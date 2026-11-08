@@ -1,0 +1,15 @@
+{
+  "deps": [
+    "../../../../../components/content_settings/core/common/content_settings_types.build_metadata",
+    "../../../../../components/content_settings/core/common/mojo_bindings.build_metadata",
+    "../../../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../../../ui/gfx/geometry/mojom/mojom.build_metadata",
+    "../../../../../url/mojom/url_mojom_gurl.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../brave/components/brave_shields/core/common/brave_shields.mojom",
+    "../../../../../../../../brave/components/brave_shields/core/common/brave_shields_panel.mojom",
+    "../../../../../../../../brave/components/brave_shields/core/common/filter_list.mojom",
+    "../../../../../../../../brave/components/brave_shields/core/common/shields_settings.mojom"
+  ]
+}

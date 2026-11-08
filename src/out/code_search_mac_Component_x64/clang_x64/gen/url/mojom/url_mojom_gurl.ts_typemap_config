@@ -1,0 +1,12 @@
+[
+  {
+    "source": "url_converter.ts",
+    "types": [
+      {
+        "converter": "UrlConverter",
+        "mojom": "url.mojom.Url",
+        "ts": "string"
+      }
+    ]
+  }
+]

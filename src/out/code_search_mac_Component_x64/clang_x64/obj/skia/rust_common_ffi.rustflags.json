@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "clang_x64/gen/skia/rust_common_ffi",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../skia/rust_common_ffi/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/skia/rust/common/io_traits_ffi.rs",
+        "@clang_x64/obj/skia/rust_common_ffi.rsp.rust"
+    ]
+}

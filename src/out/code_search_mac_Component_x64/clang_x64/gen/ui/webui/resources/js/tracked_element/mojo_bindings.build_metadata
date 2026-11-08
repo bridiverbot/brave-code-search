@@ -1,0 +1,9 @@
+{
+  "deps": [
+    "../../../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../../gfx/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../../ui/webui/resources/js/tracked_element/tracked_element.mojom"
+  ]
+}

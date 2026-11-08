@@ -1,0 +1,4 @@
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";import{JsErrorDataView}from"./jserror.mojom-converters.js";import{JsErrorConverter}from"./jserror_converter.js";export const JsErrorSpec={$:{}};const converterForJsError=new JsErrorConverter;mojo.internal.TypemappedStruct(JsErrorSpec.$,"JsError",JsErrorDataView,converterForJsError,[mojo.internal.StructField("name",0,0,mojo.internal.String,null,true,0,undefined,(value=>converterForJsError.name(value))),mojo.internal.StructField("cause",8,0,mojo.internal.String,null,true,0,undefined,(value=>converterForJsError.cause(value))),mojo.internal.StructField("message",16,0,mojo.internal.String,null,true,0,undefined,(value=>converterForJsError.message(value)))],[[0,32]]);

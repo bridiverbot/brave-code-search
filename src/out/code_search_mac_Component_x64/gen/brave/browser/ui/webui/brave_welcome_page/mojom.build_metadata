@@ -1,0 +1,8 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../../../brave/browser/ui/webui/brave_welcome_page/brave_welcome_page.mojom"
+  ]
+}
