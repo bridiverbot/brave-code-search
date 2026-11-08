@@ -1,0 +1,47 @@
+[
+  {
+    "source": "data/web_ui_mojo_ts_test_simple_converter.ts",
+    "types": [
+      {
+        "converter": "SimpleTypeConverter",
+        "mojom": "content.mojom.SimpleMappedType",
+        "ts": "string"
+      }
+    ]
+  },
+  {
+    "source": "data/web_ui_mojo_ts_test_converters.ts",
+    "types": [
+      {
+        "converter": "NestedTypeConverter",
+        "mojom": "content.mojom.NestedMappedType",
+        "ts": "TestNode",
+        "ts_import": "./web_ui_mojo_ts_test_mapped_types.js"
+      },
+      {
+        "converter": "StringDictConverter",
+        "mojom": "content.mojom.StringDict",
+        "ts": "StringDictType",
+        "ts_import": "./web_ui_mojo_ts_test_mapped_types.js"
+      },
+      {
+        "converter": "OptionalTypemapConverter",
+        "mojom": "content.mojom.OptionalTypemap",
+        "ts": "MappedOptionalContainer",
+        "ts_import": "./web_ui_mojo_ts_test_mapped_types.js"
+      },
+      {
+        "converter": "TypeWithNestedEnumConverter",
+        "mojom": "content.mojom.TypeWithNestedEnum",
+        "ts": "TypeWithNestedEnumTypemap",
+        "ts_import": "./web_ui_mojo_ts_test_converters.js"
+      },
+      {
+        "converter": "TypemappedEnumConverter",
+        "mojom": "content.mojom.TypemappedEnum",
+        "ts": "NativeEnum",
+        "ts_import": "./web_ui_mojo_ts_test_converters.js"
+      }
+    ]
+  }
+]

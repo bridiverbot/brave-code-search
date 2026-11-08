@@ -1,0 +1,93 @@
+{
+  "extends": "../../../../../../../tools/typescript/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "/@bufbuild/protobuf/wire/index.js": [
+        "./../../../../../../../third_party/node/node_modules/@bufbuild/protobuf/dist/esm/wire/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app.html.ts",
+    "preprocessed/app.ts",
+    "preprocessed/icons.html.ts",
+    "preprocessed/trace_recorder.html.ts",
+    "preprocessed/trace_recorder.ts",
+    "preprocessed/trace_report.html.ts",
+    "preprocessed/trace_report.ts",
+    "preprocessed/trace_report_list.html.ts",
+    "preprocessed/trace_report_list.ts",
+    "preprocessed/trace_util.ts",
+    "preprocessed/traces_browser_proxy.ts",
+    "preprocessed/tracing_scenario.html.ts",
+    "preprocessed/tracing_scenario.ts",
+    "preprocessed/tracing_scenarios_config.html.ts",
+    "preprocessed/tracing_scenarios_config.ts",
+    "preprocessed/app.css.ts",
+    "preprocessed/config_toggle.css.ts",
+    "preprocessed/trace_recorder.css.ts",
+    "preprocessed/trace_report.css.ts",
+    "preprocessed/trace_report_list.css.ts",
+    "preprocessed/tracing_scenario.css.ts",
+    "preprocessed/tracing_scenarios_config.css.ts",
+    "preprocessed/perfetto_config.ts",
+    "preprocessed/traces_internals.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}
