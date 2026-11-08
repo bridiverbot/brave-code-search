@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/brave_wallet/browser/zcash/rust/librustzcash/zcash_client_backend",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../brave/components/brave_wallet/browser/zcash/rust/librustzcash/src/zcash_client_backend/src/lib.rs",
+        "@obj/brave/components/brave_wallet/browser/zcash/rust/librustzcash/zcash_client_backend.rsp.rust"
+    ]
+}

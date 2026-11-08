@@ -1,0 +1,2 @@
+org.chromium.components.brave_account.BraveAccountFeatures,../../brave/components/brave_account/android/java/src/org/chromium/components/brave_account/BraveAccountFeatures.java
+org.chromium.components.brave_account.BraveAccountFeaturesJni,gen/brave/components/brave_account/android/features_jni_headers.srcjar/org/chromium/components/brave_account/BraveAccountFeaturesJni.java

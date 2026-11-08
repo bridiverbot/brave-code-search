@@ -1,0 +1,2 @@
+org.chromium.components.safe_browsing.BraveSafeBrowsingApiHandler,../../brave/components/safe_browsing/android/java/src/org/chromium/components/safe_browsing/BraveSafeBrowsingApiHandler.java
+org.chromium.components.safe_browsing.BraveSafeBrowsingUtils,../../brave/components/safe_browsing/android/java/src/org/chromium/components/safe_browsing/BraveSafeBrowsingUtils.java

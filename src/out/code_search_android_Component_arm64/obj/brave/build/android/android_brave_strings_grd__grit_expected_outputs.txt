@@ -1,0 +1,1 @@
+obj/brave/build/android/android_brave_strings_grd.resources.zip
