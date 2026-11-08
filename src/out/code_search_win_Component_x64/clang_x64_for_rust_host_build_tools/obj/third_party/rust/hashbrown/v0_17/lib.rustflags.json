@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "clang_x64_for_rust_host_build_tools/gen/third_party/rust/hashbrown/v0_17/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_VERSION": "0.17.1",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "17",
+        "CARGO_PKG_VERSION_PATCH": "1",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "hashbrown",
+        "CARGO_PKG_DESCRIPTION": "A Rust port of Google's SwissTable hash map",
+        "CARGO_PKG_REPOSITORY": "https://github.com/rust-lang/hashbrown",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/hashbrown/v0_17/lib/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/chromium_crates_io/vendor/hashbrown-v0_17/src/lib.rs",
+        "@clang_x64_for_rust_host_build_tools/obj/third_party/rust/hashbrown/v0_17/lib.rsp.rust"
+    ]
+}

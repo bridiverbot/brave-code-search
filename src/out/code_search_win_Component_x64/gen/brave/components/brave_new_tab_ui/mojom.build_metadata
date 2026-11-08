@@ -1,0 +1,10 @@
+{
+  "deps": [
+    "../brave_vpn/common/mojom/mojom.build_metadata",
+    "../ntp_background_images/browser/mojom/mojom.build_metadata",
+    "../../../url/mojom/url_mojom_gurl.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../brave/components/brave_new_tab_ui/brave_new_tab_page.mojom"
+  ]
+}
