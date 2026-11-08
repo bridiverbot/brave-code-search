@@ -1,0 +1,15 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/mojo/public/java/bindings_java.turbine.jar",
+    "obj/mojo/public/java/system_java.turbine.jar",
+    "obj/services/service_manager/public/mojom/constants_java.turbine.jar",
+    "obj/mojo/public/mojom/base/base_java.turbine.jar",
+    "obj/third_party/androidx/androidx_annotation_annotation_jvm.ijar.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

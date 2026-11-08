@@ -1,0 +1,12 @@
+{
+  "gn_target": "//third_party/android_deps:google_play_services_gcm_java",
+  "mergeable_android_manifests": [
+    "obj/third_party/android_deps/google_play_services_gcm_java/AndroidManifest.xml"
+  ],
+  "public_deps_configs": [
+    "gen/third_party/android_deps/google_play_services_gcm_java__classes.params.json",
+    "gen/third_party/android_deps/google_play_services_gcm_java__resources.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

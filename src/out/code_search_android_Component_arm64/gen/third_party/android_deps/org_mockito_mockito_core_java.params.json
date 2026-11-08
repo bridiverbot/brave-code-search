@@ -1,0 +1,24 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": true,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/net_bytebuddy_byte_buddy_agent_java.params.json",
+    "gen/third_party/android_deps/org_objenesis_objenesis_java.params.json",
+    "gen/third_party/byte_buddy/byte_buddy_android_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/android_deps/org_mockito_mockito_core_java.dex.jar",
+  "gn_target": "//third_party/android_deps:org_mockito_mockito_core_java",
+  "interface_jar_path": "obj/third_party/android_deps/org_mockito_mockito_core.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "lib.java/third_party/android_deps/org_mockito_mockito_core_java.filtered.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/org_mockito_mockito_core/mockito-core.jar"
+}

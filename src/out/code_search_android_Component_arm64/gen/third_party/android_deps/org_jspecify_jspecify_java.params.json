@@ -1,0 +1,18 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "dex_path": "obj/third_party/android_deps/org_jspecify_jspecify_java.dex.jar",
+  "gn_target": "//third_party/android_deps:org_jspecify_jspecify_java",
+  "interface_jar_path": "obj/third_party/android_deps/org_jspecify_jspecify.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/org_jspecify_jspecify/jspecify.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/org_jspecify_jspecify/jspecify.jar"
+}

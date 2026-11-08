@@ -1,0 +1,26 @@
+int attr isChildClippingToResizeDividerEnabled 0x0
+int attr isOverlappingEnabled 0x0
+int attr isUserResizingEnabled 0x0
+int attr paneSpacing 0x0
+int attr userResizeBehavior 0x0
+int attr userResizingDividerDrawable 0x0
+int attr userResizingDividerTint 0x0
+int drawable slidingpanelayout_divider 0x0
+int drawable slidingpanelayout_divider_default 0x0
+int drawable slidingpanelayout_divider_pressed 0x0
+int id relayoutWhenComplete 0x0
+int id relayoutWhenMoved 0x0
+int string draggable_divider_handler 0x0
+int string draggable_divider_handler_state_left_edge 0x0
+int string draggable_divider_handler_state_right_edge 0x0
+int style Widget_SlidingPaneLayout 0x0
+int[] styleable SlidingPaneLayout { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 }
+int styleable SlidingPaneLayout_isChildClippingToResizeDividerEnabled 0
+int styleable SlidingPaneLayout_isOverlappingEnabled 1
+int styleable SlidingPaneLayout_isUserResizingEnabled 2
+int styleable SlidingPaneLayout_paneSpacing 3
+int styleable SlidingPaneLayout_userResizeBehavior 4
+int styleable SlidingPaneLayout_userResizingDividerDrawable 5
+int styleable SlidingPaneLayout_userResizingDividerTint 6
+int[] styleable SlidingPaneLayout_Layout { 0x1010181 }
+int styleable SlidingPaneLayout_Layout_android_layout_weight 0

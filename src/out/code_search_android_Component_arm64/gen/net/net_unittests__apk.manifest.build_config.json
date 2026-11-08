@@ -1,0 +1,16 @@
+{
+  "extra_android_manifests": [
+    "gen/third_party/android_sdk/android_test_mock_java/AndroidManifest.xml",
+    "obj/third_party/androidx/androidx_emoji2_emoji2_java/AndroidManifest.xml",
+    "obj/third_party/androidx/androidx_lifecycle_lifecycle_process_java/AndroidManifest.xml",
+    "obj/third_party/androidx/androidx_startup_startup_runtime_java/AndroidManifest.xml",
+    "obj/third_party/androidx/androidx_test_core_java/AndroidManifest.xml",
+    "obj/third_party/androidx/androidx_test_runner_java/AndroidManifest.xml",
+    "obj/third_party/androidx/androidx_test_uiautomator_uiautomator_java/AndroidManifest.xml",
+    "obj/third_party/androidx/androidx_test_uiautomator_uiautomator_shell_android_java/AndroidManifest.xml",
+    "../../net/test/android/javatests/AndroidManifest_client.xml",
+    "../../base/test/android/java/AndroidManifest_file_provider.xml",
+    "../../testing/android/instrumentation/java/AndroidManifest_permissions.xml",
+    "../../testing/android/instrumentation/java/AndroidManifest_runner.xml"
+  ]
+}

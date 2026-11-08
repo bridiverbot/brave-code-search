@@ -1,0 +1,9 @@
+{
+  "javac_full_classpath_targets": [
+    "//third_party/jni_zero:jni_zero_java",
+    "//third_party/jni_zero:generate_jni_java",
+    "//third_party/androidx/local_modifications/ink:ink_jni_headers_java",
+    "//third_party/jni_zero:gendeps_java",
+    "//build/android:build_java"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "gn_target": "//testing/android/instrumentation:test_runner_permissions_java",
+  "mergeable_android_manifests": [
+    "../../testing/android/instrumentation/java/AndroidManifest_permissions.xml"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

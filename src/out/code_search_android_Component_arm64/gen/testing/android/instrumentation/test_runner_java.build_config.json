@@ -1,0 +1,21 @@
+{
+  "javac_full_classpath": [
+    "obj/third_party/androidx/androidx_test_runner_java/classes.jar",
+    "obj/third_party/androidx/androidx_test_services_storage_java/classes.jar",
+    "obj/third_party/androidx/androidx_test_monitor_java/classes.jar",
+    "obj/third_party/androidx/androidx_tracing_tracing_android_java/classes.jar",
+    "../../third_party/android_deps/cipd/libs/org_jetbrains_kotlinx_kotlinx_coroutines_core_jvm/kotlinx-coroutines-core-jvm.jar",
+    "../../third_party/androidx/cipd/libs/androidx_collection_collection_jvm/collection-jvm.jar",
+    "../../third_party/android_deps/cipd/libs/org_jspecify_jspecify/jspecify.jar",
+    "../../third_party/androidx/cipd/libs/androidx_annotation_annotation_jvm/annotation-jvm.jar",
+    "../../third_party/android_deps/cipd/libs/org_jetbrains_kotlin_kotlin_stdlib/kotlin-stdlib.jar",
+    "../../third_party/android_deps/cipd/libs/org_jetbrains_annotations/annotations.jar",
+    "obj/third_party/junit/junit.javac.jar",
+    "../../third_party/hamcrest/cipd/lib/hamcrest-library.jar",
+    "../../third_party/hamcrest/cipd/lib/hamcrest-core.jar",
+    "obj/build/android/build_java.javac.jar"
+  ],
+  "sdk_jars": [
+    "../../third_party/android_sdk/public/platforms/android-37.2/android.jar"
+  ]
+}
