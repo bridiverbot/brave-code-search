@@ -1,0 +1,10 @@
+{
+  "gn_target": "//chrome/android:chrome_public_base_module_java_for_test",
+  "public_deps_configs": [
+    "gen/chrome/android/chrome_all_java.params.json",
+    "gen/chrome/android/chrome_public_base_module_java_test_support.params.json",
+    "gen/chrome/android/delegate_public_impl_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

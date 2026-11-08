@@ -1,0 +1,14 @@
+{
+  "r8jar": "../../third_party/r8/cipd/lib/r8.jar",
+  "libs": [
+    "../../third_party/android_sdk/public/platforms/android-37.2/android.jar"
+  ],
+  "jobs": [
+    {
+      "name": "",
+      "jars": [
+        "obj/chrome/android/webapk/libs/runtime_library/webapk8.dex"
+      ]
+    }
+  ]
+}

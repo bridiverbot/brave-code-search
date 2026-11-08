@@ -1,0 +1,3 @@
+../../chrome/android/java/src/org/chromium/chrome/browser/screenshotprovider/ScreenshotContentProviderMetrics.java
+../../chrome/android/java/src/org/chromium/chrome/browser/screenshotprovider/ScreenshotInvocationState.java
+../../chrome/android/java/src/org/chromium/chrome/browser/screenshotprovider/ScreenshotUriProvider.java
