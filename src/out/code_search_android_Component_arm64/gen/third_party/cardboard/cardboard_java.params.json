@@ -1,0 +1,37 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/cardboard/cardboard_proto_java.params.json",
+    "gen/third_party/cardboard/cardboard_resources.params.json",
+    "gen/third_party/android_deps/google_play_services_base_java.params.json",
+    "gen/third_party/android_deps/google_play_services_basement_java.params.json",
+    "gen/third_party/android_deps/google_play_services_vision_common_java.params.json",
+    "gen/third_party/android_deps/google_play_services_vision_java.params.json",
+    "gen/third_party/android_deps/protobuf_lite_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_jvm_java.params.json",
+    "gen/third_party/androidx/androidx_appcompat_appcompat_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/cardboard/cardboard_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//third_party/cardboard:cardboard_java",
+  "interface_jar_path": "obj/third_party/cardboard/cardboard_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "com.google.cardboard.sdk",
+  "processed_jar_path": "obj/third_party/cardboard/cardboard_java.javac.jar",
+  "proguard_configs": [
+    "../../third_party/cardboard/proguard-rules.pro"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/third_party/cardboard/cardboard_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/cardboard/cardboard_java.javac.jar"
+}

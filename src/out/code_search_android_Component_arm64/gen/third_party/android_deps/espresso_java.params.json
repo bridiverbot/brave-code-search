@@ -1,0 +1,18 @@
+{
+  "gn_target": "//third_party/android_deps:espresso_java",
+  "preferred_dep": true,
+  "proguard_configs": [
+    "../../third_party/androidx/espresso_proguard.flags"
+  ],
+  "public_deps_configs": [
+    "gen/third_party/android_deps/com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_contrib_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_core_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_idling_resource_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_intents_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_web_java.params.json",
+    "gen/third_party/androidx/chromium_espresso_overrides_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

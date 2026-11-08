@@ -1,0 +1,34 @@
+{
+  "interface_classpath": [
+    "obj/third_party/androidx/androidx_annotation_annotation_jvm.ijar.jar",
+    "obj/third_party/androidx/androidx_collection_collection_jvm.ijar.jar",
+    "obj/third_party/androidx/core_overrides_java.turbine.jar",
+    "obj/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_android.ijar.jar",
+    "obj/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_core_jvm.ijar.jar",
+    "obj/third_party/androidx/androidx_activity_activity_ktx_java.ijar.jar",
+    "obj/third_party/androidx/androidx_annotation_annotation_experimental_java.ijar.jar",
+    "obj/third_party/androidx/androidx_autofill_autofill_java.ijar.jar",
+    "obj/third_party/androidx/androidx_compose_runtime_runtime_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_compose_runtime_runtime_saveable_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_compose_ui_ui_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_compose_ui_ui_geometry_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_compose_ui_ui_graphics_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_compose_ui_ui_text_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_compose_ui_ui_unit_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_compose_ui_ui_util_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_core_core_java.ijar.jar",
+    "obj/third_party/androidx/local_modifications/buildcompat/buildcompat_java.turbine.jar",
+    "obj/third_party/androidx/androidx_customview_customview_poolingcontainer_java.ijar.jar",
+    "obj/third_party/androidx/androidx_lifecycle_lifecycle_runtime_compose_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_android_java.ijar.jar",
+    "obj/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_ktx_java.ijar.jar",
+    "obj/third_party/androidx/androidx_savedstate_savedstate_ktx_java.ijar.jar",
+    "obj/third_party/android_deps/org_jetbrains_annotations.ijar.jar",
+    "obj/third_party/android_deps/org_jetbrains_kotlin_kotlin_stdlib.ijar.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

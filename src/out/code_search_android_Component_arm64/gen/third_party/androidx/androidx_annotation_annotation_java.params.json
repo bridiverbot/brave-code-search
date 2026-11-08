@@ -1,0 +1,9 @@
+{
+  "gn_target": "//third_party/androidx:androidx_annotation_annotation_java",
+  "preferred_dep": true,
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_jvm_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

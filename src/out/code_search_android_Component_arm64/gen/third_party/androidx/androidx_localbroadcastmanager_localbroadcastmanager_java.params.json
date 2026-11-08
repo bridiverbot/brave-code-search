@@ -1,0 +1,8 @@
+{
+  "gn_target": "//third_party/androidx:androidx_localbroadcastmanager_localbroadcastmanager_java",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_localbroadcastmanager_localbroadcastmanager_java__classes.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}
