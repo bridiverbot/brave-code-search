@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="test/data/grit/webui_test_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="test/data/grit/webui_test_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="test/data/grit/webui_test_resources_map.h"
+            type="resource_map_header" />
+    <output filename="webui_test_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <part file="bluetooth_internals/resources.grdp" />
+      <part file="browser_actuator_internals/resources.grdp" />
+      <part file="chai_resources.grdp" />
+      <part file="chrome_urls/resources.grdp" />
+      <part file="commerce_internals/resources.grdp" />
+      <part file="contextual_tasks/resources.grdp" />
+      <part file="notebooks_internals/resources.grdp" />
+      <part file="cr_elements/resources.grdp" />
+      <part file="flags/resources.grdp" />
+      <part file="js/resources.grdp" />
+      <part file="location_internals/resources.grdp" />
+      <part file="mocha_resources.grdp" />
+      <part file="sync_internals/resources.grdp" />
+      <part file="usb_internals/resources.grdp" />
+      <part file="guest_view_shared/resources.grdp" />
+      <include name="IDR_WEBUI_TEST_CHAI_ASSERT_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/chai_assert.js" resource_path="chai_assert.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_FAKE_CHROME_EVENT_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/fake_chrome_event.js" resource_path="fake_chrome_event.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_FAKE_MEDIA_QUERY_LIST_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/fake_media_query_list.js" resource_path="fake_media_query_list.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_KEYBOARD_MOCK_INTERACTIONS_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/keyboard_mock_interactions.js" resource_path="keyboard_mock_interactions.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_METRICS_TEST_SUPPORT_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/metrics_test_support.js" resource_path="metrics_test_support.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_MOCHA_ADAPTER_SIMPLE_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/mocha_adapter_simple.js" resource_path="mocha_adapter_simple.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_MOCK_CONTROLLER_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/mock_controller.js" resource_path="mock_controller.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_MOCK_TIMER_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/mock_timer.js" resource_path="mock_timer.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_MOCK_TIMER_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/mock_timer_test.js" resource_path="mock_timer_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_TEST_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/test_browser_proxy.js" resource_path="test_browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_TEST_MOCK_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/test_mock.js" resource_path="test_mock.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_TEST_MOCK_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/test_mock_test.js" resource_path="test_mock_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_TEST_OPEN_WINDOW_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/test_open_window_proxy.js" resource_path="test_open_window_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_TEST_PLURAL_STRING_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/test_plural_string_proxy.js" resource_path="test_plural_string_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_TEST_UTIL_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/test_util.js" resource_path="test_util.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_TEST_TRUSTED_HTML_JS" file="${root_gen_dir}/chrome/test/data/webui/tsc/trusted_html.js" resource_path="trusted_html.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

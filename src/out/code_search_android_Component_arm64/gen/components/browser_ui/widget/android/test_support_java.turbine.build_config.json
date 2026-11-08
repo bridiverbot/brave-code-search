@@ -1,0 +1,23 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/components/browser_ui/widget/android/java.turbine.jar",
+    "obj/base/base_java_test_support.turbine.jar",
+    "obj/base/tasks_java.turbine.jar",
+    "obj/components/browser_ui/util/android/java.turbine.jar",
+    "obj/third_party/hamcrest/hamcrest_core_java.ijar.jar",
+    "obj/third_party/hamcrest/hamcrest_library_java.ijar.jar",
+    "obj/ui/android/ui_no_recycler_view_java.turbine.jar",
+    "obj/ui/android/ui_recycler_view_java.turbine.jar",
+    "obj/base/base_cached_flags_java.turbine.jar",
+    "obj/base/base_java_url_utils_for_test.turbine.jar",
+    "obj/base/tasks_jni_java.javac.jar",
+    "obj/base/tasks_minimal_jni_java.javac.jar",
+    "obj/third_party/androidx/androidx_recyclerview_recyclerview_java.ijar.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

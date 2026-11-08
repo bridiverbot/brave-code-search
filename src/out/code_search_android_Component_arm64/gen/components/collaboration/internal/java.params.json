@@ -1,0 +1,10 @@
+{
+  "gn_target": "//components/collaboration/internal:java",
+  "public_deps_configs": [
+    "gen/components/collaboration/internal/comments_java.params.json",
+    "gen/components/collaboration/internal/core_java.params.json",
+    "gen/components/collaboration/internal/messaging_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

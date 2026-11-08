@@ -1,0 +1,1 @@
+int drawable google_wallet_24dp 0x7f010001

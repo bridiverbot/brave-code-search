@@ -1,0 +1,9 @@
+{
+  "gn_target": "//components/feature_engagement:feature_engagement_java",
+  "public_deps_configs": [
+    "gen/components/feature_engagement/internal/internal_java.params.json",
+    "gen/components/feature_engagement/public/public_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}
