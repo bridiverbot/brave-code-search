@@ -1,0 +1,1 @@
+{"base_dir": "gen/chrome/test/data/webui/metrics_internals/tsc", "files": ["field_trials_test.js", "no_logs_test.js", "private_metrics_test.js", "utils.js", "with_log_test.js"]}

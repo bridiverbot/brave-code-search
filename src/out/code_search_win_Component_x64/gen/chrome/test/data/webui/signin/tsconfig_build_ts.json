@@ -1,0 +1,125 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://profile-picker/profile_picker.js": [
+        "./../../../../browser/resources/signin/profile_picker/tsc/profile_picker.d.ts"
+      ],
+      "chrome://profile-picker/lazy_load.js": [
+        "./../../../../browser/resources/signin/profile_picker/tsc/lazy_load.d.ts"
+      ],
+      "chrome://signin-dice-web-intercept.top-chrome/*": [
+        "./../../../../browser/resources/signin/tsc/dice_web_signin_intercept/*"
+      ],
+      "chrome://managed-user-profile-notice/*": [
+        "./../../../../browser/resources/signin/tsc/managed_user_profile_notice/*"
+      ],
+      "chrome://profile-customization/*": [
+        "./../../../../browser/resources/signin/tsc/profile_customization/*"
+      ],
+      "chrome://sync-confirmation/*": [
+        "./../../../../browser/resources/signin/tsc/sync_confirmation/*"
+      ],
+      "chrome://history-sync-optin/*": [
+        "./../../../../browser/resources/signin/history_sync_optin/tsc/*"
+      ],
+      "chrome://batch-upload/batch_upload.js": [
+        "./../../../../browser/resources/signin/batch_upload/tsc/batch_upload.d.ts"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/history_sync_optin_app_refresh_test.ts",
+    "preprocessed/history_sync_optin_test.ts",
+    "preprocessed/managed_user_profile_notice_test.ts",
+    "preprocessed/managed_user_profile_notice_app_refresh_test.ts",
+    "preprocessed/profile_card_menu_test.ts",
+    "preprocessed/profile_customization_test.ts",
+    "preprocessed/profile_picker_app_test.ts",
+    "preprocessed/profile_picker_main_view_test.ts",
+    "preprocessed/profile_switch_test.ts",
+    "preprocessed/profile_type_choice_test.ts",
+    "preprocessed/sync_confirmation_refresh_test.ts",
+    "preprocessed/sync_confirmation_test.ts",
+    "preprocessed/test_history_sync_optin_browser_proxy.ts",
+    "preprocessed/test_manage_profiles_browser_proxy.ts",
+    "preprocessed/test_managed_user_profile_notice_browser_proxy.ts",
+    "preprocessed/test_profile_customization_browser_proxy.ts",
+    "preprocessed/test_sync_confirmation_browser_proxy.ts",
+    "preprocessed/batch_upload_data_sections_test.ts",
+    "preprocessed/batch_upload_view_test.ts",
+    "preprocessed/test_batch_upload_browser_proxy.ts",
+    "preprocessed/dice_web_signin_intercept_chrome_signin_test.ts",
+    "preprocessed/dice_web_signin_intercept_test.ts",
+    "preprocessed/test_dice_web_signin_intercept_browser_proxy.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "preprocessed/profile_customization_test-chromium.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/signin/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/signin/batch_upload/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/signin/history_sync_optin/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/signin/profile_picker/tsconfig_build_ts.json"
+    }
+  ]
+}

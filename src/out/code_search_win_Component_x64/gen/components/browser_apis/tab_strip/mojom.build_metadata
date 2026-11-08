@@ -1,0 +1,14 @@
+{
+  "deps": [
+    "../../tab_groups/public/mojom/mojo_bindings.build_metadata",
+    "../../tabs/public/mojom/mojom.build_metadata",
+    "../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../url/mojom/url_mojom_gurl.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../components/browser_apis/tab_strip/tab_strip_api.mojom",
+    "../../../../../../components/browser_apis/tab_strip/tab_strip_api_data_model.mojom",
+    "../../../../../../components/browser_apis/tab_strip/tab_strip_api_events.mojom",
+    "../../../../../../components/browser_apis/tab_strip/tab_strip_api_types.mojom"
+  ]
+}

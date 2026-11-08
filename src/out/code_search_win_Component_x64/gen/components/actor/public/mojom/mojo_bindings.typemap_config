@@ -1,0 +1,17 @@
+[
+  {
+    "traits_headers": [
+      "components/actor/public/mojom/actor_types_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//base",
+      "//components/actor/core:task_id"
+    ],
+    "types": [
+      {
+        "cpp": "::actor::TaskId",
+        "mojom": "actor.mojom.TaskId"
+      }
+    ]
+  }
+]

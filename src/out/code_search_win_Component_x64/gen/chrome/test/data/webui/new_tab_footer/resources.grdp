@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_NEW_TAB_FOOTER_APP_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/new_tab_footer/tsc/app_test.js" resource_path="new_tab_footer/app_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

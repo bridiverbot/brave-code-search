@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_SKILLS_API_BOOT_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/api_boot.js" resource_path="skills/api_boot.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_CARD_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/card_test.js" resource_path="skills/card_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_CAROUSEL_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/carousel_test.js" resource_path="skills/carousel_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_DISCOVER_SKILLS_PAGE_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/discover_skills_page_test.js" resource_path="skills/discover_skills_page_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_SKILLS_DIALOG_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/skills_dialog_test.js" resource_path="skills/skills_dialog_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_SKILLS_EMOJI_PICKER_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/skills_emoji_picker_test.js" resource_path="skills/skills_emoji_picker_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_SKILLS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/skills_test.js" resource_path="skills/skills_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_SKILLS_WEBVIEW_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/skills_webview_test.js" resource_path="skills/skills_webview_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_TEST_SKILLS_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/test_skills_browser_proxy.js" resource_path="skills/test_skills_browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_USER_SKILLS_PAGE_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/user_skills_page_test.js" resource_path="skills/user_skills_page_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SKILLS_WEBVIEW_BRIDGE_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/skills/tsc/webview_bridge_test.js" resource_path="skills/webview_bridge_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
