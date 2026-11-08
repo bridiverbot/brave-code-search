@@ -1,0 +1,16 @@
+          cmd LC_ID_DYLIB
+      cmdsize 64
+         name @rpath/libui_base_file_info.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN2ui8FileInfoC2Ev
+T __ZN2ui8FileInfoC1Ev
+T __ZN2ui8FileInfoC2ERKN4base8FilePathES4_
+T __ZN2ui8FileInfoC1ERKN4base8FilePathES4_
+T __ZN2ui8FileInfoD2Ev
+T __ZN2ui8FileInfoD1Ev
+T __ZNK2ui8FileInfoeqERKS0_
+T __ZN2ui18URIListToFileInfosENSt4__Cr17basic_string_viewIcNS0_11char_traitsIcEEEE
+T __ZN2ui17FilePathToFileURLERKN4base8FilePathE
+T __ZN2ui18FileInfosToURIListERKNSt4__Cr6vectorINS_8FileInfoENS0_9allocatorIS2_EEEE

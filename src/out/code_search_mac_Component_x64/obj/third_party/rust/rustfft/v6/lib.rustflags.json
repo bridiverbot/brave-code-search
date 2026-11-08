@@ -1,0 +1,22 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/rustfft/v6/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Allen Welkie <allen.welkie at gmail>, Elliott Mahler <join.together at gmail>",
+        "CARGO_PKG_VERSION": "6.4.1",
+        "CARGO_PKG_VERSION_MAJOR": "6",
+        "CARGO_PKG_VERSION_MINOR": "4",
+        "CARGO_PKG_VERSION_PATCH": "1",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "rustfft",
+        "CARGO_PKG_DESCRIPTION": "High-performance FFT library written in pure Rust.",
+        "CARGO_PKG_REPOSITORY": "https://github.com/ejmahler/RustFFT",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/rustfft/v6/lib/crate",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/chromium_crates_io/vendor/rustfft-v6/src/lib.rs",
+        "@obj/third_party/rust/rustfft/v6/lib.rsp.rust"
+    ]
+}

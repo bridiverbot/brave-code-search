@@ -1,0 +1,13 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/boringssl/bssl_crypto",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../third_party/boringssl/bssl_crypto/crate",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/boringssl/src/rust/bssl-crypto/src/lib.rs",
+        "@obj/third_party/boringssl/bssl_crypto.rsp.rust"
+    ]
+}

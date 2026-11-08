@@ -1,0 +1,22 @@
+          cmd LC_ID_DYLIB
+      cmdsize 64
+         name @rpath/libui_base_ime_init.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZNK4base12FeatureParamIbLb0EE3GetEv
+T __ZNK4base12FeatureParamIiLb0EE3GetEv
+T __ZNK4base12FeatureParamImLb0EE3GetEv
+T __ZNK4base12FeatureParamIdLb0EE3GetEv
+T __ZNK4base12FeatureParamINSt4__Cr12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEELb0EE3GetEv
+T __ZNK4base12FeatureParamINS_9TimeDeltaELb0EE3GetEv
+T __ZN2ui17CreateInputMethodEPNS_21ImeKeyEventDispatcherEy
+T __ZN2ui26SetUpInputMethodForTestingEPNS_11InputMethodE
+T __ZN2ui28ScopedTestInputMethodFactoryC2Ev
+T __ZN2ui28ScopedTestInputMethodFactoryC1Ev
+T __ZN2ui28ScopedTestInputMethodFactoryD2Ev
+T __ZN2ui28ScopedTestInputMethodFactoryD1Ev
+T __ZN2ui21InitializeInputMethodEv
+T __ZN2ui19ShutdownInputMethodEv
+T __ZN2ui31InitializeInputMethodForTestingEv
+T __ZN2ui29ShutdownInputMethodForTestingEv

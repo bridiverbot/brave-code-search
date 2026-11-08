@@ -1,0 +1,24 @@
+          cmd LC_ID_DYLIB
+      cmdsize 64
+         name @rpath/libui_gfx_gfx_switches.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZNK4base12FeatureParamIbLb0EE3GetEv
+T __ZNK4base12FeatureParamIiLb0EE3GetEv
+T __ZNK4base12FeatureParamImLb0EE3GetEv
+T __ZNK4base12FeatureParamIdLb0EE3GetEv
+T __ZNK4base12FeatureParamINSt4__Cr12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEELb0EE3GetEv
+T __ZNK4base12FeatureParamINS_9TimeDeltaELb0EE3GetEv
+S __ZN8switches23kAnimationDurationScaleE
+S __ZN8switches31kDisableFontSubpixelPositioningE
+S __ZN8switches29kEnableNativeGpuMemoryBuffersE
+S __ZN8switches26kForcePrefersReducedMotionE
+S __ZN8switches28kForcePrefersNoReducedMotionE
+S __ZN8switches9kHeadlessE
+S __ZN8switches11kScreenInfoE
+D _kUseSmartRefForGPUFenceHandle
+D _kUseRoundedPointConversion
+D _kHdrAgtmParseOldSyntax
+D _kTransparentIconWorkaround
+D _kHarfBuzzZeroCopyFontTable

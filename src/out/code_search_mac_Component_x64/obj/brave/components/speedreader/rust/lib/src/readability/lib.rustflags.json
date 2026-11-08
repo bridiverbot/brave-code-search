@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/speedreader/rust/lib/src/readability/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../brave/components/speedreader/rust/lib/src/readability/src/lib.rs",
+        "@obj/brave/components/speedreader/rust/lib/src/readability/lib.rsp.rust"
+    ]
+}

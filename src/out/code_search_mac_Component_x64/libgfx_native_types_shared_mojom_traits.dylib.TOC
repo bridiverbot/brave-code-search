@@ -1,0 +1,19 @@
+          cmd LC_ID_DYLIB
+      cmdsize 80
+         name @rpath/libgfx_native_types_shared_mojom_traits.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN4mojo15IOSurfaceHandleC2Ev
+T __ZN4mojo15IOSurfaceHandleC1Ev
+T __ZN4mojo15IOSurfaceHandleC2EOS0_
+T __ZN4mojo15IOSurfaceHandleC1EOS0_
+T __ZN4mojo15IOSurfaceHandleaSEOS0_
+T __ZN4mojo15IOSurfaceHandleD2Ev
+T __ZN4mojo15IOSurfaceHandleD1Ev
+T __ZN4mojo12StructTraitsIN3gfx5mojom23IOSurfaceHandleDataViewENS_15IOSurfaceHandleEE4ReadES3_PS4_
+T __ZN4mojo11UnionTraitsIN3gfx5mojom37GpuMemoryBufferPlatformHandleDataViewENS1_21GpuMemoryBufferHandleEE6GetTagERKS4_
+T __ZN4mojo11UnionTraitsIN3gfx5mojom37GpuMemoryBufferPlatformHandleDataViewENS1_21GpuMemoryBufferHandleEE6IsNullERKS4_
+T __ZN4mojo11UnionTraitsIN3gfx5mojom37GpuMemoryBufferPlatformHandleDataViewENS1_21GpuMemoryBufferHandleEE9SetToNullEPS4_
+T __ZN4mojo11UnionTraitsIN3gfx5mojom37GpuMemoryBufferPlatformHandleDataViewENS1_21GpuMemoryBufferHandleEE17io_surface_handleERS4_
+T __ZN4mojo11UnionTraitsIN3gfx5mojom37GpuMemoryBufferPlatformHandleDataViewENS1_21GpuMemoryBufferHandleEE4ReadES3_PS4_

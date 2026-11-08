@@ -1,0 +1,30 @@
+          cmd LC_ID_DYLIB
+      cmdsize 72
+         name @rpath/libui_base_data_transfer_policy.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN2ui20DataTransferEndpointC2ERK4GURLNS_27DataTransferEndpointOptionsE
+T __ZN2ui20DataTransferEndpointC1ERK4GURLNS_27DataTransferEndpointOptionsE
+T __ZN2ui20DataTransferEndpointC2ENS_12EndpointTypeENS_27DataTransferEndpointOptionsE
+T __ZN2ui20DataTransferEndpointC1ENS_12EndpointTypeENS_27DataTransferEndpointOptionsE
+T __ZN2ui20DataTransferEndpointC2ERKS0_
+T __ZN2ui20DataTransferEndpointC1ERKS0_
+T __ZN2ui20DataTransferEndpointC2EOS0_
+T __ZN2ui20DataTransferEndpointC1EOS0_
+T __ZN2ui20DataTransferEndpointaSERKS0_
+T __ZN2ui20DataTransferEndpointaSEOS0_
+T __ZNK2ui20DataTransferEndpointeqERKS0_
+T __ZN2ui20DataTransferEndpointD2Ev
+T __ZN2ui20DataTransferEndpointD1Ev
+T __ZNK2ui20DataTransferEndpoint6GetURLEv
+T __ZNK2ui20DataTransferEndpoint13IsSameURLWithERKS0_
+T __ZN2ui28DataTransferPolicyController3GetEv
+T __ZN2ui28DataTransferPolicyController11HasInstanceEv
+T __ZN2ui28DataTransferPolicyController14DeleteInstanceEv
+T __ZN2ui28DataTransferPolicyControllerC2Ev
+T __ZN2ui28DataTransferPolicyControllerD2Ev
+T __ZN2ui28DataTransferPolicyControllerD1Ev
+T __ZN2ui28DataTransferPolicyControllerD0Ev
+S __ZN2ui28DataTransferPolicyController34g_data_transfer_policy_controller_E
+S __ZTVN2ui28DataTransferPolicyControllerE

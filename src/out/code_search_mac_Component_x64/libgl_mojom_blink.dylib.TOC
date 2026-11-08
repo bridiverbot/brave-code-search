@@ -1,0 +1,16 @@
+          cmd LC_ID_DYLIB
+      cmdsize 56
+         name @rpath/libgl_mojom_blink.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN2gl5mojom5blink21GLImplementationPartsC2Ev
+T __ZN2gl5mojom5blink21GLImplementationPartsC1Ev
+T __ZN2gl5mojom5blink21GLImplementationPartsC2ENS0_16GLImplementationENS0_19ANGLEImplementationE
+T __ZN2gl5mojom5blink21GLImplementationPartsC1ENS0_16GLImplementationENS0_19ANGLEImplementationE
+T __ZN2gl5mojom5blink21GLImplementationPartsD2Ev
+T __ZN2gl5mojom5blink21GLImplementationPartsD1Ev
+T __ZNK2gl5mojom5blink21GLImplementationParts4HashEm
+T __ZNK2gl5mojom5blink21GLImplementationParts14WriteIntoTraceEN8perfetto11TracedValueE
+T __ZN2gl5mojom5blink21GLImplementationParts8ValidateEPKvPN4mojo8internal17ValidationContextE
+T __ZN4mojo12StructTraitsIN2gl5mojom29GLImplementationPartsDataViewENS_16InlinedStructPtrINS2_5blink21GLImplementationPartsEEEE4ReadES3_PS7_

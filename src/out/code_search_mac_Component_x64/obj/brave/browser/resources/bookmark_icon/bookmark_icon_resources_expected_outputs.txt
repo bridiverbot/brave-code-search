@@ -1,0 +1,5 @@
+gen/brave/browser/resources/bookmark_icon/grit/bookmark_icon_resources.h
+gen/brave/browser/resources/bookmark_icon/grit/bookmark_icon_resources_map.cc
+gen/brave/browser/resources/bookmark_icon/grit/bookmark_icon_resources_map.h
+gen/brave/browser/resources/bookmark_icon/bookmark_icon_resources_100_percent.pak
+gen/brave/browser/resources/bookmark_icon/bookmark_icon_resources_200_percent.pak

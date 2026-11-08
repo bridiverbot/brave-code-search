@@ -1,0 +1,22 @@
+          cmd LC_ID_DYLIB
+      cmdsize 96
+         name @rpath/libservices_network_public_cpp_document_isolation_policy.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN7network23DocumentIsolationPolicyC2Ev
+T __ZN7network23DocumentIsolationPolicyC1Ev
+T __ZN7network23DocumentIsolationPolicyC2ERKS0_
+T __ZN7network23DocumentIsolationPolicyC1ERKS0_
+T __ZN7network23DocumentIsolationPolicyC2EOS0_
+T __ZN7network23DocumentIsolationPolicyC1EOS0_
+T __ZN7network23DocumentIsolationPolicyD2Ev
+T __ZN7network23DocumentIsolationPolicyD1Ev
+T __ZN7network23DocumentIsolationPolicyC2ENS_5mojom28DocumentIsolationPolicyValueE
+T __ZN7network23DocumentIsolationPolicyC1ENS_5mojom28DocumentIsolationPolicyValueE
+T __ZN7network23DocumentIsolationPolicyaSERKS0_
+T __ZN7network23DocumentIsolationPolicyaSEOS0_
+T __ZNK7network23DocumentIsolationPolicyeqERKS0_
+T __ZN7network36DIPCompatibleWithCrossOriginIsolatedERKNS_23DocumentIsolationPolicyE
+T __ZN7network36DIPCompatibleWithCrossOriginIsolatedENS_5mojom28DocumentIsolationPolicyValueE
+T __ZN4mojo12StructTraitsIN7network5mojom31DocumentIsolationPolicyDataViewENS1_23DocumentIsolationPolicyEE4ReadES3_PS4_

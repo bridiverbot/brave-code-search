@@ -1,0 +1,10 @@
+          cmd LC_ID_DYLIB
+      cmdsize 80
+         name @rpath/libcontent_common_main_frame_counter.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN7content16MainFrameCounter14has_main_frameEv
+T __ZN7content16MainFrameCounter14IncrementCountEv
+T __ZN7content16MainFrameCounter14DecrementCountEv
+S __ZN7content16MainFrameCounter17main_frame_count_E

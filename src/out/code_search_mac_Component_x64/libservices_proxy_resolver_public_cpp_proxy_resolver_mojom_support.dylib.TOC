@@ -1,0 +1,9 @@
+          cmd LC_ID_DYLIB
+      cmdsize 104
+         name @rpath/libservices_proxy_resolver_public_cpp_proxy_resolver_mojom_support.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN4mojo10EnumTraitsIN14proxy_resolver5mojom20HostResolveOperationEN3net24ProxyResolveDnsOperationEE7ToMojomES5_
+T __ZN4mojo10EnumTraitsIN14proxy_resolver5mojom20HostResolveOperationEN3net24ProxyResolveDnsOperationEE9FromMojomES3_
+T __ZN4mojo12StructTraitsIN14proxy_resolver5mojom17ProxyInfoDataViewEN3net9ProxyInfoEE4ReadES3_PS5_

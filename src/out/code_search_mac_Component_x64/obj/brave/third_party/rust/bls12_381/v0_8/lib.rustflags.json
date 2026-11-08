@@ -1,0 +1,22 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/third_party/rust/bls12_381/v0_8/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Sean Bowe <ewillbefull@gmail.com>, Jack Grigg <thestr4d@gmail.com>",
+        "CARGO_PKG_VERSION": "0.8.0",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "8",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "bls12_381",
+        "CARGO_PKG_DESCRIPTION": "Implementation of the BLS12-381 pairing-friendly elliptic curve construction",
+        "CARGO_PKG_REPOSITORY": "https://github.com/zkcrypto/bls12_381",
+        "CARGO_MANIFEST_DIR": "../../brave/third_party/rust/bls12_381/v0_8/lib/crate",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../brave/third_party/rust/chromium_crates_io/vendor/bls12_381-v0_8/src/lib.rs",
+        "@obj/brave/third_party/rust/bls12_381/v0_8/lib.rsp.rust"
+    ]
+}

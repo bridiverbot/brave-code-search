@@ -1,0 +1,4 @@
+gen/brave/components/local_ai/resources/grit/on_device_speech_recognition_worker_generated.h
+gen/brave/components/local_ai/resources/grit/on_device_speech_recognition_worker_generated_map.cc
+gen/brave/components/local_ai/resources/grit/on_device_speech_recognition_worker_generated_map.h
+gen/brave/components/local_ai/resources/on_device_speech_recognition_worker_generated.pak

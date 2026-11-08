@@ -1,0 +1,17 @@
+          cmd LC_ID_DYLIB
+      cmdsize 56
+         name @rpath/libcommands_common.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN8commands21CodeStringToKeyStringERKNSt4__Cr12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+T __ZN8commands12ToKeysStringERKN2ui11AcceleratorE
+T __ZN8commands13ToCodesStringERKN2ui11AcceleratorE
+T __ZN8commands15FromCodesStringERKNSt4__Cr12basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+T __ZNK4base12FeatureParamIbLb0EE3GetEv
+T __ZNK4base12FeatureParamIiLb0EE3GetEv
+T __ZNK4base12FeatureParamImLb0EE3GetEv
+T __ZNK4base12FeatureParamIdLb0EE3GetEv
+T __ZNK4base12FeatureParamINSt4__Cr12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEELb0EE3GetEv
+T __ZNK4base12FeatureParamINS_9TimeDeltaELb0EE3GetEv
+D _kBraveCommands

@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/base/command_line",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../base/command_line.rs",
+        "@obj/base/command_line.rsp.rust"
+    ]
+}

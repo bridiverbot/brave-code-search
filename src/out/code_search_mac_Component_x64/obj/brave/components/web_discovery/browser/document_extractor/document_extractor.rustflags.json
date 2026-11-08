@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/web_discovery/browser/document_extractor/document_extractor",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../brave/components/web_discovery/browser/document_extractor/lib.rs",
+        "@obj/brave/components/web_discovery/browser/document_extractor/document_extractor.rsp.rust"
+    ]
+}

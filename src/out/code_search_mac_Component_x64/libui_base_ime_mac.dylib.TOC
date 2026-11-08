@@ -1,0 +1,17 @@
+          cmd LC_ID_DYLIB
+      cmdsize 56
+         name @rpath/libui_base_ime_mac.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN2ui14InputMethodMacC2EPNS_21ImeKeyEventDispatcherE
+T __ZN2ui14InputMethodMacC1EPNS_21ImeKeyEventDispatcherE
+T __ZN2ui14InputMethodMacD2Ev
+T __ZN2ui14InputMethodMacD1Ev
+T __ZN2ui14InputMethodMacD0Ev
+T __ZN2ui14InputMethodMac16DispatchKeyEventEPNS_8KeyEventE
+T __ZN2ui14InputMethodMac20OnCaretBoundsChangedEPKNS_15TextInputClientE
+T __ZN2ui14InputMethodMac17CancelCompositionEPKNS_15TextInputClientE
+T __ZNK2ui14InputMethodMac20IsCandidatePopupOpenEv
+T __ZN2ui14InputMethodMac25OnWillChangeFocusedClientEPNS_15TextInputClientES2_
+S __ZTVN2ui14InputMethodMacE

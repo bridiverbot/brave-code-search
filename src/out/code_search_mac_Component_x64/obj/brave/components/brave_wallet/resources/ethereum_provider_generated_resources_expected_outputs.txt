@@ -1,0 +1,4 @@
+gen/brave/components/brave_wallet/resources/grit/brave_wallet_script_generated.h
+gen/brave/components/brave_wallet/resources/grit/brave_wallet_script_generated_map.cc
+gen/brave/components/brave_wallet/resources/grit/brave_wallet_script_generated_map.h
+gen/brave/components/brave_wallet/resources/brave_wallet_script_generated.pak
