@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/trezor_bridge_generated.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/trezor_bridge_generated_map.cc" type="resource_file_map_source" />
+    <output filename="grit/trezor_bridge_generated_map.h" type="resource_map_header" />
+    <output filename="trezor_bridge_generated.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_TREZOR_BRIDGE_TREZOR_PATCHES_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-trezor_bridge/trezor-patches.bundle.js" resource_path="trezor-patches.bundle.js" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_TREZOR_BRIDGE_TREZOR_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-trezor_bridge/trezor.bundle.js" resource_path="trezor.bundle.js" use_base_dir="false" type="BINDATA" />
+    </includes>
+  </release>
+</grit>

@@ -1,0 +1,21 @@
+{
+    "rustenv": {
+        "OUT_DIR": "clang_x64_for_rust_host_build_tools/gen/third_party/rust/diplomat_core/v0_17/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Shadaj Laddad <shadaj@users.noreply.github.com>, Manish Goregaokar <manishsmail@gmail.com>, Quinn Okabayashi <QnnOkabayashi@users.noreply.github.com>",
+        "CARGO_PKG_VERSION": "0.17.0",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "17",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "diplomat_core",
+        "CARGO_PKG_DESCRIPTION": "Shared utilities between Diplomat macros and code generation",
+        "CARGO_PKG_REPOSITORY": "https://github.com/rust-diplomat/diplomat",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/diplomat_core/v0_17/lib/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/chromium_crates_io/vendor/diplomat_core-v0_17/src/lib.rs",
+        "@clang_x64_for_rust_host_build_tools/obj/third_party/rust/diplomat_core/v0_17/lib.rsp.rust"
+    ]
+}

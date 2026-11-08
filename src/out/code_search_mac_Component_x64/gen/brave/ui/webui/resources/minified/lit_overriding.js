@@ -1,0 +1,2 @@
+// Copyright (c) 2024 The Brave Authors. All rights reserved.
+export function injectStyle(element,css){const originalStyles=element.styles;Object.defineProperty(element,"styles",{get(){return[...originalStyles,css]}});element.elementStyles=element.finalizeStyles(element.styles)}

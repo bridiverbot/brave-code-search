@@ -1,0 +1,10 @@
+--cfg
+radium_atomic_8
+--cfg
+radium_atomic_16
+--cfg
+radium_atomic_32
+--cfg
+radium_atomic_64
+--cfg
+radium_atomic_ptr

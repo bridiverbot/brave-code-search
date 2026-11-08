@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/brave_education_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/brave_education_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/brave_education_resources_map.h"
+            type="resource_map_header" />
+    <output filename="brave_education_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_BRAVE_EDUCATION_BRAVE_EDUCATION_HTML" file="${root_gen_dir}/brave/browser/resources/brave_education/preprocessed/brave_education.html" resource_path="brave_education.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_EDUCATION_BRAVE_EDUCATION_APP_HTML_JS" file="${root_gen_dir}/brave/browser/resources/brave_education/minified/brave_education_app.html.js" resource_path="brave_education_app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_EDUCATION_BRAVE_EDUCATION_APP_JS" file="${root_gen_dir}/brave/browser/resources/brave_education/minified/brave_education_app.js" resource_path="brave_education_app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_EDUCATION_BRAVE_EDUCATION_PROXY_JS" file="${root_gen_dir}/brave/browser/resources/brave_education/minified/brave_education_proxy.js" resource_path="brave_education_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_EDUCATION_BRAVE_EDUCATION_APP_CSS_JS" file="${root_gen_dir}/brave/browser/resources/brave_education/minified/brave_education_app.css.js" resource_path="brave_education_app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_EDUCATION_BRAVE_EDUCATION_MOJOM_WEBUI_JS" file="${root_gen_dir}/brave/browser/resources/brave_education/minified/brave_education.mojom-webui.js" resource_path="brave_education.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>
