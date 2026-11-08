@@ -1,0 +1,12 @@
+{
+  "assets": {
+    "disable_compression": true,
+    "sources": [
+      "gen/android_webview/chrome_100_percent.pak",
+      "gen/android_webview/resources.pak",
+      "gen/android_webview/chrome_200_percent.pak"
+    ]
+  },
+  "gn_target": "//android_webview:pak_file_assets",
+  "type": "android_assets"
+}

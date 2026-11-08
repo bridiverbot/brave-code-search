@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "clang_x64/gen/skia/rust_exif_ffi",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/skia/rust/exif/FFI.rs",
+        "@clang_x64/obj/skia/rust_exif_ffi.rsp.rust"
+    ]
+}

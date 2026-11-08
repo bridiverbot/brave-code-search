@@ -1,0 +1,31 @@
+{
+  "bundled_srcjars": [
+    "gen/base/bundle_utils_jni.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/log_java.params.json",
+    "gen/base/metrics_java.params.json",
+    "gen/base/resetters_java.params.json",
+    "gen/base/tasks_java.params.json",
+    "gen/base/wrapped_class_loader_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/jni_zero/jni_zero_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/base/bundle_utils_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//base:bundle_utils_java",
+  "interface_jar_path": "obj/base/bundle_utils_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/base/bundle_utils_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/base/bundle_utils_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/base/bundle_utils_java.javac.jar"
+}

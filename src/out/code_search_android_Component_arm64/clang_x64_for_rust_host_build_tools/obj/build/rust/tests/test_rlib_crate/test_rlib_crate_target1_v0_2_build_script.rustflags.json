@@ -1,0 +1,33 @@
+{
+    "rustenv": {
+        "OUT_DIR": "clang_x64_for_rust_host_build_tools/gen/build/rust/tests/test_rlib_crate/test_rlib_crate_target1_v0_2_build_script",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "ENV_VAR_FOR_BUILD_SCRIPT": "42",
+        "CARGO_MANIFEST_DIR": "."
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../build/rust/tests/test_rlib_crate/crate/build.rs",
+        "-Clink-arg=-fPIC",
+        "-Clink-arg=--target=x86_64-unknown-linux-gnu",
+        "-Clink-arg=-no-canonical-prefixes",
+        "-Clink-arg=-Wl,--gc-sections",
+        "-Clink-arg=-Wl,-z,defs",
+        "-Clink-arg=-Wl,--as-needed",
+        "-Clink-arg=-nostdlib++",
+        "-Clink-arg=--sysroot=../../build/linux/debian_bullseye_amd64-sysroot",
+        "-Clink-arg=--ld-path=../../buildtools/third_party/mold/cipd/mold",
+        "-Clink-arg=-Wl,--fatal-warnings",
+        "-Clink-arg=-Wl,--build-id",
+        "-Clink-arg=-Wl,-z,noexecstack",
+        "-Clink-arg=-Wl,-z,relro",
+        "-Clink-arg=-Wl,-z,now",
+        "-Clink-arg=-Wl,--icf=all",
+        "-Clink-arg=-Wl,--undefined-version",
+        "-Clink-arg=-rdynamic",
+        "-Clink-arg=-pie",
+        "-Clink-arg=-Wl,--disable-new-dtags",
+        "-Clink-arg=-Werror",
+        "@clang_x64_for_rust_host_build_tools/obj/build/rust/tests/test_rlib_crate/test_rlib_crate_target1_v0_2_build_script.rsp.rust"
+    ]
+}

@@ -1,0 +1,13 @@
+{
+  "gn_target": "//android_webview:android_webview_no_weblayer_java",
+  "public_deps_configs": [
+    "gen/android_webview/browser_java.params.json",
+    "gen/android_webview/js_sandbox/js_sandbox_service_java.params.json",
+    "gen/android_webview/common_java.params.json",
+    "gen/android_webview/glue/glue_java.params.json",
+    "gen/android_webview/nonembedded/nonembedded_java.params.json",
+    "gen/android_webview/support_library/support_lib_glue_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

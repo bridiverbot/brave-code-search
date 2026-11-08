@@ -1,0 +1,5 @@
+../../base/android/java/src/org/chromium/base/memory_coordinator/MemoryConsumer.java
+../../base/android/java/src/org/chromium/base/memory_coordinator/MemoryConsumerRegistration.java
+../../base/android/java/src/org/chromium/base/memory_coordinator/MemoryConsumerTraits.java
+../../base/android/java/src/org/chromium/base/memory_coordinator/MemoryLimit.java
+../../base/android/java/src/org/chromium/base/memory_coordinator/PassiveMemoryConsumer.java
