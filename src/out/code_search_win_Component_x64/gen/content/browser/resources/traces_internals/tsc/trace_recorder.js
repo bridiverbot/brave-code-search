@@ -1,0 +1,843 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import '//resources/cr_elements/cr_toast/cr_toast.js';
+import '//resources/cr_elements/cr_toggle/cr_toggle.js';
+import '//resources/cr_elements/cr_collapse/cr_collapse.js';
+import '//resources/cr_elements/cr_expand_button/cr_expand_button.js';
+import '//resources/cr_elements/cr_slider/cr_slider.js';
+import { assert } from '//resources/js/assert.js';
+import { CrRouter } from '//resources/js/cr_router.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { TraceConfig, TraceConfig_BufferConfig_FillPolicy } from './perfetto_config.js';
+// 
+// clang-format on
+import { getCss } from './trace_recorder.css.js';
+import { getHtml } from './trace_recorder.html.js';
+import { downloadTraceData } from './trace_util.js';
+import { TracesBrowserProxy } from './traces_browser_proxy.js';
+var TracingState;
+(function (TracingState) {
+    TracingState["IDLE"] = "Idle";
+    TracingState["STARTING"] = "Starting";
+    TracingState["RECORDING"] = "Recording";
+    TracingState["STOPPING"] = "Stopping";
+})(TracingState || (TracingState = {}));
+const ETW_DATA_SOURCE_NAME = 'org.chromium.etw_system';
+// 
+const SAMPLER_PROFILER_DATA_SOURCE_NAME = 'org.chromium.sampler_profiler';
+const NATIVE_HEAP_PROFILER_DATA_SOURCE_NAME = 'org.chromium.native_heap_profiler';
+const BUFFER_SIZE_TICKS = [4, 8, 16, 32, 64, 128, 256, 512];
+const STACK_SAMPLING_INTERVAL_TICKS = [2, 5, 10, 20, 50, 100, 200, 500];
+const HEAP_SAMPLING_RATE_TICKS = Array.from({ length: 20 }, (_, i) => 1 << i);
+const HEAP_SAMPLING_INTERVAL_TICKS = [
+    0,
+    1,
+    2,
+    5,
+    10,
+    20,
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000,
+    10000,
+    30000,
+    60000,
+];
+function findClosestTickIndex(ticks, value) {
+    return ticks.reduce((bestIdx, tick, i) => Math.abs(tick - value) < Math.abs(ticks[bestIdx] - value) ? i :
+        bestIdx, 0);
+}
+export class TraceRecorderElement extends CrLitElement {
+    static get is() {
+        return 'trace-recorder';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            toastMessage: { type: String },
+            bufferSizeMb: { type: Number },
+            bufferFillPolicy: { type: Number },
+            tracingState: { type: String },
+            trackEventCategories: { type: Array },
+            trackEventTags: { type: Array },
+            privacyFilterEnabled_: { type: Boolean },
+            enabledCategories: { type: Object },
+            enabledTags: { type: Object },
+            // 
+            etwEvents: { type: Array },
+            enabledEtwEvents: { type: Object },
+            etwExpanded_: { type: Boolean },
+            // 
+            disabledTags: { type: Object },
+            buffersExpanded_: { type: Boolean },
+            categoriesExpanded_: { type: Boolean },
+            tagsExpanded_: { type: Boolean },
+            stackSamplingExpanded_: { type: Boolean },
+            stackSamplingEnabled: { type: Boolean },
+            stackSamplingIntervalMs: { type: Number },
+            heapProfilingExpanded_: { type: Boolean },
+            heapProfilingEnabled: { type: Boolean },
+            heapSamplingIntervalKb: { type: Number },
+            heapSamplingIntervalMs: { type: Number },
+            bufferSizeTicks_: { type: Array },
+            stackSamplingIntervalTicks_: { type: Array },
+            heapSamplingRateTicks_: { type: Array },
+            heapSamplingIntervalTicks_: { type: Array },
+            bufferUsage: { type: Number },
+            hadDataLoss: { type: Boolean },
+            encodedConfigString: { type: String },
+            commandLineExpanded_: { type: Boolean },
+        };
+    }
+    browserProxy_ = TracesBrowserProxy.getInstance();
+    // Bound method for router events
+    boundLoadConfigFromUrl_ = this.loadConfigFromUrl_.bind(this);
+    // Bound method for onTraceComplete listener
+    boundOnTraceComplete_ = this.onTraceComplete_.bind(this);
+    // Bound method for buffer usage polling
+    boundPollBufferUsage_ = this.pollBufferUsage_.bind(this);
+    // Property to store the listener ID for onTraceComplete
+    onTraceCompleteListenerId_ = null;
+    // ID for the polling interval
+    bufferPollIntervalId_ = null;
+    #encodedConfigString_accessor_storage = '';
+    get encodedConfigString() { return this.#encodedConfigString_accessor_storage; }
+    set encodedConfigString(value) { this.#encodedConfigString_accessor_storage = value; }
+    #commandLineExpanded__accessor_storage = false;
+    get commandLineExpanded_() { return this.#commandLineExpanded__accessor_storage; }
+    set commandLineExpanded_(value) { this.#commandLineExpanded__accessor_storage = value; }
+    #toastMessage_accessor_storage = '';
+    get toastMessage() { return this.#toastMessage_accessor_storage; }
+    set toastMessage(value) { this.#toastMessage_accessor_storage = value; }
+    #tracingState_accessor_storage = TracingState.IDLE;
+    // Initialize the tracing state to IDLE.
+    get tracingState() { return this.#tracingState_accessor_storage; }
+    set tracingState(value) { this.#tracingState_accessor_storage = value; }
+    #trackEventCategories_accessor_storage = [];
+    get trackEventCategories() { return this.#trackEventCategories_accessor_storage; }
+    set trackEventCategories(value) { this.#trackEventCategories_accessor_storage = value; }
+    #trackEventTags_accessor_storage = [];
+    get trackEventTags() { return this.#trackEventTags_accessor_storage; }
+    set trackEventTags(value) { this.#trackEventTags_accessor_storage = value; }
+    #privacyFilterEnabled__accessor_storage = false;
+    get privacyFilterEnabled_() { return this.#privacyFilterEnabled__accessor_storage; }
+    set privacyFilterEnabled_(value) { this.#privacyFilterEnabled__accessor_storage = value; }
+    #bufferSizeMb_accessor_storage = 200;
+    get bufferSizeMb() { return this.#bufferSizeMb_accessor_storage; }
+    set bufferSizeMb(value) { this.#bufferSizeMb_accessor_storage = value; }
+    #bufferFillPolicy_accessor_storage = TraceConfig_BufferConfig_FillPolicy.RING_BUFFER;
+    get bufferFillPolicy() { return this.#bufferFillPolicy_accessor_storage; }
+    set bufferFillPolicy(value) { this.#bufferFillPolicy_accessor_storage = value; }
+    traceConfig;
+    trackEventConfig;
+    #enabledCategories_accessor_storage = new Set();
+    get enabledCategories() { return this.#enabledCategories_accessor_storage; }
+    set enabledCategories(value) { this.#enabledCategories_accessor_storage = value; }
+    #enabledTags_accessor_storage = new Set();
+    get enabledTags() { return this.#enabledTags_accessor_storage; }
+    set enabledTags(value) { this.#enabledTags_accessor_storage = value; }
+    #disabledTags_accessor_storage = new Set();
+    get disabledTags() { return this.#disabledTags_accessor_storage; }
+    set disabledTags(value) { this.#disabledTags_accessor_storage = value; }
+    // 
+    etwConfig;
+    #etwEvents_accessor_storage = [];
+    get etwEvents() { return this.#etwEvents_accessor_storage; }
+    set etwEvents(value) { this.#etwEvents_accessor_storage = value; }
+    #enabledEtwEvents_accessor_storage = {
+        'memory': new Set(),
+        'scheduler': new Set(),
+        'system_io': new Set(),
+    };
+    get enabledEtwEvents() { return this.#enabledEtwEvents_accessor_storage; }
+    set enabledEtwEvents(value) { this.#enabledEtwEvents_accessor_storage = value; }
+    #etwExpanded__accessor_storage = false;
+    get etwExpanded_() { return this.#etwExpanded__accessor_storage; }
+    set etwExpanded_(value) { this.#etwExpanded__accessor_storage = value; }
+    #buffersExpanded__accessor_storage = false;
+    // 
+    get buffersExpanded_() { return this.#buffersExpanded__accessor_storage; }
+    set buffersExpanded_(value) { this.#buffersExpanded__accessor_storage = value; }
+    #categoriesExpanded__accessor_storage = false;
+    get categoriesExpanded_() { return this.#categoriesExpanded__accessor_storage; }
+    set categoriesExpanded_(value) { this.#categoriesExpanded__accessor_storage = value; }
+    #tagsExpanded__accessor_storage = false;
+    get tagsExpanded_() { return this.#tagsExpanded__accessor_storage; }
+    set tagsExpanded_(value) { this.#tagsExpanded__accessor_storage = value; }
+    stackSamplingConfig;
+    #stackSamplingExpanded__accessor_storage = false;
+    get stackSamplingExpanded_() { return this.#stackSamplingExpanded__accessor_storage; }
+    set stackSamplingExpanded_(value) { this.#stackSamplingExpanded__accessor_storage = value; }
+    #stackSamplingEnabled_accessor_storage = false;
+    get stackSamplingEnabled() { return this.#stackSamplingEnabled_accessor_storage; }
+    set stackSamplingEnabled(value) { this.#stackSamplingEnabled_accessor_storage = value; }
+    #stackSamplingIntervalMs_accessor_storage = 50;
+    get stackSamplingIntervalMs() { return this.#stackSamplingIntervalMs_accessor_storage; }
+    set stackSamplingIntervalMs(value) { this.#stackSamplingIntervalMs_accessor_storage = value; }
+    heapProfilingConfig;
+    #heapProfilingExpanded__accessor_storage = false;
+    get heapProfilingExpanded_() { return this.#heapProfilingExpanded__accessor_storage; }
+    set heapProfilingExpanded_(value) { this.#heapProfilingExpanded__accessor_storage = value; }
+    #heapProfilingEnabled_accessor_storage = false;
+    get heapProfilingEnabled() { return this.#heapProfilingEnabled_accessor_storage; }
+    set heapProfilingEnabled(value) { this.#heapProfilingEnabled_accessor_storage = value; }
+    #heapSamplingIntervalKb_accessor_storage = 128;
+    get heapSamplingIntervalKb() { return this.#heapSamplingIntervalKb_accessor_storage; }
+    set heapSamplingIntervalKb(value) { this.#heapSamplingIntervalKb_accessor_storage = value; }
+    #heapSamplingIntervalMs_accessor_storage = 50;
+    get heapSamplingIntervalMs() { return this.#heapSamplingIntervalMs_accessor_storage; }
+    set heapSamplingIntervalMs(value) { this.#heapSamplingIntervalMs_accessor_storage = value; }
+    #bufferSizeTicks__accessor_storage = BUFFER_SIZE_TICKS;
+    get bufferSizeTicks_() { return this.#bufferSizeTicks__accessor_storage; }
+    set bufferSizeTicks_(value) { this.#bufferSizeTicks__accessor_storage = value; }
+    #stackSamplingIntervalTicks__accessor_storage = STACK_SAMPLING_INTERVAL_TICKS;
+    get stackSamplingIntervalTicks_() { return this.#stackSamplingIntervalTicks__accessor_storage; }
+    set stackSamplingIntervalTicks_(value) { this.#stackSamplingIntervalTicks__accessor_storage = value; }
+    #heapSamplingRateTicks__accessor_storage = HEAP_SAMPLING_RATE_TICKS;
+    get heapSamplingRateTicks_() { return this.#heapSamplingRateTicks__accessor_storage; }
+    set heapSamplingRateTicks_(value) { this.#heapSamplingRateTicks__accessor_storage = value; }
+    #heapSamplingIntervalTicks__accessor_storage = HEAP_SAMPLING_INTERVAL_TICKS;
+    get heapSamplingIntervalTicks_() { return this.#heapSamplingIntervalTicks__accessor_storage; }
+    set heapSamplingIntervalTicks_(value) { this.#heapSamplingIntervalTicks__accessor_storage = value; }
+    getTickIndex_(ticks, value) {
+        return findClosestTickIndex(ticks, value);
+    }
+    #bufferUsage_accessor_storage = 0;
+    get bufferUsage() { return this.#bufferUsage_accessor_storage; }
+    set bufferUsage(value) { this.#bufferUsage_accessor_storage = value; }
+    #hadDataLoss_accessor_storage = false;
+    get hadDataLoss() { return this.#hadDataLoss_accessor_storage; }
+    set hadDataLoss(value) { this.#hadDataLoss_accessor_storage = value; }
+    connectedCallback() {
+        super.connectedCallback();
+        this.loadConfigFromUrl_();
+        this.loadEventCategories_();
+        CrRouter.getInstance().addEventListener('cr-router-path-changed', this.boundLoadConfigFromUrl_);
+        this.onTraceCompleteListenerId_ =
+            this.browserProxy_.callbackRouter.onTraceComplete.addListener(this.boundOnTraceComplete_);
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        CrRouter.getInstance().removeEventListener('cr-router-path-changed', this.boundLoadConfigFromUrl_);
+        if (this.onTraceCompleteListenerId_ !== null) {
+            this.browserProxy_.callbackRouter.removeListener(this.onTraceCompleteListenerId_);
+            this.onTraceCompleteListenerId_ = null;
+        }
+    }
+    isStartTracingEnabled() {
+        return this.tracingState === TracingState.IDLE && !!this.traceConfig;
+    }
+    isRecording() {
+        return this.tracingState === TracingState.RECORDING;
+    }
+    getStatusClass() {
+        switch (this.tracingState) {
+            case TracingState.IDLE:
+                return 'status-idle';
+            case TracingState.STARTING:
+                return 'status-starting';
+            case TracingState.RECORDING:
+                return 'status-tracing';
+            case TracingState.STOPPING:
+                return 'status-stopping';
+            default:
+                return '';
+        }
+    }
+    async pollBufferUsage_() {
+        const { success, percentFull, dataLoss } = await this.browserProxy_.handler.getBufferUsage();
+        if (success) {
+            this.bufferUsage = percentFull;
+            this.hadDataLoss = dataLoss;
+        }
+    }
+    async onStartTracingClick_() {
+        const bigBufferConfig = this.serializeTraceConfigToBigBuffer_();
+        if (!bigBufferConfig) {
+            return;
+        }
+        // Set state to RECORDING immediately to disable start button.
+        this.tracingState = TracingState.STARTING;
+        const { success } = await this.browserProxy_.handler.startTraceSession(bigBufferConfig, this.privacyFilterEnabled_);
+        if (!success) {
+            this.showToast_('Failed to start tracing.');
+            // Revert to IDLE if starting failed.
+            this.tracingState = TracingState.IDLE;
+        }
+        else {
+            this.tracingState = TracingState.RECORDING;
+            this.bufferPollIntervalId_ =
+                window.setInterval(this.boundPollBufferUsage_, 1000);
+        }
+    }
+    async onStopTracingClick_() {
+        if (this.bufferPollIntervalId_ !== null) {
+            window.clearInterval(this.bufferPollIntervalId_);
+            this.bufferPollIntervalId_ = null;
+        }
+        // Set state to STOPPING to indicate an ongoing operation.
+        this.tracingState = TracingState.STOPPING;
+        const { success } = await this.browserProxy_.handler.stopTraceSession();
+        if (!success) {
+            this.showToast_('Failed to stop tracing.');
+        }
+    }
+    async onCloneTraceSessionClick_() {
+        const { trace, uuid } = await this.browserProxy_.handler.cloneTraceSession();
+        this.downloadData_(trace, uuid);
+    }
+    onPrivacyFilterChange_(event) {
+        if (this.privacyFilterEnabled_ === event.detail) {
+            return;
+        }
+        this.privacyFilterEnabled_ = event.detail;
+    }
+    onBuffersExpandedChanged_(e) {
+        this.buffersExpanded_ = e.detail.value;
+    }
+    onCategoriesExpandedChanged_(e) {
+        this.categoriesExpanded_ = e.detail.value;
+    }
+    onTagsExpandedChanged_(e) {
+        this.tagsExpanded_ = e.detail.value;
+    }
+    onCommandLineExpandedChanged_(e) {
+        this.commandLineExpanded_ = e.detail.value;
+    }
+    getCommandLine_() {
+        return `--trace-perfetto-config=${this.encodedConfigString} --trace-startup-duration=5`;
+    }
+    async onCopyCommandLineClick_() {
+        await navigator.clipboard.writeText(this.getCommandLine_());
+        this.showToast_('Command line copied to clipboard');
+    }
+    isCategoryEnabled(category) {
+        if (this.enabledCategories.has(category.name)) {
+            return true;
+        }
+        return this.isCategoryForced(category);
+    }
+    canonicalCategoryName(category) {
+        const disabledPrefix = 'disabled-by-default-';
+        if (category.name.startsWith(disabledPrefix)) {
+            const mainPart = category.name.substring(disabledPrefix.length);
+            return `${mainPart} (disabled-by-default)`;
+        }
+        return category.name;
+    }
+    isCategoryForced(category) {
+        for (const tag of category.tags) {
+            if (this.disabledTags.has(tag)) {
+                return false;
+            }
+            if (this.enabledTags.has(tag)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    isTagEnabled(tagName) {
+        return this.enabledTags.has(tagName);
+    }
+    isTagDisabled(tagName) {
+        return this.disabledTags.has(tagName);
+    }
+    onBufferSizeCrSliderValueChanged_(e) {
+        this.bufferSizeMb = this.getSliderTickValue_(e);
+        this.updateBufferConfigField_('sizeKb', this.bufferSizeMb * 1024);
+    }
+    onBufferFillPolicyChange_(e) {
+        const selectElement = e.target;
+        const policyValue = Number(selectElement.value);
+        this.bufferFillPolicy = policyValue;
+        this.updateBufferConfigField_('fillPolicy', policyValue);
+    }
+    updateBufferConfigField_(field, value) {
+        if (!this.traceConfig?.buffers?.[0]) {
+            return;
+        }
+        this.traceConfig.buffers[0][field] = value;
+        this.updateUrlFromConfig_();
+    }
+    onCategoryChange_(event) {
+        if (!this.trackEventConfig) {
+            return;
+        }
+        const isChecked = event.target.checked;
+        const categoryName = event.currentTarget.dataset['name'];
+        if (isChecked) {
+            this.enabledCategories.add(categoryName);
+        }
+        else {
+            this.enabledCategories.delete(categoryName);
+        }
+        this.trackEventConfig.enabledCategories = [...this.enabledCategories];
+        // Reset property to force UI update.
+        this.enabledCategories = new Set(this.trackEventConfig.enabledCategories);
+        this.updateUrlFromConfig_();
+    }
+    // 
+    onEtwExpandedChanged_(e) {
+        this.etwExpanded_ = e.detail.value;
+    }
+    isEtwEventEnabled(provider, keyword) {
+        return this.enabledEtwEvents[provider].has(keyword);
+    }
+    onEtwEVentChange_(event) {
+        const index = Number(event.currentTarget.dataset['index']);
+        const provider = this.etwEvents[index].provider;
+        const keyword = this.etwEvents[index].keyword;
+        if (!this.traceConfig) {
+            return;
+        }
+        const isChecked = event.detail;
+        if (isChecked) {
+            this.enabledEtwEvents[provider].add(keyword);
+        }
+        else {
+            this.enabledEtwEvents[provider].delete(keyword);
+        }
+        if (Object.values(this.enabledEtwEvents)
+            .every((value) => value.size === 0)) {
+            this.enabledEtwEvents[provider] = new Set();
+            this.etwConfig = undefined;
+            this.removeDataSourceConfig_(ETW_DATA_SOURCE_NAME, 'etwConfig');
+        }
+        else {
+            if (!this.etwConfig) {
+                this.etwConfig = {};
+                this.addDataSourceConfig_({
+                    name: ETW_DATA_SOURCE_NAME,
+                    targetBuffer: 0,
+                    etwConfig: this.etwConfig,
+                });
+            }
+            this.enabledEtwEvents[provider] =
+                new Set(this.enabledEtwEvents[provider]);
+            this.etwConfig.schedulerProviderEvents =
+                [...this.enabledEtwEvents['scheduler']];
+            this.etwConfig.memoryProviderEvents =
+                [...this.enabledEtwEvents['memory']];
+            this.etwConfig.systemIoProviderEvents =
+                [...this.enabledEtwEvents['system_io']];
+        }
+        this.updateUrlFromConfig_();
+    }
+    // 
+    onTagsTrueChange_(event) {
+        const tagName = event.currentTarget.dataset['tag'];
+        this.onTagsChange_(event, tagName, true);
+    }
+    onTagsFalseChange_(event) {
+        const tagName = event.currentTarget.dataset['tag'];
+        this.onTagsChange_(event, tagName, false);
+    }
+    onTagsChange_(event, tagName, enabled) {
+        if (!this.trackEventConfig) {
+            return;
+        }
+        const isChecked = event.target.checked;
+        const primarySet = enabled ? this.enabledTags : this.disabledTags;
+        const secondarySet = enabled ? this.disabledTags : this.enabledTags;
+        if (isChecked) {
+            primarySet.add(tagName);
+            secondarySet.delete(tagName);
+        }
+        else {
+            primarySet.delete(tagName);
+        }
+        this.trackEventConfig.enabledTags = [...this.enabledTags];
+        this.trackEventConfig.disabledTags = [...this.disabledTags];
+        // Reset properties to force UI update.
+        this.enabledTags = new Set(this.trackEventConfig.enabledTags);
+        this.disabledTags = new Set(this.trackEventConfig.disabledTags);
+        this.updateUrlFromConfig_();
+    }
+    onStackSamplingExpandedChanged_(e) {
+        this.stackSamplingExpanded_ = e.detail.value;
+    }
+    onStackSamplingToggleChange_(event) {
+        if (!this.traceConfig) {
+            return;
+        }
+        this.stackSamplingEnabled = event.detail;
+        if (this.stackSamplingEnabled && !this.stackSamplingConfig) {
+            this.stackSamplingConfig = {
+                samplingIntervalMs: this.stackSamplingIntervalMs,
+            };
+            this.addDataSourceConfig_({
+                name: SAMPLER_PROFILER_DATA_SOURCE_NAME,
+                targetBuffer: 0,
+                chromiumStackSamplingProfiler: this.stackSamplingConfig,
+            });
+        }
+        else if (!this.stackSamplingEnabled) {
+            this.stackSamplingConfig = undefined;
+            this.removeDataSourceConfig_(SAMPLER_PROFILER_DATA_SOURCE_NAME, 'chromiumStackSamplingProfiler');
+        }
+        this.updateUrlFromConfig_();
+    }
+    onStackSamplingIntervalCrSliderValueChanged_(e) {
+        this.stackSamplingIntervalMs = this.getSliderTickValue_(e);
+        if (this.stackSamplingConfig) {
+            this.stackSamplingConfig.samplingIntervalMs =
+                this.stackSamplingIntervalMs;
+            this.updateUrlFromConfig_();
+        }
+    }
+    onHeapProfilingExpandedChanged_(e) {
+        this.heapProfilingExpanded_ = e.detail.value;
+    }
+    onHeapProfilingToggleChange_(event) {
+        if (!this.traceConfig) {
+            return;
+        }
+        this.heapProfilingEnabled = event.detail;
+        if (this.heapProfilingEnabled && !this.heapProfilingConfig) {
+            this.heapProfilingConfig = {
+                samplingIntervalBytes: this.heapSamplingIntervalKb * 1024,
+                samplingIntervalMs: this.heapSamplingIntervalMs,
+            };
+            this.addDataSourceConfig_({
+                name: NATIVE_HEAP_PROFILER_DATA_SOURCE_NAME,
+                targetBuffer: 0,
+                chromiumSamplingHeapProfiler: this.heapProfilingConfig,
+            });
+        }
+        else if (!this.heapProfilingEnabled) {
+            this.heapProfilingConfig = undefined;
+            this.removeDataSourceConfig_(NATIVE_HEAP_PROFILER_DATA_SOURCE_NAME, 'chromiumSamplingHeapProfiler');
+        }
+        this.updateUrlFromConfig_();
+    }
+    onHeapSamplingIntervalCrSliderValueChanged_(e) {
+        this.heapSamplingIntervalKb = this.getSliderTickValue_(e);
+        if (this.heapProfilingConfig) {
+            this.heapProfilingConfig.samplingIntervalBytes =
+                this.heapSamplingIntervalKb * 1024;
+            this.updateUrlFromConfig_();
+        }
+    }
+    onHeapSamplingIntervalMsCrSliderValueChanged_(e) {
+        this.heapSamplingIntervalMs = this.getSliderTickValue_(e);
+        if (this.heapProfilingConfig) {
+            this.heapProfilingConfig.samplingIntervalMs = this.heapSamplingIntervalMs;
+            this.updateUrlFromConfig_();
+        }
+    }
+    downloadData_(traceData, uuid) {
+        if (!traceData || !uuid) {
+            this.showToast_('Failed to download trace or no trace data.');
+            return;
+        }
+        try {
+            downloadTraceData(traceData, uuid);
+        }
+        catch (e) {
+            this.showToast_(`Error downloading trace: ${e}`);
+        }
+    }
+    async loadEventCategories_() {
+        let { categories } = await this.browserProxy_.handler.getTrackEventCategories();
+        // Filter category groups.
+        categories = categories.filter(category => !category.isGroup);
+        // Create a map to get unique categories by name, keeping the last one
+        // found.
+        categories = Array.from(categories
+            .reduce((map, category) => {
+            map.set(category.name, category);
+            return map;
+        }, new Map())
+            .values());
+        // Sort the unique categories and assign them.
+        const disabledPrefix = 'disabled-by-default-';
+        this.trackEventCategories = categories.sort((a, b) => a.name.replace(disabledPrefix, '')
+            .localeCompare(b.name.replace(disabledPrefix, '')));
+        // Extract unique tags using flatMap and a Set.
+        this.trackEventTags =
+            [...new Set(categories.map(category => category.tags).flat())];
+        // 
+        this.etwEvents = [
+            {
+                name: 'Context switch',
+                keyword: 'CONTEXT_SWITCH',
+                provider: 'scheduler',
+                description: 'Enables context switch events',
+            },
+            {
+                name: 'Ready Thread',
+                keyword: 'DISPATCHER',
+                provider: 'scheduler',
+                description: 'Enables ready thread events',
+            },
+            {
+                name: 'Memory Counters',
+                keyword: 'MEMINFO',
+                provider: 'memory',
+                description: 'Enables memory counters (free list, zero list, etc.)',
+            },
+            {
+                name: 'File I/O',
+                keyword: 'FILE_IO',
+                provider: 'system_io',
+                description: 'Enables file I/O events',
+            },
+            {
+                name: 'Disk I/O',
+                keyword: 'DISK_IO',
+                provider: 'system_io',
+                description: 'Enables disk I/O events',
+            },
+        ];
+        // 
+    }
+    // Decodes a Base64 string into a Uint8Array.
+    base64ToUint8Array_(base64String) {
+        const binaryString = atob(base64String);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes;
+    }
+    // Encode from Uint8Array into a Base64 string.
+    uint8ArrayToBase64_(bytes) {
+        let binary = '';
+        for (const byte of bytes) {
+            binary += String.fromCharCode(byte);
+        }
+        return btoa(binary);
+    }
+    serializeTraceConfigToBigBuffer_() {
+        if (!this.traceConfig) {
+            return;
+        }
+        let bigBuffer = undefined;
+        try {
+            const serializedConfig = TraceConfig.encode(this.traceConfig).finish();
+            bigBuffer = {
+                bytes: Array.from(serializedConfig),
+            };
+            return bigBuffer;
+        }
+        catch (error) {
+            this.showToast_(`Error encoding: ${error}`);
+        }
+        return bigBuffer;
+    }
+    onTraceComplete_(trace, uuid) {
+        if (this.bufferPollIntervalId_ !== null) {
+            window.clearInterval(this.bufferPollIntervalId_);
+            this.bufferPollIntervalId_ = null;
+        }
+        this.bufferUsage = 0;
+        this.hadDataLoss = false;
+        this.downloadData_(trace, uuid);
+        // Crucially, only set to IDLE here after the trace has been
+        // processed/handled.
+        this.tracingState = TracingState.IDLE;
+    }
+    showToast_(message) {
+        this.toastMessage = message;
+        this.$.toast?.show();
+    }
+    loadConfigFromUrl_() {
+        const params = new URLSearchParams(document.location.search);
+        const host = params.get('trace_config');
+        const newConfig = host ?? '';
+        if (this.encodedConfigString === newConfig && newConfig !== '') {
+            return;
+        }
+        this.encodedConfigString = newConfig;
+        const serializedConfig = this.base64ToUint8Array_(newConfig);
+        if (serializedConfig.length === 0) {
+            this.initializeDefaultConfig_();
+        }
+        else {
+            try {
+                this.traceConfig = TraceConfig.decode(serializedConfig);
+                // Fallback for the buffer config if the loaded one is missing it.
+                if (!this.traceConfig.buffers ||
+                    this.traceConfig.buffers.length === 0) {
+                    this.traceConfig.buffers = this.createDefaultBufferConfig_();
+                }
+                const trackEventDataSource = this.traceConfig.dataSources?.find(ds => ds.config?.trackEventConfig !== undefined);
+                if (trackEventDataSource) {
+                    this.trackEventConfig = trackEventDataSource.config?.trackEventConfig;
+                }
+                else {
+                    this.trackEventConfig = this.createDefaultTrackEventConfig_();
+                    this.addDataSourceConfig_({
+                        name: 'track_event',
+                        targetBuffer: 0,
+                        trackEventConfig: this.trackEventConfig,
+                    });
+                }
+                // 
+                this.etwConfig =
+                    this.getOrInitDataSourceConfig_(ETW_DATA_SOURCE_NAME, 'etwConfig');
+                // 
+                this.stackSamplingConfig = this.getOrInitDataSourceConfig_(SAMPLER_PROFILER_DATA_SOURCE_NAME, 'chromiumStackSamplingProfiler');
+                this.heapProfilingConfig = this.getOrInitDataSourceConfig_(NATIVE_HEAP_PROFILER_DATA_SOURCE_NAME, 'chromiumSamplingHeapProfiler');
+            }
+            catch (e) {
+                this.showToast_(`Could not parse trace config: ${e}`);
+                this.initializeDefaultConfig_();
+            }
+        }
+        // Centralized calls to sync the UI and update the URL.
+        this.updatePropertiesFromConfig_();
+    }
+    updateUrlFromConfig_() {
+        if (!this.traceConfig) {
+            return;
+        }
+        try {
+            // Encode the modified config object back to a Uint8Array
+            const writer = TraceConfig.encode(this.traceConfig);
+            // Convert to Base64 and update the URL
+            const newEncodedConfigString = this.uint8ArrayToBase64_(writer.finish());
+            if (this.encodedConfigString === newEncodedConfigString) {
+                return;
+            }
+            this.encodedConfigString = newEncodedConfigString;
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.set('trace_config', newEncodedConfigString);
+            // Update URL without reloading the page
+            history.replaceState({}, '', newUrl.toString());
+        }
+        catch (e) {
+            this.showToast_(`Could not update trace config: ${e}`);
+        }
+    }
+    initializeDefaultConfig_() {
+        this.stackSamplingConfig = undefined;
+        this.heapProfilingConfig = undefined;
+        this.trackEventConfig = this.createDefaultTrackEventConfig_();
+        this.traceConfig = {
+            buffers: this.createDefaultBufferConfig_(),
+            dataSources: [
+                // DataSource for track events
+                {
+                    config: {
+                        name: 'track_event',
+                        targetBuffer: 0,
+                        trackEventConfig: this.trackEventConfig,
+                    },
+                },
+                // DataSource for org.chromium.trace_metadata2
+                {
+                    config: {
+                        name: 'org.chromium.trace_metadata2',
+                        targetBuffer: 1,
+                    },
+                },
+            ],
+        };
+    }
+    createDefaultBufferConfig_() {
+        return [
+            {
+                sizeKb: 200 * 1024,
+                fillPolicy: TraceConfig_BufferConfig_FillPolicy.RING_BUFFER,
+            },
+            {
+                sizeKb: 256,
+                fillPolicy: TraceConfig_BufferConfig_FillPolicy.DISCARD,
+            },
+        ];
+    }
+    createDefaultTrackEventConfig_() {
+        return {
+            enabledCategories: [],
+            disabledCategories: ['*'],
+            enabledTags: [],
+            disabledTags: ['slow', 'debug', 'sensitive'],
+        };
+    }
+    addDataSourceConfig_(config) {
+        if (!this.traceConfig) {
+            return;
+        }
+        if (!this.traceConfig.dataSources) {
+            this.traceConfig.dataSources = [];
+        }
+        this.traceConfig.dataSources.push({ config: config });
+    }
+    removeDataSourceConfig_(name, fieldKey) {
+        if (!this.traceConfig?.dataSources) {
+            return;
+        }
+        this.traceConfig.dataSources = this.traceConfig.dataSources.filter(ds => ds.config?.name !== name &&
+            (!fieldKey || ds.config?.[fieldKey] === undefined));
+    }
+    getOrInitDataSourceConfig_(name, fieldKey) {
+        const dataSource = this.traceConfig?.dataSources?.find(ds => ds.config?.[fieldKey] !== undefined || ds.config?.name === name);
+        if (!dataSource) {
+            return undefined;
+        }
+        assert(dataSource.config);
+        if (!dataSource.config[fieldKey]) {
+            dataSource.config[fieldKey] = {};
+        }
+        return dataSource.config[fieldKey];
+    }
+    getSliderTickValue_(e) {
+        const slider = e.target;
+        return slider.ticks[slider.value];
+    }
+    updatePropertiesFromConfig_() {
+        const mainBuffer = this.traceConfig?.buffers?.[0];
+        if (mainBuffer) {
+            this.bufferSizeMb = Math.floor((mainBuffer.sizeKb ?? 0) / 1024);
+            this.bufferFillPolicy = mainBuffer.fillPolicy ??
+                TraceConfig_BufferConfig_FillPolicy.RING_BUFFER;
+        }
+        // Sync the tag and category UI state.
+        this.enabledCategories = new Set(this.trackEventConfig?.enabledCategories);
+        this.enabledTags = new Set(this.trackEventConfig?.enabledTags);
+        this.disabledTags = new Set(this.trackEventConfig?.disabledTags);
+        if (this.stackSamplingConfig) {
+            this.stackSamplingEnabled = true;
+            this.stackSamplingIntervalMs =
+                this.stackSamplingConfig.samplingIntervalMs ?? 50;
+        }
+        else {
+            this.stackSamplingEnabled = false;
+        }
+        if (this.heapProfilingConfig) {
+            this.heapProfilingEnabled = true;
+            this.heapSamplingIntervalKb = Math.floor((this.heapProfilingConfig.samplingIntervalBytes ?? (1024 * 128)) /
+                1024);
+            this.heapSamplingIntervalMs =
+                this.heapProfilingConfig.samplingIntervalMs ?? 50;
+        }
+        else {
+            this.heapProfilingEnabled = false;
+        }
+        // 
+        if (this.etwConfig) {
+            this.enabledEtwEvents['scheduler'] =
+                new Set(this.etwConfig.schedulerProviderEvents);
+            this.enabledEtwEvents['memory'] =
+                new Set(this.etwConfig.memoryProviderEvents);
+            this.enabledEtwEvents['system_io'] =
+                new Set(this.etwConfig.systemIoProviderEvents);
+        }
+        // 
+    }
+}
+customElements.define(TraceRecorderElement.is, TraceRecorderElement);

@@ -1,0 +1,15 @@
+IDR_WEBRTC_INTERNALS_WEBRTC_INTERNALS_CSS,32010,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_WEBRTC_INTERNALS_HTML,32011,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_CANDIDATE_GRID_JS,32012,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_DATA_SERIES_JS,32013,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_DUMP_CREATOR_JS,32014,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_PEER_CONNECTION_UPDATE_TABLE_JS,32015,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_SDP_UTILS_JS,32016,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_STATS_GRAPH_HELPER_JS,32017,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_STATS_HELPER_JS,32018,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_STATS_RATES_CALCULATOR_JS,32019,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_STATS_TABLE_JS,32020,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_TAB_VIEW_JS,32021,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_TIMELINE_GRAPH_VIEW_JS,32022,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_USER_MEDIA_TABLE_JS,32023,gen/content/browser/webrtc/resources/resources.grd
+IDR_WEBRTC_INTERNALS_WEBRTC_INTERNALS_JS,32024,gen/content/browser/webrtc/resources/resources.grd

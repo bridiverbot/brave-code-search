@@ -1,0 +1,168 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// Note: The handle* functions below are called internally on promise
+// resolution, unlike the other return* functions, which are called
+// asynchronously by the host.
+
+// clang-format off
+// 
+
+import '/strings.m.js';
+
+import {sendWithPromise} from 'chrome://resources/js/cr.js';
+import {loadTimeData} from 'chrome://resources/js/load_time_data.js';
+import {getRequiredElement} from 'chrome://resources/js/util.js';
+// 
+import {addWebUiListener} from 'chrome://resources/js/cr.js';
+// 
+// clang-format on
+
+
+/**
+ * Truncate string if it's too long to show.
+ * @param str The original string.
+ * @returns If |str| length is less or equal than 60, return |str|.
+ * Otherwise return the truncated |str|, appended with '...' in the end.
+ */
+function truncateString(str: string): string {
+  // 60 is a magic number which show nicely on the page.
+  const maxLength = 60;
+  if (str.length <= maxLength) {
+    return str;
+  }
+  return str.substring(0, maxLength) + '...';
+}
+
+/**
+ * Promise resolution handler for variations list and command line equivalent.
+ */
+function handleVariationInfo(
+    {variationsList, variationsCmd}:
+        {variationsList: string[], variationsCmd: string}) {
+  getRequiredElement('variations-section').hidden = !variationsList.length;
+  for (const item of variationsList) {
+    getRequiredElement('variations-list')
+        .appendChild(document.createTextNode(item));
+    getRequiredElement('variations-list')
+        .appendChild(document.createElement('br'));
+  }
+  if (variationsList.length) {
+    getRequiredElement('copy-active-variations-to-clipboard').dataset['value'] =
+        variationsList.join('\n');
+  }
+
+  const includeVariationsCmd = location.search.includes('show-variations-cmd');
+  if (variationsCmd !== '') {
+    getRequiredElement('variations-cmd-section').hidden = false;
+    getRequiredElement('copy-variations-to-clipboard').hidden =
+        includeVariationsCmd;
+    if (includeVariationsCmd) {
+      getRequiredElement('variations-cmd').textContent = variationsCmd;
+    } else {
+      getRequiredElement('variations-cmd').textContent =
+          truncateString(variationsCmd);
+      getRequiredElement('variations-cmd').dataset['value'] = variationsCmd;
+    }
+  }
+}
+
+/**
+ * Promise resolution handler for the executable and profile paths to display.
+ * @param execPath The executable path to display.
+ * @param profilePath The profile path to display.
+ */
+function handlePathInfo(
+    {execPath, profilePath}: {execPath: string, profilePath: string}) {
+  getRequiredElement('executable_path').textContent = execPath;
+  getRequiredElement('profile_path').textContent = profilePath;
+}
+
+// 
+/**
+ * Callback from the backend with the OS version to display.
+ * @param osVersion The OS version to display.
+ */
+function returnOsVersion(osVersion: string) {
+  getRequiredElement('os_version').textContent = osVersion;
+}
+// 
+
+// 
+
+async function copyVersionToClipboard() {
+  await navigator.clipboard.writeText(
+      getRequiredElement('copy-content').innerText);
+  announceCopy('copy_notice');
+}
+
+async function copyVariationsToClipboard() {
+  const cmdLine =
+      getRequiredElement('variations-cmd').dataset['value'] as string;
+  await navigator.clipboard.writeText(cmdLine);
+  announceCopy('copy_variations_notice');
+}
+
+async function copyActiveVariationsToClipboard() {
+  const variations =
+      getRequiredElement('copy-active-variations-to-clipboard')
+          .dataset['value'] as string;
+  await navigator.clipboard.writeText(variations);
+  announceCopy('copy_variations_notice');
+}
+
+/**
+ * Announce the copy action when screen reader is on.
+ * @param id The id string for the notice.
+ */
+function announceCopy(id: string) {
+  const messagesDiv = getRequiredElement('messages');
+  messagesDiv.innerHTML = window.trustedTypes!.emptyHTML;
+
+  // 
+
+  const div = document.createElement('div');
+  div.innerText = loadTimeData.getString(id);
+  messagesDiv.append(div);
+}
+
+/* All the work we do onload. */
+function initialize() {
+  // 
+  addWebUiListener('return-os-version', returnOsVersion);
+  // 
+
+  // 
+
+  chrome.send('requestVersionInfo');
+  const includeVariationsCmd = location.search.includes('show-variations-cmd');
+  sendWithPromise<{variationsList: string[], variationsCmd: string}>(
+      'requestVariationInfo', includeVariationsCmd)
+      .then(handleVariationInfo);
+  sendWithPromise<{execPath: string, profilePath: string}>('requestPathInfo')
+      .then(handlePathInfo);
+
+  if (getRequiredElement('variations-source').textContent !== '') {
+    getRequiredElement('variations-source-section').hidden = false;
+  }
+
+  if (getRequiredElement('variations-seed').textContent !== '') {
+    getRequiredElement('variations-seed-section').hidden = false;
+  }
+
+  if (getRequiredElement('sanitizer').textContent !== '') {
+    getRequiredElement('sanitizer-section').hidden = false;
+  }
+
+  getRequiredElement('copy-to-clipboard')
+      .addEventListener('click', copyVersionToClipboard);
+
+  getRequiredElement('copy-variations-to-clipboard')
+      .addEventListener('click', copyVariationsToClipboard);
+
+  getRequiredElement('copy-active-variations-to-clipboard')
+      .addEventListener('click', copyActiveVariationsToClipboard);
+}
+
+document.addEventListener('DOMContentLoaded', initialize);

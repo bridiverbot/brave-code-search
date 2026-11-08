@@ -1,0 +1,4 @@
+// Copyright 2012 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{addWebUiListener}from"//resources/js/cr.js";import{getRequiredElement}from"//resources/js/util.js";function observeUserAction(userAction){const table=getRequiredElement("user-actions-table");const tr=document.createElement("tr");let td=document.createElement("td");td.textContent=userAction;tr.appendChild(td);td=document.createElement("td");td.textContent=(Date.now()/1e3).toString();tr.appendChild(td);table.appendChild(tr)}document.addEventListener("DOMContentLoaded",(function(){addWebUiListener("user-action",observeUserAction);chrome.send("pageLoaded")}));
