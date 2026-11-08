@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/webui_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/webui_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/webui_resources_map.h"
+            type="resource_map_header" />
+    <output filename="webui_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <part file="../../../third_party/lit/v3_0/resources.grdp" />
+      <part file="cr_components/commerce/resources.grdp" />
+      <part file="cr_elements/resources.grdp" />
+      <part file="css/resources.grdp" />
+      <part file="images/resources.grdp" />
+      <part file="js/resources.grdp" />
+      <part file="mojo/resources.grdp" />
+      <part file="../../../brave/ui/webui/resources/brave_fonts_resources.grdp" />
+      <part file="../../../brave/ui/webui/resources/brave_icons_resources.grdp" />
+      <part file="../../../brave/ui/webui/resources/brave_static_resources.grdp" />
+      <part file="../../../brave/web-ui-external_js/external_js.grdp" />
+      <part file="../../../brave/web-ui-opaque_ke/opaque_ke.grdp" />
+      <part file="cr_components/color_change_listener/resources.grdp" />
+      <part file="cr_components/composebox/resources.grdp" />
+      <part file="cr_components/help_bubble/resources.grdp" />
+      <part file="cr_components/localized_link/resources.grdp" />
+      <part file="cr_components/search/resources.grdp" />
+      <part file="cr_components/searchbox/icons/resources.grdp" />
+      <part file="cr_components/searchbox/icons/google_logo_resources.grdp" />
+      <include name="IDR_WEBUI_TEST_LOADER_HTML" file="${root_src_dir}/ui/webui/resources/test_loader.html" resource_path="test_loader.html" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

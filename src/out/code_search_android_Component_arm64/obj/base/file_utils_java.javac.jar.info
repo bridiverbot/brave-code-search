@@ -1,0 +1,2 @@
+org.chromium.base.FileUtils,../../base/android/java/src/org/chromium/base/FileUtils.java
+org.chromium.base.FileUtilsJni,gen/base/file_utils_jni.srcjar/org/chromium/base/FileUtilsJni.java

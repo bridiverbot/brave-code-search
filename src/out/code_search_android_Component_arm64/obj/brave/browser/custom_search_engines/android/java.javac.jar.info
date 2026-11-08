@@ -1,0 +1,6 @@
+org.chromium.brave.browser.custom_search_engines.ConfirmationDialog,../../brave/browser/custom_search_engines/android/java/src/org/chromium/brave/browser/custom_search_engines/ConfirmationDialog.java
+org.chromium.brave.browser.custom_search_engines.CustomSearchEnginesManager,../../brave/browser/custom_search_engines/android/java/src/org/chromium/brave/browser/custom_search_engines/CustomSearchEnginesManager.java
+org.chromium.brave.browser.custom_search_engines.CustomSearchEnginesPrefManager,../../brave/browser/custom_search_engines/android/java/src/org/chromium/brave/browser/custom_search_engines/CustomSearchEnginesPrefManager.java
+org.chromium.brave.browser.custom_search_engines.settings.AddCustomSearchEnginePreferenceFragment,../../brave/browser/custom_search_engines/android/java/src/org/chromium/brave/browser/custom_search_engines/settings/AddCustomSearchEnginePreferenceFragment.java
+org.chromium.brave.browser.custom_search_engines.settings.CustomSearchEngineAdapter,../../brave/browser/custom_search_engines/android/java/src/org/chromium/brave/browser/custom_search_engines/settings/CustomSearchEngineAdapter.java
+org.chromium.brave.browser.custom_search_engines.settings.CustomSearchEnginesPreference,../../brave/browser/custom_search_engines/android/java/src/org/chromium/brave/browser/custom_search_engines/settings/CustomSearchEnginesPreference.java

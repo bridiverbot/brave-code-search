@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/brave_news/browser/rust_lib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../brave/components/brave_news/browser/lib.rs",
+        "@obj/brave/components/brave_news/browser/rust_lib.rsp.rust"
+    ]
+}

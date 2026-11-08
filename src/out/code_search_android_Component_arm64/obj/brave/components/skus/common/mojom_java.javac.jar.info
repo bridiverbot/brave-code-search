@@ -1,0 +1,6 @@
+org.chromium.skus.mojom.SkusInternals,gen/brave/components/skus/common/mojom_java_sources.srcjar/org/chromium/skus/mojom/SkusInternals.java
+org.chromium.skus.mojom.SkusInternals_Internal,gen/brave/components/skus/common/mojom_java_sources.srcjar/org/chromium/skus/mojom/SkusInternals_Internal.java
+org.chromium.skus.mojom.SkusResult,gen/brave/components/skus/common/mojom_java_sources.srcjar/org/chromium/skus/mojom/SkusResult.java
+org.chromium.skus.mojom.SkusResultCode,gen/brave/components/skus/common/mojom_java_sources.srcjar/org/chromium/skus/mojom/SkusResultCode.java
+org.chromium.skus.mojom.SkusService,gen/brave/components/skus/common/mojom_java_sources.srcjar/org/chromium/skus/mojom/SkusService.java
+org.chromium.skus.mojom.SkusService_Internal,gen/brave/components/skus/common/mojom_java_sources.srcjar/org/chromium/skus/mojom/SkusService_Internal.java

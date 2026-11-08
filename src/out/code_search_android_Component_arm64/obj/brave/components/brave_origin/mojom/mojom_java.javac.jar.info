@@ -1,0 +1,9 @@
+org.chromium.brave_origin.mojom.BraveOriginSettingsHandler,gen/brave/components/brave_origin/mojom/mojom_java_sources.srcjar/org/chromium/brave_origin/mojom/BraveOriginSettingsHandler.java
+org.chromium.brave_origin.mojom.BraveOriginSettingsHandler_Internal,gen/brave/components/brave_origin/mojom/mojom_java_sources.srcjar/org/chromium/brave_origin/mojom/BraveOriginSettingsHandler_Internal.java
+org.chromium.brave_origin.mojom.BraveOriginStartupHandler,gen/brave/components/brave_origin/mojom/mojom_java_sources.srcjar/org/chromium/brave_origin/mojom/BraveOriginStartupHandler.java
+org.chromium.brave_origin.mojom.BraveOriginStartupHandler_Internal,gen/brave/components/brave_origin/mojom/mojom_java_sources.srcjar/org/chromium/brave_origin/mojom/BraveOriginStartupHandler_Internal.java
+org.chromium.brave_origin.mojom.ExtendEligibility,gen/brave/components/brave_origin/mojom/mojom_java_sources.srcjar/org/chromium/brave_origin/mojom/ExtendEligibility.java
+org.chromium.brave_origin.mojom.OriginActivationLimit,gen/brave/components/brave_origin/mojom/mojom_java_sources.srcjar/org/chromium/brave_origin/mojom/OriginActivationLimit.java
+org.chromium.brave_origin.mojom.OriginActivationLimit_Internal,gen/brave/components/brave_origin/mojom/mojom_java_sources.srcjar/org/chromium/brave_origin/mojom/OriginActivationLimit_Internal.java
+org.chromium.brave_origin.mojom.OriginIapSubscription,gen/brave/components/brave_origin/mojom/mojom_java_sources.srcjar/org/chromium/brave_origin/mojom/OriginIapSubscription.java
+org.chromium.brave_origin.mojom.OriginIapSubscription_Internal,gen/brave/components/brave_origin/mojom/mojom_java_sources.srcjar/org/chromium/brave_origin/mojom/OriginIapSubscription_Internal.java

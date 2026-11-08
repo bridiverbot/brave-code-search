@@ -1,0 +1,2 @@
+org.chromium.brave.browser.quick_search_engines.utils.QuickSearchEnginesSerializerTest,../../brave/android/junit/src/org/chromium/brave/browser/quick_search_engines/utils/QuickSearchEnginesSerializerTest.java
+org.chromium.brave.browser.quick_search_engines.utils.QuickSearchEnginesUtilTest,../../brave/android/junit/src/org/chromium/brave/browser/quick_search_engines/utils/QuickSearchEnginesUtilTest.java

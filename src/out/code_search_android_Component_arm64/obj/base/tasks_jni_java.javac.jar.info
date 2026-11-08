@@ -1,0 +1,3 @@
+org.chromium.base.ApplicationStatusJni,gen/base/tasks_jni.srcjar/org/chromium/base/ApplicationStatusJni.java
+org.chromium.base.EarlyTraceEventJni,gen/base/tasks_jni.srcjar/org/chromium/base/EarlyTraceEventJni.java
+org.chromium.base.task.TaskRunnerImplJni,gen/base/tasks_jni.srcjar/org/chromium/base/task/TaskRunnerImplJni.java

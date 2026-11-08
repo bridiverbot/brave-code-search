@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.ntp_customization.BraveNtpCustomizationUtils,../../brave/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/BraveNtpCustomizationUtils.java
+org.chromium.chrome.browser.ntp_customization.theme.BraveNtpCustomizationPromoManager,../../brave/browser/ntp_customization/java/src/org/chromium/chrome/browser/ntp_customization/theme/BraveNtpCustomizationPromoManager.java
