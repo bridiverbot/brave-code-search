@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/ai_overlay_dialog_untrusted_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/ai_overlay_dialog_untrusted_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/ai_overlay_dialog_untrusted_resources_map.h"
+            type="resource_map_header" />
+    <output filename="ai_overlay_dialog_untrusted_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_AI_OVERLAY_DIALOG_HTML" file="${root_gen_dir}/chrome/browser/ttc/resources/preprocessed/ai_overlay_dialog.html" resource_path="ai_overlay_dialog.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_EVAL_EVAL_HTML" file="${root_gen_dir}/chrome/browser/ttc/resources/preprocessed/eval/eval.html" resource_path="eval/eval.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_NOTES_NOTES_HTML" file="${root_gen_dir}/chrome/browser/ttc/resources/preprocessed/notes/notes.html" resource_path="notes/notes.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_APP_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_AUDIO_CAPTURER_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/audio_capturer.js" resource_path="audio_capturer.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_AUDIO_PLAYER_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/audio_player.js" resource_path="audio_player.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_AUDIO_PROCESSOR_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/audio_processor.js" resource_path="audio_processor.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_AUDIO_UTILS_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/audio_utils.js" resource_path="audio_utils.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_CAPTION_BLOCK_MANAGER_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/caption_block_manager.js" resource_path="caption_block_manager.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_EVAL_EVAL_APP_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/eval/eval_app.js" resource_path="eval/eval_app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_JOURNAL_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/journal.js" resource_path="journal.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_LOCAL_SPEECH_RECOGNITION_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/local_speech_recognition.js" resource_path="local_speech_recognition.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_LOGGING_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/logging.js" resource_path="logging.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_NOTES_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/notes/app.html.js" resource_path="notes/app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_NOTES_APP_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/notes/app.js" resource_path="notes/app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_NOTES_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/notes/browser_proxy.js" resource_path="notes/browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_PAGE_CONTEXT_MANAGER_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/page_context_manager.js" resource_path="page_context_manager.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/app.html.js" resource_path="app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/app.css.js" resource_path="app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_NOTES_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/notes/app.css.js" resource_path="notes/app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_EVAL_HARNESS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/eval_harness.mojom-webui.js" resource_path="eval_harness.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_AI_OVERLAY_DIALOG_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/ai_overlay_dialog.mojom-webui.js" resource_path="ai_overlay_dialog.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_GENERATED_TOOL_DEFINITIONS_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/generated_tool_definitions.js" resource_path="generated_tool_definitions.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_TOOLS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/tools.mojom-webui.js" resource_path="tools.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AI_OVERLAY_DIALOG_UNTRUSTED_DOM_NODE_ID_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/ttc/resources/minified/dom_node_id.mojom-webui.js" resource_path="dom_node_id.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

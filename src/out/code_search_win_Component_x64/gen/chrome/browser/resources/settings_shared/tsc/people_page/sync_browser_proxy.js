@@ -1,0 +1,213 @@
+// Copyright 2016 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+// clang-format off
+import { assertNotReachedCase } from 'chrome://resources/js/assert.js';
+import { sendWithPromise } from 'chrome://resources/js/cr.js';
+/**
+ * Equivalent to C++ counterpart.
+ * @see chrome/browser/signin/signin_ui_util.h
+ * TODO(b/336510160): Look into integrating SYNC_PAUSED value.
+ */
+export var SignedInState;
+(function (SignedInState) {
+    SignedInState[SignedInState["SIGNED_OUT"] = 0] = "SIGNED_OUT";
+    SignedInState[SignedInState["SIGNED_IN"] = 1] = "SIGNED_IN";
+    SignedInState[SignedInState["SYNCING"] = 2] = "SYNCING";
+    SignedInState[SignedInState["SIGNED_IN_PAUSED"] = 3] = "SIGNED_IN_PAUSED";
+    SignedInState[SignedInState["WEB_ONLY_SIGNED_IN"] = 4] = "WEB_ONLY_SIGNED_IN";
+})(SignedInState || (SignedInState = {}));
+/**
+ * Must be kept in sync with the return values of getSyncErrorAction in
+ * chrome/browser/ui/webui/settings/people_handler.cc
+ */
+export var StatusAction;
+(function (StatusAction) {
+    StatusAction["NO_ACTION"] = "noAction";
+    StatusAction["REAUTHENTICATE"] = "reauthenticate";
+    StatusAction["UPGRADE_CLIENT"] = "upgradeClient";
+    StatusAction["ENTER_PASSPHRASE"] = "enterPassphrase";
+    // User needs to go through key retrieval.
+    StatusAction["RETRIEVE_TRUSTED_VAULT_KEYS"] = "retrieveTrustedVaultKeys";
+    StatusAction["CONFIRM_SYNC_SETTINGS"] = "confirmSyncSettings";
+    StatusAction["SHOW_BOOKMARKS_LIMIT_HELP_ARTICLE"] = "showBookmarksLimitHelpArticle";
+    // help article.
+})(StatusAction || (StatusAction = {}));
+/**
+ * Checks whether the error associated with the given status action is
+ * configurable, meaning that the user should still be able to interact with the
+ * sync controls.
+ */
+export function shouldShowSyncTogglesForStatusAction(statusAction) {
+    if (statusAction === undefined) {
+        return false;
+    }
+    switch (statusAction) {
+        case StatusAction.ENTER_PASSPHRASE:
+        case StatusAction.RETRIEVE_TRUSTED_VAULT_KEYS:
+        case StatusAction.CONFIRM_SYNC_SETTINGS:
+        case StatusAction.SHOW_BOOKMARKS_LIMIT_HELP_ARTICLE:
+            return true;
+        case StatusAction.NO_ACTION:
+        case StatusAction.REAUTHENTICATE:
+        case StatusAction.UPGRADE_CLIENT:
+            return false;
+        default:
+            assertNotReachedCase(statusAction);
+    }
+}
+/**
+ * Names of the individual data type properties to be cached from
+ * SyncPrefs when the user checks 'Sync All'.
+ */
+export const syncPrefsIndividualDataTypes = [
+    'appsSynced',
+    'autofillSynced',
+    'bookmarksSynced',
+    'cookiesSynced',
+    'extensionsSynced',
+    'readingListSynced',
+    'passwordsSynced',
+    'paymentsSynced',
+    'preferencesSynced',
+    'productComparisonSynced',
+    'savedTabGroupsSynced',
+    'tabsSynced',
+    'themesSynced',
+    'typedUrlsSynced',
+    'wifiConfigurationsSynced',
+    'aiChatSynced',
+];
+// Always keep in sync with `UserSelectableType` (C++).
+// LINT.IfChange(UserSelectableType)
+export var UserSelectableType;
+(function (UserSelectableType) {
+    UserSelectableType[UserSelectableType["BOOKMARKS"] = 0] = "BOOKMARKS";
+    UserSelectableType[UserSelectableType["PREFERENCES"] = 1] = "PREFERENCES";
+    UserSelectableType[UserSelectableType["PASSWORDS"] = 2] = "PASSWORDS";
+    UserSelectableType[UserSelectableType["AUTOFILL"] = 3] = "AUTOFILL";
+    UserSelectableType[UserSelectableType["THEMES"] = 4] = "THEMES";
+    UserSelectableType[UserSelectableType["HISTORY"] = 5] = "HISTORY";
+    UserSelectableType[UserSelectableType["EXTENSIONS"] = 6] = "EXTENSIONS";
+    UserSelectableType[UserSelectableType["APPS"] = 7] = "APPS";
+    UserSelectableType[UserSelectableType["READING_LIST"] = 8] = "READING_LIST";
+    UserSelectableType[UserSelectableType["TABS"] = 9] = "TABS";
+    UserSelectableType[UserSelectableType["SAVED_TAB_GROUPS"] = 10] = "SAVED_TAB_GROUPS";
+    UserSelectableType[UserSelectableType["PAYMENTS"] = 11] = "PAYMENTS";
+    UserSelectableType[UserSelectableType["PRODUCT_COMPARISON"] = 12] = "PRODUCT_COMPARISON";
+    UserSelectableType[UserSelectableType["COOKIES"] = 13] = "COOKIES";
+    UserSelectableType[UserSelectableType["AI_CHAT"] = 14] = "AI_CHAT";
+})(UserSelectableType || (UserSelectableType = {}));
+// LINT.ThenChange(/components/sync/base/user_selectable_type.h:UserSelectableType)
+export var PageStatus;
+(function (PageStatus) {
+    PageStatus["SPINNER"] = "spinner";
+    PageStatus["CONFIGURE"] = "configure";
+    PageStatus["DONE"] = "done";
+    PageStatus["PASSPHRASE_FAILED"] = "passphraseFailed";
+})(PageStatus || (PageStatus = {}));
+// WARNING: Keep synced with chrome/browser/ui/webui/settings/people_handler.cc.
+export var TrustedVaultBannerState;
+(function (TrustedVaultBannerState) {
+    TrustedVaultBannerState[TrustedVaultBannerState["NOT_SHOWN"] = 0] = "NOT_SHOWN";
+    TrustedVaultBannerState[TrustedVaultBannerState["OFFER_OPT_IN"] = 1] = "OFFER_OPT_IN";
+    TrustedVaultBannerState[TrustedVaultBannerState["OPTED_IN"] = 2] = "OPTED_IN";
+})(TrustedVaultBannerState || (TrustedVaultBannerState = {}));
+// Always keep in sync with `ChromeSigninUserChoice` (C++).
+export var ChromeSigninUserChoice;
+(function (ChromeSigninUserChoice) {
+    ChromeSigninUserChoice[ChromeSigninUserChoice["NO_CHOICE"] = 0] = "NO_CHOICE";
+    ChromeSigninUserChoice[ChromeSigninUserChoice["ALWAYS_ASK"] = 1] = "ALWAYS_ASK";
+    ChromeSigninUserChoice[ChromeSigninUserChoice["SIGNIN"] = 2] = "SIGNIN";
+    ChromeSigninUserChoice[ChromeSigninUserChoice["DO_NOT_SIGNIN"] = 3] = "DO_NOT_SIGNIN";
+})(ChromeSigninUserChoice || (ChromeSigninUserChoice = {}));
+// LINT.IfChange(ChromeSigninAccessPoint)
+export var ChromeSigninAccessPoint;
+(function (ChromeSigninAccessPoint) {
+    ChromeSigninAccessPoint[ChromeSigninAccessPoint["SETTINGS"] = 0] = "SETTINGS";
+    ChromeSigninAccessPoint[ChromeSigninAccessPoint["SETTINGS_YOUR_SAVED_INFO"] = 1] = "SETTINGS_YOUR_SAVED_INFO";
+})(ChromeSigninAccessPoint || (ChromeSigninAccessPoint = {}));
+export class SyncBrowserProxyImpl {
+    // 
+    startSignIn(accessPoint) {
+        chrome.send('SyncSetupStartSignIn', [accessPoint]);
+    }
+    signOut(deleteProfile) {
+        chrome.send('SyncSetupSignout', [deleteProfile]);
+    }
+    pauseSync() {
+        chrome.send('SyncSetupPauseSync');
+    }
+    recordSigninPendingOffered() {
+        chrome.send('RecordSigninPendingOffered');
+    }
+    recordSigninOffered(accessPoint) {
+        chrome.send('RecordSigninOffered', [accessPoint]);
+    }
+    // 
+    setSyncDatatype(pref, value) {
+        return sendWithPromise('SetDatatype', pref, value);
+    }
+    didNavigateToAccountSettingsPage() {
+        chrome.send('ShowAccountSettingsUI');
+    }
+    // 
+    startKeyRetrieval() {
+        chrome.send('SyncStartKeyRetrieval');
+    }
+    showBookmarkLimitExceededHelp() {
+        chrome.send('SyncShowBookmarkLimitExceededHelp');
+    }
+    showSyncPassphraseDialog() {
+        chrome.send('SyncShowSyncPassphraseDialog');
+    }
+    getSyncStatus() {
+        return sendWithPromise('SyncSetupGetSyncStatus');
+    }
+    getStoredAccounts() {
+        return sendWithPromise('SyncSetupGetStoredAccounts');
+    }
+    getProfileAvatar() {
+        return sendWithPromise('SyncSetupGetProfileAvatar');
+    }
+    didNavigateToSyncPage() {
+        chrome.send('SyncSetupShowSetupUI');
+    }
+    didNavigateAwayFromSyncPage(didAbort) {
+        chrome.send('SyncSetupDidClosePage', [didAbort]);
+    }
+    setSyncDatatypes(syncPrefs) {
+        return sendWithPromise('SyncSetupSetDatatypes', JSON.stringify(syncPrefs));
+    }
+    setEncryptionPassphrase(passphrase) {
+        return sendWithPromise('SyncSetupSetEncryptionPassphrase', passphrase);
+    }
+    setDecryptionPassphrase(passphrase) {
+        return sendWithPromise('SyncSetupSetDecryptionPassphrase', passphrase);
+    }
+    startSyncingWithEmail(email, isDefaultPromoAccount) {
+        chrome.send('SyncSetupStartSyncingWithEmail', [email, isDefaultPromoAccount]);
+    }
+    openActivityControlsUrl() {
+        chrome.metricsPrivate.recordUserAction('Signin_AccountSettings_GoogleActivityControlsClicked');
+    }
+    sendSyncPrefsChanged() {
+        chrome.send('SyncPrefsDispatch');
+    }
+    sendTrustedVaultBannerStateChanged() {
+        chrome.send('SyncTrustedVaultBannerStateDispatch');
+    }
+    setChromeSigninUserChoice(choice, signedInEmail) {
+        chrome.send('SetChromeSigninUserChoice', [choice, signedInEmail]);
+    }
+    getChromeSigninUserChoiceInfo() {
+        return sendWithPromise('GetChromeSigninUserChoiceInfo');
+    }
+    static getInstance() {
+        return instance || (instance = new SyncBrowserProxyImpl());
+    }
+    static setInstance(obj) {
+        instance = obj;
+    }
+}
+let instance = null;

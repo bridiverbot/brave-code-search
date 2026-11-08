@@ -1,0 +1,56 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+// 
+import 'chrome://resources/cr_elements/cr_button/cr_button.js';
+// 
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './info_page.css.js';
+import { getHtml } from './info_page.html.js';
+import { browserProxyFactory } from './webnn_internals.mojom-webui.js';
+export class WebnnInternalsInfoPageElement extends CrLitElement {
+    static get is() {
+        return 'webnn-internals-info-page';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            availableExecutionProviders_: { type: Array },
+        };
+    }
+    #availableExecutionProviders__accessor_storage = [];
+    get availableExecutionProviders_() { return this.#availableExecutionProviders__accessor_storage; }
+    set availableExecutionProviders_(value) { this.#availableExecutionProviders__accessor_storage = value; }
+    listenerIds_ = [];
+    proxy_ = browserProxyFactory.getInstance();
+    connectedCallback() {
+        super.connectedCallback();
+        this.proxy_.handler.requestAvailableExecutionProvidersDetails().then(({ availableExecutionProviders }) => {
+            this.onUpdateAvailableExecutionProvidersDetails_(availableExecutionProviders);
+        });
+        this.listenerIds_ =
+            [this.proxy_.callbackRouter.onUpdateAvailableExecutionProvidersDetails
+                    .addListener(this.onUpdateAvailableExecutionProvidersDetails_.bind(this))];
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.listenerIds_.forEach(id => this.proxy_.callbackRouter.removeListener(id));
+        this.listenerIds_ = [];
+    }
+    // 
+    async onForceOrtEnvCreationClick_() {
+        this.onUpdateAvailableExecutionProvidersDetails_((await this.proxy_.handler
+            .forceOrtEnvironmentCreationForIntrospection())
+            .availableExecutionProviders);
+    }
+    // 
+    onUpdateAvailableExecutionProvidersDetails_(availableExecutionProviders) {
+        this.availableExecutionProviders_ = availableExecutionProviders;
+    }
+}
+customElements.define(WebnnInternalsInfoPageElement.is, WebnnInternalsInfoPageElement);

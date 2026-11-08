@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/profile_picker_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/profile_picker_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/profile_picker_resources_map.h"
+            type="resource_map_header" />
+    <output filename="profile_picker_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_PROFILE_PICKER_PROFILE_PICKER_HTML" file="${root_gen_dir}/chrome/browser/resources/signin/profile_picker/preprocessed/profile_picker.html" resource_path="profile_picker.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PROFILE_PICKER_PROFILE_PICKER_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/signin/profile_picker/minified/profile_picker.rollup.js" resource_path="profile_picker.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PROFILE_PICKER_LAZY_LOAD_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/signin/profile_picker/minified/lazy_load.rollup.js" resource_path="lazy_load.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PROFILE_PICKER_SHARED_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/signin/profile_picker/minified/shared.rollup.js" resource_path="shared.rollup.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

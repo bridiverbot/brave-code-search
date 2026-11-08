@@ -1,0 +1,69 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import './filter_dialog.js';
+import '//resources/cr_elements/cr_button/cr_button.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { loadTimeData } from '../../i18n_setup.js';
+import { FilterCategory, getFilterCategoryForTarget } from '../filter_bar.js';
+import { handleKeyboardNavigation } from './keyboard_navigation.js';
+import { getCss } from './type_dialog.css.js';
+import { getHtml } from './type_dialog.html.js';
+export class TypeDialogElement extends CrLitElement {
+    static get is() {
+        return 'type-dialog';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            anchorElement: { type: Object },
+            filterMenuItems: { type: Array },
+        };
+    }
+    #anchorElement_accessor_storage = null;
+    get anchorElement() { return this.#anchorElement_accessor_storage; }
+    set anchorElement(value) { this.#anchorElement_accessor_storage = value; }
+    #filterMenuItems_accessor_storage = [
+        {
+            filterCategory: FilterCategory.APP,
+            label: loadTimeData.getString('app'),
+        },
+        {
+            filterCategory: FilterCategory.EVENT,
+            label: loadTimeData.getString('eventType'),
+        },
+        {
+            filterCategory: FilterCategory.OUTCOME,
+            label: loadTimeData.getString('updateOutcome'),
+        },
+        {
+            filterCategory: FilterCategory.SCOPE,
+            label: loadTimeData.getString('scope'),
+        },
+        {
+            filterCategory: FilterCategory.DATE,
+            label: loadTimeData.getString('date'),
+        },
+    ];
+    get filterMenuItems() { return this.#filterMenuItems_accessor_storage; }
+    set filterMenuItems(value) { this.#filterMenuItems_accessor_storage = value; }
+    firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
+        this.shadowRoot.querySelector('.filter-menu-item')?.focus();
+    }
+    onKeydown(e) {
+        handleKeyboardNavigation(e, this.shadowRoot.querySelectorAll('.filter-menu-item'));
+    }
+    onClick(e) {
+        this.fire('type-selection-changed', getFilterCategoryForTarget(e.target));
+    }
+    onClose() {
+        this.fire('close');
+    }
+}
+customElements.define(TypeDialogElement.is, TypeDialogElement);

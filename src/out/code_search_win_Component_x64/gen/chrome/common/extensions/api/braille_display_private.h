@@ -1,0 +1,242 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// GENERATED FROM THE API DEFINITION IN
+//   chrome/common/extensions/api/braille_display_private.webidl
+// by tools/json_schema_compiler.
+// DO NOT EDIT.
+//
+// Generator run command:
+//   python3 ../../tools/json_schema_compiler/compiler.py ../../chrome/common/extensions/api/braille_display_private.webidl --root=../../ --destdir=gen --namespace=extensions::api::%(namespace)s --generator=cpp --include-rules=extensions/common/api:extensions::api::%(namespace)s
+
+#ifndef CHROME_COMMON_EXTENSIONS_API_BRAILLE_DISPLAY_PRIVATE_H__
+#define CHROME_COMMON_EXTENSIONS_API_BRAILLE_DISPLAY_PRIVATE_H__
+
+#include <stdint.h>
+
+#include <map>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+
+#include "base/values.h"
+#include <string_view>
+
+
+namespace extensions {
+namespace api {
+namespace braille_display_private {
+
+//
+// Types
+//
+
+// Braille display keyboard command.
+enum class KeyCommand {
+  kNone = 0,
+  kLineUp,
+  kLineDown,
+  kPanLeft,
+  kPanRight,
+  kTop,
+  kBottom,
+  kRouting,
+  kSecondaryRouting,
+  kDots,
+  kChord,
+  kStandardKey,
+  kMaxValue = kStandardKey,
+};
+
+
+const char* ToString(KeyCommand as_enum);
+KeyCommand ParseKeyCommand(std::string_view as_string);
+std::u16string GetKeyCommandParseError(std::string_view as_string);
+
+struct KeyEvent {
+  KeyEvent();
+  ~KeyEvent();
+  KeyEvent(const KeyEvent&) = delete;
+  KeyEvent& operator=(const KeyEvent&) = delete;
+  KeyEvent(KeyEvent&& rhs) noexcept;
+  KeyEvent& operator=(KeyEvent&& rhs) noexcept;
+
+  // Populates a KeyEvent object from a base::Value& instance. Returns whether
+  // |out| was successfully populated.
+  static bool Populate(const base::Value& value, KeyEvent& out);
+
+  // Populates a KeyEvent object from a Dict& instance. Returns whether |out|
+  // was successfully populated.
+  static bool Populate(const base::DictValue& value, KeyEvent& out);
+
+  // Creates a deep copy of KeyEvent.
+  KeyEvent Clone() const;
+
+  // Creates a KeyEvent object from a base::DictValue, or nullopt on failure.
+  static std::optional<KeyEvent> FromValue(const base::DictValue& value);
+
+  // Creates a KeyEvent object from a base::Value, or nullopt on failure.
+  static std::optional<KeyEvent> FromValue(const base::Value& value);
+
+  // Returns a new base::DictValue representing the serialized form of
+  // thisKeyEvent object.
+  base::DictValue ToValue() const;
+
+  KeyCommand command;
+
+  // 0-based display position for commands that involve a routing key.
+  std::optional<int> display_position;
+
+  // Braille dot keys that were pressed, stored in the low-order bits. Dot 1 is
+  // stored in bit 0, dot2 in bit 1, etc.
+  std::optional<int> braille_dots;
+
+  // DOM keyboard event code.  This is present when command is standard_key and
+  // the braille display event represents a non-alphanumeric key such as an arrow
+  // key or function key. The value is as defined by the |code| property in
+  // http://www.w3.org/TR/uievents/#keyboard-event-interface
+  std::optional<std::string> standard_key_code;
+
+  // DOM keyboard event character value.  This is present if the braille key event
+  // corresponds to a character.
+  std::optional<std::string> standard_key_char;
+
+  // Whether the space key was pressed.
+  std::optional<bool> space_key;
+
+  // Whether the alt key was pressed.
+  std::optional<bool> alt_key;
+
+  // Whether the shift key was pressed.
+  std::optional<bool> shift_key;
+
+  // Whether the ctrl key was pressed.
+  std::optional<bool> ctrl_key;
+
+};
+
+struct DisplayState {
+  DisplayState();
+  ~DisplayState();
+  DisplayState(const DisplayState&) = delete;
+  DisplayState& operator=(const DisplayState&) = delete;
+  DisplayState(DisplayState&& rhs) noexcept;
+  DisplayState& operator=(DisplayState&& rhs) noexcept;
+
+  // Populates a DisplayState object from a base::Value& instance. Returns
+  // whether |out| was successfully populated.
+  static bool Populate(const base::Value& value, DisplayState& out);
+
+  // Populates a DisplayState object from a Dict& instance. Returns whether
+  // |out| was successfully populated.
+  static bool Populate(const base::DictValue& value, DisplayState& out);
+
+  // Creates a deep copy of DisplayState.
+  DisplayState Clone() const;
+
+  // Creates a DisplayState object from a base::DictValue, or nullopt on
+  // failure.
+  static std::optional<DisplayState> FromValue(const base::DictValue& value);
+
+  // Creates a DisplayState object from a base::Value, or nullopt on failure.
+  static std::optional<DisplayState> FromValue(const base::Value& value);
+
+  // Returns a new base::DictValue representing the serialized form of
+  // thisDisplayState object.
+  base::DictValue ToValue() const;
+
+  // Whether a braille display is currently available.
+  bool available;
+
+  // Number of rows of braille cells on the currently connected display.
+  std::optional<int> text_row_count;
+
+  // Number of columns of braille cells on the currently connected display.
+  std::optional<int> text_column_count;
+
+  // The number of dots in a braille cell on the currently connected display.
+  std::optional<int> cell_size;
+
+};
+
+
+//
+// Functions
+//
+
+namespace GetDisplayState {
+
+namespace Results {
+
+base::ListValue Create(const DisplayState& result);
+}  // namespace Results
+
+}  // namespace GetDisplayState
+
+namespace WriteDots {
+
+struct Params {
+  static std::optional<Params> Create(const base::ListValue& args);
+  Params(const Params&) = delete;
+  Params& operator=(const Params&) = delete;
+  Params(Params&& rhs) noexcept;
+  Params& operator=(Params&& rhs) noexcept;
+  ~Params();
+
+  std::vector<uint8_t> cells;
+
+  int columns;
+
+  int rows;
+
+
+ private:
+  Params();
+};
+
+}  // namespace WriteDots
+
+namespace UpdateBluetoothBrailleDisplayAddress {
+
+struct Params {
+  static std::optional<Params> Create(const base::ListValue& args);
+  Params(const Params&) = delete;
+  Params& operator=(const Params&) = delete;
+  Params(Params&& rhs) noexcept;
+  Params& operator=(Params&& rhs) noexcept;
+  ~Params();
+
+  std::string address;
+
+
+ private:
+  Params();
+};
+
+}  // namespace UpdateBluetoothBrailleDisplayAddress
+
+//
+// Events
+//
+
+namespace OnDisplayStateChanged {
+
+extern const char kEventName[];  // "brailleDisplayPrivate.onDisplayStateChanged"
+
+base::ListValue Create(const DisplayState& state);
+}  // namespace OnDisplayStateChanged
+
+namespace OnKeyEvent {
+
+extern const char kEventName[];  // "brailleDisplayPrivate.onKeyEvent"
+
+base::ListValue Create(const KeyEvent& event);
+}  // namespace OnKeyEvent
+
+}  // namespace braille_display_private
+}  // namespace api
+}  // namespace extensions
+
+#endif  // CHROME_COMMON_EXTENSIONS_API_BRAILLE_DISPLAY_PRIVATE_H__

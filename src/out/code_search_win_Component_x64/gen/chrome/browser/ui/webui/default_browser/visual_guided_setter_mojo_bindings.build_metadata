@@ -1,0 +1,8 @@
+{
+  "deps": [
+    "../../../../../ui/gfx/geometry/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../chrome/browser/ui/webui/default_browser/visual_guided_setter.mojom"
+  ]
+}

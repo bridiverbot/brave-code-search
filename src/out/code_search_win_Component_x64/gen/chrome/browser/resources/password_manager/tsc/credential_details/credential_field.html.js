@@ -1,0 +1,14 @@
+import { html } from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+    return html `<!--_html_template_start_--><style include="cr-input-style cr-shared-style shared-style credential-details-card"></style>
+
+<cr-input value="[[value]]" id="inputValue" readonly class="input-field"
+      label="[[label]]" placeholder="[[placeholder]]" role="textbox"
+      aria-disabled="true">
+  <cr-icon-button id="copyButton" class="icon-copy-content"
+      slot="inline-suffix" title="[[copyButtonLabel]]"
+      on-click="onCopyValueClick_" hidden="[[!value]]">
+  </cr-icon-button>
+</cr-input>
+<!--_html_template_end_-->`;
+}

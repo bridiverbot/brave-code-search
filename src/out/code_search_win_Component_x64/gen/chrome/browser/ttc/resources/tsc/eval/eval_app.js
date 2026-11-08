@@ -1,0 +1,47 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '/strings.m.js';
+import { loadTimeData } from '//resources/js/load_time_data.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { browserProxyFactory } from '../eval_harness.mojom-webui.js';
+export class EvalAppElement extends CrLitElement {
+    static get is() {
+        return 'ttc-eval-app';
+    }
+    get handler_() {
+        return browserProxyFactory.getInstance().handler;
+    }
+    isTestApiEnabled_() {
+        return loadTimeData.valueExists('enableTtcTestApi') &&
+            loadTimeData.getBoolean('enableTtcTestApi');
+    }
+    async start() {
+        if (!this.isTestApiEnabled_()) {
+            throw new Error('TTC Test API is not enabled.');
+        }
+        const response = await this.handler_.startSession();
+        return response.success;
+    }
+    end() {
+        if (!this.isTestApiEnabled_()) {
+            throw new Error('TTC Test API is not enabled.');
+        }
+        this.handler_.closeSession();
+    }
+    async sendText(text) {
+        if (!this.isTestApiEnabled_()) {
+            throw new Error('TTC Test API is not enabled.');
+        }
+        const response = await this.handler_.sendText(text);
+        return response.result;
+    }
+    async sendAudio(pcm16Audio) {
+        if (!this.isTestApiEnabled_()) {
+            throw new Error('TTC Test API is not enabled.');
+        }
+        const response = await this.handler_.sendAudio(Array.from(pcm16Audio));
+        return response.result;
+    }
+}
+customElements.define(EvalAppElement.is, EvalAppElement);

@@ -1,0 +1,32 @@
+// Copyright 2021 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '/strings.m.js';
+import { sendWithPromise } from 'chrome://resources/js/cr.js';
+export class BrowserSwitchInternalsProxyImpl {
+    isBrowserSwitcherEnabled() {
+        return sendWithPromise('isBrowserSwitcherEnabled');
+    }
+    getDecision(url) {
+        return sendWithPromise('getDecision', url);
+    }
+    getAllRulesets() {
+        return sendWithPromise('getAllRulesets');
+    }
+    getTimestamps() {
+        return sendWithPromise('getTimestamps');
+    }
+    getRulesetSources() {
+        return sendWithPromise('getRulesetSources');
+    }
+    refreshXml() {
+        chrome.send('refreshXml');
+    }
+    getBrowserSwitchInternalsJson() {
+        return sendWithPromise('getBrowserSwitchInternalsJson');
+    }
+    static getInstance() {
+        return instance || (instance = new BrowserSwitchInternalsProxyImpl());
+    }
+}
+let instance = null;

@@ -1,0 +1,1 @@
+{"base_dir": "gen/chrome/browser/resources/net_internals/tsc", "files": ["browser_bridge.js", "dns_view.js", "domain_security_policy_view.js", "events_view.js", "index.js", "main.js", "proxy_view.js", "shared_dictionary_view.js", "sockets_view.js", "tab_switcher_view.js", "utilities_view.js", "util.js", "view.js"]}

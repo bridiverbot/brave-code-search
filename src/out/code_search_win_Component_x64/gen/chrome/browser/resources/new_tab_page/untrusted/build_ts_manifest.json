@@ -1,0 +1,1 @@
+{"base_dir": "gen/chrome/browser/resources/new_tab_page/untrusted/tsc", "files": ["background_image.js", "microsoft_auth.js", "microsoft_auth_proxy.js", "msal_browser.js", "one_google_bar.js", "one_google_bar_api.js", "ntp_microsoft_auth_shared_ui.mojom-webui.js", "ntp_microsoft_auth_untrusted_ui.mojom-webui.js"]}

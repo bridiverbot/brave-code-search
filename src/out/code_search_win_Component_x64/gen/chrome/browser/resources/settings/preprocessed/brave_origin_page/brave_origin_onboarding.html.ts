@@ -1,0 +1,28 @@
+import {html} from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+  return html`<!--_html_template_start_--><style include="settings-shared cr-shared-style">:host{display:block;padding-bottom:var(--leo-spacing-2xl)}.label.primary-title{font:var(--leo-font-large-regular);padding-top:var(--leo-spacing-xl)}.label.secondary-title{padding-bottom:var(--leo-spacing-m)}#learnMoreLink,#restorePurchaseButton,#proceedFreeButton{margin-inline-start:var(--leo-spacing-xl)}#learnMoreLink{color:var(--cr-link-color);cursor:pointer;font:var(--cr-button-font)}</style>
+
+<settings-section page-title="$i18n{braveOriginOnboardingTitle}">
+  <div class="settings-box first">
+    <div class="flex">
+      <div class="label primary-title">$i18n{braveOriginOnboardingHeadingTitle}</div>
+      <div class="label secondary secondary-title">
+        <p>$i18n{braveOriginOnboardingDescription}</p>
+      </div>
+    </div>
+  </div>
+  <div class="cr-row">
+    <cr-button class="action-button" on-click="onBuyNowClick_">
+      $i18n{braveOriginOnboardingBuyNow}
+    </cr-button>
+    <cr-button id="restorePurchaseButton" on-click="onRestorePurchaseClick_">
+      $i18n{braveOriginOnboardingRestorePurchase}
+    </cr-button>
+    
+    <a id="learnMoreLink" on-click="onLearnMoreClick_">
+      $i18n{braveOriginOnboardingLearnMore}
+    </a>
+  </div>
+</settings-section>
+<!--_html_template_end_-->`;
+}
