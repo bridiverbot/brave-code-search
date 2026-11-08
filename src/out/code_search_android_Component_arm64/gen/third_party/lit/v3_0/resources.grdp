@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_LIT_V3_0_LIT_ROLLUP_JS" file="${root_gen_dir}/third_party/lit/v3_0/minified/lit.rollup.js" resource_path="lit/v3_0/lit.rollup.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
