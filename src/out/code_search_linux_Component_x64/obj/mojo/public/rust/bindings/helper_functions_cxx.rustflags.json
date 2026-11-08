@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/mojo/public/rust/bindings/helper_functions_cxx",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../mojo/public/rust/bindings/cxx.rs",
+        "@obj/mojo/public/rust/bindings/helper_functions_cxx.rsp.rust"
+    ]
+}

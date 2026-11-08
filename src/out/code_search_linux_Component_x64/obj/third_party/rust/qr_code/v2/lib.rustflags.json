@@ -1,0 +1,21 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/qr_code/v2/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "kennytm <kennytm@gmail.com>, Riccardo Casatta <riccardo.casatta@gmail.com>",
+        "CARGO_PKG_VERSION": "2.0.0",
+        "CARGO_PKG_VERSION_MAJOR": "2",
+        "CARGO_PKG_VERSION_MINOR": "0",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "qr_code",
+        "CARGO_PKG_DESCRIPTION": "QR code encoder in Rust, support structured append (data in multiple qrcodes)",
+        "CARGO_PKG_REPOSITORY": "https://github.com/RCasatta/qr_code",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/qr_code/v2/lib/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/lib.rs",
+        "@obj/third_party/rust/qr_code/v2/lib.rsp.rust"
+    ]
+}

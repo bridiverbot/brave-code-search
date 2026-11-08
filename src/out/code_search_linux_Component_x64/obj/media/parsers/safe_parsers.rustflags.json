@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/media/parsers/safe_parsers",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../media/parsers/parse_jpeg.rs",
+        "@obj/media/parsers/safe_parsers.rsp.rust"
+    ]
+}

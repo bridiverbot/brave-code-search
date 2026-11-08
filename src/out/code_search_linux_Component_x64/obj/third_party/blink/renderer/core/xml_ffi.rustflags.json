@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/blink/renderer/core/xml_ffi",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/blink/renderer/core/xml/parser/xml_ffi.rs",
+        "@obj/third_party/blink/renderer/core/xml_ffi.rsp.rust"
+    ]
+}

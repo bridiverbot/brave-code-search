@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/skia/rust_ico_ffi",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/skia/experimental/rust_ico/ffi/FFI.rs",
+        "@obj/skia/rust_ico_ffi.rsp.rust"
+    ]
+}

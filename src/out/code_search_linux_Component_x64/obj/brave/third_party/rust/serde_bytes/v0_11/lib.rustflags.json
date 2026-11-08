@@ -1,0 +1,21 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/third_party/rust/serde_bytes/v0_11/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "David Tolnay <dtolnay@gmail.com>",
+        "CARGO_PKG_VERSION": "0.11.17",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "11",
+        "CARGO_PKG_VERSION_PATCH": "17",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "serde_bytes",
+        "CARGO_PKG_DESCRIPTION": "Optimized handling of `&[u8]` and `Vec<u8>` for Serde",
+        "CARGO_PKG_REPOSITORY": "https://github.com/serde-rs/bytes",
+        "CARGO_MANIFEST_DIR": "../../brave/third_party/rust/serde_bytes/v0_11/lib/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../brave/third_party/rust/chromium_crates_io/vendor/serde_bytes-v0_11/src/lib.rs",
+        "@obj/brave/third_party/rust/serde_bytes/v0_11/lib.rsp.rust"
+    ]
+}

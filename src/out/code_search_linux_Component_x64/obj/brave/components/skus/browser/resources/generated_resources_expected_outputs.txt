@@ -1,0 +1,4 @@
+gen/brave/components/skus/browser/resources/grit/skus_internals_generated.h
+gen/brave/components/skus/browser/resources/grit/skus_internals_generated_map.cc
+gen/brave/components/skus/browser/resources/grit/skus_internals_generated_map.h
+gen/brave/components/skus/browser/resources/skus_internals_generated.pak

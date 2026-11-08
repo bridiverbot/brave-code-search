@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/cloud_authenticator/processor/processor",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../third_party/cloud_authenticator/processor/processor/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/cloud_authenticator/processor/src/lib.rs",
+        "@obj/third_party/cloud_authenticator/processor/processor.rsp.rust"
+    ]
+}
