@@ -1,0 +1,7 @@
+import {css, CSSResultGroup} from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[], css`:host(:not([hidden])){display:block}.status-box-fields{background-color:var(--cr-card-background-color);box-shadow:var(--cr-card-shadow);border-radius:var(--cr-card-border-radius);box-sizing:border-box;height:100%;margin:0;padding:var(--cr-section-padding)}.status-box-heading{color:var(--cr-primary-text-color);font-size:1.1em;font-weight:500;margin-top:16px;margin-bottom:12px}h3.status-box-heading:first-of-type{margin-top:0}div.status-entry *{white-space:pre-wrap}div.status-entry:not([hidden]){display:flex;justify-content:space-between;margin-bottom:.6em}div.status-entry:last-child{margin-bottom:0}.label{color:var(--cr-secondary-text-color)}.status-entry-value{color:var(--cr-primary-text-color);text-align:right}hr{border:0;border-top:1px solid var(--cr-separator-color);margin:16px 0}a{color:var(--cr-link-color);cursor:pointer;text-decoration:underline}.warning{max-width:312px}`]);
+}
