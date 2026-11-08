@@ -1,0 +1,13 @@
+{
+  "chromium_code": true,
+  "gn_target": "//content/public/android:content_java_resources",
+  "public_deps_configs": [
+    "gen/content/public/android/content_strings_grd.params.json",
+    "gen/ui/android/ui_java_resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/content/public/android/content_java_resources.res.sources",
+  "resources_zip": "obj/content/public/android/content_java_resources.resources.zip",
+  "rtxt_path": "gen/content/public/android/content_java_resources_R.txt",
+  "type": "android_resources"
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "traits_headers": [
+      "services/viz/public/cpp/compositing/video_capture_target_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//components/viz/common",
+      "//ui/base:features",
+      "//components/viz/common",
+      "//ui/gfx/geometry/mojom"
+    ],
+    "types": [
+      {
+        "cpp": "::viz::VideoCaptureTarget",
+        "mojom": "viz.mojom.VideoCaptureTarget"
+      },
+      {
+        "cpp": "::viz::VideoCaptureSubTarget",
+        "mojom": "viz.mojom.VideoCaptureSubTarget",
+        "nullable_is_same_type": true
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/viz/privileged/cpp/renderer_settings_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//components/viz/common",
+      "//ui/base:features",
+      "//ui/gfx/geometry/mojom"
+    ],
+    "traits_sources": [
+      "//services/viz/privileged/cpp/renderer_settings_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::viz::RendererSettings",
+        "mojom": "viz.mojom.RendererSettings"
+      },
+      {
+        "cpp": "::viz::DebugRendererSettings",
+        "mojom": "viz.mojom.DebugRendererSettings"
+      }
+    ]
+  }
+]

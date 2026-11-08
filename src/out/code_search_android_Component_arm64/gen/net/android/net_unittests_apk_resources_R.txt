@@ -1,0 +1,3 @@
+int mipmap app_icon 0x7f010001
+int xml dummy_spnego_account_preferences 0x7f010001
+int xml dummy_spnego_authenticator 0x7f010001

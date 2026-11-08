@@ -1,0 +1,13 @@
+{
+  "assets": {
+    "disable_compression": true,
+    "outputs": [
+      "snapshot_blob_64.bin"
+    ],
+    "sources": [
+      "snapshot_blob.bin"
+    ]
+  },
+  "gn_target": "//gin:v8_snapshot_assets",
+  "type": "android_assets"
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/process_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/process_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/process_resources_map.h"
+            type="resource_map_header" />
+    <output filename="process_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_PROCESS_PROCESS_INTERNALS_CSS" file="${root_gen_dir}/content/browser/resources/process/preprocessed/process_internals.css" resource_path="process_internals.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PROCESS_PROCESS_INTERNALS_HTML" file="${root_gen_dir}/content/browser/resources/process/preprocessed/process_internals.html" resource_path="process_internals.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PROCESS_PROCESS_INTERNALS_JS" file="${root_gen_dir}/content/browser/resources/process/minified/process_internals.js" resource_path="process_internals.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PROCESS_PROCESS_INTERNALS_MOJOM_WEBUI_JS" file="${root_gen_dir}/content/browser/resources/process/minified/process_internals.mojom-webui.js" resource_path="process_internals.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

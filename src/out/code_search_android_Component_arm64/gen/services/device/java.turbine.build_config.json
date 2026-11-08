@@ -1,0 +1,30 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/mojo/public/java/bindings_java.turbine.jar",
+    "obj/mojo/public/java/system_java.turbine.jar",
+    "obj/mojo/public/java/system/system_impl_java.turbine.jar",
+    "obj/services/device/battery/android/battery_monitor_java.turbine.jar",
+    "obj/services/device/generic_sensor/java.turbine.jar",
+    "obj/services/device/geolocation/geolocation_java.turbine.jar",
+    "obj/services/device/hid/java.turbine.jar",
+    "obj/services/device/nfc/android/java.turbine.jar",
+    "obj/services/device/public/java/nfc_java.turbine.jar",
+    "obj/services/device/public/mojom/mojom_java.turbine.jar",
+    "obj/services/device/screen_orientation/java.turbine.jar",
+    "obj/services/device/serial/java.turbine.jar",
+    "obj/services/device/time_zone_monitor/java.turbine.jar",
+    "obj/services/device/usb/java.turbine.jar",
+    "obj/services/device/vibration/android/vibration_manager_java.turbine.jar",
+    "obj/services/device/wake_lock/power_save_blocker/java.turbine.jar",
+    "obj/services/service_manager/public/java/service_manager_java.turbine.jar",
+    "obj/services/service_manager/public/mojom/mojom_java.turbine.jar",
+    "obj/third_party/jni_zero/jni_zero_java.turbine.jar",
+    "obj/third_party/jni_zero/gendeps_java.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}
