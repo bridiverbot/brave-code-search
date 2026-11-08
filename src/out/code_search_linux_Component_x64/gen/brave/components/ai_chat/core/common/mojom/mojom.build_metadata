@@ -1,0 +1,18 @@
+{
+  "deps": [
+    "../../../../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../../../../url/mojom/url_mojom_gurl.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/ai_chat.mojom",
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/bookmarks.mojom",
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/common.mojom",
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/customization_settings.mojom",
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/history.mojom",
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/ollama.mojom",
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/page_content_extractor.mojom",
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/settings_helper.mojom",
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/tab_tracker.mojom",
+    "../../../../../../../../../brave/components/ai_chat/core/common/mojom/untrusted_frame.mojom"
+  ]
+}
