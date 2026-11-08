@@ -1,0 +1,21 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/third_party/rust/core2/v0_4/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Brendan Molloy <brendan@bbqsrc.net>",
+        "CARGO_PKG_VERSION": "0.4.0",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "4",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "core2",
+        "CARGO_PKG_DESCRIPTION": "The bare essentials of std::io for use in no_std. Alloc support is optional.",
+        "CARGO_PKG_REPOSITORY": "https://github.com/bbqsrc/core2",
+        "CARGO_MANIFEST_DIR": "../../brave/third_party/rust/core2/v0_4/lib/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../brave/third_party/rust/chromium_crates_io/vendor/core2-v0_4/src/lib.rs",
+        "@obj/brave/third_party/rust/core2/v0_4/lib.rsp.rust"
+    ]
+}

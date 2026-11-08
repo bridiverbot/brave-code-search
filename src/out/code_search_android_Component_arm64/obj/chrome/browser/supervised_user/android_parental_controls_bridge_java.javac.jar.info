@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.supervised_user.AndroidParentalControlsBridge,../../chrome/browser/supervised_user/android/java/src/org/chromium/chrome/browser/supervised_user/AndroidParentalControlsBridge.java
+org.chromium.chrome.browser.supervised_user.AndroidParentalControlsBridgeJni,gen/chrome/browser/supervised_user/android_parental_controls_bridge_jni_headers.srcjar/org/chromium/chrome/browser/supervised_user/AndroidParentalControlsBridgeJni.java

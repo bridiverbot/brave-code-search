@@ -1,0 +1,14 @@
+org.chromium.chrome.browser.tab_group_sync.LocalTabGroupMutationHelper,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/LocalTabGroupMutationHelper.java
+org.chromium.chrome.browser.tab_group_sync.LogUtils,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/LogUtils.java
+org.chromium.chrome.browser.tab_group_sync.NavigationObserver,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/NavigationObserver.java
+org.chromium.chrome.browser.tab_group_sync.NavigationTracker,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/NavigationTracker.java
+org.chromium.chrome.browser.tab_group_sync.RemoteTabGroupMutationHelper,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/RemoteTabGroupMutationHelper.java
+org.chromium.chrome.browser.tab_group_sync.StartupHelper,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/StartupHelper.java
+org.chromium.chrome.browser.tab_group_sync.TabCreationDelegateImpl,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/TabCreationDelegateImpl.java
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncControllerImpl,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncControllerImpl.java
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncDelegate,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncDelegate.java
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncLocalObserver,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncLocalObserver.java
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncPendingReconciliation,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncPendingReconciliation.java
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncRemoteObserver,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncRemoteObserver.java
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncUtils,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncUtils.java
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncUtilsJni,gen/chrome/browser/tab_group_sync/jni_headers.srcjar/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncUtilsJni.java

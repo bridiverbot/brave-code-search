@@ -1,0 +1,7 @@
+org.chromium.chrome.browser.preferences.AllPreferenceKeyRegistries,../../chrome/browser/preferences/android/java/src/org/chromium/chrome/browser/preferences/AllPreferenceKeyRegistries.java
+org.chromium.chrome.browser.preferences.ChromePreferenceKeys,../../chrome/browser/preferences/android/java/src/org/chromium/chrome/browser/preferences/ChromePreferenceKeys.java
+org.chromium.chrome.browser.preferences.ChromeSharedPreferences,../../chrome/browser/preferences/android/java/src/org/chromium/chrome/browser/preferences/ChromeSharedPreferences.java
+org.chromium.chrome.browser.preferences.DeprecatedChromePreferenceKeys,../../chrome/browser/preferences/android/java/src/org/chromium/chrome/browser/preferences/DeprecatedChromePreferenceKeys.java
+org.chromium.chrome.browser.preferences.LegacyChromePreferenceKeys,../../chrome/browser/preferences/android/java/src/org/chromium/chrome/browser/preferences/LegacyChromePreferenceKeys.java
+org.chromium.chrome.browser.preferences.Pref,gen/chrome/browser/preferences/java_pref_names_srcjar.srcjar/org/chromium/chrome/browser/preferences/Pref.java
+org.chromium.chrome.browser.preferences.SharedPreferencesMetrics,../../chrome/browser/preferences/android/java/src/org/chromium/chrome/browser/preferences/SharedPreferencesMetrics.java

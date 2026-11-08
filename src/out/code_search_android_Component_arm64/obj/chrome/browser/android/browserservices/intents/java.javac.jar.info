@@ -1,0 +1,15 @@
+org.chromium.chrome.browser.browserservices.intents.BitmapHelper,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/BitmapHelper.java
+org.chromium.chrome.browser.browserservices.intents.BrowserCallbackWrapper,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/BrowserCallbackWrapper.java
+org.chromium.chrome.browser.browserservices.intents.BrowserServicesIntentDataProvider,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/BrowserServicesIntentDataProvider.java
+org.chromium.chrome.browser.browserservices.intents.ColorProvider,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/ColorProvider.java
+org.chromium.chrome.browser.browserservices.intents.CustomButtonParams,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/CustomButtonParams.java
+org.chromium.chrome.browser.browserservices.intents.CustomTabIntentDataHolder,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/CustomTabIntentDataHolder.java
+org.chromium.chrome.browser.browserservices.intents.MergedWebappInfo,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/MergedWebappInfo.java
+org.chromium.chrome.browser.browserservices.intents.SessionHolder,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/SessionHolder.java
+org.chromium.chrome.browser.browserservices.intents.WebApkExtras,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/WebApkExtras.java
+org.chromium.chrome.browser.browserservices.intents.WebApkShareTarget,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/WebApkShareTarget.java
+org.chromium.chrome.browser.browserservices.intents.WebappConstants,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/WebappConstants.java
+org.chromium.chrome.browser.browserservices.intents.WebappExtras,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/WebappExtras.java
+org.chromium.chrome.browser.browserservices.intents.WebappIcon,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/WebappIcon.java
+org.chromium.chrome.browser.browserservices.intents.WebappInfo,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/WebappInfo.java
+org.chromium.chrome.browser.browserservices.intents.WebappIntentUtils,../../chrome/browser/android/browserservices/intents/java/src/org/chromium/chrome/browser/browserservices/intents/WebappIntentUtils.java

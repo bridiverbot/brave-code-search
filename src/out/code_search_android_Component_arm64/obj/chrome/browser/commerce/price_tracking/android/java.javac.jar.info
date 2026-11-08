@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.price_tracking.PriceDropNotificationManager,../../chrome/browser/commerce/price_tracking/android/java/src/org/chromium/chrome/browser/price_tracking/PriceDropNotificationManager.java
+org.chromium.chrome.browser.price_tracking.PriceTrackingFeatures,../../chrome/browser/commerce/price_tracking/android/java/src/org/chromium/chrome/browser/price_tracking/PriceTrackingFeatures.java
+org.chromium.chrome.browser.price_tracking.PriceTrackingUtilities,../../chrome/browser/commerce/price_tracking/android/java/src/org/chromium/chrome/browser/price_tracking/PriceTrackingUtilities.java

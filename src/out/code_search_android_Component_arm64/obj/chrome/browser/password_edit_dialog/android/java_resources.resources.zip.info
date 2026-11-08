@@ -1,0 +1,3 @@
+drawable/dropdown_arrow_down.xml	../../chrome/browser/password_edit_dialog/android/java/res/drawable/dropdown_arrow_down.xml
+layout/password_edit_dialog.xml	../../chrome/browser/password_edit_dialog/android/java/res/layout/password_edit_dialog.xml
+layout/password_edit_dialog_dropdown_item.xml	../../chrome/browser/password_edit_dialog/android/java/res/layout/password_edit_dialog_dropdown_item.xml

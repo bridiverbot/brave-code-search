@@ -1,0 +1,8 @@
+org.chromium.chrome.browser.device_reauth.BiometricsAvailability,gen/chrome/browser/device_reauth/android/device_reauth_java_enums_srcjar.srcjar/org/chromium/chrome/browser/device_reauth/BiometricsAvailability.java
+org.chromium.chrome.browser.device_reauth.DeviceAuthAvailabilityCheckerBridge,../../chrome/browser/device_reauth/android/java/src/org/chromium/chrome/browser/device_reauth/DeviceAuthAvailabilityCheckerBridge.java
+org.chromium.chrome.browser.device_reauth.DeviceAuthUIResult,gen/chrome/browser/device_reauth/android/device_reauth_java_enums_srcjar.srcjar/org/chromium/chrome/browser/device_reauth/DeviceAuthUIResult.java
+org.chromium.chrome.browser.device_reauth.DeviceAuthenticatorBridge,../../chrome/browser/device_reauth/android/java/src/org/chromium/chrome/browser/device_reauth/DeviceAuthenticatorBridge.java
+org.chromium.chrome.browser.device_reauth.DeviceAuthenticatorBridgeJni,gen/chrome/browser/device_reauth/android/jni_headers.srcjar/org/chromium/chrome/browser/device_reauth/DeviceAuthenticatorBridgeJni.java
+org.chromium.chrome.browser.device_reauth.DeviceAuthenticatorController,../../chrome/browser/device_reauth/android/java/src/org/chromium/chrome/browser/device_reauth/DeviceAuthenticatorController.java
+org.chromium.chrome.browser.device_reauth.ReauthenticatorBridge,../../chrome/browser/device_reauth/android/java/src/org/chromium/chrome/browser/device_reauth/ReauthenticatorBridge.java
+org.chromium.chrome.browser.device_reauth.ReauthenticatorBridgeJni,gen/chrome/browser/device_reauth/android/jni_headers.srcjar/org/chromium/chrome/browser/device_reauth/ReauthenticatorBridgeJni.java

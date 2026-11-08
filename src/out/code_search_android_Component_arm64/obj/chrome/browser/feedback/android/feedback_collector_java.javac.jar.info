@@ -1,0 +1,6 @@
+org.chromium.chrome.browser.feedback.AsyncFeedbackSource,../../chrome/browser/feedback/android/java/src/org/chromium/chrome/browser/feedback/AsyncFeedbackSource.java
+org.chromium.chrome.browser.feedback.FeedbackCollector,../../chrome/browser/feedback/android/java/src/org/chromium/chrome/browser/feedback/FeedbackCollector.java
+org.chromium.chrome.browser.feedback.FeedbackSource,../../chrome/browser/feedback/android/java/src/org/chromium/chrome/browser/feedback/FeedbackSource.java
+org.chromium.chrome.browser.feedback.HistogramFeedbackSource,../../chrome/browser/feedback/android/java/src/org/chromium/chrome/browser/feedback/HistogramFeedbackSource.java
+org.chromium.chrome.browser.feedback.ScreenshotSource,../../chrome/browser/feedback/android/java/src/org/chromium/chrome/browser/feedback/ScreenshotSource.java
+org.chromium.chrome.browser.feedback.StaticScreenshotSource,../../chrome/browser/feedback/android/java/src/org/chromium/chrome/browser/feedback/StaticScreenshotSource.java

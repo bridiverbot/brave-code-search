@@ -1,0 +1,3 @@
+drawable/branding_icon.xml	../../chrome/browser/android/customtabs/branding/java/res/drawable/branding_icon.xml
+layout/custom_tabs_toast_branding_layout.xml	../../chrome/browser/android/customtabs/branding/java/res/layout/custom_tabs_toast_branding_layout.xml
+layout/custom_tabs_toolbar_branding_layout.xml	../../chrome/browser/android/customtabs/branding/java/res/layout/custom_tabs_toolbar_branding_layout.xml

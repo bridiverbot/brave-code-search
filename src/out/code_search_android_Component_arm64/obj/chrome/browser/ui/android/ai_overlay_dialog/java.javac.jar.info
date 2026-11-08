@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.ai_overlay_dialog.AiOverlayDialogBridge,../../chrome/browser/ui/android/ai_overlay_dialog/java/src/org/chromium/chrome/browser/ai_overlay_dialog/AiOverlayDialogBridge.java
+org.chromium.chrome.browser.ai_overlay_dialog.AiOverlayDialogBridgeJni,gen/chrome/browser/ui/android/ai_overlay_dialog/jni_headers.srcjar/org/chromium/chrome/browser/ai_overlay_dialog/AiOverlayDialogBridgeJni.java

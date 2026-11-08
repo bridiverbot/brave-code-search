@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_aliased_deps/test_aliased_deps",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../build/rust/tests/test_aliased_deps/lib.rs",
+        "@obj/build/rust/tests/test_aliased_deps/test_aliased_deps.rsp.rust"
+    ]
+}

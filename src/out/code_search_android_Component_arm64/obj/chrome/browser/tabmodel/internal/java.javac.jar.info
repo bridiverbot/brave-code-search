@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.tabmodel.AsyncTabParamsManagerFactory,../../chrome/browser/tabmodel/internal/android/java/src/org/chromium/chrome/browser/tabmodel/AsyncTabParamsManagerFactory.java
+org.chromium.chrome.browser.tabmodel.AsyncTabParamsManagerImpl,../../chrome/browser/tabmodel/internal/android/java/src/org/chromium/chrome/browser/tabmodel/AsyncTabParamsManagerImpl.kt

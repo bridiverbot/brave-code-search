@@ -1,0 +1,13 @@
+org.chromium.chrome.browser.browser_controls.BottomControlsLayer,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BottomControlsLayer.java
+org.chromium.chrome.browser.browser_controls.BottomControlsStacker,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BottomControlsStacker.java
+org.chromium.chrome.browser.browser_controls.BottomOverscrollHandler,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BottomOverscrollHandler.java
+org.chromium.chrome.browser.browser_controls.BrowserControlsMarginAdapter,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BrowserControlsMarginAdapter.java
+org.chromium.chrome.browser.browser_controls.BrowserControlsOffsetTagsInfo,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BrowserControlsOffsetTagsInfo.java
+org.chromium.chrome.browser.browser_controls.BrowserControlsSizer,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BrowserControlsSizer.java
+org.chromium.chrome.browser.browser_controls.BrowserControlsStateProvider,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BrowserControlsStateProvider.java
+org.chromium.chrome.browser.browser_controls.BrowserControlsStateProviderSupplier,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BrowserControlsStateProviderSupplier.java
+org.chromium.chrome.browser.browser_controls.BrowserControlsUtils,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BrowserControlsUtils.java
+org.chromium.chrome.browser.browser_controls.BrowserControlsVisibilityManager,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BrowserControlsVisibilityManager.java
+org.chromium.chrome.browser.browser_controls.BrowserStateBrowserControlsVisibilityDelegate,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/BrowserStateBrowserControlsVisibilityDelegate.java
+org.chromium.chrome.browser.browser_controls.TopControlLayer,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/TopControlLayer.java
+org.chromium.chrome.browser.browser_controls.TopControlsStacker,../../chrome/browser/browser_controls/android/java/src/org/chromium/chrome/browser/browser_controls/TopControlsStacker.java

@@ -1,0 +1,249 @@
+# compiler: R8
+# compiler_version: 9.6.0-alpha08
+# min_api: 29
+# compiler_hash: engineering
+# common_typos_disable
+# {"id":"com.android.tools.r8.mapping","version":"2.2"}
+# pg_map_id: b7285e5082175a263efffe30a0a02f9462963d386d20d8c9b89db5ce112c621b
+# pg_map_hash: SHA-256 b7285e5082175a263efffe30a0a02f9462963d386d20d8c9b89db5ce112c621b
+org.chromium.build.NullUtil -> org.chromium.build.NullUtil:
+# {"id":"sourceFile","fileName":"NullUtil.java"}
+    1:4:void <init>():14:14 -> <init>
+    4:9:java.lang.Object assertNonNull(java.lang.Object):30:30 -> assertNonNull
+    1:1:java.lang.Object assumeNonNull(java.lang.Object):0:0 -> assumeNonNull
+org.chromium.build.annotations.AlwaysInline -> org.chromium.build.annotations.AlwaysInline:
+# {"id":"sourceFile","fileName":"AlwaysInline.java"}
+org.chromium.build.annotations.CheckDiscard -> org.chromium.build.annotations.CheckDiscard:
+# {"id":"sourceFile","fileName":"CheckDiscard.java"}
+org.chromium.build.annotations.Contract -> org.chromium.build.annotations.Contract:
+# {"id":"sourceFile","fileName":"Contract.java"}
+org.chromium.build.annotations.DoNotClassMerge -> org.chromium.build.annotations.DoNotClassMerge:
+# {"id":"sourceFile","fileName":"DoNotClassMerge.java"}
+org.chromium.build.annotations.DoNotInline -> org.chromium.build.annotations.DoNotInline:
+# {"id":"sourceFile","fileName":"DoNotInline.java"}
+org.chromium.build.annotations.DoNotStripLogs -> org.chromium.build.annotations.DoNotStripLogs:
+# {"id":"sourceFile","fileName":"DoNotStripLogs.java"}
+org.chromium.build.annotations.EnsuresNonNull -> org.chromium.build.annotations.EnsuresNonNull:
+# {"id":"sourceFile","fileName":"EnsuresNonNull.java"}
+org.chromium.build.annotations.EnsuresNonNullIf -> org.chromium.build.annotations.EnsuresNonNullIf:
+# {"id":"sourceFile","fileName":"EnsuresNonNullIf.java"}
+org.chromium.build.annotations.IdentifierNameString -> org.chromium.build.annotations.IdentifierNameString:
+# {"id":"sourceFile","fileName":"IdentifierNameString.java"}
+org.chromium.build.annotations.Initializer -> org.chromium.build.annotations.Initializer:
+# {"id":"sourceFile","fileName":"Initializer.java"}
+org.chromium.build.annotations.MockedInTests -> org.chromium.build.annotations.MockedInTests:
+# {"id":"sourceFile","fileName":"MockedInTests.java"}
+org.chromium.build.annotations.MonotonicNonNull -> org.chromium.build.annotations.MonotonicNonNull:
+# {"id":"sourceFile","fileName":"MonotonicNonNull.java"}
+org.chromium.build.annotations.NonNull -> org.chromium.build.annotations.NonNull:
+# {"id":"sourceFile","fileName":"NonNull.java"}
+org.chromium.build.annotations.NullMarked -> org.chromium.build.annotations.NullMarked:
+# {"id":"sourceFile","fileName":"NullMarked.java"}
+org.chromium.build.annotations.NullUnmarked -> org.chromium.build.annotations.NullUnmarked:
+# {"id":"sourceFile","fileName":"NullUnmarked.java"}
+org.chromium.build.annotations.Nullable -> org.chromium.build.annotations.Nullable:
+# {"id":"sourceFile","fileName":"Nullable.java"}
+org.chromium.build.annotations.OptimizeAsNonNull -> org.chromium.build.annotations.OptimizeAsNonNull:
+# {"id":"sourceFile","fileName":"OptimizeAsNonNull.java"}
+org.chromium.build.annotations.RequiresNonNull -> org.chromium.build.annotations.RequiresNonNull:
+# {"id":"sourceFile","fileName":"RequiresNonNull.java"}
+org.chromium.build.annotations.ServiceImpl -> org.chromium.build.annotations.ServiceImpl:
+# {"id":"sourceFile","fileName":"ServiceImpl.java"}
+org.chromium.build.annotations.UsedByReflection -> org.chromium.build.annotations.UsedByReflection:
+# {"id":"sourceFile","fileName":"UsedByReflection.java"}
+org.chromium.build.annotations.UsedReflectively -> org.chromium.build.annotations.UsedReflectively:
+# {"id":"sourceFile","fileName":"UsedReflectively.java"}
+org.chromium.webapk.lib.runtime_library.IWebApkApi -> org.chromium.webapk.lib.runtime_library.IWebApkApi:
+# {"id":"sourceFile","fileName":"IWebApkApi.java"}
+org.chromium.webapk.lib.runtime_library.IWebApkApi$Default -> org.chromium.webapk.lib.runtime_library.IWebApkApi$Default:
+# {"id":"sourceFile","fileName":"IWebApkApi.java"}
+    1:4:void <init>():14:14 -> <init>
+    1:2:android.os.IBinder asBinder():0:0 -> asBinder
+    1:1:void cancelNotification(java.lang.String,int):0:0 -> cancelNotification
+    1:2:int checkNotificationPermission():0:0 -> checkNotificationPermission
+    1:2:boolean finishAndRemoveTaskSdk23():0:0 -> finishAndRemoveTaskSdk23
+    1:2:int getSmallIconId():0:0 -> getSmallIconId
+    1:2:boolean notificationPermissionEnabled():0:0 -> notificationPermissionEnabled
+    1:1:void notifyNotification(java.lang.String,int,android.app.Notification):0:0 -> notifyNotification
+    1:1:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):0:0 -> notifyNotificationWithChannel
+    1:2:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):0:0 -> requestNotificationPermission
+org.chromium.webapk.lib.runtime_library.IWebApkApi$Stub -> org.chromium.webapk.lib.runtime_library.IWebApkApi$Stub:
+# {"id":"sourceFile","fileName":"IWebApkApi.java"}
+    1:3:void <init>():66:66 -> <init>
+    4:9:void <init>():67:67 -> <init>
+    1:1:android.os.IBinder asBinder():0:0 -> asBinder
+    5:12:org.chromium.webapk.lib.runtime_library.IWebApkApi asInterface(android.os.IBinder):78:78 -> asInterface
+    13:16:org.chromium.webapk.lib.runtime_library.IWebApkApi asInterface(android.os.IBinder):79:79 -> asInterface
+    17:20:org.chromium.webapk.lib.runtime_library.IWebApkApi asInterface(android.os.IBinder):80:80 -> asInterface
+    21:27:org.chromium.webapk.lib.runtime_library.IWebApkApi asInterface(android.os.IBinder):82:82 -> asInterface
+    1:1:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):91:91 -> onTransact
+    2:2:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):172:172 -> onTransact
+    3:3:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):162:162 -> onTransact
+    4:7:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):164:167 -> onTransact
+    8:10:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):154:156 -> onTransact
+    11:13:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):147:149 -> onTransact
+    14:14:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):134:134 -> onTransact
+    15:15:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):136:136 -> onTransact
+    16:16:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):138:138 -> onTransact
+    17:19:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):140:142 -> onTransact
+    20:22:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):126:128 -> onTransact
+    23:23:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):117:117 -> onTransact
+    24:26:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):119:121 -> onTransact
+    27:27:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):105:105 -> onTransact
+    28:28:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):107:107 -> onTransact
+    29:31:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):109:111 -> onTransact
+    32:34:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):97:99 -> onTransact
+org.chromium.webapk.lib.runtime_library.IWebApkApi$Stub$Proxy -> org.chromium.webapk.lib.runtime_library.IWebApkApi$Stub$Proxy:
+# {"id":"sourceFile","fileName":"IWebApkApi.java"}
+    1:3:void <init>(android.os.IBinder):181:181 -> <init>
+    4:6:void <init>(android.os.IBinder):182:182 -> <init>
+    1:3:android.os.IBinder asBinder():186:186 -> asBinder
+    1:4:void cancelNotification(java.lang.String,int):232:232 -> cancelNotification
+    5:8:void cancelNotification(java.lang.String,int):233:233 -> cancelNotification
+    9:13:void cancelNotification(java.lang.String,int):235:235 -> cancelNotification
+    14:16:void cancelNotification(java.lang.String,int):236:236 -> cancelNotification
+    17:19:void cancelNotification(java.lang.String,int):237:237 -> cancelNotification
+    20:26:void cancelNotification(java.lang.String,int):238:238 -> cancelNotification
+    27:29:void cancelNotification(java.lang.String,int):239:239 -> cancelNotification
+    30:32:void cancelNotification(java.lang.String,int):242:242 -> cancelNotification
+    33:37:void cancelNotification(java.lang.String,int):243:243 -> cancelNotification
+    38:40:void cancelNotification(java.lang.String,int):242:242 -> cancelNotification
+    41:43:void cancelNotification(java.lang.String,int):243:243 -> cancelNotification
+    44:44:void cancelNotification(java.lang.String,int):244:244 -> cancelNotification
+    1:4:int checkNotificationPermission():305:305 -> checkNotificationPermission
+    5:8:int checkNotificationPermission():306:306 -> checkNotificationPermission
+    9:13:int checkNotificationPermission():309:309 -> checkNotificationPermission
+    14:20:int checkNotificationPermission():310:310 -> checkNotificationPermission
+    21:23:int checkNotificationPermission():311:311 -> checkNotificationPermission
+    24:27:int checkNotificationPermission():312:312 -> checkNotificationPermission
+    28:30:int checkNotificationPermission():315:315 -> checkNotificationPermission
+    31:35:int checkNotificationPermission():316:316 -> checkNotificationPermission
+    36:38:int checkNotificationPermission():315:315 -> checkNotificationPermission
+    39:41:int checkNotificationPermission():316:316 -> checkNotificationPermission
+    42:42:int checkNotificationPermission():317:317 -> checkNotificationPermission
+    1:4:boolean finishAndRemoveTaskSdk23():287:287 -> finishAndRemoveTaskSdk23
+    5:8:boolean finishAndRemoveTaskSdk23():288:288 -> finishAndRemoveTaskSdk23
+    9:13:boolean finishAndRemoveTaskSdk23():291:291 -> finishAndRemoveTaskSdk23
+    14:20:boolean finishAndRemoveTaskSdk23():292:292 -> finishAndRemoveTaskSdk23
+    21:23:boolean finishAndRemoveTaskSdk23():293:293 -> finishAndRemoveTaskSdk23
+    24:30:boolean finishAndRemoveTaskSdk23():294:294 -> finishAndRemoveTaskSdk23
+    31:33:boolean finishAndRemoveTaskSdk23():297:297 -> finishAndRemoveTaskSdk23
+    34:38:boolean finishAndRemoveTaskSdk23():298:298 -> finishAndRemoveTaskSdk23
+    39:41:boolean finishAndRemoveTaskSdk23():297:297 -> finishAndRemoveTaskSdk23
+    42:44:boolean finishAndRemoveTaskSdk23():298:298 -> finishAndRemoveTaskSdk23
+    45:45:boolean finishAndRemoveTaskSdk23():299:299 -> finishAndRemoveTaskSdk23
+    1:3:java.lang.String getInterfaceDescriptor():190:190 -> getInterfaceDescriptor
+    1:4:int getSmallIconId():195:195 -> getSmallIconId
+    5:8:int getSmallIconId():196:196 -> getSmallIconId
+    9:13:int getSmallIconId():199:199 -> getSmallIconId
+    14:20:int getSmallIconId():200:200 -> getSmallIconId
+    21:23:int getSmallIconId():201:201 -> getSmallIconId
+    24:27:int getSmallIconId():202:202 -> getSmallIconId
+    28:30:int getSmallIconId():205:205 -> getSmallIconId
+    31:35:int getSmallIconId():206:206 -> getSmallIconId
+    36:38:int getSmallIconId():205:205 -> getSmallIconId
+    39:41:int getSmallIconId():206:206 -> getSmallIconId
+    42:42:int getSmallIconId():207:207 -> getSmallIconId
+    1:4:boolean notificationPermissionEnabled():250:250 -> notificationPermissionEnabled
+    5:8:boolean notificationPermissionEnabled():251:251 -> notificationPermissionEnabled
+    9:13:boolean notificationPermissionEnabled():254:254 -> notificationPermissionEnabled
+    14:20:boolean notificationPermissionEnabled():255:255 -> notificationPermissionEnabled
+    21:23:boolean notificationPermissionEnabled():256:256 -> notificationPermissionEnabled
+    24:30:boolean notificationPermissionEnabled():257:257 -> notificationPermissionEnabled
+    31:33:boolean notificationPermissionEnabled():260:260 -> notificationPermissionEnabled
+    34:38:boolean notificationPermissionEnabled():261:261 -> notificationPermissionEnabled
+    39:41:boolean notificationPermissionEnabled():260:260 -> notificationPermissionEnabled
+    42:44:boolean notificationPermissionEnabled():261:261 -> notificationPermissionEnabled
+    45:45:boolean notificationPermissionEnabled():262:262 -> notificationPermissionEnabled
+    1:4:void notifyNotification(java.lang.String,int,android.app.Notification):214:214 -> notifyNotification
+    5:8:void notifyNotification(java.lang.String,int,android.app.Notification):215:215 -> notifyNotification
+    9:13:void notifyNotification(java.lang.String,int,android.app.Notification):217:217 -> notifyNotification
+    14:16:void notifyNotification(java.lang.String,int,android.app.Notification):218:218 -> notifyNotification
+    17:20:void notifyNotification(java.lang.String,int,android.app.Notification):219:219 -> notifyNotification
+    21:23:void notifyNotification(java.lang.String,int,android.app.Notification):220:220 -> notifyNotification
+    24:29:void notifyNotification(java.lang.String,int,android.app.Notification):221:221 -> notifyNotification
+    30:32:void notifyNotification(java.lang.String,int,android.app.Notification):222:222 -> notifyNotification
+    33:35:void notifyNotification(java.lang.String,int,android.app.Notification):225:225 -> notifyNotification
+    36:40:void notifyNotification(java.lang.String,int,android.app.Notification):226:226 -> notifyNotification
+    41:43:void notifyNotification(java.lang.String,int,android.app.Notification):225:225 -> notifyNotification
+    44:46:void notifyNotification(java.lang.String,int,android.app.Notification):226:226 -> notifyNotification
+    47:47:void notifyNotification(java.lang.String,int,android.app.Notification):227:227 -> notifyNotification
+    1:4:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):268:268 -> notifyNotificationWithChannel
+    5:8:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):269:269 -> notifyNotificationWithChannel
+    9:13:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):271:271 -> notifyNotificationWithChannel
+    14:16:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):272:272 -> notifyNotificationWithChannel
+    17:20:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):273:273 -> notifyNotificationWithChannel
+    21:23:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):274:274 -> notifyNotificationWithChannel
+    24:26:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):275:275 -> notifyNotificationWithChannel
+    27:32:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):276:276 -> notifyNotificationWithChannel
+    33:35:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):277:277 -> notifyNotificationWithChannel
+    36:38:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):280:280 -> notifyNotificationWithChannel
+    39:43:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):281:281 -> notifyNotificationWithChannel
+    44:46:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):280:280 -> notifyNotificationWithChannel
+    47:49:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):281:281 -> notifyNotificationWithChannel
+    50:50:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):282:282 -> notifyNotificationWithChannel
+    1:4:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):323:323 -> requestNotificationPermission
+    5:8:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):324:324 -> requestNotificationPermission
+    9:13:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):327:327 -> requestNotificationPermission
+    14:16:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):328:328 -> requestNotificationPermission
+    17:19:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):329:329 -> requestNotificationPermission
+    20:27:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):330:330 -> requestNotificationPermission
+    28:30:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):331:331 -> requestNotificationPermission
+    31:38:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):332:332 -> requestNotificationPermission
+    39:41:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):335:335 -> requestNotificationPermission
+    42:46:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):336:336 -> requestNotificationPermission
+    47:49:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):335:335 -> requestNotificationPermission
+    50:52:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):336:336 -> requestNotificationPermission
+    53:53:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):337:337 -> requestNotificationPermission
+org.chromium.webapk.lib.runtime_library.IWebApkApi$_Parcel -> org.chromium.webapk.lib.runtime_library.IWebApkApi$_Parcel:
+# {"id":"sourceFile","fileName":"IWebApkApi.java"}
+    1:4:void <init>():371:371 -> <init>
+    1:5:java.lang.Object -$$Nest$smreadTypedObject(android.os.Parcel,android.os.Parcelable$Creator):0:0 -> a
+      # {"id":"com.android.tools.r8.synthesized"}
+    1:4:void -$$Nest$smwriteTypedObject(android.os.Parcel,android.os.Parcelable,int):0:0 -> b
+      # {"id":"com.android.tools.r8.synthesized"}
+    1:6:java.lang.Object readTypedObject(android.os.Parcel,android.os.Parcelable$Creator):375:375 -> readTypedObject
+    7:13:java.lang.Object readTypedObject(android.os.Parcel,android.os.Parcelable$Creator):376:376 -> readTypedObject
+    4:6:void writeTypedObject(android.os.Parcel,android.os.Parcelable,int):384:384 -> writeTypedObject
+    7:11:void writeTypedObject(android.os.Parcel,android.os.Parcelable,int):385:385 -> writeTypedObject
+    12:15:void writeTypedObject(android.os.Parcel,android.os.Parcelable,int):387:387 -> writeTypedObject
+org.chromium.webapk.lib.runtime_library.WebApkServiceImpl -> org.chromium.webapk.lib.runtime_library.WebApkServiceImpl:
+# {"id":"sourceFile","fileName":"WebApkServiceImpl.java"}
+    1:3:void <init>(android.content.Context,android.os.Bundle):57:57 -> <init>
+    4:5:void <init>(android.content.Context,android.os.Bundle):58:58 -> <init>
+    6:13:void <init>(android.content.Context,android.os.Bundle):59:59 -> <init>
+    14:24:void <init>(android.content.Context,android.os.Bundle):60:60 -> <init>
+    25:30:void <init>(android.content.Context,android.os.Bundle):61:61 -> <init>
+    1:8:void cancelNotification(java.lang.String,int):93:93 -> cancelNotification
+    1:9:int checkNotificationPermission():124:124 -> checkNotificationPermission
+    1:4:boolean finishAndRemoveTaskSdk23():110:110 -> finishAndRemoveTaskSdk23
+    5:10:boolean finishAndRemoveTaskSdk23():111:111 -> finishAndRemoveTaskSdk23
+    11:16:boolean finishAndRemoveTaskSdk23():112:112 -> finishAndRemoveTaskSdk23
+    17:36:boolean finishAndRemoveTaskSdk23():113:113 -> finishAndRemoveTaskSdk23
+    37:46:boolean finishAndRemoveTaskSdk23():114:114 -> finishAndRemoveTaskSdk23
+    47:54:boolean finishAndRemoveTaskSdk23():115:115 -> finishAndRemoveTaskSdk23
+    1:11:android.app.NotificationManager getNotificationManager():179:179 -> getNotificationManager
+    1:3:int getSmallIconId():80:80 -> getSmallIconId
+    1:6:java.lang.String getTaskBaseActivityPackageName(android.app.ActivityManager$AppTask):141:141 -> getTaskBaseActivityPackageName
+    7:10:java.lang.String getTaskBaseActivityPackageName(android.app.ActivityManager$AppTask):142:142 -> getTaskBaseActivityPackageName
+    11:17:java.lang.String getTaskBaseActivityPackageName(android.app.ActivityManager$AppTask):143:143 -> getTaskBaseActivityPackageName
+    1:7:boolean notificationPermissionEnabled():98:98 -> notificationPermissionEnabled
+    8:11:boolean notificationPermissionEnabled():102:102 -> notificationPermissionEnabled
+    12:17:boolean notificationPermissionEnabled():103:103 -> notificationPermissionEnabled
+    18:22:boolean notificationPermissionEnabled():104:104 -> notificationPermissionEnabled
+    1:8:void notifyNotification(java.lang.String,int,android.app.Notification):85:85 -> notifyNotification
+    1:4:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):154:154 -> notifyNotificationWithChannel
+    5:10:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):155:155 -> notifyNotificationWithChannel
+    11:21:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):157:157 -> notifyNotificationWithChannel
+    22:26:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):162:162 -> notifyNotificationWithChannel
+    27:29:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):164:164 -> notifyNotificationWithChannel
+    30:37:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):167:167 -> notifyNotificationWithChannel
+    38:41:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):168:168 -> notifyNotificationWithChannel
+    42:47:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):169:169 -> notifyNotificationWithChannel
+    48:50:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):170:170 -> notifyNotificationWithChannel
+    51:54:void notifyNotificationWithChannel(java.lang.String,int,android.app.Notification,java.lang.String):175:175 -> notifyNotificationWithChannel
+    1:4:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):67:67 -> onTransact
+    5:8:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):68:68 -> onTransact
+    9:13:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):75:75 -> onTransact
+    14:43:boolean onTransact(int,android.os.Parcel,android.os.Parcel,int):69:69 -> onTransact
+    1:9:android.app.PendingIntent requestNotificationPermission(java.lang.String,java.lang.String):131:131 -> requestNotificationPermission

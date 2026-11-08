@@ -1,0 +1,7 @@
+org.chromium.chrome.browser.optimization_guide.OptimizationGuideBridge,../../chrome/browser/optimization_guide/android/java/src/org/chromium/chrome/browser/optimization_guide/OptimizationGuideBridge.java
+org.chromium.chrome.browser.optimization_guide.OptimizationGuideBridgeFactory,../../chrome/browser/optimization_guide/android/java/src/org/chromium/chrome/browser/optimization_guide/OptimizationGuideBridgeFactory.java
+org.chromium.chrome.browser.optimization_guide.OptimizationGuideBridgeFactoryJni,gen/chrome/browser/optimization_guide/android/jni_headers.srcjar/org/chromium/chrome/browser/optimization_guide/OptimizationGuideBridgeFactoryJni.java
+org.chromium.chrome.browser.optimization_guide.OptimizationGuideBridgeJni,gen/chrome/browser/optimization_guide/android/jni_headers.srcjar/org/chromium/chrome/browser/optimization_guide/OptimizationGuideBridgeJni.java
+org.chromium.chrome.browser.optimization_guide.OptimizationGuideDecisionWithMetadata,../../chrome/browser/optimization_guide/android/java/src/org/chromium/chrome/browser/optimization_guide/OptimizationGuideDecisionWithMetadata.java
+org.chromium.chrome.browser.optimization_guide.OptimizationGuidePushNotificationManager,../../chrome/browser/optimization_guide/android/java/src/org/chromium/chrome/browser/optimization_guide/OptimizationGuidePushNotificationManager.java
+org.chromium.components.optimization_guide.OptimizationGuideDecision,gen/components/optimization_guide/core/optimization_guide_generated_enums.srcjar/org/chromium/components/optimization_guide/OptimizationGuideDecision.java

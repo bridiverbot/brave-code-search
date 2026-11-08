@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/bindgen_test/bindgen_test_lib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../build/rust/tests/bindgen_test/src/lib.rs",
+        "@obj/build/rust/tests/bindgen_test/bindgen_test_lib.rsp.rust"
+    ]
+}

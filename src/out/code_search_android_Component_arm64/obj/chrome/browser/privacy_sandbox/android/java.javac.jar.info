@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.privacy_sandbox.PrivacySandboxBridge,../../chrome/browser/privacy_sandbox/android/java/src/org/chromium/chrome/browser/privacy_sandbox/PrivacySandboxBridge.java
+org.chromium.chrome.browser.privacy_sandbox.PrivacySandboxBridgeJni,gen/chrome/browser/privacy_sandbox/android/jni_headers.srcjar/org/chromium/chrome/browser/privacy_sandbox/PrivacySandboxBridgeJni.java

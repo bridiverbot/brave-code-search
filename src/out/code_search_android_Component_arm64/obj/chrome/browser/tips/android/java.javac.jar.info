@@ -1,0 +1,10 @@
+org.chromium.chrome.browser.tips.LegacyTipsPromoHandler,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/LegacyTipsPromoHandler.java
+org.chromium.chrome.browser.tips.TipsNotificationsFeatureType,gen/chrome/browser/tips/android/jni_enums.srcjar/org/chromium/chrome/browser/tips/TipsNotificationsFeatureType.java
+org.chromium.chrome.browser.tips.TipsOptInCoordinator,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsOptInCoordinator.java
+org.chromium.chrome.browser.tips.TipsPromoCoordinator,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoCoordinator.java
+org.chromium.chrome.browser.tips.TipsPromoHandlerFactory,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoHandlerFactory.java
+org.chromium.chrome.browser.tips.TipsPromoView,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoView.java
+org.chromium.chrome.browser.tips.TipsPromoViewBinder,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoViewBinder.java
+org.chromium.chrome.browser.tips.TipsSchedulerBridge,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsSchedulerBridge.java
+org.chromium.chrome.browser.tips.TipsSchedulerBridgeJni,gen/chrome/browser/tips/android/jni_headers.srcjar/org/chromium/chrome/browser/tips/TipsSchedulerBridgeJni.java
+org.chromium.chrome.browser.tips.TipsUtils,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsUtils.java

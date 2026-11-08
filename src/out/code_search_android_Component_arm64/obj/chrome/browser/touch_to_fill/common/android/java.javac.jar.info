@@ -1,0 +1,6 @@
+org.chromium.chrome.browser.touch_to_fill.common.BottomSheetFocusHelper,../../chrome/browser/touch_to_fill/common/android/java/src/org/chromium/chrome/browser/touch_to_fill/common/BottomSheetFocusHelper.java
+org.chromium.chrome.browser.touch_to_fill.common.FillableItemCollectionInfo,../../chrome/browser/touch_to_fill/common/android/java/src/org/chromium/chrome/browser/touch_to_fill/common/FillableItemCollectionInfo.java
+org.chromium.chrome.browser.touch_to_fill.common.TouchToFillCommonProperties,../../chrome/browser/touch_to_fill/common/android/java/src/org/chromium/chrome/browser/touch_to_fill/common/TouchToFillCommonProperties.java
+org.chromium.chrome.browser.touch_to_fill.common.TouchToFillCommonViewBinder,../../chrome/browser/touch_to_fill/common/android/java/src/org/chromium/chrome/browser/touch_to_fill/common/TouchToFillCommonViewBinder.java
+org.chromium.chrome.browser.touch_to_fill.common.TouchToFillResourceProvider,../../chrome/browser/touch_to_fill/common/android/java/src/org/chromium/chrome/browser/touch_to_fill/common/TouchToFillResourceProvider.java
+org.chromium.chrome.browser.touch_to_fill.common.TouchToFillUtil,../../chrome/browser/touch_to_fill/common/android/java/src/org/chromium/chrome/browser/touch_to_fill/common/TouchToFillUtil.java

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="isTablet">false</bool>
+    <color name="bottom_sheet_dim_color">#50000000</color>
+    <color name="brave_theme_color">#FB542B</color>
+    <color name="day_night_icon_color">#495057</color>
+    <color name="edit_toolbar">#353DAB</color>
+    <color name="hint_color">#50FFFFFF</color>
+    <color name="icon_tint">#000000</color>
+    <color name="media_stats_color">#84889C</color>
+    <color name="player_control_bg">#4D000000</color>
+    <color name="player_seekbar_text_color">#C2C4CF</color>
+    <color name="playlist_background">#FFFFFF</color>
+    <color name="playlist_behavior">#C2C4CF</color>
+    <color name="playlist_progress_bar_tint">#F0F2FF</color>
+    <color name="playlist_progress_bar_tint_bg">#20F0F2FF</color>
+    <color name="playlist_text_color">#000000</color>
+    <color name="playlist_transparent_bg">#80000000</color>
+    <color name="red_playlist">#FB542B</color>
+    <color name="selected_media">#05F0F2FF</color>
+    <color name="swipe_delete">#BD1531</color>
+    <color name="text_input_layout_activated">#FB542B</color>
+    <color name="upload_option_bg">#339AF0</color>
+    <dimen name="playlist_toolbar_height">64dp</dimen>
+    <item name="playlist_button_id" type="id"/>
+    <string name="playlist_add_media">Add media</string>
+    <string name="playlist_add_to_playlist">Add to Playlist</string>
+    <string name="playlist_browse_and_add">Browse and add</string>
+    <string name="playlist_browse_and_add_message">Add your favorite content. Look for the + button in the lower right part of your screen.</string>
+    <string name="playlist_browse_for_media">Browse for media</string>
+    <string name="playlist_copy_item">Copy</string>
+    <string name="playlist_create_toolbar_text">Create</string>
+    <string name="playlist_delete_item">Delete</string>
+    <string name="playlist_delete_item_offline_data">Delete item\'s offline data</string>
+    <string name="playlist_delete_playlist">Delete playlist</string>
+    <string name="playlist_edit_text">Edit</string>
+    <string name="playlist_empty_playlist_name">Please enter valid playlist name</string>
+    <string name="playlist_feature_text">Playlist</string>
+    <string name="playlist_move_item">Move</string>
+    <string name="playlist_name_text">Playlist name</string>
+    <string name="playlist_new_text">New playlist</string>
+    <string name="playlist_next">Next</string>
+    <string name="playlist_number_items">%d items</string>
+    <string name="playlist_number_selected">%d Selected</string>
+    <string name="playlist_onboarding_text_1">Make playlists of your favorite content. Save mobile data. And playback ad-free.</string>
+    <string name="playlist_onboarding_text_2">Stay in flow: Add videos while you browse, watch later.</string>
+    <string name="playlist_onboarding_text_3">Play in the background. Control from the lockscreen. And more…</string>
+    <string name="playlist_onboarding_title_1">Add videos to Brave Playlist. Playback anytime. Even offline.</string>
+    <string name="playlist_onboarding_title_2">Just tap the button to add videos to a playlist</string>
+    <string name="playlist_onboarding_title_3">Playback is better in Playlist</string>
+    <string name="playlist_open_in_new_tab">Open in new tab</string>
+    <string name="playlist_open_in_private_tab">Open in private tab</string>
+    <string name="playlist_open_playlist">Open Playlist</string>
+    <string name="playlist_open_playlist_settings">Open Playlist Settings</string>
+    <string name="playlist_play_all">Play All</string>
+    <string name="playlist_play_later">Play Later</string>
+    <string name="playlist_playlists_text">Playlists</string>
+    <string name="playlist_please_select_items">Please select items first</string>
+    <string name="playlist_preparing_text">Preparing…</string>
+    <string name="playlist_recently_played">Recently played</string>
+    <string name="playlist_rename_text">Rename</string>
+    <string name="playlist_share_item">Share</string>
+    <string name="playlist_share_with">"Share with : "</string>
+    <string name="playlist_shuffle">Shuffle</string>
+    <string name="playlist_time_text">%1$s:</string>
+    <string name="playlist_try_it">Try it!</string>
+    <string name="playlist_untitled_text">Untitled playlist</string>
+    <string name="playlist_up_next">Up next</string>
+    <style name="BraveButton">
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:paddingStart">22dp</item>
+        <item name="android:paddingEnd">22dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginEnd">48dp</item>
+        <item name="android:layout_marginStart">48dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="HintStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/hint_color</item>
+    </style>
+    <style name="OnboardingWindowAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+    <style name="TextInputLayout">
+        <item name="colorControlNormal">@color/text_input_layout_activated</item>
+        <item name="colorControlActivated">@color/text_input_layout_activated</item>
+        <item name="colorControlHighlight">@color/text_input_layout_activated</item>
+        <item name="android:textColorHint">@color/hint_color</item>
+    </style>
+    <style name="playlistSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">@color/playlist_progress_bar_tint_bg</item>
+        <item name="android:progressTint">@color/playlist_progress_bar_tint</item>
+        <item name="android:thumbTint">@color/playlist_progress_bar_tint</item>
+    </style>
+    <declare-styleable name="BottomPanelLayout">
+        <attr format="dimension" name="panelHeight"/>
+        <attr format="reference" name="scrollableView"/>
+        <attr format="enum" name="initialState">
+            <enum name="expanded" value="0"/>
+            <enum name="collapsed" value="1"/>
+            <enum name="anchored" value="2"/>
+            <enum name="hidden" value="3"/>
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="PlaylistToolbar">
+        <attr format="string" name="title"/>
+        <attr format="boolean" name="showOptions"/>
+        <attr format="boolean" name="showActionButton"/>
+        <attr format="string" name="actionButtonText"/>
+        <attr format="boolean" name="requireDarkMode"/>
+        <attr format="reference" name="backButtonIcon"/>
+        <attr format="reference" name="backButtonTint"/>
+        <attr format="reference" name="optionButtonIcon"/>
+        <attr format="reference" name="optionButtonTint"/>
+    </declare-styleable>
+</resources>

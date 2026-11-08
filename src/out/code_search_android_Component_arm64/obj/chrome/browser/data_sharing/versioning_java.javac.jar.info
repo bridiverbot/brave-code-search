@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.data_sharing.ui.versioning.VersionUpdateIphHandler,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/versioning/VersionUpdateIphHandler.java
+org.chromium.chrome.browser.data_sharing.ui.versioning.VersioningMessageBanner,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/versioning/VersioningMessageBanner.java
+org.chromium.chrome.browser.data_sharing.ui.versioning.VersioningModalDialog,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/versioning/VersioningModalDialog.java

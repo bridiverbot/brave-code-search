@@ -1,0 +1,4 @@
+gen/chrome/grit/webapks_resources.h
+gen/chrome/grit/webapks_resources_map.cc
+gen/chrome/grit/webapks_resources_map.h
+gen/chrome/webapks_resources.pak

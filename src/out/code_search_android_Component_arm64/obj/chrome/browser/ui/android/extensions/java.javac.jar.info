@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.ui.extensions.ExtensionUi,../../chrome/browser/ui/android/extensions/java/src/org/chromium/chrome/browser/ui/extensions/ExtensionUi.java
+org.chromium.chrome.browser.ui.extensions.ExtensionUiBackend,../../chrome/browser/ui/android/extensions/java/src/org/chromium/chrome/browser/ui/extensions/ExtensionUiBackend.java

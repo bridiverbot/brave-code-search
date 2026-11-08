@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.segmentation_platform.SegmentationPlatformServiceFactory,../../chrome/browser/segmentation_platform/android/java/src/org/chromium/chrome/browser/segmentation_platform/SegmentationPlatformServiceFactory.java
+org.chromium.chrome.browser.segmentation_platform.SegmentationPlatformServiceFactoryJni,gen/chrome/browser/segmentation_platform/jni_headers.srcjar/org/chromium/chrome/browser/segmentation_platform/SegmentationPlatformServiceFactoryJni.java

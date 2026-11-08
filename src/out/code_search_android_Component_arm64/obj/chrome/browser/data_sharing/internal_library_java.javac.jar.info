@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.data_sharing.DataSharingNotificationManager,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/DataSharingNotificationManager.java
+org.chromium.chrome.browser.data_sharing.DataSharingUiDelegateAndroid,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/DataSharingUiDelegateAndroid.java
+org.chromium.chrome.browser.data_sharing.InstantMessageDelegateImpl,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/InstantMessageDelegateImpl.java

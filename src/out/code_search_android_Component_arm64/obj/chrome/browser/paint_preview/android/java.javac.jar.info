@@ -1,0 +1,10 @@
+org.chromium.chrome.browser.paint_preview.DemoPaintPreview,../../chrome/browser/paint_preview/android/java/src/org/chromium/chrome/browser/paint_preview/DemoPaintPreview.java
+org.chromium.chrome.browser.paint_preview.PaintPreviewCompositorUtils,../../chrome/browser/paint_preview/android/java/src/org/chromium/chrome/browser/paint_preview/PaintPreviewCompositorUtils.java
+org.chromium.chrome.browser.paint_preview.PaintPreviewCompositorUtilsJni,gen/chrome/browser/paint_preview/android/jni_headers.srcjar/org/chromium/chrome/browser/paint_preview/PaintPreviewCompositorUtilsJni.java
+org.chromium.chrome.browser.paint_preview.StartupPaintPreview,../../chrome/browser/paint_preview/android/java/src/org/chromium/chrome/browser/paint_preview/StartupPaintPreview.java
+org.chromium.chrome.browser.paint_preview.StartupPaintPreviewMetrics,../../chrome/browser/paint_preview/android/java/src/org/chromium/chrome/browser/paint_preview/StartupPaintPreviewMetrics.java
+org.chromium.chrome.browser.paint_preview.TabbedPaintPreview,../../chrome/browser/paint_preview/android/java/src/org/chromium/chrome/browser/paint_preview/TabbedPaintPreview.java
+org.chromium.chrome.browser.paint_preview.services.PaintPreviewTabService,../../chrome/browser/paint_preview/android/java/src/org/chromium/chrome/browser/paint_preview/services/PaintPreviewTabService.java
+org.chromium.chrome.browser.paint_preview.services.PaintPreviewTabServiceFactory,../../chrome/browser/paint_preview/android/java/src/org/chromium/chrome/browser/paint_preview/services/PaintPreviewTabServiceFactory.java
+org.chromium.chrome.browser.paint_preview.services.PaintPreviewTabServiceFactoryJni,gen/chrome/browser/paint_preview/android/jni_headers.srcjar/org/chromium/chrome/browser/paint_preview/services/PaintPreviewTabServiceFactoryJni.java
+org.chromium.chrome.browser.paint_preview.services.PaintPreviewTabServiceJni,gen/chrome/browser/paint_preview/android/jni_headers.srcjar/org/chromium/chrome/browser/paint_preview/services/PaintPreviewTabServiceJni.java

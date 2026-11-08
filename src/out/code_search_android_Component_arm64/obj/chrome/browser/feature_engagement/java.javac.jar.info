@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.feature_engagement.TrackerFactory,../../chrome/browser/feature_engagement/java/src/org/chromium/chrome/browser/feature_engagement/TrackerFactory.java
+org.chromium.chrome.browser.feature_engagement.TrackerFactoryJni,gen/chrome/browser/feature_engagement/jni_headers.srcjar/org/chromium/chrome/browser/feature_engagement/TrackerFactoryJni.java

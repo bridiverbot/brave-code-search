@@ -1,0 +1,6 @@
+org.chromium.build.gtest_apk.IProcessKeepaliveService,gen/build/android/gtest_apk/aidl.srcjar/org/chromium/build/gtest_apk/IProcessKeepaliveService.java
+org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner,../../build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/NativeTestInstrumentationTestRunner.java
+org.chromium.build.gtest_apk.NativeTestIntent,../../build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/NativeTestIntent.java
+org.chromium.build.gtest_apk.ProcessKeepaliveService,../../build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/ProcessKeepaliveService.java
+org.chromium.build.gtest_apk.TestStatusIntent,../../build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/TestStatusIntent.java
+org.chromium.build.gtest_apk.TestStatusReceiver,../../build/android/gtest_apk/java/src/org/chromium/build/gtest_apk/TestStatusReceiver.java

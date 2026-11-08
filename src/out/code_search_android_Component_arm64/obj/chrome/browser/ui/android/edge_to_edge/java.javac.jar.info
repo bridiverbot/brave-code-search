@@ -1,0 +1,13 @@
+org.chromium.chrome.browser.ui.edge_to_edge.EdgeToEdgeBottomChinSceneLayer,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/EdgeToEdgeBottomChinSceneLayer.java
+org.chromium.chrome.browser.ui.edge_to_edge.EdgeToEdgeBottomChinSceneLayerJni,gen/chrome/browser/ui/android/edge_to_edge/jni_headers.srcjar/org/chromium/chrome/browser/ui/edge_to_edge/EdgeToEdgeBottomChinSceneLayerJni.java
+org.chromium.chrome.browser.ui.edge_to_edge.EdgeToEdgeController,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/EdgeToEdgeController.java
+org.chromium.chrome.browser.ui.edge_to_edge.EdgeToEdgeControllerCreator,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/EdgeToEdgeControllerCreator.java
+org.chromium.chrome.browser.ui.edge_to_edge.EdgeToEdgeFieldTrialImpl,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/EdgeToEdgeFieldTrialImpl.java
+org.chromium.chrome.browser.ui.edge_to_edge.EdgeToEdgeTopScalpSceneLayer,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/EdgeToEdgeTopScalpSceneLayer.java
+org.chromium.chrome.browser.ui.edge_to_edge.EdgeToEdgeTopScalpSceneLayerJni,gen/chrome/browser/ui/android/edge_to_edge/jni_headers.srcjar/org/chromium/chrome/browser/ui/edge_to_edge/EdgeToEdgeTopScalpSceneLayerJni.java
+org.chromium.chrome.browser.ui.edge_to_edge.EdgeToEdgeUtils,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/EdgeToEdgeUtils.java
+org.chromium.chrome.browser.ui.edge_to_edge.NavigationBarColorProvider,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/NavigationBarColorProvider.java
+org.chromium.chrome.browser.ui.edge_to_edge.NoOpTopInsetProvider,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/NoOpTopInsetProvider.java
+org.chromium.chrome.browser.ui.edge_to_edge.SimpleEdgeToEdgeController,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/SimpleEdgeToEdgeController.java
+org.chromium.chrome.browser.ui.edge_to_edge.TopInsetProvider,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/TopInsetProvider.java
+org.chromium.chrome.browser.ui.edge_to_edge.TransitiveTopInsetProvider,../../chrome/browser/ui/android/edge_to_edge/java/src/org/chromium/chrome/browser/ui/edge_to_edge/TransitiveTopInsetProvider.java

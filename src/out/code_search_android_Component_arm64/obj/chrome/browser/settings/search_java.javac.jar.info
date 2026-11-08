@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.settings.search.ChromeBaseSearchIndexProvider,../../chrome/browser/settings/search/java/src/org/chromium/chrome/browser/settings/search/ChromeBaseSearchIndexProvider.java
+org.chromium.chrome.browser.settings.search.ChromeSearchIndexProvider,../../chrome/browser/settings/search/java/src/org/chromium/chrome/browser/settings/search/ChromeSearchIndexProvider.java
+org.chromium.chrome.browser.settings.search.RecentSearchQueue,../../chrome/browser/settings/search/java/src/org/chromium/chrome/browser/settings/search/RecentSearchQueue.java
