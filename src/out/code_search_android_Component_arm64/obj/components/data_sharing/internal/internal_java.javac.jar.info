@@ -1,0 +1,8 @@
+org.chromium.components.data_sharing.DataSharingConversionBridge,../../components/data_sharing/internal/android/java/src/org/chromium/components/data_sharing/DataSharingConversionBridge.java
+org.chromium.components.data_sharing.DataSharingNetworkLoaderImpl,../../components/data_sharing/internal/android/java/src/org/chromium/components/data_sharing/DataSharingNetworkLoaderImpl.java
+org.chromium.components.data_sharing.DataSharingNetworkLoaderImplJni,gen/components/data_sharing/internal/jni_headers.srcjar/org/chromium/components/data_sharing/DataSharingNetworkLoaderImplJni.java
+org.chromium.components.data_sharing.DataSharingSDKDelegateBridge,../../components/data_sharing/internal/android/java/src/org/chromium/components/data_sharing/DataSharingSDKDelegateBridge.java
+org.chromium.components.data_sharing.DataSharingSDKDelegateBridgeJni,gen/components/data_sharing/internal/jni_headers.srcjar/org/chromium/components/data_sharing/DataSharingSDKDelegateBridgeJni.java
+org.chromium.components.data_sharing.DataSharingServiceImpl,../../components/data_sharing/internal/android/java/src/org/chromium/components/data_sharing/DataSharingServiceImpl.java
+org.chromium.components.data_sharing.DataSharingServiceImplJni,gen/components/data_sharing/internal/jni_headers.srcjar/org/chromium/components/data_sharing/DataSharingServiceImplJni.java
+org.chromium.components.data_sharing.ObserverBridge,../../components/data_sharing/internal/android/java/src/org/chromium/components/data_sharing/ObserverBridge.java

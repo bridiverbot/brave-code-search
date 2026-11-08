@@ -1,0 +1,13 @@
+org.chromium.components.signin.test.util.AccountCapabilitiesBuilder,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountCapabilitiesBuilder.java
+org.chromium.components.signin.test.util.AccountCapabilitiesFetcherTestUtil,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountCapabilitiesFetcherTestUtil.java
+org.chromium.components.signin.test.util.AccountHolder,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountHolder.java
+org.chromium.components.signin.test.util.AccountInfoSerializer,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountInfoSerializer.java
+org.chromium.components.signin.test.util.AccountInfoSerializerJni,gen/components/signin/public/android/test_support_jni_headers.srcjar/org/chromium/components/signin/test/util/AccountInfoSerializerJni.java
+org.chromium.components.signin.test.util.AccountManagerFacadeUtil,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountManagerFacadeUtil.java
+org.chromium.components.signin.test.util.FakeAccountManagerDelegate,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/FakeAccountManagerDelegate.java
+org.chromium.components.signin.test.util.FakeAccountManagerFacade,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/FakeAccountManagerFacade.java
+org.chromium.components.signin.test.util.FakeIdentityManager,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/FakeIdentityManager.java
+org.chromium.components.signin.test.util.FakePlatformAccount,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/FakePlatformAccount.java
+org.chromium.components.signin.test.util.SharedPrefsAccountStorage,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/SharedPrefsAccountStorage.java
+org.chromium.components.signin.test.util.SigninMatchers,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/SigninMatchers.java
+org.chromium.components.signin.test.util.TestAccounts,../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/TestAccounts.java

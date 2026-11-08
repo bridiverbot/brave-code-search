@@ -1,0 +1,3 @@
+org.chromium.ui.resources.dynamics.DynamicResourceTestUtils,../../ui/android/junit/src/org/chromium/ui/resources/dynamics/DynamicResourceTestUtils.java
+org.chromium.ui.shadows.ShadowAnimatedStateListDrawable,../../ui/android/junit/src/org/chromium/ui/shadows/ShadowAnimatedStateListDrawable.java
+org.chromium.ui.shadows.ShadowAppCompatResources,../../ui/android/junit/src/org/chromium/ui/shadows/ShadowAppCompatResources.java

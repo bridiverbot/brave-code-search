@@ -1,0 +1,6 @@
+org.chromium.components.variations.ClientVariationsOuterClass,gen/components/variations/proto/proto_java__protoc_java.srcjar/org/chromium/components/variations/ClientVariationsOuterClass.java
+org.chromium.components.variations.LayerIntDef,gen/components/variations/proto/proto_java__protoc_java.srcjar/org/chromium/components/variations/LayerIntDef.java
+org.chromium.components.variations.LayerOuterClass,gen/components/variations/proto/proto_java__protoc_java.srcjar/org/chromium/components/variations/LayerOuterClass.java
+org.chromium.components.variations.StudyIntDef,gen/components/variations/proto/proto_java__protoc_java.srcjar/org/chromium/components/variations/StudyIntDef.java
+org.chromium.components.variations.StudyOuterClass,gen/components/variations/proto/proto_java__protoc_java.srcjar/org/chromium/components/variations/StudyOuterClass.java
+org.chromium.components.variations.VariationsSeedOuterClass,gen/components/variations/proto/proto_java__protoc_java.srcjar/org/chromium/components/variations/VariationsSeedOuterClass.java

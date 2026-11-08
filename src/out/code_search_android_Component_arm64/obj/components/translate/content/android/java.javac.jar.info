@@ -1,0 +1,5 @@
+org.chromium.components.translate.TranslateMessage,../../components/translate/content/android/java/src/org/chromium/components/translate/TranslateMessage.java
+org.chromium.components.translate.TranslateMessageJni,gen/components/translate/content/android/jni_headers.srcjar/org/chromium/components/translate/TranslateMessageJni.java
+org.chromium.components.translate.TranslateMessageSecondaryMenu,../../components/translate/content/android/java/src/org/chromium/components/translate/TranslateMessageSecondaryMenu.java
+org.chromium.components.translate.TranslateMessageSecondaryMenuAdapter,../../components/translate/content/android/java/src/org/chromium/components/translate/TranslateMessageSecondaryMenuAdapter.java
+org.chromium.components.translate.TranslateOptions,../../components/translate/content/android/java/src/org/chromium/components/translate/TranslateOptions.java

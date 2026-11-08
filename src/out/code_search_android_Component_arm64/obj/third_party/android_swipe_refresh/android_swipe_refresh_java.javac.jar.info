@@ -1,0 +1,3 @@
+org.chromium.third_party.android.swiperefresh.CircleImageView,../../third_party/android_swipe_refresh/java/src/org/chromium/third_party/android/swiperefresh/CircleImageView.java
+org.chromium.third_party.android.swiperefresh.MaterialProgressDrawable,../../third_party/android_swipe_refresh/java/src/org/chromium/third_party/android/swiperefresh/MaterialProgressDrawable.java
+org.chromium.third_party.android.swiperefresh.SwipeRefreshLayout,../../third_party/android_swipe_refresh/java/src/org/chromium/third_party/android/swiperefresh/SwipeRefreshLayout.java

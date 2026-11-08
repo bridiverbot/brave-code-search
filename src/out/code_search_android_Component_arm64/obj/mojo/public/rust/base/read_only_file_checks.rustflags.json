@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/mojo/public/rust/base/read_only_file_checks",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../mojo/public/rust/base/read_only_file_checks.rs",
+        "@obj/mojo/public/rust/base/read_only_file_checks.rsp.rust"
+    ]
+}

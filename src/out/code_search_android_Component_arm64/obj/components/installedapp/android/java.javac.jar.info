@@ -1,0 +1,4 @@
+org.chromium.components.installedapp.InstalledAppProviderImpl,../../components/installedapp/android/java/src/org/chromium/components/installedapp/InstalledAppProviderImpl.java
+org.chromium.components.installedapp.InstalledAppProviderImplJni,gen/components/installedapp/android/jni_headers.srcjar/org/chromium/components/installedapp/InstalledAppProviderImplJni.java
+org.chromium.components.installedapp.PackageHash,../../components/installedapp/android/java/src/org/chromium/components/installedapp/PackageHash.java
+org.chromium.components.installedapp.PackageManagerDelegate,../../components/installedapp/android/java/src/org/chromium/components/installedapp/PackageManagerDelegate.java

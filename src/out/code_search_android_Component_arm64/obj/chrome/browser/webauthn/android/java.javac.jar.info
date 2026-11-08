@@ -1,0 +1,5 @@
+org.chromium.chrome.browser.webauthn.AuthenticatorIncognitoConfirmationBottomsheet,../../chrome/browser/webauthn/android/java/src/org/chromium/chrome/browser/webauthn/AuthenticatorIncognitoConfirmationBottomsheet.java
+org.chromium.chrome.browser.webauthn.CableAuthenticatorModuleProvider,../../chrome/browser/webauthn/android/java/src/org/chromium/chrome/browser/webauthn/CableAuthenticatorModuleProvider.java
+org.chromium.chrome.browser.webauthn.CableAuthenticatorModuleProviderJni,gen/chrome/browser/webauthn/android/jni_headers.srcjar/org/chromium/chrome/browser/webauthn/CableAuthenticatorModuleProviderJni.java
+org.chromium.chrome.browser.webauthn.ChromeAuthenticatorConfirmationFactory,../../chrome/browser/webauthn/android/java/src/org/chromium/chrome/browser/webauthn/ChromeAuthenticatorConfirmationFactory.java
+org.chromium.chrome.browser.webauthn.ChromeAuthenticatorFactory,../../chrome/browser/webauthn/android/java/src/org/chromium/chrome/browser/webauthn/ChromeAuthenticatorFactory.java

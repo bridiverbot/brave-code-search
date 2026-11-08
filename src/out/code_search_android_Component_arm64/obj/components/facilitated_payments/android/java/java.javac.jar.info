@@ -1,0 +1,8 @@
+org.chromium.components.facilitated_payments.AccountLinkingResult,../../components/facilitated_payments/android/java/src/org/chromium/components/facilitated_payments/AccountLinkingResult.java
+org.chromium.components.facilitated_payments.DeviceDelegate,../../components/facilitated_payments/android/java/src/org/chromium/components/facilitated_payments/DeviceDelegate.java
+org.chromium.components.facilitated_payments.FacilitatedPaymentsApiClient,../../components/facilitated_payments/android/java/src/org/chromium/components/facilitated_payments/FacilitatedPaymentsApiClient.java
+org.chromium.components.facilitated_payments.FacilitatedPaymentsApiClientBridge,../../components/facilitated_payments/android/java/src/org/chromium/components/facilitated_payments/FacilitatedPaymentsApiClientBridge.java
+org.chromium.components.facilitated_payments.FacilitatedPaymentsApiClientBridgeJni,gen/components/facilitated_payments/android/java/jni_headers.srcjar/org/chromium/components/facilitated_payments/FacilitatedPaymentsApiClientBridgeJni.java
+org.chromium.components.facilitated_payments.PackageManagerDelegate,../../components/facilitated_payments/android/java/src/org/chromium/components/facilitated_payments/PackageManagerDelegate.java
+org.chromium.components.facilitated_payments.SecureData,../../components/facilitated_payments/android/java/src/org/chromium/components/facilitated_payments/SecureData.java
+org.chromium.components.facilitated_payments.SecurePayload,../../components/facilitated_payments/android/java/src/org/chromium/components/facilitated_payments/SecurePayload.java

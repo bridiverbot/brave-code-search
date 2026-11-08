@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <id name="androidx_fragment_testing_container"/>
+    <style name="FragmentScenarioEmptyFragmentActivityTheme" parent="android:Theme.WithActionBar">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+</resources>

@@ -1,0 +1,3 @@
+org.chromium.components.policy.test.FakeEnterpriseInfo,../../components/policy/android/javatests/src/org/chromium/components/policy/test/FakeEnterpriseInfo.java
+org.chromium.components.policy.test.PolicyData,../../components/policy/android/javatests/src/org/chromium/components/policy/test/PolicyData.java
+org.chromium.components.policy.test.annotations.Policies,../../components/policy/android/javatests/src/org/chromium/components/policy/test/annotations/Policies.java

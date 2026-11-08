@@ -1,0 +1,7 @@
+anim/fragment_fast_out_extra_slow_in.xml	../../third_party/androidx/cipd/libs/androidx_fragment_fragment/fragment.aar/res/anim/fragment_fast_out_extra_slow_in.xml
+animator/fragment_close_enter.xml	../../third_party/androidx/cipd/libs/androidx_fragment_fragment/fragment.aar/res/animator/fragment_close_enter.xml
+animator/fragment_close_exit.xml	../../third_party/androidx/cipd/libs/androidx_fragment_fragment/fragment.aar/res/animator/fragment_close_exit.xml
+animator/fragment_fade_enter.xml	../../third_party/androidx/cipd/libs/androidx_fragment_fragment/fragment.aar/res/animator/fragment_fade_enter.xml
+animator/fragment_fade_exit.xml	../../third_party/androidx/cipd/libs/androidx_fragment_fragment/fragment.aar/res/animator/fragment_fade_exit.xml
+animator/fragment_open_enter.xml	../../third_party/androidx/cipd/libs/androidx_fragment_fragment/fragment.aar/res/animator/fragment_open_enter.xml
+animator/fragment_open_exit.xml	../../third_party/androidx/cipd/libs/androidx_fragment_fragment/fragment.aar/res/animator/fragment_open_exit.xml

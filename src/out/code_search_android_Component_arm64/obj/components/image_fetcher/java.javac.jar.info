@@ -1,0 +1,12 @@
+org.chromium.components.image_fetcher.CachedImageFetcher,../../components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/CachedImageFetcher.java
+org.chromium.components.image_fetcher.ImageDataFetchResult,../../components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/ImageDataFetchResult.java
+org.chromium.components.image_fetcher.ImageFetchResult,../../components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/ImageFetchResult.java
+org.chromium.components.image_fetcher.ImageFetcher,../../components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/ImageFetcher.java
+org.chromium.components.image_fetcher.ImageFetcherBridge,../../components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/ImageFetcherBridge.java
+org.chromium.components.image_fetcher.ImageFetcherBridgeJni,gen/components/image_fetcher/jni_headers.srcjar/org/chromium/components/image_fetcher/ImageFetcherBridgeJni.java
+org.chromium.components.image_fetcher.ImageFetcherConfig,gen/components/image_fetcher/core/java_enums_srcjar.srcjar/org/chromium/components/image_fetcher/ImageFetcherConfig.java
+org.chromium.components.image_fetcher.ImageFetcherEvent,gen/components/image_fetcher/core/java_enums_srcjar.srcjar/org/chromium/components/image_fetcher/ImageFetcherEvent.java
+org.chromium.components.image_fetcher.ImageFetcherFactory,../../components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/ImageFetcherFactory.java
+org.chromium.components.image_fetcher.InMemoryCachedImageFetcher,../../components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/InMemoryCachedImageFetcher.java
+org.chromium.components.image_fetcher.NetworkImageFetcher,../../components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/NetworkImageFetcher.java
+org.chromium.components.image_fetcher.RequestMetadata,../../components/image_fetcher/android/java/src/org/chromium/components/image_fetcher/RequestMetadata.java

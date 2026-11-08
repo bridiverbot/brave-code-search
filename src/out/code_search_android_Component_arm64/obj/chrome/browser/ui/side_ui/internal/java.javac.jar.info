@@ -1,0 +1,8 @@
+org.chromium.chrome.browser.ui.side_ui.AnchorContainerTopMargins,../../chrome/browser/ui/side_ui/internal/android/java/src/org/chromium/chrome/browser/ui/side_ui/AnchorContainerTopMargins.java
+org.chromium.chrome.browser.ui.side_ui.SideUiContainerTransition,../../chrome/browser/ui/side_ui/internal/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiContainerTransition.java
+org.chromium.chrome.browser.ui.side_ui.SideUiCoordinatorFactory,../../chrome/browser/ui/side_ui/internal/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiCoordinatorFactory.java
+org.chromium.chrome.browser.ui.side_ui.SideUiCoordinatorImpl,../../chrome/browser/ui/side_ui/internal/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiCoordinatorImpl.java
+org.chromium.chrome.browser.ui.side_ui.SideUiObserverNotifier,../../chrome/browser/ui/side_ui/internal/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiObserverNotifier.java
+org.chromium.chrome.browser.ui.side_ui.SideUiResizeHandler,../../chrome/browser/ui/side_ui/internal/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiResizeHandler.java
+org.chromium.chrome.browser.ui.side_ui.SideUiTransitionListener,../../chrome/browser/ui/side_ui/internal/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiTransitionListener.java
+org.chromium.chrome.browser.ui.side_ui.SideUiUpdateSpecs,../../chrome/browser/ui/side_ui/internal/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiUpdateSpecs.java

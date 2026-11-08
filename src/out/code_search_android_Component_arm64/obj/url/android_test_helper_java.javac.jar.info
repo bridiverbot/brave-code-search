@@ -1,0 +1,4 @@
+org.chromium.url.GURLJavaTestHelper,../../url/android/javatests/src/org/chromium/url/GURLJavaTestHelper.java
+org.chromium.url.GURLJavaTestHelperJni,gen/url/j_test_jni_headers.srcjar/org/chromium/url/GURLJavaTestHelperJni.java
+org.chromium.url.OriginJavaTestHelper,../../url/android/javatests/src/org/chromium/url/OriginJavaTestHelper.java
+org.chromium.url.OriginJavaTestHelperJni,gen/url/j_test_jni_headers.srcjar/org/chromium/url/OriginJavaTestHelperJni.java

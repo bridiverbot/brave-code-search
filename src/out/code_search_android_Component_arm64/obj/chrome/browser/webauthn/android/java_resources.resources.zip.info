@@ -1,0 +1,2 @@
+drawable/webauthn_incognito_confirmation_icon.xml	../../chrome/browser/webauthn/android/java/res/drawable/webauthn_incognito_confirmation_icon.xml
+layout/webauthn_incognito_confirmation.xml	../../chrome/browser/webauthn/android/java/res/layout/webauthn_incognito_confirmation.xml

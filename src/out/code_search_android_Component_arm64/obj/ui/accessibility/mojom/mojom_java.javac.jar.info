@@ -1,0 +1,15 @@
+org.chromium.ax.mojom.AxActionData,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxActionData.java
+org.chromium.ax.mojom.AxBitsetData,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxBitsetData.java
+org.chromium.ax.mojom.AxEvent,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxEvent.java
+org.chromium.ax.mojom.AxLocationAndScrollUpdates,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxLocationAndScrollUpdates.java
+org.chromium.ax.mojom.AxLocationChange,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxLocationChange.java
+org.chromium.ax.mojom.AxMode,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxMode.java
+org.chromium.ax.mojom.AxNodeData,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxNodeData.java
+org.chromium.ax.mojom.AxRelativeBounds,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxRelativeBounds.java
+org.chromium.ax.mojom.AxScrollChange,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxScrollChange.java
+org.chromium.ax.mojom.AxTreeChecks,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxTreeChecks.java
+org.chromium.ax.mojom.AxTreeData,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxTreeData.java
+org.chromium.ax.mojom.AxTreeId,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxTreeId.java
+org.chromium.ax.mojom.AxTreeUpdate,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxTreeUpdate.java
+org.chromium.ax.mojom.AxUpdatesAndEvents,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/AxUpdatesAndEvents.java
+org.chromium.ax.mojom.EventIntent,gen/ui/accessibility/mojom/mojom_java_sources.srcjar/org/chromium/ax/mojom/EventIntent.java

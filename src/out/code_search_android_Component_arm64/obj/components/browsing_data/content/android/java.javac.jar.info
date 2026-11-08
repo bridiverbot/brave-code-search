@@ -1,0 +1,3 @@
+org.chromium.components.browsing_data.content.BrowsingDataInfo,../../components/browsing_data/content/android/java/src/org/chromium/components/browsing_data/content/BrowsingDataInfo.java
+org.chromium.components.browsing_data.content.BrowsingDataModel,../../components/browsing_data/content/android/java/src/org/chromium/components/browsing_data/content/BrowsingDataModel.java
+org.chromium.components.browsing_data.content.BrowsingDataModelJni,gen/components/browsing_data/content/android/jni_headers.srcjar/org/chromium/components/browsing_data/content/BrowsingDataModelJni.java

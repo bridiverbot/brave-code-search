@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.ui.android.whats_new.features.WhatsNewFeature,../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/features/WhatsNewFeature.java
+org.chromium.chrome.browser.ui.android.whats_new.features.WhatsNewFeatureProvider,../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/features/WhatsNewFeatureProvider.java
+org.chromium.chrome.browser.ui.android.whats_new.features.WhatsNewFeatureUtils,../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/features/WhatsNewFeatureUtils.java

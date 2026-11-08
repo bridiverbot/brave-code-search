@@ -1,0 +1,2 @@
+gen/services/device/public/cpp/usb/grit/usb_ids_resources.h
+gen/services/device/public/cpp/usb/usb_ids_resources.pak

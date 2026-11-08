@@ -1,0 +1,13 @@
+org.chromium.ui.mojom.ImeTextSpan,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/ImeTextSpan.java
+org.chromium.ui.mojom.ImeTextSpanInfo,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/ImeTextSpanInfo.java
+org.chromium.ui.mojom.ImeTextSpanThickness,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/ImeTextSpanThickness.java
+org.chromium.ui.mojom.ImeTextSpanType,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/ImeTextSpanType.java
+org.chromium.ui.mojom.ImeTextSpanUnderlineStyle,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/ImeTextSpanUnderlineStyle.java
+org.chromium.ui.mojom.TextEditCommand,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/TextEditCommand.java
+org.chromium.ui.mojom.TextInputAction,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/TextInputAction.java
+org.chromium.ui.mojom.TextInputMode,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/TextInputMode.java
+org.chromium.ui.mojom.TextInputState,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/TextInputState.java
+org.chromium.ui.mojom.TextInputType,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/TextInputType.java
+org.chromium.ui.mojom.VirtualKeyboardMode,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/VirtualKeyboardMode.java
+org.chromium.ui.mojom.VirtualKeyboardPolicy,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/VirtualKeyboardPolicy.java
+org.chromium.ui.mojom.VirtualKeyboardVisibilityRequest,gen/ui/base/ime/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/VirtualKeyboardVisibilityRequest.java

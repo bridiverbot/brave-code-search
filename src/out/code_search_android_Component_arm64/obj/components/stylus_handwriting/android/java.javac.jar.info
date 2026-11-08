@@ -1,0 +1,14 @@
+android.widget.directwriting.IDirectWritingService,gen/components/stylus_handwriting/android/direct_writing_service_aidl.srcjar/android/widget/directwriting/IDirectWritingService.java
+android.widget.directwriting.IDirectWritingServiceCallback,gen/components/stylus_handwriting/android/direct_writing_service_aidl.srcjar/android/widget/directwriting/IDirectWritingServiceCallback.java
+org.chromium.components.stylus_handwriting.AndroidStylusWritingHandler,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/AndroidStylusWritingHandler.java
+org.chromium.components.stylus_handwriting.DirectWritingBundleUtil,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/DirectWritingBundleUtil.java
+org.chromium.components.stylus_handwriting.DirectWritingConstants,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/DirectWritingConstants.java
+org.chromium.components.stylus_handwriting.DirectWritingServiceBinder,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/DirectWritingServiceBinder.java
+org.chromium.components.stylus_handwriting.DirectWritingServiceCallback,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/DirectWritingServiceCallback.java
+org.chromium.components.stylus_handwriting.DirectWritingServiceConfiguration,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/DirectWritingServiceConfiguration.java
+org.chromium.components.stylus_handwriting.DirectWritingSettingsHelper,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/DirectWritingSettingsHelper.java
+org.chromium.components.stylus_handwriting.DirectWritingTrigger,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/DirectWritingTrigger.java
+org.chromium.components.stylus_handwriting.DisabledStylusWritingHandler,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/DisabledStylusWritingHandler.java
+org.chromium.components.stylus_handwriting.StylusApiOption,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/StylusApiOption.java
+org.chromium.components.stylus_handwriting.StylusWritingController,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/StylusWritingController.java
+org.chromium.components.stylus_handwriting.StylusWritingSettingsState,../../components/stylus_handwriting/android/java/src/org/chromium/components/stylus_handwriting/StylusWritingSettingsState.java

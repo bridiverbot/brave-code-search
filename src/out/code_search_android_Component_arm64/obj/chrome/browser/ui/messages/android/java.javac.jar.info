@@ -1,0 +1,9 @@
+org.chromium.chrome.browser.ui.messages.snackbar.BraveSnackbarManager,../../brave/browser/ui/messages/android/java/src/org/chromium/chrome/browser/ui/messages/snackbar/BraveSnackbarManager.java
+org.chromium.chrome.browser.ui.messages.snackbar.BraveSnackbarView,../../brave/browser/ui/messages/android/java/src/org/chromium/chrome/browser/ui/messages/snackbar/BraveSnackbarView.java
+org.chromium.chrome.browser.ui.messages.snackbar.Snackbar,../../chrome/browser/ui/messages/android/java/src/org/chromium/chrome/browser/ui/messages/snackbar/Snackbar.java
+org.chromium.chrome.browser.ui.messages.snackbar.SnackbarCollection,../../chrome/browser/ui/messages/android/java/src/org/chromium/chrome/browser/ui/messages/snackbar/SnackbarCollection.java
+org.chromium.chrome.browser.ui.messages.snackbar.SnackbarManager,../../chrome/browser/ui/messages/android/java/src/org/chromium/chrome/browser/ui/messages/snackbar/SnackbarManager.java
+org.chromium.chrome.browser.ui.messages.snackbar.SnackbarManagerProvider,../../chrome/browser/ui/messages/android/java/src/org/chromium/chrome/browser/ui/messages/snackbar/SnackbarManagerProvider.java
+org.chromium.chrome.browser.ui.messages.snackbar.SnackbarStateProvider,../../chrome/browser/ui/messages/android/java/src/org/chromium/chrome/browser/ui/messages/snackbar/SnackbarStateProvider.java
+org.chromium.chrome.browser.ui.messages.snackbar.SnackbarSwipeHandler,../../chrome/browser/ui/messages/android/java/src/org/chromium/chrome/browser/ui/messages/snackbar/SnackbarSwipeHandler.java
+org.chromium.chrome.browser.ui.messages.snackbar.SnackbarView,../../chrome/browser/ui/messages/android/java/src/org/chromium/chrome/browser/ui/messages/snackbar/SnackbarView.java

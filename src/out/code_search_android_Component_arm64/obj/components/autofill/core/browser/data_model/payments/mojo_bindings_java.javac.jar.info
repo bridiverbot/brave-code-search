@@ -1,0 +1,7 @@
+org.chromium.components.autofill.BenefitCategory,gen/components/autofill/core/browser/data_model/payments/mojo_bindings_java_sources.srcjar/org/chromium/components/autofill/BenefitCategory.java
+org.chromium.components.autofill.BenefitSource,gen/components/autofill/core/browser/data_model/payments/mojo_bindings_java_sources.srcjar/org/chromium/components/autofill/BenefitSource.java
+org.chromium.components.autofill.CardCreationSource,gen/components/autofill/core/browser/data_model/payments/mojo_bindings_java_sources.srcjar/org/chromium/components/autofill/CardCreationSource.java
+org.chromium.components.autofill.CardInfoRetrievalEnrollmentState,gen/components/autofill/core/browser/data_model/payments/mojo_bindings_java_sources.srcjar/org/chromium/components/autofill/CardInfoRetrievalEnrollmentState.java
+org.chromium.components.autofill.Issuer,gen/components/autofill/core/browser/data_model/payments/mojo_bindings_java_sources.srcjar/org/chromium/components/autofill/Issuer.java
+org.chromium.components.autofill.VirtualCardEnrollmentState,gen/components/autofill/core/browser/data_model/payments/mojo_bindings_java_sources.srcjar/org/chromium/components/autofill/VirtualCardEnrollmentState.java
+org.chromium.components.autofill.VirtualCardEnrollmentType,gen/components/autofill/core/browser/data_model/payments/mojo_bindings_java_sources.srcjar/org/chromium/components/autofill/VirtualCardEnrollmentType.java

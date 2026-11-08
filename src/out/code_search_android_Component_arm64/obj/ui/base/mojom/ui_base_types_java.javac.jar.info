@@ -1,0 +1,3 @@
+org.chromium.ui.mojom.DialogButton,gen/ui/base/mojom/ui_base_types_java_sources.srcjar/org/chromium/ui/mojom/DialogButton.java
+org.chromium.ui.mojom.MenuSourceType,gen/ui/base/mojom/ui_base_types_java_sources.srcjar/org/chromium/ui/mojom/MenuSourceType.java
+org.chromium.ui.mojom.WindowShowState,gen/ui/base/mojom/ui_base_types_java_sources.srcjar/org/chromium/ui/mojom/WindowShowState.java

@@ -1,0 +1,2 @@
+org.chromium.persistent_cache.mojom.PendingReadOnlyBackend,gen/components/persistent_cache/mojom/mojom_java_sources.srcjar/org/chromium/persistent_cache/mojom/PendingReadOnlyBackend.java
+org.chromium.persistent_cache.mojom.PendingReadWriteBackend,gen/components/persistent_cache/mojom/mojom_java_sources.srcjar/org/chromium/persistent_cache/mojom/PendingReadWriteBackend.java

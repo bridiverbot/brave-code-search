@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-iw/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">מודעה</string>
+<string name="cast_casting_to_device">מעביר אל %1$s</string>
+<string name="cast_closed_captions">כתוביות</string>
+<string name="cast_closed_captions_unavailable">הכתוביות אינן זמינות</string>
+<string name="cast_connecting_to_device">מתחבר אל %1$s</string>
+<string name="cast_disconnect">נתק</string>
+<string name="cast_expanded_controller_ad_image_description">‏רואים את התמונה בזמן שמוצגת מודעה במקלט שממנו מפעילים Cast</string>
+<string name="cast_expanded_controller_ad_in_progress">מודעה בתהליך...</string>
+<string name="cast_expanded_controller_background_image">עטיפת אלבום</string>
+<string name="cast_expanded_controller_live_head_description">המיקום הנוכחי בראש הסטרימינג בשידור חי</string>
+<string name="cast_expanded_controller_live_stream_indicator">זרם בשידור חי</string>
+<string name="cast_expanded_controller_loading">טוען…</string>
+<string name="cast_expanded_controller_skip_ad_label">דילוג על המודעה</string>
+<string name="cast_expanded_controller_skip_ad_text">ניתן יהיה לדלג על המודעה בעוד %1$d…</string>
+<string name="cast_forward">העבר</string>
+<string name="cast_forward_10">העבר עשר שניות קדימה</string>
+<string name="cast_forward_30">העבר 30 שניות קדימה</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">שידור חי</string>
+<string name="cast_mute">השתק</string>
+<string name="cast_pause">השהה</string>
+<string name="cast_play">הפעל</string>
+<string name="cast_rewind">העבר לאחור</string>
+<string name="cast_rewind_10">העבר עשר שניות לאחור</string>
+<string name="cast_rewind_30">העבר 30 שניות לאחור</string>
+<string name="cast_seek_bar">פקד חיפוש הפעלה</string>
+<string name="cast_skip_next">אפשר לדלג אל הפריט הבא</string>
+<string name="cast_skip_prev">אפשר לדלג אל הפריט הקודם</string>
+<string name="cast_stop">עצור</string>
+<string name="cast_stop_live_stream">עצור סטרימינג בשידור חי</string>
+<string name="cast_tracks_chooser_dialog_audio">אודיו</string>
+<string name="cast_tracks_chooser_dialog_cancel">ביטול</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">כתוביות</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">רצועה %1$d</string>
+<string name="cast_tracks_chooser_dialog_none">אף אחת</string>
+<string name="cast_tracks_chooser_dialog_ok">אישור</string>
+<string name="cast_tracks_chooser_dialog_subtitles">כתוביות</string>
+<string name="cast_unmute">ביטול השתקה</string>
+<string name="media_notification_channel_name">‏הפעלת Cast</string>
+</resources>

@@ -1,0 +1,5 @@
+org.chromium.device.mojom.Geoposition,gen/services/device/public/mojom/geoposition_java_sources.srcjar/org/chromium/device/mojom/Geoposition.java
+org.chromium.device.mojom.GeopositionConstants,gen/services/device/public/mojom/geoposition_java_sources.srcjar/org/chromium/device/mojom/GeopositionConstants.java
+org.chromium.device.mojom.GeopositionError,gen/services/device/public/mojom/geoposition_java_sources.srcjar/org/chromium/device/mojom/GeopositionError.java
+org.chromium.device.mojom.GeopositionErrorCode,gen/services/device/public/mojom/geoposition_java_sources.srcjar/org/chromium/device/mojom/GeopositionErrorCode.java
+org.chromium.device.mojom.GeopositionResult,gen/services/device/public/mojom/geoposition_java_sources.srcjar/org/chromium/device/mojom/GeopositionResult.java

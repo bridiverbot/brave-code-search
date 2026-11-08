@@ -1,0 +1,5 @@
+org.chromium.viz.mojom.ChannelFormat,gen/services/viz/public/mojom/compositing/shared_image_format_java_sources.srcjar/org/chromium/viz/mojom/ChannelFormat.java
+org.chromium.viz.mojom.MultiplanarFormat,gen/services/viz/public/mojom/compositing/shared_image_format_java_sources.srcjar/org/chromium/viz/mojom/MultiplanarFormat.java
+org.chromium.viz.mojom.PlaneConfig,gen/services/viz/public/mojom/compositing/shared_image_format_java_sources.srcjar/org/chromium/viz/mojom/PlaneConfig.java
+org.chromium.viz.mojom.SharedImageFormat,gen/services/viz/public/mojom/compositing/shared_image_format_java_sources.srcjar/org/chromium/viz/mojom/SharedImageFormat.java
+org.chromium.viz.mojom.Subsampling,gen/services/viz/public/mojom/compositing/shared_image_format_java_sources.srcjar/org/chromium/viz/mojom/Subsampling.java

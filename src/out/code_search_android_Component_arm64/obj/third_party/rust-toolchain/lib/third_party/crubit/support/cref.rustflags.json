@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust-toolchain/lib/third_party/crubit/support/cref",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust-toolchain/lib/third_party/crubit/support/cref.rs",
+        "@obj/third_party/rust-toolchain/lib/third_party/crubit/support/cref.rsp.rust"
+    ]
+}

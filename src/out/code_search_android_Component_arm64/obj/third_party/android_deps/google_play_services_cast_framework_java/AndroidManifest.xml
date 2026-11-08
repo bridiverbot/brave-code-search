@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.google.android.gms.cast.framework"
+    android:compileSdkVersion="34" >
+
+    <uses-sdk
+        android:minSdkVersion="23"
+        android:targetSdkVersion="34" />
+    <!-- This permission is required to check the state of and information about the current network. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- This permission is required to start foreground services in Android P. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <queries>
+        <package android:name="com.google.android.gms.policy_cast_dynamite" />
+    </queries>
+
+    <application>
+        <receiver
+            android:name="com.google.android.gms.cast.framework.media.MediaIntentReceiver"
+            android:exported="false" />
+
+        <service
+            android:name="com.google.android.gms.cast.framework.ReconnectionService"
+            android:exported="false" />
+    </application>
+
+</manifest>

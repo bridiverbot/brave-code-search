@@ -1,0 +1,6 @@
+org.chromium.chrome.browser.share.send_tab_to_self.AutoOpenOutcome,gen/components/send_tab_to_self/java_enum_srcjar.srcjar/org/chromium/chrome/browser/share/send_tab_to_self/AutoOpenOutcome.java
+org.chromium.chrome.browser.share.send_tab_to_self.EntryPointDisplayReason,gen/components/send_tab_to_self/java_enum_srcjar.srcjar/org/chromium/chrome/browser/share/send_tab_to_self/EntryPointDisplayReason.java
+org.chromium.chrome.browser.share.send_tab_to_self.NotificationStatus,gen/components/send_tab_to_self/java_enum_srcjar.srcjar/org/chromium/chrome/browser/share/send_tab_to_self/NotificationStatus.java
+org.chromium.chrome.browser.share.send_tab_to_self.SendTabToSelfResult,gen/components/send_tab_to_self/java_enum_srcjar.srcjar/org/chromium/chrome/browser/share/send_tab_to_self/SendTabToSelfResult.java
+org.chromium.chrome.browser.share.send_tab_to_self.ShareActivatedEntryPoint,gen/components/send_tab_to_self/java_enum_srcjar.srcjar/org/chromium/chrome/browser/share/send_tab_to_self/ShareActivatedEntryPoint.java
+org.chromium.chrome.browser.share.send_tab_to_self.ShareEntryPoint,gen/components/send_tab_to_self/java_enum_srcjar.srcjar/org/chromium/chrome/browser/share/send_tab_to_self/ShareEntryPoint.java

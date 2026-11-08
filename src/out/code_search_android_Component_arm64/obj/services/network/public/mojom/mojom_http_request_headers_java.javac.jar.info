@@ -1,0 +1,3 @@
+org.chromium.network.mojom.HttpRequestHeaderKeyValuePair,gen/services/network/public/mojom/mojom_http_request_headers_java_sources.srcjar/org/chromium/network/mojom/HttpRequestHeaderKeyValuePair.java
+org.chromium.network.mojom.HttpRequestHeaders,gen/services/network/public/mojom/mojom_http_request_headers_java_sources.srcjar/org/chromium/network/mojom/HttpRequestHeaders.java
+org.chromium.network.mojom.HttpRequestHeadersUpdateParams,gen/services/network/public/mojom/mojom_http_request_headers_java_sources.srcjar/org/chromium/network/mojom/HttpRequestHeadersUpdateParams.java

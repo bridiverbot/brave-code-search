@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/safe_browsing/core/common/interfaces_rust",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "gen/components/safe_browsing/core/common/interfaces/lib.rs",
+        "@obj/components/safe_browsing/core/common/interfaces_rust.rsp.rust"
+    ]
+}

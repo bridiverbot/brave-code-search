@@ -1,0 +1,8 @@
+org.chromium.components.background_task_scheduler.BackgroundTask,../../components/background_task_scheduler/android/java/src/org/chromium/components/background_task_scheduler/BackgroundTask.java
+org.chromium.components.background_task_scheduler.BackgroundTaskFactory,../../components/background_task_scheduler/android/java/src/org/chromium/components/background_task_scheduler/BackgroundTaskFactory.java
+org.chromium.components.background_task_scheduler.BackgroundTaskScheduler,../../components/background_task_scheduler/android/java/src/org/chromium/components/background_task_scheduler/BackgroundTaskScheduler.java
+org.chromium.components.background_task_scheduler.BackgroundTaskSchedulerExternalUma,../../components/background_task_scheduler/android/java/src/org/chromium/components/background_task_scheduler/BackgroundTaskSchedulerExternalUma.java
+org.chromium.components.background_task_scheduler.NativeBackgroundTask,../../components/background_task_scheduler/android/java/src/org/chromium/components/background_task_scheduler/NativeBackgroundTask.java
+org.chromium.components.background_task_scheduler.NativeBackgroundTaskDelegate,../../components/background_task_scheduler/android/java/src/org/chromium/components/background_task_scheduler/NativeBackgroundTaskDelegate.java
+org.chromium.components.background_task_scheduler.TaskInfo,../../components/background_task_scheduler/android/java/src/org/chromium/components/background_task_scheduler/TaskInfo.java
+org.chromium.components.background_task_scheduler.TaskParameters,../../components/background_task_scheduler/android/java/src/org/chromium/components/background_task_scheduler/TaskParameters.java

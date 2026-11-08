@@ -1,0 +1,13 @@
+org.chromium.components.browser_ui.bottomsheet.BottomSheetContent,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetContent.java
+org.chromium.components.browser_ui.bottomsheet.BottomSheetController,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetController.java
+org.chromium.components.browser_ui.bottomsheet.BottomSheetControllerProvider,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetControllerProvider.java
+org.chromium.components.browser_ui.bottomsheet.BottomSheetFeatureMap,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetFeatureMap.java
+org.chromium.components.browser_ui.bottomsheet.BottomSheetFeatureMapJni,gen/components/browser_ui/bottomsheet/android/bottomsheet_jni_headers.srcjar/org/chromium/components/browser_ui/bottomsheet/BottomSheetFeatureMapJni.java
+org.chromium.components.browser_ui.bottomsheet.BottomSheetListViewBase,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetListViewBase.java
+org.chromium.components.browser_ui.bottomsheet.BottomSheetObserver,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetObserver.java
+org.chromium.components.browser_ui.bottomsheet.BottomSheetRecyclerScrollListener,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetRecyclerScrollListener.java
+org.chromium.components.browser_ui.bottomsheet.BottomSheetType,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetType.java
+org.chromium.components.browser_ui.bottomsheet.BottomSheetUtils,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetUtils.java
+org.chromium.components.browser_ui.bottomsheet.ExpandedSheetHelper,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/ExpandedSheetHelper.java
+org.chromium.components.browser_ui.bottomsheet.ItemDividerBase,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/ItemDividerBase.java
+org.chromium.components.browser_ui.bottomsheet.UserCriticalFeature,../../components/browser_ui/bottomsheet/android/java/src/org/chromium/components/browser_ui/bottomsheet/UserCriticalFeature.java

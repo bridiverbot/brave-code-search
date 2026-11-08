@@ -1,0 +1,3 @@
+org.chromium.components.tabs.DetachReason,gen/components/tabs/public/android/java_enum_srcjar.srcjar/org/chromium/components/tabs/DetachReason.java
+org.chromium.components.tabs.TabAlert,gen/components/tabs/public/android/java_enum_srcjar.srcjar/org/chromium/components/tabs/TabAlert.java
+org.chromium.components.tabs.TabStripCollection,../../components/tabs/public/android/org/chromium/components/tabs/TabStripCollection.java

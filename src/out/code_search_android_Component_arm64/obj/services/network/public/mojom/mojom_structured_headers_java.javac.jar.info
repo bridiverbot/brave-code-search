@@ -1,0 +1,7 @@
+org.chromium.network.mojom.StructuredHeadersDictionary,gen/services/network/public/mojom/mojom_structured_headers_java_sources.srcjar/org/chromium/network/mojom/StructuredHeadersDictionary.java
+org.chromium.network.mojom.StructuredHeadersDictionaryMember,gen/services/network/public/mojom/mojom_structured_headers_java_sources.srcjar/org/chromium/network/mojom/StructuredHeadersDictionaryMember.java
+org.chromium.network.mojom.StructuredHeadersInnerList,gen/services/network/public/mojom/mojom_structured_headers_java_sources.srcjar/org/chromium/network/mojom/StructuredHeadersInnerList.java
+org.chromium.network.mojom.StructuredHeadersItem,gen/services/network/public/mojom/mojom_structured_headers_java_sources.srcjar/org/chromium/network/mojom/StructuredHeadersItem.java
+org.chromium.network.mojom.StructuredHeadersParameter,gen/services/network/public/mojom/mojom_structured_headers_java_sources.srcjar/org/chromium/network/mojom/StructuredHeadersParameter.java
+org.chromium.network.mojom.StructuredHeadersParameterizedItem,gen/services/network/public/mojom/mojom_structured_headers_java_sources.srcjar/org/chromium/network/mojom/StructuredHeadersParameterizedItem.java
+org.chromium.network.mojom.StructuredHeadersParameterizedMember,gen/services/network/public/mojom/mojom_structured_headers_java_sources.srcjar/org/chromium/network/mojom/StructuredHeadersParameterizedMember.java

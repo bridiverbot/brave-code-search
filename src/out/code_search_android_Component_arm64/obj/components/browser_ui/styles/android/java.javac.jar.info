@@ -1,0 +1,5 @@
+org.chromium.components.browser_ui.styles.ChromeColors,../../components/browser_ui/styles/android/java/src/org/chromium/components/browser_ui/styles/ChromeColors.java
+org.chromium.components.browser_ui.styles.IncognitoColors,../../components/browser_ui/styles/android/java/src/org/chromium/components/browser_ui/styles/IncognitoColors.java
+org.chromium.components.browser_ui.styles.NewLabelSpan,../../components/browser_ui/styles/android/java/src/org/chromium/components/browser_ui/styles/NewLabelSpan.java
+org.chromium.components.browser_ui.styles.NewLabelUtils,../../components/browser_ui/styles/android/java/src/org/chromium/components/browser_ui/styles/NewLabelUtils.java
+org.chromium.components.browser_ui.styles.SemanticColorUtils,../../components/browser_ui/styles/android/java/src/org/chromium/components/browser_ui/styles/SemanticColorUtils.java

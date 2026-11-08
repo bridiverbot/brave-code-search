@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-kn/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">ಜಾಹೀರಾತು</string>
+<string name="cast_casting_to_device">%1$s ಗೆ ಬಿತ್ತರಿಸಲಾಗುತ್ತಿದೆ</string>
+<string name="cast_closed_captions">ಮುಚ್ಚಿದ ಶೀರ್ಷಿಕೆಗಳು</string>
+<string name="cast_closed_captions_unavailable">ಮುಚ್ಚಲಾಗಿರುವ ಶೀರ್ಷಿಕೆಗಳು ಲಭ್ಯವಿಲ್ಲ</string>
+<string name="cast_connecting_to_device">%1$s ಗೆ ಸಂಪರ್ಕಪಡಿಸಲಾಗುತ್ತಿದೆ</string>
+<string name="cast_disconnect">ಡಿಸ್‌ಕನೆಕ್ಟ್ ಮಾಡಿ</string>
+<string name="cast_expanded_controller_ad_image_description">ಬಿತ್ತರಿಸುವಿಕೆ ಸ್ವೀಕರಿಸುವವರು ಜಾಹೀರಾತನ್ನು ಪ್ಲೇ ಮಾಡುತ್ತಿರುವಾಗ ಚಿತ್ರವನ್ನು ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತದೆ</string>
+<string name="cast_expanded_controller_ad_in_progress">ಜಾಹೀರಾತು ಪ್ರಗತಿಯಲ್ಲಿದೆ...</string>
+<string name="cast_expanded_controller_background_image">ಆಲ್ಬಮ್ ಕಲೆ</string>
+<string name="cast_expanded_controller_live_head_description">ಪ್ರಸ್ತುತ ಸ್ಥಾನವು ಲೈವ್ ಸ್ಟ್ರೀಮ್‌ನ ಮುಖ್ಯ ಸ್ಥಳದಲ್ಲಿದೆ</string>
+<string name="cast_expanded_controller_live_stream_indicator">ಲೈವ್ ಸ್ಟ್ರೀಮ್</string>
+<string name="cast_expanded_controller_loading">ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...</string>
+<string name="cast_expanded_controller_skip_ad_label">ಜಾಹೀರಾತು ಸ್ಕಿಪ್ ಮಾಡಿ</string>
+<string name="cast_expanded_controller_skip_ad_text">ನೀವು %1$d ನಲ್ಲಿ ಜಾಹೀರಾತನ್ನು ಸ್ಕಿಪ್ ಮಾಡಬಹುದು…</string>
+<string name="cast_forward">ಫಾರ್ವರ್ಡ್</string>
+<string name="cast_forward_10">ಹತ್ತು ಸೆಕೆಂಡುಗಳಷ್ಟು ಫಾರ್ವರ್ಡ್ ಮಾಡು</string>
+<string name="cast_forward_30">ಮೂವತ್ತು ಸೆಕೆಂಡುಗಳಷ್ಟು ಫಾರ್ವರ್ಡ್ ಮಾಡು</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">ಲೈವ್</string>
+<string name="cast_mute">ಮ್ಯೂಟ್</string>
+<string name="cast_pause">ವಿರಾಮ</string>
+<string name="cast_play">ಪ್ಲೇ</string>
+<string name="cast_rewind">ರಿವೈಂಡ್</string>
+<string name="cast_rewind_10">ಹತ್ತು ಸೆಕೆಂಡುಗಳಷ್ಟು ರಿವೈಂಡ್ ಮಾಡು</string>
+<string name="cast_rewind_30">ಮೂವತ್ತು ಸೆಕೆಂಡುಗಳಷ್ಟು ರಿವೈಂಡ್ ಮಾಡು</string>
+<string name="cast_seek_bar">ಪ್ಲೇಬ್ಯಾಕ್‌ ಸೀಕ್ ನಿಯಂತ್ರಣ</string>
+<string name="cast_skip_next">ಮುಂದಿನ ಐಟಂಗೆ ಸ್ಕಿಪ್‌ ಮಾಡಿ</string>
+<string name="cast_skip_prev">ಹಿಂದಿನ ಐಟಂಗೆ ಸ್ಕಿಪ್‌ ಮಾಡಿ</string>
+<string name="cast_stop">ನಿಲ್ಲಿಸಿ</string>
+<string name="cast_stop_live_stream">ಲೈವ್ ಸ್ಟ್ರೀಮ್ ನಿಲ್ಲಿಸಿ</string>
+<string name="cast_tracks_chooser_dialog_audio">ಆಡಿಯೋ</string>
+<string name="cast_tracks_chooser_dialog_cancel">ರದ್ದು ಮಾಡಿ</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">ಮುಚ್ಚಿದ ಶೀರ್ಷಿಕೆಗಳು</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">%1$d ಟ್ರ್ಯಾಕ್ ಮಾಡಿ</string>
+<string name="cast_tracks_chooser_dialog_none">ಯಾವುದೂ ಅಲ್ಲ</string>
+<string name="cast_tracks_chooser_dialog_ok">ಸರಿ</string>
+<string name="cast_tracks_chooser_dialog_subtitles">ಸಬ್‌ಟೈಟಲ್‌ಗಳು</string>
+<string name="cast_unmute">ಅನ್‌ಮ್ಯೂಟ್</string>
+<string name="media_notification_channel_name">ಬಿತ್ತರಿಸಿ</string>
+</resources>

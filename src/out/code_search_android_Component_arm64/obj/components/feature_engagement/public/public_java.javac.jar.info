@@ -1,0 +1,10 @@
+org.chromium.components.feature_engagement.CppWrappedTestTracker,../../components/feature_engagement/public/android/java/src/org/chromium/components/feature_engagement/CppWrappedTestTracker.java
+org.chromium.components.feature_engagement.EventConstants,../../components/feature_engagement/public/android/java/src/org/chromium/components/feature_engagement/EventConstants.java
+org.chromium.components.feature_engagement.FeatureConstants,../../components/feature_engagement/public/android/java/src/org/chromium/components/feature_engagement/FeatureConstants.java
+org.chromium.components.feature_engagement.FeatureProperties,../../components/feature_engagement/public/android/java/src/org/chromium/components/feature_engagement/FeatureProperties.java
+org.chromium.components.feature_engagement.SnoozeAction,gen/components/feature_engagement/public/public_java_enums_srcjar.srcjar/org/chromium/components/feature_engagement/SnoozeAction.java
+org.chromium.components.feature_engagement.TestTracker,../../components/feature_engagement/public/android/java/src/org/chromium/components/feature_engagement/TestTracker.java
+org.chromium.components.feature_engagement.Tracker,../../components/feature_engagement/public/android/java/src/org/chromium/components/feature_engagement/Tracker.java
+org.chromium.components.feature_engagement.TriggerDetails,../../components/feature_engagement/public/android/java/src/org/chromium/components/feature_engagement/TriggerDetails.java
+org.chromium.components.feature_engagement.TriggerHelpUIResult,gen/components/feature_engagement/public/public_java_enums_srcjar.srcjar/org/chromium/components/feature_engagement/TriggerHelpUIResult.java
+org.chromium.components.feature_engagement.UiFormat,../../components/feature_engagement/public/android/java/src/org/chromium/components/feature_engagement/UiFormat.java

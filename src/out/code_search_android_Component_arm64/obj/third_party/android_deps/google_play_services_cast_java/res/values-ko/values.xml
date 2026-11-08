@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/res/values-ko/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_dynamic_group_name_format">%1$s 외 %2$d대</string>
+<string name="cast_notification_connected_message">%1$s에 연결됨</string>
+<string name="cast_notification_connecting_message">%1$s에 연결 중</string>
+<string name="cast_notification_default_channel_name">Cast</string>
+<string name="cast_notification_disconnect">연결 해제</string>
+</resources>

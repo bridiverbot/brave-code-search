@@ -1,0 +1,17 @@
+org.chromium.components.autofill.IbanRecordType,gen/components/autofill/android/payments_autofill_core_browser_java_enums.srcjar/org/chromium/components/autofill/IbanRecordType.java
+org.chromium.components.autofill.payments.AccountType,gen/components/autofill/android/payments_autofill_core_browser_java_enums.srcjar/org/chromium/components/autofill/payments/AccountType.java
+org.chromium.components.autofill.payments.AutofillSaveCardUiInfo,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/AutofillSaveCardUiInfo.java
+org.chromium.components.autofill.payments.AutofillSaveIbanUiInfo,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/AutofillSaveIbanUiInfo.java
+org.chromium.components.autofill.payments.BankAccount,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/BankAccount.java
+org.chromium.components.autofill.payments.BnplIssuerContext,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/BnplIssuerContext.java
+org.chromium.components.autofill.payments.BnplIssuerForSettings,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/BnplIssuerForSettings.java
+org.chromium.components.autofill.payments.BnplIssuerTosDetail,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/BnplIssuerTosDetail.java
+org.chromium.components.autofill.payments.CardDetail,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/CardDetail.java
+org.chromium.components.autofill.payments.Ewallet,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/Ewallet.java
+org.chromium.components.autofill.payments.Iban,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/Iban.java
+org.chromium.components.autofill.payments.LegalMessage,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/LegalMessage.java
+org.chromium.components.autofill.payments.LegalMessageLine,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/LegalMessageLine.java
+org.chromium.components.autofill.payments.PaymentInstrument,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/PaymentInstrument.java
+org.chromium.components.autofill.payments.PaymentRail,gen/components/autofill/android/payments_autofill_core_browser_java_enums.srcjar/org/chromium/components/autofill/payments/PaymentRail.java
+org.chromium.components.autofill.payments.TouchToFillDisplayOptions,../../components/autofill/android/java/src/org/chromium/components/autofill/payments/TouchToFillDisplayOptions.java
+org.chromium.components.autofill.payments.WalletReminderNoticeInteraction,gen/components/autofill/android/payments_autofill_core_browser_java_enums.srcjar/org/chromium/components/autofill/payments/WalletReminderNoticeInteraction.java
