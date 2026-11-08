@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/internal_debug_pages_disabled_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/internal_debug_pages_disabled_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/internal_debug_pages_disabled_resources_map.h"
+            type="resource_map_header" />
+    <output filename="internal_debug_pages_disabled_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_INTERNAL_DEBUG_PAGES_DISABLED_APP_HTML" file="${root_gen_dir}/components/webui/internal_debug_pages_disabled/resources/preprocessed/app.html" resource_path="app.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_INTERNAL_DEBUG_PAGES_DISABLED_APP_JS" file="${root_gen_dir}/components/webui/internal_debug_pages_disabled/resources/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>
