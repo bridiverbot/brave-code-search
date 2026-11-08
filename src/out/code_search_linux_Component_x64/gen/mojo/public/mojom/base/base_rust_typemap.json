@@ -1,0 +1,18 @@
+[
+  {
+    "deps": [
+      "//mojo/public/rust/base:read_only_file_checks",
+      "//mojo/public/rust/c_mojo_api"
+    ],
+    "public_deps": [
+      "//base:file"
+    ],
+    "traits_file": "../../mojo/public/mojom/base/read_only_file_mojom_traits.rs",
+    "types": [
+      {
+        "mojom": "mojo_base.mojom.ReadOnlyFile",
+        "rust": "base_file::File"
+      }
+    ]
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "deps": [
+    "audio_data.build_metadata",
+    "encryption_pattern.build_metadata",
+    "../../../gpu/ipc/common/interfaces.build_metadata",
+    "../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../ui/gfx/geometry/mojom/mojom.build_metadata",
+    "../../../ui/gfx/mojom/mojom.build_metadata",
+    "../../../ui/gfx/mojom/hdr_metadata.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../media/mojo/mojom/channel_layout.mojom",
+    "../../../../../../media/mojo/mojom/media_types.mojom"
+  ]
+}

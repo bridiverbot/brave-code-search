@@ -1,0 +1,9 @@
+{
+  "deps": [
+    "../../../../mojo/public/mojom/base/base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../content/common/memory_coordinator/mojom/memory_coordinator.mojom",
+    "../../../../../../../content/common/memory_coordinator/mojom/memory_coordinator_diagnostics.mojom"
+  ]
+}

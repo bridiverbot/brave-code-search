@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_EXTENSIONS_RENDERER_GENERATED_EXTENSIONS_COMMON_API_MIME_HANDLER_MOJOM_JS" file="${root_gen_dir}/extensions/common/api/mime_handler.mojom.js" resource_path="extensions/common/api/mime_handler.mojom.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_EXTENSIONS_RENDERER_GENERATED_EXTENSIONS_COMMON_MOJOM_KEEP_ALIVE_MOJOM_JS" file="${root_gen_dir}/extensions/common/mojom/keep_alive.mojom.js" resource_path="extensions/common/mojom/keep_alive.mojom.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
