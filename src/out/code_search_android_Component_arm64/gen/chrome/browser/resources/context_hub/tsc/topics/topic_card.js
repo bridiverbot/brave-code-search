@@ -1,0 +1,74 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_icon/cr_icon.js';
+import '//resources/cr_elements/icons.html.js';
+import './topic_feedback_controls.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './topic_card.css.js';
+import { getHtml } from './topic_card.html.js';
+import { getBackgroundColorForTopic, getBadgePath, getBadgeShapeForTopic, isCrIcon, isTopicsFishfoodFeedbackEnabled } from './topic_utils.js';
+// TODO(crbug.com/558572977): Use internationalized strings once GRD
+// strings are added.
+export class TopicCardElement extends CrLitElement {
+    static get is() {
+        return 'topic-card';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            topic: { type: Object },
+            // The stored fishfood feedback on `topic`, if any.
+            feedback: { type: Object },
+            feedbackEnabled_: { type: Boolean },
+        };
+    }
+    #topic_accessor_storage = null;
+    get topic() { return this.#topic_accessor_storage; }
+    set topic(value) { this.#topic_accessor_storage = value; }
+    #feedback_accessor_storage = null;
+    get feedback() { return this.#feedback_accessor_storage; }
+    set feedback(value) { this.#feedback_accessor_storage = value; }
+    #feedbackEnabled__accessor_storage = isTopicsFishfoodFeedbackEnabled();
+    get feedbackEnabled_() { return this.#feedbackEnabled__accessor_storage; }
+    set feedbackEnabled_(value) { this.#feedbackEnabled__accessor_storage = value; }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('topic')) {
+            this.toggleAttribute('hidden', !this.hasContent_());
+        }
+    }
+    hasContent_() {
+        return Boolean(this.topic &&
+            (this.topic.title.trim() || this.topic.description.trim()));
+    }
+    getBadgePath_() {
+        return getBadgePath(getBadgeShapeForTopic(this.topic?.id || ''));
+    }
+    getBackgroundColor_() {
+        return getBackgroundColorForTopic(this.topic?.id || '');
+    }
+    getIcon_() {
+        return this.topic?.icon || '';
+    }
+    isCrIcon_() {
+        return isCrIcon(this.getIcon_());
+    }
+    getActionAriaLabel_() {
+        return this.topic?.title.trim() ? `Jump back in to ${this.topic.title}` :
+            'Jump back in';
+    }
+    onJumpBackInClick_() {
+        if (!this.topic) {
+            return;
+        }
+        this.fire('jump-back-in', { topic: this.topic });
+    }
+}
+customElements.define(TopicCardElement.is, TopicCardElement);

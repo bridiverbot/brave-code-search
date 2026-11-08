@@ -1,0 +1,8 @@
+{
+  "gn_target": "//chrome/browser/thumbnail:java",
+  "public_deps_configs": [
+    "gen/chrome/browser/thumbnail/generator/java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

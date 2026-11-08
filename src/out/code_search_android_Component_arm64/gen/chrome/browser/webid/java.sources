@@ -1,0 +1,9 @@
+../../chrome/browser/webid/android/java/src/org/chromium/chrome/browser/webid/DigitalAssetLinksVerifier.java
+../../chrome/browser/webid/android/java/src/org/chromium/chrome/browser/webid/DigitalCredentialsCreationDelegate.java
+../../chrome/browser/webid/android/java/src/org/chromium/chrome/browser/webid/DigitalCredentialsPresentationDelegate.java
+../../chrome/browser/webid/android/java/src/org/chromium/chrome/browser/webid/DigitalIdentityProvider.java
+../../chrome/browser/webid/android/java/src/org/chromium/chrome/browser/webid/IdentityCredentialsDelegate.java
+../../chrome/browser/webid/android/java/src/org/chromium/chrome/browser/webid/IdentityProviderService.java
+../../chrome/browser/webid/android/java/src/org/chromium/chrome/browser/webid/LoginStatusService.java
+../../chrome/browser/webid/android/java/src/org/chromium/chrome/browser/webid/TestIdP.java
+../../chrome/browser/webid/android/java/src/org/chromium/chrome/browser/webid/VerifiedOriginResolver.java

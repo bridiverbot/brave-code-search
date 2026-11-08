@@ -1,0 +1,2 @@
+int style SettingsToolbarStyle 0x7f010001
+int style ThemeOverlay_Chromium_Settings 0x7f010001

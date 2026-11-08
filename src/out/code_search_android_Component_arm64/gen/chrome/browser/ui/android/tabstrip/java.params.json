@@ -1,0 +1,34 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/callback_java.params.json",
+    "gen/base/log_java.params.json",
+    "gen/base/metrics_java.params.json",
+    "gen/base/supplier_java.params.json",
+    "gen/chrome/browser/browser_controls/android/java.params.json",
+    "gen/chrome/browser/ui/android/toolbar/java.params.json",
+    "gen/ui/android/ui_no_recycler_view_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/browser/ui/android/tabstrip/java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/ui/android/tabstrip:java",
+  "interface_jar_path": "obj/chrome/browser/ui/android/tabstrip/java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/browser/ui/android/tabstrip/java.javac.jar",
+  "public_deps_configs": [
+    "gen/chrome/browser/ui/android/tabstrip/enums_java.params.json"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/browser/ui/android/tabstrip/java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/ui/android/tabstrip/java.javac.jar"
+}

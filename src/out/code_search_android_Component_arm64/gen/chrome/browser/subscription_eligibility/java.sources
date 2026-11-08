@@ -1,0 +1,3 @@
+../../chrome/browser/subscription_eligibility/android/java/src/org/chromium/chrome/browser/subscription_eligibility/AiSubscriptionTierNames.java
+../../chrome/browser/subscription_eligibility/android/java/src/org/chromium/chrome/browser/subscription_eligibility/SubscriptionEligibilityService.java
+../../chrome/browser/subscription_eligibility/android/java/src/org/chromium/chrome/browser/subscription_eligibility/SubscriptionEligibilityServiceFactory.java

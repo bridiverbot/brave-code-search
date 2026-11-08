@@ -1,0 +1,1 @@
+int drawable chrome_product_vd_24 0x7f010001

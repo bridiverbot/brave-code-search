@@ -1,0 +1,3 @@
+{
+  "org/chromium/chrome/browser/task_manager/TaskManagerServiceBridge$NativeTaskManagerObserverAndroid": "::task_manager::TaskManagerObserverAndroid"
+}

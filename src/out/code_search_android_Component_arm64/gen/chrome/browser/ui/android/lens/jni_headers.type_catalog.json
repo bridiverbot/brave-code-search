@@ -1,0 +1,3 @@
+{
+  "org/chromium/chrome/browser/ui/lens/LensOverlayCoordinator$NativeLensOverlayControllerAndroid": "::lens::LensOverlayControllerAndroid"
+}

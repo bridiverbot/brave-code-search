@@ -1,0 +1,21 @@
+import { getTrustedHTML } from '//resources/js/static_types.js';
+export function getTemplate() {
+    return getTrustedHTML `<!--_html_template_start_--><!--
+Copyright 2023 The Chromium Authors
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+-->
+
+<style>display:flex;flex-wrap:wrap;justify-content:space-around;padding-inline-end:20px;padding-inline-start:20px;</style>
+
+<diagnose-info-table id="watch-position-table"></diagnose-info-table>
+<diagnose-info-table id="provider-state-table"></diagnose-info-table>
+<diagnose-info-table
+  id="location-provider-manager-mode-table"></diagnose-info-table>
+<diagnose-info-table id="wifi-data-table"></diagnose-info-table>
+<diagnose-info-table id="position-cache-table"></diagnose-info-table>
+<diagnose-info-table id="wifi-polling-policy-table"></diagnose-info-table>
+<diagnose-info-table id="last-network-request-table"></diagnose-info-table>
+<diagnose-info-table id="last-network-response-table"></diagnose-info-table>
+<!--_html_template_end_-->`;
+}

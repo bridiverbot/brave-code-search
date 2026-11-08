@@ -1,0 +1,63 @@
+{
+  "extends": "../../../../../../../chrome/test/data/webui/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "../../../../../../../chrome/test/data/webui",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//webui-test/chai.js": [
+        "./../../../../../../../third_party/node/node_modules/@types/chai/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "../../../../../../../chrome/test/data/webui/chai_assert.ts",
+    "../../../../../../../chrome/test/data/webui/fake_chrome_event.ts",
+    "../../../../../../../chrome/test/data/webui/fake_media_query_list.ts",
+    "../../../../../../../chrome/test/data/webui/keyboard_mock_interactions.ts",
+    "../../../../../../../chrome/test/data/webui/metrics_test_support.ts",
+    "../../../../../../../chrome/test/data/webui/mocha_adapter_simple.ts",
+    "../../../../../../../chrome/test/data/webui/mock_controller.ts",
+    "../../../../../../../chrome/test/data/webui/mock_timer.ts",
+    "../../../../../../../chrome/test/data/webui/mock_timer_test.ts",
+    "../../../../../../../chrome/test/data/webui/test_browser_proxy.ts",
+    "../../../../../../../chrome/test/data/webui/test_mock.ts",
+    "../../../../../../../chrome/test/data/webui/test_mock_test.ts",
+    "../../../../../../../chrome/test/data/webui/test_open_window_proxy.ts",
+    "../../../../../../../chrome/test/data/webui/test_plural_string_proxy.ts",
+    "../../../../../../../chrome/test/data/webui/test_util.ts",
+    "../../../../../../../chrome/test/data/webui/trusted_html.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../tools/typescript/definitions/dom_automation_controller.d.ts",
+    "../../../../../../../tools/typescript/definitions/chrome_histograms.d.ts",
+    "../../../../../../../tools/typescript/definitions/metrics_private.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    }
+  ]
+}

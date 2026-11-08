@@ -1,0 +1,32 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/components/browser_ui/http_auth/android/java_resources.params.json",
+    "gen/components/browser_ui/widget/android/java.params.json",
+    "gen/components/strings/components_strings_grd.params.json",
+    "gen/third_party/android_deps/material_design_java.params.json",
+    "gen/third_party/androidx/androidx_appcompat_appcompat_java.params.json",
+    "gen/ui/android/ui_java.params.json",
+    "gen/url/gurl_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/components/browser_ui/http_auth/android/java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//components/browser_ui/http_auth/android:java",
+  "interface_jar_path": "obj/components/browser_ui/http_auth/android/java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.components.browser_ui.http_auth",
+  "processed_jar_path": "obj/components/browser_ui/http_auth/android/java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/components/browser_ui/http_auth/android/java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/components/browser_ui/http_auth/android/java.javac.jar"
+}

@@ -1,0 +1,10 @@
+
+    import plugin from '../../../../../../../../ui/webui/resources/tools/rollup_plugin.mjs';
+    import {resolve} from 'node:path';
+    const in_path_abs = resolve('gen/chrome/browser/resources/glic/tsc').replace(/\\/g, '/');
+    export default ({
+      plugins: [
+        plugin(in_path_abs, '', 'chrome://glic/', ["strings.m.js", "chrome://resources/brave/leo.bundle.js", "//resources/brave/leo.bundle.js", "chrome://resources/brave/opaque_ke.bundle.js", "//resources/brave/opaque_ke.bundle.js", "chrome://resources/brave/leo.bundle.js", "//resources/brave/leo.bundle.js", "chrome://resources/brave/opaque_ke.bundle.js", "//resources/brave/opaque_ke.bundle.js", "chrome://resources/mojo/mojo/public/js/bindings.js", "//resources/mojo/mojo/public/js/bindings.js", "chrome://resources/mojo/mojo/public/mojom/base/time.mojom-lite.js", "//resources/mojo/mojo/public/mojom/base/time.mojom-lite.js", "chrome://resources/lit/v3_0/lit.rollup.js", "//resources/lit/v3_0/lit.rollup.js", "chrome://resources/polymer/v3_0/polymer/polymer_bundled.min.js", "//resources/polymer/v3_0/polymer/polymer_bundled.min.js", "chrome://resources/js/cr.js", "//resources/js/cr.js", "chrome://resources/js/load_time_data.js", "//resources/js/load_time_data.js", "chrome://resources/ash/common/load_time_data.m.js", "//resources/ash/common/load_time_data.m.js", "chrome://resources/mwc/lit/index.js", "//resources/mwc/lit/index.js"],
+               ["/shared/guest_view|gen/chrome/browser/resources/guest_view_shared/tsc", "chrome://resources/polymer/v3_0/|../../third_party/polymer/v3_0/components-chromium/", "//resources/polymer/v3_0/|../../third_party/polymer/v3_0/components-chromium/", "chrome://resources/lit/v3_0/|gen/third_party/lit/v3_0/minified/", "//resources/lit/v3_0/|gen/third_party/lit/v3_0/minified/", "chrome://resources/brave/|gen/brave/ui/webui/resources/tsc/", "//resources/brave/|gen/brave/ui/webui/resources/tsc/", "chrome://resources/|gen/ui/webui/resources/tsc/", "//resources/|gen/ui/webui/resources/tsc/"]) ]
+    });
+    
