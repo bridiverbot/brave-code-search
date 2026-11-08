@@ -1,0 +1,15 @@
+{
+  "deps": [
+    "../common/memory_coordinator/mojom/mojom.build_metadata",
+    "../../mojo/public/mojom/base/base.build_metadata",
+    "../../sandbox/policy/mojom/mojom.build_metadata",
+    "../../third_party/blink/public/mojom/fingerprinting_protection/fingerprinting_protection.build_metadata",
+    "../../third_party/blink/public/mojom/tokens/tokens.build_metadata"
+  ],
+  "sources": [
+    "../../../../../content/shell/common/main_frame_counter_test.mojom",
+    "../../../../../content/shell/common/memory_coordinator/memory_coordinator_test.mojom",
+    "../../../../../content/shell/common/power_monitor_test.mojom",
+    "../../../../../content/shell/common/render_frame_test_helper.mojom"
+  ]
+}

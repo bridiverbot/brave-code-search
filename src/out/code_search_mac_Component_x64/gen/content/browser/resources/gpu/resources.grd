@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/gpu_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/gpu_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/gpu_resources_map.h"
+            type="resource_map_header" />
+    <output filename="gpu_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_GPU_GPU_INTERNALS_HTML" file="${root_gen_dir}/content/browser/resources/gpu/preprocessed/gpu_internals.html" resource_path="gpu_internals.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GPU_INFO_VIEW_JS" file="${root_gen_dir}/content/browser/resources/gpu/minified/info_view.js" resource_path="info_view.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GPU_BROWSER_BRIDGE_JS" file="${root_gen_dir}/content/browser/resources/gpu/minified/browser_bridge.js" resource_path="browser_bridge.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GPU_GPU_INTERNALS_JS" file="${root_gen_dir}/content/browser/resources/gpu/minified/gpu_internals.js" resource_path="gpu_internals.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GPU_INFO_VIEW_HTML_JS" file="${root_gen_dir}/content/browser/resources/gpu/minified/info_view.html.js" resource_path="info_view.html.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

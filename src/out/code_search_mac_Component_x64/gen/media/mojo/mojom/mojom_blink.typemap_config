@@ -1,0 +1,46 @@
+[
+  {
+    "traits_headers": [
+      "media/mojo/mojom/audio_parameters_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      ":shared_mojom_traits"
+    ],
+    "types": [
+      {
+        "cpp": "::media::AudioParameters",
+        "mojom": "media.mojom.AudioParameters"
+      },
+      {
+        "cpp": "::media::AudioParameters::HardwareCapabilities",
+        "mojom": "media.mojom.AudioParametersHardwareCapabilities"
+      },
+      {
+        "cpp": "::media::AudioParameters::Format",
+        "mojom": "media.mojom.AudioParametersFormat"
+      },
+      {
+        "cpp": "::media::AudioLatency::Type",
+        "mojom": "media.mojom.AudioLatencyType"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/audio_processing_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      ":shared_mojom_traits"
+    ],
+    "types": [
+      {
+        "cpp": "::media::AudioProcessingSettings",
+        "mojom": "media.mojom.AudioProcessingSettings"
+      },
+      {
+        "cpp": "::media::AudioProcessingStats",
+        "mojom": "media.mojom.AudioProcessingStats"
+      }
+    ]
+  }
+]

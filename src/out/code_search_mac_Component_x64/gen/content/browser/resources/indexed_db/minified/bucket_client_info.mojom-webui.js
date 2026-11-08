@@ -1,0 +1,4 @@
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";import{DocumentTokenSpec as blink_mojom_DocumentTokenSpec,ExecutionContextTokenSpec as blink_mojom_ExecutionContextTokenSpec}from"./tokens.mojom-webui.js";export const BucketClientInfoSpec={$:{}};mojo.internal.Struct(BucketClientInfoSpec.$,"BucketClientInfo",[mojo.internal.StructField("processId",0,0,mojo.internal.Int32,0,false,0,undefined,undefined),mojo.internal.StructField("contextToken",8,0,blink_mojom_ExecutionContextTokenSpec.$,null,false,0,undefined,undefined),mojo.internal.StructField("documentToken",24,0,blink_mojom_DocumentTokenSpec.$,null,true,0,undefined,undefined)],[[0,40]]);
