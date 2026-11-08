@@ -1,0 +1,23 @@
+[
+  {
+    "traits_deps": [
+      "//ipc"
+    ],
+    "traits_headers": [
+      "content/public/common/webplugininfo.h"
+    ],
+    "traits_private_headers": [
+      "content/public/common/webplugininfo_param_traits.h"
+    ],
+    "traits_public_deps": [
+      "//base",
+      "//skia"
+    ],
+    "types": [
+      {
+        "cpp": "::content::WebPluginInfo",
+        "mojom": "content.mojom.WebPluginInfo"
+      }
+    ]
+  }
+]

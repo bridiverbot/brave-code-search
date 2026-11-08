@@ -1,0 +1,5 @@
+{
+  "javac_full_classpath_targets": [
+    "//build/android:build_java"
+  ]
+}

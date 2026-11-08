@@ -1,0 +1,4 @@
+{
+  "org/chromium/midi/MidiInputPortAndroid$NativeMidiInputPortAndroid": "::midi::MidiInputPortAndroid",
+  "org/chromium/midi/MidiManagerAndroid$NativeMidiManagerAndroid": "::midi::MidiManagerAndroid"
+}

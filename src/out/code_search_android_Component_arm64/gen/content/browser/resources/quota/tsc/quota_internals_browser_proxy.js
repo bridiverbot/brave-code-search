@@ -1,0 +1,51 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { QuotaInternalsHandler } from './quota_internals.mojom-webui.js';
+function urlPort(url) {
+    if (url.port) {
+        return Number.parseInt(url.port, 10);
+    }
+    if (url.protocol === 'https:') {
+        return 443;
+    }
+    else if (url.protocol === 'http:') {
+        return 80;
+    }
+    else {
+        return 0;
+    }
+}
+export class QuotaInternalsBrowserProxy {
+    handler = QuotaInternalsHandler.getRemote();
+    getDiskAvailabilityAndTempPoolSize() {
+        return this.handler.getDiskAvailabilityAndTempPoolSize();
+    }
+    getGlobalUsage() {
+        return this.handler.getGlobalUsageForInternals();
+    }
+    getStatistics() {
+        return this.handler.getStatistics();
+    }
+    simulateStoragePressure() {
+        const originToTest = (document.body.querySelector('#origin-to-test')).value;
+        const originUrl = new URL(originToTest);
+        const newOrigin = {
+            scheme: originUrl.protocol.replace(/:$/, ''),
+            host: originUrl.host,
+            port: urlPort(originUrl),
+            nonceIfOpaque: null,
+        };
+        this.handler.simulateStoragePressure(newOrigin);
+    }
+    isSimulateStoragePressureAvailable() {
+        return this.handler.isSimulateStoragePressureAvailable();
+    }
+    retrieveBucketsTable() {
+        return this.handler.retrieveBucketsTable();
+    }
+    static getInstance() {
+        return instance || (instance = new QuotaInternalsBrowserProxy());
+    }
+}
+let instance = null;
