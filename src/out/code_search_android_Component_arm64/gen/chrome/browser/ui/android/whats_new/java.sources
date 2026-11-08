@@ -1,0 +1,8 @@
+../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/WhatsNewBottomSheetContent.java
+../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/WhatsNewCoordinator.java
+../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/WhatsNewListItemProperties.java
+../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/WhatsNewListItemView.java
+../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/WhatsNewListItemViewBinder.java
+../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/WhatsNewMediator.java
+../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/WhatsNewProperties.java
+../../chrome/browser/ui/android/whats_new/java/src/org/chromium/chrome/browser/ui/android/whats_new/WhatsNewViewBinder.java

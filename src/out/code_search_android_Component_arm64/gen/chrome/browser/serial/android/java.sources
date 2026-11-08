@@ -1,0 +1,3 @@
+../../chrome/browser/serial/android/java/src/org/chromium/chrome/browser/serial/SerialBridge.java
+../../chrome/browser/serial/android/java/src/org/chromium/chrome/browser/serial/SerialNotificationManager.java
+../../chrome/browser/serial/android/java/src/org/chromium/chrome/browser/serial/SerialNotificationManagerDelegate.java

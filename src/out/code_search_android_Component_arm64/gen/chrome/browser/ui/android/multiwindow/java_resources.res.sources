@@ -1,0 +1,11 @@
+../../chrome/browser/ui/android/multiwindow/java/res/color/instance_switcher_item_foreground_color_list.xml
+../../chrome/browser/ui/android/multiwindow/java/res/color/instance_switcher_item_secondary_text_color_list.xml
+../../chrome/browser/ui/android/multiwindow/java/res/layout/close_confirmation_dialog.xml
+../../chrome/browser/ui/android/multiwindow/java/res/layout/instance_switcher_cmd_item.xml
+../../chrome/browser/ui/android/multiwindow/java/res/layout/instance_switcher_dialog.xml
+../../chrome/browser/ui/android/multiwindow/java/res/layout/instance_switcher_item.xml
+../../chrome/browser/ui/android/multiwindow/java/res/layout/rename_window_dialog.xml
+../../chrome/browser/ui/android/multiwindow/java/res/layout/target_selector_dialog.xml
+../../chrome/browser/ui/android/multiwindow/java/res/values/colors.xml
+../../chrome/browser/ui/android/multiwindow/java/res/values/dimens.xml
+../../chrome/browser/ui/android/multiwindow/java/res/values/styles.xml

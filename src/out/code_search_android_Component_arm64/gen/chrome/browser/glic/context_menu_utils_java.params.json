@@ -1,0 +1,33 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/browser/glic/public_java.params.json",
+    "gen/base/build_info_java.params.json",
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/browser/context_sharing/tab_bottom_sheet/android/java.params.json",
+    "gen/chrome/browser/flags/java.params.json",
+    "gen/chrome/browser/glic/android/java.params.json",
+    "gen/chrome/browser/profiles/android/java.params.json",
+    "gen/chrome/browser/ui/side_panel/android/java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/browser/glic/context_menu_utils_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/glic:context_menu_utils_java",
+  "interface_jar_path": "obj/chrome/browser/glic/context_menu_utils_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/browser/glic/context_menu_utils_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/browser/glic/context_menu_utils_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/glic/context_menu_utils_java.javac.jar"
+}

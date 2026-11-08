@@ -1,0 +1,12 @@
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/BricksCoordinator.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/BricksJavaCoordinator.java
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/progress/ProgressBar.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/progress/ProgressCoordinator.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/progress/ProgressMediator.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/progress/ProgressProvider.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/progress/ProgressUiState.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/progress/VibesProgressProvider.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/switches/ComposeMaterialSwitchWithText.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/switches/ComposeMaterialSwitchWithTitleAndSummary.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/switches/ComposeSwitchComponent.kt
+../../chrome/browser/ui/android/bricks/internal/java/src/org/chromium/chrome/browser/bricks/theme/ChromeDesignTokens.kt

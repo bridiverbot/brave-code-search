@@ -1,0 +1,6 @@
+../../chrome/browser/auxiliary_search/java/src/org/chromium/chrome/browser/auxiliary_search/module/AuxiliarySearchModuleBuilder.java
+../../chrome/browser/auxiliary_search/java/src/org/chromium/chrome/browser/auxiliary_search/module/AuxiliarySearchModuleCoordinator.java
+../../chrome/browser/auxiliary_search/java/src/org/chromium/chrome/browser/auxiliary_search/module/AuxiliarySearchModuleMediator.java
+../../chrome/browser/auxiliary_search/java/src/org/chromium/chrome/browser/auxiliary_search/module/AuxiliarySearchModuleProperties.java
+../../chrome/browser/auxiliary_search/java/src/org/chromium/chrome/browser/auxiliary_search/module/AuxiliarySearchModuleView.java
+../../chrome/browser/auxiliary_search/java/src/org/chromium/chrome/browser/auxiliary_search/module/AuxiliarySearchModuleViewBinder.java

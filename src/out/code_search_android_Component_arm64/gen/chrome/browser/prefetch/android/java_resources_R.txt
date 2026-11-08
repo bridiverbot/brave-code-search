@@ -1,0 +1,7 @@
+int id extended_preloading 0x7f010001
+int id no_preloading 0x7f010001
+int id standard_preloading 0x7f010001
+int layout radio_button_group_preload_pages_preference 0x7f010001
+int xml extended_preloading_preferences 0x7f010001
+int xml preload_pages_preferences 0x7f010001
+int xml standard_preloading_preferences 0x7f010001

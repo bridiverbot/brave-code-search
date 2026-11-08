@@ -1,0 +1,3 @@
+../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/dev/SidePanelDevFeatureFactory.java
+../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/dev/SidePanelTabScopedDevFeatureImpl.java
+../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/dev/SidePanelWindowScopedDevFeatureImpl.java

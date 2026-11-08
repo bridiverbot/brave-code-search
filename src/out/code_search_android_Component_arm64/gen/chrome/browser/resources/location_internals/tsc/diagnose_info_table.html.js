@@ -1,0 +1,17 @@
+import { getTrustedHTML } from '//resources/js/static_types.js';
+export function getTemplate() {
+    return getTrustedHTML `<!--_html_template_start_--><!--
+Copyright 2023 The Chromium Authors
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+-->
+
+<style>table{border-collapse:collapse;margin-top:20px}#table-title{font-size:18px;font-weight:bold;text-align:start;white-space:nowrap}#table-footer{caption-side:bottom;text-align:start;white-space:nowrap}td,th{border:1px solid #ddd;padding:8px;text-align:start}</style>
+<table>
+  <caption id="table-title"></caption>
+  <thead></thead>
+  <tbody></tbody>
+  <caption id="table-footer"></caption>
+</table>
+<!--_html_template_end_-->`;
+}

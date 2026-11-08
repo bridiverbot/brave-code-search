@@ -1,0 +1,21 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/base/build_info_java.turbine.jar",
+    "obj/brave/browser/ui/android/bottombar/prefs_java.turbine.jar",
+    "obj/chrome/browser/flags/java.turbine.jar",
+    "obj/chrome/browser/preferences/java.turbine.jar",
+    "obj/chrome/browser/tab/java.turbine.jar",
+    "obj/chrome/browser/ui/android/native_page/java.turbine.jar",
+    "obj/components/embedder_support/android/util_java.turbine.jar",
+    "obj/ui/android/ui_no_recycler_view_java.turbine.jar",
+    "obj/url/url_java.turbine.jar",
+    "obj/components/cached_flags/java.turbine.jar",
+    "obj/base/base_shared_preferences_java.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

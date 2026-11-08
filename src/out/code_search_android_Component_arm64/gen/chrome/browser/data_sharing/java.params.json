@@ -1,0 +1,40 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/browser/profiles/android/java.params.json",
+    "gen/chrome/browser/tab/java.params.json",
+    "gen/chrome/browser/ui/android/strings/ui_strings_grd.params.json",
+    "gen/components/browser_ui/styles/android/java_resources.params.json",
+    "gen/components/data_sharing/public/public_java.params.json",
+    "gen/components/data_sharing/public/protocol/proto_java.params.json",
+    "gen/google_apis/gaia/android/java.params.json",
+    "gen/third_party/android_deps/protobuf_lite_runtime_java.params.json",
+    "gen/third_party/android_sdk/android_window_extensions_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/jni_zero/jni_zero_java.params.json",
+    "gen/ui/android/ui_utils_java.params.json",
+    "gen/url/url_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/browser/data_sharing/java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/data_sharing:java",
+  "interface_jar_path": "obj/chrome/browser/data_sharing/java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome.browser.data_sharing",
+  "processed_jar_path": "obj/chrome/browser/data_sharing/java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/browser/data_sharing/java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/data_sharing/java.javac.jar"
+}

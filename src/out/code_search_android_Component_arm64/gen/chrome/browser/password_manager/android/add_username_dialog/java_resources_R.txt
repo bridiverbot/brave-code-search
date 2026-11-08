@@ -1,0 +1,7 @@
+int id add_username_dialog_scroll_view 0x7f010001
+int id description 0x7f010001
+int id password 0x7f010001
+int id password_text_input_layout 0x7f010001
+int id username 0x7f010001
+int id username_text_input_layout 0x7f010001
+int layout add_username_dialog_content 0x7f010001

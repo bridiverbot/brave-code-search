@@ -1,0 +1,5 @@
+{
+  "javac_full_classpath_targets": [
+    "//third_party/flatbuffers:flatbuffers_java"
+  ]
+}

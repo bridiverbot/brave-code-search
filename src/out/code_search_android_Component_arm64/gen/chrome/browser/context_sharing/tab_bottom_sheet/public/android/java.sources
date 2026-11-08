@@ -1,0 +1,6 @@
+../../chrome/browser/context_sharing/tab_bottom_sheet/public/android/java/src/org/chromium/chrome/browser/tab_bottom_sheet/CoBrowseComponentProvider.java
+../../chrome/browser/context_sharing/tab_bottom_sheet/public/android/java/src/org/chromium/chrome/browser/tab_bottom_sheet/PeekViewManager.java
+../../chrome/browser/context_sharing/tab_bottom_sheet/public/android/java/src/org/chromium/chrome/browser/tab_bottom_sheet/ResizingPlaceholderCoordinator.java
+../../chrome/browser/context_sharing/tab_bottom_sheet/public/android/java/src/org/chromium/chrome/browser/tab_bottom_sheet/TabBottomSheetContent.java
+../../chrome/browser/context_sharing/tab_bottom_sheet/public/android/java/src/org/chromium/chrome/browser/tab_bottom_sheet/TabBottomSheetManager.java
+../../chrome/browser/context_sharing/tab_bottom_sheet/public/android/java/src/org/chromium/chrome/browser/tab_bottom_sheet/TabBottomSheetPeekProperties.java

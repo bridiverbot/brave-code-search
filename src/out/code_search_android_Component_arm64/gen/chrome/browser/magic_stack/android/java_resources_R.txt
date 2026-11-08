@@ -1,0 +1,7 @@
+int dimen home_module_height 0x7f010001
+int dimen module_internal_padding 0x7f010001
+int dimen page_indicator_dot_size 0x7f010001
+int dimen page_indicator_internal_padding 0x7f010001
+int dimen page_indicator_top_margin 0x7f010001
+int id home_modules_recycler_view 0x7f010001
+int layout home_modules_recycler_view_layout 0x7f010001

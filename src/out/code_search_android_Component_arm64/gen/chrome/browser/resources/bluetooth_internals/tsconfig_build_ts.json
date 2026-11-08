@@ -1,0 +1,93 @@
+{
+  "extends": "../../../../../../../tools/typescript/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/characteristic_list_item.ts",
+    "preprocessed/descriptor_list_item.ts",
+    "preprocessed/device_table.ts",
+    "preprocessed/expandable_list.ts",
+    "preprocessed/expandable_list_item.ts",
+    "preprocessed/object_fieldset.ts",
+    "preprocessed/service_list_item.ts",
+    "preprocessed/snackbar.ts",
+    "preprocessed/value_control.ts",
+    "preprocessed/adapter_broker.ts",
+    "preprocessed/adapter_page.ts",
+    "preprocessed/bluetooth_internals.ts",
+    "preprocessed/characteristic_list.ts",
+    "preprocessed/debug_log_page.ts",
+    "preprocessed/descriptor_list.ts",
+    "preprocessed/device_broker.ts",
+    "preprocessed/device_collection.ts",
+    "preprocessed/device_details_page.ts",
+    "preprocessed/device_utils.ts",
+    "preprocessed/devices_page.ts",
+    "preprocessed/main.ts",
+    "preprocessed/page.ts",
+    "preprocessed/page_manager.ts",
+    "preprocessed/service_list.ts",
+    "preprocessed/sidebar.ts",
+    "preprocessed/characteristic_list_item.html.ts",
+    "preprocessed/descriptor_list_item.html.ts",
+    "preprocessed/device_table.html.ts",
+    "preprocessed/expandable_list.html.ts",
+    "preprocessed/expandable_list_item.html.ts",
+    "preprocessed/object_fieldset.html.ts",
+    "preprocessed/service_list_item.html.ts",
+    "preprocessed/snackbar.html.ts",
+    "preprocessed/value_control.html.ts",
+    "preprocessed/bluetooth_internals.mojom-webui.ts",
+    "preprocessed/adapter.mojom-webui.ts",
+    "preprocessed/device.mojom-webui.ts",
+    "preprocessed/gatt_characteristic_permissions.mojom-webui.ts",
+    "preprocessed/gatt_characteristic_properties.mojom-webui.ts",
+    "preprocessed/gatt_service_error_code.mojom-webui.ts",
+    "preprocessed/uuid.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../tools/typescript/definitions/chrome_send.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

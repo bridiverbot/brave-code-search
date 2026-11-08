@@ -1,0 +1,36 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_button/cr_button.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { browserProxyFactory } from '../contextual_tasks_internals.mojom-webui.js';
+import { getCss } from './session_state_tab.css.js';
+import { getHtml } from './session_state_tab.html.js';
+export class ContextualTasksSessionStateTabElement extends CrLitElement {
+    static get is() {
+        return 'contextual-tasks-session-state-tab';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            webContentsDebugStates_: { type: Array },
+        };
+    }
+    #webContentsDebugStates__accessor_storage = [];
+    get webContentsDebugStates_() { return this.#webContentsDebugStates__accessor_storage; }
+    set webContentsDebugStates_(value) { this.#webContentsDebugStates__accessor_storage = value; }
+    proxy_ = browserProxyFactory.getInstance();
+    async refresh() {
+        const response = await this.proxy_.handler.getSessionAndUserDataState();
+        this.webContentsDebugStates_ = response.webContentsStates;
+    }
+    async onRefreshSessionStateClick_() {
+        await this.refresh();
+    }
+}
+customElements.define(ContextualTasksSessionStateTabElement.is, ContextualTasksSessionStateTabElement);

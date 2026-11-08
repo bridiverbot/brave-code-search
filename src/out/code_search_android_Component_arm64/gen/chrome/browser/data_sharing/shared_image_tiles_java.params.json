@@ -1,0 +1,36 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/browser/data_sharing/java_resources.params.json",
+    "gen/base/callback_java.params.json",
+    "gen/chrome/browser/ui/android/strings/ui_strings_grd.params.json",
+    "gen/chrome/browser/ui/android/theme/java.params.json",
+    "gen/components/browser_ui/styles/android/java.params.json",
+    "gen/components/collaboration/public/core_java.params.json",
+    "gen/components/data_sharing/public/public_java.params.json",
+    "gen/components/tab_groups/tab_groups_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/ui/android/ui_no_recycler_view_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/browser/data_sharing/shared_image_tiles_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/data_sharing:shared_image_tiles_java",
+  "interface_jar_path": "obj/chrome/browser/data_sharing/shared_image_tiles_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome.browser.data_sharing.ui.shared_image_tiles",
+  "processed_jar_path": "obj/chrome/browser/data_sharing/shared_image_tiles_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/browser/data_sharing/shared_image_tiles_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/data_sharing/shared_image_tiles_java.javac.jar"
+}

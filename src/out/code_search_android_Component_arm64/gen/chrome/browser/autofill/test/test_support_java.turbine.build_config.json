@@ -1,0 +1,37 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/base/tasks_java.turbine.jar",
+    "obj/chrome/browser/profiles/android/java.turbine.jar",
+    "obj/components/autofill/core/browser/data_model/payments/mojo_bindings_java.turbine.jar",
+    "obj/third_party/jni_zero/jni_zero_java.turbine.jar",
+    "obj/base/base_java_test_support.turbine.jar",
+    "obj/chrome/browser/autofill/android/java.turbine.jar",
+    "obj/components/autofill/android/main_autofill_java.turbine.jar",
+    "obj/content/public/test/android/content_java_test_support.turbine.jar",
+    "obj/base/tasks_jni_java.javac.jar",
+    "obj/base/tasks_minimal_jni_java.javac.jar",
+    "obj/content/public/android/content_full_java.turbine.jar",
+    "obj/content/public/android/content_main_dex_java.turbine.jar",
+    "obj/ui/base/mojom/ui_base_types_java.turbine.jar",
+    "obj/third_party/androidx/chromium_espresso_overrides_java.turbine.jar",
+    "obj/third_party/android_deps/com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework_java.ijar.jar",
+    "obj/third_party/androidx/androidx_test_espresso_espresso_contrib_java.ijar.jar",
+    "obj/third_party/androidx/androidx_test_espresso_espresso_core_java.ijar.jar",
+    "obj/third_party/androidx/androidx_test_espresso_espresso_idling_resource_java.ijar.jar",
+    "obj/third_party/androidx/androidx_test_espresso_espresso_intents_java.ijar.jar",
+    "obj/third_party/androidx/androidx_test_espresso_espresso_web_java.ijar.jar",
+    "obj/third_party/hamcrest/hamcrest_core_java.ijar.jar",
+    "obj/third_party/hamcrest/hamcrest_library_java.ijar.jar",
+    "obj/third_party/jni_zero/gendeps_java.turbine.jar",
+    "obj/url/url_java.turbine.jar",
+    "obj/base/base_cached_flags_java.turbine.jar",
+    "obj/base/base_java_url_utils_for_test.turbine.jar",
+    "obj/components/autofill/android/payments_autofill_java.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

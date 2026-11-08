@@ -1,0 +1,9 @@
+../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/recent_activity/DescriptionAndTimestamp.java
+../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/recent_activity/RecentActivityActionHandler.java
+../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/recent_activity/RecentActivityBottomSheetContent.java
+../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/recent_activity/RecentActivityContainerProperties.java
+../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/recent_activity/RecentActivityContainerViewBinder.java
+../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/recent_activity/RecentActivityListCoordinator.java
+../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/recent_activity/RecentActivityListMediator.java
+../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/recent_activity/RecentActivityListProperties.java
+../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/ui/recent_activity/RecentActivityListViewBinder.java
