@@ -1,0 +1,12 @@
+--crate-feature=other_lib_1dc874e1=always_specialize_generics_in_cpp_api_from_rust
+--crate-header=other_lib_1dc874e1=build/rust/tests/test_cpp_api_from_rust/other_lib.h
+--crate-namespace=other_lib_1dc874e1=other_lib
+--crate-feature=alloc=always_specialize_generics_in_cpp_api_from_rust
+--crate-header=alloc=third_party/crubit/support/rs_std/rs_alloc.h
+--crate-namespace=alloc=rs::alloc
+--crate-feature=core=always_specialize_generics_in_cpp_api_from_rust
+--crate-header=core=third_party/crubit/support/rs_std/rs_core.h
+--crate-namespace=core=rs::core
+--crate-feature=std=always_specialize_generics_in_cpp_api_from_rust
+--crate-header=std=third_party/crubit/support/rs_std/rs_std.h
+--crate-namespace=std=rs::std

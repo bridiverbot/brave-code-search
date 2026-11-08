@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/speedreader/rust/ffi/lib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../brave/components/speedreader/rust/ffi/lib.rs",
+        "@obj/brave/components/speedreader/rust/ffi/lib.rsp.rust"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/blink/renderer/platform/fonts/ift_patcher_rs",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../third_party/blink/renderer/platform/fonts/ift/ift_patcher.rs",
+        "@obj/third_party/blink/renderer/platform/fonts/ift_patcher_rs.rsp.rust"
+    ]
+}

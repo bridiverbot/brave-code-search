@@ -1,0 +1,7 @@
+{
+    "rustenv": {},
+    "rustflags": [
+        "gen/components/cbor/rust/cbor_rust.h.impl.rs",
+        "@obj/components/cbor/rust/cbor_rust_bindings_crubit_impl.rsp.rust"
+    ]
+}

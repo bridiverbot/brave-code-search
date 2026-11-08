@@ -1,0 +1,4 @@
+gen/chrome/grit/conflicts_resources.h
+gen/chrome/grit/conflicts_resources_map.cc
+gen/chrome/grit/conflicts_resources_map.h
+gen/chrome/conflicts_resources.pak

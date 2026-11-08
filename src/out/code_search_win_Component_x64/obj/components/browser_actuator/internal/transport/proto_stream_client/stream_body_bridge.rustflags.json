@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/browser_actuator/internal/transport/proto_stream_client/stream_body_bridge",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../components/browser_actuator/internal/transport/proto_stream_client/rust/stream_body_bridge.rs",
+        "@obj/components/browser_actuator/internal/transport/proto_stream_client/stream_body_bridge.rsp.rust"
+    ]
+}

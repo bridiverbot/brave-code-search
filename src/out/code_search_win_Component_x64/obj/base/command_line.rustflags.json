@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/base/command_line",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../base/command_line.rs",
+        "@obj/base/command_line.rsp.rust"
+    ]
+}

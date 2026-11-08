@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/blink/renderer/platform/fonts/font_format",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../third_party/blink/renderer/platform/fonts/opentype/format_check.rs",
+        "@obj/third_party/blink/renderer/platform/fonts/font_format.rsp.rust"
+    ]
+}

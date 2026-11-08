@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/storage/common/storage_common_rust",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../storage/common/file_system/file_system_types.rs",
+        "@obj/storage/common/storage_common_rust.rsp.rust"
+    ]
+}

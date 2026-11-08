@@ -1,0 +1,4 @@
+gen/chrome/grit/reset_password_resources.h
+gen/chrome/grit/reset_password_resources_map.cc
+gen/chrome/grit/reset_password_resources_map.h
+gen/chrome/reset_password_resources.pak

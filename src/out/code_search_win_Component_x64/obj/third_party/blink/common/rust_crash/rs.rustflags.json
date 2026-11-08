@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/blink/common/rust_crash/rs",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../third_party/blink/common/rust_crash/src/lib.rs",
+        "@obj/third_party/blink/common/rust_crash/rs.rsp.rust"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/base/logging/rust_logger/test_support",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../base/logging/rust_logger/test_support.rs",
+        "@obj/base/logging/rust_logger/test_support.rsp.rust"
+    ]
+}

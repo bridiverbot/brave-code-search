@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/skia/rust_jpeg_ffi",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../third_party/skia/experimental/rust_jpeg/ffi/FFI.rs",
+        "@obj/skia/rust_jpeg_ffi.rsp.rust"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_rust_multiple_dep_versions_exe/transitive_v2",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../build/rust/tests/test_rust_multiple_dep_versions_exe/transitive_lib.rs",
+        "@obj/build/rust/tests/test_rust_multiple_dep_versions_exe/transitive_v2.rsp.rust"
+    ]
+}

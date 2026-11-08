@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/content/common/common_id_types",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../content/common/child_process_id.rs",
+        "@obj/content/common/common_id_types.rsp.rust"
+    ]
+}

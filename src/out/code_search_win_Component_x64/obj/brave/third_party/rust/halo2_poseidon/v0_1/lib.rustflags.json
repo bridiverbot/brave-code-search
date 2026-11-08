@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/third_party/rust/halo2_poseidon/v0_1/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Jack Grigg <jack@electriccoin.co>, Daira Emma Hopwood <daira@jacaranda.org>, Ying Tong Lai",
+        "CARGO_PKG_VERSION": "0.1.0",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "1",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "halo2_poseidon",
+        "CARGO_PKG_DESCRIPTION": "The Poseidon algebraic hash function for Halo 2",
+        "CARGO_PKG_REPOSITORY": "https://github.com/zcash/halo2",
+        "CARGO_MANIFEST_DIR": "../../brave/third_party/rust/halo2_poseidon/v0_1/lib/crate"
+    },
+    "rustflags": [
+        "../../brave/third_party/rust/chromium_crates_io/vendor/halo2_poseidon-v0_1/src/lib.rs",
+        "@obj/brave/third_party/rust/halo2_poseidon/v0_1/lib.rsp.rust"
+    ]
+}

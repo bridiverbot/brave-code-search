@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/third_party/rust/reddsa/v0_5/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Henry de Valence <hdevalence@hdevalence.ca>, Deirdre Connolly <durumcrustulum@gmail.com>, Chelsea Komlo <me@chelseakomlo.com>, Jack Grigg <jack@electriccoin.co>, Conrado Gouvea <conradoplg@gmail.com>",
+        "CARGO_PKG_VERSION": "0.5.1",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "5",
+        "CARGO_PKG_VERSION_PATCH": "1",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "reddsa",
+        "CARGO_PKG_DESCRIPTION": "A standalone implementation of the RedDSA signature scheme.",
+        "CARGO_PKG_REPOSITORY": "https://github.com/ZcashFoundation/reddsa",
+        "CARGO_MANIFEST_DIR": "../../brave/third_party/rust/reddsa/v0_5/lib/crate"
+    },
+    "rustflags": [
+        "../../brave/third_party/rust/chromium_crates_io/vendor/reddsa-v0_5/src/lib.rs",
+        "@obj/brave/third_party/rust/reddsa/v0_5/lib.rsp.rust"
+    ]
+}

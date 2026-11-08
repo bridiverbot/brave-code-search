@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_rust_metadata/transitive_dep_1",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../build/rust/tests/test_rust_metadata/transitive_dep_1/crate"
+    },
+    "rustflags": [
+        "../../build/rust/tests/test_rust_metadata/transitive_dep.rs",
+        "@obj/build/rust/tests/test_rust_metadata/transitive_dep_1.rsp.rust"
+    ]
+}

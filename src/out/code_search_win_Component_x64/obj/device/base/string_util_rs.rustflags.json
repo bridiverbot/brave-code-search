@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/device/base/string_util_rs",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../device/base/string_util.rs",
+        "@obj/device/base/string_util_rs.rsp.rust"
+    ]
+}

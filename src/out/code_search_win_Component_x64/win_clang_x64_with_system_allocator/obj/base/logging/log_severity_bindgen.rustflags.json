@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "win_clang_x64_with_system_allocator/gen/base/logging/log_severity_bindgen",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "win_clang_x64_with_system_allocator/gen/base/logging/log_severity_bindgen_generator/bindings.rs",
+        "@win_clang_x64_with_system_allocator/obj/base/logging/log_severity_bindgen.rsp.rust"
+    ]
+}

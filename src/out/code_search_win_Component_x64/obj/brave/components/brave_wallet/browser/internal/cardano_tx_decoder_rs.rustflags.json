@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/brave_wallet/browser/internal/cardano_tx_decoder_rs",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../brave/components/brave_wallet/browser/internal/cardano_tx_decoder.rs",
+        "@obj/brave/components/brave_wallet/browser/internal/cardano_tx_decoder_rs.rsp.rust"
+    ]
+}

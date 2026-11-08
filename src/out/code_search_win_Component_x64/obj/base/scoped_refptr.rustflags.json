@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/base/scoped_refptr",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../base/memory/scoped_refptr.rs",
+        "@obj/base/scoped_refptr.rsp.rust"
+    ]
+}

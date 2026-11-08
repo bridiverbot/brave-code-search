@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/cloud_authenticator/crypto/crypto",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../third_party/cloud_authenticator/crypto/crypto/crate"
+    },
+    "rustflags": [
+        "../../third_party/cloud_authenticator/crypto/src/lib.rs",
+        "@obj/third_party/cloud_authenticator/crypto/crypto.rsp.rust"
+    ]
+}

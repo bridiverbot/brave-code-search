@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/openscreen/src/discovery/mdns_rust",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../third_party/openscreen/src/discovery/mdns/public/mdns_wire.rs",
+        "@obj/third_party/openscreen/src/discovery/mdns_rust.rsp.rust"
+    ]
+}

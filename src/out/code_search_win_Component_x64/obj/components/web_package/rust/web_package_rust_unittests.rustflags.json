@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/web_package/rust/web_package_rust_unittests",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../components/web_package/rust/web_package_rust_unittests.rs",
+        "@obj/components/web_package/rust/web_package_rust_unittests.rsp.rust"
+    ]
+}

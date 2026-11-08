@@ -1,0 +1,7 @@
+{
+    "rustenv": {},
+    "rustflags": [
+        "gen/brave/components/brave_wallet/browser/internal/polkadot_extrinsic_rs.h.impl.rs",
+        "@obj/brave/components/brave_wallet/browser/internal/polkadot_extrinsic_bindings_crubit_impl.rsp.rust"
+    ]
+}

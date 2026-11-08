@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/ordered_float/v5/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Jonathan Reem <jonathan.reem@gmail.com>, Matt Brubeck <mbrubeck@limpet.net>",
+        "CARGO_PKG_VERSION": "5.5.0",
+        "CARGO_PKG_VERSION_MAJOR": "5",
+        "CARGO_PKG_VERSION_MINOR": "5",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "ordered-float",
+        "CARGO_PKG_DESCRIPTION": "Wrappers for total ordering on floats",
+        "CARGO_PKG_REPOSITORY": "https://github.com/reem/rust-ordered-float",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/ordered_float/v5/lib/crate"
+    },
+    "rustflags": [
+        "../../third_party/rust/chromium_crates_io/vendor/ordered-float-v5/src/lib.rs",
+        "@obj/third_party/rust/ordered_float/v5/lib.rsp.rust"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/base/test/histogram_tester",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../base/test/metrics/histogram_tester.rs",
+        "@obj/base/test/histogram_tester.rsp.rust"
+    ]
+}

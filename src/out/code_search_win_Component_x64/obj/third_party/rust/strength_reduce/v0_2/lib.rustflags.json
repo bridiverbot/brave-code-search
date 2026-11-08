@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/strength_reduce/v0_2/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Elliott Mahler <join.together@gmail.com>",
+        "CARGO_PKG_VERSION": "0.2.4",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "2",
+        "CARGO_PKG_VERSION_PATCH": "4",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "strength_reduce",
+        "CARGO_PKG_DESCRIPTION": "Faster integer division and modulus operations",
+        "CARGO_PKG_REPOSITORY": "http://github.com/ejmahler/strength_reduce",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/strength_reduce/v0_2/lib/crate"
+    },
+    "rustflags": [
+        "../../third_party/rust/chromium_crates_io/vendor/strength_reduce-v0_2/src/lib.rs",
+        "@obj/third_party/rust/strength_reduce/v0_2/lib.rsp.rust"
+    ]
+}

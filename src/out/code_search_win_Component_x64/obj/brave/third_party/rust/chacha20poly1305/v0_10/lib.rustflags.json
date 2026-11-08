@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/third_party/rust/chacha20poly1305/v0_10/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "RustCrypto Developers",
+        "CARGO_PKG_VERSION": "0.10.1",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "10",
+        "CARGO_PKG_VERSION_PATCH": "1",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "chacha20poly1305",
+        "CARGO_PKG_DESCRIPTION": "Pure Rust implementation of the ChaCha20Poly1305 Authenticated Encryption with Additional Data Cipher (RFC 8439) with optional architecture-specific hardware acceleration. Also contains implementations of the XChaCha20Poly1305 extended nonce variant of ChaCha20Poly1305, and the reduced-round ChaCha8Poly1305 and ChaCha12Poly1305 lightweight variants.",
+        "CARGO_PKG_REPOSITORY": "https://github.com/RustCrypto/AEADs/tree/master/chacha20poly1305",
+        "CARGO_MANIFEST_DIR": "../../brave/third_party/rust/chacha20poly1305/v0_10/lib/crate"
+    },
+    "rustflags": [
+        "../../brave/third_party/rust/chromium_crates_io/vendor/chacha20poly1305-v0_10/src/lib.rs",
+        "@obj/brave/third_party/rust/chacha20poly1305/v0_10/lib.rsp.rust"
+    ]
+}

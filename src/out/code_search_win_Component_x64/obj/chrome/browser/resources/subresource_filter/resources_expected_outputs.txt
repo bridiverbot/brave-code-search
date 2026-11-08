@@ -1,0 +1,4 @@
+gen/chrome/grit/subresource_filter_internals_resources.h
+gen/chrome/grit/subresource_filter_internals_resources_map.cc
+gen/chrome/grit/subresource_filter_internals_resources_map.h
+gen/chrome/subresource_filter_internals_resources.pak

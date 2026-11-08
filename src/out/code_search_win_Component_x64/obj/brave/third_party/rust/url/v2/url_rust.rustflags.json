@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/third_party/rust/url/v2/url_rust",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../brave/third_party/rust/url/v2/crate/src/lib.rs",
+        "@obj/brave/third_party/rust/url/v2/url_rust.rsp.rust"
+    ]
+}

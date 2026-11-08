@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/crypto/tpm",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../crypto/tpm.rs",
+        "@obj/crypto/tpm.rsp.rust"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/net/base/filename_util",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../net/base/filename_util.rs",
+        "@obj/net/base/filename_util.rsp.rust"
+    ]
+}

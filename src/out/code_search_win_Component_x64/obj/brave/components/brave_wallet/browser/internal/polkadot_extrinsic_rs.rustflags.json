@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/brave_wallet/browser/internal/polkadot_extrinsic_rs",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../brave/components/brave_wallet/browser/internal/polkadot_extrinsic.rs",
+        "@obj/brave/components/brave_wallet/browser/internal/polkadot_extrinsic_rs.rsp.rust"
+    ]
+}

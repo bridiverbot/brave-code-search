@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_cpp_api_from_rust/rust_lib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../build/rust/tests/test_cpp_api_from_rust/lib.rs",
+        "@obj/build/rust/tests/test_cpp_api_from_rust/rust_lib.rsp.rust"
+    ]
+}

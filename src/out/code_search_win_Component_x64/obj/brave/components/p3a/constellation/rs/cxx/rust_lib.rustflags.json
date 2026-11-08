@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/p3a/constellation/rs/cxx/rust_lib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../brave/components/p3a/constellation/rs/cxx/src/lib.rs",
+        "@obj/brave/components/p3a/constellation/rs/cxx/rust_lib.rsp.rust"
+    ]
+}

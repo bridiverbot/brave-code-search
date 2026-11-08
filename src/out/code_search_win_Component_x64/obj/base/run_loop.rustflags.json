@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/base/run_loop",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../base/run_loop.rs",
+        "@obj/base/run_loop.rsp.rust"
+    ]
+}

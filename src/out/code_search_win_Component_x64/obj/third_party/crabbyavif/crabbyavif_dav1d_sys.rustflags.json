@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/crabbyavif/crabbyavif_dav1d_sys",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../third_party/crabbyavif/crabbyavif_dav1d_sys/crate"
+    },
+    "rustflags": [
+        "../../third_party/crabbyavif/src/sys/dav1d-sys/src/lib.rs",
+        "@obj/third_party/crabbyavif/crabbyavif_dav1d_sys.rsp.rust"
+    ]
+}

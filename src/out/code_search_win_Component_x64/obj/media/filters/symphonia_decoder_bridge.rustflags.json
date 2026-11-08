@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/media/filters/symphonia_decoder_bridge",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../media/filters/symphonia_decoder_bridge.rs",
+        "@obj/media/filters/symphonia_decoder_bridge.rsp.rust"
+    ]
+}
