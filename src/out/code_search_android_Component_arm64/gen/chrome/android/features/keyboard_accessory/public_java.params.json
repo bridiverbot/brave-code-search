@@ -1,0 +1,9 @@
+{
+  "gn_target": "//chrome/android/features/keyboard_accessory:public_java",
+  "public_deps_configs": [
+    "gen/chrome/android/features/keyboard_accessory/factory/public_java.params.json",
+    "gen/chrome/browser/keyboard_accessory/android/java/java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

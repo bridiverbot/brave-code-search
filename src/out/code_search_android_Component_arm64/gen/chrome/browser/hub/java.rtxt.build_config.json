@@ -1,0 +1,17 @@
+{
+  "dependency_rtxt_files": [
+    "gen/third_party/androidx/androidx_appcompat_appcompat_resources_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_core_core_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_annotation_annotation_experimental_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_core_core_viewtree_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_runtime_android_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_arch_core_core_runtime_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_versionedparcelable_versionedparcelable_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_vectordrawable_vectordrawable_animated_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_vectordrawable_vectordrawable_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_recyclerview_recyclerview_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_customview_customview_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_customview_customview_poolingcontainer_java__resources_R.txt",
+    "gen/third_party/androidx/androidx_core_core_ktx_java__resources_R.txt"
+  ]
+}

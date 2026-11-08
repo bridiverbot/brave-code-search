@@ -1,0 +1,1 @@
+int string current_detected_ui_locale_name 0x7f010001

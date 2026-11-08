@@ -1,0 +1,16 @@
+{
+  "r8jar": "../../third_party/r8/cipd/lib/r8.jar",
+  "libs": [
+    "../../third_party/android_sdk/public/platforms/android-37.2/android.jar",
+    "../../third_party/android_deps/cipd/libs/com_android_extensions_xr_extensions_xr/extensions-xr.jar",
+    "obj/third_party/android_sdk/window_extensions/androidx_window_extensions_java.javac.jar"
+  ],
+  "jobs": [
+    {
+      "name": "",
+      "jars": [
+        "obj/chrome/android/chrome_public_apk/chrome_public_apk.r8dex.jar"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+../../chrome/browser/history/java/src/org/chromium/chrome/browser/history/FilterSheetContent.java
+../../chrome/browser/history/java/src/org/chromium/chrome/browser/history/FilterSheetCoordinator.java
+../../chrome/browser/history/java/src/org/chromium/chrome/browser/history/FilterSheetMediator.java
+../../chrome/browser/history/java/src/org/chromium/chrome/browser/history/FilterSheetProperties.java
+../../chrome/browser/history/java/src/org/chromium/chrome/browser/history/FilterSheetViewBinder.java
+../../chrome/browser/history/java/src/org/chromium/chrome/browser/history/HistoryTabHelper.java

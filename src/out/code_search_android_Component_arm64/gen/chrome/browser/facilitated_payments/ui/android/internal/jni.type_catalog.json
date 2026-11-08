@@ -1,0 +1,3 @@
+{
+  "org/chromium/chrome/browser/facilitated_payments/FacilitatedPaymentsPaymentMethodsControllerBridge$NativeFacilitatedPaymentsController": "::FacilitatedPaymentsController"
+}

@@ -1,0 +1,15 @@
+{
+  "chromium_code": true,
+  "gn_target": "//chrome/browser/recent_tabs/internal:java_resources",
+  "public_deps_configs": [
+    "gen/chrome/browser/recent_tabs/internal/java_strings_grd.params.json",
+    "gen/chrome/android/chrome_app_java_resources.params.json",
+    "gen/components/browser_ui/widget/android/java_resources.params.json",
+    "gen/ui/android/ui_java_resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/chrome/browser/recent_tabs/internal/java_resources.res.sources",
+  "resources_zip": "obj/chrome/browser/recent_tabs/internal/java_resources.resources.zip",
+  "rtxt_path": "gen/chrome/browser/recent_tabs/internal/java_resources_R.txt",
+  "type": "android_resources"
+}

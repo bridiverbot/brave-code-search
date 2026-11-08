@@ -1,0 +1,14 @@
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/BoyerMoore.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/NativeMetadata.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/NativePlayback.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/NativeVoicePreviewPlayback.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/ReadAloudController.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/ReadAloudControllerSupplier.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/ReadAloudIphController.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/ReadAloudMiniPlayerSceneLayer.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/ReadAloudNativeBridge.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/ReadAloudPrefs.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/ReadAloudToolbarButtonController.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/TabModelTabObserver.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/TapToSeekHandler.java
+../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/TapToSeekSelectionManager.java

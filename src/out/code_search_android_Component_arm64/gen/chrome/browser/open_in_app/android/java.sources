@@ -1,0 +1,6 @@
+../../chrome/browser/open_in_app/android/java/src/org/chromium/chrome/browser/open_in_app/CustomTabOpenInAppEntryPoint.java
+../../chrome/browser/open_in_app/android/java/src/org/chromium/chrome/browser/open_in_app/OpenInAppDelegate.java
+../../chrome/browser/open_in_app/android/java/src/org/chromium/chrome/browser/open_in_app/OpenInAppEntryPoint.java
+../../chrome/browser/open_in_app/android/java/src/org/chromium/chrome/browser/open_in_app/OpenInAppMenuItemProvider.java
+../../chrome/browser/open_in_app/android/java/src/org/chromium/chrome/browser/open_in_app/OpenInAppUtils.java
+../../chrome/browser/open_in_app/android/java/src/org/chromium/chrome/browser/open_in_app/TabbedOpenInAppEntryPoint.java

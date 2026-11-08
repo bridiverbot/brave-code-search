@@ -1,0 +1,43 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/browser/commerce/coupons/android/java_resources.params.json",
+    "gen/base/callback_java.params.json",
+    "gen/base/metrics_java.params.json",
+    "gen/chrome/browser/commerce/android/commerce_bottom_sheet_content_java.params.json",
+    "gen/chrome/browser/commerce/android/java.params.json",
+    "gen/chrome/browser/profiles/android/java.params.json",
+    "gen/chrome/browser/tab/java.params.json",
+    "gen/chrome/browser/ui/android/toolbar/adaptive_features_java.params.json",
+    "gen/chrome/browser/ui/android/toolbar/java.params.json",
+    "gen/chrome/browser/ui/android/toolbar/optional_button_java.params.json",
+    "gen/chrome/browser/user_education/java.params.json",
+    "gen/components/browser_ui/bottomsheet/android/java.params.json",
+    "gen/components/commerce/core/android/core_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_appcompat_appcompat_resources_java.params.json",
+    "gen/third_party/androidx/androidx_recyclerview_recyclerview_java.params.json",
+    "gen/ui/android/ui_java.params.json",
+    "gen/url/url_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/browser/commerce/coupons/android/java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/commerce/coupons/android:java",
+  "interface_jar_path": "obj/chrome/browser/commerce/coupons/android/java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome.browser.commerce.coupons",
+  "processed_jar_path": "obj/chrome/browser/commerce/coupons/android/java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/browser/commerce/coupons/android/java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/commerce/coupons/android/java.javac.jar"
+}
