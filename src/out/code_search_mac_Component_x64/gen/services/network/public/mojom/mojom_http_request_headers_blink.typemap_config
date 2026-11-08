@@ -1,0 +1,33 @@
+[
+  {
+    "traits_headers": [
+      "services/network/public/cpp/http_request_headers_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//net",
+      "//services/network/public/cpp:http_request_headers_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::HttpRequestHeaders",
+        "mojom": "network.mojom.HttpRequestHeaders"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/http_request_headers_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//net",
+      "//services/network/public/cpp:http_request_headers_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::network::HttpRequestHeadersUpdateParams",
+        "mojom": "network.mojom.HttpRequestHeadersUpdateParams",
+        "move_only": true
+      }
+    ]
+  }
+]

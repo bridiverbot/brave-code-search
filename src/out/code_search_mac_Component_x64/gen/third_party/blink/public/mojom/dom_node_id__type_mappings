@@ -1,0 +1,28 @@
+{
+  "c++": {
+    "blink.mojom.DOMNodeId": {
+      "typename": "::blink::DOMNodeIdType",
+      "forward_declaration": null,
+      "public_headers": [
+        "third_party/blink/public/common/dom/dom_node_id_mojom_traits.h"
+      ],
+      "traits_headers": [],
+      "copyable_pass_by_value": false,
+      "default_constructible": true,
+      "hashable": false,
+      "move_only": false,
+      "non_const_ref": false,
+      "nullable_is_same_type": false,
+      "non_copyable_non_movable": false
+    }
+  },
+  "typescript": {},
+  "_metadata": {
+    "module_typemaps": {
+      "c++": [
+        "blink.mojom.DOMNodeId"
+      ],
+      "typescript": []
+    }
+  }
+}
