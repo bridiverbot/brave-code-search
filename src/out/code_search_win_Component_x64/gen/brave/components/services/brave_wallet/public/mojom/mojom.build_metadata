@@ -1,0 +1,10 @@
+{
+  "deps": [
+    "../../../../../../sandbox/policy/mojom/mojom.build_metadata",
+    "../../../../../../mojo/public/mojom/base/base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../../brave/components/services/brave_wallet/public/mojom/brave_wallet_utils_service.mojom",
+    "../../../../../../../../../brave/components/services/brave_wallet/public/mojom/zcash_decoder.mojom"
+  ]
+}

@@ -1,0 +1,16 @@
+IDR_APP_HOME_APP_HOME_HTML,15990,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_HOME_EMPTY_PAGE_HTML_JS,15991,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_HOME_EMPTY_PAGE_JS,15992,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_HOME_UTILS_JS,15993,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_ITEM_HTML_JS,15994,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_ITEM_JS,15995,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_LIST_HTML_JS,15996,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_LIST_JS,15997,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_DEPRECATED_APPS_LINK_HTML_JS,15998,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_DEPRECATED_APPS_LINK_JS,15999,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_HOME_EMPTY_PAGE_CSS_JS,16000,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_ITEM_CSS_JS,16001,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_LIST_CSS_JS,16002,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_DEPRECATED_APPS_LINK_CSS_JS,16003,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_APP_HOME_MOJOM_WEBUI_JS,16004,gen/chrome/browser/resources/app_home/resources.grd
+IDR_APP_HOME_USER_DISPLAY_MODE_MOJOM_WEBUI_JS,16005,gen/chrome/browser/resources/app_home/resources.grd

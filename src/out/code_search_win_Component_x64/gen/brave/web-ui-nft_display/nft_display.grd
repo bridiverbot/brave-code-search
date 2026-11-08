@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/nft_display_generated.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/nft_display_generated_map.cc" type="resource_file_map_source" />
+    <output filename="grit/nft_display_generated_map.h" type="resource_map_header" />
+    <output filename="nft_display_generated.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_NFT_DISPLAY_A0186B06FBB93C921BEF61544AE917BE_SVG" file="${root_gen_dir}/brave/web-ui-nft_display/a0186b06fbb93c921bef61544ae917be.svg" resource_path="a0186b06fbb93c921bef61544ae917be.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NFT_DISPLAY_NFT_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-nft_display/nft.bundle.js" resource_path="nft.bundle.js" use_base_dir="false" type="BINDATA" />
+    </includes>
+  </release>
+</grit>

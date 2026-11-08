@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_BUFBUILD_WIRE_INDEX_ROLLUP_JS" file="${root_gen_dir}/content/browser/resources/traces_internals/bufbuild/minified/wire/index.rollup.js" resource_path="@bufbuild/protobuf/wire/index.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
