@@ -1,0 +1,143 @@
+{
+  "extends": "../../../../../../../../tools/typescript/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_components/color_change_listener/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "chrome://resources/cr_components/color_change_listener/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "//resources/cr_components/commerce/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/commerce/*"
+      ],
+      "chrome://resources/cr_components/commerce/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/commerce/*"
+      ],
+      "//resources/cr_components/page_image_service/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/page_image_service/*"
+      ],
+      "chrome://resources/cr_components/page_image_service/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/page_image_service/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//bookmarks-side-panel.top-chrome/shared/*": [
+        "./../shared/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/bookmarks_api_proxy.ts",
+    "preprocessed/commerce/shopping_list.html.ts",
+    "preprocessed/commerce/shopping_list.ts",
+    "preprocessed/keyboard_arrow_navigation_service.ts",
+    "preprocessed/power_bookmarks_metrics.ts",
+    "preprocessed/power_bookmarks_add_folder_button.html.ts",
+    "preprocessed/power_bookmarks_add_folder_button.ts",
+    "preprocessed/power_bookmarks_app.html.ts",
+    "preprocessed/power_bookmarks_app.ts",
+    "preprocessed/power_bookmarks_list_header.html.ts",
+    "preprocessed/power_bookmarks_list_header.ts",
+    "preprocessed/power_bookmarks_list.html.ts",
+    "preprocessed/power_bookmarks_list.ts",
+    "preprocessed/power_bookmark_row.html.ts",
+    "preprocessed/power_bookmark_row.ts",
+    "preprocessed/power_bookmark_row_item.html.ts",
+    "preprocessed/power_bookmark_row_item.ts",
+    "preprocessed/power_bookmarks_context_menu.html.ts",
+    "preprocessed/power_bookmarks_context_menu.ts",
+    "preprocessed/power_bookmarks_drag_manager.ts",
+    "preprocessed/power_bookmarks_labels.html.ts",
+    "preprocessed/power_bookmarks_labels.ts",
+    "preprocessed/power_bookmarks_service.ts",
+    "preprocessed/power_bookmarks_utils.ts",
+    "preprocessed/commerce/icons.html.ts",
+    "preprocessed/icons.html.ts",
+    "preprocessed/power_bookmark_row.css.ts",
+    "preprocessed/power_bookmark_row_item.css.ts",
+    "preprocessed/power_bookmarks_add_folder_button.css.ts",
+    "preprocessed/power_bookmarks_app.css.ts",
+    "preprocessed/power_bookmarks_list_header.css.ts",
+    "preprocessed/power_bookmarks_list.css.ts",
+    "preprocessed/power_bookmarks_context_menu.css.ts",
+    "preprocessed/commerce/shopping_list.css.ts",
+    "preprocessed/bookmarks.mojom-webui.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../../tools/typescript/definitions/bookmark_manager_private.d.ts",
+    "../../../../../../../../tools/typescript/definitions/bookmarks.d.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_event.d.ts",
+    "../../../../../../../../tools/typescript/definitions/metrics_private.d.ts",
+    "../../../../../../../../tools/typescript/definitions/tabs.d.ts",
+    "preprocessed/power_bookmarks_list-chromium.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../shared/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/color_change_listener/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/commerce/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/page_image_service/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

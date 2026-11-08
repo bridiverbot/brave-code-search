@@ -1,0 +1,8 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss as getCrIconsLit } from 'chrome://resources/cr_elements/cr_icons_lit.css.js';
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+import 'chrome://resources/cr_elements/mwb_shared_vars.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[getCrIconsLit()], css `.dropdown-item{display:flex;align-items:center;color:var(--toolbar-text-color)}.dropdown-item[disabled]{color:var(--cr-fallback-color-disabled-foreground)}cr-action-menu{--cr-menu-border-radius:16px;--cr-menu-background-color:var(--toolbar-menu-background-color)}cr-action-menu::part(dialog){max-height:none}cr-action-menu>button{padding-block:4px;padding-inline-start:16px;min-width:230px}button>cr-icon{--iron-icon-fill-color:var(--toolbar-menu-icon-color);width:20px;height:20px}.dropdown-item cr-icon{margin-inline-end:10px}.dropdown-divider{background-color:var(--toolbar-divider-color);height:1px;width:100%;margin-block:8px}`]);
+}

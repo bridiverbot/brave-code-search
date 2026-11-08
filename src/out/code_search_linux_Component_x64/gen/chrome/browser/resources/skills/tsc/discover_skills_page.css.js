@@ -1,0 +1,8 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss as getCrSharedStyleLit } from '//resources/cr_elements/cr_shared_style_lit.css.js';
+import { getCss as getSharedStyle } from './shared_style.css.js';
+import './shared_vars.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[getCrSharedStyleLit(), getSharedStyle()], css `:host{display:flex;flex-direction:column;flex:1;padding:0 var(--page-padding) 0 var(--page-padding)}#discoverCategories{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;margin:16px 0 0 0}skills-carousel{margin-bottom:14px}skill-card.skill-with-image{--skills-card-height:308px}`]);
+}

@@ -1,0 +1,111 @@
+/* Copyright (c) 2020 The Brave Authors. All rights reserved.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/. */
+import 'chrome://resources/cr_elements/cr_dialog/cr_dialog.js';
+import 'chrome://resources/cr_elements/icons.html.js';
+import '../settings_page/settings_subpage.js';
+import '../settings_shared.css.js';
+import '../settings_vars.css.js';
+import './brave_sync_subpage.js';
+import './brave_sync_manage_devices_page.js';
+import { SyncBrowserProxyImpl } from '/shared/settings/people_page/sync_browser_proxy.js';
+import { I18nMixin } from 'chrome://resources/cr_elements/i18n_mixin.js';
+import { WebUiListenerMixin } from '/shared/settings/web_ui_listener_mixin.js';
+import { PolymerElement } from 'chrome://resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+import { BaseMixin } from '../base_mixin.js';
+import { routes } from '../route.js';
+import { RouteObserverMixin } from '../router.js';
+import { SearchableViewContainerMixin } from '../settings_page/searchable_view_container_mixin.js';
+import { BraveSyncBrowserProxy } from './brave_sync_browser_proxy.js';
+import { getTemplate } from './brave_sync_page_index.html.js';
+/**
+ * @fileoverview
+ * 'settings-brave-sync-page-index' is the settings page containing brave's
+ * custom sync.
+ */
+const SettingsBraveSyncPageElementBase = SearchableViewContainerMixin(RouteObserverMixin(I18nMixin(WebUiListenerMixin(BaseMixin(PolymerElement)))));
+export class SettingsBraveSyncPageElement extends SettingsBraveSyncPageElementBase {
+    static get is() {
+        return 'settings-brave-sync-page-index';
+    }
+    static get template() {
+        return getTemplate();
+    }
+    static get properties() {
+        return {
+            /**
+             * The current sync status, supplied by SyncBrowserProxy.
+             * @type {?SyncStatus}
+             */
+            syncStatus_: Object,
+            isEncryptionSet_: {
+                type: Boolean,
+                value: false
+            },
+            syncLabel_: {
+                type: String,
+                computed: 'computeSyncLabel_(syncStatus_)'
+            },
+        };
+    }
+    browserProxy_ = SyncBrowserProxyImpl.getInstance();
+    braveBrowserProxy_ = BraveSyncBrowserProxy.getInstance();
+    computeSyncLabel_() {
+        if (this.syncStatus_ !== undefined &&
+            this.syncStatus_.hasSyncWordsDecryptionError) {
+            return this.i18n('braveSyncCouldNotSyncActionLabel');
+        }
+        const isAlreadySetup = this.syncStatus_ !== undefined &&
+            !this.syncStatus_.firstSetupInProgress;
+        const key = isAlreadySetup ? 'braveSyncManageActionLabel' : 'braveSyncSetupActionLabel';
+        return this.i18n(key);
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        const onSyncStatus = this.handleSyncStatus_.bind(this);
+        this.braveBrowserProxy_.getSyncStatus().then((status) => onSyncStatus(status));
+        this.addWebUiListener('sync-prefs-changed', this.handleSyncPrefsChanged_.bind(this));
+        this.addWebUiListener('sync-status-changed', onSyncStatus);
+    }
+    /**
+     * Handler for when the sync state is pushed from the browser.
+     */
+    handleSyncStatus_(syncStatus) {
+        this.syncStatus_ = syncStatus;
+    }
+    /**
+     * Handler for when the sync preferences are updated.
+     */
+    async handleSyncPrefsChanged_(syncPrefs) {
+        if (this.syncStatus_ && !this.syncStatus_.firstSetupInProgress) {
+            const pureSyncCode = await this.braveBrowserProxy_.getPureSyncCode();
+            if (syncPrefs.passphraseRequired) {
+                await this.browserProxy_.setDecryptionPassphrase(pureSyncCode);
+            }
+            else if (!this.isEncryptionSet_) {
+                this.browserProxy_.setEncryptionPassphrase(pureSyncCode)
+                    .then(successfullySet => {
+                    this.isEncryptionSet_ = successfullySet;
+                });
+            }
+        }
+    }
+    currentRouteChanged(newRoute, oldRoute) {
+        super.currentRouteChanged(newRoute, oldRoute);
+        // Need to wait for currentRouteChanged observers on child views to run
+        // first, before switching views.
+        queueMicrotask(() => {
+            switch (newRoute) {
+                case routes.BRAVE_SYNC:
+                case routes.BASIC:
+                    this.$.viewManager.switchView('braveSync', 'no-animation', 'no-animation');
+                    break;
+                case routes.BRAVE_SYNC_SETUP:
+                    this.$.viewManager.switchView('setup', 'no-animation', 'no-animation');
+                    break;
+            }
+        });
+    }
+}
+customElements.define(SettingsBraveSyncPageElement.is, SettingsBraveSyncPageElement);

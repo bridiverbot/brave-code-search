@@ -1,0 +1,77 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_icon/cr_icon.js';
+import '//resources/cr_elements/cr_icon/cr_iconset.js';
+import '//resources/cr_elements/cr_input/cr_input.js';
+import '//resources/cr_elements/icons.html.js';
+import './icons.html.js';
+import { assert } from '//resources/js/assert.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './cr_icons_demo.css.js';
+import { getHtml } from './cr_icons_demo.html.js';
+export class CrIconsDemoElement extends CrLitElement {
+    static get is() {
+        return 'cr-icons-demo';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            crIcons_: { type: Array },
+            iconColor_: { type: String },
+            iconSize_: { type: String },
+            icons_: { type: Array },
+        };
+    }
+    #crIcons__accessor_storage = [
+        'icon-arrow-back', 'icon-arrow-dropdown', 'icon-cancel',
+        'icon-clear', 'icon-copy-content', 'icon-delete-gray',
+        'icon-edit', 'icon-folder-open', 'icon-picture-delete',
+        'icon-expand-less', 'icon-expand-more', 'icon-external',
+        'icon-more-vert', 'icon-refresh', 'icon-search',
+        'icon-settings', 'icon-visibility', 'icon-visibility-off',
+        'subpage-arrow',
+    ];
+    get crIcons_() { return this.#crIcons__accessor_storage; }
+    set crIcons_(value) { this.#crIcons__accessor_storage = value; }
+    #iconColor__accessor_storage = '#000000';
+    get iconColor_() { return this.#iconColor__accessor_storage; }
+    set iconColor_(value) { this.#iconColor__accessor_storage = value; }
+    #iconSize__accessor_storage = '24';
+    get iconSize_() { return this.#iconSize__accessor_storage; }
+    set iconSize_(value) { this.#iconSize__accessor_storage = value; }
+    #icons__accessor_storage = [];
+    get icons_() { return this.#icons__accessor_storage; }
+    set icons_(value) { this.#icons__accessor_storage = value; }
+    firstUpdated() {
+        function getIconNames(iconset) {
+            return Array.from(iconset.querySelectorAll('g[id]'))
+                .map((el) => {
+                return `${iconset.name}:${el.id}`;
+            });
+        }
+        // Iconsets are appended to the document's head element when they are
+        // imported.
+        const crIconsSet = document.head.querySelector('cr-iconset[name=cr]');
+        assert(crIconsSet);
+        this.icons_.push(...getIconNames(crIconsSet));
+        const cr20IconsSet = document.head.querySelector('cr-iconset[name=cr20]');
+        assert(cr20IconsSet);
+        this.icons_.push(...getIconNames(cr20IconsSet));
+        this.requestUpdate();
+    }
+    onIconColorInput_(e) {
+        const color = e.target.value;
+        this.iconColor_ = color;
+    }
+    onIconSizeValueChanged_(e) {
+        this.iconSize_ = e.detail.value;
+    }
+}
+export const tagName = CrIconsDemoElement.is;
+customElements.define(CrIconsDemoElement.is, CrIconsDemoElement);

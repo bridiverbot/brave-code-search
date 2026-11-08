@@ -1,0 +1,75 @@
+{
+  "c++": {
+    "mojom.ACMatchClassification": {
+      "typename": "::AutocompleteMatch::ACMatchClassification",
+      "forward_declaration": null,
+      "public_headers": [
+        "chrome/browser/ui/webui/omnibox_internals/omnibox_internals_mojom_traits.h"
+      ],
+      "traits_headers": [],
+      "copyable_pass_by_value": false,
+      "default_constructible": true,
+      "hashable": false,
+      "move_only": false,
+      "non_const_ref": false,
+      "nullable_is_same_type": false,
+      "non_copyable_non_movable": false
+    },
+    "mojom.AutocompleteMatch": {
+      "typename": "::AutocompleteMatchWrapper",
+      "forward_declaration": null,
+      "public_headers": [
+        "chrome/browser/ui/webui/omnibox_internals/omnibox_internals_mojom_traits.h"
+      ],
+      "traits_headers": [],
+      "copyable_pass_by_value": false,
+      "default_constructible": true,
+      "hashable": false,
+      "move_only": false,
+      "non_const_ref": false,
+      "nullable_is_same_type": false,
+      "non_copyable_non_movable": false
+    },
+    "mojom.Signals": {
+      "typename": "::AutocompleteMatch::ScoringSignals",
+      "forward_declaration": null,
+      "public_headers": [
+        "chrome/browser/ui/webui/omnibox_internals/omnibox_internals_mojom_traits.h"
+      ],
+      "traits_headers": [],
+      "copyable_pass_by_value": false,
+      "default_constructible": true,
+      "hashable": false,
+      "move_only": false,
+      "non_const_ref": false,
+      "nullable_is_same_type": false,
+      "non_copyable_non_movable": false
+    },
+    "url.mojom.Url": {
+      "typename": "::GURL",
+      "forward_declaration": null,
+      "public_headers": [
+        "url/mojom/url_gurl_mojom_traits.h"
+      ],
+      "traits_headers": [],
+      "copyable_pass_by_value": false,
+      "default_constructible": true,
+      "hashable": false,
+      "move_only": false,
+      "non_const_ref": false,
+      "nullable_is_same_type": false,
+      "non_copyable_non_movable": false
+    }
+  },
+  "typescript": {},
+  "_metadata": {
+    "module_typemaps": {
+      "c++": [
+        "mojom.ACMatchClassification",
+        "mojom.AutocompleteMatch",
+        "mojom.Signals"
+      ],
+      "typescript": []
+    }
+  }
+}

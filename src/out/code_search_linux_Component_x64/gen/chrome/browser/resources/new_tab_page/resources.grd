@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/new_tab_page_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/new_tab_page_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/new_tab_page_resources_map.h"
+            type="resource_map_header" />
+    <output filename="new_tab_page_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <part file="icons/resources.grdp" />
+      <part file="modules/authentication/icons/resources.grdp" />
+      <part file="modules/calendar/icons/resources.grdp" />
+      <part file="modules/tab_groups/icons/resources.grdp" />
+      <part file="eager_resources.grdp" />
+      <include name="IDR_NEW_TAB_PAGE_NEW_TAB_PAGE_HTML" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/preprocessed/new_tab_page.html" resource_path="new_tab_page.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_SHARED_VARS_CSS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/preprocessed/shared_vars.css" resource_path="shared_vars.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NEW_TAB_PAGE_NEW_TAB_PAGE_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/minified/new_tab_page.rollup.js" resource_path="new_tab_page.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_LAZY_LOAD_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/minified/lazy_load.rollup.js" resource_path="lazy_load.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_SHARED_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/minified/shared.rollup.js" resource_path="shared.rollup.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

@@ -1,0 +1,59 @@
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '/strings.m.js';
+import 'chrome://resources/cr_elements/cr_radio_group/cr_radio_group.js';
+import 'chrome://resources/cr_elements/cr_radio_button/cr_radio_button.js';
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+import { assert } from 'chrome://resources/js/assert.js';
+import { CrLitElement } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './managed_user_profile_notice_data_handling.css.js';
+import { getHtml } from './managed_user_profile_notice_data_handling.html.js';
+export class ManagedUserProfileNoticeDataHandlingElement extends CrLitElement {
+    static get is() {
+        return 'managed-user-profile-notice-data-handling';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            title: { type: String },
+            separateDataChoiceTitle: { type: String },
+            separateDataChoiceDetails: { type: String },
+            mergeDataChoiceTitle: { type: String },
+            mergeDataChoiceDetails: { type: String },
+            selectedDataHandling: { type: String, notify: true },
+        };
+    }
+    #title_accessor_storage = '';
+    get title() { return this.#title_accessor_storage; }
+    set title(value) { this.#title_accessor_storage = value; }
+    #separateDataChoiceTitle_accessor_storage = '';
+    get separateDataChoiceTitle() { return this.#separateDataChoiceTitle_accessor_storage; }
+    set separateDataChoiceTitle(value) { this.#separateDataChoiceTitle_accessor_storage = value; }
+    #separateDataChoiceDetails_accessor_storage = '';
+    get separateDataChoiceDetails() { return this.#separateDataChoiceDetails_accessor_storage; }
+    set separateDataChoiceDetails(value) { this.#separateDataChoiceDetails_accessor_storage = value; }
+    #mergeDataChoiceTitle_accessor_storage = '';
+    get mergeDataChoiceTitle() { return this.#mergeDataChoiceTitle_accessor_storage; }
+    set mergeDataChoiceTitle(value) { this.#mergeDataChoiceTitle_accessor_storage = value; }
+    #mergeDataChoiceDetails_accessor_storage = '';
+    get mergeDataChoiceDetails() { return this.#mergeDataChoiceDetails_accessor_storage; }
+    set mergeDataChoiceDetails(value) { this.#mergeDataChoiceDetails_accessor_storage = value; }
+    #selectedDataHandling_accessor_storage;
+    get selectedDataHandling() { return this.#selectedDataHandling_accessor_storage; }
+    set selectedDataHandling(value) { this.#selectedDataHandling_accessor_storage = value; }
+    firstUpdated() {
+        const titleElement = this.shadowRoot.querySelector('.title');
+        assert(titleElement);
+        titleElement.focus();
+    }
+    onSelectedChanged_(e) {
+        this.selectedDataHandling = e.detail.value;
+    }
+}
+customElements.define(ManagedUserProfileNoticeDataHandlingElement.is, ManagedUserProfileNoticeDataHandlingElement);

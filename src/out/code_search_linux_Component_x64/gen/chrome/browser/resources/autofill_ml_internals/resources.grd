@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/autofill_ml_internals_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/autofill_ml_internals_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/autofill_ml_internals_resources_map.h"
+            type="resource_map_header" />
+    <output filename="autofill_ml_internals_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_AUTOFILL_ML_INTERNALS_AUTOFILL_ML_INTERNALS_HTML" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/preprocessed/autofill_ml_internals.html" resource_path="autofill_ml_internals.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/app.html.js" resource_path="app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_APP_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_LOG_DETAILS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/log_details.html.js" resource_path="log_details.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_LOG_DETAILS_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/log_details.js" resource_path="log_details.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_LOG_LIST_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/log_list.html.js" resource_path="log_list.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_LOG_LIST_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/log_list.js" resource_path="log_list.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/app.css.js" resource_path="app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_LOG_DETAILS_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/log_details.css.js" resource_path="log_details.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_LOG_LIST_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/log_list.css.js" resource_path="log_list.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_AUTOFILL_ML_INTERNALS_AUTOFILL_ML_INTERNALS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/autofill_ml_internals/minified/autofill_ml_internals.mojom-webui.js" resource_path="autofill_ml_internals.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

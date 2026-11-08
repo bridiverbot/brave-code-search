@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/search_engine_choice_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/search_engine_choice_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/search_engine_choice_resources_map.h"
+            type="resource_map_header" />
+    <output filename="search_engine_choice_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_SEARCH_ENGINE_CHOICE_IMAGES_ARROW_DOWNWARD_SVG" file="${root_src_dir}/chrome/browser/resources/search_engine_choice/images/arrow_downward.svg" resource_path="images/arrow_downward.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_IMAGES_ARROW_DOWNWARD_OLD_SVG" file="${root_src_dir}/chrome/browser/resources/search_engine_choice/images/arrow_downward_old.svg" resource_path="images/arrow_downward_old.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_IMAGES_INFO_DIALOG_ILLUSTRATION_SVG" file="${root_src_dir}/chrome/browser/resources/search_engine_choice/images/info_dialog_illustration.svg" resource_path="images/info_dialog_illustration.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_IMAGES_INFO_DIALOG_ILLUSTRATION_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/search_engine_choice/images/info_dialog_illustration_dark.svg" resource_path="images/info_dialog_illustration_dark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_IMAGES_REFRESH_BG_BOTTOM_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/search_engine_choice/images/refresh_bg_bottom_dark.svg" resource_path="images/refresh_bg_bottom_dark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_IMAGES_REFRESH_BG_BOTTOM_LIGHT_SVG" file="${root_src_dir}/chrome/browser/resources/search_engine_choice/images/refresh_bg_bottom_light.svg" resource_path="images/refresh_bg_bottom_light.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_IMAGES_REFRESH_BG_RIGHT_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/search_engine_choice/images/refresh_bg_right_dark.svg" resource_path="images/refresh_bg_right_dark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_IMAGES_REFRESH_BG_RIGHT_LIGHT_SVG" file="${root_src_dir}/chrome/browser/resources/search_engine_choice/images/refresh_bg_right_light.svg" resource_path="images/refresh_bg_right_light.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_SEARCH_ENGINE_CHOICE_HTML" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/preprocessed/search_engine_choice.html" resource_path="search_engine_choice.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_SEARCH_ENGINE_CHOICE_REFRESH_HTML" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/preprocessed/search_engine_choice_refresh.html" resource_path="search_engine_choice_refresh.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/minified/app.html.js" resource_path="app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_APP_JS" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_APP_REFRESH_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/minified/app_refresh.html.js" resource_path="app_refresh.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_APP_REFRESH_JS" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/minified/app_refresh.js" resource_path="app_refresh.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_SEARCH_ENGINE_CHOICE_JS" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/minified/search_engine_choice.js" resource_path="search_engine_choice.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/minified/app.css.js" resource_path="app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_APP_REFRESH_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/minified/app_refresh.css.js" resource_path="app_refresh.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SEARCH_ENGINE_CHOICE_SEARCH_ENGINE_CHOICE_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/search_engine_choice/minified/search_engine_choice.mojom-webui.js" resource_path="search_engine_choice.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

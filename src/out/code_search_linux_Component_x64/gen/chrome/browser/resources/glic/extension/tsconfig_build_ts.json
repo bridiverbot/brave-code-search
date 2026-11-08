@@ -1,0 +1,30 @@
+{
+  "extends": "../../../../../../../../tools/typescript/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "../../../../../../../../chrome/browser/resources/glic/extension",
+    "outDir": "tsc",
+    "paths": {
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "../../../../../../../../chrome/browser/resources/glic/extension/background.ts",
+    "../../../../../../../../chrome/browser/resources/glic/extension/glic_private.d.ts",
+    "../../../../../../../../tools/typescript/definitions/runtime.d.ts",
+    "../../../../../../../../tools/typescript/definitions/tabs.d.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_event.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";export const PageContentTypeSpec={$:mojo.internal.Enum()};export var PageContentType;(function(PageContentType){PageContentType[PageContentType["MIN_VALUE"]=0]="MIN_VALUE";PageContentType[PageContentType["MAX_VALUE"]=2]="MAX_VALUE";PageContentType[PageContentType["kUnknown"]=0]="kUnknown";PageContentType[PageContentType["kPdf"]=1]="kPdf";PageContentType[PageContentType["kHtml"]=2]="kHtml"})(PageContentType||(PageContentType={}));

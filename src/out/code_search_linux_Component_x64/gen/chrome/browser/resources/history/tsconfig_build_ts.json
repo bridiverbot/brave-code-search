@@ -1,0 +1,172 @@
+{
+  "extends": "../../../../../../../tools/typescript/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_components/color_change_listener/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "chrome://resources/cr_components/color_change_listener/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "//resources/cr_components/help_bubble/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "chrome://resources/cr_components/help_bubble/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "//resources/cr_components/history/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/history/*"
+      ],
+      "chrome://resources/cr_components/history/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/history/*"
+      ],
+      "//resources/cr_components/history_clusters/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/history_clusters/*"
+      ],
+      "chrome://resources/cr_components/history_clusters/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/history_clusters/*"
+      ],
+      "//resources/cr_components/history_embeddings/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/history_embeddings/*"
+      ],
+      "chrome://resources/cr_components/history_embeddings/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/history_embeddings/*"
+      ],
+      "//resources/cr_components/managed_footnote/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/managed_footnote/*"
+      ],
+      "chrome://resources/cr_components/managed_footnote/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/managed_footnote/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app.html.ts",
+    "preprocessed/app.ts",
+    "preprocessed/browser_proxy.ts",
+    "preprocessed/constants.ts",
+    "preprocessed/history_filter_chips.html.ts",
+    "preprocessed/history_filter_chips.ts",
+    "preprocessed/history.ts",
+    "preprocessed/history_embeddings_promo.html.ts",
+    "preprocessed/history_embeddings_promo.ts",
+    "preprocessed/history_item.html.ts",
+    "preprocessed/history_item.ts",
+    "preprocessed/history_list.html.ts",
+    "preprocessed/history_list.ts",
+    "preprocessed/history_toolbar.html.ts",
+    "preprocessed/history_toolbar.ts",
+    "preprocessed/query_manager.ts",
+    "preprocessed/router.ts",
+    "preprocessed/searched_label.html.ts",
+    "preprocessed/searched_label.ts",
+    "preprocessed/side_bar.html.ts",
+    "preprocessed/side_bar.ts",
+    "preprocessed/synced_device_card.html.ts",
+    "preprocessed/synced_device_card.ts",
+    "preprocessed/synced_device_manager.html.ts",
+    "preprocessed/synced_device_manager.ts",
+    "preprocessed/history_cross_device_signin_promo.html.ts",
+    "preprocessed/history_cross_device_signin_promo.ts",
+    "preprocessed/history_cross_device_signin_promo_browser_proxy.ts",
+    "preprocessed/history_sync_promo.html.ts",
+    "preprocessed/history_sync_promo.ts",
+    "preprocessed/shared_icons.html.ts",
+    "preprocessed/app.css.ts",
+    "preprocessed/history_filter_chips.css.ts",
+    "preprocessed/history_embeddings_promo.css.ts",
+    "preprocessed/history_item.css.ts",
+    "preprocessed/history_list.css.ts",
+    "preprocessed/history_toolbar.css.ts",
+    "preprocessed/shared_style.css.ts",
+    "preprocessed/shared_vars.css.ts",
+    "preprocessed/side_bar.css.ts",
+    "preprocessed/synced_device_card.css.ts",
+    "preprocessed/synced_device_manager.css.ts",
+    "preprocessed/history_cross_device_signin_promo.css.ts",
+    "preprocessed/history_sync_promo.css.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../tools/typescript/definitions/chrome_send.d.ts",
+    "../../../../../../../tools/typescript/definitions/metrics_private.d.ts",
+    "preprocessed/app-chromium.ts",
+    "preprocessed/history_item-chromium.ts",
+    "preprocessed/side_bar-chromium.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/color_change_listener/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/help_bubble/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/history/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/history_clusters/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/history_embeddings/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/managed_footnote/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

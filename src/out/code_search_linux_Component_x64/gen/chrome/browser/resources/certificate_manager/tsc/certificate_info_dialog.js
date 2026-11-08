@@ -1,0 +1,35 @@
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview The 'certificate-info-dialog' component is for showing
+ * a dialog box that displays informational or error messages to the user.
+ */
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_dialog/cr_dialog.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getHtml } from './certificate_info_dialog.html.js';
+export class CertificateInfoDialogElement extends CrLitElement {
+    static get is() {
+        return 'certificate-info-dialog';
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            dialogTitle: { type: String },
+            dialogMessage: { type: String },
+        };
+    }
+    #dialogTitle_accessor_storage = '';
+    get dialogTitle() { return this.#dialogTitle_accessor_storage; }
+    set dialogTitle(value) { this.#dialogTitle_accessor_storage = value; }
+    #dialogMessage_accessor_storage = '';
+    get dialogMessage() { return this.#dialogMessage_accessor_storage; }
+    set dialogMessage(value) { this.#dialogMessage_accessor_storage = value; }
+    onOkClick_() {
+        this.$.dialog.close();
+    }
+}
+customElements.define(CertificateInfoDialogElement.is, CertificateInfoDialogElement);

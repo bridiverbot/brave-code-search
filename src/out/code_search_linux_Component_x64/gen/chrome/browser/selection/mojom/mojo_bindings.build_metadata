@@ -1,0 +1,8 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../../chrome/browser/selection/mojom/action.mojom"
+  ]
+}

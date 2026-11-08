@@ -1,0 +1,42 @@
+import { html } from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+    return html `<!--_html_template_start_--><style include="settings-shared site-settings-shared"></style>
+<settings-subpage page-title="$i18n{siteSettingsSensors}"
+    search-label="$i18n{siteSettingsAllSitesSearch}"
+    search-term="{{searchTerm}}" route-path$="[[routePath]]">
+  <div class="content-settings-header secondary">
+    $i18n{siteSettingsSensorsDescription}
+  </div>
+  <template is="dom-if" if="[[isSensorsAllowAskBlockPermissionModelEnabled_]]">
+    <settings-category-default-radio-group
+        category="[[contentSettingsTypesEnum_.SENSORS]]"
+        allow-option-label="$i18n{siteSettingsSensorsAllowed}"
+        allow-option-icon="privacy:sensors"
+        ask-option-label="$i18n{siteSettingsSensorsAsk}"
+        ask-option-icon="privacy:sensors-ask-custom"
+        block-option-label="$i18n{siteSettingsSensorsBlocked}"
+        block-option-sub-label=
+            "$i18n{siteSettingsSensorsBlockedSubLabel}"
+        block-option-icon="privacy:sensors-off">
+    </settings-category-default-radio-group>
+  </template>
+  <template is="dom-if" if="[[!isSensorsAllowAskBlockPermissionModelEnabled_]]">
+    <settings-category-default-radio-group
+        category="[[contentSettingsTypesEnum_.SENSORS]]"
+        allow-option-label="$i18n{siteSettingsSensorsAllowed}"
+        allow-option-icon="privacy:sensors"
+        block-option-label="$i18n{siteSettingsSensorsBlocked}"
+        block-option-sub-label=
+            "$i18n{siteSettingsSensorsBlockedSubLabel}"
+        block-option-icon="privacy:sensors-off">
+    </settings-category-default-radio-group>
+  </template>
+  <category-setting-exceptions
+      category="[[contentSettingsTypesEnum_.SENSORS]]" read-only-list
+      allow-header="$i18n{siteSettingsSensorsAllowedExceptions}"
+      block-header="$i18n{siteSettingsSensorsBlockedExceptions}"
+      search-filter="[[searchTerm]]">
+  </category-setting-exceptions>
+</settings-subpage>
+<!--_html_template_end_-->`;
+}
