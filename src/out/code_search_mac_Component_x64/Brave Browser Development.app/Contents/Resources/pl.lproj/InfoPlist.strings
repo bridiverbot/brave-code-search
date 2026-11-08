@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Skrót w Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 Autorzy Brave. Wszelkie prawa zastrzeżone.";
+NSAudioCaptureUsageDescription = "Gdy Brave będzie mieć dostęp, strony będą mogły prosić Cię o dostęp.";
+NSBluetoothAlwaysUsageDescription = "Gdy Brave będzie mieć dostęp, strony będą mogły prosić Cię o dostęp.";
+NSBluetoothPeripheralUsageDescription = "Gdy Brave będzie mieć dostęp, strony będą mogły prosić Cię o dostęp.";
+NSCameraUsageDescription = "Gdy Brave będzie mieć dostęp, strony będą mogły prosić Cię o dostęp.";
+NSHumanReadableCopyright = "Copyright © 2026 Autorzy Brave. Wszelkie prawa zastrzeżone.";
+NSLocalNetworkUsageDescription = "To pozwoli Ci na udostępnianie treści z przeglądarki Brave na urządzenia lokalne, takie jak telewizor lub głośnik.";
+NSLocationUsageDescription = "Gdy Brave będzie mieć dostęp, strony będą mogły prosić Cię o dostęp.";
+NSMicrophoneUsageDescription = "Gdy Brave będzie mieć dostęp, strony będą mogły prosić Cię o dostęp.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Gdy Brave będzie mieć dostęp, strony będą mogły prosić Cię o dostęp.";

@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave tezkor tugmasi";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, © Brave Software Inc, 2026. Barcha huquqlar himoyalangan.";
+NSAudioCaptureUsageDescription = "Brave saytlarga ulanganda sizdan ruxsat so‘raydi.";
+NSBluetoothAlwaysUsageDescription = "Brave saytlarga ulanganda sizdan ruxsat so‘raydi.";
+NSBluetoothPeripheralUsageDescription = "Brave saytlarga ulanganda sizdan ruxsat so‘raydi.";
+NSCameraUsageDescription = "Brave saytlarga ulanganda sizdan ruxsat so‘raydi.";
+NSHumanReadableCopyright = "© Brave Software Inc, 2026. Barcha huquqlar himoyalangan.";
+NSLocalNetworkUsageDescription = "Bu sizga Brave-dan mahalliy qurilmalarga, masalan, TV yoki spikerga kontentni ulashish imkoniyatini beradi.";
+NSLocationUsageDescription = "Brave saytlarga ulanganda sizdan ruxsat so‘raydi.";
+NSMicrophoneUsageDescription = "Brave saytlarga ulanganda sizdan ruxsat so‘raydi.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Brave saytlarga ulanganda sizdan ruxsat so‘raydi.";

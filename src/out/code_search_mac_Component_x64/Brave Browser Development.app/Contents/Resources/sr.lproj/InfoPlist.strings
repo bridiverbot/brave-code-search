@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave пречица";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Ауторска права 2026. Аутори Brave-а. Сва права задржана.";
+NSAudioCaptureUsageDescription = "Када Brave добије приступ, веб-сајтови ће моћи да затраже приступ.";
+NSBluetoothAlwaysUsageDescription = "Када Brave добије приступ, веб-сајтови ће моћи да затраже приступ.";
+NSBluetoothPeripheralUsageDescription = "Када Brave добије приступ, веб-сајтови ће моћи да затраже приступ.";
+NSCameraUsageDescription = "Када Brave добије приступ, веб-сајтови ће моћи да затраже приступ.";
+NSHumanReadableCopyright = "Ауторска права 2026. Аутори Brave-а. Сва права задржана.";
+NSLocalNetworkUsageDescription = "То ће вам омогућити да бирате са доступних уређаја и да приказујете садржај на њима.";
+NSLocationUsageDescription = "Када Brave добије приступ, веб-сајтови ће моћи да затраже приступ.";
+NSMicrophoneUsageDescription = "Када Brave добије приступ, веб-сајтови ће моћи да затраже приступ.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Када Brave добије приступ, веб-сајтови ће моћи да затраже приступ.";

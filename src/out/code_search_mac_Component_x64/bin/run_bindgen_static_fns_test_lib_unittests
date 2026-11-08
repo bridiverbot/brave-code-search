@@ -1,0 +1,4 @@
+#!/bin/bash
+env vpython3 "$(dirname $0)/../../../testing/scripts/rust/rust_main_program.py" \
+    "--rust-test-executable=$(dirname $0)/../bindgen_static_fns_test_lib_unittests" \
+    "$@"

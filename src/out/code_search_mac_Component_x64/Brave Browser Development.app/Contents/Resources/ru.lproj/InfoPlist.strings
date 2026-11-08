@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Ярлык Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, © Brave Software Inc, 2026 . Все права защищены.";
+NSAudioCaptureUsageDescription = "Когда вы предоставите доступ Brave, веб-сайты также смогут запрашивать у вас доступ.";
+NSBluetoothAlwaysUsageDescription = "Когда вы предоставите доступ Brave, веб-сайты также смогут запрашивать у вас доступ.";
+NSBluetoothPeripheralUsageDescription = "Когда вы предоставите доступ Brave, веб-сайты также смогут запрашивать у вас доступ.";
+NSCameraUsageDescription = "Когда вы предоставите доступ Brave, веб-сайты также смогут запрашивать у вас доступ.";
+NSHumanReadableCopyright = "© Brave Software Inc, 2026 . Все права защищены.";
+NSLocalNetworkUsageDescription = "Это позволит вам делиться контентом из Brave с локальными устройствами, такими как телевизор или динамик.";
+NSLocationUsageDescription = "Когда вы предоставите доступ Brave, веб-сайты также смогут запрашивать у вас доступ.";
+NSMicrophoneUsageDescription = "Когда вы предоставите доступ Brave, веб-сайты также смогут запрашивать у вас доступ.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Когда вы предоставите доступ Brave, веб-сайты также смогут запрашивать у вас доступ.";

@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Bravei otsetee";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Autoriõigus 2026 Brave Software Inc. Kõik õigused on kaitstud.";
+NSAudioCaptureUsageDescription = "Kui annate Braveile juurdepääsu, saavad veebisaidid küsida teilt juurdepääsuluba.";
+NSBluetoothAlwaysUsageDescription = "Kui annate Braveile juurdepääsu, saavad veebisaidid küsida teilt juurdepääsuluba.";
+NSBluetoothPeripheralUsageDescription = "Kui annate Braveile juurdepääsu, saavad veebisaidid küsida teilt juurdepääsuluba.";
+NSCameraUsageDescription = "Kui annate Braveile juurdepääsu, saavad veebisaidid küsida teilt juurdepääsuluba.";
+NSHumanReadableCopyright = "Autoriõigus 2026 Brave Software Inc. Kõik õigused on kaitstud.";
+NSLocalNetworkUsageDescription = "See võimaldab teil jagada sisu Brave'ist oma kohalikele seadmetele, nagu TV või kõlar.";
+NSLocationUsageDescription = "Kui annate Braveile juurdepääsu, saavad veebisaidid küsida teilt juurdepääsuluba.";
+NSMicrophoneUsageDescription = "Kui annate Braveile juurdepääsu, saavad veebisaidid küsida teilt juurdepääsuluba.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Kui annate Braveile juurdepääsu, saavad veebisaidid küsida teilt juurdepääsuluba.";

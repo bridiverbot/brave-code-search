@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Comandă rapidă pentru Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 Brave Software Inc. Toate drepturile rezervate.";
+NSAudioCaptureUsageDescription = "Odată ce Brave are acces, site-urile web îți vor putea solicita accesul.";
+NSBluetoothAlwaysUsageDescription = "Odată ce Brave are acces, site-urile web îți vor putea solicita accesul.";
+NSBluetoothPeripheralUsageDescription = "Odată ce Brave are acces, site-urile web îți vor putea solicita accesul.";
+NSCameraUsageDescription = "Odată ce Brave are acces, site-urile web îți vor putea solicita accesul.";
+NSHumanReadableCopyright = "Copyright © 2026 Brave Software Inc. Toate drepturile rezervate.";
+NSLocalNetworkUsageDescription = "Aceasta vă va permite să partajați conținut din Brave pe dispozitivele dvs. locale, cum ar fi un televizor sau un difuzor.";
+NSLocationUsageDescription = "Odată ce Brave are acces, site-urile web îți vor putea solicita accesul.";
+NSMicrophoneUsageDescription = "Odată ce Brave are acces, site-urile web îți vor putea solicita accesul.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Odată ce Brave are acces, site-urile web îți vor putea solicita accesul.";

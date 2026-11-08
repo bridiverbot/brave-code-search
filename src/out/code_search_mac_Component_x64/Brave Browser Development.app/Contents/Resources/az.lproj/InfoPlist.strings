@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave qısayolu";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Müəlliflik Hüququ 2026 Brave Müəllifləri. Bütün hüquqlar qorunur.";
+NSAudioCaptureUsageDescription = "Brave'un giriş imkanı olduqda veb saytlar giriş üçün Sizdən icazə istəyəcək.";
+NSBluetoothAlwaysUsageDescription = "Brave'un giriş imkanı olduqda veb saytlar giriş üçün Sizdən icazə istəyəcək.";
+NSBluetoothPeripheralUsageDescription = "Brave'un giriş imkanı olduqda veb saytlar giriş üçün Sizdən icazə istəyəcək.";
+NSCameraUsageDescription = "Brave'un giriş imkanı olduqda veb saytlar giriş üçün Sizdən icazə istəyəcək.";
+NSHumanReadableCopyright = "Müəlliflik Hüququ 2026 Brave Müəllifləri. Bütün hüquqlar qorunur.";
+NSLocalNetworkUsageDescription = "Bu, Brave-dən TV və ya dinamik kimi lokal cihazlarınıza kontenti paylaşmağa imkan verəcəkdir.";
+NSLocationUsageDescription = "Brave'un giriş imkanı olduqda veb saytlar giriş üçün Sizdən icazə istəyəcək.";
+NSMicrophoneUsageDescription = "Brave'un giriş imkanı olduqda veb saytlar giriş üçün Sizdən icazə istəyəcək.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Brave'un giriş imkanı olduqda veb saytlar giriş üçün Sizdən icazə istəyəcək.";

@@ -1,0 +1,28 @@
+# Do not edit, any changes will be lost on next build.
+# To customize build args, use args.gn in the same directory.
+
+import("//brave/build/args/brave_defaults.gni")
+is_asan=false
+is_lsan=false
+enable_full_stack_frames_for_profiling=false
+v8_enable_verify_heap=false
+is_component_build=true
+is_universal_binary=false
+target_cpu="x64"
+is_official_build=false
+is_debug=false
+brave_channel="development"
+enable_hangout_services_extension=false
+enable_cdm_host_verification=false
+skip_signing=true
+use_remoteexec=true
+use_libfuzzer=false
+enable_update_notifications=false
+import("//brave/build/args/blink_platform_defaults.gni")
+import("//brave/build/args/branding_defaults.gni")
+import("//brave/build/args/desktop_defaults.gni")
+chrome_pgo_phase=0
+enable_mojom_message_id_scrambling=false
+use_dummy_lastchange=true
+use_system_xcode=false
+target_os="mac"

@@ -1,0 +1,15 @@
+#!/bin/bash
+env vpython3 "$(dirname $0)/../../../testing/scripts/rust/rust_main_program.py" \
+    "--rust-test-executable=$(dirname $0)/../bindgen_static_fns_test_lib_unittests" \
+    "--rust-test-executable=$(dirname $0)/../bindgen_test_lib_unittests" \
+    "--rust-test-executable=$(dirname $0)/../foo_tests" \
+    "--rust-test-executable=$(dirname $0)/../target1_test_rlib_crate_v0_2_unittests" \
+    "--rust-test-executable=$(dirname $0)/../target2_test_rlib_crate_v0_2_unittests" \
+    "--rust-test-executable=$(dirname $0)/../test_aliased_deps_unittests" \
+    "--rust-test-executable=$(dirname $0)/../test_lib_v1_unittests" \
+    "--rust-test-executable=$(dirname $0)/../test_lib_v2_unittests" \
+    "--rust-test-executable=$(dirname $0)/../test_rust_exe_unittests" \
+    "--rust-test-executable=$(dirname $0)/../test_rust_metadata_unittests" \
+    "--rust-test-executable=$(dirname $0)/../test_rust_static_library_unittests" \
+    "--rust-test-executable=$(dirname $0)/../test_rust_unittests" \
+    "$@"

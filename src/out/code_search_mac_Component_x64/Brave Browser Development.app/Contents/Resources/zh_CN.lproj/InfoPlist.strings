@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave 快捷方式";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, 版权所有2026 Brave Software Inc。保留所有权利。";
+NSAudioCaptureUsageDescription = "一旦 Brave 获得了使用权限，网站便能请求您向其授予使用权限。";
+NSBluetoothAlwaysUsageDescription = "一旦 Brave 获得了使用权限，网站便能请求您向其授予使用权限。";
+NSBluetoothPeripheralUsageDescription = "一旦 Brave 获得了使用权限，网站便能请求您向其授予使用权限。";
+NSCameraUsageDescription = "一旦 Brave 获得了使用权限，网站便能请求您向其授予使用权限。";
+NSHumanReadableCopyright = "版权所有2026 Brave Software Inc。保留所有权利。";
+NSLocalNetworkUsageDescription = "这将允许您将 Brave 中的内容共享到本地设备，例如电视或扬声器。";
+NSLocationUsageDescription = "一旦 Brave 获得了使用权限，网站便能请求您向其授予使用权限。";
+NSMicrophoneUsageDescription = "一旦 Brave 获得了使用权限，网站便能请求您向其授予使用权限。";
+NSWebBrowserPublicKeyCredentialUsageDescription = "一旦 Brave 获得了使用权限，网站便能请求您向其授予使用权限。";
