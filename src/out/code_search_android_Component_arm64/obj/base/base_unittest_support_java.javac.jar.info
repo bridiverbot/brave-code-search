@@ -1,0 +1,4 @@
+org.chromium.base.ContentUriTestUtils,../../base/test/android/java/src/org/chromium/base/ContentUriTestUtils.java
+org.chromium.base.InputHintCheckerTestUtil,../../base/test/android/java/src/org/chromium/base/InputHintCheckerTestUtil.java
+org.chromium.base.JavaHandlerThreadHelpers,../../base/test/android/java/src/org/chromium/base/JavaHandlerThreadHelpers.java
+org.chromium.base.JniAndroidTestUtils,../../base/test/android/java/src/org/chromium/base/JniAndroidTestUtils.java

@@ -1,0 +1,262 @@
+import * as Common from '../../core/common/common.js';
+import { type LitTemplate } from '../../ui/lit/lit.js';
+import * as Geometry from '../geometry/geometry.js';
+import { Icon } from '../kit/kit.js';
+import { ContextMenu } from './ContextMenu.js';
+import type { Toolbar } from './Toolbar.js';
+import { type AnyWidget, VBox, WidgetElement } from './Widget.js';
+export interface TabInfo {
+    id: string;
+    title: string;
+    view: AnyWidget;
+    tabTooltip?: string;
+    isCloseable?: boolean;
+    previewFeature?: boolean;
+    index?: number;
+    jslogContext?: string;
+    enabled?: boolean;
+    selected?: boolean;
+}
+declare const TabbedPaneBase: Common.ObjectWrapper.EventMixin<EventTypes, typeof VBox>;
+export declare class TabbedPane extends TabbedPaneBase {
+    #private;
+    protected readonly headerContentsElement: HTMLElement;
+    tabSlider: HTMLDivElement;
+    readonly tabsElement: HTMLElement;
+    private readonly tabsHistory;
+    tabsById: Map<string, TabbedPaneTab>;
+    private currentTabLocked;
+    private autoSelectFirstItemOnShow;
+    private triggerDropDownTimeout;
+    private dropDownButton;
+    private currentDevicePixelRatio;
+    private shrinkableTabs?;
+    private verticalTabLayout?;
+    private closeableTabs?;
+    private delegate?;
+    private currentTab?;
+    private sliderEnabled?;
+    private placeholderElement?;
+    private focusedPlaceholderElement?;
+    private placeholderContainerElement?;
+    private lastSelectedOverflowTab?;
+    private measuredDropDownButtonWidth?;
+    allowTabReorder?: boolean;
+    private automaticReorder?;
+    constructor(element?: HTMLElement);
+    setAccessibleName(name: string): void;
+    setCurrentTabLocked(locked: boolean): void;
+    setAutoSelectFirstItemOnShow(autoSelect: boolean): void;
+    get visibleView(): AnyWidget | null;
+    tabIds(): string[];
+    tabIndex(tabId: string): number;
+    tabViews(): AnyWidget[];
+    tabView(tabId: string): AnyWidget | null;
+    get selectedTabId(): string | null;
+    setShrinkableTabs(shrinkableTabs: boolean): void;
+    makeVerticalTabLayout(): void;
+    setCloseableTabs(closeableTabs: boolean): void;
+    focus(): void;
+    focusSelectedTabHeader(): void;
+    headerElement(): Element;
+    tabbedPaneContentElement(): Element;
+    setTabDelegate(delegate: TabbedPaneTabDelegate): void;
+    appendTab(id: string, tabTitle: string, view: AnyWidget, tabTooltip?: string, userGesture?: boolean, isCloseable?: boolean, isPreviewFeature?: boolean, index?: number, jslogContext?: string): void;
+    closeTab(id: string, userGesture?: boolean): void;
+    closeTabs(ids: string[], userGesture?: boolean): void;
+    hasTab(tabId: string): boolean;
+    otherTabs(id: string): string[];
+    tabsToTheRight(id: string): string[];
+    private viewHasFocus;
+    selectTab(id: string, userGesture?: boolean, forceFocus?: boolean): boolean;
+    selectNextTab(): void;
+    selectPrevTab(): void;
+    getTabIndex(id: string): number;
+    moveTabBackward(id: string, index: number): void;
+    moveTabForward(id: string, index: number): void;
+    lastOpenedTabIds(tabsCount: number): string[];
+    setTabIcon(id: string, icon: Icon | null): void;
+    setTrailingTabIcon(id: string, icon: Icon | LitTemplate | null): void;
+    setSuffixElement(id: string, suffixElement: HTMLElement | LitTemplate | null): void;
+    setBadge(id: string, content: string | null): void;
+    setTabEnabled(id: string, enabled: boolean): void;
+    tabIsDisabled(id: string): boolean;
+    tabIsEnabled(id: string): boolean;
+    private zoomChanged;
+    protected clearMeasuredWidths(): void;
+    changeTabTitle(id: string, tabTitle: string, tabTooltip?: string): void;
+    changeTabView(id: string, view: AnyWidget): void;
+    get tabs(): TabInfo[];
+    onResize(): void;
+    headerResized(): void;
+    wasShown(): void;
+    willHide(): void;
+    wasHidden(): void;
+    makeTabSlider(): void;
+    private setTabSlider;
+    calculateConstraints(): Geometry.Constraints;
+    setPlaceholderElement(element: Element | LitTemplate, focusedElement?: Element): void;
+    waitForTabElementUpdate(): Promise<void>;
+    performUpdate(): void;
+    private adjustToolbarWidth;
+    private hideTabElement;
+    private createDropDownButton;
+    private dropDownClicked;
+    private dropDownKeydown;
+    private dropDownMenuItemSelected;
+    private totalWidth;
+    private numberOfTabsShown;
+    private updateTabsDropDown;
+    private maybeShowDropDown;
+    /**
+     * Returns the tabs that are currently hidden because of overflow, in
+     * tab order. Mirrors the payload of the `overflow-tabs-changed` event.
+     */
+    hiddenTabs(): Array<{
+        id: string;
+        title: string;
+        jslogContext?: string;
+    }>;
+    /**
+     * Returns the index in tab order of the first overflowed (hidden) tab,
+     * or -1 if every tab fits.
+     */
+    firstHiddenTabIndex(): number;
+    /**
+     * Reorders `tabId` to position `newIndex` in the tab list. Unlike
+     * {@link insertBefore}, this does not require the tab to currently be in
+     * the DOM (overflowed tabs are detached). The change is persisted via the
+     * {@link Events.TabOrderChanged} event so the new order survives across
+     * DevTools reloads.
+     */
+    moveTab(tabId: string, newIndex: number): void;
+    private measureDropDownButton;
+    private updateWidths;
+    private measureWidths;
+    private calculateMaxWidth;
+    private tabsToShowIndexes;
+    private hideCurrentTab;
+    private showTab;
+    updateTabSlider(): void;
+    private hideTab;
+    elementsToRestoreScrollPositionsFor(): Element[];
+    insertBefore(tab: TabbedPaneTab, index: number): void;
+    leftToolbar(): Toolbar;
+    rightToolbar(): Toolbar;
+    setAllowTabReorder(allow: boolean, automatic?: boolean): void;
+    private keyDown;
+}
+export interface EventData {
+    prevTabId?: string;
+    tabId: string;
+    view?: AnyWidget;
+    isUserGesture?: boolean;
+}
+export declare enum Events {
+    TabInvoked = "TabInvoked",
+    TabSelected = "TabSelected",
+    TabClosed = "TabClosed",
+    TabOrderChanged = "TabOrderChanged",
+    PaneVisibilityChanged = "PaneVisibilityChanged"
+}
+export interface EventTypes {
+    [Events.TabInvoked]: EventData;
+    [Events.TabSelected]: EventData;
+    [Events.TabClosed]: EventData;
+    [Events.TabOrderChanged]: EventData;
+    [Events.PaneVisibilityChanged]: {
+        isVisible: boolean;
+    };
+}
+export declare class TabbedPaneTab {
+    #private;
+    closeable: boolean;
+    previewFeature: boolean;
+    private readonly tabbedPane;
+    shown: boolean;
+    measuredWidth: number | undefined;
+    private icon;
+    private suffixElement;
+    private delegate?;
+    private titleElement?;
+    private dragStartX?;
+    constructor(tabbedPane: TabbedPane, id: string, title: string, closeable: boolean, previewFeature: boolean, view: AnyWidget, tooltip?: string, jslogContext?: string);
+    get id(): string;
+    get title(): string;
+    set title(title: string);
+    get jslogContext(): string;
+    set jslogContext(jslogContext: string | undefined);
+    isCloseable(): boolean;
+    setIcon(icon: Icon | null): void;
+    setSuffixElement(suffixElement: HTMLElement | LitTemplate | null): void;
+    toggleClass(className: string, force?: boolean): boolean;
+    get view(): AnyWidget;
+    set view(view: AnyWidget);
+    get tooltip(): string | undefined;
+    set tooltip(tooltip: string | undefined);
+    get tabElement(): HTMLElement;
+    width(): number;
+    setWidth(width: number): void;
+    setDelegate(delegate: TabbedPaneTabDelegate): void;
+    private createIconElement;
+    private createSuffixElement;
+    /**
+     * Called when the tab header is (re-)attached to the DOM. If the slotted
+     * content changed while the header was detached, no `slotchange` fires
+     * on re-attachment when the slot is still empty afterwards (its assigned
+     * nodes were already cleared on detach), so sync the state explicitly.
+     */
+    slotsAttached(): void;
+    clearSlots(): void;
+    private createMeasureClone;
+    createTabElement(measuring: boolean): HTMLElement;
+    private createCloseIconButton;
+    private createPreviewIcon;
+    private isCloseIconClicked;
+    private tabKeyDown;
+    private tabClicked;
+    private tabMouseDown;
+    private tabMouseUp;
+    private closeTabs;
+    private tabContextMenu;
+    private startTabDragging;
+    private tabDragging;
+    private endTabDragging;
+}
+export interface TabbedPaneTabDelegate {
+    closeTabs(tabbedPane: TabbedPane, ids: string[]): void;
+    onContextMenu(tabId: string, contextMenu: ContextMenu): void;
+}
+/**
+ * Declarative version of the TabbedPane. Each child element with an `id` is a
+ * tab, e.g.
+ *
+ * ```html
+ * <devtools-tabbed-pane>
+ *   <div id="tab1" label="Tab 1" tab-tooltip="Full Tab 1 description">Content 1</div>
+ *   <devtools-icon slot="icon-tab1" name="warning"></devtools-icon>
+ *   <span slot="suffix-tab1">*</span>
+ * </devtools-tabbed-pane>
+ * ```
+ *
+ * The tab label is read from `label` (falling back to `title`, which is
+ * deprecated for this purpose because it leaks a native tooltip onto the tab
+ * content). An optional `tab-tooltip` attribute sets the tooltip (`title`)
+ * shown on the tab header.
+ *
+ * Children with `slot="icon-<tab id>"` and `slot="suffix-<tab id>"` are shown
+ * before and after the title in the header of that tab.
+ */
+export declare class TabbedPaneElement extends WidgetElement<TabbedPane> {
+    #private;
+    set closeableTabs(closeable: boolean);
+    set allowTabReorder(allow: boolean);
+    set automaticReorder(automatic: boolean);
+    get tabs(): TabInfo[];
+    set tabDelegate(delegate: TabbedPaneTabDelegate);
+    set placeholder(element: Element | LitTemplate);
+    set headerJslog(jslog: string);
+    constructor();
+    disconnectedCallback(): void;
+}
+export {};

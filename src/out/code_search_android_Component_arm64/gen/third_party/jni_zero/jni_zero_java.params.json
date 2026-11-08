@@ -1,0 +1,30 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/jni_zero/generate_jni_java.params.json"
+  ],
+  "dex_path": "obj/third_party/jni_zero/jni_zero_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//third_party/jni_zero:jni_zero_java",
+  "interface_jar_path": "obj/third_party/jni_zero/jni_zero_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "preferred_dep": true,
+  "processed_jar_path": "obj/third_party/jni_zero/jni_zero_java.javac.jar",
+  "proguard_configs": [
+    "../../third_party/jni_zero/proguard.flags"
+  ],
+  "public_deps_configs": [
+    "gen/third_party/jni_zero/gendeps_java.params.json"
+  ],
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/third_party/jni_zero/jni_zero_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/jni_zero/jni_zero_java.javac.jar"
+}

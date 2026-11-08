@@ -1,0 +1,7 @@
+org.chromium.base.shared_preferences.BraveStrictPreferenceKeyChecker,../../brave/base/android/java/src/org/chromium/base/shared_preferences/BraveStrictPreferenceKeyChecker.java
+org.chromium.base.shared_preferences.KeyPrefix,../../base/android/java/src/org/chromium/base/shared_preferences/KeyPrefix.java
+org.chromium.base.shared_preferences.KnownPreferenceKeyRegistries,../../base/android/java/src/org/chromium/base/shared_preferences/KnownPreferenceKeyRegistries.java
+org.chromium.base.shared_preferences.PreferenceKeyChecker,../../base/android/java/src/org/chromium/base/shared_preferences/PreferenceKeyChecker.java
+org.chromium.base.shared_preferences.PreferenceKeyRegistry,../../base/android/java/src/org/chromium/base/shared_preferences/PreferenceKeyRegistry.java
+org.chromium.base.shared_preferences.SharedPreferencesManager,../../base/android/java/src/org/chromium/base/shared_preferences/SharedPreferencesManager.java
+org.chromium.base.shared_preferences.StrictPreferenceKeyChecker,../../base/android/java/src/org/chromium/base/shared_preferences/StrictPreferenceKeyChecker.java

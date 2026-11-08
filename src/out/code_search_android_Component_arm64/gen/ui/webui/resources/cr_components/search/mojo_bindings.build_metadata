@@ -1,0 +1,8 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../../../ui/webui/resources/cr_components/search/plural_string_provider.mojom"
+  ]
+}

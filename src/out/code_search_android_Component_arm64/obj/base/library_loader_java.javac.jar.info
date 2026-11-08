@@ -1,0 +1,9 @@
+org.chromium.base.library_loader.IRelroLibInfo,gen/base/relro_aidl.srcjar/org/chromium/base/library_loader/IRelroLibInfo.java
+org.chromium.base.library_loader.LibraryLoader,../../base/android/java/src/org/chromium/base/library_loader/LibraryLoader.java
+org.chromium.base.library_loader.LibraryPrefetcher,../../base/android/java/src/org/chromium/base/library_loader/LibraryPrefetcher.java
+org.chromium.base.library_loader.LibraryProcessType,gen/base/library_loader_java_enums_srcjar.srcjar/org/chromium/base/library_loader/LibraryProcessType.java
+org.chromium.base.library_loader.Linker,../../base/android/java/src/org/chromium/base/library_loader/Linker.java
+org.chromium.base.library_loader.LinkerJni,../../base/android/java/src/org/chromium/base/library_loader/LinkerJni.java
+org.chromium.base.library_loader.LoaderErrors,../../base/android/java/src/org/chromium/base/library_loader/LoaderErrors.java
+org.chromium.base.library_loader.NativeLibraryPreloader,../../base/android/java/src/org/chromium/base/library_loader/NativeLibraryPreloader.java
+org.chromium.base.library_loader.ProcessInitException,../../base/android/java/src/org/chromium/base/library_loader/ProcessInitException.java

@@ -1,0 +1,6 @@
+org.chromium.base.AconfigFlaggedApiDelegate,../../base/android/java/src/org/chromium/base/AconfigFlaggedApiDelegate.java
+org.chromium.base.PasswordEchoSettingDelegate,../../base/android/java/src/org/chromium/base/PasswordEchoSettingDelegate.java
+org.chromium.base.SelectionActionMenuClientWrapper,../../base/android/java/src/org/chromium/base/SelectionActionMenuClientWrapper.java
+org.chromium.base.hid.HidDevice,../../base/android/java/src/org/chromium/base/hid/HidDevice.java
+org.chromium.base.hid.HidDeviceListener,../../base/android/java/src/org/chromium/base/hid/HidDeviceListener.java
+org.chromium.base.hid.HidManager,../../base/android/java/src/org/chromium/base/hid/HidManager.java

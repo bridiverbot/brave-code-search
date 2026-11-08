@@ -1,0 +1,6 @@
+{
+  "javac_full_classpath_targets": [
+    "//third_party/hamcrest:hamcrest_library_java",
+    "//third_party/hamcrest:hamcrest_core_java"
+  ]
+}

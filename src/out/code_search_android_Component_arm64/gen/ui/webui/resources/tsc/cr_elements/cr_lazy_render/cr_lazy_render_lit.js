@@ -1,0 +1,77 @@
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview
+ * cr-lazy-render-lit helps with lazy rendering elements only when they are
+ * actually needed (requested to be shown by the user). The lazy rendered
+ * node is rendered right before the cr-lazy-render-lit node itself, such that
+ * it can be fully styled by the parent, or use Lit bindings referring to the
+ * parent's reactive properties.
+ *
+ * Example usage:
+ *   <cr-lazy-render-lit id="menu"
+ *       .template="${() => html`<heavy-menu></heavy-menu>`}">
+ *   </cr-lazy-render-lit>
+ *
+ * Note that the provided template should create exactly one top-level DOM node,
+ * otherwise the result of this.get() will not be correct.
+ *
+ *   this.$.menu.get().show();
+ */
+import { assert } from '//resources/js/assert.js';
+import { CrLitElement, html, render } from '//resources/lit/v3_0/lit.rollup.js';
+export class CrLazyRenderLitElement extends CrLitElement {
+    static get is() {
+        return 'cr-lazy-render-lit';
+    }
+    render() {
+        if (this.rendered_) {
+            // Render items into the parent's DOM using the client provided template.
+            render(this.template(), this.parentNode, {
+                host: this.getRootNode().host,
+                // Specify 'renderBefore', so that the lazy rendered node can be
+                // easily located in get() later on.
+                renderBefore: this,
+            });
+        }
+        return html ``;
+    }
+    static get properties() {
+        return {
+            template: { type: Object },
+            rendered_: {
+                type: Boolean,
+                state: true,
+            },
+        };
+    }
+    #rendered__accessor_storage = false;
+    get rendered_() { return this.#rendered__accessor_storage; }
+    set rendered_(value) { this.#rendered__accessor_storage = value; }
+    #template_accessor_storage = () => html ``;
+    get template() { return this.#template_accessor_storage; }
+    set template(value) { this.#template_accessor_storage = value; }
+    child_ = null;
+    /**
+     * Stamp the template into the DOM tree synchronously
+     * @return Child element which has been stamped into the DOM tree.
+     */
+    get() {
+        if (!this.rendered_) {
+            this.rendered_ = true;
+            this.performUpdate();
+            this.child_ = this.previousElementSibling;
+        }
+        assert(this.child_);
+        return this.child_;
+    }
+    /**
+     * @return The element contained in the template, if it has
+     *   already been stamped.
+     */
+    getIfExists() {
+        return this.child_;
+    }
+}
+customElements.define(CrLazyRenderLitElement.is, CrLazyRenderLitElement);

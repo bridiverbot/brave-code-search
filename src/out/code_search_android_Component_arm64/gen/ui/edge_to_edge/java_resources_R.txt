@@ -1,0 +1,2 @@
+int id edge_to_edge_base_layout 0x7f010001
+int layout edge_to_edge_base_layout 0x7f010001

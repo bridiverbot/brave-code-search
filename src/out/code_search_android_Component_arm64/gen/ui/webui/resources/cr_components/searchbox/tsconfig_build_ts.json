@@ -1,0 +1,91 @@
+{
+  "extends": "../../../../../../../../tools/typescript/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "../../tsc/cr_components/searchbox",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_components/composebox/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/keyword_mode_manager.ts",
+    "preprocessed/placeholder_text_cycler.ts",
+    "preprocessed/searchbox_selection_mixin.ts",
+    "preprocessed/searchbox_action.html.ts",
+    "preprocessed/searchbox_action.ts",
+    "preprocessed/searchbox_browser_proxy.ts",
+    "preprocessed/searchbox_compose_button.html.ts",
+    "preprocessed/searchbox_compose_button.ts",
+    "preprocessed/searchbox_dropdown.html.ts",
+    "preprocessed/searchbox_dropdown.ts",
+    "preprocessed/searchbox_icon.html.ts",
+    "preprocessed/searchbox_icon.ts",
+    "preprocessed/searchbox_input.html.ts",
+    "preprocessed/searchbox_input.ts",
+    "preprocessed/searchbox_match.html.ts",
+    "preprocessed/searchbox_match.ts",
+    "preprocessed/searchbox_mixin.ts",
+    "preprocessed/searchbox_thumbnail.html.ts",
+    "preprocessed/searchbox_thumbnail.ts",
+    "preprocessed/utils.ts",
+    "preprocessed/searchbox_action.css.ts",
+    "preprocessed/searchbox_compose_button.css.ts",
+    "preprocessed/searchbox_dropdown.css.ts",
+    "preprocessed/searchbox_dropdown_shared_style.css.ts",
+    "preprocessed/searchbox_icon.css.ts",
+    "preprocessed/searchbox_input.css.ts",
+    "preprocessed/searchbox_match.css.ts",
+    "preprocessed/searchbox_thumbnail.css.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../composebox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

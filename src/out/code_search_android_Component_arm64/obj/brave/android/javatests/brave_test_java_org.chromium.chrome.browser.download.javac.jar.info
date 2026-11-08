@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.download.BraveDownloadSettingsTest,../../brave/android/javatests/org/chromium/chrome/browser/download/BraveDownloadSettingsTest.java
+org.chromium.chrome.browser.download.dialogs.BraveDownloadLocationDialogTest,../../brave/android/javatests/org/chromium/chrome/browser/download/dialogs/BraveDownloadLocationDialogTest.java

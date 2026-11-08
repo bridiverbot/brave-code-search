@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.download.BraveMimeUtils,../../brave/browser/download/android/java/src/org/chromium/chrome/browser/download/BraveMimeUtils.java
+org.chromium.chrome.browser.download.dialogs.BraveDownloadLocationDialogCoordinator,../../brave/browser/download/android/java/src/org/chromium/chrome/browser/download/dialogs/BraveDownloadLocationDialogCoordinator.java

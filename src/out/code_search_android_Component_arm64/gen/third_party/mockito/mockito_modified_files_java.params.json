@@ -1,0 +1,26 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/org_mockito_mockito_android_java.params.json",
+    "gen/third_party/android_deps/org_mockito_mockito_core_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/mockito/mockito_modified_files_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//third_party/mockito:mockito_modified_files_java",
+  "interface_jar_path": "obj/third_party/mockito/mockito_modified_files_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/mockito/mockito_modified_files_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/third_party/mockito/mockito_modified_files_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/mockito/mockito_modified_files_java.javac.jar"
+}

@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.brave_origin.BraveOriginDeepLinkHandlerTest,../../brave/android/junit/src/org/chromium/chrome/browser/brave_origin/BraveOriginDeepLinkHandlerTest.java
+org.chromium.chrome.browser.brave_origin.BraveOriginSubscriptionPrefsTest,../../brave/android/junit/src/org/chromium/chrome/browser/brave_origin/BraveOriginSubscriptionPrefsTest.java

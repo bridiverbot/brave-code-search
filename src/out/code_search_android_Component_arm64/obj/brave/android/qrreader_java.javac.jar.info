@@ -1,0 +1,5 @@
+org.chromium.chrome.browser.qrreader.BarcodeTracker,../../brave/android/java/org/chromium/chrome/browser/qrreader/BarcodeTracker.java
+org.chromium.chrome.browser.qrreader.BarcodeTrackerFactory,../../brave/android/java/org/chromium/chrome/browser/qrreader/BarcodeTrackerFactory.java
+org.chromium.chrome.browser.qrreader.CameraSource,../../brave/android/java/org/chromium/chrome/browser/qrreader/CameraSource.java
+org.chromium.chrome.browser.qrreader.CameraSourcePreview,../../brave/android/java/org/chromium/chrome/browser/qrreader/CameraSourcePreview.java
+org.chromium.chrome.browser.qrreader.QRCodeCameraManager,../../brave/android/java/org/chromium/chrome/browser/qrreader/QRCodeCameraManager.java

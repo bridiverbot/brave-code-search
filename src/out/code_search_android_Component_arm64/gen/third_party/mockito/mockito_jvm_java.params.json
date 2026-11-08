@@ -1,0 +1,10 @@
+{
+  "gn_target": "//third_party/mockito:mockito_jvm_java",
+  "public_deps_configs": [
+    "gen/third_party/mockito/mockito_modified_files_java.params.json",
+    "gen/third_party/android_deps/org_mockito_mockito_core_java.params.json",
+    "gen/third_party/android_deps/org_mockito_mockito_subclass_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

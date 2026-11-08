@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_SEARCHBOX_ICONS_GOOGLE_LOGO_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/icons/google_logo.svg" resource_path="cr_components/searchbox/icons/google_logo.svg" use_base_dir="false" type="BINDATA" />
+</grit-part>

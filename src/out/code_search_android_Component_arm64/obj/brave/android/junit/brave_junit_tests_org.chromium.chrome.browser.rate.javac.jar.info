@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.rate.BraveAskPlayStoreRatingDialogTest,../../brave/android/junit/src/org/chromium/chrome/browser/rate/BraveAskPlayStoreRatingDialogTest.java
+org.chromium.chrome.browser.rate.RateUtilsTest,../../brave/android/junit/src/org/chromium/chrome/browser/rate/RateUtilsTest.java
