@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "robolectric_x64/gen/build/rust/allocator/allocator_impls_ffi",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "robolectric_x64/gen/build/rust/allocator/allocator_impls_ffi_generator/bindings.rs",
+        "@robolectric_x64/obj/build/rust/allocator/allocator_impls_ffi.rsp.rust"
+    ]
+}
