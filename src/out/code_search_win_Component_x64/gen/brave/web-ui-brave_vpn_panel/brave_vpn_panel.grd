@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/brave_vpn_panel_generated.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/brave_vpn_panel_generated_map.cc" type="resource_file_map_source" />
+    <output filename="grit/brave_vpn_panel_generated_map.h" type="resource_map_header" />
+    <output filename="brave_vpn_panel_generated.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_BRAVE_VPN_PANEL_04BC64DC76EECBFA11DCFB3D3565760B_SVG" file="${root_gen_dir}/brave/web-ui-brave_vpn_panel/04bc64dc76eecbfa11dcfb3d3565760b.svg" resource_path="04bc64dc76eecbfa11dcfb3d3565760b.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_BRAVE_VPN_PANEL_47EF12C205815FE0BBA044252C231E1A_SVG" file="${root_gen_dir}/brave/web-ui-brave_vpn_panel/47ef12c205815fe0bba044252c231e1a.svg" resource_path="47ef12c205815fe0bba044252c231e1a.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_BRAVE_VPN_PANEL_7D290AD90FD17AF244A3FEDA23A51395_SVG" file="${root_gen_dir}/brave/web-ui-brave_vpn_panel/7d290ad90fd17af244a3feda23a51395.svg" resource_path="7d290ad90fd17af244a3feda23a51395.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_BRAVE_VPN_PANEL_BRAVE_VPN_PANEL_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-brave_vpn_panel/brave_vpn_panel.bundle.js" resource_path="brave_vpn_panel.bundle.js" use_base_dir="false" type="BINDATA" />
+    </includes>
+  </release>
+</grit>

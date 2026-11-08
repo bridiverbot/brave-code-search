@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/playlist_generated.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/playlist_generated_map.cc" type="resource_file_map_source" />
+    <output filename="grit/playlist_generated_map.h" type="resource_map_header" />
+    <output filename="playlist_generated.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_PLAYLIST_160F5C9B770A601DBBA66F299CB748A3_SVG" file="${root_gen_dir}/brave/web-ui-playlist/160f5c9b770a601dbba66f299cb748a3.svg" resource_path="160f5c9b770a601dbba66f299cb748a3.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PLAYLIST_69816EDBB537E258054A39DE1FF9B37F_SVG" file="${root_gen_dir}/brave/web-ui-playlist/69816edbb537e258054a39de1ff9b37f.svg" resource_path="69816edbb537e258054a39de1ff9b37f.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PLAYLIST_PLAYLIST_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-playlist/playlist.bundle.js" resource_path="playlist.bundle.js" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PLAYLIST_VIDEOFRAMECONTENTS_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-playlist/videoFrameContents.bundle.js" resource_path="videoFrameContents.bundle.js" use_base_dir="false" type="BINDATA" />
+    </includes>
+  </release>
+</grit>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/brave_shields_panel_generated.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/brave_shields_panel_generated_map.cc" type="resource_file_map_source" />
+    <output filename="grit/brave_shields_panel_generated_map.h" type="resource_map_header" />
+    <output filename="brave_shields_panel_generated.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_BRAVE_SHIELDS_PANEL_BRAVE_SHIELDS_PANEL_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-brave_shields_panel/brave_shields_panel.bundle.js" resource_path="brave_shields_panel.bundle.js" use_base_dir="false" type="BINDATA" />
+    </includes>
+  </release>
+</grit>

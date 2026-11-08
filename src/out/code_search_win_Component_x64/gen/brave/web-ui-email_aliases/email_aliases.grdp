@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+  <include name="IDR_EMAIL_ALIASES_4206DCAC550A504CB85194B22340C458_SVG" file="${root_gen_dir}/brave/web-ui-email_aliases/4206dcac550a504cb85194b22340c458.svg" resource_path="4206dcac550a504cb85194b22340c458.svg" use_base_dir="false" type="BINDATA" />
+  <include name="IDR_EMAIL_ALIASES_BF26A3C63E86634D842B44E28F952C47_SVG" file="${root_gen_dir}/brave/web-ui-email_aliases/bf26a3c63e86634d842b44e28f952c47.svg" resource_path="bf26a3c63e86634d842b44e28f952c47.svg" use_base_dir="false" type="BINDATA" />
+  <include name="IDR_EMAIL_ALIASES_EMAIL_ALIASES_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-email_aliases/email_aliases.bundle.js" resource_path="email_aliases.bundle.js" use_base_dir="false" type="BINDATA" />
+  <include name="IDR_EMAIL_ALIASES_EMAIL_ALIASES_PANEL_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-email_aliases/email_aliases_panel.bundle.js" resource_path="email_aliases_panel.bundle.js" use_base_dir="false" type="BINDATA" />
+  <include name="IDR_EMAIL_ALIASES_EMAIL_ALIASES_PROMO_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-email_aliases/email_aliases_promo.bundle.js" resource_path="email_aliases_promo.bundle.js" use_base_dir="false" type="BINDATA" />
+</grit-part>
