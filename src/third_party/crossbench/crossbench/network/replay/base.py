@@ -1,0 +1,126 @@
+# Copyright 2023 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+from __future__ import annotations
+
+import abc
+import contextlib
+import hashlib
+import logging
+from typing import TYPE_CHECKING, Final, Iterator, Self, TypeVar
+from urllib.parse import urlparse
+
+from typing_extensions import override
+
+from crossbench import exception
+from crossbench import path as pth
+from crossbench.cli.ui import ui
+from crossbench.network.base import Network
+from crossbench.parse import ObjectParser, PathParser
+
+if TYPE_CHECKING:
+  from crossbench import plt
+  from crossbench.env.runner_env import RunnerEnv
+  from crossbench.network.traffic_shaping.base import TrafficShaper
+  from crossbench.runner.groups.session import BrowserSessionRunGroup
+  ReplayNetworkT = TypeVar("ReplayNetworkT", bound="ReplayNetwork")
+
+GS_PREFIX: Final[str] = "gs://"
+
+
+class ReplayNetwork(Network, metaclass=abc.ABCMeta):
+  """ A network implementation that can be used to replay requests
+  from a an archive."""
+
+  def __init__(self,
+               archive: pth.LocalPath | str,
+               traffic_shaper: TrafficShaper | None = None,
+               browser_platform: plt.Platform | None = None,
+               expected_md5_hash: bytes | str = b"") -> None:
+    super().__init__(traffic_shaper, browser_platform)
+    self._expected_md5_hash: Final[bytes] = ObjectParser.md5_hash(
+        expected_md5_hash)
+    self._cached_archive_md5_hash: bytes = b""
+    self._archive_path: pth.LocalPath = self.ensure_archive(archive)
+
+  @property
+  def _archive_md5_hash(self) -> bytes:
+    if not self._cached_archive_md5_hash:
+      with self._archive_path.open("rb") as f:
+        self._cached_archive_md5_hash = hashlib.file_digest(f, "md5").digest()
+    return self._cached_archive_md5_hash
+
+  @override
+  def validate_env(self, env: RunnerEnv) -> None:
+    super().validate_env(env)
+    if not self._expected_md5_hash:
+      return
+    assert len(self._expected_md5_hash) == 16
+    actual_hash = self._archive_md5_hash
+    if actual_hash != self._expected_md5_hash:
+      env.handle_warning(f"WPR archive hash mismatch for {self._archive_path}: "
+                         f"expected '{self._expected_md5_hash.hex()}', "
+                         f"but actual archive MD5 was '{actual_hash.hex()}'.")
+
+  @property
+  @override
+  def is_wpr(self) -> bool:
+    return True
+
+  @property
+  def archive_path(self) -> pth.LocalPath:
+    return self._archive_path
+
+  def set_archive_path(self, path: pth.LocalPath) -> None:
+    assert not self.is_running
+    self._archive_path = path
+    self._cached_archive_md5_hash = b""
+
+  @contextlib.contextmanager
+  @override
+  def open(self, session: BrowserSessionRunGroup) -> Iterator[Self]:
+    with exception.annotate(f"Starting {type(self).__name__}"):
+      with super().open(session):
+        with self._open_replay_server(session):
+          with self._traffic_shaper.open(self, session):
+            yield self
+
+  @contextlib.contextmanager
+  def _open_replay_server(self,
+                          session: BrowserSessionRunGroup) -> Iterator[None]:
+    del session
+    yield
+
+  def _generate_filename(self, url: str) -> str:
+    blob = self.host_platform.prepare_gcs_request(url)
+    if md5 := blob.md5_hash:
+      safe_md5 = pth.safe_filename(md5)
+      url_path = pth.AnyPosixPath(urlparse(url).path)
+      return f"{url_path.stem}_{safe_md5}{url_path.suffix}"
+    raise RuntimeError(f"Could not find md5 hash in blob: {url}")
+
+  def _download_gcloud_archive(self, url: str) -> pth.LocalPath:
+    title: str = f"Downloading {url}"
+    hint: str = (
+        f"Failed to download {url} from Google Cloud Storage. Make sure the "
+        "cloud SDK is installed and that you have the necessary permissions "
+        "(run `./cb.py `<your benchmark> --help` and check for mentions to "
+        "permission groups)")
+    with exception.annotate(title), ui.spinner(title=title):
+      # `title` + "\n" + `hint` yields the wrong formatting, so nest.
+      with exception.annotate(hint):
+        local_path = (
+            self.host_platform.local_cache_dir("wpr") /
+            self._generate_filename(url))
+        if local_path.is_file():
+          logging.info("Found cached WPR archive: %s", local_path)
+          return local_path
+        logging.info("Downloading WPR archive from %s to %s", url, local_path)
+        self.host_platform.download_gcs_file(url, local_path)
+    return local_path
+
+  def ensure_archive(self, archive: pth.LocalPath | str) -> pth.LocalPath:
+    if isinstance(archive, str) and archive.startswith(GS_PREFIX):
+      return self._download_gcloud_archive(url=archive)
+    return PathParser.existing_file_path(archive).resolve()
