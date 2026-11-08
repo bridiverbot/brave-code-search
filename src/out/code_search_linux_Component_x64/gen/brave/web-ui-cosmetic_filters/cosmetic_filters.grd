@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/cosmetic_filters_generated.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/cosmetic_filters_generated_map.cc" type="resource_file_map_source" />
+    <output filename="grit/cosmetic_filters_generated_map.h" type="resource_map_header" />
+    <output filename="cosmetic_filters_generated.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_COSMETIC_FILTERS_COSMETIC_FILTERS_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-cosmetic_filters/cosmetic_filters.bundle.js" resource_path="cosmetic_filters.bundle.js" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_COSMETIC_FILTERS_ELEMENT_PICKER_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-cosmetic_filters/element_picker.bundle.js" resource_path="element_picker.bundle.js" use_base_dir="false" type="BINDATA" />
+    </includes>
+  </release>
+</grit>

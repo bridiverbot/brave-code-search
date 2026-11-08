@@ -1,0 +1,8 @@
+{
+  "deps": [
+    "../../../../../components/ai_chat/core/common/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../../brave/ui/webui/resources/js/brave_browser_command/brave_browser_command.mojom"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "deps": [
+    "../../../../mojo/public/mojom/base/base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../brave/components/brave_search/common/brave_search_default.mojom",
+    "../../../../../../../brave/components/brave_search/common/brave_search_fallback.mojom"
+  ]
+}

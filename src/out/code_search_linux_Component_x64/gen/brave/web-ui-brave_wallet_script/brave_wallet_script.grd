@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/brave_wallet_script_generated.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/brave_wallet_script_generated_map.cc" type="resource_file_map_source" />
+    <output filename="grit/brave_wallet_script_generated_map.h" type="resource_map_header" />
+    <output filename="brave_wallet_script_generated.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_BRAVE_WALLET_SCRIPT_ETHEREUM_PROVIDER_SCRIPT_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-brave_wallet_script/ethereum_provider_script.bundle.js" resource_path="ethereum_provider_script.bundle.js" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_BRAVE_WALLET_SCRIPT_SOLANA_PROVIDER_SCRIPT_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-brave_wallet_script/solana_provider_script.bundle.js" resource_path="solana_provider_script.bundle.js" use_base_dir="false" type="BINDATA" />
+    </includes>
+  </release>
+</grit>

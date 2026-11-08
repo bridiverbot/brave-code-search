@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+  <include name="IDR_EXTERNAL_JS_LEO_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-external_js/leo.bundle.js" resource_path="brave/leo.bundle.js" use_base_dir="false" type="BINDATA" />
+  <include name="IDR_EXTERNAL_JS_REACT_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-external_js/react.bundle.js" resource_path="brave/react.bundle.js" use_base_dir="false" type="BINDATA" />
+</grit-part>

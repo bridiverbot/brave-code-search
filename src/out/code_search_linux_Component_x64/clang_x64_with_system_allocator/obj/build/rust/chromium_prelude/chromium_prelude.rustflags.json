@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "clang_x64_with_system_allocator/gen/build/rust/chromium_prelude/chromium_prelude",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../build/rust/chromium_prelude/chromium_prelude.rs",
+        "@clang_x64_with_system_allocator/obj/build/rust/chromium_prelude/chromium_prelude.rsp.rust"
+    ]
+}
