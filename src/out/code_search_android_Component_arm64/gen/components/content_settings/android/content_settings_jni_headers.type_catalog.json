@@ -1,0 +1,4 @@
+{
+  "org/chromium/components/content_settings/ContentSettingsObserver$NativeAndroidObserver": "::content_settings::AndroidObserver",
+  "org/chromium/components/content_settings/CookieControlsBridge$NativeCookieControlsBridge": "::content_settings::CookieControlsBridge"
+}

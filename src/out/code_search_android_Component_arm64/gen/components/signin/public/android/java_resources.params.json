@@ -1,0 +1,11 @@
+{
+  "chromium_code": true,
+  "gn_target": "//components/signin/public/android:java_resources",
+  "public_deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/components/signin/public/android/java_resources.res.sources",
+  "resources_zip": "obj/components/signin/public/android/java_resources.resources.zip",
+  "rtxt_path": "gen/components/signin/public/android/java_resources_R.txt",
+  "type": "android_resources"
+}

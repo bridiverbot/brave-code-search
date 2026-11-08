@@ -1,0 +1,2 @@
+int string leave 0x7f010001
+int string suppress_js_modal_dialogs 0x7f010001

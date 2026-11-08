@@ -1,0 +1,2 @@
+../../components/metrics/android/java/src/org/chromium/components/metrics/LimitedEntropyRandomizationSource.java
+../../components/metrics/android/java/src/org/chromium/components/metrics/LowEntropySource.java

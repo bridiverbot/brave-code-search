@@ -1,0 +1,19 @@
+{
+  "chromium_code": true,
+  "gn_target": "//components/browser_ui/widget/android:java_resources",
+  "public_deps_configs": [
+    "gen/components/browser_ui/widget/android/shared_with_webview/java_resources.params.json",
+    "gen/chrome/browser/ui/android/strings/ui_strings_grd.params.json",
+    "gen/components/browser_ui/strings/android/browser_ui_strings_grd.params.json",
+    "gen/components/browser_ui/styles/android/java_resources.params.json",
+    "gen/components/omnibox/browser/java_resources.params.json",
+    "gen/third_party/android_deps/material_design_java.params.json",
+    "gen/third_party/androidx/androidx_constraintlayout_constraintlayout_java.params.json",
+    "gen/ui/android/ui_java_resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/components/browser_ui/widget/android/java_resources.res.sources",
+  "resources_zip": "obj/components/browser_ui/widget/android/java_resources.resources.zip",
+  "rtxt_path": "gen/components/browser_ui/widget/android/java_resources_R.txt",
+  "type": "android_resources"
+}

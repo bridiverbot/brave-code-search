@@ -1,0 +1,37 @@
+{
+  "bundled_srcjars": [
+    "gen/components/sync/android/java_enums.srcjar",
+    "gen/components/sync/android/java_prefs.srcjar",
+    "gen/components/sync/android/jni_headers.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/base/service_loader_java.params.json",
+    "gen/components/signin/public/android/java.params.json",
+    "gen/google_apis/gaia/android/java.params.json",
+    "gen/third_party/android_deps/protobuf_lite_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/jni_zero/jni_zero_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/components/sync/android/sync_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//components/sync/android:sync_java",
+  "interface_jar_path": "obj/components/sync/android/sync_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/components/sync/android/sync_java.bytecode-rewritten.jar",
+  "public_deps_configs": [
+    "gen/components/signin/public/android/java.params.json",
+    "gen/components/sync/protocol/protocol_java.params.json"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/components/sync/android/sync_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/components/sync/android/sync_java.javac.jar"
+}

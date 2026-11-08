@@ -1,0 +1,6 @@
+{
+  "javac_full_interface_classpath": [
+    "obj/build/android/build_java.turbine.jar"
+  ],
+  "sdk_interface_jars": []
+}

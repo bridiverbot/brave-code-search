@@ -1,0 +1,9 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../components/ntp_tiles/tile_source.mojom",
+    "../../../../../components/ntp_tiles/tile_type.mojom"
+  ]
+}

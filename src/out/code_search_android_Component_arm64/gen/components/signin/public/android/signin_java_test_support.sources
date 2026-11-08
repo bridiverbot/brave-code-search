@@ -1,0 +1,12 @@
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountCapabilitiesBuilder.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountCapabilitiesFetcherTestUtil.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountHolder.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountInfoSerializer.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/AccountManagerFacadeUtil.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/FakeAccountManagerDelegate.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/FakeAccountManagerFacade.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/FakeIdentityManager.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/FakePlatformAccount.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/SharedPrefsAccountStorage.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/SigninMatchers.java
+../../components/signin/public/android/java/src/org/chromium/components/signin/test/util/TestAccounts.java

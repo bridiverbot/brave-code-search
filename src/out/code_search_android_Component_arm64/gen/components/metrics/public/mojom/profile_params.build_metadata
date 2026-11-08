@@ -1,0 +1,8 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../../components/metrics/public/mojom/profile_params.mojom"
+  ]
+}

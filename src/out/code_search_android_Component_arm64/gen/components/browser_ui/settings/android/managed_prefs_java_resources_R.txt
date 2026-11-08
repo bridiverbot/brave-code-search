@@ -1,0 +1,6 @@
+int id barrier_for_bottom_space 0x7f010001
+int id bottom_space 0x7f010001
+int id icon_frame 0x7f010001
+int id managed_disclaimer_text 0x7f010001
+int id top_space 0x7f010001
+int layout chrome_managed_preference 0x7f010001
