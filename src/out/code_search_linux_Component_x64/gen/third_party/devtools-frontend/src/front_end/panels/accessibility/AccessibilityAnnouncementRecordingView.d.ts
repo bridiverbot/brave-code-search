@@ -1,0 +1,85 @@
+import * as SDK from '../../core/sdk/sdk.js';
+import * as Workspace from '../../models/workspace/workspace.js';
+import { AccessibilitySubPane } from './AccessibilitySubPane.js';
+export declare const BINDING_NAME = "__announcementsRecorderBinding";
+export declare enum AnnouncementApi {
+    ARIA_LIVE = "aria-live",
+    JS_TRIGGERED = "js-triggered"
+}
+export declare const enum RecordTypeFilter {
+    BOTH = "both",
+    ARIA_LIVE = "aria-live",
+    JS_TRIGGERED = "js-triggered"
+}
+export interface BlockedTargetInfo {
+    targetName: string;
+    reason: string;
+}
+export type RevealTargetPanel = 'elements' | 'accessibility';
+export interface ViewInput {
+    isRecording: boolean;
+    onToggleRecording: () => void;
+    onClear: () => void;
+    onExportCsv: () => void;
+    canExport: boolean;
+    recordTypeFilter: RecordTypeFilter;
+    onRecordTypeFilterChange: (type: RecordTypeFilter) => void;
+    textFilter: string;
+    onTextFilterChange: (text: string) => void;
+    blockedTargets: BlockedTargetInfo[];
+    announcements: readonly A11yAnnouncement[];
+    selectedAnnouncement: A11yAnnouncement | null;
+    onSelectAnnouncement: (item: A11yAnnouncement | null) => void;
+    onRevealInElements: (item: A11yAnnouncement) => void;
+    onRevealInA11yTree: (item: A11yAnnouncement) => void;
+}
+export type View = (input: ViewInput, output: undefined, target: HTMLElement) => void;
+export declare const DEFAULT_VIEW: View;
+declare global {
+    interface Window {
+        __announcementsRecorderBinding?: (payload: string) => void;
+        __announcementsRecorderBinding_loaded?: boolean;
+        __announcementsRecorderBinding_cleanup?: () => void;
+        __announcementsRecorderGetElement?: (id: string) => Element | undefined;
+    }
+}
+export interface A11yAnnouncement {
+    api: AnnouncementApi;
+    message: string;
+    politeness: string;
+    element: string;
+    elementId?: string;
+    stack?: string;
+    target?: SDK.Target.Target;
+    time: number;
+}
+export declare function injectedScript(ariaLiveApi: string, jsTriggeredApi: string): void;
+export declare function teardownScript(): void;
+export declare const INJECTED_SCRIPT_SOURCE: string;
+export declare const TEARDOWN_SCRIPT_SOURCE: string;
+export declare function checkForBlockedPayload(payload: unknown): string | null;
+export declare function validateAndSanitizeAnnouncement(payload: unknown): A11yAnnouncement | null;
+export declare function buildCsvContent(announcements: readonly A11yAnnouncement[]): string;
+export declare function parseFirstCallSite(target: SDK.Target.Target, stack: string): Promise<Workspace.UISourceCode.UILocation | null>;
+export declare class AccessibilityAnnouncementRecordingView extends AccessibilitySubPane implements SDK.TargetManager.Observer {
+    #private;
+    constructor(element?: HTMLElement, view?: View);
+    wasShown(): void;
+    targetAdded(target: SDK.Target.Target): Promise<void>;
+    targetRemoved(target: SDK.Target.Target): Promise<void>;
+    startRecording(): Promise<void>;
+    stopRecording(): Promise<void>;
+    clearAnnouncements(): void;
+    get filteredAnnouncements(): readonly A11yAnnouncement[];
+    setRecordTypeFilter(type: RecordTypeFilter): void;
+    setTextFilter(text: string): void;
+    exportCsvForTest(): string;
+    revealSourceForAnnouncementForTest(item: A11yAnnouncement): Promise<void>;
+    revealElementForTest(item: A11yAnnouncement, targetPanel: RevealTargetPanel): Promise<void>;
+    selectedAnnouncementForTest(): A11yAnnouncement | null;
+    performUpdate(): void;
+    announcementsForTest(): A11yAnnouncement[];
+    blockedReasonForTargetForTest(target: SDK.Target.Target): string | undefined;
+    blockedTargetsForTest(): Map<SDK.Target.Target, string>;
+    isRecordingForTest(): boolean;
+}
