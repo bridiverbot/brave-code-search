@@ -1,0 +1,11 @@
+../../third_party/dawn/generator/dawn_json_generator.py
+../../third_party/dawn/generator/generator_lib.py
+*third_party/jinja2/*
+*third_party/markupsafe/*
+../../third_party/dawn/src/dawn/dawn.json
+../../third_party/dawn/generator/dawn_json_parsing.py
+../../third_party/dawn/generator/webgpu_docs_utility.py
+../../third_party/dawn/generator/templates/api_cpp_chained_struct.h
+../../third_party/dawn/generator/templates/api_cpp_print.h
+../../third_party/dawn/generator/templates/api_cpp.h
+../../third_party/dawn/generator/templates/dawn/cpp_macros.tmpl

@@ -1,0 +1,11 @@
+{
+  "deps": [
+    "../../../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../../gfx/geometry/mojom/mojom.build_metadata",
+    "../../js/tracked_element/mojo_bindings.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../../ui/webui/resources/cr_components/help_bubble/custom_help_bubble.mojom",
+    "../../../../../../../../../ui/webui/resources/cr_components/help_bubble/help_bubble.mojom"
+  ]
+}

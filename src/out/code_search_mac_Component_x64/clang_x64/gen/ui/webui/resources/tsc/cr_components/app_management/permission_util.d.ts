@@ -1,0 +1,12 @@
+import type { Permission, PermissionType, PermissionValue } from './app_management.mojom-webui.js';
+import { TriState } from './app_management.mojom-webui.js';
+export declare function createPermission(permissionType: PermissionType, value: PermissionValue, isManaged: boolean): Permission;
+export declare function createTriStatePermissionValue(value: TriState): PermissionValue;
+export declare function getTriStatePermissionValue(permissionValue: PermissionValue): TriState;
+export declare function createBoolPermissionValue(value: boolean): PermissionValue;
+export declare function getBoolPermissionValue(permissionValue: PermissionValue): boolean;
+export declare function isTriStateValue(permissionValue: PermissionValue): boolean;
+export declare function isBoolValue(permissionValue: PermissionValue): boolean;
+export declare function createBoolPermission(permissionType: PermissionType, value: boolean, isManaged: boolean): Permission;
+export declare function createTriStatePermission(permissionType: PermissionType, value: TriState, isManaged: boolean): Permission;
+export declare function isPermissionEnabled(permissionValue: PermissionValue): boolean;

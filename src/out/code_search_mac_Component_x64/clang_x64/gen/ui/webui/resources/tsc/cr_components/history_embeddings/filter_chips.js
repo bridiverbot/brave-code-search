@@ -1,0 +1,122 @@
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_chip/cr_chip.js';
+import '//resources/cr_elements/cr_icon/cr_icon.js';
+import '//resources/cr_elements/icons.html.js';
+import { I18nMixinLit } from '//resources/cr_elements/i18n_mixin_lit.js';
+import { assert } from '//resources/js/assert.js';
+import { loadTimeData } from '//resources/js/load_time_data.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './filter_chips.css.js';
+import { getHtml } from './filter_chips.html.js';
+function generateSuggestions() {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+    const last7Days = new Date();
+    last7Days.setDate(last7Days.getDate() - 7);
+    last7Days.setHours(0, 0, 0, 0);
+    const last30Days = new Date();
+    last30Days.setDate(last30Days.getDate() - 30);
+    last30Days.setHours(0, 0, 0, 0);
+    return [
+        {
+            label: loadTimeData.getString('historyEmbeddingsSuggestion1'),
+            timeRangeStart: yesterday,
+            ariaLabel: loadTimeData.getString('historyEmbeddingsSuggestion1AriaLabel'),
+        },
+        {
+            label: loadTimeData.getString('historyEmbeddingsSuggestion2'),
+            timeRangeStart: last7Days,
+            ariaLabel: loadTimeData.getString('historyEmbeddingsSuggestion2AriaLabel'),
+        },
+        {
+            label: loadTimeData.getString('historyEmbeddingsSuggestion3'),
+            timeRangeStart: last30Days,
+            ariaLabel: loadTimeData.getString('historyEmbeddingsSuggestion3AriaLabel'),
+        },
+    ];
+}
+const HistoryEmbeddingsFilterChipsElementElementBase = I18nMixinLit(CrLitElement);
+export class HistoryEmbeddingsFilterChipsElement extends HistoryEmbeddingsFilterChipsElementElementBase {
+    static get is() {
+        return 'cr-history-embeddings-filter-chips';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            enableShowResultsByGroupOption: {
+                type: Boolean,
+            },
+            timeRangeStart: {
+                type: Object,
+            },
+            selectedSuggestion: {
+                type: Object,
+                notify: true,
+            },
+            showResultsByGroup: {
+                type: Boolean,
+                notify: true,
+            },
+            suggestions_: {
+                type: Array,
+            },
+        };
+    }
+    #enableShowResultsByGroupOption_accessor_storage = false;
+    get enableShowResultsByGroupOption() { return this.#enableShowResultsByGroupOption_accessor_storage; }
+    set enableShowResultsByGroupOption(value) { this.#enableShowResultsByGroupOption_accessor_storage = value; }
+    #selectedSuggestion_accessor_storage;
+    get selectedSuggestion() { return this.#selectedSuggestion_accessor_storage; }
+    set selectedSuggestion(value) { this.#selectedSuggestion_accessor_storage = value; }
+    #showResultsByGroup_accessor_storage = false;
+    get showResultsByGroup() { return this.#showResultsByGroup_accessor_storage; }
+    set showResultsByGroup(value) { this.#showResultsByGroup_accessor_storage = value; }
+    #suggestions__accessor_storage = generateSuggestions();
+    get suggestions_() { return this.#suggestions__accessor_storage; }
+    set suggestions_(value) { this.#suggestions__accessor_storage = value; }
+    #timeRangeStart_accessor_storage;
+    get timeRangeStart() { return this.#timeRangeStart_accessor_storage; }
+    set timeRangeStart(value) { this.#timeRangeStart_accessor_storage = value; }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('timeRangeStart')) {
+            this.onTimeRangeStartChanged_();
+        }
+    }
+    isSuggestionSelected_(suggestion) {
+        return this.selectedSuggestion === suggestion;
+    }
+    onShowByGroupSelectMenuChange_() {
+        this.showResultsByGroup = this.$.showByGroupSelectMenu.value === 'true';
+    }
+    onTimeRangeStartChanged_() {
+        if (this.timeRangeStart?.getTime() ===
+            this.selectedSuggestion?.timeRangeStart.getTime()) {
+            return;
+        }
+        this.selectedSuggestion = this.suggestions_.find(suggestion => {
+            return suggestion.timeRangeStart.getTime() ===
+                this.timeRangeStart?.getTime();
+        });
+    }
+    onSuggestionClick_(e) {
+        const index = Number(e.currentTarget.dataset['index']);
+        const clickedSuggestion = this.suggestions_[index];
+        assert(clickedSuggestion);
+        if (this.isSuggestionSelected_(clickedSuggestion)) {
+            this.selectedSuggestion = undefined;
+        }
+        else {
+            this.selectedSuggestion = clickedSuggestion;
+        }
+    }
+}
+customElements.define(HistoryEmbeddingsFilterChipsElement.is, HistoryEmbeddingsFilterChipsElement);

@@ -1,0 +1,4 @@
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";import{UnguessableTokenDataView}from"./unguessable_token.mojom-converters.js";import{UnguessableTokenConverter}from"./unguessable_token_converter.js";export const UnguessableTokenSpec={$:{}};const converterForUnguessableToken=new UnguessableTokenConverter;mojo.internal.TypemappedStruct(UnguessableTokenSpec.$,"UnguessableToken",UnguessableTokenDataView,converterForUnguessableToken,[mojo.internal.StructField("high",0,0,mojo.internal.Uint64,BigInt(0),false,0,undefined,(value=>converterForUnguessableToken.high(value))),mojo.internal.StructField("low",8,0,mojo.internal.Uint64,BigInt(0),false,0,undefined,(value=>converterForUnguessableToken.low(value)))],[[0,24]]);
