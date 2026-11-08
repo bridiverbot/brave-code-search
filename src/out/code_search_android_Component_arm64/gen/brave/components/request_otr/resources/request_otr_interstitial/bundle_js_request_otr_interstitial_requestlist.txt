@@ -1,0 +1,1 @@
+{"request_otr_interstitial.rollup.js": ["../../../../../components/security_interstitials/core/common/resources/interstitial_common.js", "../../../../../../../../brave/components/request_otr/resources/request_otr_interstitial.js"]}

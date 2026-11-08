@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_BRAVE_WEBUI_CSS_MD_COLORS_CSS" file="${root_gen_dir}/brave/ui/webui/resources/css/md_colors.css" resource_path="brave/css/md_colors.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_BRAVE_WEBUI_CSS_TEXT_DEFAULTS_MD_CSS" file="${root_gen_dir}/brave/ui/webui/resources/css/text_defaults_md.css" resource_path="brave/css/text_defaults_md.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_BRAVE_WEBUI_CSS_RESET_CSS" file="${root_gen_dir}/brave/ui/webui/resources/css/reset.css" resource_path="brave/css/reset.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_BRAVE_WEBUI_CSS_NALA_CSS" file="${root_gen_dir}/brave/ui/webui/resources/css/nala.css" resource_path="brave/css/nala.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_BRAVE_WEBUI_LEO_CSS_VARIABLES_CSS" file="${root_gen_dir}/brave/ui/webui/resources/leo/css/variables.css" resource_path="brave/leo/css/variables.css" use_base_dir="false" type="BINDATA" />
+</grit-part>

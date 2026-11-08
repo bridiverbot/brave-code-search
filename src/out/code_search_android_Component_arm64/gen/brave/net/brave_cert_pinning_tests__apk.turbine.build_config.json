@@ -1,0 +1,14 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/testing/android/instrumentation/test_runner_java.turbine.jar",
+    "obj/base/test/test_support_java.turbine.jar",
+    "obj/build/android/gtest_apk/native_test_instrumentation_test_runner_java.turbine.jar",
+    "obj/testing/android/native_test/native_test_java.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

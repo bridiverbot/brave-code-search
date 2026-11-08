@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/rewards_page_generated.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/rewards_page_generated_map.cc" type="resource_file_map_source" />
+    <output filename="grit/rewards_page_generated_map.h" type="resource_map_header" />
+    <output filename="rewards_page_generated.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_REWARDS_PAGE_01FC74AE1F8FD74E64E0A96079887195_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/01fc74ae1f8fd74e64e0a96079887195.svg" resource_path="01fc74ae1f8fd74e64e0a96079887195.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_1830E33BF2DD77344D12EC1793ADCC7D_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/1830e33bf2dd77344d12ec1793adcc7d.svg" resource_path="1830e33bf2dd77344d12ec1793adcc7d.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_2551825B31F090DE432FE2FA1C7B6C1C_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/2551825b31f090de432fe2fa1c7b6c1c.svg" resource_path="2551825b31f090de432fe2fa1c7b6c1c.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_2B08DB1827E2965CDE7CC4F65F4B34BC_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/2b08db1827e2965cde7cc4f65f4b34bc.svg" resource_path="2b08db1827e2965cde7cc4f65f4b34bc.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_62A1E94F52818470275F4848F77952B3_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/62a1e94f52818470275f4848f77952b3.svg" resource_path="62a1e94f52818470275f4848f77952b3.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_90537CC91E8B33A62438DCFF388C9675_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/90537cc91e8b33a62438dcff388c9675.svg" resource_path="90537cc91e8b33a62438dcff388c9675.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_96844BA7B13AA876918E7E76CF5F4FBA_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/96844ba7b13aa876918e7e76cf5f4fba.svg" resource_path="96844ba7b13aa876918e7e76cf5f4fba.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_A47955224855C9B8CFBCDBC97B8346BB_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/a47955224855c9b8cfbcdbc97b8346bb.svg" resource_path="a47955224855c9b8cfbcdbc97b8346bb.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_A670C281F966B2BA161FCA87726E7C42_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/a670c281f966b2ba161fca87726e7c42.svg" resource_path="a670c281f966b2ba161fca87726e7c42.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_B609352E56A352E7295F2F1C29190890_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/b609352e56a352e7295f2f1c29190890.svg" resource_path="b609352e56a352e7295f2f1c29190890.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_D1BE848FB7633381777701431299E4EC_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/d1be848fb7633381777701431299e4ec.svg" resource_path="d1be848fb7633381777701431299e4ec.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_EE71A63F7D51639FF4F0ADE68783FD2A_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/ee71a63f7d51639ff4f0ade68783fd2a.svg" resource_path="ee71a63f7d51639ff4f0ade68783fd2a.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_F816C5912C3D559CD401B3F1CEB687F5_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/f816c5912c3d559cd401b3f1ceb687f5.svg" resource_path="f816c5912c3d559cd401b3f1ceb687f5.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_F8D842F6B8015DE3F5D5F823119D766A_SVG" file="${root_gen_dir}/brave/web-ui-rewards_page/f8d842f6b8015de3f5d5f823119d766a.svg" resource_path="f8d842f6b8015de3f5d5f823119d766a.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_REWARDS_PAGE_REWARDS_PAGE_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-rewards_page/rewards_page.bundle.js" resource_path="rewards_page.bundle.js" use_base_dir="false" type="BINDATA" />
+    </includes>
+  </release>
+</grit>

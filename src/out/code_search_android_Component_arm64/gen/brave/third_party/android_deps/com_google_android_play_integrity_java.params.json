@@ -1,0 +1,8 @@
+{
+  "gn_target": "//brave/third_party/android_deps:com_google_android_play_integrity_java",
+  "public_deps_configs": [
+    "gen/brave/third_party/android_deps/com_google_android_play_integrity_java__classes.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}
