@@ -1,0 +1,75 @@
+import * as Common from '../../core/common/common.js';
+import type * as NetworkTimeCalculator from '../../models/network_time_calculator/network_time_calculator.js';
+import * as PerfUI from '../../ui/legacy/components/perf_ui/perf_ui.js';
+import * as UI from '../../ui/legacy/legacy.js';
+declare const HeapTimelineOverviewBase: Common.ObjectWrapper.EventMixin<EventTypes, typeof UI.Widget.VBox>;
+export declare class HeapTimelineOverview extends HeapTimelineOverviewBase {
+    #private;
+    readonly overviewCalculator: OverviewCalculator;
+    overviewContainer: HTMLElement;
+    overviewGrid: PerfUI.OverviewGrid.OverviewGrid;
+    overviewCanvas: HTMLCanvasElement;
+    windowLeftRatio: number;
+    windowRightRatio: number;
+    readonly yScale: SmoothScale;
+    readonly xScale: SmoothScale;
+    profileSamples: Samples;
+    running?: boolean;
+    updateOverviewCanvas?: boolean;
+    updateGridTimerId?: number;
+    updateTimerId?: number | null;
+    windowWidthRatio?: number;
+    constructor(element?: HTMLElement);
+    start(): void;
+    stop(): void;
+    setSamples(samples: Samples): void;
+    drawOverviewCanvas(width: number, height: number): void;
+    wasShown(): void;
+    willHide(): void;
+    onResize(): void;
+    onWindowChanged(): void;
+    scheduleUpdate(): void;
+    updateBoundaries(): void;
+    performUpdate(): void;
+    update(): void;
+    updateGrid(): void;
+}
+export declare const enum Events {
+    IDS_RANGE_CHANGED = "IdsRangeChanged"
+}
+export interface IdsRangeChangedEvent {
+    minId: number;
+    maxId: number;
+    size: number;
+}
+export interface EventTypes {
+    [Events.IDS_RANGE_CHANGED]: IdsRangeChangedEvent;
+}
+export declare class SmoothScale {
+    lastUpdate: number;
+    currentScale: number;
+    constructor();
+    nextScale(target: number): number;
+}
+export declare class Samples {
+    sizes: number[];
+    ids: number[];
+    timestamps: number[];
+    max: number[];
+    totalTime: number;
+    constructor();
+}
+export declare class OverviewCalculator implements NetworkTimeCalculator.Calculator {
+    maximumBoundaries: number;
+    minimumBoundaries: number;
+    xScaleFactor: number;
+    constructor();
+    updateBoundaries(chart: HeapTimelineOverview): void;
+    computePosition(time: number): number;
+    formatValue(value: number, precision?: number): string;
+    maximumBoundary(): number;
+    minimumBoundary(): number;
+    zeroTime(): number;
+    boundarySpan(): number;
+}
+export {};

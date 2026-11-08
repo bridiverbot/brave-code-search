@@ -1,0 +1,9 @@
+../../third_party/dawn/generator/opengl_loader_generator.py
+../../third_party/dawn/generator/generator_lib.py
+*third_party/jinja2/*
+*third_party/markupsafe/*
+../../third_party/dawn/third_party/OpenGL-Registry/src/xml/gl.xml
+../../third_party/dawn/generator/templates/opengl/opengl_platform.h
+../../third_party/dawn/generator/templates/opengl/OpenGLFunctionsBase.cpp
+../../third_party/dawn/generator/templates/opengl/OpenGLFunctionsBase.h
+../../third_party/dawn/src/dawn/native/opengl/supported_extensions.json

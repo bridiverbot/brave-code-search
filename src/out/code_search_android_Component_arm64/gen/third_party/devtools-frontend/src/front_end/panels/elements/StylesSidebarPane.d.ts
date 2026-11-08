@@ -1,0 +1,221 @@
+import '../../ui/legacy/legacy.js';
+import * as Common from '../../core/common/common.js';
+import * as SDK from '../../core/sdk/sdk.js';
+import * as TextUtils from '../../core/text_utils/text_utils.js';
+import * as Protocol from '../../generated/protocol.js';
+import * as ChangeTracker from '../../models/change_tracker/change_tracker.js';
+import type * as ComputedStyle from '../../models/computed_style/computed_style.js';
+import * as TextEditor from '../../ui/components/text_editor/text_editor.js';
+import * as InlineEditor from '../../ui/legacy/components/inline_editor/inline_editor.js';
+import * as Components from '../../ui/legacy/components/utils/utils.js';
+import * as UI from '../../ui/legacy/legacy.js';
+import * as ElementsComponents from './components/components.js';
+import { ElementsSidebarPane } from './ElementsSidebarPane.js';
+import { StylePropertiesSection } from './StylePropertiesSection.js';
+import type { StylePropertyTreeElement } from './StylePropertyTreeElement.js';
+import * as StylesAiCodeCompletionProvider from './StylesAiCodeCompletionProvider.js';
+import type { StylesContainer } from './StylesContainer.js';
+import { WebCustomData } from './WebCustomData.js';
+/** Title of the registered properties section **/
+export declare const REGISTERED_PROPERTY_SECTION_NAME = "@property";
+/** Title of the function section **/
+export declare const FUNCTION_SECTION_NAME = "@function";
+declare const StylesSidebarPaneBase: Common.ObjectWrapper.EventMixin<EventTypes, typeof ElementsSidebarPane>;
+export declare class StylesSidebarPane extends StylesSidebarPaneBase implements StylesContainer {
+    #private;
+    private matchedStyles;
+    private currentToolbarPane;
+    private animatedToolbarPane;
+    private pendingWidget;
+    private pendingWidgetToggle;
+    private toolbar;
+    private toolbarPaneElement;
+    private lastFilterChange;
+    private visibleSections;
+    private noMatchesElement;
+    private sectionsContainer;
+    sectionByElement: WeakMap<Node, StylePropertiesSection>;
+    readonly linkifier: Components.Linkifier.Linkifier;
+    private readonly decorator;
+    private lastRevealedProperty;
+    private userOperation;
+    isEditingStyle: boolean;
+    private isActivePropertyHighlighted;
+    private initialUpdateCompleted;
+    hasMatchedStyles: boolean;
+    sectionBlocks: SectionBlock[];
+    private idleCallbackManager;
+    private needsForceUpdate;
+    private isSuppressingResets;
+    private readonly resizeThrottler;
+    private readonly resetUpdateThrottler;
+    private readonly computedStyleUpdateThrottler;
+    private scrollerElement?;
+    private readonly boundOnScroll;
+    private readonly imagePreviewPopover;
+    activeCSSAngle: InlineEditor.CSSAngle.CSSAngle | null;
+    aiCodeCompletionConfig?: TextEditor.AiCodeCompletionProvider.AiCodeCompletionConfig;
+    aiCodeCompletionProvider?: StylesAiCodeCompletionProvider.StylesAiCodeCompletionProvider;
+    constructor(computedStyleModel: ComputedStyle.ComputedStyleModel.ComputedStyleModel, changeTracker?: ChangeTracker.ChangeTracker.ChangeTracker);
+    get webCustomData(): WebCustomData | undefined;
+    get changeTracker(): ChangeTracker.ChangeTracker.ChangeTracker | undefined;
+    private onScroll;
+    swatchPopoverHelper(): InlineEditor.SwatchPopoverHelper.SwatchPopoverHelper;
+    setUserOperation(userOperation: boolean): void;
+    revealProperty(cssProperty: SDK.CSSProperty.CSSProperty): void;
+    jumpToProperty(propertyName: string, sectionName?: string, blockName?: string): boolean;
+    jumpToDeclaration(valueSource: SDK.CSSMatchedStyles.CSSValueSource): void;
+    jumpToSection(sectionName: string, blockName: string, treeScopeDistance?: number): void;
+    jumpToSectionBlock(section: string): void;
+    jumpToFunctionDefinition(functionName: string, treeScopeDistance: number): void;
+    jumpToFontPaletteDefinition(paletteName: string): void;
+    jumpToCounterStyleDefinition(counterStyleName: string): void;
+    forceUpdate(): void;
+    private updateCollapsedSectionsSetting;
+    private sectionsContainerKeyDown;
+    private sectionsContainerFocusChanged;
+    resetFocus(): void;
+    onAddButtonLongClick(event: Event): void;
+    private onFilterChanged;
+    private onRegexToggled;
+    setFilter(regex: RegExp | null): void;
+    refreshUpdate(editedSection: StylePropertiesSection, editedTreeElement?: StylePropertyTreeElement, force?: boolean): void;
+    performUpdate(signal?: AbortSignal): Promise<void>;
+    getVariableParserError(matchedStyles: SDK.CSSMatchedStyles.CSSMatchedStyles, variableName: string): ElementsComponents.CSSVariableValueView.CSSVariableParserError | null;
+    getVariablePopoverContents(matchedStyles: SDK.CSSMatchedStyles.CSSMatchedStyles, variableName: string, computedValue: string | null): ElementsComponents.CSSVariableValueView.CSSVariableValueView;
+    private fetchComputedStylesFor;
+    private fetchComputedStyleExtraFieldsFor;
+    onResize(): void;
+    private resetCache;
+    private fetchMatchedCascade;
+    setEditingStyle(editing: boolean): void;
+    setActiveProperty(treeElement: StylePropertyTreeElement | null): void;
+    onCSSModelChanged(event: Common.EventTarget.EventTargetEvent<ComputedStyle.ComputedStyleModel.CSSModelChangedEvent>): void;
+    onComputedStyleChanged(): void;
+    handledComputedStyleChangedForTest(): void;
+    suppressResets(): void;
+    scheduleResetUpdateIfNotEditingCalledForTest(): void;
+    focusedSectionIndex(): number;
+    continueEditingElement(sectionIndex: number, propertyIndex: number): void;
+    private innerRebuildUpdate;
+    private nodeStylesUpdatedForTest;
+    setMatchedStylesForTest(matchedStyles: SDK.CSSMatchedStyles.CSSMatchedStyles): void;
+    setNodeForTest(node: SDK.DOMModel.DOMNode): void;
+    private getStyleId;
+    rebuildSectionsForMatchedStyleRulesForTest(matchedStyles: SDK.CSSMatchedStyles.CSSMatchedStyles, computedStyles: Map<string, string> | null, parentsComputedStyles: Map<string, string> | null, computedStyleExtraFields: Protocol.CSS.ComputedStyleExtraFields | null): Promise<SectionBlock[]>;
+    private rebuildSectionsForMatchedStyleRules;
+    private mergeInactiveStyles;
+    createNewRuleInViaInspectorStyleSheet(): Promise<void>;
+    private createNewRuleInStyleSheet;
+    addBlankSection(insertAfterSection: StylePropertiesSection, styleSheetHeader: SDK.CSSStyleSheetHeader.CSSStyleSheetHeader, ruleLocation: TextUtils.TextRange.TextRange): void;
+    removeSection(section: StylePropertiesSection): void;
+    filterRegex(): RegExp | null;
+    private updateFilter;
+    wasShown(): void;
+    willHide(): void;
+    hideAllPopovers(): void;
+    getSectionBlockByName(name: string): SectionBlock | undefined;
+    allSections(): StylePropertiesSection[];
+    private clipboardCopy;
+    private createStylesSidebarToolbar;
+    showToolbarPane(widget: UI.Widget.Widget | null, toggle: UI.Toolbar.ToolbarToggle | null): void;
+    appendToolbarItem(item: UI.Toolbar.ToolbarItem): void;
+    addStyleUpdateListener(listener: () => void): void;
+    removeStyleUpdateListener(listener: () => void): void;
+    private startToolbarPaneAnimation;
+    private createRenderingShortcuts;
+    trackForLazyRendering(element: Element, callback: () => void): void;
+    shouldRenderLazily(): boolean;
+    untrackForLazyRendering(element: Element): void;
+}
+export declare const enum Events {
+    INITIAL_UPDATE_COMPLETED = "InitialUpdateCompleted",
+    STYLES_UPDATE_COMPLETED = "StylesUpdateCompleted"
+}
+export interface StylesUpdateCompletedEvent {
+    hasMatchedStyles: boolean;
+}
+export interface EventTypes {
+    [Events.INITIAL_UPDATE_COMPLETED]: void;
+    [Events.STYLES_UPDATE_COMPLETED]: StylesUpdateCompletedEvent;
+}
+export declare class SectionBlock {
+    #private;
+    readonly id: string;
+    sections: StylePropertiesSection[];
+    childBlocks: SectionBlock[];
+    constructor(titleElement: Element | null, expandable?: boolean, expandedByDefault?: boolean, id?: string);
+    expand(expand: boolean): void;
+    static createPseudoTypeBlock(pseudoType: Protocol.DOM.PseudoType, pseudoArgument: string | null): SectionBlock;
+    static createInheritedPseudoTypeBlock(pseudoType: Protocol.DOM.PseudoType, pseudoArgument: string | null, node: SDK.DOMModel.DOMNode): Promise<SectionBlock>;
+    static createRegisteredPropertiesBlock(expandedByDefault: boolean): SectionBlock;
+    static createFunctionBlock(expandedByDefault: boolean): SectionBlock;
+    static createKeyframesBlock(keyframesName: string): SectionBlock;
+    static createAtRuleBlock(expandedByDefault: boolean): SectionBlock;
+    static createPositionTryBlock(positionTryName: string): SectionBlock;
+    static createInheritedNodeBlock(node: SDK.DOMModel.DOMNode): Promise<SectionBlock>;
+    static createLayerBlock(rule: SDK.CSSRule.CSSStyleRule, parentBlockId?: string): SectionBlock;
+    updateFilter(): number;
+    titleElement(): Element | null;
+}
+export declare class IdleCallbackManager {
+    private discarded;
+    private readonly promises;
+    private readonly queue;
+    constructor();
+    discard(): void;
+    schedule(fn: () => void): void;
+    protected scheduleIdleCallback(timeout: number): void;
+    awaitDone(): Promise<void[]>;
+}
+export declare function quoteFamilyName(familyName: string): string;
+export declare class CSSPropertyPrompt extends UI.TextPrompt.TextPrompt {
+    #private;
+    private readonly isColorAware;
+    private readonly cssCompletions;
+    private selectedNodeComputedStyles;
+    private parentNodeComputedStyles;
+    private treeElement;
+    private isEditingName;
+    private readonly cssVariables;
+    aiCodeCompletionProvider?: StylesAiCodeCompletionProvider.StylesAiCodeCompletionProvider;
+    private activeAiSuggestionInfo?;
+    constructor(treeElement: StylePropertyTreeElement, isEditingName: boolean, completions?: string[]);
+    onKeyDown(event: Event): void;
+    onMouseWheel(event: Event): void;
+    tabKeyPressed(): boolean;
+    onInput(event: Event): void;
+    detach(): void;
+    private handleNameOrValueUpDown;
+    private isValueSuggestion;
+    private buildPropertyCompletions;
+    private triggerAiCodeCompletion;
+    private setAiAutoCompletion;
+    /**
+     * Extracts the remaining portion of the suggestion text that follows the
+     * user's current input.
+     */
+    private getCompletionHint;
+    private acceptCodeComplete;
+    commitAiSuggestion(): Promise<void>;
+}
+export declare function unescapeCssString(input: string): string;
+export declare function escapeUrlAsCssComment(urlText: string): string;
+/**
+ * Merges a newly active list of items with an existing (previously known) list of items,
+ * preserving the relative order of inactive items while updating and inserting active items.
+ */
+export declare function mergeOrderedItems<T>(oldItems: T[], newItems: T[], getId: (item: T) => string, toggleActive: (item: T, active: boolean, newItem?: T) => void): T[];
+export declare class ActionDelegate implements UI.ActionRegistration.ActionDelegate {
+    handleAction(_context: UI.Context.Context, actionId: string): boolean;
+}
+export declare class ButtonProvider implements UI.Toolbar.Provider {
+    private readonly button;
+    private constructor();
+    static instance(opts?: {
+        forceNew: boolean | null;
+    }): ButtonProvider;
+    private longClicked;
+    item(): UI.Toolbar.ToolbarItem;
+}
+export {};
