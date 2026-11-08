@@ -1,7 +1,0 @@
-../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/ConversationInfo.java
-../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicEnabling.java
-../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicIntentConstants.java
-../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicKeyedService.java
-../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicKeyedServiceFactory.java
-../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicKeyedServiceHandler.java
-../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicUiHelper.java

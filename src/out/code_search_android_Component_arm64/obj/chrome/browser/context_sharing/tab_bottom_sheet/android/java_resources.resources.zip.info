@@ -1,6 +1,0 @@
-drawable/tab_bottom_sheet_skeleton_box.xml	../../chrome/browser/context_sharing/tab_bottom_sheet/android/java/res/drawable/tab_bottom_sheet_skeleton_box.xml
-drawable/tab_bottom_sheet_skeleton_line.xml	../../chrome/browser/context_sharing/tab_bottom_sheet/android/java/res/drawable/tab_bottom_sheet_skeleton_line.xml
-layout/tab_bottom_sheet.xml	../../chrome/browser/context_sharing/tab_bottom_sheet/android/java/res/layout/tab_bottom_sheet.xml
-layout/tab_bottom_sheet_peek_layout.xml	../../chrome/browser/context_sharing/tab_bottom_sheet/android/java/res/layout/tab_bottom_sheet_peek_layout.xml
-layout/tab_bottom_sheet_resizing_view.xml	../../chrome/browser/context_sharing/tab_bottom_sheet/android/java/res/layout/tab_bottom_sheet_resizing_view.xml
-layout/tab_bottom_sheet_skeleton_view.xml	../../chrome/browser/context_sharing/tab_bottom_sheet/android/java/res/layout/tab_bottom_sheet_skeleton_view.xml

@@ -1,8 +1,0 @@
-../../chrome/browser/ui/android/web_app_header/java/src/org/chromium/chrome/browser/ui/web_app_header/CutoutDrawable.java
-../../chrome/browser/ui/android/web_app_header/java/src/org/chromium/chrome/browser/ui/web_app_header/WebAppHeaderDelegate.java
-../../chrome/browser/ui/android/web_app_header/java/src/org/chromium/chrome/browser/ui/web_app_header/WebAppHeaderLayout.java
-../../chrome/browser/ui/android/web_app_header/java/src/org/chromium/chrome/browser/ui/web_app_header/WebAppHeaderLayoutCoordinator.java
-../../chrome/browser/ui/android/web_app_header/java/src/org/chromium/chrome/browser/ui/web_app_header/WebAppHeaderLayoutMediator.java
-../../chrome/browser/ui/android/web_app_header/java/src/org/chromium/chrome/browser/ui/web_app_header/WebAppHeaderLayoutProperties.java
-../../chrome/browser/ui/android/web_app_header/java/src/org/chromium/chrome/browser/ui/web_app_header/WebAppHeaderLayoutViewBinder.java
-../../chrome/browser/ui/android/web_app_header/java/src/org/chromium/chrome/browser/ui/web_app_header/WebAppHeaderUtils.java

@@ -1,9 +1,0 @@
-../../chrome/browser/ttc/android/java/src/org/chromium/chrome/browser/ttc/TtcFreDialog.java
-../../chrome/browser/ttc/android/java/src/org/chromium/chrome/browser/ttc/TtcKeyedService.java
-../../chrome/browser/ttc/android/java/src/org/chromium/chrome/browser/ttc/TtcKeyedServiceFactory.java
-../../chrome/browser/ttc/android/java/src/org/chromium/chrome/browser/ttc/TtcSessionCoordinator.java
-../../chrome/browser/ttc/android/java/src/org/chromium/chrome/browser/ttc/TtcSessionMediator.java
-../../chrome/browser/ttc/android/java/src/org/chromium/chrome/browser/ttc/TtcSessionPillView.java
-../../chrome/browser/ttc/android/java/src/org/chromium/chrome/browser/ttc/TtcSessionProperties.java
-../../chrome/browser/ttc/android/java/src/org/chromium/chrome/browser/ttc/TtcSessionViewBinder.java
-../../chrome/browser/ttc/android/java/src/org/chromium/chrome/browser/ttc/TtcSessionWindowTracker.java

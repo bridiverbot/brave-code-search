@@ -1,9 +1,0 @@
-import { css } from '//resources/lit/v3_0/lit.rollup.js';
-import { getCss as getCrToolbarChromium } from './cr_toolbar-chromium.css.js';
-import '../cr_shared_vars.css.js';
-import { getCss as getCrHiddenStyleLit } from '../cr_hidden_style_lit.css.js';
-import { getCss as getCrIconsLit } from '../cr_icons_lit.css.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[getCrToolbarChromium(), getCrHiddenStyleLit(), getCrIconsLit()], css `:host(:not([narrow])) #leftContent{flex:0 1 var(--cr-toolbar-field-margin,0)}:host(:not([narrow])) #centeredContent{flex-basis:var(--cr-toolbar-center-basis,0)}:host(:not([narrow])[disable-right-content-grow]) #centeredContent{justify-content:center;padding-inline-start:12px}:host(:not([narrow])) #rightContent{flex:0 1 0;text-align:end}`]);
-}

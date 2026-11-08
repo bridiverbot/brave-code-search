@@ -1,4 +1,0 @@
-org.chromium.cc.input.BrowserControlsOffsetTagModifications,../../cc/input/android/java/src/org/chromium/cc/input/BrowserControlsOffsetTagModifications.java
-org.chromium.cc.input.BrowserControlsOffsetTags,../../cc/input/android/java/src/org/chromium/cc/input/BrowserControlsOffsetTags.java
-org.chromium.cc.input.BrowserControlsState,gen/cc/cc_android_java_enums_srcjar.srcjar/org/chromium/cc/input/BrowserControlsState.java
-org.chromium.cc.input.OffsetTag,../../cc/input/android/java/src/org/chromium/cc/input/OffsetTag.java

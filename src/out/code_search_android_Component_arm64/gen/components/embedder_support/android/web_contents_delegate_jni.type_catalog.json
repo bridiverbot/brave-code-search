@@ -1,3 +1,0 @@
-{
-  "org/chromium/components/embedder_support/delegate/HtmlColorPickerBridge$NativeHtmlColorPickerBridge": "::web_contents_delegate_android::HtmlColorPickerBridge"
-}

@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.toolbar.BraveToolbarLongPressMenuHandler,../../brave/browser/ui/android/toolbar/java/src/org/chromium/chrome/browser/toolbar/BraveToolbarLongPressMenuHandler.java
-org.chromium.chrome.browser.toolbar.adaptive.BraveAdaptiveToolbarStatePredictor,../../brave/browser/ui/android/toolbar/java/src/org/chromium/chrome/browser/toolbar/adaptive/BraveAdaptiveToolbarStatePredictor.java
-org.chromium.chrome.browser.toolbar.adaptive.BraveAdaptiveToolbarStatePredictorDummySuper,../../brave/browser/ui/android/toolbar/java/src/org/chromium/chrome/browser/toolbar/adaptive/BraveAdaptiveToolbarStatePredictorDummySuper.java

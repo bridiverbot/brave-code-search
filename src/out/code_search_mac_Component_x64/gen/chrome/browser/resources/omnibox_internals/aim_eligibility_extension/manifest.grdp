@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_AIM_ELIGIBILITY_EXTENSION_MANIFEST_JSON" file="${root_src_dir}/chrome/browser/resources/omnibox_internals/aim_eligibility_extension/manifest.json" resource_path="aim_eligibility_extension/manifest.json" use_base_dir="false" type="BINDATA" />
-</grit-part>

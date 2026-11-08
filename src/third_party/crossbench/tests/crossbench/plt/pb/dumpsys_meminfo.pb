@@ -1,96 +1,0 @@
-­ÎSîÀêS"·
-¦µ &com.android.chrome:privileged_process0)
-
-Native Heap˜ ¸(Œ0ŒHPĞ"´jÁ4 »"(
-
-Dalvik Heap› ,(¨0¸0HPŒ5û Ş*
-Dalvik OtherÏ (À0ŒPØ	*
-Stackè (è0Pğ*
-Ashmem
- (Ô0Pô*
-	Other dev
- ì8Pô*#
-.so mmapü#À Ø(ˆ0„÷8ÀHP¤„*
-	.jar mmapëD0ôí8DP¸î*
-	.apk mmapÓÌ((À0äÛ8Ì(Pğ‹*
-	.dex mmap¨0è$Pè$*
-	.oat mmapŒ0¬EP¬E*"
-	.art mmap² ¤(´0Øg8H—PÌ*
-
-Other mmap, (0¬8PĞ2
-UnknownŠ' €(ü&0ì8Pì*:-
-"
-TOTAL¢§ì0 „D(¬b0ÄØ	8€1HËPô¯¯}ŞB ™J'øŒ¨: è0˜-8ö“@ËPØÃXĞ"`ğèhğxì\(8@,HP"ù
-è¯ Ycom.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0)
-
-Native Heap  ¨(ì0°H PÄĞ_ÿ* ¢"(
-
-Dalvik HeapŸ d(˜0¼0HP¸4Ì Ä*
-Dalvik OtherÃ 8(œ0ÄHP˜	*
-StackĞ (Ì0Pà*
-AshmemÚ ¼((ì0P¸-*
-	Other dev ¸8PÀ*
-.so mmapŠ Ü(H0„ªHP¨®*
-	.jar mmap¥0”ÎP”Î*#
-	.apk mmapÏÎäS Ì( 0€¹8äSPĞ”*
-	.ttf mmapÒ&|0äM8|PàN*
-	.dex mmapÍ0ğPğ*
-	.oat mmapN0œ<Pœ<*
-	.art mmap¡
- ¬(Ì0œeH°P”†*
-
-Other mmapª(0¬8ÔP„2
-Unknown”= ğ(ô<0ÜPÀA:-
-"
-TOTALó…àT ŒW(„\0ğ—	8¼WHõP¼¢àqË8 æJ(äìØW Ì0ÌG8³Ò@õPÌºXÄ`ˆ¸hàxÄ˜(8@HP"ï
-Şô Ycom.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:1)
-
-Native Heap® ¤(ü0°HPĞĞ_ş* »"(
-
-Dalvik HeapŸ d(˜0¼0HP¸4Ì Ä*
-Dalvik OtherÃ 8(œ0ÄHP˜	*
-Stack° (¬0PÀ*
-Ashmem½
- Ä#0PÔ#*
-	Other dev ¸8PÀ*
-.so mmap„ Ü(H0”©HP¸­*
-	.jar mmap¥0”ÎP”Î* 
-	.apk mmap‘Xx ì(€0ÀÖ8xP¤ß*
-	.ttf mmap‚&,0äM8,PN*
-	.dex mmapÍ0ğPğ*
-	.oat mmapN0œ<Pœ<*
-	.art mmap¡
- ¬(Ì0œeH°P”†*
-
-Other mmapÖ	(0¬P°2
-Unknown( è(ô'0àP¼,:-
-"
-TOTAL×ï¤ ¨R(èA0Ä´8¬HôP€Ê	àqÊ8 ÿJ'äüü ¬0Œ+8Ã¬@ôPÌºXĞ`œhÀxˆw(8@HP"ó
-ØÖŸcom.android.chrome0
-#
-Native Heap±È €(üÇ0Ü8$HPüÏÔ•Î %"+
-
-Dalvik Heapˆ… ,(°{0œ/HPøª§ûÔ} Ó}*
-Dalvik Other˜$ Œ(È"0ÄP˜)*
-Stack„
- („
-0PŒ
-*
-Ashmemğ ¨)(ˆP°1*
-	Other dev‡ ˆ8„PŒ*#
-.so mmapø%È Ø(œ0È»8ÈH
-P„Ä*
-	.jar mmapû00Ìğ80Püğ*"
-	.apk mmapãŒ”Ü(ì0ÜŸ8”ÜPÜ„*
-	.ttf mmapëŒ0˜8ŒP¤
-*
-	.dex mmapào€g0˜&8€gP˜*
-	.oat mmapâ0ğdPğd*#
-	.art mmapıØ ø(ì0ä}8ØHhP «*!
-
-Other mmap—• ¨(¸0˜8”PŒ¨2
-Unknown£¦ €(˜¦0ôPŒª:3
-%
-TOTALš¢ğÉ äS(Ä¹0À¯8¬ÙH”P”–ûãË à¢J-ôŠüÇ Ó „
-0Üâ8ª@”P˜ÖXüÏ`¹hŒ
-xä¬Ú (8@iHPMX

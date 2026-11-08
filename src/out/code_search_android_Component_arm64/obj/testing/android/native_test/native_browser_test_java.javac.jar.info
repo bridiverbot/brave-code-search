@@ -1,4 +1,0 @@
-org.chromium.native_test.NativeBrowserTest,../../testing/android/native_test/java/src/org/chromium/native_test/NativeBrowserTest.java
-org.chromium.native_test.NativeBrowserTestActivity,../../testing/android/native_test/java/src/org/chromium/native_test/NativeBrowserTestActivity.java
-org.chromium.native_test.NativeBrowserTestApplication,../../testing/android/native_test/java/src/org/chromium/native_test/NativeBrowserTestApplication.java
-org.chromium.native_test.NativeBrowserTestJni,gen/testing/android/native_test/native_browser_test_jni.srcjar/org/chromium/native_test/NativeBrowserTestJni.java

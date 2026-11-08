@@ -1,5 +1,0 @@
-import { css } from '//resources/lit/v3_0/lit.rollup.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[], css `:host{padding:16px}.row{display:flex;gap:16px}.label{font-weight:500;width:150px}.field{border:1px solid var(--cr-separator-color);border-radius:4px;padding:8px;margin-bottom:16px;gap:8px}.field-properties{width:300px}.field-details-row{display:flex;gap:8px;margin-bottom:8px}.histogram{width:500px}.histogram-row{display:flex;align-items:center;gap:8px;height:24px}.histogram-label{width:300px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.histogram-bar-container{flex:1;background-color:var(--cr-hover-background-color);border-radius:4px}.histogram-bar{background-color:var(--google-blue-500);height:16px;border-radius:4px}.histogram-value{width:60px}`]);
-}

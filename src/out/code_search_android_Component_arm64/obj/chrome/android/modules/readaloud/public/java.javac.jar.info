@@ -1,9 +1,0 @@
-org.chromium.chrome.modules.readaloud.Feedback,../../chrome/android/modules/readaloud/public/java/src/org/chromium/chrome/modules/readaloud/Feedback.java
-org.chromium.chrome.modules.readaloud.Playback,../../chrome/android/modules/readaloud/public/java/src/org/chromium/chrome/modules/readaloud/Playback.java
-org.chromium.chrome.modules.readaloud.PlaybackArgs,../../chrome/android/modules/readaloud/public/java/src/org/chromium/chrome/modules/readaloud/PlaybackArgs.java
-org.chromium.chrome.modules.readaloud.PlaybackListener,../../chrome/android/modules/readaloud/public/java/src/org/chromium/chrome/modules/readaloud/PlaybackListener.java
-org.chromium.chrome.modules.readaloud.Player,../../chrome/android/modules/readaloud/public/java/src/org/chromium/chrome/modules/readaloud/Player.java
-org.chromium.chrome.modules.readaloud.ReadAloudPlaybackHooks,../../chrome/android/modules/readaloud/public/java/src/org/chromium/chrome/modules/readaloud/ReadAloudPlaybackHooks.java
-org.chromium.chrome.modules.readaloud.ReadAloudPlaybackHooksFactory,../../chrome/android/modules/readaloud/public/java/src/org/chromium/chrome/modules/readaloud/ReadAloudPlaybackHooksFactory.java
-org.chromium.chrome.modules.readaloud.contentjs.Extractor,../../chrome/android/modules/readaloud/public/java/src/org/chromium/chrome/modules/readaloud/contentjs/Extractor.java
-org.chromium.chrome.modules.readaloud.contentjs.Highlighter,../../chrome/android/modules/readaloud/public/java/src/org/chromium/chrome/modules/readaloud/contentjs/Highlighter.java

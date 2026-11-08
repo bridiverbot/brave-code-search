@@ -1,3 +1,0 @@
-org.chromium.components.browser_ui.desktop_windowing.AppHeaderState,../../components/browser_ui/desktop_windowing/android/java/src/org/chromium/components/browser_ui/desktop_windowing/AppHeaderState.java
-org.chromium.components.browser_ui.desktop_windowing.AppHeaderStateProvider,../../components/browser_ui/desktop_windowing/android/java/src/org/chromium/components/browser_ui/desktop_windowing/AppHeaderStateProvider.java
-org.chromium.components.browser_ui.desktop_windowing.DesktopWindowStateManager,../../components/browser_ui/desktop_windowing/android/java/src/org/chromium/components/browser_ui/desktop_windowing/DesktopWindowStateManager.java

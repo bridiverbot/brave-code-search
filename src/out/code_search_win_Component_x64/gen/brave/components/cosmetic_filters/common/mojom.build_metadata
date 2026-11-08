@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "../../../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../brave/components/cosmetic_filters/common/cosmetic_filters.mojom"
-  ]
-}

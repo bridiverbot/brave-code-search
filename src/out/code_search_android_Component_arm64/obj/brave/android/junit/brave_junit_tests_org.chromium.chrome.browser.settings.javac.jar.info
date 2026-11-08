@@ -1,6 +1,0 @@
-org.chromium.chrome.browser.settings.BraveMainPreferencesHomepageTest,../../brave/android/junit/src/org/chromium/chrome/browser/settings/BraveMainPreferencesHomepageTest.java
-org.chromium.chrome.browser.settings.BravePreferenceFragmentNamesTest,../../brave/android/junit/src/org/chromium/chrome/browser/settings/BravePreferenceFragmentNamesTest.java
-org.chromium.chrome.browser.settings.BraveSearchEngineUtilsTest,../../brave/android/junit/src/org/chromium/chrome/browser/settings/BraveSearchEngineUtilsTest.java
-org.chromium.chrome.browser.settings.BraveSettingsActivityTest,../../brave/android/junit/src/org/chromium/chrome/browser/settings/BraveSettingsActivityTest.java
-org.chromium.chrome.browser.settings.BraveSettingsLauncherImplTest,../../brave/android/junit/src/org/chromium/chrome/browser/settings/BraveSettingsLauncherImplTest.java
-org.chromium.components.browser_ui.settings.BraveSettingsIconTintUtilsTest,../../brave/android/junit/src/org/chromium/components/browser_ui/settings/BraveSettingsIconTintUtilsTest.java

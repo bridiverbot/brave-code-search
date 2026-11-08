@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.tab.proto.ArchivePersistedTabData,gen/chrome/browser/tab/critical_persisted_tab_data_proto_java__protoc_java.srcjar/org/chromium/chrome/browser/tab/proto/ArchivePersistedTabData.java
-org.chromium.chrome.browser.tab.proto.SendTabToSelfPersistedTabData,gen/chrome/browser/tab/critical_persisted_tab_data_proto_java__protoc_java.srcjar/org/chromium/chrome/browser/tab/proto/SendTabToSelfPersistedTabData.java
-org.chromium.chrome.browser.tab.proto.ShoppingPersistedTabData,gen/chrome/browser/tab/critical_persisted_tab_data_proto_java__protoc_java.srcjar/org/chromium/chrome/browser/tab/proto/ShoppingPersistedTabData.java

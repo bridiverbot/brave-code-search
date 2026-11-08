@@ -1,2 +1,0 @@
-org.chromium.components.navigation_interception.InterceptNavigationDelegate,../../components/navigation_interception/android/java/src/org/chromium/components/navigation_interception/InterceptNavigationDelegate.java
-org.chromium.components.navigation_interception.InterceptNavigationDelegateJni,gen/components/navigation_interception/jni_headers.srcjar/org/chromium/components/navigation_interception/InterceptNavigationDelegateJni.java

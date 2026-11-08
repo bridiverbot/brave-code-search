@@ -1,3 +1,0 @@
-org.chromium.components.enterprise.device_attestation.AttestationBlobGenerator,../../components/enterprise/device_attestation/android/java/src/org/chromium/components/enterprise/device_attestation/AttestationBlobGenerator.java
-org.chromium.components.enterprise.device_attestation.AttestationBlobGeneratorDelegate,../../components/enterprise/device_attestation/android/java/src/org/chromium/components/enterprise/device_attestation/AttestationBlobGeneratorDelegate.java
-org.chromium.components.enterprise.device_attestation.BlobGenerationResult,../../components/enterprise/device_attestation/android/java/src/org/chromium/components/enterprise/device_attestation/BlobGenerationResult.java

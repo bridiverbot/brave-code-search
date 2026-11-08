@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.readaloud.ReadAloudFeatures,../../chrome/browser/readaloud/android/java/src/org/chromium/chrome/browser/readaloud/ReadAloudFeatures.java
-org.chromium.chrome.browser.readaloud.ReadAloudFeaturesJni,gen/chrome/browser/readaloud/android/features_jni_headers.srcjar/org/chromium/chrome/browser/readaloud/ReadAloudFeaturesJni.java

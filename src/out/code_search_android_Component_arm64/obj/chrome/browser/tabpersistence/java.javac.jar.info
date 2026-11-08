@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.tabpersistence.FlatBufferTabStateSerializer,../../chrome/browser/tabpersistence/android/java/src/org/chromium/chrome/browser/tabpersistence/FlatBufferTabStateSerializer.java
-org.chromium.chrome.browser.tabpersistence.TabMetadataFileManager,../../chrome/browser/tabpersistence/android/java/src/org/chromium/chrome/browser/tabpersistence/TabMetadataFileManager.java
-org.chromium.chrome.browser.tabpersistence.TabStateDirectory,../../chrome/browser/tabpersistence/android/java/src/org/chromium/chrome/browser/tabpersistence/TabStateDirectory.java
-org.chromium.chrome.browser.tabpersistence.TabStateFileManager,../../chrome/browser/tabpersistence/android/java/src/org/chromium/chrome/browser/tabpersistence/TabStateFileManager.java
-org.chromium.chrome.browser.tabpersistence.TabStateSerializer,../../chrome/browser/tabpersistence/android/java/src/org/chromium/chrome/browser/tabpersistence/TabStateSerializer.java

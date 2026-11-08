@@ -1,5 +1,0 @@
-{
-  setup_commands: {
-    kill_memeater: ["pkill", "-9", "memeater"]
-  }
-}

@@ -1,2 +1,0 @@
-org.chromium.ui.accessibility.AccessibilityStateTestHelper,../../ui/accessibility/android/javatests/src/org/chromium/ui/accessibility/AccessibilityStateTestHelper.java
-org.chromium.ui.accessibility.FakeAccessibilityStateDelegate,../../ui/accessibility/android/java/src/org/chromium/ui/accessibility/FakeAccessibilityStateDelegate.java

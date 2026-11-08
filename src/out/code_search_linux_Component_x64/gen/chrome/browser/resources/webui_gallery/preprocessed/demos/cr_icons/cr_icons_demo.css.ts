@@ -1,8 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-import {getCss as getDemo} from '../demo.css.js';
-import {getCss as getCrIconsLit} from '//resources/cr_elements/cr_icons_lit.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[getDemo(),getCrIconsLit()], css`.icons{display:grid;font-size:11px;gap:12px;grid-auto-rows:75px;grid-template-columns:repeat(auto-fill,75px);text-align:center;width:100%}.icon{align-items:center;display:flex;flex-direction:column;justify-content:center}.icon cr-icon,.icon .cr-icon{margin-block-end:12px}.label{height:30%}cr-input{--cr-input-error-display:none}`]);
-}

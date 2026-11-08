@@ -1,8 +1,0 @@
-org.chromium.viz.mojom.FrameSinkId,gen/services/viz/public/mojom/surfaces_java_sources.srcjar/org/chromium/viz/mojom/FrameSinkId.java
-org.chromium.viz.mojom.LocalSurfaceId,gen/services/viz/public/mojom/surfaces_java_sources.srcjar/org/chromium/viz/mojom/LocalSurfaceId.java
-org.chromium.viz.mojom.OffsetTag,gen/services/viz/public/mojom/surfaces_java_sources.srcjar/org/chromium/viz/mojom/OffsetTag.java
-org.chromium.viz.mojom.OffsetTagDefinition,gen/services/viz/public/mojom/surfaces_java_sources.srcjar/org/chromium/viz/mojom/OffsetTagDefinition.java
-org.chromium.viz.mojom.OffsetTagValue,gen/services/viz/public/mojom/surfaces_java_sources.srcjar/org/chromium/viz/mojom/OffsetTagValue.java
-org.chromium.viz.mojom.SurfaceId,gen/services/viz/public/mojom/surfaces_java_sources.srcjar/org/chromium/viz/mojom/SurfaceId.java
-org.chromium.viz.mojom.SurfaceInfo,gen/services/viz/public/mojom/surfaces_java_sources.srcjar/org/chromium/viz/mojom/SurfaceInfo.java
-org.chromium.viz.mojom.SurfaceRange,gen/services/viz/public/mojom/surfaces_java_sources.srcjar/org/chromium/viz/mojom/SurfaceRange.java

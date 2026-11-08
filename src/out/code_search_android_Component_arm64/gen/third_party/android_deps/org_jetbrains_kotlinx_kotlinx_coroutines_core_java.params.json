@@ -1,8 +1,0 @@
-{
-  "gn_target": "//third_party/android_deps:org_jetbrains_kotlinx_kotlinx_coroutines_core_java",
-  "public_deps_configs": [
-    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_core_jvm_java.params.json"
-  ],
-  "supports_android": true,
-  "type": "group"
-}

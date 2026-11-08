@@ -1,9 +1,0 @@
-../../chrome/browser/task_manager/internal/android/java/src/org/chromium/chrome/browser/task_manager/TaskManagerFactory.java
-../../chrome/browser/task_manager/internal/android/java/src/org/chromium/chrome/browser/task_manager/TaskManagerImpl.java
-../../chrome/browser/task_manager/internal/android/java/src/org/chromium/chrome/browser/task_manager/TaskManagerObserver.java
-../../chrome/browser/task_manager/internal/android/java/src/org/chromium/chrome/browser/task_manager/TaskManagerServiceBridge.java
-../../chrome/browser/task_manager/internal/android/java/src/org/chromium/chrome/browser/task_manager/ui/PropertyStringifier.java
-../../chrome/browser/task_manager/internal/android/java/src/org/chromium/chrome/browser/task_manager/ui/TaskManagerActivity.java
-../../chrome/browser/task_manager/internal/android/java/src/org/chromium/chrome/browser/task_manager/ui/TaskManagerCoordinator.java
-../../chrome/browser/task_manager/internal/android/java/src/org/chromium/chrome/browser/task_manager/ui/TaskManagerMediator.java
-../../chrome/browser/task_manager/internal/android/java/src/org/chromium/chrome/browser/task_manager/ui/TaskManagerProperties.java

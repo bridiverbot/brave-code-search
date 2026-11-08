@@ -1,3 +1,0 @@
-org.chromium.components.sync_device_info.FormFactor,gen/components/sync_device_info/java_enums.srcjar/org/chromium/components/sync_device_info/FormFactor.java
-org.chromium.components.sync_device_info.OsType,gen/components/sync_device_info/java_enums.srcjar/org/chromium/components/sync_device_info/OsType.java
-org.chromium.components.sync_device_info.RemoteDeviceInfo,../../components/sync_device_info/android/java/src/org/chromium/components/sync_device_info/RemoteDeviceInfo.java

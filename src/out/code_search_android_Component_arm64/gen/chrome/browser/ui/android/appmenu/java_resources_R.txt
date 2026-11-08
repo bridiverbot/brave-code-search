@@ -1,3 +1,0 @@
-int dimen menu_item_shortcut_with_text_end_padding_start 0x7f010001
-int id empty_item_menu_id 0x7f010001
-int id menu_item_enter_anim_id 0x7f010001

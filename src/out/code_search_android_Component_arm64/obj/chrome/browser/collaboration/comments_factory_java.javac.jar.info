@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.collaboration.comments.CommentsServiceFactory,../../chrome/browser/collaboration/android/java/src/org/chromium/chrome/browser/collaboration/comments/CommentsServiceFactory.java
-org.chromium.chrome.browser.collaboration.comments.CommentsServiceFactoryJni,gen/chrome/browser/collaboration/comments_jni_headers.srcjar/org/chromium/chrome/browser/collaboration/comments/CommentsServiceFactoryJni.java

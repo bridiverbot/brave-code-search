@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.xsurface_provider.ProcessScopeDependencyProviderFactory,../../chrome/browser/xsurface_provider/android/java/src/org/chromium/chrome/browser/xsurface_provider/ProcessScopeDependencyProviderFactory.java
-org.chromium.chrome.browser.xsurface_provider.XSurfaceProcessScopeProvider,../../chrome/browser/xsurface_provider/android/java/src/org/chromium/chrome/browser/xsurface_provider/XSurfaceProcessScopeProvider.java
-org.chromium.chrome.browser.xsurface_provider.hooks.XSurfaceHooks,../../chrome/browser/xsurface_provider/android/java/src/org/chromium/chrome/browser/xsurface_provider/hooks/XSurfaceHooks.java

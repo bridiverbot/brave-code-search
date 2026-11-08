@@ -1,2 +1,0 @@
-org.chromium.components.user_prefs.UserPrefs,../../components/user_prefs/android/java/src/org/chromium/components/user_prefs/UserPrefs.java
-org.chromium.components.user_prefs.UserPrefsJni,gen/components/user_prefs/android/jni_headers.srcjar/org/chromium/components/user_prefs/UserPrefsJni.java

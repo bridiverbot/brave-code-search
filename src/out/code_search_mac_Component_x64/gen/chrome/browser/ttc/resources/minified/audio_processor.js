@@ -1,4 +1,0 @@
-// Copyright 2026 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-class AudioProcessor extends AudioWorkletProcessor{bufferSize;buffer;bufferIndex;constructor(){super();this.bufferSize=2048;this.buffer=new Float32Array(this.bufferSize);this.bufferIndex=0}process(inputs,_outputs,_parameters){const input=inputs[0];if(input&&input.length>0){const inputChannel=input[0];if(inputChannel){for(let i=0;i<inputChannel.length;i++){this.buffer[this.bufferIndex++]=inputChannel[i];if(this.bufferIndex>=this.bufferSize){this.flush()}}}}return true}flush(){const bufferToSend=this.buffer.slice(0,this.bufferSize);this.port.postMessage({type:"audio",data:bufferToSend});this.bufferIndex=0}}registerProcessor("audio-processor",AudioProcessor);export{};

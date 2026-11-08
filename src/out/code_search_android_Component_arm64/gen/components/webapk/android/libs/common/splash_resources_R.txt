@@ -1,4 +1,0 @@
-int dimen webapp_splash_image_size_ideal 0x7f010001
-int dimen webapp_splash_image_size_minimum 0x7f010001
-int dimen webapp_splash_large_title_margin_bottom 0x7f010001
-int dimen webapp_splash_offset 0x7f010001

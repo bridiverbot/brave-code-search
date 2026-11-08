@@ -1,4 +1,0 @@
-gen/chrome/grit/glic_untrusted_resources.h
-gen/chrome/grit/glic_untrusted_resources_map.cc
-gen/chrome/grit/glic_untrusted_resources_map.h
-gen/chrome/glic_untrusted_resources.pak

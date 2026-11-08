@@ -1,4 +1,0 @@
-x11
-headless
-wayland
-

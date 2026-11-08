@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "../../../../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../../brave/components/brave_vpn/common/mojom/browser_agent.mojom"
-  ]
-}

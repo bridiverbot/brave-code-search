@@ -1,6 +1,0 @@
-org.chromium.google_apis.gaia.CoreAccountId,../../google_apis/gaia/android/java/src/org/chromium/google_apis/gaia/CoreAccountId.java
-org.chromium.google_apis.gaia.DeviceManagementErrorDetails,../../google_apis/gaia/android/java/src/org/chromium/google_apis/gaia/DeviceManagementErrorDetails.java
-org.chromium.google_apis.gaia.GaiaId,../../google_apis/gaia/android/java/src/org/chromium/google_apis/gaia/GaiaId.java
-org.chromium.google_apis.gaia.GoogleServiceAuthError,../../google_apis/gaia/android/java/src/org/chromium/google_apis/gaia/GoogleServiceAuthError.java
-org.chromium.google_apis.gaia.GoogleServiceAuthErrorJni,gen/google_apis/gaia/android/jni_headers.srcjar/org/chromium/google_apis/gaia/GoogleServiceAuthErrorJni.java
-org.chromium.google_apis.gaia.GoogleServiceAuthErrorState,gen/google_apis/gaia/android/google_apis_enum_javagen.srcjar/org/chromium/google_apis/gaia/GoogleServiceAuthErrorState.java

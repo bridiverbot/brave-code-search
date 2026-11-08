@@ -1,3 +1,0 @@
-org.chromium.components.one_time_tokens.backend.OneTimeTokensBackendErrorCode,../../components/one_time_tokens/android/backend/common/java/src/org/chromium/components/one_time_tokens/backend/OneTimeTokensBackendErrorCode.java
-org.chromium.components.one_time_tokens.backend.OneTimeTokensBackendException,../../components/one_time_tokens/android/backend/common/java/src/org/chromium/components/one_time_tokens/backend/OneTimeTokensBackendException.java
-org.chromium.components.one_time_tokens.backend.OneTimeTokensMetricsRecorder,../../components/one_time_tokens/android/backend/common/java/src/org/chromium/components/one_time_tokens/backend/OneTimeTokensMetricsRecorder.java

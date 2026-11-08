@@ -1,3 +1,0 @@
-org.chromium.webapk.lib.client.WebApkIdentityServiceClient,../../chrome/android/webapk/libs/client/src/org/chromium/webapk/lib/client/WebApkIdentityServiceClient.java
-org.chromium.webapk.lib.client.WebApkNavigationClient,../../chrome/android/webapk/libs/client/src/org/chromium/webapk/lib/client/WebApkNavigationClient.java
-org.chromium.webapk.lib.client.WebApkServiceConnectionManager,../../chrome/android/webapk/libs/client/src/org/chromium/webapk/lib/client/WebApkServiceConnectionManager.java

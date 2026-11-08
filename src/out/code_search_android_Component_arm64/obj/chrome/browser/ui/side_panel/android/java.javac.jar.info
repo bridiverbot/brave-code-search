@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.ui.side_panel.AndroidSidePanelEnabledFn,../../chrome/browser/ui/side_panel/android/java/src/org/chromium/chrome/browser/ui/side_panel/AndroidSidePanelEnabledFn.java
-org.chromium.chrome.browser.ui.side_panel.SidePanelContainerCoordinator,../../chrome/browser/ui/side_panel/android/java/src/org/chromium/chrome/browser/ui/side_panel/SidePanelContainerCoordinator.java
-org.chromium.chrome.browser.ui.side_panel.SidePanelContent,../../chrome/browser/ui/side_panel/android/java/src/org/chromium/chrome/browser/ui/side_panel/SidePanelContent.java
-org.chromium.chrome.browser.ui.side_panel.SidePanelUtils,../../chrome/browser/ui/side_panel/android/java/src/org/chromium/chrome/browser/ui/side_panel/SidePanelUtils.java

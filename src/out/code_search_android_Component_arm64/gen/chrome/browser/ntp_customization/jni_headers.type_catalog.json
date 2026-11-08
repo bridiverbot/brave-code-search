@@ -1,4 +1,0 @@
-{
-  "org/chromium/chrome/browser/ntp_customization/theme/NtpSyncedThemeBridge$NativeNtpSyncedThemeBridge": "::NtpSyncedThemeBridge",
-  "org/chromium/chrome/browser/ntp_customization/theme_sync/CrossDeviceThemeTracker$NativeCrossDeviceThemeTrackerAndroid": "::themes::CrossDeviceThemeTrackerAndroid"
-}

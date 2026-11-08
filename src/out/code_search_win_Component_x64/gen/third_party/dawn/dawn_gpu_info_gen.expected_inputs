@@ -1,7 +1,0 @@
-../../third_party/dawn/generator/dawn_gpu_info_generator.py
-../../third_party/dawn/generator/generator_lib.py
-*third_party/jinja2/*
-*third_party/markupsafe/*
-../../third_party/dawn/src/dawn/gpu_info.json
-../../third_party/dawn/generator/templates/dawn/common/GPUInfo.h
-../../third_party/dawn/generator/templates/dawn/common/GPUInfo.cpp

@@ -1,3 +1,0 @@
-org.chromium.brave.browser.customize_menu.CustomizeBraveMenuTest,../../brave/browser/customize_menu/android/javatests/src/org/chromium/brave/browser/customize_menu/CustomizeBraveMenuTest.java
-org.chromium.brave.browser.customize_menu.MenuItemDataTest,../../brave/browser/customize_menu/android/javatests/src/org/chromium/brave/browser/customize_menu/MenuItemDataTest.java
-org.chromium.brave.browser.customize_menu.settings.BraveCustomizeMenuPreferenceFragmentTest,../../brave/browser/customize_menu/android/javatests/src/org/chromium/brave/browser/customize_menu/settings/BraveCustomizeMenuPreferenceFragmentTest.java

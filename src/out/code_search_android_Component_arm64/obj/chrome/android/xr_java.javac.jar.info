@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.xr.scenecore.XrModule,gen/chrome/android/xr_module_interface.srcjar/org/chromium/chrome/browser/xr/scenecore/XrModule.java
-org.chromium.chrome.browser.xr.scenecore.XrModuleBridge,../../chrome/android/java/src/org/chromium/chrome/browser/xr/scenecore/XrModuleBridge.java
-org.chromium.chrome.browser.xr.scenecore.XrModuleProvider,../../chrome/android/java/src/org/chromium/chrome/browser/xr/scenecore/XrModuleProvider.java

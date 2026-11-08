@@ -1,9 +1,0 @@
-{
-  "gn_target": "//content/public/android:content_java",
-  "public_deps_configs": [
-    "gen/content/public/android/content_full_java.params.json",
-    "gen/content/public/android/content_main_dex_java.params.json"
-  ],
-  "supports_android": true,
-  "type": "group"
-}

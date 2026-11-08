@@ -1,4 +1,0 @@
-int id top_sites_display_mode_favorites_radio_button 0x7f010001
-int id top_sites_display_mode_frequent_radio_button 0x7f010001
-int id top_sites_display_mode_radio_group 0x7f010001
-int layout radio_button_group_top_sites_display_mode_preference 0x7f010001

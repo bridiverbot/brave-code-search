@@ -1,9 +1,0 @@
-layout/notification_media_action.xml	../../third_party/androidx/cipd/libs/androidx_media_media/media.aar/res/layout/notification_media_action.xml
-layout/notification_media_cancel_action.xml	../../third_party/androidx/cipd/libs/androidx_media_media/media.aar/res/layout/notification_media_cancel_action.xml
-layout/notification_template_big_media.xml	../../third_party/androidx/cipd/libs/androidx_media_media/media.aar/res/layout/notification_template_big_media.xml
-layout/notification_template_big_media_custom.xml	../../third_party/androidx/cipd/libs/androidx_media_media/media.aar/res/layout/notification_template_big_media_custom.xml
-layout/notification_template_big_media_narrow.xml	../../third_party/androidx/cipd/libs/androidx_media_media/media.aar/res/layout/notification_template_big_media_narrow.xml
-layout/notification_template_big_media_narrow_custom.xml	../../third_party/androidx/cipd/libs/androidx_media_media/media.aar/res/layout/notification_template_big_media_narrow_custom.xml
-layout/notification_template_lines_media.xml	../../third_party/androidx/cipd/libs/androidx_media_media/media.aar/res/layout/notification_template_lines_media.xml
-layout/notification_template_media.xml	../../third_party/androidx/cipd/libs/androidx_media_media/media.aar/res/layout/notification_template_media.xml
-layout/notification_template_media_custom.xml	../../third_party/androidx/cipd/libs/androidx_media_media/media.aar/res/layout/notification_template_media_custom.xml

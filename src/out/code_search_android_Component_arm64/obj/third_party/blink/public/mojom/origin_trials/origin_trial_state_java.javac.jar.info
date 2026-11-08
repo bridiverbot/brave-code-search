@@ -1,3 +1,0 @@
-org.chromium.blink.mojom.OriginTrialFeatureState,gen/third_party/blink/public/mojom/origin_trials/origin_trial_state_java_sources.srcjar/org/chromium/blink/mojom/OriginTrialFeatureState.java
-org.chromium.blink.mojom.OriginTrialStateHost,gen/third_party/blink/public/mojom/origin_trials/origin_trial_state_java_sources.srcjar/org/chromium/blink/mojom/OriginTrialStateHost.java
-org.chromium.blink.mojom.OriginTrialStateHost_Internal,gen/third_party/blink/public/mojom/origin_trials/origin_trial_state_java_sources.srcjar/org/chromium/blink/mojom/OriginTrialStateHost_Internal.java

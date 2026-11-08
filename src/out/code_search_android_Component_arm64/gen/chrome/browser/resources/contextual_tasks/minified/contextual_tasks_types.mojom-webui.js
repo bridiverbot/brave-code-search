@@ -1,4 +1,0 @@
-// Copyright 2020 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";export const TabSelectionModeSpec={$:mojo.internal.Enum()};export var TabSelectionMode;(function(TabSelectionMode){TabSelectionMode[TabSelectionMode["MIN_VALUE"]=0]="MIN_VALUE";TabSelectionMode[TabSelectionMode["MAX_VALUE"]=3]="MAX_VALUE";TabSelectionMode[TabSelectionMode["kEmbeddingsMatch"]=0]="kEmbeddingsMatch";TabSelectionMode[TabSelectionMode["kMultiSignalScoring"]=1]="kMultiSignalScoring";TabSelectionMode[TabSelectionMode["kStaticSignalsOnly"]=2]="kStaticSignalsOnly";TabSelectionMode[TabSelectionMode["kStaticSignalsMlModel"]=3]="kStaticSignalsMlModel"})(TabSelectionMode||(TabSelectionMode={}));

@@ -1,4 +1,0 @@
-org.chromium.gl.mojom.AngleImplementation,gen/ui/gl/mojom/mojom_java_sources.srcjar/org/chromium/gl/mojom/AngleImplementation.java
-org.chromium.gl.mojom.GlImplementation,gen/ui/gl/mojom/mojom_java_sources.srcjar/org/chromium/gl/mojom/GlImplementation.java
-org.chromium.gl.mojom.GlImplementationParts,gen/ui/gl/mojom/mojom_java_sources.srcjar/org/chromium/gl/mojom/GlImplementationParts.java
-org.chromium.gl.mojom.GpuPreference,gen/ui/gl/mojom/mojom_java_sources.srcjar/org/chromium/gl/mojom/GpuPreference.java

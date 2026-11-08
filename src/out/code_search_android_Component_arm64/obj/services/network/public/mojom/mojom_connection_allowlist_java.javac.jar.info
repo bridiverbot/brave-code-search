@@ -1,5 +1,0 @@
-org.chromium.network.mojom.ConnectionAllowlist,gen/services/network/public/mojom/mojom_connection_allowlist_java_sources.srcjar/org/chromium/network/mojom/ConnectionAllowlist.java
-org.chromium.network.mojom.ConnectionAllowlistIssue,gen/services/network/public/mojom/mojom_connection_allowlist_java_sources.srcjar/org/chromium/network/mojom/ConnectionAllowlistIssue.java
-org.chromium.network.mojom.ConnectionAllowlists,gen/services/network/public/mojom/mojom_connection_allowlist_java_sources.srcjar/org/chromium/network/mojom/ConnectionAllowlists.java
-org.chromium.network.mojom.RedirectBehavior,gen/services/network/public/mojom/mojom_connection_allowlist_java_sources.srcjar/org/chromium/network/mojom/RedirectBehavior.java
-org.chromium.network.mojom.WebRtcBehavior,gen/services/network/public/mojom/mojom_connection_allowlist_java_sources.srcjar/org/chromium/network/mojom/WebRtcBehavior.java

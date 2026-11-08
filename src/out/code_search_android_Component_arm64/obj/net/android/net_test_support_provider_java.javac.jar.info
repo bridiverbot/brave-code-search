@@ -1,3 +1,0 @@
-org.chromium.net.test.EmbeddedTestServerImpl,../../net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerImpl.java
-org.chromium.net.test.EmbeddedTestServerImplJni,gen/net/android/net_test_support_provider_jni.srcjar/org/chromium/net/test/EmbeddedTestServerImplJni.java
-org.chromium.net.test.EmbeddedTestServerService,../../net/test/android/javatests/src/org/chromium/net/test/EmbeddedTestServerService.java

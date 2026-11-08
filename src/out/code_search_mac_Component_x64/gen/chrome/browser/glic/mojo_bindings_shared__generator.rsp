@@ -1,7 +1,0 @@
-../../chrome/browser/glic/experimental_opt_in/glic_experimental_opt_in.mojom
-../../chrome/browser/glic/gemini_enterprise/gemini_enterprise.mojom
-../../chrome/browser/glic/host/glic.mojom
-../../chrome/browser/glic/host/glic_features.mojom
-../../chrome/browser/glic/host/glic_internals.mojom
-../../chrome/browser/glic/host/glic_overlay.mojom
-../../chrome/browser/glic/host/glic_webui.mojom

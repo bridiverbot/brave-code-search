@@ -1,4 +1,0 @@
-gen/brave/components/brave_rewards/resources/grit/rewards_page_generated.h
-gen/brave/components/brave_rewards/resources/grit/rewards_page_generated_map.cc
-gen/brave/components/brave_rewards/resources/grit/rewards_page_generated_map.h
-gen/brave/components/brave_rewards/resources/rewards_page_generated.pak

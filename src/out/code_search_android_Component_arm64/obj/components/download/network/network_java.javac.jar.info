@@ -1,3 +1,0 @@
-org.chromium.components.download.BackgroundNetworkStatusListener,../../components/download/network/android/java/src/org/chromium/components/download/BackgroundNetworkStatusListener.java
-org.chromium.components.download.NetworkStatusListenerAndroid,../../components/download/network/android/java/src/org/chromium/components/download/NetworkStatusListenerAndroid.java
-org.chromium.components.download.NetworkStatusListenerAndroidJni,gen/components/download/network/jni_headers.srcjar/org/chromium/components/download/NetworkStatusListenerAndroidJni.java

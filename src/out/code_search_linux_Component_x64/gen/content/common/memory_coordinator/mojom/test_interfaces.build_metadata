@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "mojom.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../content/common/memory_coordinator/mojom/memory_consumer_traits_test.mojom"
-  ]
-}

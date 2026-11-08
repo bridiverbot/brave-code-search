@@ -1,2 +1,0 @@
-org.chromium.components.optimization_guide.content.PageContentProtoProviderBridge,../../components/optimization_guide/content/browser/android/java/src/org/chromium/components/optimization_guide/content/PageContentProtoProviderBridge.java
-org.chromium.components.optimization_guide.content.PageContentProtoProviderBridgeJni,gen/components/optimization_guide/content/browser/android/jni_headers.srcjar/org/chromium/components/optimization_guide/content/PageContentProtoProviderBridgeJni.java

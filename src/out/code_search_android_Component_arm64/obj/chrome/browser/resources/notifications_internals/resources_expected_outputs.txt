@@ -1,4 +1,0 @@
-gen/chrome/grit/notifications_internals_resources.h
-gen/chrome/grit/notifications_internals_resources_map.cc
-gen/chrome/grit/notifications_internals_resources_map.h
-gen/chrome/notifications_internals_resources.pak

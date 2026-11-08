@@ -1,7 +1,0 @@
-org.chromium.chrome.browser.ssl.HttpsFirstModeBridge,../../chrome/browser/ssl/android/java/src/org/chromium/chrome/browser/ssl/HttpsFirstModeBridge.java
-org.chromium.chrome.browser.ssl.HttpsFirstModeBridgeJni,gen/chrome/browser/ssl/android/jni_headers.srcjar/org/chromium/chrome/browser/ssl/HttpsFirstModeBridgeJni.java
-org.chromium.chrome.browser.ssl.HttpsFirstModeSetting,gen/chrome/browser/ssl/android/https_first_mode_enums.srcjar/org/chromium/chrome/browser/ssl/HttpsFirstModeSetting.java
-org.chromium.chrome.browser.ssl.HttpsFirstModeSettingsFragment,../../chrome/browser/ssl/android/java/src/org/chromium/chrome/browser/ssl/HttpsFirstModeSettingsFragment.java
-org.chromium.chrome.browser.ssl.HttpsFirstModeVariantPreference,../../chrome/browser/ssl/android/java/src/org/chromium/chrome/browser/ssl/HttpsFirstModeVariantPreference.java
-org.chromium.chrome.browser.ssl.HttpsUpgradesInterceptor,../../chrome/browser/ssl/android/java/src/org/chromium/chrome/browser/ssl/HttpsUpgradesInterceptor.java
-org.chromium.chrome.browser.ssl.HttpsUpgradesInterceptorJni,gen/chrome/browser/ssl/android/jni_headers.srcjar/org/chromium/chrome/browser/ssl/HttpsUpgradesInterceptorJni.java

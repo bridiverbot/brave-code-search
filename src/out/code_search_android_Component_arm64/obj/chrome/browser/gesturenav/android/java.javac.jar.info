@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.gesturenav.HardwareDraw,../../chrome/browser/gesturenav/android/java/src/org/chromium/chrome/browser/gesturenav/HardwareDraw.java
-org.chromium.chrome.browser.gesturenav.NativePageBitmapCapturer,../../chrome/browser/gesturenav/android/java/src/org/chromium/chrome/browser/gesturenav/NativePageBitmapCapturer.java
-org.chromium.chrome.browser.gesturenav.TabOnBackGestureHandler,../../chrome/browser/gesturenav/android/java/src/org/chromium/chrome/browser/gesturenav/TabOnBackGestureHandler.java
-org.chromium.chrome.browser.gesturenav.TabOnBackGestureHandlerJni,gen/chrome/browser/gesturenav/android/jni_headers.srcjar/org/chromium/chrome/browser/gesturenav/TabOnBackGestureHandlerJni.java

@@ -1,2 +1,0 @@
-gen/chrome/browser/actor/resources/actor_browser_resources.pak
-gen/chrome/browser/actor/resources/grit/actor_browser_resources.h

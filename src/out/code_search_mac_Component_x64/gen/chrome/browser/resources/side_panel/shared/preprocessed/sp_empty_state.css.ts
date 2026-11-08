@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-import '//resources/cr_elements/cr_shared_vars.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[], css`:host{align-items:center;display:flex;flex-direction:column;text-align:center}picture{align-items:center;display:flex;height:144px;justify-content:center;width:288px;margin-block-end:12px}#heading{color:var(--sp-empty-state-heading-color,var(--cr-primary-text-color));font-size:var(--sp-empty-state-heading-font-size,16px);font-weight:500;line-height:var(--sp-empty-state-heading-line-height,24px);margin-block-end:8px;max-width:259px}#body{color:var(--sp-empty-state-body-color,var(--cr-secondary-text-color));font-size:var(--sp-empty-state-body-font-size,13px);font-weight:400;line-height:var(--sp-empty-state-body-line-height,20px);margin-block-end:12px;max-width:229px}`]);
-}

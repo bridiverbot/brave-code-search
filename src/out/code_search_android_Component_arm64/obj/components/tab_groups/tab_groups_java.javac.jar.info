@@ -1,4 +1,0 @@
-org.chromium.components.tab_groups.TabGroupColorId,gen/components/tab_groups/java_enums.srcjar/org/chromium/components/tab_groups/TabGroupColorId.java
-org.chromium.components.tab_groups.TabGroupColorPickerUtils,../../components/tab_groups/android/java/src/org/chromium/components/tab_groups/TabGroupColorPickerUtils.java
-org.chromium.components.tab_groups.TabGroupsFeatureMap,../../components/tab_groups/android/java/src/org/chromium/components/tab_groups/TabGroupsFeatureMap.java
-org.chromium.components.tab_groups.TabGroupsFeatureMapJni,gen/components/tab_groups/tab_groups_jni_headers.srcjar/org/chromium/components/tab_groups/TabGroupsFeatureMapJni.java

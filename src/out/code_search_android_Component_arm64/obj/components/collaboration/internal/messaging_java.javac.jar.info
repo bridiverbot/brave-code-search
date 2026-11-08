@@ -1,3 +1,0 @@
-org.chromium.components.collaboration.messaging.MessagingBackendServiceBridge,../../components/collaboration/internal/android/java/src/org/chromium/components/collaboration/messaging/MessagingBackendServiceBridge.java
-org.chromium.components.collaboration.messaging.MessagingBackendServiceBridgeJni,gen/components/collaboration/internal/messaging_jni_headers.srcjar/org/chromium/components/collaboration/messaging/MessagingBackendServiceBridgeJni.java
-org.chromium.components.collaboration.messaging.bridge.ConversionUtils,../../components/collaboration/internal/android/java/src/org/chromium/components/collaboration/messaging/bridge/ConversionUtils.java

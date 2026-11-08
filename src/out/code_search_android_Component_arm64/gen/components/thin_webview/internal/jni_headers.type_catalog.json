@@ -1,3 +1,0 @@
-{
-  "org/chromium/components/thinwebview/internal/ThinWebViewImpl$NativeThinWebView": "::thin_webview::android::ThinWebView"
-}

@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.BraveIntentHandlerUnitTest,../../brave/android/junit/src/org/chromium/chrome/browser/BraveIntentHandlerUnitTest.java
-org.chromium.chrome.browser.BravePwaShortcutIconHelperTest,../../brave/android/junit/src/org/chromium/chrome/browser/BravePwaShortcutIconHelperTest.java
-org.chromium.components.webapps.BraveAppInstallMenuHandlerTest,../../brave/android/junit/src/org/chromium/components/webapps/BraveAppInstallMenuHandlerTest.java

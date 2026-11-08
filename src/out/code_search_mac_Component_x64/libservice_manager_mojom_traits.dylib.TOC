@@ -1,8 +1,0 @@
-          cmd LC_ID_DYLIB
-      cmdsize 72
-         name @rpath/libservice_manager_mojom_traits.dylib (offset 24)
-   time stamp 0 Thu Jan  1 00:00:00 1970
-      current version 0.0.0
-compatibility version 0.0.0
-T __ZN4mojo12StructTraitsIN15service_manager5mojom16IdentityDataViewENS1_8IdentityEE4ReadES3_PS4_
-T __ZN4mojo12StructTraitsIN15service_manager5mojom21ServiceFilterDataViewENS1_13ServiceFilterEE4ReadES3_PS4_

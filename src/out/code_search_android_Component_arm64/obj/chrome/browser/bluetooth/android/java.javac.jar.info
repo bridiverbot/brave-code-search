@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.bluetooth.BluetoothBridge,../../chrome/browser/bluetooth/android/java/src/org/chromium/chrome/browser/bluetooth/BluetoothBridge.java
-org.chromium.chrome.browser.bluetooth.BluetoothBridgeJni,gen/chrome/browser/bluetooth/android/jni_headers.srcjar/org/chromium/chrome/browser/bluetooth/BluetoothBridgeJni.java
-org.chromium.chrome.browser.bluetooth.BluetoothNotificationManager,../../chrome/browser/bluetooth/android/java/src/org/chromium/chrome/browser/bluetooth/BluetoothNotificationManager.java
-org.chromium.chrome.browser.bluetooth.BluetoothNotificationManagerDelegate,../../chrome/browser/bluetooth/android/java/src/org/chromium/chrome/browser/bluetooth/BluetoothNotificationManagerDelegate.java

@@ -1,4 +1,0 @@
-gen/brave/components/trezor_bridge/resources/grit/trezor_bridge_generated.h
-gen/brave/components/trezor_bridge/resources/grit/trezor_bridge_generated_map.cc
-gen/brave/components/trezor_bridge/resources/grit/trezor_bridge_generated_map.h
-gen/brave/components/trezor_bridge/resources/trezor_bridge_generated.pak

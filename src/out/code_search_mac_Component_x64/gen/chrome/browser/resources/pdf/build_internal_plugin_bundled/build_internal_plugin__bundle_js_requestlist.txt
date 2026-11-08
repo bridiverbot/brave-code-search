@@ -1,1 +1,0 @@
-{"pdf_internal_plugin_wrapper.rollup.js": ["../../../../../ui/webui/resources/tsc/js/assert.js", "../../../../../ui/webui/resources/tsc/js/util.js", "../tsc/constants.js", "../tsc/gesture_detector.js", "../tsc/pdf_scripting_api.js", "../tsc/message_converter.js", "../tsc/pdf_viewer_utils.js", "../tsc/swipe_detector.js", "../tsc/pdf_internal_plugin_wrapper.js"]}

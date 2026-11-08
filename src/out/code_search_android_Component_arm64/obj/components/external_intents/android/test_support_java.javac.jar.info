@@ -1,2 +1,0 @@
-org.chromium.components.external_intents.TestChildFrameNavigationObserver,../../components/external_intents/android/javatests/src/org/chromium/components/external_intents/TestChildFrameNavigationObserver.java
-org.chromium.components.external_intents.TestChildFrameNavigationObserverJni,gen/components/external_intents/android/test_support_java_jni_headers.srcjar/org/chromium/components/external_intents/TestChildFrameNavigationObserverJni.java

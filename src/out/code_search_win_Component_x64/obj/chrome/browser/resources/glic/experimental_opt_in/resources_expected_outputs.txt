@@ -1,4 +1,0 @@
-gen/chrome/grit/glic_experimental_opt_in_resources.h
-gen/chrome/grit/glic_experimental_opt_in_resources_map.cc
-gen/chrome/grit/glic_experimental_opt_in_resources_map.h
-gen/chrome/glic_experimental_opt_in_resources.pak

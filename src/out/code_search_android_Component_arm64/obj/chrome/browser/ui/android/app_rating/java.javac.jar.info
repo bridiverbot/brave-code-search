@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.ui.app_rating.AppRatingManager,../../chrome/browser/ui/android/app_rating/java/src/org/chromium/chrome/browser/ui/app_rating/AppRatingManager.java
-org.chromium.chrome.browser.ui.app_rating.AppRatingManagerFactory,../../chrome/browser/ui/android/app_rating/java/src/org/chromium/chrome/browser/ui/app_rating/AppRatingManagerFactory.java
-org.chromium.chrome.browser.ui.app_rating.AppRatingPromoController,../../chrome/browser/ui/android/app_rating/java/src/org/chromium/chrome/browser/ui/app_rating/AppRatingPromoController.java
-org.chromium.chrome.browser.ui.app_rating.AppRatingPromoMetrics,../../chrome/browser/ui/android/app_rating/java/src/org/chromium/chrome/browser/ui/app_rating/AppRatingPromoMetrics.java

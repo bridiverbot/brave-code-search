@@ -1,5 +1,0 @@
-org.chromium.network.mojom.OriginWithPossibleWildcards,gen/services/network/public/mojom/mojom_permissions_policy_java_sources.srcjar/org/chromium/network/mojom/OriginWithPossibleWildcards.java
-org.chromium.network.mojom.ParsedPermissionsPolicyDeclaration,gen/services/network/public/mojom/mojom_permissions_policy_java_sources.srcjar/org/chromium/network/mojom/ParsedPermissionsPolicyDeclaration.java
-org.chromium.network.mojom.PermissionsPolicy,gen/services/network/public/mojom/mojom_permissions_policy_java_sources.srcjar/org/chromium/network/mojom/PermissionsPolicy.java
-org.chromium.network.mojom.PermissionsPolicyFeature,gen/services/network/public/mojom/mojom_permissions_policy_java_sources.srcjar/org/chromium/network/mojom/PermissionsPolicyFeature.java
-org.chromium.network.mojom.PermissionsPolicyFeaturesBitset,gen/services/network/public/mojom/mojom_permissions_policy_java_sources.srcjar/org/chromium/network/mojom/PermissionsPolicyFeaturesBitset.java

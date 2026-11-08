@@ -1,6 +1,0 @@
-import { css } from 'chrome://resources/lit/v3_0/lit.rollup.js';
-import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[], css `:host{background-color:var(--url-item-container-color,var(--cr-fallback-color-primary-container));border-radius:8px;display:flex;flex-direction:column;height:100%}.header{align-items:center;display:flex;gap:12px;padding:8px 16px 8px 8px}#favicon{background-size:contain;flex-shrink:0;height:20px;width:20px}#title{color:var(--url-item-title-text-color);flex-grow:1;font:var(--url-item-title-font);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.thumbnail-container{align-items:center;background-color:var(--url-item-thumbnail-container-color,var(--cr-fallback-color-neutral-container));border-radius:0 0 8px 8px;display:flex;flex-grow:1;justify-content:center;min-height:80px;margin:3px;overflow:hidden}#thumbnail{display:block;height:100%;object-fit:cover;width:100%}`]);
-}

@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "mojom/mojom.build_metadata"
-  ],
-  "sources": [
-    "../../../../../components/sqlite_vfs/multiprocess_test.test-mojom"
-  ]
-}

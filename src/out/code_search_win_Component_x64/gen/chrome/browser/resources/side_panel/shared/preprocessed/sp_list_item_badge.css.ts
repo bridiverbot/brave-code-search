@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-import '//resources/cr_elements/cr_shared_vars.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[], css`:host{height:20px;align-items:center;background:var(--color-side-panel-badge-background);border-radius:100px;box-sizing:border-box;color:var(--color-side-panel-badge-foreground);display:inline-flex;flex-direction:row;font-size:11px;gap:0;line-height:normal;padding:4px 8px 4px 6px}:host([was-updated]){background:var(--color-side-panel-badge-background-updated);color:var(--color-side-panel-badge-foreground-updated);font-weight:400}::slotted([icon]){color:inherit;height:12px;width:12px;padding-inline-end:4px}::slotted([slot=previous-badge]){color:var(--color-side-panel-badge-foreground);font-weight:400;text-decoration:line-through;padding-inline-start:2px}`]);
-}

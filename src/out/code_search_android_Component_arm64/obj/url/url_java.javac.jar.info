@@ -1,8 +1,0 @@
-org.chromium.url.GURL,../../url/android/java/src/org/chromium/url/GURL.java
-org.chromium.url.GURLJni,gen/url/url_jni_headers.srcjar/org/chromium/url/GURLJni.java
-org.chromium.url.IDNStringUtil,../../url/android/java/src/org/chromium/url/IDNStringUtil.java
-org.chromium.url.Origin,../../url/android/java/src/org/chromium/url/Origin.java
-org.chromium.url.OriginJni,gen/url/url_jni_headers.srcjar/org/chromium/url/OriginJni.java
-org.chromium.url.Parsed,../../url/android/java/src/org/chromium/url/Parsed.java
-org.chromium.url.ParsedJni,gen/url/url_jni_headers.srcjar/org/chromium/url/ParsedJni.java
-org.chromium.url.URI,../../url/android/java/src/org/chromium/url/URI.java

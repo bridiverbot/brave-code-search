@@ -1,8 +1,0 @@
-{
-  "javac_full_classpath": [
-    "obj/third_party/flatbuffers/flatbuffers_java.javac.jar"
-  ],
-  "sdk_jars": [
-    "../../third_party/android_sdk/public/platforms/android-37.2/android.jar"
-  ]
-}

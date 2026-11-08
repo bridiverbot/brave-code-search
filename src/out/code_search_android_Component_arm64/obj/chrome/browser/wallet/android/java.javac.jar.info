@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.wallet.BoardingPassBridge,../../chrome/browser/wallet/android/java/src/org/chromium/chrome/browser/wallet/BoardingPassBridge.java
-org.chromium.chrome.browser.wallet.BoardingPassBridgeJni,gen/chrome/browser/wallet/android/jni_headers.srcjar/org/chromium/chrome/browser/wallet/BoardingPassBridgeJni.java
-org.chromium.chrome.browser.wallet.BoardingPassController,../../chrome/browser/wallet/android/java/src/org/chromium/chrome/browser/wallet/BoardingPassController.java

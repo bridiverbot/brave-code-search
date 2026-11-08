@@ -1,4 +1,0 @@
-// Copyright 2024 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-export function time(mojoTime){const windowsEpoch=Date.UTC(1601,0,1,0,0,0,0);const unixEpoch=Date.UTC(1970,0,1,0,0,0,0);const epochDeltaInMs=unixEpoch-windowsEpoch;const timeInMs=Number(mojoTime.internalValue)/1e3;return new Date(timeInMs-epochDeltaInMs)}export function scope(mojoScope){return`[${mojoScope.join(", ")}]`}export function origin(mojoOrigin){const{scheme:scheme,host:host,port:port}=mojoOrigin;const portSuf=port===0?"":`:${port}`;return`${scheme}://${host}${portSuf}`}export function schemefulSite(mojoSite){return origin(mojoSite.siteAsOrigin)}

@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-import {getCss as getCrIconsLit} from 'chrome://resources/cr_elements/cr_icons_lit.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[getCrIconsLit()], css`:host{--menu-item-margin:12px;display:flex;flex-direction:column;margin:8px}@media (forced-colors:active){:host{outline:var(--cr-border-hcm)}}#titleContainer{align-items:center;display:flex;height:20px;padding:12px 12px 8px 12px}#title{color:var(--color-new-tab-page-primary-foreground);font-size:13px;font-weight:normal;line-height:20px;margin-block-start:0;margin-block-end:0}#headerSpacer{flex-grow:1}#menuButton{--cr-icon-button-icon-size:20px;--cr-icon-button-fill-color:var(--color-new-tab-page-primary-foreground);--cr-icon-button-hover-background-color:var(--color-new-tab-page-control-background-hovered);margin-inline:0 -6px}#actionMenu{--cr-menu-shadow:var(--ntp-menu-shadow)}.action-menu-icon{--cr-icon-ripple-size:16px;background-color:transparent;margin-inline-start:calc(-1 * var(--menu-item-margin));margin-inline-end:var(--menu-item-margin)}#actionMenuDivider{background-color:var(--color-new-tab-page-module-context-menu-divider);border:none;height:1px;margin:8px 0}`]);
-}

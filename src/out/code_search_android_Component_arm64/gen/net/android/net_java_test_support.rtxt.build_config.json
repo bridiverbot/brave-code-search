@@ -1,8 +1,0 @@
-{
-  "dependency_rtxt_files": [
-    "gen/third_party/androidx/androidx_test_uiautomator_uiautomator_java__resources_R.txt",
-    "gen/third_party/androidx/androidx_test_core_java__resources_R.txt",
-    "gen/third_party/androidx/androidx_test_uiautomator_uiautomator_shell_android_java__resources_R.txt",
-    "gen/third_party/androidx/androidx_test_runner_java__resources_R.txt"
-  ]
-}

@@ -1,6 +1,0 @@
---crate-feature=alloc=always_specialize_generics_in_cpp_api_from_rust
---crate-header=alloc=third_party/crubit/support/rs_std/rs_alloc.h
---crate-namespace=alloc=rs::alloc
---crate-feature=core=always_specialize_generics_in_cpp_api_from_rust
---crate-header=core=third_party/crubit/support/rs_std/rs_core.h
---crate-namespace=core=rs::core

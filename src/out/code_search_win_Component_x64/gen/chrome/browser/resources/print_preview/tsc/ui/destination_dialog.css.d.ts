@@ -1,5 +1,0 @@
-import { CSSResultGroup } from 'chrome://resources/lit/v3_0/lit.rollup.js';
-import 'chrome://resources/cr_elements/cr_shared_style_lit.css.js';
-import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
-import './print_preview_vars.css.js';
-export declare function getCss(): CSSResultGroup;

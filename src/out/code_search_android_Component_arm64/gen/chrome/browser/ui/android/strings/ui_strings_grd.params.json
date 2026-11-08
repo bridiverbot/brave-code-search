@@ -1,7 +1,0 @@
-{
-  "gn_target": "//chrome/browser/ui/android/strings:ui_strings_grd",
-  "resources_zip": "obj/chrome/browser/ui/android/strings/ui_strings_grd.compiled.resources.zip",
-  "rtxt_path": "gen/chrome/browser/ui/android/strings/ui_strings_grd.R.txt",
-  "type": "android_resources",
-  "uncompiled_resources_zip": "obj/chrome/browser/ui/android/strings/ui_strings_grd.resources.zip"
-}

@@ -1,5 +1,0 @@
-int drawable ic_logo_googleg_20dp 0x7f010001
-int drawable search_engine_aimode 0x7f010001
-int drawable search_engine_default 0x7f010001
-int drawable search_engine_gemini 0x7f010001
-int drawable search_engine_google 0x7f010001

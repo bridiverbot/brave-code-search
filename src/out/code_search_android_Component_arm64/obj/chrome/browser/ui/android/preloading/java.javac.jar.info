@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.preloading.AndroidPrerenderManager,../../chrome/browser/ui/android/preloading/java/src/org/chromium/chrome/browser/preloading/AndroidPrerenderManager.java
-org.chromium.chrome.browser.preloading.AndroidPrerenderManagerJni,gen/chrome/browser/ui/android/preloading/jni_headers.srcjar/org/chromium/chrome/browser/preloading/AndroidPrerenderManagerJni.java

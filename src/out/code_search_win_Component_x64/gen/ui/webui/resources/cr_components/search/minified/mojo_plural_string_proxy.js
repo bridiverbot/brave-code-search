@@ -1,4 +1,0 @@
-// Copyright 2026 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-import{PluralStringProvider}from"./plural_string_provider.mojom-webui.js";let instance=null;export class MojoPluralStringProxy{remote_=null;async getPluralString(messageName,itemCount){if(!this.remote_){this.remote_=PluralStringProvider.getRemote()}const{text:text}=await this.remote_.getPluralString(messageName,itemCount);return text}getPluralStringTupleWithComma(){return Promise.reject(new Error("Not supported"))}getPluralStringTupleWithPeriods(){return Promise.reject(new Error("Not supported"))}static getInstance(){return instance||(instance=new MojoPluralStringProxy)}static setInstance(obj){instance=obj}}

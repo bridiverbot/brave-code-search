@@ -1,4 +1,0 @@
-gen/extensions/grit/extensions_renderer_generated_resources.h
-gen/extensions/grit/extensions_renderer_generated_resources_map.cc
-gen/extensions/grit/extensions_renderer_generated_resources_map.h
-gen/extensions/extensions_renderer_generated_resources.pak

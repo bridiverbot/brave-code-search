@@ -1,4 +1,0 @@
-gen/chrome/grit/webui_browser_resources.h
-gen/chrome/grit/webui_browser_resources_map.cc
-gen/chrome/grit/webui_browser_resources_map.h
-gen/chrome/webui_browser_resources.pak

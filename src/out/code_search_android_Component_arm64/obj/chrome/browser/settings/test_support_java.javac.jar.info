@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.settings.SettingsActivityTestRule,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/SettingsActivityTestRule.java
-org.chromium.chrome.browser.settings.SettingsInTabTestActivity,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/SettingsInTabTestActivity.java
-org.chromium.chrome.browser.settings.SettingsTestFragmentFinder,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/SettingsTestFragmentFinder.java
-org.chromium.chrome.browser.settings.SettingsTestRule,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/SettingsTestRule.java

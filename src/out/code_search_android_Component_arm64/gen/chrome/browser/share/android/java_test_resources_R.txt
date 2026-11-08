@@ -1,3 +1,0 @@
-int string test_radio_button_item_1 0x7f010001
-int string test_radio_button_item_2 0x7f010001
-int string test_radio_button_item_3 0x7f010001

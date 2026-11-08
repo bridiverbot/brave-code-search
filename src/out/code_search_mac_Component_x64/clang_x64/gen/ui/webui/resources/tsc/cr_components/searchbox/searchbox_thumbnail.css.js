@@ -1,6 +1,0 @@
-import { css } from '//resources/lit/v3_0/lit.rollup.js';
-import { getCss as getCrIconsLit } from '//resources/cr_elements/cr_icons_lit.css.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[getCrIconsLit()], css `:host{align-items:center;display:flex;flex-shrink:0;justify-content:center;outline:none}#container{align-items:center;aspect-ratio:1/1;border-radius:12px;display:flex;justify-content:center;overflow:hidden;position:relative;width:48px;height:40px}:host([enable-thumbnail-sizing-tweaks_]) #container{border-radius:8px;height:32px;width:40px}#image{display:initial;height:100%;object-fit:cover;user-select:none;width:100%}.overlay{position:absolute;justify-content:center;align-items:center;background-color:var(--color-searchbox-thumbnail-overlay-background);display:flex;width:100%;height:100%}:host([is-deletable]:hover) .overlay,:host(:focus-visible) .overlay{background-color:var(--color-searchbox-thumbnail-overlay)}#remove{--cr-icon-button-fill-color:white;display:none;margin-inline-start:0;margin-inline-end:0;background-color:transparent}:host(:hover) #remove,:host(:focus-visible) #remove{display:flex}:host(:focus-visible) #container{border:solid 3px var(--color-searchbox-thumbnail-border);box-sizing:border-box}`]);
-}

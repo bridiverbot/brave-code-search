@@ -1,4 +1,0 @@
-gen/chrome/grit/contextual_tasks_extension_resources.h
-gen/chrome/grit/contextual_tasks_extension_resources_map.cc
-gen/chrome/grit/contextual_tasks_extension_resources_map.h
-gen/chrome/contextual_tasks_extension_resources.pak
