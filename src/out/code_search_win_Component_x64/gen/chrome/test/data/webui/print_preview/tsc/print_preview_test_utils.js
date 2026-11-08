@@ -1,0 +1,331 @@
+// Copyright 2017 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { createDocumentSettings as createDefaultDocumentSettings, DEFAULT_MAX_COPIES, Destination, DestinationOrigin, DestinationStore, GooglePromotedDestinationId, MeasurementSystemUnitType, VendorCapabilityType, VendorCapabilityValueType } from 'chrome://print/print_preview.js';
+import { assert } from 'chrome://resources/js/assert.js';
+import { loadTimeData } from 'chrome://resources/js/load_time_data.js';
+import { eventToPromise } from 'chrome://webui-test/test_util.js';
+export function getDefaultInitialSettings(isPdf = false) {
+    return {
+        isInKioskAutoPrintMode: false,
+        isInAppKioskMode: false,
+        pdfPrinterDisabled: false,
+        thousandsDelimiter: ',',
+        decimalDelimiter: '.',
+        previewModifiable: !isPdf,
+        documentTitle: 'title',
+        documentHasSelection: true,
+        shouldPrintSelectionOnly: false,
+        printerName: 'FooDevice',
+        serializedAppStateStr: null,
+        serializedDefaultDestinationSelectionRulesStr: null,
+        destinationsManaged: false,
+        uiLocale: 'en-us',
+        unitType: MeasurementSystemUnitType.IMPERIAL,
+    };
+}
+export function createDocumentSettings(...overrides) {
+    return Object.assign(createDefaultDocumentSettings(), ...overrides);
+}
+export function getCddTemplate(printerId, printerName) {
+    return {
+        printer: {
+            deviceName: printerId,
+            printerName: printerName || '',
+        },
+        capabilities: {
+            version: '1.0',
+            printer: {
+                collate: { default: true },
+                copies: { default: 1, max: DEFAULT_MAX_COPIES },
+                color: {
+                    option: [
+                        { type: 'STANDARD_COLOR', is_default: true },
+                        { type: 'STANDARD_MONOCHROME' },
+                    ],
+                },
+                dpi: {
+                    option: [
+                        { horizontal_dpi: 200, vertical_dpi: 200, is_default: true },
+                        { horizontal_dpi: 100, vertical_dpi: 100 },
+                    ],
+                },
+                duplex: {
+                    option: [
+                        { type: 'NO_DUPLEX', is_default: true },
+                        { type: 'LONG_EDGE' },
+                        { type: 'SHORT_EDGE' },
+                    ],
+                },
+                page_orientation: {
+                    option: [
+                        { type: 'PORTRAIT', is_default: true },
+                        { type: 'LANDSCAPE' },
+                        { type: 'AUTO' },
+                    ],
+                },
+                media_size: {
+                    option: [
+                        {
+                            name: 'NA_LETTER',
+                            width_microns: 215900,
+                            height_microns: 279400,
+                            is_default: true,
+                            custom_display_name: 'Letter',
+                        },
+                        {
+                            name: 'CUSTOM',
+                            width_microns: 215900,
+                            height_microns: 215900,
+                            custom_display_name: 'CUSTOM_SQUARE',
+                        },
+                    ],
+                },
+            },
+        },
+    };
+}
+/**
+ * Gets a CDD template and adds some dummy vendor capabilities. For select
+ * capabilities, the values of these options are arbitrary. These values are
+ * provided and read by the destination, so there are no fixed options like
+ * there are for margins or color.
+ * @param printerName Defaults to an empty string.
+ */
+export function getCddTemplateWithAdvancedSettings(numSettings, printerId, printerName) {
+    const template = getCddTemplate(printerId, printerName);
+    if (numSettings < 1) {
+        return template;
+    }
+    const vendorCapability = [{
+            display_name: 'Print Area',
+            id: 'printArea',
+            type: VendorCapabilityType.SELECT,
+            select_cap: {
+                option: [
+                    { display_name: 'A4', value: '4', is_default: true },
+                    { display_name: 'A6', value: '6' },
+                    { display_name: 'A7', value: '7' },
+                ],
+            },
+        }];
+    template.capabilities.printer.vendor_capability = vendorCapability;
+    if (numSettings < 2) {
+        return template;
+    }
+    // Add new capability.
+    vendorCapability.push({
+        display_name: 'Paper Type',
+        id: 'paperType',
+        type: VendorCapabilityType.SELECT,
+        select_cap: {
+            option: [
+                { display_name: 'Standard', value: '0', is_default: true },
+                { display_name: 'Recycled', value: '1' },
+                { display_name: 'Special', value: '2' },
+            ],
+        },
+    });
+    if (numSettings < 3) {
+        return template;
+    }
+    vendorCapability.push({
+        display_name: 'Watermark',
+        id: 'watermark',
+        type: VendorCapabilityType.TYPED_VALUE,
+        typed_value_cap: {
+            default: '',
+        },
+    });
+    if (numSettings < 4) {
+        return template;
+    }
+    vendorCapability.push({
+        display_name: 'Staple',
+        id: 'finishings/4',
+        type: VendorCapabilityType.TYPED_VALUE,
+        typed_value_cap: {
+            default: '',
+            value_type: VendorCapabilityValueType.BOOLEAN,
+        },
+    });
+    if (numSettings < 5) {
+        return template;
+    }
+    vendorCapability.push({
+        display_name: 'Quality',
+        id: 'print-quality',
+        type: VendorCapabilityType.SELECT,
+        select_cap: {
+            option: [
+                { display_name: 'Draft', value: '3' },
+                { display_name: 'Normal', value: '4', is_default: true },
+            ],
+        },
+    });
+    return template;
+}
+/**
+ * @return The capabilities of the Save as PDF destination.
+ */
+export function getPdfPrinter() {
+    return {
+        capabilities: {
+            version: '1.0',
+            printer: {
+                page_orientation: {
+                    option: [
+                        { type: 'AUTO', is_default: true },
+                        { type: 'PORTRAIT' },
+                        { type: 'LANDSCAPE' },
+                    ],
+                },
+                color: { option: [{ type: 'STANDARD_COLOR', is_default: true }] },
+                media_size: {
+                    option: [{
+                            name: 'NA_LETTER',
+                            width_microns: 0,
+                            height_microns: 0,
+                            is_default: true,
+                        }],
+                },
+            },
+        },
+    };
+}
+/**
+ * Get the default media size for |device|.
+ * @return The width and height of the default media.
+ */
+export function getDefaultMediaSize(device) {
+    const size = device.capabilities.printer.media_size.option.find(opt => !!opt.is_default);
+    return {
+        width_microns: size.width_microns,
+        height_microns: size.height_microns,
+    };
+}
+/**
+ * Get the default page orientation for |device|.
+ * @return The default orientation.
+ */
+export function getDefaultOrientation(device) {
+    const options = device.capabilities.printer.page_orientation.option;
+    const orientation = options.find(opt => !!opt.is_default).type;
+    assert(orientation);
+    return orientation;
+}
+export function getExtensionDestinations() {
+    const destinations = [];
+    const infoLists = [];
+    infoLists.push([]);
+    infoLists.push([]);
+    [{
+            id: 'IDA',
+            name: 'PrinterA',
+            extensionId: 'ext1',
+            extensionName: 'ExtensionOne',
+        },
+        {
+            id: 'IDB',
+            name: 'PrinterB',
+            extensionId: 'ext1',
+            extensionName: 'ExtensionOne',
+        },
+        {
+            id: 'IDC',
+            name: 'PrinterC',
+            extensionId: 'ext2',
+            extensionName: 'ExtensionTwo',
+        },
+    ].forEach(info => {
+        const destination = new Destination(info.id, DestinationOrigin.EXTENSION, info.name, {
+            extensionId: info.extensionId,
+            extensionName: info.extensionName,
+        });
+        if (info.extensionId === 'ext1') {
+            infoLists[0].push(info);
+        }
+        else {
+            infoLists[1].push(info);
+        }
+        destinations.push(destination);
+    });
+    return { destinations, infoLists };
+}
+/**
+ * Creates 5 local destinations, adds them to |localDestinations|.
+ */
+export function getDestinations(localDestinations) {
+    const destinations = [];
+    // Five destinations. FooDevice is the system default.
+    [{ deviceName: 'ID1', printerName: 'One' },
+        { deviceName: 'ID2', printerName: 'Two' },
+        { deviceName: 'ID3', printerName: 'Three' },
+        { deviceName: 'ID4', printerName: 'Four' },
+        { deviceName: 'FooDevice', printerName: 'FooName' }]
+        .forEach(info => {
+        const destination = new Destination(info.deviceName, DestinationOrigin.LOCAL, info.printerName);
+        localDestinations.push(info);
+        destinations.push(destination);
+    });
+    return destinations;
+}
+/**
+ * Returns a media size capability with custom and localized names.
+ */
+export function getMediaSizeCapabilityWithCustomNames() {
+    const customLocalizedMediaName = 'Vendor defined localized media name';
+    const customMediaName = 'Vendor defined media name';
+    return {
+        option: [
+            {
+                name: 'CUSTOM',
+                width_microns: 15900,
+                height_microns: 79400,
+                is_default: true,
+                custom_display_name_localized: [{ locale: navigator.language, value: customLocalizedMediaName }],
+            },
+            {
+                name: 'CUSTOM',
+                width_microns: 15900,
+                height_microns: 79400,
+                custom_display_name: customMediaName,
+            },
+        ],
+    };
+}
+/**
+ * @param input The value to set for the input element.
+ * @param parentElement The element that receives the input-change event.
+ * @return Promise that resolves when the input-change event has fired.
+ */
+export async function triggerInputEvent(inputElement, input, parentElement) {
+    inputElement.value = input;
+    if (inputElement.tagName === 'CR-INPUT') {
+        await inputElement.updateComplete;
+    }
+    inputElement.dispatchEvent(new CustomEvent('input', { composed: true, bubbles: true }));
+    return eventToPromise('input-change', parentElement);
+}
+export function createDestinationStore() {
+    const testListenerElement = document.createElement('test-listener');
+    document.body.appendChild(testListenerElement);
+    return new DestinationStore(testListenerElement.addWebUiListener.bind(testListenerElement));
+}
+/** @return The Save as PDF destination. */
+export function getSaveAsPdfDestination() {
+    return new Destination(GooglePromotedDestinationId.SAVE_AS_PDF, DestinationOrigin.LOCAL, loadTimeData.getString('printToPDF'));
+}
+/**
+ * @param section The settings section that contains the select to toggle.
+ * @param option The option to select.
+ * @return Promise that resolves when the option has been selected and the
+ *     process-select-change event has fired.
+ */
+export function selectOption(section, option) {
+    const select = section.shadowRoot.querySelector('select');
+    select.focus();
+    select.value = option;
+    select.dispatchEvent(new CustomEvent('change'));
+    return eventToPromise('process-select-change', section);
+}

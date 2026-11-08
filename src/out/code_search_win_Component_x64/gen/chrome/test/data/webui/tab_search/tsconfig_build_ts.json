@@ -1,0 +1,93 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://tab-search.top-chrome/tab_search.js": [
+        "./../../../../browser/resources/tab_search/tsc/tab_search.d.ts"
+      ],
+      "/tab_group_shared/*": [
+        "./../../../../browser/resources/tab_group_shared/tsc/*"
+      ],
+      "chrome://webui-test/metrics_reporter/*": [
+        "./../metrics_reporter/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/search_test.ts",
+    "preprocessed/selectable_lazy_list_test.ts",
+    "preprocessed/split_new_tab_page_test.ts",
+    "preprocessed/tab_search_item_test.ts",
+    "preprocessed/tab_search_media_tabs_test.ts",
+    "preprocessed/tab_search_page_focus_test.ts",
+    "preprocessed/tab_search_page_test.ts",
+    "preprocessed/tab_search_split_item_test.ts",
+    "preprocessed/tab_search_test_data.ts",
+    "preprocessed/tab_search_test_helper.ts",
+    "preprocessed/test_search_api_proxy.ts",
+    "preprocessed/test_tab_search_api_proxy.ts",
+    "preprocessed/test_tab_search_sync_browser_proxy.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/tab_group_shared/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/tab_search/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

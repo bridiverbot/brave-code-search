@@ -1,0 +1,52 @@
+// Copyright 2016 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { BrowserProxyImpl } from 'chrome://history/history.js';
+import { assertEquals, assertFalse, assertTrue } from 'chrome://webui-test/chai_assert.js';
+import { eventToPromise, microtasksFinished } from 'chrome://webui-test/test_util.js';
+import { TestHistoryBrowserProxy } from './test_browser_proxy.js';
+import { createHistoryEntry, createHistoryInfo } from './test_util.js';
+suite('history-list supervised-user', function () {
+    let app;
+    let historyList;
+    let toolbar;
+    let testProxy;
+    const TEST_HISTORY_RESULTS = [createHistoryEntry('2016-03-15', 'https://www.google.com')];
+    setup(function () {
+        document.body.innerHTML = window.trustedTypes.emptyHTML;
+        testProxy = new TestHistoryBrowserProxy();
+        BrowserProxyImpl.setInstance(testProxy);
+        testProxy.handler.setResultFor('queryHistory', Promise.resolve({
+            results: {
+                info: createHistoryInfo(),
+                value: TEST_HISTORY_RESULTS,
+            },
+        }));
+        app = document.createElement('history-app');
+        document.body.appendChild(app);
+        historyList = app.$.history;
+        toolbar = app.$.toolbar;
+        return testProxy.handler.whenCalled('queryHistory');
+    });
+    test('checkboxes disabled for supervised user', async function () {
+        await microtasksFinished();
+        const items = historyList.shadowRoot.querySelectorAll('history-item');
+        items[0].$.checkbox.click();
+        assertFalse(items[0].selected);
+    });
+    test('deletion disabled for supervised user', async function () {
+        await microtasksFinished();
+        const whenChecked = eventToPromise('history-checkbox-select', historyList);
+        // Manually dispatch the event since the checkboxes are disabled due
+        // to the test configuration.
+        historyList.shadowRoot.querySelector('history-item').fire('history-checkbox-select', { index: 0, shiftKey: false });
+        await whenChecked;
+        toolbar.deleteSelectedItems();
+        // Make sure that removeVisits is not being called.
+        assertEquals(0, testProxy.handler.getCallCount('removeVisits'));
+    });
+    test('remove history menu button disabled', function () {
+        historyList.$.sharedMenu.get();
+        assertTrue(historyList.shadowRoot.querySelector('#menuRemoveButton').hidden);
+    });
+});

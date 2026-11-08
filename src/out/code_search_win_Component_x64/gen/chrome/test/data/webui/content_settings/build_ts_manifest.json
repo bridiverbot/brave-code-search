@@ -1,0 +1,1 @@
+{"base_dir": "gen/chrome/test/data/webui/content_settings/tsc", "files": ["app_test.js", "content_settings_test.js", "test_content_settings_browser_proxy.js", "content_settings_internals.mojom-webui.js", "content_settings.mojom-webui.js", "content_settings_enums.mojom-webui.js", "content_settings_types.mojom-webui.js"]}

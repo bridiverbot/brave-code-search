@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_DEVICE_LOG_DEVICE_LOG_UI_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/device_log/tsc/device_log_ui_test.js" resource_path="device_log/device_log_ui_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
