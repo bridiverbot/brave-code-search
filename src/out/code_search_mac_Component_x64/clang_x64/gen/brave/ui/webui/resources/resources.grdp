@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_BRAVE_LIT_OVERRIDING_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/lit_overriding.js" resource_path="brave/lit_overriding.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_POLYMER_OVERRIDING_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/polymer_overriding.js" resource_path="brave/polymer_overriding.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_JS_BRAVE_BROWSER_COMMAND_BRAVE_BROWSER_COMMAND_PROXY_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/js/brave_browser_command/brave_browser_command_proxy.js" resource_path="brave/js/brave_browser_command/brave_browser_command_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_CUSTOM_PROFILE_IMAGE_ROW_HTML_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/custom_profile_image_row.html.js" resource_path="brave/custom_profile_image_row.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_CUSTOM_PROFILE_IMAGE_ROW_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/custom_profile_image_row.js" resource_path="brave/custom_profile_image_row.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_PAGE_SPECIFIC_SETTINGS_BR_SETTINGS_SHARED_CSS_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/page_specific/settings/br_settings_shared.css.js" resource_path="brave/page_specific/settings/br_settings_shared.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_PAGE_SPECIFIC_SETTINGS_BR_SETTINGS_SHARED_LIT_CSS_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/page_specific/settings/br_settings_shared_lit.css.js" resource_path="brave/page_specific/settings/br_settings_shared_lit.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_CUSTOM_PROFILE_IMAGE_ROW_CSS_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/custom_profile_image_row.css.js" resource_path="brave/custom_profile_image_row.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_BRAVE_BROWSER_COMMAND_MOJOM_WEBUI_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/brave_browser_command.mojom-webui.js" resource_path="brave/brave_browser_command.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BRAVE_BRAVE_GENERATED_RESOURCES_WEBUI_STRINGS_JS" file="${root_gen_dir}/brave/ui/webui/resources/minified/brave_generated_resources_webui_strings.js" resource_path="brave/brave_generated_resources_webui_strings.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
