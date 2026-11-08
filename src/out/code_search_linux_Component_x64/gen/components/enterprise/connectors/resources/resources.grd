@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/connectors_internals_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/connectors_internals_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/connectors_internals_resources_map.h"
+            type="resource_map_header" />
+    <output filename="connectors_internals_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_CONNECTORS_INTERNALS_INDEX_HTML" file="${root_gen_dir}/components/enterprise/connectors/resources/preprocessed/index.html" resource_path="index.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_APP_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_CONNECTORS_TABS_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/connectors_tabs.js" resource_path="connectors_tabs.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_DEVICE_TRUST_CONNECTOR_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/device_trust_connector.js" resource_path="device_trust_connector.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_MANAGED_CLIENT_CERTIFICATE_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/managed_client_certificate.js" resource_path="managed_client_certificate.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_PROVISIONING_DOMAIN_CONFIG_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/provisioning_domain_config.js" resource_path="provisioning_domain_config.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_SIGNALS_REPORTING_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/signals_reporting.js" resource_path="signals_reporting.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_BROWSER_PROXY_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/browser_proxy.js" resource_path="browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_CONNECTORS_UTILS_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/connectors_utils.js" resource_path="connectors_utils.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_APP_HTML_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/app.html.js" resource_path="app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_CONNECTORS_TABS_HTML_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/connectors_tabs.html.js" resource_path="connectors_tabs.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_DEVICE_TRUST_CONNECTOR_HTML_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/device_trust_connector.html.js" resource_path="device_trust_connector.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_MANAGED_CLIENT_CERTIFICATE_HTML_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/managed_client_certificate.html.js" resource_path="managed_client_certificate.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_PROVISIONING_DOMAIN_CONFIG_HTML_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/provisioning_domain_config.html.js" resource_path="provisioning_domain_config.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_SIGNALS_REPORTING_HTML_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/signals_reporting.html.js" resource_path="signals_reporting.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONNECTORS_INTERNALS_CONNECTORS_INTERNALS_MOJOM_WEBUI_JS" file="${root_gen_dir}/components/enterprise/connectors/resources/minified/connectors_internals.mojom-webui.js" resource_path="connectors_internals.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>
