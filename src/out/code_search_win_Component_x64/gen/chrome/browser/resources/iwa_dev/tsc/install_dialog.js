@@ -1,0 +1,114 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import './install_dev_proxy_tab.js';
+import './install_local_bundle_tab.js';
+import './install_update_manifest_tab.js';
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_dialog/cr_dialog.js';
+import '//resources/cr_elements/cr_tabs/cr_tabs.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './install_dialog.css.js';
+import { getHtml } from './install_dialog.html.js';
+import { getCss as getSharedCss } from './shared_style.css.js';
+export var TabIndex;
+(function (TabIndex) {
+    TabIndex[TabIndex["DEV_PROXY"] = 0] = "DEV_PROXY";
+    TabIndex[TabIndex["LOCAL_BUNDLE"] = 1] = "LOCAL_BUNDLE";
+    TabIndex[TabIndex["UPDATE_MANIFEST"] = 2] = "UPDATE_MANIFEST";
+})(TabIndex || (TabIndex = {}));
+export class IwaDevInstallDialogElement extends CrLitElement {
+    static get is() {
+        return 'iwa-dev-install-dialog';
+    }
+    static get styles() {
+        return [
+            getSharedCss(),
+            getCss(),
+        ];
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            selectedTab_: { type: Number, state: true },
+            isInstalling_: { type: Boolean, state: true },
+            installationError_: { type: String, state: true },
+            isCurrentTabValid_: { type: Boolean, state: true },
+            isOpened_: { type: Boolean, state: true },
+        };
+    }
+    #selectedTab__accessor_storage = TabIndex.DEV_PROXY;
+    get selectedTab_() { return this.#selectedTab__accessor_storage; }
+    set selectedTab_(value) { this.#selectedTab__accessor_storage = value; }
+    #isInstalling__accessor_storage = false;
+    get isInstalling_() { return this.#isInstalling__accessor_storage; }
+    set isInstalling_(value) { this.#isInstalling__accessor_storage = value; }
+    #installationError__accessor_storage = '';
+    get installationError_() { return this.#installationError__accessor_storage; }
+    set installationError_(value) { this.#installationError__accessor_storage = value; }
+    #isCurrentTabValid__accessor_storage = false;
+    get isCurrentTabValid_() { return this.#isCurrentTabValid__accessor_storage; }
+    set isCurrentTabValid_(value) { this.#isCurrentTabValid__accessor_storage = value; }
+    #isOpened__accessor_storage = false;
+    get isOpened_() { return this.#isOpened__accessor_storage; }
+    set isOpened_(value) { this.#isOpened__accessor_storage = value; }
+    showDialog() {
+        this.selectedTab_ = TabIndex.DEV_PROXY;
+        this.installationError_ = '';
+        this.isInstalling_ = false;
+        this.isCurrentTabValid_ = false;
+        this.isOpened_ = true;
+        this.$.dialog.showModal();
+    }
+    closeDialog() {
+        this.isOpened_ = false;
+        this.$.dialog.close();
+    }
+    startInstallation() {
+        this.$.dialog.focus();
+        this.isInstalling_ = true;
+        this.installationError_ = '';
+    }
+    onInstallationFinished(error) {
+        this.isInstalling_ = false;
+        if (error) {
+            this.installationError_ = error;
+        }
+        else {
+            this.closeDialog();
+        }
+    }
+    onCancelClick_() {
+        this.isOpened_ = false;
+        this.$.dialog.cancel();
+    }
+    isInstallButtonEnabled_() {
+        if (this.isInstalling_) {
+            return false;
+        }
+        return this.isCurrentTabValid_;
+    }
+    get activeTab_() {
+        return this.shadowRoot?.querySelector('.tab-content > *') ??
+            null;
+    }
+    onInstallClick_() {
+        this.installationError_ = '';
+        this.activeTab_?.submit();
+    }
+    onSelectedChanged_(e) {
+        if (this.isInstalling_) {
+            return;
+        }
+        this.selectedTab_ = e.detail.value;
+        this.installationError_ = '';
+        this.isCurrentTabValid_ = false;
+    }
+    onTabValidChanged_(e) {
+        this.isCurrentTabValid_ = e.detail.isValid;
+        this.installationError_ = '';
+    }
+}
+customElements.define(IwaDevInstallDialogElement.is, IwaDevInstallDialogElement);

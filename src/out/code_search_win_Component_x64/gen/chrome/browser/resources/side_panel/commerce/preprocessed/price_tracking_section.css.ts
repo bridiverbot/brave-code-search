@@ -1,0 +1,8 @@
+import {css, CSSResultGroup} from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import {getCss as getCrHiddenStyleLit} from 'chrome://resources/cr_elements/cr_hidden_style_lit.css.js';
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[getCrHiddenStyleLit()], css`#toggleSection{align-items:center;display:flex;max-width:100%}#toggleTitle{color:var(--cr-primary-text-color);font-size:14px;font-weight:500;margin-bottom:8px}#toggleAnnotationButton{color:var(--cr-link-color)}#toggleAnnotation{color:var(--cr-secondary-text-color);display:inline;font-size:12px;line-height:16px;overflow:hidden;white-space:initial}#toggleText{align-items:flex-start;display:flex;flex-direction:column;line-height:20px;margin-right:10px;margin-top:-1px;max-width:100%}#toggle{margin-inline-end:0;margin-inline-start:auto}`]);
+}

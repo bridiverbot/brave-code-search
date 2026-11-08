@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/conflicts_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/conflicts_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/conflicts_resources_map.h"
+            type="resource_map_header" />
+    <output filename="conflicts_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_CONFLICTS_WARNING_SVG" file="${root_src_dir}/chrome/browser/resources/conflicts/warning.svg" resource_path="warning.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CONFLICTS_ABOUT_CONFLICTS_HTML" file="${root_gen_dir}/chrome/browser/resources/conflicts/preprocessed/about_conflicts.html" resource_path="about_conflicts.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONFLICTS_ABOUT_CONFLICTS_JS" file="${root_gen_dir}/chrome/browser/resources/conflicts/minified/about_conflicts.js" resource_path="about_conflicts.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONFLICTS_ABOUT_CONFLICTS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/conflicts/minified/about_conflicts.html.js" resource_path="about_conflicts.html.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

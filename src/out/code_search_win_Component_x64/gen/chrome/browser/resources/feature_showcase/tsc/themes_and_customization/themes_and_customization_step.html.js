@@ -1,0 +1,31 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { html } from '//resources/lit/v3_0/lit.rollup.js';
+export function getHtml() {
+    return html `<!--_html_template_start_-->
+<feature-showcase-step>
+  <slot name="stepper" slot="stepper"></slot>
+  <!-- TODO(crbug.com/506842511): Use more general name instead of illustration. !-->
+  <div slot="illustration" id="illustration">
+    <div class="picker-container">
+      <customize-color-scheme-mode></customize-color-scheme-mode>
+      <cr-theme-color-picker columns="4"></cr-theme-color-picker>
+    </div>
+  </div>
+  <span slot="title">$i18n{themesTitle}</span>
+  <span slot="description">$i18n{themesSubtitle}</span>
+
+  <cr-button slot="button" id="confirm-button" class="action-button"
+      @click="${this.onConfirmClick_}" ?disabled="${this.buttonsDisabled}">
+    $i18n{themesApplyTheme}
+  </cr-button>
+
+  <cr-button slot="button" id="skip-button" @click="${this.onSkipClick_}"
+      ?disabled="${this.buttonsDisabled}">
+    $i18n{themesNoThanks}
+  </cr-button>
+
+</feature-showcase-step>
+<!--_html_template_end_-->`;
+}

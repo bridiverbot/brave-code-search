@@ -1,0 +1,4 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{loadTimeData}from"./i18n_setup.js";export function getKnownApps(){const numApps=loadTimeData.getInteger("numKnownApps");const apps=new Map;for(let i=0;i<numApps;i++){apps.set(loadTimeData.getString(`knownAppName${i}`),loadTimeData.getString(`knownAppIds${i}`).split(",").map((appId=>appId.toLowerCase())))}return apps}export function getKnownAppNamesById(){return new Map(Array.from(getKnownApps().entries()).flatMap((([appName,appIds])=>appIds.map((appId=>[appId,appName])))))}

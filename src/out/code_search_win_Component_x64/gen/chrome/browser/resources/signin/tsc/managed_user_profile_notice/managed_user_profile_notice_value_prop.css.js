@@ -1,0 +1,7 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+import '//resources/cr_elements/cr_shared_vars.css.js';
+import { getCss as getTangibleSyncStyleShared } from '/tangible_sync_style_shared.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[getTangibleSyncStyleShared()], css `:host{color:var(--cr-primary-text-color);width:64vw}main{align-items:center;display:flex;flex-direction:column;height:100%;justify-content:center;padding-inline:10rem;margin-inline:auto}.title{text-align:center}.title:focus{outline:none}.subtitle{margin:0 0 24px 0;text-align:center}#product-logo{height:64px;width:64px}.pill{align-items:center;background-color:var(--md-background-color);border-radius:16px;box-sizing:border-box;display:flex;gap:12px;height:64px;padding:12px}.pill .avatar{flex:0 0 40px;border-radius:50%;height:40px;width:40px}.pill .text-container{flex:1 1 auto;padding-inline-end:12px}.pill .icon{color:var(--cr-fallback-color-on-surface-subtle);flex:0 0 20px;height:20px;width:20px}.account-name{color:var(--cr-fallback-color-on-surface);font-size:0.875rem;font-weight:500;line-height:20px;margin:0;text-overflow:ellipsis}.email{color:var(--cr-fallback-color-on-surface-subtle);font-size:0.75rem;margin:0;text-overflow:ellipsis}@media (prefers-color-scheme:dark){.pill{background-color:var(--cr-fallback-color-surface)}}`]);
+}

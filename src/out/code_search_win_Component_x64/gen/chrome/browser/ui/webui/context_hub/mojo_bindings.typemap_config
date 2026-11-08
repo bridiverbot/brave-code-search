@@ -1,0 +1,82 @@
+[
+  {
+    "traits_deps": [
+      "//base",
+      "//chrome/browser/context_hub/auto_todos",
+      "//chrome/browser/context_hub/memory_bank",
+      "//components/optimization_guide/proto:optimization_guide_proto",
+      "//components/personal_context/proto:personal_context_proto",
+      "//mojo/public/mojom/base",
+      "//third_party/abseil-cpp:absl",
+      "//url"
+    ],
+    "traits_headers": [
+      "chrome/browser/ui/webui/context_hub/context_hub_mojom_traits.h"
+    ],
+    "traits_sources": [
+      "context_hub_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::context_hub::AutoTodoEntry::Status",
+        "mojom": "browser.context_hub.mojom.AutoTodoStatus"
+      },
+      {
+        "cpp": "::context_hub::ThirdPartyData::GroupType",
+        "mojom": "browser.context_hub.mojom.AutoTodoGroup"
+      },
+      {
+        "cpp": "::context_hub::GmailReference",
+        "mojom": "browser.context_hub.mojom.GmailReference"
+      },
+      {
+        "cpp": "::context_hub::ChromeHistoryEntry",
+        "mojom": "browser.context_hub.mojom.ChromeHistoryEntry"
+      },
+      {
+        "cpp": "::context_hub::SourceReference",
+        "mojom": "browser.context_hub.mojom.SourceReference"
+      },
+      {
+        "cpp": "::context_hub::FirstPartyData",
+        "mojom": "browser.context_hub.mojom.FirstPartyData"
+      },
+      {
+        "cpp": "::context_hub::ThirdPartyData",
+        "mojom": "browser.context_hub.mojom.ThirdPartyData"
+      },
+      {
+        "cpp": "::std::variant\u003C::context_hub::FirstPartyData, ::context_hub::ThirdPartyData>",
+        "mojom": "browser.context_hub.mojom.AutoTodoData"
+      },
+      {
+        "cpp": "::context_hub::AutoTodoEntry",
+        "mojom": "browser.context_hub.mojom.AutoTodoItem"
+      },
+      {
+        "cpp": "::context_hub::AutoTodosGenerationMetadata",
+        "mojom": "browser.context_hub.mojom.AutoTodosGenerationMetadata"
+      },
+      {
+        "cpp": "::context_hub::MemoryBankType",
+        "mojom": "browser.context_hub.mojom.EntryType"
+      },
+      {
+        "cpp": "::context_hub::MemoryBankEntry",
+        "mojom": "browser.context_hub.mojom.MemoryBankEntry"
+      },
+      {
+        "cpp": "::personal_context::proto::SmartSearchItem",
+        "mojom": "browser.context_hub.mojom.SmartSearchResult"
+      },
+      {
+        "cpp": "::context_hub::MemoryBankChatCitation",
+        "mojom": "browser.context_hub.mojom.ChatReference"
+      },
+      {
+        "cpp": "::context_hub::MemoryBankChatHistoryTurn",
+        "mojom": "browser.context_hub.mojom.MemoryBankChatMessage"
+      }
+    ]
+  }
+]

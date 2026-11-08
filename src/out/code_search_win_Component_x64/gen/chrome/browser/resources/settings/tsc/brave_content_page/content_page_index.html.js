@@ -1,0 +1,49 @@
+import { html } from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+    return html `<!--_html_template_start_--><style include="settings-shared">cr-view-manager [hidden-by-search],cr-view-manager[show-all] [slot=view][data-parent-view-id]{display:none}cr-view-manager [slot=view]:not(.closing){position:initial}</style>
+
+<cr-view-manager id="viewManager" class="cr-centered-card-container"
+    show-all$="[[shouldShowAll]]">
+  <settings-brave-content-content slot="view" id="parent">
+  </settings-brave-content-content>
+
+  <template is="dom-if" if="[[showPage_(pageVisibility_.containers)]]">
+    <settings-brave-content-containers
+      id="containers"
+      slot="view"
+      in-search-mode="[[inSearchMode_]]">
+    </settings-brave-content-containers>
+  </template>
+
+  <template is="dom-if" if="[[showPage_(pageVisibility_.trafficControl)]]">
+    <settings-brave-content-traffic-control
+      id="trafficControl"
+      slot="view"
+      in-search-mode="[[inSearchMode_]]">
+    </settings-brave-content-traffic-control>
+  </template>
+
+  <template is="dom-if" if="[[showPage_(pageVisibility_.playlist)]]">
+    <settings-brave-content-playlist
+      id="playlist"
+      slot="view"
+      in-search-mode="[[inSearchMode_]]">
+    </settings-brave-content-playlist>
+  </template>
+
+  
+    <template is="dom-if" if="[[showPage_(pageVisibility_.speedreader)]]">
+      <settings-brave-content-speedreader
+        id="speedreader"
+        slot="view"
+          in-search-mode="[[inSearchMode_]]">
+      </settings-brave-content-speedreader>
+    </template>
+  
+
+  <settings-appearance-fonts-page slot="view" id="fonts"
+      data-parent-view-id="parent">
+  </settings-appearance-fonts-page>
+</cr-view-manager>
+<!--_html_template_end_-->`;
+}

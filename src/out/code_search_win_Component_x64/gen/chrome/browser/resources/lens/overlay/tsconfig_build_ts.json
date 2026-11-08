@@ -1,0 +1,210 @@
+{
+  "extends": "../../../../../../../../chrome/browser/resources/lens/overlay/tsconfig_base.json",
+  "compilerOptions": {
+    "types": [
+      "dom-speech-recognition",
+      "trusted-types"
+    ],
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome-untrusted://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/polymer/v3_0/polymer/polymer_bundled.min.js": [
+        "./../../../../../../../../third_party/polymer/v3_0/components-chromium/polymer/polymer.d.ts"
+      ],
+      "chrome-untrusted://resources/polymer/v3_0/polymer/polymer_bundled.min.js": [
+        "./../../../../../../../../third_party/polymer/v3_0/components-chromium/polymer/polymer.d.ts"
+      ],
+      "//resources/polymer/v3_0/*": [
+        "./../../../../../../../../third_party/polymer/v3_0/components-chromium/*"
+      ],
+      "chrome-untrusted://resources/polymer/v3_0/*": [
+        "./../../../../../../../../third_party/polymer/v3_0/components-chromium/*"
+      ],
+      "//resources/cr_components/color_change_listener/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "chrome-untrusted://resources/cr_components/color_change_listener/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "//resources/cr_components/composebox/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "chrome-untrusted://resources/cr_components/composebox/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "//resources/cr_components/help_bubble/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "chrome-untrusted://resources/cr_components/help_bubble/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "//resources/cr_components/search/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/search/*"
+      ],
+      "chrome-untrusted://resources/cr_components/search/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/search/*"
+      ],
+      "//resources/cr_components/searchbox/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "chrome-untrusted://resources/cr_components/searchbox/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome-untrusted://resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome-untrusted://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome-untrusted://resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "/lens/shared/*": [
+        "./../shared/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/cursor_tooltip.ts",
+    "preprocessed/initial_gradient.ts",
+    "preprocessed/lens_overlay_app.ts",
+    "preprocessed/object_layer.ts",
+    "preprocessed/overlay_shimmer_canvas.ts",
+    "preprocessed/post_selection_renderer.ts",
+    "preprocessed/region_selection.ts",
+    "preprocessed/selection_overlay.ts",
+    "preprocessed/side_panel/side_panel_app.ts",
+    "preprocessed/text_layer.ts",
+    "preprocessed/translate_button.ts",
+    "preprocessed/browser_proxy.ts",
+    "preprocessed/color_utils.ts",
+    "preprocessed/cubic_bezier.ts",
+    "preprocessed/find_words_in_region.ts",
+    "preprocessed/hit.ts",
+    "preprocessed/language_browser_proxy.ts",
+    "preprocessed/metrics_utils.ts",
+    "preprocessed/overlay_border_glow.html.ts",
+    "preprocessed/overlay_border_glow.ts",
+    "preprocessed/performance_tracker.ts",
+    "preprocessed/post_selection_paint_worklet.ts",
+    "preprocessed/screenshot_bitmap_browser_proxy.ts",
+    "preprocessed/screenshot_utils.ts",
+    "preprocessed/searchbox_utils.ts",
+    "preprocessed/selection_overlay_base.ts",
+    "preprocessed/selection_overlay_base_lit.ts",
+    "preprocessed/selection_overlay_base_handler.ts",
+    "preprocessed/selection_utils.ts",
+    "preprocessed/side_panel/feedback_toast.html.ts",
+    "preprocessed/side_panel/feedback_toast.ts",
+    "preprocessed/side_panel/post_message_communication.ts",
+    "preprocessed/side_panel/side_panel_browser_proxy.ts",
+    "preprocessed/side_panel/side_panel_error_page.html.ts",
+    "preprocessed/side_panel/side_panel_error_page.ts",
+    "preprocessed/side_panel/side_panel_ghost_loader.html.ts",
+    "preprocessed/side_panel/side_panel_ghost_loader.ts",
+    "preprocessed/simplified_text_layer.html.ts",
+    "preprocessed/simplified_text_layer.ts",
+    "preprocessed/text_highlights.ts",
+    "preprocessed/text_layer_base.ts",
+    "preprocessed/text_rendering.ts",
+    "preprocessed/values_converter.ts",
+    "preprocessed/wiggle.ts",
+    "preprocessed/cursor_tooltip.html.ts",
+    "preprocessed/initial_gradient.html.ts",
+    "preprocessed/lens_overlay_app.html.ts",
+    "preprocessed/object_layer.html.ts",
+    "preprocessed/overlay_shimmer_canvas.html.ts",
+    "preprocessed/post_selection_renderer.html.ts",
+    "preprocessed/region_selection.html.ts",
+    "preprocessed/selection_overlay.html.ts",
+    "preprocessed/side_panel/side_panel_app.html.ts",
+    "preprocessed/text_layer.html.ts",
+    "preprocessed/translate_button.html.ts",
+    "preprocessed/overlay_border_glow.css.ts",
+    "preprocessed/side_panel/feedback_toast.css.ts",
+    "preprocessed/side_panel/side_panel_error_page.css.ts",
+    "preprocessed/side_panel/side_panel_ghost_loader.css.ts",
+    "preprocessed/simplified_text_layer.css.ts",
+    "preprocessed/geometry.mojom-webui.ts",
+    "preprocessed/lens.mojom-webui.ts",
+    "preprocessed/lens_side_panel.mojom-webui.ts",
+    "preprocessed/overlay_object.mojom-webui.ts",
+    "preprocessed/page_content_type.mojom-webui.ts",
+    "preprocessed/polygon.mojom-webui.ts",
+    "preprocessed/text.mojom-webui.ts",
+    "preprocessed/translate.mojom-webui.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_event.d.ts",
+    "../../../../../../../../tools/typescript/definitions/language_settings_private.d.ts",
+    "../../../../../../../../tools/typescript/definitions/metrics_private.d.ts",
+    "../../../../../../../../chrome/browser/resources/lens/overlay/paint_api.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../shared/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/polymer/v3_0/tsconfig_library.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/color_change_listener/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/composebox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/help_bubble/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/search/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/searchbox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

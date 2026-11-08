@@ -1,0 +1,60 @@
+// Copyright 2016 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_icon/cr_icon.js';
+import '//resources/cr_elements/icons.html.js';
+import { assert } from '//resources/js/assert.js';
+import { loadTimeData } from '//resources/js/load_time_data.js';
+import { OpenWindowProxyImpl } from '//resources/js/open_window_proxy.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { ExtensionControlBrowserProxyImpl } from '../extension_control_browser_proxy.js';
+import { getCss } from './extension_controlled_indicator.css.js';
+import { getHtml } from './extension_controlled_indicator.html.js';
+export class ExtensionControlledIndicatorElement extends CrLitElement {
+    static get is() {
+        return 'extension-controlled-indicator';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            extensionCanBeDisabled: { type: Boolean },
+            extensionId: { type: String },
+            extensionName: { type: String },
+            extensionNameOnlyInLabel: { type: Boolean },
+        };
+    }
+    #extensionCanBeDisabled_accessor_storage = false;
+    get extensionCanBeDisabled() { return this.#extensionCanBeDisabled_accessor_storage; }
+    set extensionCanBeDisabled(value) { this.#extensionCanBeDisabled_accessor_storage = value; }
+    #extensionId_accessor_storage = '';
+    get extensionId() { return this.#extensionId_accessor_storage; }
+    set extensionId(value) { this.#extensionId_accessor_storage = value; }
+    #extensionName_accessor_storage = '';
+    get extensionName() { return this.#extensionName_accessor_storage; }
+    set extensionName(value) { this.#extensionName_accessor_storage = value; }
+    #extensionNameOnlyInLabel_accessor_storage = false;
+    get extensionNameOnlyInLabel() { return this.#extensionNameOnlyInLabel_accessor_storage; }
+    set extensionNameOnlyInLabel(value) { this.#extensionNameOnlyInLabel_accessor_storage = value; }
+    getLabel_() {
+        if (this.extensionNameOnlyInLabel) {
+            return this.extensionName;
+        }
+        return loadTimeData.getStringF('controlledByExtension', this.extensionName);
+    }
+    onManageClick_() {
+        const manageUrl = 'chrome://extensions/?id=' + this.extensionId;
+        OpenWindowProxyImpl.getInstance().openUrl(manageUrl);
+    }
+    onDisableClick_() {
+        assert(this.extensionCanBeDisabled);
+        ExtensionControlBrowserProxyImpl.getInstance().disableExtension(this.extensionId);
+        this.fire('disable-extension-click');
+    }
+}
+customElements.define(ExtensionControlledIndicatorElement.is, ExtensionControlledIndicatorElement);

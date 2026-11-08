@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/inline_login_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/inline_login_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/inline_login_resources_map.h"
+            type="resource_map_header" />
+    <output filename="inline_login_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_INLINE_LOGIN_INLINE_LOGIN_HTML" file="${root_gen_dir}/chrome/browser/resources/inline_login/preprocessed/inline_login.html" resource_path="inline_login.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_INLINE_LOGIN_INLINE_LOGIN_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/inline_login/minified/inline_login_app.html.js" resource_path="inline_login_app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_INLINE_LOGIN_INLINE_LOGIN_APP_JS" file="${root_gen_dir}/chrome/browser/resources/inline_login/minified/inline_login_app.js" resource_path="inline_login_app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_INLINE_LOGIN_INLINE_LOGIN_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/browser/resources/inline_login/minified/inline_login_browser_proxy.js" resource_path="inline_login_browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_INLINE_LOGIN_INLINE_LOGIN_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/inline_login/minified/inline_login_app.css.js" resource_path="inline_login_app.css.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

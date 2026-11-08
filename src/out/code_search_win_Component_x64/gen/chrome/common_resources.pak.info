@@ -1,0 +1,3 @@
+IDR_CHROME_EXTENSION_API_FEATURES,22100,../../chrome/common/common_resources.grd
+IDR_CHROME_APP_API_FEATURES,22101,../../chrome/common/common_resources.grd
+IDR_CHROME_CONTROLLED_FRAME_API_FEATURES,22102,../../chrome/common/common_resources.grd
