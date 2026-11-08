@@ -1,0 +1,26 @@
+diff --git a/content/browser/renderer_host/navigation_request.cc b/content/browser/renderer_host/navigation_request.cc
+index 4c35b986cf6c3880fdd0f1ed0a1026a921e28f82..2015a30081d73c7336432c26a3193c740d217344 100644
+--- a/content/browser/renderer_host/navigation_request.cc
++++ b/content/browser/renderer_host/navigation_request.cc
+@@ -4061,6 +4061,9 @@ void NavigationRequest::OnRequestRedirected(
+   }
+ 
+   common_params_->referrer->url = GURL(redirect_info.new_referrer);
++  GetContentClient()->browser()->MaybeHideReferrer(
++      browser_context, common_params_->url,
++      GetTopDocumentGURL(frame_tree_node_), &common_params_->referrer);
+   common_params_->referrer = Referrer::SanitizeForRequest(
+       common_params_->url, *common_params_->referrer);
+ 
+@@ -6449,7 +6452,10 @@ void NavigationRequest::OnStartChecksComplete(
+   bool is_visible = GetWebContents() &&
+                     GetWebContents()->GetVisibility() == Visibility::VISIBLE;
+ 
+-  loader_ = NavigationURLLoader::Create(
++  GetContentClient()->browser()->MaybeHideReferrer(
++    browser_context, common_params_->url,
++    GetTopDocumentGURL(frame_tree_node_), &common_params_->referrer);
++loader_ = NavigationURLLoader::Create(
+       browser_context, partition,
+       std::make_unique<NavigationRequestInfo>(
+           common_params_->Clone(), begin_params_.Clone(), sandbox_flags,

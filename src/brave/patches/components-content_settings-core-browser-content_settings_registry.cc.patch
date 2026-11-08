@@ -1,0 +1,20 @@
+diff --git a/components/content_settings/core/browser/content_settings_registry.cc b/components/content_settings/core/browser/content_settings_registry.cc
+index fe3eded783d8fb287ca49eb55576456e3adc5fb3..741d683ee3032e031cb9c4e58a79ece5d8a1f18d 100644
+--- a/components/content_settings/core/browser/content_settings_registry.cc
++++ b/components/content_settings/core/browser/content_settings_registry.cc
+@@ -119,6 +119,7 @@ void ContentSettingsRegistry::Init() {
+            WebsiteSettingsInfo::TOP_ORIGIN_ONLY_SCOPE,
+            WebsiteSettingsRegistry::DESKTOP |
+                WebsiteSettingsRegistry::PLATFORM_ANDROID
++               | WebsiteSettingsRegistry::PLATFORM_IOS
+ #if BUILDFLAG(USE_BLINK)
+                | WebsiteSettingsRegistry::PLATFORM_IOS
+ #endif
+@@ -830,6 +831,7 @@ void ContentSettingsRegistry::Init() {
+            WebsiteSettingsRegistry::DESKTOP,
+            ContentSettingsInfo::INHERIT_IN_INCOGNITO,
+            PermissionSettingsInfo::EXCEPTIONS_ON_SECURE_AND_INSECURE_ORIGINS);
++  BRAVE_INIT
+ }
+ 
+ void ContentSettingsRegistry::Register(

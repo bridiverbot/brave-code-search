@@ -1,0 +1,30 @@
+diff --git a/components/sync/base/user_selectable_type.cc b/components/sync/base/user_selectable_type.cc
+index 6d6d315ac6197985b044536094261235f06ba793..0dc6e9d0a0eec3c8f462d28c92c7b03a88410791 100644
+--- a/components/sync/base/user_selectable_type.cc
++++ b/components/sync/base/user_selectable_type.cc
+@@ -52,7 +52,7 @@ UserSelectableTypeInfo GetUserSelectableTypeInfo(
+   // TODO(crbug.com/445840788): In CL #3, map CONTEXTUAL_TASK to an existing
+   // selectable type or to a new one. The first option should be trivial, the
+   // second requires touching UI code across platforms.
+-  static_assert(64 == syncer::GetNumDataTypes(),
++  static_assert(64 + 1 == syncer::GetNumDataTypes(),
+                 "Almost always when adding a new Data, you must tie it to "
+                 "a UserSelectableType below (new or existing) so the user can "
+                 "disable syncing of that data. Today you must also update the "
+@@ -139,6 +139,8 @@ UserSelectableTypeInfo GetUserSelectableTypeInfo(
+           kProductComparisonTypeName, PRODUCT_COMPARISON, {PRODUCT_COMPARISON}};
+     case UserSelectableType::kCookies:
+       return {kCookiesTypeName, COOKIES, {COOKIES}};
++    case UserSelectableType::kAIChat:
++      return {kAIChatTypeName, AI_CHAT_CONVERSATION, {AI_CHAT_CONVERSATION}};
+   }
+   NOTREACHED();
+ }
+@@ -194,6 +196,7 @@ std::optional<UserSelectableType> GetUserSelectableTypeFromString(
+           {kSavedTabGroupsTypeName, UserSelectableType::kSavedTabGroups},
+           {kProductComparisonTypeName, UserSelectableType::kProductComparison},
+           {kCookiesTypeName, UserSelectableType::kCookies},
++          {kAIChatTypeName, UserSelectableType::kAIChat},
+       });
+   if (auto it = kTypeMap.find(type); it != kTypeMap.end()) {
+     return it->second;

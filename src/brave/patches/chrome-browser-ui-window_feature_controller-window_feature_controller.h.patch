@@ -1,0 +1,14 @@
+diff --git a/chrome/browser/ui/window_feature_controller/window_feature_controller.h b/chrome/browser/ui/window_feature_controller/window_feature_controller.h
+index 3e12ea5d95fe1e7a64f1bd19d959651359f9fda3..a72ee0a89ed255b7a83ab1b72018a3a6b3d3bd3b 100644
+--- a/chrome/browser/ui/window_feature_controller/window_feature_controller.h
++++ b/chrome/browser/ui/window_feature_controller/window_feature_controller.h
+@@ -69,6 +69,9 @@ class WindowFeatureController {
+   bool UsesImmersiveFullscreenTabbedMode() const;
+ #endif
+ 
++ protected:
++  raw_ptr<ui::UnownedUserDataHost> unowned_user_data_host_;
++
+  private:
+   bool NormalBrowserSupportsWindowFeature(WindowFeature feature,
+                                           bool check_can_support) const;

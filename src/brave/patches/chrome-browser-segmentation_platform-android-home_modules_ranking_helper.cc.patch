@@ -1,0 +1,28 @@
+diff --git a/chrome/browser/segmentation_platform/android/home_modules_ranking_helper.cc b/chrome/browser/segmentation_platform/android/home_modules_ranking_helper.cc
+index 2d92fb22f27c48795b9f468cc28c2ccef7016c0e..e603072cb8429c0bea9bda47ed19f373f8a6aa4c 100644
+--- a/chrome/browser/segmentation_platform/android/home_modules_ranking_helper.cc
++++ b/chrome/browser/segmentation_platform/android/home_modules_ranking_helper.cc
+@@ -50,6 +50,7 @@ static void JNI_HomeModulesRankingHelper_GetClassificationResult(
+   segmentation_platform::home_modules::HomeModulesCardRegistry* registry =
+       segmentation_platform::SegmentationPlatformServiceFactory::
+           GetHomeModulesCardRegistry(profile);
++  BRAVE_JNI_HOME_MODULES_RANKING_HELPER_GET_CLASSIFICATION_RESULT
+   scoped_refptr<segmentation_platform::InputContext> native_input_context =
+       segmentation_platform::InputContextAndroid::ToNativeInputContext(
+           env, input_context);
+@@ -70,6 +71,7 @@ static void JNI_HomeModulesRankingHelper_NotifyCardShown(
+   segmentation_platform::home_modules::HomeModulesCardRegistry* registry =
+       segmentation_platform::SegmentationPlatformServiceFactory::
+           GetHomeModulesCardRegistry(profile);
++  BRAVE_JNI_HOME_MODULES_RANKING_HELPER_NOTIFY_CARD_SHOWN
+   registry->NotifyCardShown(card_label.c_str());
+ }
+ 
+@@ -80,6 +82,7 @@ static void JNI_HomeModulesRankingHelper_NotifyCardInteracted(
+   segmentation_platform::home_modules::HomeModulesCardRegistry* registry =
+       segmentation_platform::SegmentationPlatformServiceFactory::
+           GetHomeModulesCardRegistry(profile);
++  BRAVE_JNI_HOME_MODULES_RANKING_HELPER_NOTIFY_CARD_INTERACTED
+   registry->NotifyCardInteracted(card_label.c_str());
+ }
+ 
