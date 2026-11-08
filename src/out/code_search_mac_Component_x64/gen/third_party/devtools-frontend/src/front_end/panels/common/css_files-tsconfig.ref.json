@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "skipLibCheck": true
+  },
+  "files": [
+    "aiCodeCompletionSummaryToolbar.css.js",
+    "badgeNotification.css.js",
+    "commentThreadWidget.css.js",
+    "commentsOverlay.css.js",
+    "domLinkifier.css.js",
+    "gdpSignUpDialog.css.js",
+    "geminiRebrandPromoDialog.css.js"
+  ]
+}
