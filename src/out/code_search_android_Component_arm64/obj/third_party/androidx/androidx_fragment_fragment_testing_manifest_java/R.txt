@@ -1,0 +1,2 @@
+int id androidx_fragment_testing_container 0x0
+int style FragmentScenarioEmptyFragmentActivityTheme 0x0

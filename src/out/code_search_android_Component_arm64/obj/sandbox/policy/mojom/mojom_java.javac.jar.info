@@ -1,0 +1,2 @@
+org.chromium.sandbox.mojom.Context,gen/sandbox/policy/mojom/mojom_java_sources.srcjar/org/chromium/sandbox/mojom/Context.java
+org.chromium.sandbox.mojom.Sandbox,gen/sandbox/policy/mojom/mojom_java_sources.srcjar/org/chromium/sandbox/mojom/Sandbox.java

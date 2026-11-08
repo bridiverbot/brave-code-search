@@ -1,0 +1,2 @@
+org.chromium.components.payments.browser_binding.BrowserBoundKey,../../components/payments/content/android/spc/java/src/org/chromium/components/payments/browser_binding/BrowserBoundKey.java
+org.chromium.components.payments.browser_binding.BrowserBoundKeyStore,../../components/payments/content/android/spc/java/src/org/chromium/components/payments/browser_binding/BrowserBoundKeyStore.java

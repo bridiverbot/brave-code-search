@@ -1,0 +1,4 @@
+org.chromium.chrome.browser.picture_in_picture.AutoPiPTabModelObserverHelperTestUtils,../../chrome/browser/picture_in_picture/test/android/java/src/org/chromium/chrome/browser/picture_in_picture/AutoPiPTabModelObserverHelperTestUtils.java
+org.chromium.chrome.browser.picture_in_picture.AutoPiPTabModelObserverHelperTestUtilsJni,gen/chrome/browser/picture_in_picture/test/jni_headers.srcjar/org/chromium/chrome/browser/picture_in_picture/AutoPiPTabModelObserverHelperTestUtilsJni.java
+org.chromium.chrome.browser.picture_in_picture.AutoPictureInPictureTabHelperTestUtils,../../chrome/browser/picture_in_picture/test/android/java/src/org/chromium/chrome/browser/picture_in_picture/AutoPictureInPictureTabHelperTestUtils.java
+org.chromium.chrome.browser.picture_in_picture.AutoPictureInPictureTabHelperTestUtilsJni,gen/chrome/browser/picture_in_picture/test/jni_headers.srcjar/org/chromium/chrome/browser/picture_in_picture/AutoPictureInPictureTabHelperTestUtilsJni.java

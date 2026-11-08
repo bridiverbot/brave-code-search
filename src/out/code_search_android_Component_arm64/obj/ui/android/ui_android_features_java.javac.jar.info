@@ -1,0 +1,4 @@
+org.chromium.ui.base.UiAndroidFeatureList,../../ui/android/java/src/org/chromium/ui/base/UiAndroidFeatureList.java
+org.chromium.ui.base.UiAndroidFeatureMap,../../ui/android/java/src/org/chromium/ui/base/UiAndroidFeatureMap.java
+org.chromium.ui.base.UiAndroidFeatureMapJni,gen/ui/android/ui_android_feature_map_jni.srcjar/org/chromium/ui/base/UiAndroidFeatureMapJni.java
+org.chromium.ui.base.UiAndroidFeatures,gen/ui/android/java_features_srcjar.srcjar/org/chromium/ui/base/UiAndroidFeatures.java

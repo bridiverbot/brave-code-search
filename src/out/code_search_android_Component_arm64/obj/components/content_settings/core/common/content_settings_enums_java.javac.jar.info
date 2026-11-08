@@ -1,0 +1,4 @@
+org.chromium.components.content_settings.ProviderType,gen/components/content_settings/core/common/content_settings_enums_java_sources.srcjar/org/chromium/components/content_settings/ProviderType.java
+org.chromium.components.content_settings.SessionModel,gen/components/content_settings/core/common/content_settings_enums_java_sources.srcjar/org/chromium/components/content_settings/SessionModel.java
+org.chromium.components.content_settings.TpcdMetadataCohort,gen/components/content_settings/core/common/content_settings_enums_java_sources.srcjar/org/chromium/components/content_settings/TpcdMetadataCohort.java
+org.chromium.components.content_settings.TpcdMetadataRuleSource,gen/components/content_settings/core/common/content_settings_enums_java_sources.srcjar/org/chromium/components/content_settings/TpcdMetadataRuleSource.java

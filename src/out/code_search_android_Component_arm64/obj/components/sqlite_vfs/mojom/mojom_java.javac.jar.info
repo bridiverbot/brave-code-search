@@ -1,0 +1,2 @@
+org.chromium.sqlite_vfs.mojom.PendingReadOnlyFileSet,gen/components/sqlite_vfs/mojom/mojom_java_sources.srcjar/org/chromium/sqlite_vfs/mojom/PendingReadOnlyFileSet.java
+org.chromium.sqlite_vfs.mojom.PendingReadWriteFileSet,gen/components/sqlite_vfs/mojom/mojom_java_sources.srcjar/org/chromium/sqlite_vfs/mojom/PendingReadWriteFileSet.java

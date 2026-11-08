@@ -1,0 +1,2 @@
+org.chromium.gfx.mojom.AHardwareBufferHandle,gen/ui/gfx/mojom/native_handle_types_java_sources.srcjar/org/chromium/gfx/mojom/AHardwareBufferHandle.java
+org.chromium.gfx.mojom.GpuMemoryBufferPlatformHandle,gen/ui/gfx/mojom/native_handle_types_java_sources.srcjar/org/chromium/gfx/mojom/GpuMemoryBufferPlatformHandle.java

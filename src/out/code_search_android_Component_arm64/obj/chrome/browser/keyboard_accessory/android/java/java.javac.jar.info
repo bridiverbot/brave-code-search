@@ -1,0 +1,15 @@
+org.chromium.chrome.browser.keyboard_accessory.AccessoryAction,gen/chrome/browser/keyboard_accessory/android/java_enums.srcjar/org/chromium/chrome/browser/keyboard_accessory/AccessoryAction.java
+org.chromium.chrome.browser.keyboard_accessory.AccessorySheetTrigger,gen/chrome/browser/keyboard_accessory/android/java/java_enums_srcjar.srcjar/org/chromium/chrome/browser/keyboard_accessory/AccessorySheetTrigger.java
+org.chromium.chrome.browser.keyboard_accessory.AccessorySheetVisualStateProvider,../../chrome/browser/keyboard_accessory/android/java/src/org/chromium/chrome/browser/keyboard_accessory/AccessorySheetVisualStateProvider.java
+org.chromium.chrome.browser.keyboard_accessory.AccessorySuggestionType,gen/chrome/browser/keyboard_accessory/android/java_enums.srcjar/org/chromium/chrome/browser/keyboard_accessory/AccessorySuggestionType.java
+org.chromium.chrome.browser.keyboard_accessory.AccessoryTabType,gen/chrome/browser/keyboard_accessory/android/java_enums.srcjar/org/chromium/chrome/browser/keyboard_accessory/AccessoryTabType.java
+org.chromium.chrome.browser.keyboard_accessory.AccessoryToggleType,gen/chrome/browser/keyboard_accessory/android/java_enums.srcjar/org/chromium/chrome/browser/keyboard_accessory/AccessoryToggleType.java
+org.chromium.chrome.browser.keyboard_accessory.EmptyManualFillingComponent,../../chrome/browser/keyboard_accessory/android/java/src/org/chromium/chrome/browser/keyboard_accessory/EmptyManualFillingComponent.java
+org.chromium.chrome.browser.keyboard_accessory.KeyboardAccessoryVisualStateProvider,../../chrome/browser/keyboard_accessory/android/java/src/org/chromium/chrome/browser/keyboard_accessory/KeyboardAccessoryVisualStateProvider.java
+org.chromium.chrome.browser.keyboard_accessory.ManualFillingComponent,../../chrome/browser/keyboard_accessory/android/java/src/org/chromium/chrome/browser/keyboard_accessory/ManualFillingComponent.java
+org.chromium.chrome.browser.keyboard_accessory.ManualFillingComponentSupplier,../../chrome/browser/keyboard_accessory/android/java/src/org/chromium/chrome/browser/keyboard_accessory/ManualFillingComponentSupplier.java
+org.chromium.chrome.browser.keyboard_accessory.NavigationAction,gen/chrome/browser/keyboard_accessory/android/java_enums.srcjar/org/chromium/chrome/browser/keyboard_accessory/NavigationAction.java
+org.chromium.chrome.browser.keyboard_accessory.data.CachedProviderAdapter,../../chrome/browser/keyboard_accessory/android/java/src/org/chromium/chrome/browser/keyboard_accessory/data/CachedProviderAdapter.java
+org.chromium.chrome.browser.keyboard_accessory.data.KeyboardAccessoryData,../../chrome/browser/keyboard_accessory/android/java/src/org/chromium/chrome/browser/keyboard_accessory/data/KeyboardAccessoryData.java
+org.chromium.chrome.browser.keyboard_accessory.data.Provider,../../chrome/browser/keyboard_accessory/android/java/src/org/chromium/chrome/browser/keyboard_accessory/data/Provider.java
+org.chromium.chrome.browser.keyboard_accessory.data.UserInfoField,../../chrome/browser/keyboard_accessory/android/java/src/org/chromium/chrome/browser/keyboard_accessory/data/UserInfoField.java

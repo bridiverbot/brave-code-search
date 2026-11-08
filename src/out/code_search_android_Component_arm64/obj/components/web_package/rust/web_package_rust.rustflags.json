@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/web_package/rust/web_package_rust",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../components/web_package/rust/lib.rs",
+        "@obj/components/web_package/rust/web_package_rust.rsp.rust"
+    ]
+}

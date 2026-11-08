@@ -1,0 +1,4 @@
+org.chromium.chrome.browser.commerce.CommerceBottomSheetContent,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/CommerceBottomSheetContent.java
+org.chromium.chrome.browser.commerce.CommerceBottomSheetContentBinder,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/CommerceBottomSheetContentBinder.java
+org.chromium.chrome.browser.commerce.CommerceBottomSheetContentCoordinator,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/CommerceBottomSheetContentCoordinator.java
+org.chromium.chrome.browser.commerce.CommerceBottomSheetContentMediator,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/CommerceBottomSheetContentMediator.java

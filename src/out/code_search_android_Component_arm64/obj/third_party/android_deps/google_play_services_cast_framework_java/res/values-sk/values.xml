@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-sk/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">Reklama</string>
+<string name="cast_casting_to_device">Prenáša sa do zariadenia %1$s</string>
+<string name="cast_closed_captions">Skryté titulky</string>
+<string name="cast_closed_captions_unavailable">Skryté titulky nie sú k dispozícii</string>
+<string name="cast_connecting_to_device">Pripája sa k zariadeniu %1$s</string>
+<string name="cast_disconnect">Odpojiť</string>
+<string name="cast_expanded_controller_ad_image_description">Obrázok, ktorý sa zobrazí, keď prijímač prenášaného obsahu bude prehrávať reklamu</string>
+<string name="cast_expanded_controller_ad_in_progress">Zobrazená reklama…</string>
+<string name="cast_expanded_controller_background_image">Obrázok albumu</string>
+<string name="cast_expanded_controller_live_head_description">Aktuálna pozícia je na začiatku priameho prenosu</string>
+<string name="cast_expanded_controller_live_stream_indicator">Živé vysielanie</string>
+<string name="cast_expanded_controller_loading">Načítava sa…</string>
+<string name="cast_expanded_controller_skip_ad_label">Preskočiť reklamu</string>
+<string name="cast_expanded_controller_skip_ad_text">Reklamu môžete preskočiť o %1$d…</string>
+<string name="cast_forward">Pretočiť dopredu</string>
+<string name="cast_forward_10">Pretočiť dopredu desať sekúnd</string>
+<string name="cast_forward_30">Pretočiť dopredu tridsať sekúnd</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">NAŽIVO</string>
+<string name="cast_mute">Vypnúť zvuk</string>
+<string name="cast_pause">Pozastaviť</string>
+<string name="cast_play">Prehrať</string>
+<string name="cast_rewind">Pretočiť späť</string>
+<string name="cast_rewind_10">Pretočiť späť desať sekúnd</string>
+<string name="cast_rewind_30">Pretočiť spať tridsať sekúnd</string>
+<string name="cast_seek_bar">Posúvač prehrávania</string>
+<string name="cast_skip_next">Preskočiť na ďalšiu položku</string>
+<string name="cast_skip_prev">Preskočiť na predchádzajúcu položku</string>
+<string name="cast_stop">Zastaviť</string>
+<string name="cast_stop_live_stream">Zastaviť priamy prenos</string>
+<string name="cast_tracks_chooser_dialog_audio">Zvuk</string>
+<string name="cast_tracks_chooser_dialog_cancel">Zrušiť</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">Skryté titulky</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">%1$d. skladba</string>
+<string name="cast_tracks_chooser_dialog_none">Žiadne</string>
+<string name="cast_tracks_chooser_dialog_ok">OK</string>
+<string name="cast_tracks_chooser_dialog_subtitles">Titulky</string>
+<string name="cast_unmute">Zapnúť zvuk</string>
+<string name="media_notification_channel_name">Prenos</string>
+</resources>

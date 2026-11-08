@@ -1,0 +1,5 @@
+org.chromium.chrome.browser.compositor.overlay_panel.OverlayPanelManagerWrapper,../../chrome/android/javatests/src/org/chromium/chrome/browser/compositor/overlay_panel/OverlayPanelManagerWrapper.java
+org.chromium.chrome.browser.customtabs.CustomTabsIntentTestUtils,../../chrome/android/javatests/src/org/chromium/chrome/browser/customtabs/CustomTabsIntentTestUtils.java
+org.chromium.chrome.browser.download.MockDownloadNotificationService,../../chrome/android/javatests/src/org/chromium/chrome/browser/download/MockDownloadNotificationService.java
+org.chromium.chrome.browser.download.TestDownloadDirectoryProvider,../../chrome/android/javatests/src/org/chromium/chrome/browser/download/TestDownloadDirectoryProvider.java
+org.chromium.chrome.browser.tabmodel.TestTabModelDirectory,../../chrome/android/javatests/src/org/chromium/chrome/browser/tabmodel/TestTabModelDirectory.java

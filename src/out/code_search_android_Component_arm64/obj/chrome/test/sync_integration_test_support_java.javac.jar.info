@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.sync.SyncTestSigninUtils,../../chrome/android/javatests/src/org/chromium/chrome/browser/sync/SyncTestSigninUtils.java
+org.chromium.chrome.browser.sync.SyncTestSigninUtilsJni,gen/chrome/test/sync_integration_test_support_jni_headers.srcjar/org/chromium/chrome/browser/sync/SyncTestSigninUtilsJni.java
+org.chromium.chrome.browser.sync.SyncTestTabGroupHelpers,../../chrome/android/javatests/src/org/chromium/chrome/browser/sync/SyncTestTabGroupHelpers.java

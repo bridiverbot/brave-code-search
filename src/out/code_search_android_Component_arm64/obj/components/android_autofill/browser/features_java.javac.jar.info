@@ -1,0 +1,2 @@
+org.chromium.components.autofill.AndroidAutofillFeatures,../../components/android_autofill/browser/java/src/org/chromium/components/autofill/AndroidAutofillFeatures.java
+org.chromium.components.autofill.AndroidAutofillFeaturesJni,gen/components/android_autofill/browser/jni_headers_features.srcjar/org/chromium/components/autofill/AndroidAutofillFeaturesJni.java

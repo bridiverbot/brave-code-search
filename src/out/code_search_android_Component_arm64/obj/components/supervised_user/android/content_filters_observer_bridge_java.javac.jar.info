@@ -1,0 +1,3 @@
+org.chromium.components.supervised_user.ContentFiltersObserverBridge,../../components/supervised_user/android/java/src/org/chromium/components/supervised_user/ContentFiltersObserverBridge.java
+org.chromium.components.supervised_user.ContentFiltersObserverBridgeJni,gen/components/supervised_user/android/jni_headers.srcjar/org/chromium/components/supervised_user/ContentFiltersObserverBridgeJni.java
+org.chromium.components.supervised_user.SupervisedUserConstants,gen/components/supervised_user/android/constants_srcjar.srcjar/org/chromium/components/supervised_user/SupervisedUserConstants.java

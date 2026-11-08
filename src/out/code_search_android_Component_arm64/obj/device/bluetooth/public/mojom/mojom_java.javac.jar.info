@@ -1,0 +1,4 @@
+org.chromium.bluetooth.mojom.GattCharacteristicPermissions,gen/device/bluetooth/public/mojom/mojom_java_sources.srcjar/org/chromium/bluetooth/mojom/GattCharacteristicPermissions.java
+org.chromium.bluetooth.mojom.GattCharacteristicProperties,gen/device/bluetooth/public/mojom/mojom_java_sources.srcjar/org/chromium/bluetooth/mojom/GattCharacteristicProperties.java
+org.chromium.bluetooth.mojom.GattServiceErrorCode,gen/device/bluetooth/public/mojom/mojom_java_sources.srcjar/org/chromium/bluetooth/mojom/GattServiceErrorCode.java
+org.chromium.bluetooth.mojom.Uuid,gen/device/bluetooth/public/mojom/mojom_java_sources.srcjar/org/chromium/bluetooth/mojom/Uuid.java

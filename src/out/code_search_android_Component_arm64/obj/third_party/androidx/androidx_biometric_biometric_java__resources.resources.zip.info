@@ -1,0 +1,4 @@
+color-v26/biometric_error_color.xml	../../third_party/androidx/cipd/libs/androidx_biometric_biometric/biometric.aar/res/color-v26/biometric_error_color.xml
+drawable/fingerprint_dialog_error.xml	../../third_party/androidx/cipd/libs/androidx_biometric_biometric/biometric.aar/res/drawable/fingerprint_dialog_error.xml
+drawable/fingerprint_dialog_fp_icon.xml	../../third_party/androidx/cipd/libs/androidx_biometric_biometric/biometric.aar/res/drawable/fingerprint_dialog_fp_icon.xml
+layout/fingerprint_dialog_layout.xml	../../third_party/androidx/cipd/libs/androidx_biometric_biometric/biometric.aar/res/layout/fingerprint_dialog_layout.xml

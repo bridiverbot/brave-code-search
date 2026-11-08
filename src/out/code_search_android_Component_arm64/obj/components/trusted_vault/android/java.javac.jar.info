@@ -1,0 +1,3 @@
+org.chromium.components.trusted_vault.SecurityDomainId,gen/components/trusted_vault/android/java_enums.srcjar/org/chromium/components/trusted_vault/SecurityDomainId.java
+org.chromium.components.trusted_vault.TrustedVaultClient,../../components/trusted_vault/android/java/src/org/chromium/components/trusted_vault/TrustedVaultClient.java
+org.chromium.components.trusted_vault.TrustedVaultClientJni,gen/components/trusted_vault/android/jni_headers.srcjar/org/chromium/components/trusted_vault/TrustedVaultClientJni.java

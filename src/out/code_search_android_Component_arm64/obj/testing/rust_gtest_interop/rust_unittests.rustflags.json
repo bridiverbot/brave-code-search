@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/testing/rust_gtest_interop/rust_unittests",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../testing/rust_gtest_interop/rust_gtest_interop_unittest.rs",
+        "@obj/testing/rust_gtest_interop/rust_unittests.rsp.rust"
+    ]
+}

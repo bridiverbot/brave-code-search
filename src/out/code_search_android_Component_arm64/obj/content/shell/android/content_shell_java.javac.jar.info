@@ -1,0 +1,5 @@
+org.chromium.content_shell.Shell,../../content/shell/android/java/src/org/chromium/content_shell/Shell.java
+org.chromium.content_shell.ShellJni,gen/content/shell/android/content_shell_jni_headers.srcjar/org/chromium/content_shell/ShellJni.java
+org.chromium.content_shell.ShellManager,../../content/shell/android/java/src/org/chromium/content_shell/ShellManager.java
+org.chromium.content_shell.ShellManagerJni,gen/content/shell/android/content_shell_jni_headers.srcjar/org/chromium/content_shell/ShellManagerJni.java
+org.chromium.content_shell.ShellViewAndroidDelegate,../../content/shell/android/java/src/org/chromium/content_shell/ShellViewAndroidDelegate.java

@@ -1,0 +1,2 @@
+org.chromium.components.webxr.WebXrAndroidFeatureMap,../../components/webxr/android/java/src/org/chromium/components/webxr/WebXrAndroidFeatureMap.java
+org.chromium.components.webxr.WebXrAndroidFeatureMapJni,gen/components/webxr/android/features_jni.srcjar/org/chromium/components/webxr/WebXrAndroidFeatureMapJni.java

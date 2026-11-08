@@ -1,0 +1,2 @@
+org.chromium.components.thinwebview.CompositorViewFactory,../../components/thin_webview/java/src/org/chromium/components/thinwebview/CompositorViewFactory.java
+org.chromium.components.thinwebview.ThinWebViewFactory,../../components/thin_webview/java/src/org/chromium/components/thinwebview/ThinWebViewFactory.java

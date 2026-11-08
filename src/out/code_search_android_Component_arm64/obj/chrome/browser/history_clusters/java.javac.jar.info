@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.history_clusters.HistoryClustersTabHelper,../../chrome/browser/history_clusters/java/src/org/chromium/chrome/browser/history_clusters/HistoryClustersTabHelper.java
+org.chromium.chrome.browser.history_clusters.HistoryClustersTabHelperJni,gen/chrome/browser/history_clusters/jni_headers.srcjar/org/chromium/chrome/browser/history_clusters/HistoryClustersTabHelperJni.java

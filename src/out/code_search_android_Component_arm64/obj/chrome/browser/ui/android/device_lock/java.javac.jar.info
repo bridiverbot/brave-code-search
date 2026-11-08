@@ -1,0 +1,12 @@
+org.chromium.chrome.browser.ui.device_lock.DeviceLockCoordinator,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/DeviceLockCoordinator.java
+org.chromium.chrome.browser.ui.device_lock.DeviceLockMediator,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/DeviceLockMediator.java
+org.chromium.chrome.browser.ui.device_lock.DeviceLockProperties,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/DeviceLockProperties.java
+org.chromium.chrome.browser.ui.device_lock.DeviceLockUtils,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/DeviceLockUtils.java
+org.chromium.chrome.browser.ui.device_lock.DeviceLockView,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/DeviceLockView.java
+org.chromium.chrome.browser.ui.device_lock.DeviceLockViewBinder,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/DeviceLockViewBinder.java
+org.chromium.chrome.browser.ui.device_lock.MissingDeviceLockCoordinator,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/MissingDeviceLockCoordinator.java
+org.chromium.chrome.browser.ui.device_lock.MissingDeviceLockLauncher,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/MissingDeviceLockLauncher.java
+org.chromium.chrome.browser.ui.device_lock.MissingDeviceLockMediator,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/MissingDeviceLockMediator.java
+org.chromium.chrome.browser.ui.device_lock.MissingDeviceLockProperties,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/MissingDeviceLockProperties.java
+org.chromium.chrome.browser.ui.device_lock.MissingDeviceLockView,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/MissingDeviceLockView.java
+org.chromium.chrome.browser.ui.device_lock.MissingDeviceLockViewBinder,../../chrome/browser/ui/android/device_lock/java/src/org/chromium/chrome/browser/ui/device_lock/MissingDeviceLockViewBinder.java

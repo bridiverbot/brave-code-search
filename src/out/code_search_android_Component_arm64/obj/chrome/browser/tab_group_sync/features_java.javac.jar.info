@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncFeatures,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncFeatures.java
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncFeaturesJni,gen/chrome/browser/tab_group_sync/utils_jni_headers.srcjar/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncFeaturesJni.java

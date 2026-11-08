@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncServiceFactory,../../chrome/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncServiceFactory.java
+org.chromium.chrome.browser.tab_group_sync.TabGroupSyncServiceFactoryJni,gen/chrome/browser/tab_group_sync/factory_jni_headers.srcjar/org/chromium/chrome/browser/tab_group_sync/TabGroupSyncServiceFactoryJni.java

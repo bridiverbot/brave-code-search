@@ -1,0 +1,2 @@
+org.chromium.device.serial.ChromeSerialManager,../../services/device/serial/android/java/src/org/chromium/device/serial/ChromeSerialManager.java
+org.chromium.device.serial.ChromeSerialManagerJni,gen/services/device/serial/jni_headers.srcjar/org/chromium/device/serial/ChromeSerialManagerJni.java

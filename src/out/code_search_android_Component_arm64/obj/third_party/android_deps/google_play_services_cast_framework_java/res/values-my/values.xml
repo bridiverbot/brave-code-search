@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-my/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">Ad</string>
+<string name="cast_casting_to_device">%1$s သို့ကာစ်တ်လုပ်နေသည်</string>
+<string name="cast_closed_captions">စာတန်းထိုးများ</string>
+<string name="cast_closed_captions_unavailable">စာတန်းထိုး မရနိုင်ပါ</string>
+<string name="cast_connecting_to_device">%1$s နှင့် ချိတ်ဆက်နေပါသည်</string>
+<string name="cast_disconnect">ဆက်သွယ်မှုဖြုတ်ပါ</string>
+<string name="cast_expanded_controller_ad_image_description">ကာ့စ်လက်ခံကိရိယာက ကြော်ငြာဖွင့်နေစဉ် ပြသသော ပုံ</string>
+<string name="cast_expanded_controller_ad_in_progress">Ad လုပ်ဆောင်နေဆဲ…</string>
+<string name="cast_expanded_controller_background_image">အယ်လ်ဘမ်ပုံ</string>
+<string name="cast_expanded_controller_live_head_description">လက်ရှိနေရာသည် တိုက်ရိုက်လွှင့်ခြင်း၏ အစပိုင်းဖြစ်သည်</string>
+<string name="cast_expanded_controller_live_stream_indicator">တိုက်ရိုက်ထုတ်လွှင့်မှု</string>
+<string name="cast_expanded_controller_loading">ဖွင့်နေသည်…</string>
+<string name="cast_expanded_controller_skip_ad_label">ကြော်ငြာကို ကျော်ရန်</string>
+<string name="cast_expanded_controller_skip_ad_text">ကြော်ငြာကို %1$d တွင် ကျော်နိုင်သည်…</string>
+<string name="cast_forward">အရှေ့သို့ရစ်ပါ</string>
+<string name="cast_forward_10">အရှေ့သို့ ဆယ်စက္ကန့် ရစ်ပါ</string>
+<string name="cast_forward_30">အရှေ့သို့ စက္ကန့်သုံးဆယ် ရစ်ပါ</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">တိုက်ရိုက်လွှင့်ခြင်း</string>
+<string name="cast_mute">အသံပိတ်ပါ</string>
+<string name="cast_pause">ခဏရပ်ပါ</string>
+<string name="cast_play">ဖွင့်ပါ</string>
+<string name="cast_rewind">အနောက်သို့ရစ်ပါ</string>
+<string name="cast_rewind_10">အနောက်သို့ ဆယ်စက္ကန့် ပြန်ရစ်ပါ</string>
+<string name="cast_rewind_30">အနောက်သို့ စက္ကန့်သုံးဆယ် ပြန်ရစ်ပါ</string>
+<string name="cast_seek_bar">ဖွင့်ခြင်းဆိုင်ရာ ရှာဖွေခြင်း ထိန်းချုပ်မှု</string>
+<string name="cast_skip_next">နောက်တစ်ခုသို့ ကျော်ပါ</string>
+<string name="cast_skip_prev">ပြီးခဲ့သည့်တစ်ခုသို့ ပြန်သွားပါ</string>
+<string name="cast_stop">ရပ်ပါ</string>
+<string name="cast_stop_live_stream">တိုက်ရိုက်ထုတ်လွှင့်ခြင်းကို ရပ်ပါ</string>
+<string name="cast_tracks_chooser_dialog_audio">အသံ</string>
+<string name="cast_tracks_chooser_dialog_cancel">မလုပ်တော့</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">စာတန်းထိုးများ</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">အပုဒ်ရေ %1$d</string>
+<string name="cast_tracks_chooser_dialog_none">မရှိပါ</string>
+<string name="cast_tracks_chooser_dialog_ok">OK</string>
+<string name="cast_tracks_chooser_dialog_subtitles">စာတန်းထိုးများ</string>
+<string name="cast_unmute">အသံပြန်ဖွင့်ပါ</string>
+<string name="media_notification_channel_name">ကာစ်လုပ်ရန်</string>
+</resources>

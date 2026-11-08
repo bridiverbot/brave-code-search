@@ -1,0 +1,5 @@
+org.chromium.components.autofill.AutofillHintsServiceTestHelper,../../components/android_autofill/browser/test_support/java/src/org/chromium/components/autofill/AutofillHintsServiceTestHelper.java
+org.chromium.components.autofill.AutofillProviderTestHelper,../../components/android_autofill/browser/test_support/java/src/org/chromium/components/autofill/AutofillProviderTestHelper.java
+org.chromium.components.autofill.AutofillProviderTestHelperJni,gen/components/android_autofill/browser/test_support/jni_headers.srcjar/org/chromium/components/autofill/AutofillProviderTestHelperJni.java
+org.chromium.components.autofill.FormFieldDataBuilder,../../components/android_autofill/browser/test_support/java/src/org/chromium/components/autofill/FormFieldDataBuilder.java
+org.chromium.components.autofill.TestViewStructure,../../components/android_autofill/browser/test_support/java/src/org/chromium/components/autofill/TestViewStructure.java

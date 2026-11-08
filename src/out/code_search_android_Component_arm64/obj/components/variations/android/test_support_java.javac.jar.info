@@ -1,0 +1,2 @@
+org.chromium.components.variations.NormalizedMurmurHashEntropyProviderTestUtilsBridge,../../components/variations/android/javatests/src/org/chromium/components/variations/NormalizedMurmurHashEntropyProviderTestUtilsBridge.java
+org.chromium.components.variations.NormalizedMurmurHashEntropyProviderTestUtilsBridgeJni,gen/components/variations/android/test_support_jni_headers.srcjar/org/chromium/components/variations/NormalizedMurmurHashEntropyProviderTestUtilsBridgeJni.java

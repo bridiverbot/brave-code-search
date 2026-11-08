@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.pdf.PdfCoordinatorInterface,../../chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfCoordinatorInterface.java
+org.chromium.chrome.browser.pdf.PdfEntryPoint,../../chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfEntryPoint.java
+org.chromium.chrome.browser.pdf.PdfFragmentViewTracker,../../chrome/browser/ui/android/pdf/java/src/org/chromium/chrome/browser/pdf/PdfFragmentViewTracker.java

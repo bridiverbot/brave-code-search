@@ -1,0 +1,5 @@
+org.chromium.components.omnibox.OmniboxCapabilities,../../components/omnibox/common/android/java/src/org/chromium/components/omnibox/OmniboxCapabilities.java
+org.chromium.components.omnibox.OmniboxFeatureList,gen/components/omnibox/common/java_features_srcjar.srcjar/org/chromium/components/omnibox/OmniboxFeatureList.java
+org.chromium.components.omnibox.OmniboxFeatureMap,../../components/omnibox/common/android/java/src/org/chromium/components/omnibox/OmniboxFeatureMap.java
+org.chromium.components.omnibox.OmniboxFeatureMapJni,gen/components/omnibox/common/jni_headers.srcjar/org/chromium/components/omnibox/OmniboxFeatureMapJni.java
+org.chromium.components.omnibox.OmniboxFeatures,../../components/omnibox/common/android/java/src/org/chromium/components/omnibox/OmniboxFeatures.java

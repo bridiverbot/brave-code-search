@@ -1,0 +1,6 @@
+org.chromium.chrome.browser.password_manager.PasswordStoreAndroidBackend,../../chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordStoreAndroidBackend.java
+org.chromium.chrome.browser.password_manager.PasswordStoreAndroidBackendFactory,../../chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordStoreAndroidBackendFactory.java
+org.chromium.chrome.browser.password_manager.PasswordStoreAndroidBackendFactoryUpstreamImpl,../../chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordStoreAndroidBackendFactoryUpstreamImpl.java
+org.chromium.chrome.browser.password_manager.PasswordSyncControllerDelegate,../../chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordSyncControllerDelegate.java
+org.chromium.chrome.browser.password_manager.PasswordSyncControllerDelegateFactory,../../chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordSyncControllerDelegateFactory.java
+org.chromium.chrome.browser.password_manager.PasswordSyncControllerDelegateFactoryUpstreamImpl,../../chrome/browser/password_manager/android/java/src/org/chromium/chrome/browser/password_manager/PasswordSyncControllerDelegateFactoryUpstreamImpl.java

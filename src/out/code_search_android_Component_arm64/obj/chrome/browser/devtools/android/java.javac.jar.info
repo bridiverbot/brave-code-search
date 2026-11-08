@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.devtools.DevToolsWindowAndroid,../../chrome/browser/devtools/android/java/src/org/chromium/chrome/browser/devtools/DevToolsWindowAndroid.java
+org.chromium.chrome.browser.devtools.DevToolsWindowAndroidJni,gen/chrome/browser/devtools/android/jni.srcjar/org/chromium/chrome/browser/devtools/DevToolsWindowAndroidJni.java

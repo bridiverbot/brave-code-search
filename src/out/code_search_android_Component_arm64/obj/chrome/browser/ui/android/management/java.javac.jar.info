@@ -1,0 +1,6 @@
+org.chromium.chrome.browser.management.ManagementCoordinator,../../chrome/browser/ui/android/management/java/src/org/chromium/chrome/browser/management/ManagementCoordinator.java
+org.chromium.chrome.browser.management.ManagementMediator,../../chrome/browser/ui/android/management/java/src/org/chromium/chrome/browser/management/ManagementMediator.java
+org.chromium.chrome.browser.management.ManagementPage,../../chrome/browser/ui/android/management/java/src/org/chromium/chrome/browser/management/ManagementPage.java
+org.chromium.chrome.browser.management.ManagementProperties,../../chrome/browser/ui/android/management/java/src/org/chromium/chrome/browser/management/ManagementProperties.java
+org.chromium.chrome.browser.management.ManagementView,../../chrome/browser/ui/android/management/java/src/org/chromium/chrome/browser/management/ManagementView.java
+org.chromium.chrome.browser.management.ManagementViewBinder,../../chrome/browser/ui/android/management/java/src/org/chromium/chrome/browser/management/ManagementViewBinder.java

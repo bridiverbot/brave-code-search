@@ -1,0 +1,2 @@
+org.chromium.native_test.MainRunner,../../testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java
+org.chromium.native_test.MainRunnerJni,gen/testing/android/native_test/native_main_runner_jni.srcjar/org/chromium/native_test/MainRunnerJni.java

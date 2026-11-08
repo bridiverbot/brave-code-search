@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.android.httpclient.AnnotatedSimpleHttpClient,../../chrome/browser/android/httpclient/java/src/org/chromium/chrome/browser/android/httpclient/AnnotatedSimpleHttpClient.java
+org.chromium.chrome.browser.android.httpclient.SimpleHttpClient,../../chrome/browser/android/httpclient/java/src/org/chromium/chrome/browser/android/httpclient/SimpleHttpClient.java
+org.chromium.chrome.browser.android.httpclient.SimpleHttpClientJni,gen/chrome/browser/android/httpclient/jni_headers.srcjar/org/chromium/chrome/browser/android/httpclient/SimpleHttpClientJni.java

@@ -1,0 +1,9 @@
+org.chromium.chrome.browser.FederatedIdentityTestUtils,../../chrome/android/javatests/src/org/chromium/chrome/browser/FederatedIdentityTestUtils.java
+org.chromium.chrome.browser.FederatedIdentityTestUtilsJni,gen/chrome/android/chrome_test_util_jni.srcjar/org/chromium/chrome/browser/FederatedIdentityTestUtilsJni.java
+org.chromium.chrome.browser.customtabs.CustomTabActivityTestRule,../../chrome/android/javatests/src/org/chromium/chrome/browser/customtabs/CustomTabActivityTestRule.java
+org.chromium.chrome.browser.customtabs.CustomTabsTestUtils,../../chrome/android/javatests/src/org/chromium/chrome/browser/customtabs/CustomTabsTestUtils.java
+org.chromium.chrome.browser.customtabs.CustomTabsTestUtilsJni,gen/chrome/android/chrome_test_util_jni.srcjar/org/chromium/chrome/browser/customtabs/CustomTabsTestUtilsJni.java
+org.chromium.chrome.browser.modaldialog.ChromeModalDialogTestUtils,../../chrome/android/javatests/src/org/chromium/chrome/browser/modaldialog/ChromeModalDialogTestUtils.java
+org.chromium.chrome.browser.payments.PaymentRequestTestRule,../../chrome/android/javatests/src/org/chromium/chrome/browser/payments/PaymentRequestTestRule.java
+org.chromium.chrome.browser.webapps.TestFetchStorageCallback,../../chrome/android/javatests/src/org/chromium/chrome/browser/webapps/TestFetchStorageCallback.java
+org.chromium.chrome.browser.webapps.WebappActivityTestRule,../../chrome/android/javatests/src/org/chromium/chrome/browser/webapps/WebappActivityTestRule.java

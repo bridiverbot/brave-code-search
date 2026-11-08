@@ -1,0 +1,4 @@
+gen/chrome/grit/guest_view_shared_resources.h
+gen/chrome/grit/guest_view_shared_resources_map.cc
+gen/chrome/grit/guest_view_shared_resources_map.h
+gen/chrome/guest_view_shared_resources.pak

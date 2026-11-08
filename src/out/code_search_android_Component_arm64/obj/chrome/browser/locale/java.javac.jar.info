@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.locale.LocaleManager,../../chrome/browser/locale/java/src/org/chromium/chrome/browser/locale/LocaleManager.java
+org.chromium.chrome.browser.locale.LocaleManagerDelegate,../../chrome/browser/locale/java/src/org/chromium/chrome/browser/locale/LocaleManagerDelegate.java

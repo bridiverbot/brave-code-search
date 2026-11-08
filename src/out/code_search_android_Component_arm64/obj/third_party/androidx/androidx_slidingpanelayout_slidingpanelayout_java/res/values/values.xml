@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draggable_divider_handler">Draggable divider handler</string>
+    <string name="draggable_divider_handler_state_left_edge">Right pane expanded</string>
+    <string name="draggable_divider_handler_state_right_edge">Left pane expanded</string>
+    <style name="Widget.SlidingPaneLayout" parent="">
+        <item name="userResizingDividerDrawable">@drawable/slidingpanelayout_divider</item>
+    </style>
+    <declare-styleable name="SlidingPaneLayout">
+        <attr format="boolean" name="isOverlappingEnabled"/>
+        <attr format="boolean" name="isUserResizingEnabled"/>
+        <attr format="reference" name="userResizingDividerDrawable"/>
+        <attr format="color" name="userResizingDividerTint"/>
+        <attr format="boolean" name="isChildClippingToResizeDividerEnabled"/>
+        <attr format="enum" name="userResizeBehavior">
+            <enum name="relayoutWhenComplete" value="0"/>
+            <enum name="relayoutWhenMoved" value="1"/>
+        </attr>
+        <attr format="dimension" name="paneSpacing"/>
+    </declare-styleable>
+    <declare-styleable name="SlidingPaneLayout_Layout">
+        <attr name="android:layout_weight"/>
+    </declare-styleable>
+</resources>

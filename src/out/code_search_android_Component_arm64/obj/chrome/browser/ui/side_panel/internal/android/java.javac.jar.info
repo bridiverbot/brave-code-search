@@ -1,0 +1,8 @@
+org.chromium.chrome.browser.ui.side_panel.SidePanelContainerCoordinatorFactory,../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/SidePanelContainerCoordinatorFactory.java
+org.chromium.chrome.browser.ui.side_panel.SidePanelContainerCoordinatorImpl,../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/SidePanelContainerCoordinatorImpl.java
+org.chromium.chrome.browser.ui.side_panel.SidePanelCoordinatorAndroidBridge,../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/SidePanelCoordinatorAndroidBridge.java
+org.chromium.chrome.browser.ui.side_panel.SidePanelCoordinatorAndroidBridgeJni,gen/chrome/browser/ui/side_panel/internal/android/jni_headers.srcjar/org/chromium/chrome/browser/ui/side_panel/SidePanelCoordinatorAndroidBridgeJni.java
+org.chromium.chrome.browser.ui.side_panel.SidePanelNativeBridgeSelector,../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/SidePanelNativeBridgeSelector.java
+org.chromium.chrome.browser.ui.side_panel.SidePanelResizeManager,../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/SidePanelResizeManager.java
+org.chromium.chrome.browser.ui.side_panel.WindowScopedSidePanelRegistryBridge,../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/WindowScopedSidePanelRegistryBridge.java
+org.chromium.chrome.browser.ui.side_panel.WindowScopedSidePanelRegistryBridgeJni,gen/chrome/browser/ui/side_panel/internal/android/jni_headers.srcjar/org/chromium/chrome/browser/ui/side_panel/WindowScopedSidePanelRegistryBridgeJni.java

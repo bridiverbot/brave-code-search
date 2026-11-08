@@ -1,0 +1,3 @@
+org.chromium.components.paintpreview.player.FrameData,../../components/paint_preview/player/android/javatests/src/org/chromium/components/paintpreview/player/FrameData.java
+org.chromium.components.paintpreview.player.PaintPreviewTestService,../../components/paint_preview/player/android/javatests/src/org/chromium/components/paintpreview/player/PaintPreviewTestService.java
+org.chromium.components.paintpreview.player.PaintPreviewTestServiceJni,gen/components/paint_preview/player/android/javatests_jni_headers.srcjar/org/chromium/components/paintpreview/player/PaintPreviewTestServiceJni.java

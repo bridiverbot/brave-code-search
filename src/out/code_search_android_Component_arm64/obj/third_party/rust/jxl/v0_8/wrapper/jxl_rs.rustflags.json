@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/jxl/v0_8/wrapper/jxl_rs",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/jxl/v0_8/wrapper/lib.rs",
+        "@obj/third_party/rust/jxl/v0_8/wrapper/jxl_rs.rsp.rust"
+    ]
+}

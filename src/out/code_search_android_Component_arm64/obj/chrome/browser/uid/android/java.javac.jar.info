@@ -1,0 +1,4 @@
+org.chromium.chrome.browser.uid.SettingsSecureBasedIdentificationGenerator,../../chrome/browser/uid/android/java/src/org/chromium/chrome/browser/uid/SettingsSecureBasedIdentificationGenerator.java
+org.chromium.chrome.browser.uid.UniqueIdentificationGenerator,../../chrome/browser/uid/android/java/src/org/chromium/chrome/browser/uid/UniqueIdentificationGenerator.java
+org.chromium.chrome.browser.uid.UniqueIdentificationGeneratorFactory,../../chrome/browser/uid/android/java/src/org/chromium/chrome/browser/uid/UniqueIdentificationGeneratorFactory.java
+org.chromium.chrome.browser.uid.UuidBasedUniqueIdentificationGenerator,../../chrome/browser/uid/android/java/src/org/chromium/chrome/browser/uid/UuidBasedUniqueIdentificationGenerator.java

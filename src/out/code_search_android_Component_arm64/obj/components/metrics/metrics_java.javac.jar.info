@@ -1,0 +1,5 @@
+org.chromium.components.metrics.LimitedEntropyRandomizationSource,../../components/metrics/android/java/src/org/chromium/components/metrics/LimitedEntropyRandomizationSource.java
+org.chromium.components.metrics.LowEntropySource,../../components/metrics/android/java/src/org/chromium/components/metrics/LowEntropySource.java
+org.chromium.components.metrics.MetricsFeatures,gen/components/metrics/java_features_srcjar.srcjar/org/chromium/components/metrics/MetricsFeatures.java
+org.chromium.components.metrics.MetricsSwitches,gen/components/metrics/java_switches_srcjar.srcjar/org/chromium/components/metrics/MetricsSwitches.java
+org.chromium.components.metrics.StabilityEventType,gen/components/metrics/java_enum_srcjar.srcjar/org/chromium/components/metrics/StabilityEventType.java

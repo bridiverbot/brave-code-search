@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-ja/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">広告</string>
+<string name="cast_casting_to_device">「%1$s」にキャストしています</string>
+<string name="cast_closed_captions">クローズド キャプション</string>
+<string name="cast_closed_captions_unavailable">クローズド キャプションを使用できません</string>
+<string name="cast_connecting_to_device">「%1$s」に接続しています</string>
+<string name="cast_disconnect">接続を解除</string>
+<string name="cast_expanded_controller_ad_image_description">Cast レシーバーが広告を再生している間に表示された画像</string>
+<string name="cast_expanded_controller_ad_in_progress">広告の編集中…</string>
+<string name="cast_expanded_controller_background_image">アルバムアート</string>
+<string name="cast_expanded_controller_live_head_description">現在の位置はライブ ストリームの先頭です</string>
+<string name="cast_expanded_controller_live_stream_indicator">ライブ ストリーム</string>
+<string name="cast_expanded_controller_loading">読み込んでいます…</string>
+<string name="cast_expanded_controller_skip_ad_label">広告をスキップ</string>
+<string name="cast_expanded_controller_skip_ad_text">広告は %1$d 後にスキップできます…</string>
+<string name="cast_forward">早送り</string>
+<string name="cast_forward_10">10 秒早送り</string>
+<string name="cast_forward_30">30 秒早送り</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">ライブ</string>
+<string name="cast_mute">ミュート</string>
+<string name="cast_pause">一時停止</string>
+<string name="cast_play">再生</string>
+<string name="cast_rewind">巻き戻し</string>
+<string name="cast_rewind_10">10 秒巻き戻し</string>
+<string name="cast_rewind_30">30 秒巻き戻し</string>
+<string name="cast_seek_bar">再生スライダー</string>
+<string name="cast_skip_next">次の項目にスキップ</string>
+<string name="cast_skip_prev">前の項目にスキップ</string>
+<string name="cast_stop">停止</string>
+<string name="cast_stop_live_stream">ライブ ストリームを停止</string>
+<string name="cast_tracks_chooser_dialog_audio">音声</string>
+<string name="cast_tracks_chooser_dialog_cancel">キャンセル</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">クローズド キャプション</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">トラック %1$d</string>
+<string name="cast_tracks_chooser_dialog_none">なし</string>
+<string name="cast_tracks_chooser_dialog_ok">OK</string>
+<string name="cast_tracks_chooser_dialog_subtitles">字幕</string>
+<string name="cast_unmute">ミュートを解除</string>
+<string name="media_notification_channel_name">Cast</string>
+</resources>

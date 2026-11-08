@@ -1,0 +1,17 @@
+org.chromium.media.mojom.AvailabilityStatus,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/AvailabilityStatus.java
+org.chromium.media.mojom.OnDeviceSpeechRecognition,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/OnDeviceSpeechRecognition.java
+org.chromium.media.mojom.OnDeviceSpeechRecognition_Internal,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/OnDeviceSpeechRecognition_Internal.java
+org.chromium.media.mojom.SpeechAudioErrorDetails,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechAudioErrorDetails.java
+org.chromium.media.mojom.SpeechRecognitionError,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionError.java
+org.chromium.media.mojom.SpeechRecognitionErrorCode,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionErrorCode.java
+org.chromium.media.mojom.SpeechRecognitionGrammar,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionGrammar.java
+org.chromium.media.mojom.SpeechRecognitionHypothesis,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionHypothesis.java
+org.chromium.media.mojom.SpeechRecognitionQuality,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionQuality.java
+org.chromium.media.mojom.SpeechRecognitionSession,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionSession.java
+org.chromium.media.mojom.SpeechRecognitionSessionClient,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionSessionClient.java
+org.chromium.media.mojom.SpeechRecognitionSessionClient_Internal,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionSessionClient_Internal.java
+org.chromium.media.mojom.SpeechRecognitionSession_Internal,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionSession_Internal.java
+org.chromium.media.mojom.SpeechRecognizer,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognizer.java
+org.chromium.media.mojom.SpeechRecognizer_Internal,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognizer_Internal.java
+org.chromium.media.mojom.StartSpeechRecognitionRequestParams,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/StartSpeechRecognitionRequestParams.java
+org.chromium.media.mojom.WebSpeechRecognitionResult,gen/media/mojo/mojom/web_speech_recognition_java_sources.srcjar/org/chromium/media/mojom/WebSpeechRecognitionResult.java

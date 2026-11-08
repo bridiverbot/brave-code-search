@@ -1,0 +1,5 @@
+org.chromium.components.download.DownloadCollectionBridge,../../components/download/internal/common/android/java/src/org/chromium/components/download/DownloadCollectionBridge.java
+org.chromium.components.download.DownloadCollectionBridgeJni,gen/components/download/internal/common/jni_headers.srcjar/org/chromium/components/download/DownloadCollectionBridgeJni.java
+org.chromium.components.download.DownloadDelegate,../../components/download/internal/common/android/java/src/org/chromium/components/download/DownloadDelegate.java
+org.chromium.components.download.DownloadDocumentUriBridge,../../components/download/internal/common/android/java/src/org/chromium/components/download/DownloadDocumentUriBridge.java
+org.chromium.components.download.InMemoryDownloadFile,../../components/download/internal/common/android/java/src/org/chromium/components/download/InMemoryDownloadFile.java

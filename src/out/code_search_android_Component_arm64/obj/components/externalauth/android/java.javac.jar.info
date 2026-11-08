@@ -1,0 +1,3 @@
+org.chromium.components.externalauth.ExternalAuthGoogleDelegate,../../components/externalauth/android/java/src/org/chromium/components/externalauth/ExternalAuthGoogleDelegate.java
+org.chromium.components.externalauth.ExternalAuthUtils,../../components/externalauth/android/java/src/org/chromium/components/externalauth/ExternalAuthUtils.java
+org.chromium.components.externalauth.UserRecoverableErrorHandler,../../components/externalauth/android/java/src/org/chromium/components/externalauth/UserRecoverableErrorHandler.java

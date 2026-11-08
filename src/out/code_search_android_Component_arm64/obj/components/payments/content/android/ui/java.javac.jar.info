@@ -1,0 +1,5 @@
+org.chromium.components.payments.ui.CurrencyFormatter,../../components/payments/content/android/ui/java/src/org/chromium/components/payments/ui/CurrencyFormatter.java
+org.chromium.components.payments.ui.CurrencyFormatterJni,gen/components/payments/content/android/ui/jni_headers.srcjar/org/chromium/components/payments/ui/CurrencyFormatterJni.java
+org.chromium.components.payments.ui.InputProtector,../../components/payments/content/android/ui/java/src/org/chromium/components/payments/ui/InputProtector.java
+org.chromium.components.payments.ui.ItemDividerBase,../../components/payments/content/android/ui/java/src/org/chromium/components/payments/ui/ItemDividerBase.java
+org.chromium.components.payments.ui.PaymentsUiUtil,../../components/payments/content/android/ui/java/src/org/chromium/components/payments/ui/PaymentsUiUtil.java

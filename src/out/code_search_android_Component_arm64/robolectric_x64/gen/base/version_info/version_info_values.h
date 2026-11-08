@@ -1,0 +1,15 @@
+// Copyright 2010 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef BASE_VERSION_INFO_VERSION_INFO_VALUES_H_
+#define BASE_VERSION_INFO_VERSION_INFO_VALUES_H_
+
+#include "build/build_config.h"
+
+#define PRODUCT_NAME "Brave Browser Development"
+#define PRODUCT_VERSION "158.1.101.0"
+#define LAST_CHANGE "0000000000000000000000000000000000000000-0000000000000000000000000000000000000000"
+#define IS_OFFICIAL_BUILD 0
+
+#endif  // BASE_VERSION_INFO_VERSION_INFO_VALUES_H_

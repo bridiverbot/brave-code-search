@@ -1,0 +1,3 @@
+org.chromium.components.payments.PaymentFeatureList,../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentFeatureList.java
+org.chromium.components.payments.PaymentFeatureMap,../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentFeatureMap.java
+org.chromium.components.payments.PaymentFeatureMapJni,gen/components/payments/content/android/feature_list_jni.srcjar/org/chromium/components/payments/PaymentFeatureMapJni.java

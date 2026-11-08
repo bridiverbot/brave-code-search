@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-sw/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">Tangazo</string>
+<string name="cast_casting_to_device">Inatuma kwa %1$s</string>
+<string name="cast_closed_captions">Manukuu yanayoweza kufichwa na kuonyeshwa</string>
+<string name="cast_closed_captions_unavailable">Manukuu hayapatikani</string>
+<string name="cast_connecting_to_device">Inaunganisha na %1$s</string>
+<string name="cast_disconnect">Kata muunganisho</string>
+<string name="cast_expanded_controller_ad_image_description">Picha inayoonyeshwa wakati kipokezi cha kutuma kinaonyesha tangazo</string>
+<string name="cast_expanded_controller_ad_in_progress">Tangazo linaendelea...</string>
+<string name="cast_expanded_controller_background_image">Sanaa ya albamu</string>
+<string name="cast_expanded_controller_live_head_description">Nafasi ya sasa iko katika kichwa cha mtiririko wa moja kwa moja</string>
+<string name="cast_expanded_controller_live_stream_indicator">Mtiririko wa moja kwa moja</string>
+<string name="cast_expanded_controller_loading">Inapakia…</string>
+<string name="cast_expanded_controller_skip_ad_label">Ruka Tangazo</string>
+<string name="cast_expanded_controller_skip_ad_text">Unaweza kuruka tangazo baada ya %1$d…</string>
+<string name="cast_forward">Sambaza</string>
+<string name="cast_forward_10">Sogeza mbele kwa sekunde kumi</string>
+<string name="cast_forward_30">Sogeza mbele kwa sekunde thelathini</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">MOJA KWA MOJA</string>
+<string name="cast_mute">Zima sauti</string>
+<string name="cast_pause">Sitisha</string>
+<string name="cast_play">Cheza</string>
+<string name="cast_rewind">Rudisha nyuma</string>
+<string name="cast_rewind_10">Rudisha nyuma kwa sekunde kumi</string>
+<string name="cast_rewind_30">Rudisha nyuma kwa sekunde thelathini</string>
+<string name="cast_seek_bar">Kidhibiti cha kutafuta kucheza</string>
+<string name="cast_skip_next">Nenda kwenye kipengee kinachofuata</string>
+<string name="cast_skip_prev">Rudi kwenye kipengee kilichotangulia</string>
+<string name="cast_stop">Simamisha</string>
+<string name="cast_stop_live_stream">Acha kutiririsha moja kwa moja</string>
+<string name="cast_tracks_chooser_dialog_audio">Sauti</string>
+<string name="cast_tracks_chooser_dialog_cancel">Ghairi</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">Manukuu</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">Wimbo wa %1$d</string>
+<string name="cast_tracks_chooser_dialog_none">Hamna</string>
+<string name="cast_tracks_chooser_dialog_ok">Sawa</string>
+<string name="cast_tracks_chooser_dialog_subtitles">Manukuu</string>
+<string name="cast_unmute">Rejesha sauti</string>
+<string name="media_notification_channel_name">Tuma</string>
+</resources>

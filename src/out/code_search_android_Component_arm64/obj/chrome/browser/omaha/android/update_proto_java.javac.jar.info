@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.omaha.metrics.UpdateProtos,gen/chrome/browser/omaha/android/update_proto_java__protoc_java.srcjar/org/chromium/chrome/browser/omaha/metrics/UpdateProtos.java
+org.chromium.chrome.browser.omaha.metrics.UpdateProtosIntDef,gen/chrome/browser/omaha/android/update_proto_java__protoc_java.srcjar/org/chromium/chrome/browser/omaha/metrics/UpdateProtosIntDef.java

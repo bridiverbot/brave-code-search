@@ -1,0 +1,3 @@
+org.chromium.components.collaboration.comments.AttributionLevel,gen/components/collaboration/public/comments_enums_java.srcjar/org/chromium/components/collaboration/comments/AttributionLevel.java
+org.chromium.components.collaboration.comments.CommentType,gen/components/collaboration/public/comments_enums_java.srcjar/org/chromium/components/collaboration/comments/CommentType.java
+org.chromium.components.collaboration.comments.CommentsService,../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/comments/CommentsService.java

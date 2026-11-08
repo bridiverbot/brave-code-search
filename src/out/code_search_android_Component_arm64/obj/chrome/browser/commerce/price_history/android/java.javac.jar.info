@@ -1,0 +1,4 @@
+org.chromium.chrome.browser.price_history.PriceHistoryBottomSheetContentCoordinator,../../chrome/browser/commerce/price_history/android/java/src/org/chromium/chrome/browser/price_history/PriceHistoryBottomSheetContentCoordinator.java
+org.chromium.chrome.browser.price_history.PriceHistoryBottomSheetContentMediator,../../chrome/browser/commerce/price_history/android/java/src/org/chromium/chrome/browser/price_history/PriceHistoryBottomSheetContentMediator.java
+org.chromium.chrome.browser.price_history.PriceHistoryBottomSheetContentProperties,../../chrome/browser/commerce/price_history/android/java/src/org/chromium/chrome/browser/price_history/PriceHistoryBottomSheetContentProperties.java
+org.chromium.chrome.browser.price_history.PriceHistoryBottomSheetContentViewBinder,../../chrome/browser/commerce/price_history/android/java/src/org/chromium/chrome/browser/price_history/PriceHistoryBottomSheetContentViewBinder.java

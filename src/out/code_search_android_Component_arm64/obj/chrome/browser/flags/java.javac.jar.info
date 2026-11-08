@@ -1,0 +1,11 @@
+org.chromium.chrome.browser.flags.ActivityType,gen/chrome/browser/flags/chrome_browser_flags_enums_srcjar.srcjar/org/chromium/chrome/browser/flags/ActivityType.java
+org.chromium.chrome.browser.flags.ChromeFeatureList,../../chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeFeatureList.java
+org.chromium.chrome.browser.flags.ChromeFeatureMap,../../chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeFeatureMap.java
+org.chromium.chrome.browser.flags.ChromeFeatureMapJni,gen/chrome/browser/flags/jni_headers.srcjar/org/chromium/chrome/browser/flags/ChromeFeatureMapJni.java
+org.chromium.chrome.browser.flags.ChromeFeatures,gen/chrome/browser/flags/java_flags.srcjar/org/chromium/chrome/browser/flags/ChromeFeatures.java
+org.chromium.chrome.browser.flags.ChromeSessionState,../../chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeSessionState.java
+org.chromium.chrome.browser.flags.ChromeSessionStateJni,gen/chrome/browser/flags/jni_headers.srcjar/org/chromium/chrome/browser/flags/ChromeSessionStateJni.java
+org.chromium.chrome.browser.flags.ChromeSwitches,gen/chrome/browser/flags/chrome_android_java_switches_srcjar.srcjar/org/chromium/chrome/browser/flags/ChromeSwitches.java
+org.chromium.chrome.browser.flags.CustomTabProfileType,gen/chrome/browser/flags/chrome_browser_flags_enums_srcjar.srcjar/org/chromium/chrome/browser/flags/CustomTabProfileType.java
+org.chromium.chrome.browser.flags.DarkModeState,gen/chrome/browser/flags/chrome_browser_flags_enums_srcjar.srcjar/org/chromium/chrome/browser/flags/DarkModeState.java
+org.chromium.chrome.browser.flags.MultipleUserProfilesState,gen/chrome/browser/flags/chrome_browser_flags_enums_srcjar.srcjar/org/chromium/chrome/browser/flags/MultipleUserProfilesState.java
