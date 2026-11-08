@@ -1,0 +1,4 @@
+gen/brave/browser/resources/ai_chat_agent_new_tab_page/grit/ai_chat_agent_new_tab_page_generated.h
+gen/brave/browser/resources/ai_chat_agent_new_tab_page/grit/ai_chat_agent_new_tab_page_generated_map.cc
+gen/brave/browser/resources/ai_chat_agent_new_tab_page/grit/ai_chat_agent_new_tab_page_generated_map.h
+gen/brave/browser/resources/ai_chat_agent_new_tab_page/ai_chat_agent_new_tab_page_generated.pak

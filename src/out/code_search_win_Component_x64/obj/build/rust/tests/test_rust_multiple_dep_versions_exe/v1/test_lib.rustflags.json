@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_rust_multiple_dep_versions_exe/v1/test_lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../build/rust/tests/test_rust_multiple_dep_versions_exe/v1/test_lib/crate"
+    },
+    "rustflags": [
+        "../../build/rust/tests/test_rust_multiple_dep_versions_exe/v1/src/lib.rs",
+        "@obj/build/rust/tests/test_rust_multiple_dep_versions_exe/v1/test_lib.rsp.rust"
+    ]
+}

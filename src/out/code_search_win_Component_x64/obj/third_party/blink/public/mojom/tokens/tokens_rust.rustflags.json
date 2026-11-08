@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/blink/public/mojom/tokens/tokens_rust",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "gen/third_party/blink/public/mojom/tokens/tokens/lib.rs",
+        "@obj/third_party/blink/public/mojom/tokens/tokens_rust.rsp.rust"
+    ]
+}

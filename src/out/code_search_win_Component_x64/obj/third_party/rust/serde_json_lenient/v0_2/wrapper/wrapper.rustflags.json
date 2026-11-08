@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/serde_json_lenient/v0_2/wrapper/wrapper",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../third_party/rust/serde_json_lenient/v0_2/wrapper/lib.rs",
+        "@obj/third_party/rust/serde_json_lenient/v0_2/wrapper/wrapper.rsp.rust"
+    ]
+}

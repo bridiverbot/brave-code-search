@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/skia/bridge_rust_side",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../third_party/skia/src/ports/fontations/src/ffi.rs",
+        "@obj/skia/bridge_rust_side.rsp.rust"
+    ]
+}

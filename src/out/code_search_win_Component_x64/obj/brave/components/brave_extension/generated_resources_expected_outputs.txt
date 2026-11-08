@@ -1,0 +1,4 @@
+gen/brave/components/brave_extension/grit/brave_extension_generated.h
+gen/brave/components/brave_extension/grit/brave_extension_generated_map.cc
+gen/brave/components/brave_extension/grit/brave_extension_generated_map.h
+gen/brave/components/brave_extension/brave_extension_generated.pak

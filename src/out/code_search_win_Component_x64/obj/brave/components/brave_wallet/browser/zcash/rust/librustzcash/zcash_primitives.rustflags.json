@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/brave_wallet/browser/zcash/rust/librustzcash/zcash_primitives",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../brave/components/brave_wallet/browser/zcash/rust/librustzcash/src/zcash_primitives/src/lib.rs",
+        "@obj/brave/components/brave_wallet/browser/zcash/rust/librustzcash/zcash_primitives.rsp.rust"
+    ]
+}

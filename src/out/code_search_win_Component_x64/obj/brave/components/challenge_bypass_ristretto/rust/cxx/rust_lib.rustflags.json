@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/challenge_bypass_ristretto/rust/cxx/rust_lib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../brave/components/challenge_bypass_ristretto/rust/cxx/src/lib.rs",
+        "@obj/brave/components/challenge_bypass_ristretto/rust/cxx/rust_lib.rsp.rust"
+    ]
+}

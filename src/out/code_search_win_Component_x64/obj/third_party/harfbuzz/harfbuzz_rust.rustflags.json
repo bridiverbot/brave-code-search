@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/harfbuzz/harfbuzz_rust",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../third_party/harfbuzz/harfbuzz_rust/crate"
+    },
+    "rustflags": [
+        "../../third_party/harfbuzz/src/src/rust/lib.rs",
+        "@obj/third_party/harfbuzz/harfbuzz_rust.rsp.rust"
+    ]
+}

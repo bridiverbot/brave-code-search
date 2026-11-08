@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "win_clang_x64_with_system_allocator/gen/third_party/rust/serde/v1/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>",
+        "CARGO_PKG_VERSION": "1.0.229",
+        "CARGO_PKG_VERSION_MAJOR": "1",
+        "CARGO_PKG_VERSION_MINOR": "0",
+        "CARGO_PKG_VERSION_PATCH": "229",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "serde",
+        "CARGO_PKG_DESCRIPTION": "A generic serialization/deserialization framework",
+        "CARGO_PKG_REPOSITORY": "https://github.com/serde-rs/serde",
+        "CARGO_MANIFEST_DIR": "."
+    },
+    "rustflags": [
+        "../../third_party/rust/chromium_crates_io/vendor/serde-v1/src/lib.rs",
+        "@win_clang_x64_with_system_allocator/obj/third_party/rust/serde/v1/lib.rsp.rust"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/safe_browsing/content/renderer/phishing_classifier/rust/phishing_model_setter_bridge",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../components/safe_browsing/content/renderer/phishing_classifier/rust/phishing_model_setter_bridge.rs",
+        "@obj/components/safe_browsing/content/renderer/phishing_classifier/rust/phishing_model_setter_bridge.rsp.rust"
+    ]
+}

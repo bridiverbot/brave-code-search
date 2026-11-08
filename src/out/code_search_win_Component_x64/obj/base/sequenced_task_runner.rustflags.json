@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/base/sequenced_task_runner",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../base/task/sequenced_task_runner.rs",
+        "@obj/base/sequenced_task_runner.rsp.rust"
+    ]
+}

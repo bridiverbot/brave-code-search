@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/zip/v8/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Mathijs van de Nes <git@mathijs.vd-nes.nl>, Marli Frost <marli@frost.red>, Ryan Levick <ryan.levick@gmail.com>, Chris Hennick <hennickc@amazon.com>",
+        "CARGO_PKG_VERSION": "8.6.0",
+        "CARGO_PKG_VERSION_MAJOR": "8",
+        "CARGO_PKG_VERSION_MINOR": "6",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "zip",
+        "CARGO_PKG_DESCRIPTION": "Library to support the reading and writing of zip files.",
+        "CARGO_PKG_REPOSITORY": "https://github.com/zip-rs/zip2",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/zip/v8/lib/crate"
+    },
+    "rustflags": [
+        "../../third_party/rust/chromium_crates_io/vendor/zip-v8/src/lib.rs",
+        "@obj/third_party/rust/zip/v8/lib.rsp.rust"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/skia/rust_icc_ffi",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../third_party/skia/rust/icc/FFI.rs",
+        "@obj/skia/rust_icc_ffi.rsp.rust"
+    ]
+}

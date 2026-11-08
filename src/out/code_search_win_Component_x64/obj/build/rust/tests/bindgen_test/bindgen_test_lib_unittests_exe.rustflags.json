@@ -1,0 +1,38 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/bindgen_test/bindgen_test_lib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../build/rust/tests/bindgen_test/src/lib.rs",
+        "-Clink-arg=/CETCOMPAT",
+        "-Clink-arg=/WX",
+        "-Clink-arg=/alternatename:hypotf=_hypotf",
+        "-Clink-arg=/TIMESTAMP:1793509200",
+        "-Clink-arg=/lldignoreenv",
+        "-Clink-arg=/prefetch-inputs",
+        "-Clink-arg=/pdbpagesize:8192",
+        "-Clink-arg=/PDBSourcePath:/workspace/src/out/code_search_win_Component_x64",
+        "-Clink-arg=/DEBUG:GHASH",
+        "-Clink-arg=/pdbaltpath:%_PDB%",
+        "-Clink-arg=/NATVIS:../../build/config/c++/libc++.natvis",
+        "-Clink-arg=/DEFAULTLIB:msvcprt.lib",
+        "-Clink-arg=--color-diagnostics",
+        "-Clink-arg=/call-graph-profile-sort:no",
+        "-Clink-arg=/INCREMENTAL",
+        "-Clink-arg=/OPT:NOREF",
+        "-Clink-arg=/OPT:NOICF",
+        "-Clink-arg=/SUBSYSTEM:CONSOLE,10.0",
+        "-Clink-arg=/FIXED:NO",
+        "-Clink-arg=/ignore:4199",
+        "-Clink-arg=/ignore:4221",
+        "-Clink-arg=/NXCOMPAT",
+        "-Clink-arg=/DYNAMICBASE",
+        "-Clink-arg=/guard:cf",
+        "-Clink-arg=-libpath:../../third_party/llvm-build/Release+Asserts/lib/clang/24/lib/windows",
+        "-Clink-arg=/winsysroot:../../third_party/depot_tools/win_toolchain/vs_files/3dce9a2ec1",
+        "-Clink-arg=/MACHINE:X64",
+        "-Clink-arg=/PDB:./bindgen_test_lib_unittests.exe.pdb",
+        "@obj/build/rust/tests/bindgen_test/bindgen_test_lib_unittests_exe.rsp.rust"
+    ]
+}

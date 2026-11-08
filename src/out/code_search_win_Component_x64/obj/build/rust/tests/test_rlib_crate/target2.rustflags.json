@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_rlib_crate/target2",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "ENV_VAR_FOR_BUILD_SCRIPT": "42",
+        "CARGO_MANIFEST_DIR": "."
+    },
+    "rustflags": [
+        "../../build/rust/tests/test_rlib_crate/crate/src/lib.rs",
+        "@obj/build/rust/tests/test_rlib_crate/target2.rsp.rust"
+    ]
+}

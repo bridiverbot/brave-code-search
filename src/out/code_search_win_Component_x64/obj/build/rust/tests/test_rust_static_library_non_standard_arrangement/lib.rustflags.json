@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_rust_static_library_non_standard_arrangement/lib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../build/rust/tests/test_rust_static_library_non_standard_arrangement/foo.rs",
+        "@obj/build/rust/tests/test_rust_static_library_non_standard_arrangement/lib.rsp.rust"
+    ]
+}

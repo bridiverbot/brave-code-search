@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/facilitated_payments/core/validation/payment_qr_validator_rs",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../components/facilitated_payments/core/validation/payment_qr_validator.rs",
+        "@obj/components/facilitated_payments/core/validation/payment_qr_validator_rs.rsp.rust"
+    ]
+}

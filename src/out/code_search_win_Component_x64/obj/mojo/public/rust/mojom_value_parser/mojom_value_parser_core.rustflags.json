@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/mojo/public/rust/mojom_value_parser/mojom_value_parser_core",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../mojo/public/rust/mojom_value_parser/lib_core.rs",
+        "@obj/mojo/public/rust/mojom_value_parser/mojom_value_parser_core.rsp.rust"
+    ]
+}

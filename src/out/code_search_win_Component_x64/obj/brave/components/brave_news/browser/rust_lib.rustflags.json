@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/components/brave_news/browser/rust_lib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../brave/components/brave_news/browser/lib.rs",
+        "@obj/brave/components/brave_news/browser/rust_lib.rsp.rust"
+    ]
+}

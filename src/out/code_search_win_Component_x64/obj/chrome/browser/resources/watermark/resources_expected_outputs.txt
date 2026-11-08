@@ -1,0 +1,4 @@
+gen/chrome/grit/watermark_resources.h
+gen/chrome/grit/watermark_resources_map.cc
+gen/chrome/grit/watermark_resources_map.h
+gen/chrome/watermark_resources.pak

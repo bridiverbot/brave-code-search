@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/third_party/rust/bigdecimal/v0_1/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Andrew Kubera",
+        "CARGO_PKG_VERSION": "0.1.2",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "1",
+        "CARGO_PKG_VERSION_PATCH": "2",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "bigdecimal",
+        "CARGO_PKG_DESCRIPTION": "Arbitrary percision decimal numbers",
+        "CARGO_PKG_REPOSITORY": "https://github.com/akubera/bigdecimal-rs",
+        "CARGO_MANIFEST_DIR": "../../brave/third_party/rust/bigdecimal/v0_1/lib/crate"
+    },
+    "rustflags": [
+        "../../brave/third_party/rust/chromium_crates_io/vendor/bigdecimal-v0_1/src/lib.rs",
+        "@obj/brave/third_party/rust/bigdecimal/v0_1/lib.rsp.rust"
+    ]
+}

@@ -1,0 +1,7 @@
+{
+    "rustenv": {},
+    "rustflags": [
+        "gen/components/web_package/rust/web_package_rust.h.impl.rs",
+        "@obj/components/web_package/rust/web_package_rust_bindings_crubit_impl.rsp.rust"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/base/unguessable_token",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../base/unguessable_token.rs",
+        "@obj/base/unguessable_token.rsp.rust"
+    ]
+}

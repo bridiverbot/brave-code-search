@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/safe_browsing/content/common/interfaces_rust",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "gen/components/safe_browsing/content/common/interfaces/lib.rs",
+        "@obj/components/safe_browsing/content/common/interfaces_rust.rsp.rust"
+    ]
+}

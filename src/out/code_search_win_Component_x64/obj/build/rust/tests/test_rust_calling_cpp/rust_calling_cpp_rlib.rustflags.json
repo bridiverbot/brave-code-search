@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_rust_calling_cpp/rust_calling_cpp_rlib",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../build/rust/tests/test_rust_calling_cpp/rust_calling_cpp_rlib.rs",
+        "@obj/build/rust/tests/test_rust_calling_cpp/rust_calling_cpp_rlib.rsp.rust"
+    ]
+}

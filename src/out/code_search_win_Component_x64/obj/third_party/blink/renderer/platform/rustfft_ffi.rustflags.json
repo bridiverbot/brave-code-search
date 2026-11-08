@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/blink/renderer/platform/rustfft_ffi",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "../../third_party/blink/renderer/platform/audio/rustfft_ffi.rs",
+        "@obj/third_party/blink/renderer/platform/rustfft_ffi.rsp.rust"
+    ]
+}

@@ -1,0 +1,7 @@
+{
+    "rustenv": {},
+    "rustflags": [
+        "gen/third_party/blink/renderer/platform/fonts/ift_patcher_rs.h.impl.rs",
+        "@obj/third_party/blink/renderer/platform/fonts/ift_patcher_bindings_crubit_impl.rsp.rust"
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/cloud_authenticator/cbor/cbor",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../third_party/cloud_authenticator/cbor/cbor/crate"
+    },
+    "rustflags": [
+        "../../third_party/cloud_authenticator/cbor/src/lib.rs",
+        "@obj/third_party/cloud_authenticator/cbor/cbor.rsp.rust"
+    ]
+}
