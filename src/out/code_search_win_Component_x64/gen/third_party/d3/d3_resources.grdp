@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_D3_D3_MIN_JS" file="${root_src_dir}/third_party/d3/src/d3.min.js" resource_path="d3/d3.min.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
