@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/discards_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/discards_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/discards_resources_map.h"
+            type="resource_map_header" />
+    <output filename="discards_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_DISCARDS_DISCARDS_HTML" file="${root_gen_dir}/chrome/browser/resources/discards/preprocessed/discards.html" resource_path="discards.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DATABASE_TAB_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/database_tab.html.js" resource_path="database_tab.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DATABASE_TAB_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/database_tab.js" resource_path="database_tab.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DISCARDS_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/discards.js" resource_path="discards.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DISCARDS_MAIN_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/discards_main.html.js" resource_path="discards_main.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DISCARDS_MAIN_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/discards_main.js" resource_path="discards_main.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DISCARDS_TAB_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/discards_tab.html.js" resource_path="discards_tab.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DISCARDS_TAB_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/discards_tab.js" resource_path="discards_tab.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_GRAPH_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/graph.js" resource_path="graph.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_GRAPH_TAB_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/graph_tab.html.js" resource_path="graph_tab.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_GRAPH_TAB_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/graph_tab.js" resource_path="graph_tab.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_MEMORY_SECTION_DEFS_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/memory_section_defs.js" resource_path="memory_section_defs.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_MEMORY_TAB_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/memory_tab.html.js" resource_path="memory_tab.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_MEMORY_TAB_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/memory_tab.js" resource_path="memory_tab.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_SORTED_TABLE_MIXIN_LIT_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/sorted_table_mixin_lit.js" resource_path="sorted_table_mixin_lit.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DATABASE_TAB_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/database_tab.css.js" resource_path="database_tab.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DISCARDS_MAIN_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/discards_main.css.js" resource_path="discards_main.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DISCARDS_TAB_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/discards_tab.css.js" resource_path="discards_tab.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_GRAPH_TAB_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/graph_tab.css.js" resource_path="graph_tab.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_MEMORY_TAB_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/memory_tab.css.js" resource_path="memory_tab.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_LIFECYCLE_UNIT_STATE_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/lifecycle_unit_state.mojom-webui.js" resource_path="lifecycle_unit_state.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_DISCARDS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/discards.mojom-webui.js" resource_path="discards.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_SITE_DATA_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/site_data.mojom-webui.js" resource_path="site_data.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_CONSTANTS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/constants.mojom-webui.js" resource_path="constants.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_DISCARDS_MEMORY_INSTRUMENTATION_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/discards/minified/memory_instrumentation.mojom-webui.js" resource_path="memory_instrumentation.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

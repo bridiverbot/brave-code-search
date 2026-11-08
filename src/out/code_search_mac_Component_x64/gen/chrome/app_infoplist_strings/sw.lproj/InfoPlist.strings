@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Njia ya Mkato ya Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Hakimiliki 2026 Wasanidi wa Brave. Haki zote zimehifadhiwa.";
+NSAudioCaptureUsageDescription = "Brave itakapopata idhini, tovuti zitaweza kukuomba idhini ya kufikia.";
+NSBluetoothAlwaysUsageDescription = "Brave itakapopata idhini, tovuti zitaweza kukuomba idhini ya kufikia.";
+NSBluetoothPeripheralUsageDescription = "Brave itakapopata idhini, tovuti zitaweza kukuomba idhini ya kufikia.";
+NSCameraUsageDescription = "Brave itakapopata idhini, tovuti zitaweza kukuomba idhini ya kufikia.";
+NSHumanReadableCopyright = "Hakimiliki 2026 Wasanidi wa Brave. Haki zote zimehifadhiwa.";
+NSLocalNetworkUsageDescription = "Hii itakuwezesha kushiriki maudhui kutoka kwa Brave kwenye vifaa vyako vya kawaida, kama vile Televisheni au spika.";
+NSLocationUsageDescription = "Brave itakapopata idhini, tovuti zitaweza kukuomba idhini ya kufikia.";
+NSMicrophoneUsageDescription = "Brave itakapopata idhini, tovuti zitaweza kukuomba idhini ya kufikia.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Brave itakapopata idhini, tovuti zitaweza kukuomba idhini ya kufikia.";

@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave-snelkoppeling";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 De auteurs van Brave. Alle rechten voorbehouden.";
+NSAudioCaptureUsageDescription = "Zodra Brave toegang heeft, kunnen websites je om toegang vragen.";
+NSBluetoothAlwaysUsageDescription = "Zodra Brave toegang heeft, kunnen websites je om toegang vragen.";
+NSBluetoothPeripheralUsageDescription = "Zodra Brave toegang heeft, kunnen websites je om toegang vragen.";
+NSCameraUsageDescription = "Zodra Brave toegang heeft, kunnen websites je om toegang vragen.";
+NSHumanReadableCopyright = "Copyright © 2026 De auteurs van Brave. Alle rechten voorbehouden.";
+NSLocalNetworkUsageDescription = "Hiermee kun je inhoud van Brave delen met je lokale apparaten, zoals een tv of speaker.";
+NSLocationUsageDescription = "Zodra Brave toegang heeft, kunnen websites je om toegang vragen.";
+NSMicrophoneUsageDescription = "Zodra Brave toegang heeft, kunnen websites je om toegang vragen.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Zodra Brave toegang heeft, kunnen websites je om toegang vragen.";

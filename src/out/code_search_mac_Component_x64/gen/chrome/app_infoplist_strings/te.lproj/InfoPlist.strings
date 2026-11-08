@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave షార్ట్‌కట్";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, కాపీరైట్ 2026 Brave రచయితలు. అన్ని హ‌క్కులు రిజ‌ర్వ్ చేయ‌బ‌డ్డాయి.";
+NSAudioCaptureUsageDescription = "ఓసారి Braveకి యాక్సెస్ లభించాక, ఆపై వెబ్‌సైట్‌లకు ఏమైనా యాక్సెస్‌ కావాలంటే అవి మిమ్మల్ని అడగవచ్చు.";
+NSBluetoothAlwaysUsageDescription = "ఓసారి Braveకి యాక్సెస్ లభించాక, ఆపై వెబ్‌సైట్‌లకు ఏమైనా యాక్సెస్‌ కావాలంటే అవి మిమ్మల్ని అడగవచ్చు.";
+NSBluetoothPeripheralUsageDescription = "ఓసారి Braveకి యాక్సెస్ లభించాక, ఆపై వెబ్‌సైట్‌లకు ఏమైనా యాక్సెస్‌ కావాలంటే అవి మిమ్మల్ని అడగవచ్చు.";
+NSCameraUsageDescription = "ఓసారి Braveకి యాక్సెస్ లభించాక, ఆపై వెబ్‌సైట్‌లకు ఏమైనా యాక్సెస్‌ కావాలంటే అవి మిమ్మల్ని అడగవచ్చు.";
+NSHumanReadableCopyright = "కాపీరైట్ 2026 Brave రచయితలు. అన్ని హ‌క్కులు రిజ‌ర్వ్ చేయ‌బ‌డ్డాయి.";
+NSLocalNetworkUsageDescription = "ఇది బ్రేవ్ నుండి మీ స్థానిక పరికరాలకు, టీవీ లేదా స్పీకర్ వంటివాటికి కంటెంట్‌ను భాగస్వామ్యం చేయడానికి మిమ్మల్ని అనుమతిస్తుంది.";
+NSLocationUsageDescription = "ఓసారి Braveకి యాక్సెస్ లభించాక, ఆపై వెబ్‌సైట్‌లకు ఏమైనా యాక్సెస్‌ కావాలంటే అవి మిమ్మల్ని అడగవచ్చు.";
+NSMicrophoneUsageDescription = "ఓసారి Braveకి యాక్సెస్ లభించాక, ఆపై వెబ్‌సైట్‌లకు ఏమైనా యాక్సెస్‌ కావాలంటే అవి మిమ్మల్ని అడగవచ్చు.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "ఓసారి Braveకి యాక్సెస్ లభించాక, ఆపై వెబ్‌సైట్‌లకు ఏమైనా యాక్సెస్‌ కావాలంటే అవి మిమ్మల్ని అడగవచ్చు.";

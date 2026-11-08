@@ -1,0 +1,41 @@
+// Copyright 2023 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { CrLitElement } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { browserProxyFactory } from './app_home.mojom-webui.js';
+import { getCss } from './deprecated_apps_link.css.js';
+import { getHtml } from './deprecated_apps_link.html.js';
+export class DeprecatedAppsLinkElement extends CrLitElement {
+    static get is() {
+        return 'deprecated-apps-link';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            deprecationLinkString: { type: String },
+            display: { type: Boolean },
+        };
+    }
+    #deprecationLinkString_accessor_storage = '';
+    get deprecationLinkString() { return this.#deprecationLinkString_accessor_storage; }
+    set deprecationLinkString(value) { this.#deprecationLinkString_accessor_storage = value; }
+    #display_accessor_storage = false;
+    get display() { return this.#display_accessor_storage; }
+    set display(value) { this.#display_accessor_storage = value; }
+    constructor() {
+        super();
+        browserProxyFactory.getInstance().handler.getDeprecationLinkString().then(result => {
+            this.display = !!result.linkString && result.linkString.length > 0;
+            this.deprecationLinkString = result.linkString;
+        });
+    }
+    onLinkClick_() {
+        browserProxyFactory.getInstance().handler.launchDeprecatedAppDialog();
+    }
+}
+customElements.define(DeprecatedAppsLinkElement.is, DeprecatedAppsLinkElement);

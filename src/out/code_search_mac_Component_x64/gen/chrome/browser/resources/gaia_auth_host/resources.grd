@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/gaia_auth_host_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/gaia_auth_host_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/gaia_auth_host_resources_map.h"
+            type="resource_map_header" />
+    <output filename="gaia_auth_host_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <part file="injected_resources.grdp" />
+      <include name="IDR_GAIA_AUTH_HOST_AUTHENTICATOR_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/authenticator.js" resource_path="gaia_auth_host/authenticator.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_CHANNEL_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/channel.js" resource_path="gaia_auth_host/channel.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_OKTA_DETECT_SUCCESS_INJECTED_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/okta_detect_success_injected.js" resource_path="gaia_auth_host/okta_detect_success_injected.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_PASSWORD_CHANGE_AUTHENTICATOR_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/password_change_authenticator.js" resource_path="gaia_auth_host/password_change_authenticator.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_POST_MESSAGE_CHANNEL_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/post_message_channel.js" resource_path="gaia_auth_host/post_message_channel.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_SCROLL_HELPER_INJECTED_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/scroll_helper_injected.js" resource_path="gaia_auth_host/scroll_helper_injected.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_SAFE_XML_UTILS_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/safe_xml_utils.js" resource_path="gaia_auth_host/safe_xml_utils.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_SAML_HANDLER_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/saml_handler.js" resource_path="gaia_auth_host/saml_handler.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_SAML_INJECTED_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/saml_injected.js" resource_path="gaia_auth_host/saml_injected.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_SAML_PASSWORD_ATTRIBUTES_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/saml_password_attributes.js" resource_path="gaia_auth_host/saml_password_attributes.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_SAML_TIMESTAMPS_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/saml_timestamps.js" resource_path="gaia_auth_host/saml_timestamps.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_SAML_USERNAME_AUTOFILL_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/saml_username_autofill.js" resource_path="gaia_auth_host/saml_username_autofill.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GAIA_AUTH_HOST_WEBVIEW_EVENT_MANAGER_JS" file="${root_gen_dir}/chrome/browser/resources/gaia_auth_host/webview_event_manager.js" resource_path="gaia_auth_host/webview_event_manager.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

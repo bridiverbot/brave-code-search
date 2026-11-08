@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Odkaz na Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 Autori Brave. Všetky práva vyhradené.";
+NSAudioCaptureUsageDescription = "Keď Brave získa prístup, weby vás budú môcť žiadať o prístup.";
+NSBluetoothAlwaysUsageDescription = "Keď Brave získa prístup, weby vás budú môcť žiadať o prístup.";
+NSBluetoothPeripheralUsageDescription = "Keď Brave získa prístup, weby vás budú môcť žiadať o prístup.";
+NSCameraUsageDescription = "Keď Brave získa prístup, weby vás budú môcť žiadať o prístup.";
+NSHumanReadableCopyright = "Copyright © 2026 Autori Brave. Všetky práva vyhradené.";
+NSLocalNetworkUsageDescription = "To vám umožní zdieľať obsah z Brave do vašich lokálnych zariadení, ako sú televízia alebo reproduktor.";
+NSLocationUsageDescription = "Keď Brave získa prístup, weby vás budú môcť žiadať o prístup.";
+NSMicrophoneUsageDescription = "Keď Brave získa prístup, weby vás budú môcť žiadať o prístup.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Keď Brave získa prístup, weby vás budú môcť žiadať o prístup.";

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/new_tab_page_untrusted_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/new_tab_page_untrusted_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/new_tab_page_untrusted_resources_map.h"
+            type="resource_map_header" />
+    <output filename="new_tab_page_untrusted_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <part file="msal_browser_resources.grdp" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_BACKGROUND_IMAGE_HTML" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/preprocessed/background_image.html" resource_path="background_image.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_IMAGE_HTML" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/preprocessed/image.html" resource_path="image.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_MICROSOFT_AUTH_HTML" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/preprocessed/microsoft_auth.html" resource_path="microsoft_auth.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_ONE_GOOGLE_BAR_HTML" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/preprocessed/one_google_bar.html" resource_path="one_google_bar.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_BACKGROUND_IMAGE_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/minified/background_image.js" resource_path="background_image.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_MICROSOFT_AUTH_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/minified/microsoft_auth.js" resource_path="microsoft_auth.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_MICROSOFT_AUTH_PROXY_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/minified/microsoft_auth_proxy.js" resource_path="microsoft_auth_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_MSAL_BROWSER_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/minified/msal_browser.js" resource_path="msal_browser.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_ONE_GOOGLE_BAR_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/minified/one_google_bar.js" resource_path="one_google_bar.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_ONE_GOOGLE_BAR_API_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/minified/one_google_bar_api.js" resource_path="one_google_bar_api.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_NTP_MICROSOFT_AUTH_SHARED_UI_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/minified/ntp_microsoft_auth_shared_ui.mojom-webui.js" resource_path="ntp_microsoft_auth_shared_ui.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_UNTRUSTED_NTP_MICROSOFT_AUTH_UNTRUSTED_UI_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page/untrusted/minified/ntp_microsoft_auth_untrusted_ui.mojom-webui.js" resource_path="ntp_microsoft_auth_untrusted_ui.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

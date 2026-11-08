@@ -1,0 +1,132 @@
+import { RegionSource, SelectionOverlayBaseHandler } from '/lens/selection_overlay_base_handler.js';
+import { calculateCenterRotatedBox } from '/lens/selection_utils.js';
+import { BrowserProxyImpl } from './browser_proxy.js';
+function generateRandomHexId() {
+    return Array
+        .from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16).toUpperCase())
+        .join('');
+}
+export class SelectionOverlayBaseHandlerImpl extends SelectionOverlayBaseHandler {
+    addNotifyOverlayClosingListener(_callback) {
+        return -1;
+    }
+    closePreselectionBubble() {
+        BrowserProxyImpl.getInstance().handler.closePreselectionBubble();
+    }
+    notifyOverlayInitialized() { }
+    addBackgroundBlur() {
+        BrowserProxyImpl.getInstance().handler.addBackgroundBlur();
+    }
+    setLiveBlur(enabled) {
+        BrowserProxyImpl.getInstance().handler.setLiveBlur(enabled);
+    }
+    removeListener(id) {
+        if (id === -1) {
+            return true;
+        }
+        return BrowserProxyImpl.getInstance().callbackRouter.removeListener(id);
+    }
+    addOnOverlayReshownListener(_callback) {
+        return -1;
+    }
+    addScreenshotDataReceivedListener(callback) {
+        return BrowserProxyImpl.getInstance()
+            .callbackRouter.screenshotReceived.addListener((screenshotData) => {
+            callback(screenshotData, false);
+        });
+    }
+    addSetInteractionOptionsListener(callback) {
+        return BrowserProxyImpl.getInstance()
+            .callbackRouter.setInteractionOptions.addListener(callback);
+    }
+    addSetSidePanelOpenListener(callback) {
+        return BrowserProxyImpl.getInstance()
+            .callbackRouter.setSidePanelOpen.addListener(callback);
+    }
+    addClearRegionSelectionListener(callback) {
+        return BrowserProxyImpl.getInstance()
+            .callbackRouter.setPostRegionSelections.addListener((regions) => {
+            if (regions.length === 0) {
+                callback();
+            }
+        });
+    }
+    addClearAllSelectionsListener(callback) {
+        return BrowserProxyImpl.getInstance()
+            .callbackRouter.setPostRegionSelections.addListener((regions) => {
+            if (regions.length === 0) {
+                callback();
+            }
+        });
+    }
+    addNotifyResultsPanelOpenedListener(callback) {
+        // We are always invoked from the results panel for now.
+        callback();
+        return -1;
+    }
+    addSetPostRegionSelectionListener(callback) {
+        return BrowserProxyImpl.getInstance()
+            .callbackRouter.setPostRegionSelections.addListener((regions) => {
+            const firstRegion = regions[0];
+            if (firstRegion && firstRegion.shape.rect) {
+                callback(firstRegion.shape.rect);
+            }
+        });
+    }
+    addMultiRegionSelectionListener(callback) {
+        return BrowserProxyImpl.getInstance()
+            .callbackRouter.setPostRegionSelections.addListener((regions) => {
+            callback(regions.map(r => {
+                let rect = r.shape.rect;
+                if (!rect && r.shape.polyline) {
+                    rect = calculateCenterRotatedBox(r.shape.polyline).box;
+                }
+                const tsRegion = {
+                    id: r.id,
+                    region: rect || { x: 0, y: 0, width: 0, height: 0 },
+                };
+                if (r.shape.polyline) {
+                    tsRegion.polyline = r.shape.polyline;
+                }
+                return tsRegion;
+            }));
+        });
+    }
+    adjustRegionSelected(rect, source, id = this.activeRegionId || generateRandomHexId()) {
+        const proxy = BrowserProxyImpl.getInstance();
+        proxy.handler.adjustRegion({
+            id: id,
+            shape: { rect: rect },
+        }, source === RegionSource.KEYBOARD);
+    }
+    adjustPolylineSelected(points, source, id = this.activeRegionId || generateRandomHexId()) {
+        const proxy = BrowserProxyImpl.getInstance();
+        proxy.handler.adjustRegion({
+            id: id,
+            shape: { polyline: points },
+        }, source === RegionSource.KEYBOARD);
+    }
+    deleteRegion(id, source) {
+        const proxy = BrowserProxyImpl.getInstance();
+        proxy.handler.deleteRegion(id, source === RegionSource.KEYBOARD);
+    }
+    submitPrompt(prompt) {
+        const proxy = BrowserProxyImpl.getInstance();
+        proxy.handler.submitPrompt(prompt);
+    }
+    getSuggestedActions(listener) {
+        BrowserProxyImpl.getInstance().handler.getSuggestedActions(listener);
+    }
+    executeSuggestedAction(actionId, channel) {
+        const proxy = BrowserProxyImpl.getInstance();
+        proxy.handler.executeSuggestedAction(actionId, channel);
+    }
+    dismissOverlay(reason) {
+        const proxy = BrowserProxyImpl.getInstance();
+        proxy.handler.dismissOverlay(reason);
+    }
+    openSettings() {
+        const proxy = BrowserProxyImpl.getInstance();
+        proxy.handler.openSettings();
+    }
+}

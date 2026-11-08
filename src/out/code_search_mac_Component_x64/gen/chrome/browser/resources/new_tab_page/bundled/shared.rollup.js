@@ -1,0 +1,12017 @@
+import { css, CrLitElement, html, nothing } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { mojo } from 'chrome://resources/mojo/mojo/public/js/bindings.js';
+import { MostVisitedThemeSpec } from 'chrome://resources/cr_components/most_visited/most_visited.mojom-webui.js';
+import { SkColorSpec } from 'chrome://resources/mojo/skia/public/mojom/skcolor.mojom-webui.js';
+import { UrlSpec } from 'chrome://resources/mojo/url/mojom/url.mojom-webui.js';
+import { loadTimeData } from 'chrome://resources/js/load_time_data.js';
+import { ContextUploadErrorType as ContextUploadErrorType$1, ContextUploadStatus as ContextUploadStatus$1, InputType as InputType$1, ToolMode as ToolMode$1, ModelMode as ModelMode$1 } from 'chrome://resources/cr_components/composebox/composebox_query.mojom-webui.js';
+import 'chrome://resources/brave/leo.bundle.js';
+import { String16Spec } from 'chrome://resources/mojo/mojo/public/mojom/base/string16.mojom-webui.js';
+import { TimeTicksSpec, JSTimeSpec, TimeDeltaSpec, TimeSpec } from 'chrome://resources/mojo/mojo/public/mojom/base/time.mojom-webui.js';
+
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * Verify |value| is truthy.
+ * @param value A value to check for truthiness. Note that this
+ *     may be used to test whether |value| is defined or not, and we don't want
+ *     to force a cast to boolean.
+ */
+function assert(value, message) {
+    if (value) {
+        return;
+    }
+    throw new Error('Assertion failed' + (message ? `: ${message}` : ''));
+}
+function assertInstanceof(value, type, message) {
+    if (value instanceof type) {
+        return;
+    }
+    throw new Error(`Value ${value} is not of type ${type.name || typeof type}`);
+}
+/**
+ * Call this from places in the code that should never be reached.
+ *
+ * For example, handling all the values of enum with a switch() like this:
+ *
+ *   function getValueFromEnum(enum) {
+ *     switch (enum) {
+ *       case ENUM_FIRST_OF_TWO:
+ *         return first
+ *       case ENUM_LAST_OF_TWO:
+ *         return last;
+ *     }
+ *     assertNotReached();
+ *   }
+ *
+ * This code should only be hit in the case of serious programmer error or
+ * unexpected input.
+ */
+function assertNotReached(message = 'Unreachable code hit') {
+    assert(false, message);
+}
+/**
+ * Statically and dynamically assert that a code should not be reached.
+ *
+ * For example, handling all the values of enum with a switch() like this:
+ *
+ *   function getValueFromEnum(value: SomeEnum): number {
+ *     switch (value) {
+ *       case ENUM_FIRST_OF_TWO:
+ *         return 1;
+ *       case ENUM_LAST_OF_TWO:
+ *         return 2;
+ *       default:
+ *         assertNotReachedCase(value);
+ *     }
+ *   }
+ *
+ * Helper function that should be preferred over assertNotReached in switch/case
+ * statements referring to enums, because it results in a build time error if the
+ * 'case' statements are not exhaustive. At runtime it behaves identically to
+ * assertNotReached.
+ */
+function assertNotReachedCase(_param, message) {
+    assertNotReached(message);
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * Reusable factory that encapsulates singleton management, production Mojo pipe
+ * binding, and test mock creation for WebUI browser proxies with precise Mojo
+ * pipe types.
+ */
+// Disable clang-format to avoid mangling of long type list.
+// clang-format off
+class MojoBrowserProxyFactory {
+    handlerRemoteCtor_;
+    callbackRouterCtor_;
+    bindFn_;
+    //clang-format on
+    instance_ = null;
+    /**
+     * @param handlerRemoteCtor Constructor for the production Mojo remote (e.g.,
+     *     PageHandlerRemote).
+     * @param callbackRouterCtor Constructor for the Mojo callback router (e.g.,
+     *     PageCallbackRouter).
+     * @param bindFn Callback invoked in production to bind the pipes via the
+     *     factory.
+     */
+    constructor(handlerRemoteCtor_, callbackRouterCtor_, bindFn_) {
+        this.handlerRemoteCtor_ = handlerRemoteCtor_;
+        this.callbackRouterCtor_ = callbackRouterCtor_;
+        this.bindFn_ = bindFn_;
+    }
+    /**
+     * Retrieves or creates the production singleton instance.
+     */
+    getInstance() {
+        if (!this.instance_) {
+            const handler = new this.handlerRemoteCtor_();
+            const callbackRouter = new this.callbackRouterCtor_();
+            this.bindFn_(callbackRouter.$.bindNewPipeAndPassRemote(), handler.$.bindNewPipeAndPassReceiver());
+            this.instance_ = { handler, callbackRouter };
+        }
+        return this.instance_;
+    }
+    /**
+     * Sets the singleton instance directly (used during test setup).
+     */
+    setInstance(proxy) {
+        this.instance_ = proxy;
+    }
+    /**
+     * Creates a test proxy instance wrapped with a mock handler and a real
+     * callback router.
+     */
+    createForTest(handler) {
+        const callbackRouter = new this.callbackRouterCtor_();
+        return {
+            instance: { handler, callbackRouter },
+            remote: callbackRouter.$.bindNewPipeAndPassRemote(),
+        };
+    }
+}
+
+// mojo/public/mojom/base/big_buffer.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const BigBufferSharedMemoryRegionSpec = { $: {} };
+const BigBufferSpec = { $: {} };
+mojo.internal.Struct(BigBufferSharedMemoryRegionSpec.$, 'BigBufferSharedMemoryRegion', [
+    mojo.internal.StructField('bufferHandle', 0, 0, mojo.internal.Handle, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('size', 4, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Union(BigBufferSpec.$, 'BigBuffer', {
+    'bytes': {
+        'ordinal': 0,
+        'type': mojo.internal.Array(mojo.internal.Uint8, false),
+    },
+    'sharedMemory': {
+        'ordinal': 1,
+        'type': BigBufferSharedMemoryRegionSpec.$,
+    },
+    'invalidBuffer': {
+        'ordinal': 2,
+        'type': mojo.internal.Bool,
+    },
+});
+var BigBufferFieldTags;
+(function (BigBufferFieldTags) {
+    BigBufferFieldTags[BigBufferFieldTags["BYTES"] = 0] = "BYTES";
+    BigBufferFieldTags[BigBufferFieldTags["SHARED_MEMORY"] = 1] = "SHARED_MEMORY";
+    BigBufferFieldTags[BigBufferFieldTags["INVALID_BUFFER"] = 2] = "INVALID_BUFFER";
+})(BigBufferFieldTags || (BigBufferFieldTags = {}));
+
+// mojo/public/mojom/base/unguessable_token.mojom-converters.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class UnguessableTokenDataView {
+    decoder_;
+    version_;
+    fieldSpecs_;
+    constructor(decoder, version, fieldSpecs) {
+        this.decoder_ = decoder;
+        this.version_ = version;
+        this.fieldSpecs_ = fieldSpecs;
+    }
+    get high() {
+        const field = this.fieldSpecs_[0];
+        return mojo.internal.decodeStructField(this.decoder_, field, this.version_);
+    }
+    get low() {
+        const field = this.fieldSpecs_[1];
+        return mojo.internal.decodeStructField(this.decoder_, field, this.version_);
+    }
+}
+
+const HEX_BASE = 16;
+// Token component is 64 bits, hex is 4 bits. This gives us a necessary
+// string length.
+const TOKEN_COMPONENT_STR_LENGTH = 64 / 4;
+class UnguessableTokenConverter {
+    // Field accessors for encoding a typemap to a mojo type.
+    validate(token) {
+        if (token.length !== (2 * TOKEN_COMPONENT_STR_LENGTH)) {
+            throw new Error('token is malformed: ' + token);
+        }
+        if (token !== token.toUpperCase()) {
+            throw new Error('token is not uppercase: ' + token);
+        }
+    }
+    high(token) {
+        this.validate(token);
+        return BigInt(`0x${token.slice(0, TOKEN_COMPONENT_STR_LENGTH)}`);
+    }
+    low(token) {
+        this.validate(token);
+        return BigInt(`0x${token.slice(TOKEN_COMPONENT_STR_LENGTH)}`);
+    }
+    // Converts a mojo type to the typemap.
+    convert(view) {
+        return (view.high.toString(HEX_BASE).padStart(TOKEN_COMPONENT_STR_LENGTH, '0') +
+            view.low.toString(HEX_BASE).padStart(TOKEN_COMPONENT_STR_LENGTH, '0'))
+            .toUpperCase();
+    }
+}
+
+// mojo/public/mojom/base/unguessable_token.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const UnguessableTokenSpec = { $: {} };
+const converterForUnguessableToken = new UnguessableTokenConverter();
+mojo.internal.TypemappedStruct(UnguessableTokenSpec.$, 'UnguessableToken', UnguessableTokenDataView, converterForUnguessableToken, [
+    mojo.internal.StructField('high', 0, 0, mojo.internal.Uint64, BigInt(0), false /* nullable */, 0, undefined, ((value) => converterForUnguessableToken.high(value))),
+    mojo.internal.StructField('low', 8, 0, mojo.internal.Uint64, BigInt(0), false /* nullable */, 0, undefined, ((value) => converterForUnguessableToken.low(value))),
+], [[0, 24],]);
+
+// ui/base/mojom/window_open_disposition.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const WindowOpenDispositionSpec = { $: mojo.internal.Enum() };
+var WindowOpenDisposition;
+(function (WindowOpenDisposition) {
+    WindowOpenDisposition[WindowOpenDisposition["MIN_VALUE"] = 0] = "MIN_VALUE";
+    WindowOpenDisposition[WindowOpenDisposition["MAX_VALUE"] = 12] = "MAX_VALUE";
+    WindowOpenDisposition[WindowOpenDisposition["kUnknown"] = 0] = "kUnknown";
+    WindowOpenDisposition[WindowOpenDisposition["kCurrentTab"] = 1] = "kCurrentTab";
+    WindowOpenDisposition[WindowOpenDisposition["kSingletonTab"] = 2] = "kSingletonTab";
+    WindowOpenDisposition[WindowOpenDisposition["kNewForegroundTab"] = 3] = "kNewForegroundTab";
+    WindowOpenDisposition[WindowOpenDisposition["kNewBackgroundTab"] = 4] = "kNewBackgroundTab";
+    WindowOpenDisposition[WindowOpenDisposition["kNewPopup"] = 5] = "kNewPopup";
+    WindowOpenDisposition[WindowOpenDisposition["kNewWindow"] = 6] = "kNewWindow";
+    WindowOpenDisposition[WindowOpenDisposition["kSaveToDisk"] = 7] = "kSaveToDisk";
+    WindowOpenDisposition[WindowOpenDisposition["kOffTheRecord"] = 8] = "kOffTheRecord";
+    WindowOpenDisposition[WindowOpenDisposition["kIgnoreAction"] = 9] = "kIgnoreAction";
+    WindowOpenDisposition[WindowOpenDisposition["kSwitchToTab"] = 10] = "kSwitchToTab";
+    WindowOpenDisposition[WindowOpenDisposition["kNewPictureInPicture"] = 11] = "kNewPictureInPicture";
+    WindowOpenDisposition[WindowOpenDisposition["kNewSplitView"] = 12] = "kNewSplitView";
+})(WindowOpenDisposition || (WindowOpenDisposition = {}));
+const ClickModifiersSpec = { $: {} };
+mojo.internal.Struct(ClickModifiersSpec.$, 'ClickModifiers', [
+    mojo.internal.StructField('middleButton', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('altKey', 0, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('ctrlKey', 0, 2, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('metaKey', 0, 3, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shiftKey', 0, 4, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+
+// ui/gfx/geometry/mojom/geometry.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const PointSpec = { $: {} };
+const PointFSpec = { $: {} };
+const Point3FSpec = { $: {} };
+const SizeSpec = { $: {} };
+const SizeFSpec = { $: {} };
+const RectSpec = { $: {} };
+const RectFSpec = { $: {} };
+const InsetsSpec = { $: {} };
+const InsetsFSpec = { $: {} };
+const Vector2dSpec = { $: {} };
+const Vector2dFSpec = { $: {} };
+const Vector3dFSpec = { $: {} };
+const QuaternionSpec = { $: {} };
+const QuadFSpec = { $: {} };
+const AxisTransform2dSpec = { $: {} };
+mojo.internal.Struct(PointSpec.$, 'Point', [
+    mojo.internal.StructField('x', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('y', 4, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PointFSpec.$, 'PointF', [
+    mojo.internal.StructField('x', 0, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('y', 4, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Point3FSpec.$, 'Point3F', [
+    mojo.internal.StructField('x', 0, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('y', 4, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('z', 8, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(SizeSpec.$, 'Size', [
+    mojo.internal.StructField('width', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('height', 4, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(SizeFSpec.$, 'SizeF', [
+    mojo.internal.StructField('width', 0, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('height', 4, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(RectSpec.$, 'Rect', [
+    mojo.internal.StructField('x', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('y', 4, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('width', 8, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('height', 12, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(RectFSpec.$, 'RectF', [
+    mojo.internal.StructField('x', 0, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('y', 4, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('width', 8, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('height', 12, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(InsetsSpec.$, 'Insets', [
+    mojo.internal.StructField('top', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('left', 4, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('bottom', 8, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('right', 12, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(InsetsFSpec.$, 'InsetsF', [
+    mojo.internal.StructField('top', 0, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('left', 4, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('bottom', 8, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('right', 12, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(Vector2dSpec.$, 'Vector2d', [
+    mojo.internal.StructField('x', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('y', 4, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Vector2dFSpec.$, 'Vector2dF', [
+    mojo.internal.StructField('x', 0, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('y', 4, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Vector3dFSpec.$, 'Vector3dF', [
+    mojo.internal.StructField('x', 0, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('y', 4, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('z', 8, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(QuaternionSpec.$, 'Quaternion', [
+    mojo.internal.StructField('x', 0, 0, mojo.internal.Double, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('y', 8, 0, mojo.internal.Double, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('z', 16, 0, mojo.internal.Double, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('w', 24, 0, mojo.internal.Double, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 40],]);
+mojo.internal.Struct(QuadFSpec.$, 'QuadF', [
+    mojo.internal.StructField('p1', 0, 0, PointFSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('p2', 8, 0, PointFSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('p3', 16, 0, PointFSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('p4', 24, 0, PointFSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 40],]);
+mojo.internal.Struct(AxisTransform2dSpec.$, 'AxisTransform2d', [
+    mojo.internal.StructField('scale', 0, 0, Vector2dFSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('translation', 8, 0, Vector2dFSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+
+// ui/gfx/range/mojom/range.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const RangeSpec = { $: {} };
+const RangeFSpec = { $: {} };
+mojo.internal.Struct(RangeSpec.$, 'Range', [
+    mojo.internal.StructField('start', 0, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('end', 4, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(RangeFSpec.$, 'RangeF', [
+    mojo.internal.StructField('start', 0, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('end', 4, 0, mojo.internal.Float, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+
+// components/omnibox/composebox/composebox_query.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const ContextUploadStatusSpec = { $: mojo.internal.Enum() };
+var ContextUploadStatus;
+(function (ContextUploadStatus) {
+    ContextUploadStatus[ContextUploadStatus["MIN_VALUE"] = 0] = "MIN_VALUE";
+    ContextUploadStatus[ContextUploadStatus["MAX_VALUE"] = 8] = "MAX_VALUE";
+    ContextUploadStatus[ContextUploadStatus["kNotUploaded"] = 0] = "kNotUploaded";
+    ContextUploadStatus[ContextUploadStatus["kProcessing"] = 1] = "kProcessing";
+    ContextUploadStatus[ContextUploadStatus["kValidationFailed"] = 2] = "kValidationFailed";
+    ContextUploadStatus[ContextUploadStatus["kUploadStarted"] = 3] = "kUploadStarted";
+    ContextUploadStatus[ContextUploadStatus["kUploadSuccessful"] = 4] = "kUploadSuccessful";
+    ContextUploadStatus[ContextUploadStatus["kUploadFailed"] = 5] = "kUploadFailed";
+    ContextUploadStatus[ContextUploadStatus["kUploadExpired"] = 6] = "kUploadExpired";
+    ContextUploadStatus[ContextUploadStatus["kProcessingSuggestSignalsReady"] = 7] = "kProcessingSuggestSignalsReady";
+    ContextUploadStatus[ContextUploadStatus["kUploadReplaced"] = 8] = "kUploadReplaced";
+})(ContextUploadStatus || (ContextUploadStatus = {}));
+const ContextUploadErrorTypeSpec = { $: mojo.internal.Enum() };
+var ContextUploadErrorType;
+(function (ContextUploadErrorType) {
+    ContextUploadErrorType[ContextUploadErrorType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    ContextUploadErrorType[ContextUploadErrorType["MAX_VALUE"] = 13] = "MAX_VALUE";
+    ContextUploadErrorType[ContextUploadErrorType["kUnknown"] = 0] = "kUnknown";
+    ContextUploadErrorType[ContextUploadErrorType["kBrowserProcessingError"] = 1] = "kBrowserProcessingError";
+    ContextUploadErrorType[ContextUploadErrorType["kNetworkError"] = 2] = "kNetworkError";
+    ContextUploadErrorType[ContextUploadErrorType["kServerError"] = 3] = "kServerError";
+    ContextUploadErrorType[ContextUploadErrorType["kServerSizeLimitExceeded"] = 4] = "kServerSizeLimitExceeded";
+    ContextUploadErrorType[ContextUploadErrorType["kAborted"] = 5] = "kAborted";
+    ContextUploadErrorType[ContextUploadErrorType["kImageProcessingError"] = 6] = "kImageProcessingError";
+    ContextUploadErrorType[ContextUploadErrorType["kBrowserProcessingFileTooLargeError"] = 7] = "kBrowserProcessingFileTooLargeError";
+    ContextUploadErrorType[ContextUploadErrorType["kBrowserProcessingFileEmptyError"] = 8] = "kBrowserProcessingFileEmptyError";
+    ContextUploadErrorType[ContextUploadErrorType["kBrowserProcessingMaxFilesExceededError"] = 9] = "kBrowserProcessingMaxFilesExceededError";
+    ContextUploadErrorType[ContextUploadErrorType["kBrowserProcessingUnsupportedFileTypeError"] = 10] = "kBrowserProcessingUnsupportedFileTypeError";
+    ContextUploadErrorType[ContextUploadErrorType["kBrowserProcessingFileUploadNotAllowedError"] = 11] = "kBrowserProcessingFileUploadNotAllowedError";
+    ContextUploadErrorType[ContextUploadErrorType["kBrowserProcessingMaxImagesExceededError"] = 12] = "kBrowserProcessingMaxImagesExceededError";
+    ContextUploadErrorType[ContextUploadErrorType["kBrowserProcessingMaxPdfsExceededError"] = 13] = "kBrowserProcessingMaxPdfsExceededError";
+})(ContextUploadErrorType || (ContextUploadErrorType = {}));
+const ModelModeSpec = { $: mojo.internal.Enum() };
+var ModelMode;
+(function (ModelMode) {
+    ModelMode[ModelMode["MIN_VALUE"] = 0] = "MIN_VALUE";
+    ModelMode[ModelMode["MAX_VALUE"] = 7] = "MAX_VALUE";
+    ModelMode[ModelMode["kUnspecified"] = 0] = "kUnspecified";
+    ModelMode[ModelMode["kGeminiRegular"] = 1] = "kGeminiRegular";
+    ModelMode[ModelMode["kGeminiPro"] = 2] = "kGeminiPro";
+    ModelMode[ModelMode["kGeminiProAutoroute"] = 3] = "kGeminiProAutoroute";
+    ModelMode[ModelMode["kGeminiProNoGenUi"] = 4] = "kGeminiProNoGenUi";
+    ModelMode[ModelMode["kGeminiFlashLatest"] = 5] = "kGeminiFlashLatest";
+    ModelMode[ModelMode["kGeminiProLatest"] = 6] = "kGeminiProLatest";
+    ModelMode[ModelMode["kGeminiPreview"] = 7] = "kGeminiPreview";
+})(ModelMode || (ModelMode = {}));
+const ToolModeSpec = { $: mojo.internal.Enum() };
+var ToolMode;
+(function (ToolMode) {
+    ToolMode[ToolMode["MIN_VALUE"] = 0] = "MIN_VALUE";
+    ToolMode[ToolMode["MAX_VALUE"] = 12] = "MAX_VALUE";
+    ToolMode[ToolMode["kUnspecified"] = 0] = "kUnspecified";
+    ToolMode[ToolMode["kDeepSearch"] = 1] = "kDeepSearch";
+    ToolMode[ToolMode["kCanvas"] = 2] = "kCanvas";
+    ToolMode[ToolMode["kGeminiPro"] = 3] = "kGeminiPro";
+    ToolMode[ToolMode["kImageGen"] = 4] = "kImageGen";
+    ToolMode[ToolMode["kDeepBrowse"] = 5] = "kDeepBrowse";
+    ToolMode[ToolMode["kImageGenSelfie"] = 6] = "kImageGenSelfie";
+    ToolMode[ToolMode["kImageGenUpload"] = 7] = "kImageGenUpload";
+    ToolMode[ToolMode["kDisableSuggest"] = 8] = "kDisableSuggest";
+    ToolMode[ToolMode["kAim"] = 9] = "kAim";
+    ToolMode[ToolMode["kAimGenPrompt"] = 10] = "kAimGenPrompt";
+    ToolMode[ToolMode["kAgentTask"] = 11] = "kAgentTask";
+    ToolMode[ToolMode["kSearchMore"] = 12] = "kSearchMore";
+})(ToolMode || (ToolMode = {}));
+const InputTypeSpec = { $: mojo.internal.Enum() };
+var InputType;
+(function (InputType) {
+    InputType[InputType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    InputType[InputType["MAX_VALUE"] = 4] = "MAX_VALUE";
+    InputType[InputType["kUnspecified"] = 0] = "kUnspecified";
+    InputType[InputType["kLensImage"] = 1] = "kLensImage";
+    InputType[InputType["kLensFile"] = 2] = "kLensFile";
+    InputType[InputType["kBrowserTab"] = 3] = "kBrowserTab";
+    InputType[InputType["kDrive"] = 4] = "kDrive";
+})(InputType || (InputType = {}));
+const AimUrlParamSpec = { $: {} };
+const InputTypeConfigSpec = { $: {} };
+const ToolConfigSpec = { $: {} };
+const ModelConfigSpec = { $: {} };
+const SectionConfigSpec = { $: {} };
+const InputStateSpec = { $: {} };
+mojo.internal.Struct(AimUrlParamSpec.$, 'AimUrlParam', [
+    mojo.internal.StructField('paramKey', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('paramValue', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(InputTypeConfigSpec.$, 'InputTypeConfig', [
+    mojo.internal.StructField('inputType', 0, 0, InputTypeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('menuLabel', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(ToolConfigSpec.$, 'ToolConfig', [
+    mojo.internal.StructField('tool', 0, 0, ToolModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('disableActiveModelSelection', 4, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('menuLabel', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('chipLabel', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('hintText', 24, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('aimUrlParams', 32, 0, mojo.internal.Array(AimUrlParamSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('menuTooltip', 40, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('icon', 48, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 64],]);
+mojo.internal.Struct(ModelConfigSpec.$, 'ModelConfig', [
+    mojo.internal.StructField('model', 0, 0, ModelModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('menuLabel', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('hintText', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('aimUrlParams', 24, 0, mojo.internal.Array(AimUrlParamSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('menuTooltip', 32, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('icon', 4, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 48],]);
+mojo.internal.Struct(SectionConfigSpec.$, 'SectionConfig', [
+    mojo.internal.StructField('header', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(InputStateSpec.$, 'InputState', [
+    mojo.internal.StructField('allowedModels', 0, 0, mojo.internal.Array(ModelModeSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('allowedTools', 8, 0, mojo.internal.Array(ToolModeSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('allowedInputTypes', 16, 0, mojo.internal.Array(InputTypeSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('activeModel', 24, 0, ModelModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('activeTool', 28, 0, ToolModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('disabledModels', 32, 0, mojo.internal.Array(ModelModeSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('disabledTools', 40, 0, mojo.internal.Array(ToolModeSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('disabledInputTypes', 48, 0, mojo.internal.Array(InputTypeSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('toolConfigs', 56, 0, mojo.internal.Array(ToolConfigSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('modelConfigs', 64, 0, mojo.internal.Array(ModelConfigSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('inputTypeConfigs', 72, 0, mojo.internal.Array(InputTypeConfigSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('toolsSectionConfig', 80, 0, SectionConfigSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('modelSectionConfig', 88, 0, SectionConfigSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('hintText', 96, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('maxInputsByType', 104, 0, mojo.internal.Map(InputTypeSpec.$, mojo.internal.Int32, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('maxTotalInputs', 112, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isCanvasQuerySubmitted', 116, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('willFulfillInAim', 116, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 128],]);
+
+// components/omnibox/browser/fusebox_action.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const SuggestInventorySpec = { $: mojo.internal.Enum() };
+var SuggestInventory;
+(function (SuggestInventory) {
+    SuggestInventory[SuggestInventory["MIN_VALUE"] = 0] = "MIN_VALUE";
+    SuggestInventory[SuggestInventory["MAX_VALUE"] = 15] = "MAX_VALUE";
+    SuggestInventory[SuggestInventory["kDefault"] = 0] = "kDefault";
+    SuggestInventory[SuggestInventory["kTravel"] = 1] = "kTravel";
+    SuggestInventory[SuggestInventory["kAimTakeover"] = 2] = "kAimTakeover";
+    SuggestInventory[SuggestInventory["kImageGenTakeover"] = 3] = "kImageGenTakeover";
+    SuggestInventory[SuggestInventory["kConversationStarters"] = 4] = "kConversationStarters";
+    SuggestInventory[SuggestInventory["kAiHpCreateChip"] = 5] = "kAiHpCreateChip";
+    SuggestInventory[SuggestInventory["kAiHpGetItDoneChip"] = 6] = "kAiHpGetItDoneChip";
+    SuggestInventory[SuggestInventory["kAiHpSimplifyChip"] = 7] = "kAiHpSimplifyChip";
+    SuggestInventory[SuggestInventory["kAiHpIfl"] = 8] = "kAiHpIfl";
+    SuggestInventory[SuggestInventory["kAiHpReservations"] = 9] = "kAiHpReservations";
+    SuggestInventory[SuggestInventory["kBrainstorm"] = 10] = "kBrainstorm";
+    SuggestInventory[SuggestInventory["kHelpMeLearn"] = 11] = "kHelpMeLearn";
+    SuggestInventory[SuggestInventory["kWriteOrEdit"] = 12] = "kWriteOrEdit";
+    SuggestInventory[SuggestInventory["kAddFile"] = 13] = "kAddFile";
+    SuggestInventory[SuggestInventory["kAddTab"] = 14] = "kAddTab";
+    SuggestInventory[SuggestInventory["kAimImages"] = 15] = "kAimImages";
+})(SuggestInventory || (SuggestInventory = {}));
+const QueryActionOverrideSpec = { $: mojo.internal.Enum() };
+var QueryActionOverride;
+(function (QueryActionOverride) {
+    QueryActionOverride[QueryActionOverride["MIN_VALUE"] = 0] = "MIN_VALUE";
+    QueryActionOverride[QueryActionOverride["MAX_VALUE"] = 2] = "MAX_VALUE";
+    QueryActionOverride[QueryActionOverride["kDefault"] = 0] = "kDefault";
+    QueryActionOverride[QueryActionOverride["kPaste"] = 1] = "kPaste";
+    QueryActionOverride[QueryActionOverride["kHint"] = 2] = "kHint";
+})(QueryActionOverride || (QueryActionOverride = {}));
+const InputSourceSpec = { $: mojo.internal.Enum() };
+var InputSource;
+(function (InputSource) {
+    InputSource[InputSource["MIN_VALUE"] = 0] = "MIN_VALUE";
+    InputSource[InputSource["MAX_VALUE"] = 6] = "MAX_VALUE";
+    InputSource[InputSource["kInputSourceUnspecified"] = 0] = "kInputSourceUnspecified";
+    InputSource[InputSource["kInputSourceGallery"] = 1] = "kInputSourceGallery";
+    InputSource[InputSource["kInputSourceCamera"] = 2] = "kInputSourceCamera";
+    InputSource[InputSource["kInputSourceFilePicker"] = 3] = "kInputSourceFilePicker";
+    InputSource[InputSource["kInputSourceDrive"] = 4] = "kInputSourceDrive";
+    InputSource[InputSource["kInputSourceTabPicker"] = 5] = "kInputSourceTabPicker";
+    InputSource[InputSource["kInputSourceVoice"] = 6] = "kInputSourceVoice";
+})(InputSource || (InputSource = {}));
+const SearchboxOverrideSpec = { $: mojo.internal.Enum() };
+var SearchboxOverride;
+(function (SearchboxOverride) {
+    SearchboxOverride[SearchboxOverride["MIN_VALUE"] = 0] = "MIN_VALUE";
+    SearchboxOverride[SearchboxOverride["MAX_VALUE"] = 2] = "MAX_VALUE";
+    SearchboxOverride[SearchboxOverride["kUnspecified"] = 0] = "kUnspecified";
+    SearchboxOverride[SearchboxOverride["kRealbox"] = 1] = "kRealbox";
+    SearchboxOverride[SearchboxOverride["kComposebox"] = 2] = "kComposebox";
+})(SearchboxOverride || (SearchboxOverride = {}));
+const SearchboxTutorialSpec = { $: mojo.internal.Enum() };
+var SearchboxTutorial;
+(function (SearchboxTutorial) {
+    SearchboxTutorial[SearchboxTutorial["MIN_VALUE"] = 0] = "MIN_VALUE";
+    SearchboxTutorial[SearchboxTutorial["MAX_VALUE"] = 1] = "MAX_VALUE";
+    SearchboxTutorial[SearchboxTutorial["kUnspecified"] = 0] = "kUnspecified";
+    SearchboxTutorial[SearchboxTutorial["kGlowPlusButton"] = 1] = "kGlowPlusButton";
+})(SearchboxTutorial || (SearchboxTutorial = {}));
+const FuseboxActionSpec = { $: {} };
+mojo.internal.Struct(FuseboxActionSpec.$, 'FuseboxAction', [
+    mojo.internal.StructField('preselected_tool_$flag', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "preselected_tool_$value",
+        originalFieldName: "preselectedTool",
+    }, undefined),
+    mojo.internal.StructField('preselected_tool_$value', 4, 0, ToolModeSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "preselectedTool",
+    }, undefined),
+    mojo.internal.StructField('preferred_inventory_$flag', 0, 1, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "preferred_inventory_$value",
+        originalFieldName: "preferredInventory",
+    }, undefined),
+    mojo.internal.StructField('preferred_inventory_$value', 8, 0, SuggestInventorySpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "preferredInventory",
+    }, undefined),
+    mojo.internal.StructField('preselected_model_$flag', 0, 2, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "preselected_model_$value",
+        originalFieldName: "preselectedModel",
+    }, undefined),
+    mojo.internal.StructField('preselected_model_$value', 12, 0, ModelModeSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "preselectedModel",
+    }, undefined),
+    mojo.internal.StructField('query_action_override_$flag', 0, 3, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "query_action_override_$value",
+        originalFieldName: "queryActionOverride",
+    }, undefined),
+    mojo.internal.StructField('query_action_override_$value', 16, 0, QueryActionOverrideSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "queryActionOverride",
+    }, undefined),
+    mojo.internal.StructField('preselected_input_source_$flag', 0, 4, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "preselected_input_source_$value",
+        originalFieldName: "preselectedInputSource",
+    }, undefined),
+    mojo.internal.StructField('preselected_input_source_$value', 20, 0, InputSourceSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "preselectedInputSource",
+    }, undefined),
+    mojo.internal.StructField('searchbox_override_$flag', 0, 5, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "searchbox_override_$value",
+        originalFieldName: "searchboxOverride",
+    }, undefined),
+    mojo.internal.StructField('searchbox_override_$value', 24, 0, SearchboxOverrideSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "searchboxOverride",
+    }, undefined),
+    mojo.internal.StructField('searchbox_tutorial_$flag', 0, 6, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "searchbox_tutorial_$value",
+        originalFieldName: "searchboxTutorial",
+    }, undefined),
+    mojo.internal.StructField('searchbox_tutorial_$value', 28, 0, SearchboxTutorialSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "searchboxTutorial",
+    }, undefined),
+], [[0, 40],]);
+
+// components/omnibox/browser/omnibox.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const NavigationPredictorSpec = { $: mojo.internal.Enum() };
+var NavigationPredictor;
+(function (NavigationPredictor) {
+    NavigationPredictor[NavigationPredictor["MIN_VALUE"] = 1] = "MIN_VALUE";
+    NavigationPredictor[NavigationPredictor["MAX_VALUE"] = 3] = "MAX_VALUE";
+    NavigationPredictor[NavigationPredictor["kMouseDown"] = 1] = "kMouseDown";
+    NavigationPredictor[NavigationPredictor["kUpOrDownArrowButton"] = 2] = "kUpOrDownArrowButton";
+    NavigationPredictor[NavigationPredictor["kTouchDown"] = 3] = "kTouchDown";
+})(NavigationPredictor || (NavigationPredictor = {}));
+({ $: mojo.internal.Enum() });
+var PageClassification;
+(function (PageClassification) {
+    PageClassification[PageClassification["MIN_VALUE"] = 0] = "MIN_VALUE";
+    PageClassification[PageClassification["MAX_VALUE"] = 41] = "MAX_VALUE";
+    PageClassification[PageClassification["INVALID_SPEC"] = 0] = "INVALID_SPEC";
+    PageClassification[PageClassification["NTP"] = 1] = "NTP";
+    PageClassification[PageClassification["BLANK"] = 2] = "BLANK";
+    PageClassification[PageClassification["HOME_PAGE"] = 3] = "HOME_PAGE";
+    PageClassification[PageClassification["OTHER"] = 4] = "OTHER";
+    PageClassification[PageClassification["SEARCH_RESULT_PAGE_DOING_SEARCH_TERM_REPLACEMENT"] = 6] = "SEARCH_RESULT_PAGE_DOING_SEARCH_TERM_REPLACEMENT";
+    PageClassification[PageClassification["INSTANT_NTP_WITH_OMNIBOX_AS_STARTING_FOCUS"] = 7] = "INSTANT_NTP_WITH_OMNIBOX_AS_STARTING_FOCUS";
+    PageClassification[PageClassification["SEARCH_RESULT_PAGE_NO_SEARCH_TERM_REPLACEMENT"] = 9] = "SEARCH_RESULT_PAGE_NO_SEARCH_TERM_REPLACEMENT";
+    PageClassification[PageClassification["APP_HOME"] = 10] = "APP_HOME";
+    PageClassification[PageClassification["APP_SEARCH"] = 11] = "APP_SEARCH";
+    PageClassification[PageClassification["APP_MAPS"] = 12] = "APP_MAPS";
+    PageClassification[PageClassification["SEARCH_BUTTON_AS_STARTING_FOCUS"] = 13] = "SEARCH_BUTTON_AS_STARTING_FOCUS";
+    PageClassification[PageClassification["CHROMEOS_APP_LIST"] = 14] = "CHROMEOS_APP_LIST";
+    PageClassification[PageClassification["NTP_REALBOX"] = 15] = "NTP_REALBOX";
+    PageClassification[PageClassification["ANDROID_SEARCH_WIDGET"] = 16] = "ANDROID_SEARCH_WIDGET";
+    PageClassification[PageClassification["ANDROID_SHORTCUTS_WIDGET"] = 19] = "ANDROID_SHORTCUTS_WIDGET";
+    PageClassification[PageClassification["NTP_ZPS_PREFETCH"] = 20] = "NTP_ZPS_PREFETCH";
+    PageClassification[PageClassification["JOURNEYS"] = 21] = "JOURNEYS";
+    PageClassification[PageClassification["SRP_ZPS_PREFETCH"] = 22] = "SRP_ZPS_PREFETCH";
+    PageClassification[PageClassification["OTHER_ZPS_PREFETCH"] = 23] = "OTHER_ZPS_PREFETCH";
+    PageClassification[PageClassification["CONTEXTUAL_SEARCHBOX"] = 24] = "CONTEXTUAL_SEARCHBOX";
+    PageClassification[PageClassification["SEARCH_SIDE_PANEL_SEARCHBOX"] = 25] = "SEARCH_SIDE_PANEL_SEARCHBOX";
+    PageClassification[PageClassification["LENS_SIDE_PANEL_SEARCHBOX"] = 26] = "LENS_SIDE_PANEL_SEARCHBOX";
+    PageClassification[PageClassification["SEARCH_RESULT_PAGE_ON_CCT"] = 27] = "SEARCH_RESULT_PAGE_ON_CCT";
+    PageClassification[PageClassification["OTHER_ON_CCT"] = 28] = "OTHER_ON_CCT";
+    PageClassification[PageClassification["ANDROID_HUB"] = 29] = "ANDROID_HUB";
+    PageClassification[PageClassification["JUMP_START"] = 30] = "JUMP_START";
+    PageClassification[PageClassification["NTP_COMPOSEBOX"] = 31] = "NTP_COMPOSEBOX";
+    PageClassification[PageClassification["LENS_SIDE_PANEL_COMPOSEBOX"] = 32] = "LENS_SIDE_PANEL_COMPOSEBOX";
+    PageClassification[PageClassification["NTP_OMNIBOX_COMPOSEBOX"] = 33] = "NTP_OMNIBOX_COMPOSEBOX";
+    PageClassification[PageClassification["SRP_OMNIBOX_COMPOSEBOX"] = 34] = "SRP_OMNIBOX_COMPOSEBOX";
+    PageClassification[PageClassification["OTHER_OMNIBOX_COMPOSEBOX"] = 35] = "OTHER_OMNIBOX_COMPOSEBOX";
+    PageClassification[PageClassification["CO_BROWSING_COMPOSEBOX"] = 36] = "CO_BROWSING_COMPOSEBOX";
+    PageClassification[PageClassification["NTP_COMPOSEBOX_PREFETCH"] = 37] = "NTP_COMPOSEBOX_PREFETCH";
+    PageClassification[PageClassification["OMNIBOX_EVERYWHERE"] = 38] = "OMNIBOX_EVERYWHERE";
+    PageClassification[PageClassification["COMPOSEBOX_EVERYWHERE"] = 39] = "COMPOSEBOX_EVERYWHERE";
+    PageClassification[PageClassification["ANDROID_TAB_SEARCH_OVERLAY"] = 40] = "ANDROID_TAB_SEARCH_OVERLAY";
+    PageClassification[PageClassification["NTP_ACTION_CHIPS"] = 41] = "NTP_ACTION_CHIPS";
+})(PageClassification || (PageClassification = {}));
+
+// components/omnibox/browser/suggest_template_info.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const ColorTypeSpec = { $: mojo.internal.Enum() };
+var ColorType;
+(function (ColorType) {
+    ColorType[ColorType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    ColorType[ColorType["MAX_VALUE"] = 16] = "MAX_VALUE";
+    ColorType[ColorType["kUnknown"] = 0] = "kUnknown";
+    ColorType[ColorType["kCanvas"] = 1] = "kCanvas";
+    ColorType[ColorType["kSurface"] = 2] = "kSurface";
+    ColorType[ColorType["kPrimary"] = 3] = "kPrimary";
+    ColorType[ColorType["kTertiary"] = 4] = "kTertiary";
+    ColorType[ColorType["kOnTertiary"] = 5] = "kOnTertiary";
+    ColorType[ColorType["kOnSurfaceLinkVisited"] = 6] = "kOnSurfaceLinkVisited";
+    ColorType[ColorType["kOnSurfaceDefault"] = 7] = "kOnSurfaceDefault";
+    ColorType[ColorType["kOnSurfacePositive"] = 8] = "kOnSurfacePositive";
+    ColorType[ColorType["kOnSurfaceNegative"] = 9] = "kOnSurfaceNegative";
+    ColorType[ColorType["kOnSurfaceEmphasis"] = 10] = "kOnSurfaceEmphasis";
+    ColorType[ColorType["kOnSurfaceDeemphasis"] = 11] = "kOnSurfaceDeemphasis";
+    ColorType[ColorType["kOutlineDefault"] = 12] = "kOutlineDefault";
+    ColorType[ColorType["kSubtitleText"] = 13] = "kSubtitleText";
+    ColorType[ColorType["kSuggestQueryText"] = 14] = "kSuggestQueryText";
+    ColorType[ColorType["kSuggestHintText"] = 15] = "kSuggestHintText";
+    ColorType[ColorType["kSuggestActionHigh"] = 16] = "kSuggestActionHigh";
+})(ColorType || (ColorType = {}));
+const SuggestStyleSpec = { $: mojo.internal.Enum() };
+var SuggestStyle;
+(function (SuggestStyle) {
+    SuggestStyle[SuggestStyle["MIN_VALUE"] = 0] = "MIN_VALUE";
+    SuggestStyle[SuggestStyle["MAX_VALUE"] = 4] = "MAX_VALUE";
+    SuggestStyle[SuggestStyle["kUnspecified"] = 0] = "kUnspecified";
+    SuggestStyle[SuggestStyle["kDefault"] = 1] = "kDefault";
+    SuggestStyle[SuggestStyle["kEnriched"] = 2] = "kEnriched";
+    SuggestStyle[SuggestStyle["kAnnotated"] = 3] = "kAnnotated";
+    SuggestStyle[SuggestStyle["kRichImage"] = 4] = "kRichImage";
+})(SuggestStyle || (SuggestStyle = {}));
+const IconTypeSpec = { $: mojo.internal.Enum() };
+var IconType;
+(function (IconType) {
+    IconType[IconType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    IconType[IconType["MAX_VALUE"] = 18] = "MAX_VALUE";
+    IconType[IconType["kIconTypeUnspecified"] = 0] = "kIconTypeUnspecified";
+    IconType[IconType["kHistory"] = 1] = "kHistory";
+    IconType[IconType["kSearchLoop"] = 2] = "kSearchLoop";
+    IconType[IconType["kSearchLoopWithSparkle"] = 3] = "kSearchLoopWithSparkle";
+    IconType[IconType["kTrending"] = 4] = "kTrending";
+    IconType[IconType["kSubArrowRight"] = 5] = "kSubArrowRight";
+    IconType[IconType["kGlobeWithSearchLoop"] = 6] = "kGlobeWithSearchLoop";
+    IconType[IconType["kBanana"] = 7] = "kBanana";
+    IconType[IconType["kFavicon"] = 8] = "kFavicon";
+    IconType[IconType["kNotesSpark"] = 9] = "kNotesSpark";
+    IconType[IconType["kDraftSpark"] = 10] = "kDraftSpark";
+    IconType[IconType["kLightbulb"] = 11] = "kLightbulb";
+    IconType[IconType["kAttachFile"] = 12] = "kAttachFile";
+    IconType[IconType["kSchool"] = 13] = "kSchool";
+    IconType[IconType["kInkPen"] = 14] = "kInkPen";
+    IconType[IconType["kTab"] = 15] = "kTab";
+    IconType[IconType["kPhotoSpark"] = 16] = "kPhotoSpark";
+    IconType[IconType["kBolt"] = 17] = "kBolt";
+    IconType[IconType["kImageCreate"] = 18] = "kImageCreate";
+})(IconType || (IconType = {}));
+const SecondaryTextPlacementSpec = { $: mojo.internal.Enum() };
+var SecondaryTextPlacement;
+(function (SecondaryTextPlacement) {
+    SecondaryTextPlacement[SecondaryTextPlacement["MIN_VALUE"] = 0] = "MIN_VALUE";
+    SecondaryTextPlacement[SecondaryTextPlacement["MAX_VALUE"] = 2] = "MAX_VALUE";
+    SecondaryTextPlacement[SecondaryTextPlacement["kUnspecified"] = 0] = "kUnspecified";
+    SecondaryTextPlacement[SecondaryTextPlacement["kInFrontOfPrimaryText"] = 1] = "kInFrontOfPrimaryText";
+    SecondaryTextPlacement[SecondaryTextPlacement["kBelowPrimaryText"] = 2] = "kBelowPrimaryText";
+})(SecondaryTextPlacement || (SecondaryTextPlacement = {}));
+const FormattedStringFragmentSpec = { $: {} };
+const FormattedStringSpec = { $: {} };
+const ImageSpec = { $: {} };
+const SuggestTemplateInfoSpec = { $: {} };
+mojo.internal.Struct(FormattedStringFragmentSpec.$, 'FormattedStringFragment', [
+    mojo.internal.StructField('startIndex', 0, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('color', 4, 0, ColorTypeSpec.$, ColorType.kUnknown, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isBolded', 8, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(FormattedStringSpec.$, 'FormattedString', [
+    mojo.internal.StructField('text', 0, 0, String16Spec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('fragments', 8, 0, mojo.internal.Array(FormattedStringFragmentSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('a11yText', 16, 0, String16Spec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(ImageSpec.$, 'Image', [
+    mojo.internal.StructField('url', 0, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('dominantColor', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(SuggestTemplateInfoSpec.$, 'SuggestTemplateInfo', [
+    mojo.internal.StructField('primaryText', 0, 0, FormattedStringSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('secondaryText', 8, 0, FormattedStringSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('secondaryTextPlacement', 16, 0, SecondaryTextPlacementSpec.$, SecondaryTextPlacement.kUnspecified, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('image', 24, 0, ImageSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('style', 20, 0, SuggestStyleSpec.$, SuggestStyle.kUnspecified, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('typeIcon', 32, 0, IconTypeSpec.$, IconType.kIconTypeUnspecified, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('fuseboxAction', 40, 0, FuseboxActionSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 56],]);
+
+// components/omnibox/browser/searchbox.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const UrlDeemphasisModeSpec = { $: mojo.internal.Enum() };
+var UrlDeemphasisMode;
+(function (UrlDeemphasisMode) {
+    UrlDeemphasisMode[UrlDeemphasisMode["MIN_VALUE"] = 0] = "MIN_VALUE";
+    UrlDeemphasisMode[UrlDeemphasisMode["MAX_VALUE"] = 3] = "MAX_VALUE";
+    UrlDeemphasisMode[UrlDeemphasisMode["kEverything"] = 0] = "kEverything";
+    UrlDeemphasisMode[UrlDeemphasisMode["kAllButScheme"] = 1] = "kAllButScheme";
+    UrlDeemphasisMode[UrlDeemphasisMode["kAllButHost"] = 2] = "kAllButHost";
+    UrlDeemphasisMode[UrlDeemphasisMode["kNothing"] = 3] = "kNothing";
+})(UrlDeemphasisMode || (UrlDeemphasisMode = {}));
+const KeywordTypeSpec = { $: mojo.internal.Enum() };
+var KeywordType;
+(function (KeywordType) {
+    KeywordType[KeywordType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    KeywordType[KeywordType["MAX_VALUE"] = 2] = "MAX_VALUE";
+    KeywordType[KeywordType["kChip"] = 0] = "kChip";
+    KeywordType[KeywordType["kInKeyword"] = 1] = "kInKeyword";
+    KeywordType[KeywordType["kInstant"] = 2] = "kInstant";
+})(KeywordType || (KeywordType = {}));
+const KeywordActivationMethodSpec = { $: mojo.internal.Enum() };
+var KeywordActivationMethod;
+(function (KeywordActivationMethod) {
+    KeywordActivationMethod[KeywordActivationMethod["MIN_VALUE"] = 0] = "MIN_VALUE";
+    KeywordActivationMethod[KeywordActivationMethod["MAX_VALUE"] = 2] = "MAX_VALUE";
+    KeywordActivationMethod[KeywordActivationMethod["kClick"] = 0] = "kClick";
+    KeywordActivationMethod[KeywordActivationMethod["kTap"] = 1] = "kTap";
+    KeywordActivationMethod[KeywordActivationMethod["kKeyboard"] = 2] = "kKeyboard";
+})(KeywordActivationMethod || (KeywordActivationMethod = {}));
+const TabAttachmentSourceSpec = { $: mojo.internal.Enum() };
+var TabAttachmentSource;
+(function (TabAttachmentSource) {
+    TabAttachmentSource[TabAttachmentSource["MIN_VALUE"] = 0] = "MIN_VALUE";
+    TabAttachmentSource[TabAttachmentSource["MAX_VALUE"] = 5] = "MAX_VALUE";
+    TabAttachmentSource[TabAttachmentSource["kOther"] = 0] = "kOther";
+    TabAttachmentSource[TabAttachmentSource["kContextMenu"] = 1] = "kContextMenu";
+    TabAttachmentSource[TabAttachmentSource["kCurrentTabChip"] = 2] = "kCurrentTabChip";
+    TabAttachmentSource[TabAttachmentSource["kActionChip"] = 3] = "kActionChip";
+    TabAttachmentSource[TabAttachmentSource["kAutoActive"] = 4] = "kAutoActive";
+    TabAttachmentSource[TabAttachmentSource["kAutoAdded"] = 5] = "kAutoAdded";
+})(TabAttachmentSource || (TabAttachmentSource = {}));
+const FreStageSpec = { $: mojo.internal.Enum() };
+var FreStage;
+(function (FreStage) {
+    FreStage[FreStage["MIN_VALUE"] = 0] = "MIN_VALUE";
+    FreStage[FreStage["MAX_VALUE"] = 3] = "MAX_VALUE";
+    FreStage[FreStage["kNone"] = 0] = "kNone";
+    FreStage[FreStage["kIntroModal"] = 1] = "kIntroModal";
+    FreStage[FreStage["kShortcutSetupChin"] = 2] = "kShortcutSetupChin";
+    FreStage[FreStage["kShortcutReminderChin"] = 3] = "kShortcutReminderChin";
+})(FreStage || (FreStage = {}));
+const SideTypeSpec = { $: mojo.internal.Enum() };
+var SideType;
+(function (SideType) {
+    SideType[SideType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    SideType[SideType["MAX_VALUE"] = 1] = "MAX_VALUE";
+    SideType[SideType["kDefaultPrimary"] = 0] = "kDefaultPrimary";
+    SideType[SideType["kSecondary"] = 1] = "kSecondary";
+})(SideType || (SideType = {}));
+const RenderTypeSpec = { $: mojo.internal.Enum() };
+var RenderType;
+(function (RenderType) {
+    RenderType[RenderType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    RenderType[RenderType["MAX_VALUE"] = 2] = "MAX_VALUE";
+    RenderType[RenderType["kDefaultVertical"] = 0] = "kDefaultVertical";
+    RenderType[RenderType["kHorizontal"] = 1] = "kHorizontal";
+    RenderType[RenderType["kGrid"] = 2] = "kGrid";
+})(RenderType || (RenderType = {}));
+const SelectionLineStateSpec = { $: mojo.internal.Enum() };
+var SelectionLineState;
+(function (SelectionLineState) {
+    SelectionLineState[SelectionLineState["MIN_VALUE"] = 1] = "MIN_VALUE";
+    SelectionLineState[SelectionLineState["MAX_VALUE"] = 10] = "MAX_VALUE";
+    SelectionLineState[SelectionLineState["kNormal"] = 1] = "kNormal";
+    SelectionLineState[SelectionLineState["kKeywordMode"] = 2] = "kKeywordMode";
+    SelectionLineState[SelectionLineState["kFocusedButtonAction"] = 3] = "kFocusedButtonAction";
+    SelectionLineState[SelectionLineState["kFocusedButtonRemoveSuggestion"] = 4] = "kFocusedButtonRemoveSuggestion";
+    SelectionLineState[SelectionLineState["kFocusedButtonAim"] = 5] = "kFocusedButtonAim";
+    SelectionLineState[SelectionLineState["kFocusedButtonContextEntrypoint"] = 6] = "kFocusedButtonContextEntrypoint";
+    SelectionLineState[SelectionLineState["kCtrlEnter"] = 7] = "kCtrlEnter";
+    SelectionLineState[SelectionLineState["kFocusedButtonVoiceSearch"] = 8] = "kFocusedButtonVoiceSearch";
+    SelectionLineState[SelectionLineState["kFocusedButtonLensSearch"] = 9] = "kFocusedButtonLensSearch";
+    SelectionLineState[SelectionLineState["kFocusedButtonContextualChip"] = 10] = "kFocusedButtonContextualChip";
+})(SelectionLineState || (SelectionLineState = {}));
+const SelectionDirectionSpec = { $: mojo.internal.Enum() };
+var SelectionDirection;
+(function (SelectionDirection) {
+    SelectionDirection[SelectionDirection["MIN_VALUE"] = 1] = "MIN_VALUE";
+    SelectionDirection[SelectionDirection["MAX_VALUE"] = 2] = "MAX_VALUE";
+    SelectionDirection[SelectionDirection["kForward"] = 1] = "kForward";
+    SelectionDirection[SelectionDirection["kBackward"] = 2] = "kBackward";
+})(SelectionDirection || (SelectionDirection = {}));
+const SelectionStepSpec = { $: mojo.internal.Enum() };
+var SelectionStep;
+(function (SelectionStep) {
+    SelectionStep[SelectionStep["MIN_VALUE"] = 1] = "MIN_VALUE";
+    SelectionStep[SelectionStep["MAX_VALUE"] = 3] = "MAX_VALUE";
+    SelectionStep[SelectionStep["kWholeLine"] = 1] = "kWholeLine";
+    SelectionStep[SelectionStep["kStateOrLine"] = 2] = "kStateOrLine";
+    SelectionStep[SelectionStep["kAllLines"] = 3] = "kAllLines";
+})(SelectionStep || (SelectionStep = {}));
+const DriveUploadErrorSpec = { $: mojo.internal.Enum() };
+var DriveUploadError;
+(function (DriveUploadError) {
+    DriveUploadError[DriveUploadError["MIN_VALUE"] = 0] = "MIN_VALUE";
+    DriveUploadError[DriveUploadError["MAX_VALUE"] = 1] = "MAX_VALUE";
+    DriveUploadError[DriveUploadError["kSizeLimitExceeded"] = 0] = "kSizeLimitExceeded";
+    DriveUploadError[DriveUploadError["kMaxFilesExceeded"] = 1] = "kMaxFilesExceeded";
+})(DriveUploadError || (DriveUploadError = {}));
+const DriveDisclaimerStatusSpec = { $: mojo.internal.Enum() };
+var DriveDisclaimerStatus;
+(function (DriveDisclaimerStatus) {
+    DriveDisclaimerStatus[DriveDisclaimerStatus["MIN_VALUE"] = 0] = "MIN_VALUE";
+    DriveDisclaimerStatus[DriveDisclaimerStatus["MAX_VALUE"] = 2] = "MAX_VALUE";
+    DriveDisclaimerStatus[DriveDisclaimerStatus["kNotAccepted"] = 0] = "kNotAccepted";
+    DriveDisclaimerStatus[DriveDisclaimerStatus["kAccepted"] = 1] = "kAccepted";
+    DriveDisclaimerStatus[DriveDisclaimerStatus["kRestricted"] = 2] = "kRestricted";
+})(DriveDisclaimerStatus || (DriveDisclaimerStatus = {}));
+const InputMethodSpec = { $: mojo.internal.Enum() };
+var InputMethod;
+(function (InputMethod) {
+    InputMethod[InputMethod["MIN_VALUE"] = 1] = "MIN_VALUE";
+    InputMethod[InputMethod["MAX_VALUE"] = 11] = "MAX_VALUE";
+    InputMethod[InputMethod["kKeyboard"] = 1] = "kKeyboard";
+    InputMethod[InputMethod["kPaste"] = 2] = "kPaste";
+    InputMethod[InputMethod["kSpeech"] = 6] = "kSpeech";
+    InputMethod[InputMethod["kTab"] = 8] = "kTab";
+    InputMethod[InputMethod["kLensCamera"] = 10] = "kLensCamera";
+    InputMethod[InputMethod["kSmartCompose"] = 11] = "kSmartCompose";
+})(InputMethod || (InputMethod = {}));
+let PageHandlerFactoryPendingReceiver$1 = class PageHandlerFactoryPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'searchbox.mojom.PageHandlerFactory', scope);
+    }
+};
+let PageHandlerFactoryRemote$1 = class PageHandlerFactoryRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PageHandlerFactoryPendingReceiver$1, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    createPageHandler(page, handler) {
+        this.proxy.sendMessage(0, PageHandlerFactory_CreatePageHandler_ParamsSpec$1.$, null, [
+            page,
+            handler
+        ], false);
+    }
+};
+let PageHandlerFactory$1 = class PageHandlerFactory {
+    static get $interfaceName() {
+        return "searchbox.mojom.PageHandlerFactory";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new PageHandlerFactoryRemote$1;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+};
+let PageHandlerPendingReceiver$3 = class PageHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'searchbox.mojom.PageHandler', scope);
+    }
+};
+let PageHandlerRemote$3 = class PageHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PageHandlerPendingReceiver$3, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    onFocusChanged(focused) {
+        this.proxy.sendMessage(0, PageHandler_OnFocusChanged_ParamsSpec.$, null, [
+            focused
+        ], false);
+    }
+    queryAutocomplete(queryId, tabId, input, preventInlineAutocomplete, cursorPosition, suggestInventory, isOnFocus, keyword, inputMethod) {
+        this.proxy.sendMessage(1, PageHandler_QueryAutocomplete_ParamsSpec.$, null, [
+            queryId,
+            tabId,
+            input,
+            preventInlineAutocomplete,
+            cursorPosition,
+            suggestInventory,
+            isOnFocus,
+            keyword,
+            inputMethod
+        ], false);
+    }
+    stopAutocomplete(clearResult) {
+        this.proxy.sendMessage(2, PageHandler_StopAutocomplete_ParamsSpec.$, null, [
+            clearResult
+        ], false);
+    }
+    openAutocompleteMatch(resultSequenceId, line, url, areMatchesShowing, mouseButton, modifiers, viaKeyboard) {
+        this.proxy.sendMessage(3, PageHandler_OpenAutocompleteMatch_ParamsSpec.$, null, [
+            resultSequenceId,
+            line,
+            url,
+            areMatchesShowing,
+            mouseButton,
+            modifiers,
+            viaKeyboard
+        ], false);
+    }
+    setSmartComposeStats(smartComposeStats) {
+        this.proxy.sendMessage(4, PageHandler_SetSmartComposeStats_ParamsSpec.$, null, [
+            smartComposeStats
+        ], false);
+    }
+    setPopupSelection(selection) {
+        this.proxy.sendMessage(5, PageHandler_SetPopupSelection_ParamsSpec.$, null, [
+            selection
+        ], false);
+    }
+    openPopupSelection(resultSequenceId, selection, disposition) {
+        this.proxy.sendMessage(6, PageHandler_OpenPopupSelection_ParamsSpec.$, null, [
+            resultSequenceId,
+            selection,
+            disposition
+        ], false);
+    }
+    onNavigationLikely(line, url, navigationPredictor) {
+        this.proxy.sendMessage(7, PageHandler_OnNavigationLikely_ParamsSpec.$, null, [
+            line,
+            url,
+            navigationPredictor
+        ], false);
+    }
+    deleteAutocompleteMatch(line, url) {
+        this.proxy.sendMessage(8, PageHandler_DeleteAutocompleteMatch_ParamsSpec.$, null, [
+            line,
+            url
+        ], false);
+    }
+    activateKeyword(line, url, matchSelectionTimestamp, activationMethod) {
+        this.proxy.sendMessage(9, PageHandler_ActivateKeyword_ParamsSpec.$, null, [
+            line,
+            url,
+            matchSelectionTimestamp,
+            activationMethod
+        ], false);
+    }
+    executeAction(line, actionIndex, url, matchSelectionTimestamp, mouseButton, altKey, ctrlKey, metaKey, shiftKey) {
+        this.proxy.sendMessage(10, PageHandler_ExecuteAction_ParamsSpec.$, null, [
+            line,
+            actionIndex,
+            url,
+            matchSelectionTimestamp,
+            mouseButton,
+            altKey,
+            ctrlKey,
+            metaKey,
+            shiftKey
+        ], false);
+    }
+    onThumbnailRemoved() {
+        this.proxy.sendMessage(11, PageHandler_OnThumbnailRemoved_ParamsSpec.$, null, [], false);
+    }
+    getCyclingPlaceholderConfig() {
+        return this.proxy.sendMessage(12, PageHandler_GetCyclingPlaceholderConfig_ParamsSpec.$, PageHandler_GetCyclingPlaceholderConfig_ResponseParamsSpec.$, [], false);
+    }
+    getRecentTabs() {
+        return this.proxy.sendMessage(13, PageHandler_GetRecentTabs_ParamsSpec.$, PageHandler_GetRecentTabs_ResponseParamsSpec.$, [], false);
+    }
+    getTabPreview(tabId) {
+        return this.proxy.sendMessage(14, PageHandler_GetTabPreview_ParamsSpec.$, PageHandler_GetTabPreview_ResponseParamsSpec.$, [
+            tabId
+        ], false);
+    }
+    waitForTabFaviconLoad(tabId) {
+        return this.proxy.sendMessage(15, PageHandler_WaitForTabFaviconLoad_ParamsSpec.$, PageHandler_WaitForTabFaviconLoad_ResponseParamsSpec.$, [
+            tabId
+        ], false);
+    }
+    getInputState() {
+        return this.proxy.sendMessage(16, PageHandler_GetInputState_ParamsSpec.$, PageHandler_GetInputState_ResponseParamsSpec.$, [], false);
+    }
+    notifySessionStarted() {
+        this.proxy.sendMessage(17, PageHandler_NotifySessionStarted_ParamsSpec.$, null, [], false);
+    }
+    notifySessionAbandoned() {
+        this.proxy.sendMessage(18, PageHandler_NotifySessionAbandoned_ParamsSpec.$, null, [], false);
+    }
+    addFileContext(fileInfo, fileBytes) {
+        return this.proxy.sendMessage(19, PageHandler_AddFileContext_ParamsSpec.$, PageHandler_AddFileContext_ResponseParamsSpec.$, [
+            fileInfo,
+            fileBytes
+        ], true);
+    }
+    addTabContext(tabId, delayUpload, source) {
+        return this.proxy.sendMessage(20, PageHandler_AddTabContext_ParamsSpec.$, PageHandler_AddTabContext_ResponseParamsSpec.$, [
+            tabId,
+            delayUpload,
+            source
+        ], true);
+    }
+    deleteContext(token, fromAutomaticChip) {
+        this.proxy.sendMessage(21, PageHandler_DeleteContext_ParamsSpec.$, null, [
+            token,
+            fromAutomaticChip
+        ], false);
+    }
+    deleteTabContext(tabId) {
+        this.proxy.sendMessage(22, PageHandler_DeleteTabContext_ParamsSpec.$, null, [
+            tabId
+        ], false);
+    }
+    clearFiles(shouldBlockAutoSuggestedTabs) {
+        this.proxy.sendMessage(23, PageHandler_ClearFiles_ParamsSpec.$, null, [
+            shouldBlockAutoSuggestedTabs
+        ], false);
+    }
+    submitQuery(queryText, mouseButton, altKey, ctrlKey, metaKey, shiftKey, isVoiceSearch) {
+        this.proxy.sendMessage(24, PageHandler_SubmitQuery_ParamsSpec.$, null, [
+            queryText,
+            mouseButton,
+            altKey,
+            ctrlKey,
+            metaKey,
+            shiftKey,
+            isVoiceSearch
+        ], false);
+    }
+    openLensSearch() {
+        this.proxy.sendMessage(25, PageHandler_OpenLensSearch_ParamsSpec.$, null, [], false);
+    }
+    setActiveToolMode(tool, isSetByAim) {
+        this.proxy.sendMessage(26, PageHandler_SetActiveToolMode_ParamsSpec.$, null, [
+            tool,
+            isSetByAim
+        ], false);
+    }
+    setActiveModelMode(model, isSetByAim) {
+        this.proxy.sendMessage(27, PageHandler_SetActiveModelMode_ParamsSpec.$, null, [
+            model,
+            isSetByAim
+        ], false);
+    }
+    activateMetricsFunnel(funnelName) {
+        this.proxy.sendMessage(28, PageHandler_ActivateMetricsFunnel_ParamsSpec.$, null, [
+            funnelName
+        ], false);
+    }
+    recordToolSelectionAction(tool) {
+        this.proxy.sendMessage(29, PageHandler_RecordToolSelectionAction_ParamsSpec.$, null, [
+            tool
+        ], false);
+    }
+    recordModelSelectionAction(model) {
+        this.proxy.sendMessage(30, PageHandler_RecordModelSelectionAction_ParamsSpec.$, null, [
+            model
+        ], false);
+    }
+    getDriveDisclaimerStatus() {
+        return this.proxy.sendMessage(31, PageHandler_GetDriveDisclaimerStatus_ParamsSpec.$, PageHandler_GetDriveDisclaimerStatus_ResponseParamsSpec.$, [], false);
+    }
+    onDriveDisclaimerAccepted() {
+        this.proxy.sendMessage(32, PageHandler_OnDriveDisclaimerAccepted_ParamsSpec.$, null, [], false);
+    }
+    onDriveUploadClicked() {
+        return this.proxy.sendMessage(33, PageHandler_OnDriveUploadClicked_ParamsSpec.$, PageHandler_OnDriveUploadClicked_ResponseParamsSpec.$, [], false);
+    }
+    openProfilePicker() {
+        this.proxy.sendMessage(34, PageHandler_OpenProfilePicker_ParamsSpec.$, null, [], false);
+    }
+    showScreenshotMenu(anchorRect) {
+        this.proxy.sendMessage(35, PageHandler_ShowScreenshotMenu_ParamsSpec.$, null, [
+            anchorRect
+        ], false);
+    }
+    startScreenshare(preferEntireScreen) {
+        return this.proxy.sendMessage(36, PageHandler_StartScreenshare_ParamsSpec.$, PageHandler_StartScreenshare_ResponseParamsSpec.$, [
+            preferEntireScreen
+        ], false);
+    }
+    captureRegionScreenshot() {
+        return this.proxy.sendMessage(37, PageHandler_CaptureRegionScreenshot_ParamsSpec.$, PageHandler_CaptureRegionScreenshot_ResponseParamsSpec.$, [], false);
+    }
+    getPageClassification() {
+        return this.proxy.sendMessage(38, PageHandler_GetPageClassification_ParamsSpec.$, PageHandler_GetPageClassification_ResponseParamsSpec.$, [], false);
+    }
+    setSmartTabSharingActive(active) {
+        this.proxy.sendMessage(39, PageHandler_SetSmartTabSharingActive_ParamsSpec.$, null, [
+            active
+        ], false);
+    }
+    getSmartTabSharingActive() {
+        return this.proxy.sendMessage(40, PageHandler_GetSmartTabSharingActive_ParamsSpec.$, PageHandler_GetSmartTabSharingActive_ResponseParamsSpec.$, [], false);
+    }
+    resetSmartTabSharing() {
+        return this.proxy.sendMessage(41, PageHandler_ResetSmartTabSharing_ParamsSpec.$, PageHandler_ResetSmartTabSharing_ResponseParamsSpec.$, [], false);
+    }
+    dismissFre(stage) {
+        this.proxy.sendMessage(42, PageHandler_DismissFre_ParamsSpec.$, null, [
+            stage
+        ], false);
+    }
+    showHotkeyDropdown(anchorBounds) {
+        return this.proxy.sendMessage(43, PageHandler_ShowHotkeyDropdown_ParamsSpec.$, PageHandler_ShowHotkeyDropdown_ResponseParamsSpec.$, [
+            anchorBounds
+        ], false);
+    }
+    openHotkeySettings() {
+        this.proxy.sendMessage(44, PageHandler_OpenHotkeySettings_ParamsSpec.$, null, [], false);
+    }
+    onEscapePressed() {
+        this.proxy.sendMessage(45, PageHandler_OnEscapePressed_ParamsSpec.$, null, [], false);
+    }
+};
+let PagePendingReceiver$2 = class PagePendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'searchbox.mojom.Page', scope);
+    }
+};
+let PageRemote$2 = class PageRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PagePendingReceiver$2, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    setFreState(state) {
+        this.proxy.sendMessage(0, Page_SetFreState_ParamsSpec.$, null, [
+            state
+        ], false);
+    }
+    autocompleteResultChanged(result) {
+        this.proxy.sendMessage(1, Page_AutocompleteResultChanged_ParamsSpec.$, null, [
+            result
+        ], false);
+    }
+    updateSelection(oldSelection, selection) {
+        this.proxy.sendMessage(2, Page_UpdateSelection_ParamsSpec.$, null, [
+            oldSelection,
+            selection
+        ], false);
+    }
+    stepSelection(direction, step) {
+        this.proxy.sendMessage(3, Page_StepSelection_ParamsSpec.$, null, [
+            direction,
+            step
+        ], false);
+    }
+    openCurrentSelection(disposition) {
+        this.proxy.sendMessage(4, Page_OpenCurrentSelection_ParamsSpec.$, null, [
+            disposition
+        ], false);
+    }
+    setAimButtonVisible(visible) {
+        this.proxy.sendMessage(5, Page_SetAimButtonVisible_ParamsSpec.$, null, [
+            visible
+        ], false);
+    }
+    setAimButtonConfig(text, tooltip, a11yLabel, iconUrl) {
+        this.proxy.sendMessage(6, Page_SetAimButtonConfig_ParamsSpec.$, null, [
+            text,
+            tooltip,
+            a11yLabel,
+            iconUrl
+        ], false);
+    }
+    setInputText(input) {
+        this.proxy.sendMessage(7, Page_SetInputText_ParamsSpec.$, null, [
+            input
+        ], false);
+    }
+    setKeywordSpaceTriggeringEnabled(enabled) {
+        this.proxy.sendMessage(8, Page_SetKeywordSpaceTriggeringEnabled_ParamsSpec.$, null, [
+            enabled
+        ], false);
+    }
+    setAvailableKeywordModels(models, defaultSearchProviderKeyword) {
+        this.proxy.sendMessage(9, Page_SetAvailableKeywordModels_ParamsSpec.$, null, [
+            models,
+            defaultSearchProviderKeyword
+        ], false);
+    }
+    setThumbnail(thumbnailUrl, isDeletable) {
+        this.proxy.sendMessage(10, Page_SetThumbnail_ParamsSpec.$, null, [
+            thumbnailUrl,
+            isDeletable
+        ], false);
+    }
+    onContextualInputStatusChanged(token, status, errorType) {
+        this.proxy.sendMessage(11, Page_OnContextualInputStatusChanged_ParamsSpec.$, null, [
+            token,
+            status,
+            errorType
+        ], false);
+    }
+    onTabStripChanged() {
+        this.proxy.sendMessage(12, Page_OnTabStripChanged_ParamsSpec.$, null, [], false);
+    }
+    onInputStateChanged(inputState) {
+        this.proxy.sendMessage(13, Page_OnInputStateChanged_ParamsSpec.$, null, [
+            inputState
+        ], false);
+    }
+    addFileContext(token, fileInfo) {
+        this.proxy.sendMessage(14, Page_AddFileContext_ParamsSpec.$, null, [
+            token,
+            fileInfo
+        ], false);
+    }
+    updateAutoSuggestedTabContext(tab, invocationSource) {
+        this.proxy.sendMessage(15, Page_UpdateAutoSuggestedTabContext_ParamsSpec.$, null, [
+            tab,
+            invocationSource
+        ], false);
+    }
+    updateLensSearchEligibility(eligible) {
+        this.proxy.sendMessage(16, Page_UpdateLensSearchEligibility_ParamsSpec.$, null, [
+            eligible
+        ], false);
+    }
+    updateContentSharingPolicy(enabled) {
+        this.proxy.sendMessage(17, Page_UpdateContentSharingPolicy_ParamsSpec.$, null, [
+            enabled
+        ], false);
+    }
+    updateAimPopupEligibility(eligible) {
+        this.proxy.sendMessage(18, Page_UpdateAimPopupEligibility_ParamsSpec.$, null, [
+            eligible
+        ], false);
+    }
+    updateSmartTabSharingActive(active) {
+        this.proxy.sendMessage(19, Page_UpdateSmartTabSharingActive_ParamsSpec.$, null, [
+            active
+        ], false);
+    }
+    onPermissionPromptChanged(isShowing, promptSize) {
+        this.proxy.sendMessage(20, Page_OnPermissionPromptChanged_ParamsSpec.$, null, [
+            isShowing,
+            promptSize
+        ], false);
+    }
+    setRestoredTabIds(ids) {
+        this.proxy.sendMessage(21, Page_SetRestoredTabIds_ParamsSpec.$, null, [
+            ids
+        ], false);
+    }
+    setAimThreadRestoredTabs(tabs) {
+        this.proxy.sendMessage(22, Page_SetAimThreadRestoredTabs_ParamsSpec.$, null, [
+            tabs
+        ], false);
+    }
+    onScreenshotMenuClosed() {
+        this.proxy.sendMessage(23, Page_OnScreenshotMenuClosed_ParamsSpec.$, null, [], false);
+    }
+    updateProfileInfo(avatarUrl, name, email) {
+        this.proxy.sendMessage(24, Page_UpdateProfileInfo_ParamsSpec.$, null, [
+            avatarUrl,
+            name,
+            email
+        ], false);
+    }
+};
+/**
+ * An object which receives request messages for the Page
+ * mojom interface and dispatches them as callbacks. One callback receiver exists
+ * on this object for each message defined in the mojom interface, and each
+ * receiver can have any number of listeners added to it.
+ */
+let PageCallbackRouter$2 = class PageCallbackRouter {
+    helper_internal_;
+    $;
+    router_;
+    setFreState;
+    autocompleteResultChanged;
+    updateSelection;
+    stepSelection;
+    openCurrentSelection;
+    setAimButtonVisible;
+    setAimButtonConfig;
+    setInputText;
+    setKeywordSpaceTriggeringEnabled;
+    setAvailableKeywordModels;
+    setThumbnail;
+    onContextualInputStatusChanged;
+    onTabStripChanged;
+    onInputStateChanged;
+    addFileContext;
+    updateAutoSuggestedTabContext;
+    updateLensSearchEligibility;
+    updateContentSharingPolicy;
+    updateAimPopupEligibility;
+    updateSmartTabSharingActive;
+    onPermissionPromptChanged;
+    setRestoredTabIds;
+    setAimThreadRestoredTabs;
+    onScreenshotMenuClosed;
+    updateProfileInfo;
+    onConnectionError;
+    constructor() {
+        this.helper_internal_ = new mojo.internal.interfaceSupport.InterfaceReceiverHelperInternal(PageRemote$2);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceReceiverHelper(this.helper_internal_);
+        this.router_ = new mojo.internal.interfaceSupport.CallbackRouter;
+        this.setFreState =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(0, Page_SetFreState_ParamsSpec.$, null, this.setFreState.createReceiverHandler(false /* expectsResponse */), false);
+        this.autocompleteResultChanged =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(1, Page_AutocompleteResultChanged_ParamsSpec.$, null, this.autocompleteResultChanged.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateSelection =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(2, Page_UpdateSelection_ParamsSpec.$, null, this.updateSelection.createReceiverHandler(false /* expectsResponse */), false);
+        this.stepSelection =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(3, Page_StepSelection_ParamsSpec.$, null, this.stepSelection.createReceiverHandler(false /* expectsResponse */), false);
+        this.openCurrentSelection =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(4, Page_OpenCurrentSelection_ParamsSpec.$, null, this.openCurrentSelection.createReceiverHandler(false /* expectsResponse */), false);
+        this.setAimButtonVisible =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(5, Page_SetAimButtonVisible_ParamsSpec.$, null, this.setAimButtonVisible.createReceiverHandler(false /* expectsResponse */), false);
+        this.setAimButtonConfig =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(6, Page_SetAimButtonConfig_ParamsSpec.$, null, this.setAimButtonConfig.createReceiverHandler(false /* expectsResponse */), false);
+        this.setInputText =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(7, Page_SetInputText_ParamsSpec.$, null, this.setInputText.createReceiverHandler(false /* expectsResponse */), false);
+        this.setKeywordSpaceTriggeringEnabled =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(8, Page_SetKeywordSpaceTriggeringEnabled_ParamsSpec.$, null, this.setKeywordSpaceTriggeringEnabled.createReceiverHandler(false /* expectsResponse */), false);
+        this.setAvailableKeywordModels =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(9, Page_SetAvailableKeywordModels_ParamsSpec.$, null, this.setAvailableKeywordModels.createReceiverHandler(false /* expectsResponse */), false);
+        this.setThumbnail =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(10, Page_SetThumbnail_ParamsSpec.$, null, this.setThumbnail.createReceiverHandler(false /* expectsResponse */), false);
+        this.onContextualInputStatusChanged =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(11, Page_OnContextualInputStatusChanged_ParamsSpec.$, null, this.onContextualInputStatusChanged.createReceiverHandler(false /* expectsResponse */), false);
+        this.onTabStripChanged =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(12, Page_OnTabStripChanged_ParamsSpec.$, null, this.onTabStripChanged.createReceiverHandler(false /* expectsResponse */), false);
+        this.onInputStateChanged =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(13, Page_OnInputStateChanged_ParamsSpec.$, null, this.onInputStateChanged.createReceiverHandler(false /* expectsResponse */), false);
+        this.addFileContext =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(14, Page_AddFileContext_ParamsSpec.$, null, this.addFileContext.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateAutoSuggestedTabContext =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(15, Page_UpdateAutoSuggestedTabContext_ParamsSpec.$, null, this.updateAutoSuggestedTabContext.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateLensSearchEligibility =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(16, Page_UpdateLensSearchEligibility_ParamsSpec.$, null, this.updateLensSearchEligibility.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateContentSharingPolicy =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(17, Page_UpdateContentSharingPolicy_ParamsSpec.$, null, this.updateContentSharingPolicy.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateAimPopupEligibility =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(18, Page_UpdateAimPopupEligibility_ParamsSpec.$, null, this.updateAimPopupEligibility.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateSmartTabSharingActive =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(19, Page_UpdateSmartTabSharingActive_ParamsSpec.$, null, this.updateSmartTabSharingActive.createReceiverHandler(false /* expectsResponse */), false);
+        this.onPermissionPromptChanged =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(20, Page_OnPermissionPromptChanged_ParamsSpec.$, null, this.onPermissionPromptChanged.createReceiverHandler(false /* expectsResponse */), false);
+        this.setRestoredTabIds =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(21, Page_SetRestoredTabIds_ParamsSpec.$, null, this.setRestoredTabIds.createReceiverHandler(false /* expectsResponse */), false);
+        this.setAimThreadRestoredTabs =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(22, Page_SetAimThreadRestoredTabs_ParamsSpec.$, null, this.setAimThreadRestoredTabs.createReceiverHandler(false /* expectsResponse */), false);
+        this.onScreenshotMenuClosed =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(23, Page_OnScreenshotMenuClosed_ParamsSpec.$, null, this.onScreenshotMenuClosed.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateProfileInfo =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(24, Page_UpdateProfileInfo_ParamsSpec.$, null, this.updateProfileInfo.createReceiverHandler(false /* expectsResponse */), false);
+        this.onConnectionError = this.helper_internal_.getConnectionErrorEventRouter();
+    }
+    /**
+     * @param id An ID returned by a prior call to addListener.
+     * @return True iff the identified listener was found and removed.
+     */
+    removeListener(id) {
+        return this.router_.removeListener(id);
+    }
+};
+const UrlEmphasisSpec = { $: {} };
+const ACMatchClassificationSpec = { $: {} };
+const ActionSpec = { $: {} };
+const InputKeywordModelSpec = { $: {} };
+const MatchKeywordModelSpec = { $: {} };
+const AutocompleteMatchSpec = { $: {} };
+const TabInfoSpec$1 = { $: {} };
+const FileAttachmentSpec = { $: {} };
+const TabAttachmentSpec = { $: {} };
+const SearchContextSpec = { $: {} };
+const FreStateSpec = { $: {} };
+const SelectedFileInfoSpec = { $: {} };
+const SuggestionGroupSpec = { $: {} };
+const SmartComposeStatsSpec = { $: {} };
+const AutocompleteResultSpec = { $: {} };
+const OmniboxPopupSelectionSpec = { $: {} };
+const ActionModifiersSpec = { $: {} };
+const PlaceholderConfigSpec = { $: {} };
+const DriveFileSpec = { $: {} };
+const DriveUploadResponseSpec = { $: {} };
+const PageHandlerFactory_CreatePageHandler_ParamsSpec$1 = { $: {} };
+const PageHandler_OnFocusChanged_ParamsSpec = { $: {} };
+const PageHandler_QueryAutocomplete_ParamsSpec = { $: {} };
+const PageHandler_StopAutocomplete_ParamsSpec = { $: {} };
+const PageHandler_OpenAutocompleteMatch_ParamsSpec = { $: {} };
+const PageHandler_SetSmartComposeStats_ParamsSpec = { $: {} };
+const PageHandler_SetPopupSelection_ParamsSpec = { $: {} };
+const PageHandler_OpenPopupSelection_ParamsSpec = { $: {} };
+const PageHandler_OnNavigationLikely_ParamsSpec = { $: {} };
+const PageHandler_DeleteAutocompleteMatch_ParamsSpec = { $: {} };
+const PageHandler_ActivateKeyword_ParamsSpec = { $: {} };
+const PageHandler_ExecuteAction_ParamsSpec = { $: {} };
+const PageHandler_OnThumbnailRemoved_ParamsSpec = { $: {} };
+const PageHandler_GetCyclingPlaceholderConfig_ParamsSpec = { $: {} };
+const PageHandler_GetCyclingPlaceholderConfig_ResponseParamsSpec = { $: {} };
+const PageHandler_GetRecentTabs_ParamsSpec = { $: {} };
+const PageHandler_GetRecentTabs_ResponseParamsSpec = { $: {} };
+const PageHandler_GetTabPreview_ParamsSpec = { $: {} };
+const PageHandler_GetTabPreview_ResponseParamsSpec = { $: {} };
+const PageHandler_WaitForTabFaviconLoad_ParamsSpec = { $: {} };
+const PageHandler_WaitForTabFaviconLoad_ResponseParamsSpec = { $: {} };
+const PageHandler_GetInputState_ParamsSpec = { $: {} };
+const PageHandler_GetInputState_ResponseParamsSpec = { $: {} };
+const PageHandler_NotifySessionStarted_ParamsSpec = { $: {} };
+const PageHandler_NotifySessionAbandoned_ParamsSpec = { $: {} };
+const PageHandler_AddFileContext_ParamsSpec = { $: {} };
+const PageHandler_AddFileContext_ResponseParamsSpec = { $: {} };
+const PageHandler_AddTabContext_ParamsSpec = { $: {} };
+const PageHandler_AddTabContext_ResponseParamsSpec = { $: {} };
+const PageHandler_DeleteContext_ParamsSpec = { $: {} };
+const PageHandler_DeleteTabContext_ParamsSpec = { $: {} };
+const PageHandler_ClearFiles_ParamsSpec = { $: {} };
+const PageHandler_SubmitQuery_ParamsSpec = { $: {} };
+const PageHandler_OpenLensSearch_ParamsSpec = { $: {} };
+const PageHandler_SetActiveToolMode_ParamsSpec = { $: {} };
+const PageHandler_SetActiveModelMode_ParamsSpec = { $: {} };
+const PageHandler_ActivateMetricsFunnel_ParamsSpec = { $: {} };
+const PageHandler_RecordToolSelectionAction_ParamsSpec = { $: {} };
+const PageHandler_RecordModelSelectionAction_ParamsSpec = { $: {} };
+const PageHandler_GetDriveDisclaimerStatus_ParamsSpec = { $: {} };
+const PageHandler_GetDriveDisclaimerStatus_ResponseParamsSpec = { $: {} };
+const PageHandler_OnDriveDisclaimerAccepted_ParamsSpec = { $: {} };
+const PageHandler_OnDriveUploadClicked_ParamsSpec = { $: {} };
+const PageHandler_OnDriveUploadClicked_ResponseParamsSpec = { $: {} };
+const PageHandler_OpenProfilePicker_ParamsSpec = { $: {} };
+const PageHandler_ShowScreenshotMenu_ParamsSpec = { $: {} };
+const PageHandler_StartScreenshare_ParamsSpec = { $: {} };
+const PageHandler_StartScreenshare_ResponseParamsSpec = { $: {} };
+const PageHandler_CaptureRegionScreenshot_ParamsSpec = { $: {} };
+const PageHandler_CaptureRegionScreenshot_ResponseParamsSpec = { $: {} };
+const PageHandler_GetPageClassification_ParamsSpec = { $: {} };
+const PageHandler_GetPageClassification_ResponseParamsSpec = { $: {} };
+const PageHandler_SetSmartTabSharingActive_ParamsSpec = { $: {} };
+const PageHandler_GetSmartTabSharingActive_ParamsSpec = { $: {} };
+const PageHandler_GetSmartTabSharingActive_ResponseParamsSpec = { $: {} };
+const PageHandler_ResetSmartTabSharing_ParamsSpec = { $: {} };
+const PageHandler_ResetSmartTabSharing_ResponseParamsSpec = { $: {} };
+const PageHandler_DismissFre_ParamsSpec = { $: {} };
+const PageHandler_ShowHotkeyDropdown_ParamsSpec = { $: {} };
+const PageHandler_ShowHotkeyDropdown_ResponseParamsSpec = { $: {} };
+const PageHandler_OpenHotkeySettings_ParamsSpec = { $: {} };
+const PageHandler_OnEscapePressed_ParamsSpec = { $: {} };
+const Page_SetFreState_ParamsSpec = { $: {} };
+const Page_AutocompleteResultChanged_ParamsSpec = { $: {} };
+const Page_UpdateSelection_ParamsSpec = { $: {} };
+const Page_StepSelection_ParamsSpec = { $: {} };
+const Page_OpenCurrentSelection_ParamsSpec = { $: {} };
+const Page_SetAimButtonVisible_ParamsSpec = { $: {} };
+const Page_SetAimButtonConfig_ParamsSpec = { $: {} };
+const Page_SetInputText_ParamsSpec = { $: {} };
+const Page_SetKeywordSpaceTriggeringEnabled_ParamsSpec = { $: {} };
+const Page_SetAvailableKeywordModels_ParamsSpec = { $: {} };
+const Page_SetThumbnail_ParamsSpec = { $: {} };
+const Page_OnContextualInputStatusChanged_ParamsSpec = { $: {} };
+const Page_OnTabStripChanged_ParamsSpec = { $: {} };
+const Page_OnInputStateChanged_ParamsSpec = { $: {} };
+const Page_AddFileContext_ParamsSpec = { $: {} };
+const Page_UpdateAutoSuggestedTabContext_ParamsSpec = { $: {} };
+const Page_UpdateLensSearchEligibility_ParamsSpec = { $: {} };
+const Page_UpdateContentSharingPolicy_ParamsSpec = { $: {} };
+const Page_UpdateAimPopupEligibility_ParamsSpec = { $: {} };
+const Page_UpdateSmartTabSharingActive_ParamsSpec = { $: {} };
+const Page_OnPermissionPromptChanged_ParamsSpec = { $: {} };
+const Page_SetRestoredTabIds_ParamsSpec = { $: {} };
+const Page_SetAimThreadRestoredTabs_ParamsSpec = { $: {} };
+const Page_OnScreenshotMenuClosed_ParamsSpec = { $: {} };
+const Page_UpdateProfileInfo_ParamsSpec = { $: {} };
+const SearchContextAttachmentSpec = { $: {} };
+const PageHandler_AddFileContext_ResponseParam_ResultSpec = { $: {} };
+const PageHandler_AddTabContext_ResponseParam_ResultSpec = { $: {} };
+mojo.internal.Struct(UrlEmphasisSpec.$, 'UrlEmphasis', [
+    mojo.internal.StructField('textIsUrl', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('deemphasisMode', 4, 0, UrlDeemphasisModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('schemeRange', 8, 0, RangeSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('hostRange', 16, 0, RangeSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('schemeStrikeThrough', 0, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('schemeDangerous', 0, 2, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(ACMatchClassificationSpec.$, 'ACMatchClassification', [
+    mojo.internal.StructField('offset', 0, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('style', 4, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(ActionSpec.$, 'Action', [
+    mojo.internal.StructField('hint', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('suggestionContents', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('iconPath', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('a11yLabel', 24, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 40],]);
+mojo.internal.Struct(InputKeywordModelSpec.$, 'InputKeywordModel', [
+    mojo.internal.StructField('type', 0, 0, KeywordTypeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('keyword', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('displayText', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('iconPath', 24, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('placeholder', 32, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 48],]);
+mojo.internal.Struct(MatchKeywordModelSpec.$, 'MatchKeywordModel', [
+    mojo.internal.StructField('type', 0, 0, KeywordTypeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('chipHint', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('chipA11y', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('placeholder', 24, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('keyword', 32, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 48],]);
+mojo.internal.Struct(AutocompleteMatchSpec.$, 'AutocompleteMatch', [
+    mojo.internal.StructField('isHidden', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('a11yLabel', 8, 0, String16Spec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('allowedToBeDefaultMatch', 0, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('actions', 16, 0, mojo.internal.Array(ActionSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('destinationUrl', 24, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('inlineAutocompletion', 32, 0, String16Spec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('fillIntoEdit', 40, 0, String16Spec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('iconPath', 48, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('iconUrl', 56, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('suggestTemplate', 64, 0, SuggestTemplateInfoSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('secondaryTextIsUrl', 0, 2, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isSearchType', 0, 3, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isEnterpriseSearchAggregatorPeopleType', 0, 4, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('type', 72, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('removeButtonA11yLabel', 80, 0, String16Spec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('descriptionIconPath', 88, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('showSecondaryTextOnlyOnSelection', 0, 5, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('suggestionGroupId', 4, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('supportsDeletion', 0, 6, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('tailSuggestCommonPrefix', 96, 0, String16Spec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('keywordModel', 104, 0, MatchKeywordModelSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('urlEmphasis', 112, 0, UrlEmphasisSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 128],]);
+mojo.internal.Struct(TabInfoSpec$1.$, 'TabInfo', [
+    mojo.internal.StructField('tabId', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('title', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 16, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('showInCurrentTabChip', 4, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('showInPreviousTabChip', 4, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('lastActive', 24, 0, TimeTicksSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isLoading', 4, 2, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 40],]);
+mojo.internal.Struct(FileAttachmentSpec.$, 'FileAttachment', [
+    mojo.internal.StructField('uuid', 0, 0, UnguessableTokenSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('name', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('mimeType', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('imageDataUrl', 24, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('error_type_$flag', 32, 0, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "error_type_$value",
+        originalFieldName: "errorType",
+    }, undefined),
+    mojo.internal.StructField('error_type_$value', 36, 0, ContextUploadErrorTypeSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "errorType",
+    }, undefined),
+    mojo.internal.StructField('iconUrl', 40, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('thumbnailUrl', 48, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 64],]);
+mojo.internal.Struct(TabAttachmentSpec.$, 'TabAttachment', [
+    mojo.internal.StructField('tabId', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('title', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 16, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('source', 4, 0, TabAttachmentSourceSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('fromSingleTabMenuItem', 24, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isActiveTab', 24, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 40],]);
+mojo.internal.Struct(SearchContextSpec.$, 'SearchContext', [
+    mojo.internal.StructField('input', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('attachments', 8, 0, mojo.internal.Array(SearchContextAttachmentSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('toolMode', 16, 0, ToolModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('modelMode', 20, 0, ModelModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(FreStateSpec.$, 'FreState', [
+    mojo.internal.StructField('stage', 0, 0, FreStageSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('currentHotkeyTokens', 8, 0, mojo.internal.Array(mojo.internal.String, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(SelectedFileInfoSpec.$, 'SelectedFileInfo', [
+    mojo.internal.StructField('fileName', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('mimeType', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('imageDataUrl', 16, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isDeletable', 24, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('selectionTime', 32, 0, JSTimeSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('thumbnailUrl', 40, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 56],]);
+mojo.internal.Struct(SuggestionGroupSpec.$, 'SuggestionGroup', [
+    mojo.internal.StructField('header', 0, 0, String16Spec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('renderType', 8, 0, RenderTypeSpec.$, RenderType.kDefaultVertical, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('sideType', 12, 0, SideTypeSpec.$, SideType.kDefaultPrimary, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(SmartComposeStatsSpec.$, 'SmartComposeStats', [
+    mojo.internal.StructField('enabled', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shownCount', 4, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('acceptedCount', 8, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('charactersAccepted', 12, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shownLength', 16, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(AutocompleteResultSpec.$, 'AutocompleteResult', [
+    mojo.internal.StructField('queryId', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('sequenceId', 4, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('input', 8, 0, String16Spec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('suggestionGroupsMap', 16, 0, mojo.internal.Map(mojo.internal.Int32, SuggestionGroupSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('matches', 24, 0, mojo.internal.Array(AutocompleteMatchSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('smartComposeInlineHint', 32, 0, String16Spec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('showAimActivityLink', 40, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 56],]);
+mojo.internal.Struct(OmniboxPopupSelectionSpec.$, 'OmniboxPopupSelection', [
+    mojo.internal.StructField('line', 0, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('state', 4, 0, SelectionLineStateSpec.$, 1, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('actionIndex', 1, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(ActionModifiersSpec.$, 'ActionModifiers', [
+    mojo.internal.StructField('altKey', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('ctrlKey', 0, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('metaKey', 0, 2, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shiftKey', 0, 3, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PlaceholderConfigSpec.$, 'PlaceholderConfig', [
+    mojo.internal.StructField('texts', 0, 0, mojo.internal.Array(String16Spec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('changeTextAnimationInterval', 8, 0, TimeDeltaSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('fadeTextAnimationDuration', 16, 0, TimeDeltaSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(DriveFileSpec.$, 'DriveFile', [
+    mojo.internal.StructField('token', 0, 0, UnguessableTokenSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('mimeType', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('fileName', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('thumbnailUrl', 24, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('iconUrl', 32, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 48],]);
+mojo.internal.Struct(DriveUploadResponseSpec.$, 'DriveUploadResponse', [
+    mojo.internal.StructField('files', 0, 0, mojo.internal.Array(DriveFileSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('error_$flag', 8, 0, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "error_$value",
+        originalFieldName: "error",
+    }, undefined),
+    mojo.internal.StructField('error_$value', 12, 0, DriveUploadErrorSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "error",
+    }, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandlerFactory_CreatePageHandler_ParamsSpec$1.$, 'PageHandlerFactory_CreatePageHandler_Params', [
+    mojo.internal.StructField('page', 0, 0, mojo.internal.InterfaceProxy(PageRemote$2), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('handler', 8, 0, mojo.internal.InterfaceRequest(PageHandlerPendingReceiver$3), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_OnFocusChanged_ParamsSpec.$, 'PageHandler_OnFocusChanged_Params', [
+    mojo.internal.StructField('focused', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_QueryAutocomplete_ParamsSpec.$, 'PageHandler_QueryAutocomplete_Params', [
+    mojo.internal.StructField('queryId', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('tab_id_$flag', 4, 0, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "tab_id_$value",
+        originalFieldName: "tabId",
+    }, undefined),
+    mojo.internal.StructField('tab_id_$value', 8, 0, mojo.internal.Int32, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "tabId",
+    }, undefined),
+    mojo.internal.StructField('input', 16, 0, String16Spec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('preventInlineAutocomplete', 4, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('cursorPosition', 12, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('suggestInventory', 24, 0, SuggestInventorySpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isOnFocus', 4, 2, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('keyword', 32, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('inputMethod', 28, 0, InputMethodSpec.$, 1, false /* nullable */, 0, undefined, undefined),
+], [[0, 48],]);
+mojo.internal.Struct(PageHandler_StopAutocomplete_ParamsSpec.$, 'PageHandler_StopAutocomplete_Params', [
+    mojo.internal.StructField('clearResult', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_OpenAutocompleteMatch_ParamsSpec.$, 'PageHandler_OpenAutocompleteMatch_Params', [
+    mojo.internal.StructField('resultSequenceId', 0, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('line', 4, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 8, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('areMatchesShowing', 5, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('mouseButton', 6, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('modifiers', 16, 0, ActionModifiersSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('viaKeyboard', 5, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(PageHandler_SetSmartComposeStats_ParamsSpec.$, 'PageHandler_SetSmartComposeStats_Params', [
+    mojo.internal.StructField('smartComposeStats', 0, 0, SmartComposeStatsSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_SetPopupSelection_ParamsSpec.$, 'PageHandler_SetPopupSelection_Params', [
+    mojo.internal.StructField('selection', 0, 0, OmniboxPopupSelectionSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_OpenPopupSelection_ParamsSpec.$, 'PageHandler_OpenPopupSelection_Params', [
+    mojo.internal.StructField('resultSequenceId', 0, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('selection', 8, 0, OmniboxPopupSelectionSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('disposition', 4, 0, WindowOpenDispositionSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_OnNavigationLikely_ParamsSpec.$, 'PageHandler_OnNavigationLikely_Params', [
+    mojo.internal.StructField('line', 0, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 8, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('navigationPredictor', 4, 0, NavigationPredictorSpec.$, 1, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_DeleteAutocompleteMatch_ParamsSpec.$, 'PageHandler_DeleteAutocompleteMatch_Params', [
+    mojo.internal.StructField('line', 0, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 8, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_ActivateKeyword_ParamsSpec.$, 'PageHandler_ActivateKeyword_Params', [
+    mojo.internal.StructField('line', 0, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 8, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('matchSelectionTimestamp', 16, 0, TimeTicksSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('activationMethod', 4, 0, KeywordActivationMethodSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(PageHandler_ExecuteAction_ParamsSpec.$, 'PageHandler_ExecuteAction_Params', [
+    mojo.internal.StructField('line', 0, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('actionIndex', 1, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 8, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('matchSelectionTimestamp', 16, 0, TimeTicksSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('mouseButton', 2, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('altKey', 3, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('ctrlKey', 3, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('metaKey', 3, 2, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shiftKey', 3, 3, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(PageHandler_OnThumbnailRemoved_ParamsSpec.$, 'PageHandler_OnThumbnailRemoved_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetCyclingPlaceholderConfig_ParamsSpec.$, 'PageHandler_GetCyclingPlaceholderConfig_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetCyclingPlaceholderConfig_ResponseParamsSpec.$, 'PageHandler_GetCyclingPlaceholderConfig_ResponseParams', [
+    mojo.internal.StructField('config', 0, 0, PlaceholderConfigSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetRecentTabs_ParamsSpec.$, 'PageHandler_GetRecentTabs_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetRecentTabs_ResponseParamsSpec.$, 'PageHandler_GetRecentTabs_ResponseParams', [
+    mojo.internal.StructField('tabs', 0, 0, mojo.internal.Array(TabInfoSpec$1.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetTabPreview_ParamsSpec.$, 'PageHandler_GetTabPreview_Params', [
+    mojo.internal.StructField('tabId', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetTabPreview_ResponseParamsSpec.$, 'PageHandler_GetTabPreview_ResponseParams', [
+    mojo.internal.StructField('previewDataUrl', 0, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_WaitForTabFaviconLoad_ParamsSpec.$, 'PageHandler_WaitForTabFaviconLoad_Params', [
+    mojo.internal.StructField('tabId', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_WaitForTabFaviconLoad_ResponseParamsSpec.$, 'PageHandler_WaitForTabFaviconLoad_ResponseParams', [
+    mojo.internal.StructField('faviconDataUrl', 0, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetInputState_ParamsSpec.$, 'PageHandler_GetInputState_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetInputState_ResponseParamsSpec.$, 'PageHandler_GetInputState_ResponseParams', [
+    mojo.internal.StructField('state', 0, 0, InputStateSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_NotifySessionStarted_ParamsSpec.$, 'PageHandler_NotifySessionStarted_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_NotifySessionAbandoned_ParamsSpec.$, 'PageHandler_NotifySessionAbandoned_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_AddFileContext_ParamsSpec.$, 'PageHandler_AddFileContext_Params', [
+    mojo.internal.StructField('fileInfo', 0, 0, SelectedFileInfoSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('fileBytes', 8, 0, BigBufferSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(PageHandler_AddFileContext_ResponseParamsSpec.$, 'PageHandler_AddFileContext_ResponseParams', [
+    mojo.internal.StructField('result', 0, 0, PageHandler_AddFileContext_ResponseParam_ResultSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_AddTabContext_ParamsSpec.$, 'PageHandler_AddTabContext_Params', [
+    mojo.internal.StructField('tabId', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('delayUpload', 4, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('source', 8, 0, TabAttachmentSourceSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_AddTabContext_ResponseParamsSpec.$, 'PageHandler_AddTabContext_ResponseParams', [
+    mojo.internal.StructField('result', 0, 0, PageHandler_AddTabContext_ResponseParam_ResultSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_DeleteContext_ParamsSpec.$, 'PageHandler_DeleteContext_Params', [
+    mojo.internal.StructField('token', 0, 0, UnguessableTokenSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('fromAutomaticChip', 8, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_DeleteTabContext_ParamsSpec.$, 'PageHandler_DeleteTabContext_Params', [
+    mojo.internal.StructField('tabId', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_ClearFiles_ParamsSpec.$, 'PageHandler_ClearFiles_Params', [
+    mojo.internal.StructField('shouldBlockAutoSuggestedTabs', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_SubmitQuery_ParamsSpec.$, 'PageHandler_SubmitQuery_Params', [
+    mojo.internal.StructField('queryText', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('mouseButton', 8, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('altKey', 9, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('ctrlKey', 9, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('metaKey', 9, 2, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shiftKey', 9, 3, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isVoiceSearch', 9, 4, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_OpenLensSearch_ParamsSpec.$, 'PageHandler_OpenLensSearch_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_SetActiveToolMode_ParamsSpec.$, 'PageHandler_SetActiveToolMode_Params', [
+    mojo.internal.StructField('tool', 0, 0, ToolModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isSetByAim', 4, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_SetActiveModelMode_ParamsSpec.$, 'PageHandler_SetActiveModelMode_Params', [
+    mojo.internal.StructField('model', 0, 0, ModelModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isSetByAim', 4, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_ActivateMetricsFunnel_ParamsSpec.$, 'PageHandler_ActivateMetricsFunnel_Params', [
+    mojo.internal.StructField('funnelName', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_RecordToolSelectionAction_ParamsSpec.$, 'PageHandler_RecordToolSelectionAction_Params', [
+    mojo.internal.StructField('tool', 0, 0, ToolModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_RecordModelSelectionAction_ParamsSpec.$, 'PageHandler_RecordModelSelectionAction_Params', [
+    mojo.internal.StructField('model', 0, 0, ModelModeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetDriveDisclaimerStatus_ParamsSpec.$, 'PageHandler_GetDriveDisclaimerStatus_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetDriveDisclaimerStatus_ResponseParamsSpec.$, 'PageHandler_GetDriveDisclaimerStatus_ResponseParams', [
+    mojo.internal.StructField('status', 0, 0, DriveDisclaimerStatusSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_OnDriveDisclaimerAccepted_ParamsSpec.$, 'PageHandler_OnDriveDisclaimerAccepted_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_OnDriveUploadClicked_ParamsSpec.$, 'PageHandler_OnDriveUploadClicked_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_OnDriveUploadClicked_ResponseParamsSpec.$, 'PageHandler_OnDriveUploadClicked_ResponseParams', [
+    mojo.internal.StructField('response', 0, 0, DriveUploadResponseSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_OpenProfilePicker_ParamsSpec.$, 'PageHandler_OpenProfilePicker_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_ShowScreenshotMenu_ParamsSpec.$, 'PageHandler_ShowScreenshotMenu_Params', [
+    mojo.internal.StructField('anchorRect', 0, 0, RectSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_StartScreenshare_ParamsSpec.$, 'PageHandler_StartScreenshare_Params', [
+    mojo.internal.StructField('preferEntireScreen', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_StartScreenshare_ResponseParamsSpec.$, 'PageHandler_StartScreenshare_ResponseParams', [
+    mojo.internal.StructField('token', 0, 0, UnguessableTokenSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_CaptureRegionScreenshot_ParamsSpec.$, 'PageHandler_CaptureRegionScreenshot_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_CaptureRegionScreenshot_ResponseParamsSpec.$, 'PageHandler_CaptureRegionScreenshot_ResponseParams', [
+    mojo.internal.StructField('token', 0, 0, UnguessableTokenSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetPageClassification_ParamsSpec.$, 'PageHandler_GetPageClassification_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetPageClassification_ResponseParamsSpec.$, 'PageHandler_GetPageClassification_ResponseParams', [
+    mojo.internal.StructField('metricSource', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_SetSmartTabSharingActive_ParamsSpec.$, 'PageHandler_SetSmartTabSharingActive_Params', [
+    mojo.internal.StructField('active', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetSmartTabSharingActive_ParamsSpec.$, 'PageHandler_GetSmartTabSharingActive_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetSmartTabSharingActive_ResponseParamsSpec.$, 'PageHandler_GetSmartTabSharingActive_ResponseParams', [
+    mojo.internal.StructField('active', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_ResetSmartTabSharing_ParamsSpec.$, 'PageHandler_ResetSmartTabSharing_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_ResetSmartTabSharing_ResponseParamsSpec.$, 'PageHandler_ResetSmartTabSharing_ResponseParams', [
+    mojo.internal.StructField('active', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_DismissFre_ParamsSpec.$, 'PageHandler_DismissFre_Params', [
+    mojo.internal.StructField('stage', 0, 0, FreStageSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_ShowHotkeyDropdown_ParamsSpec.$, 'PageHandler_ShowHotkeyDropdown_Params', [
+    mojo.internal.StructField('anchorBounds', 0, 0, RectSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_ShowHotkeyDropdown_ResponseParamsSpec.$, 'PageHandler_ShowHotkeyDropdown_ResponseParams', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_OpenHotkeySettings_ParamsSpec.$, 'PageHandler_OpenHotkeySettings_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_OnEscapePressed_ParamsSpec.$, 'PageHandler_OnEscapePressed_Params', [], [[0, 8],]);
+mojo.internal.Struct(Page_SetFreState_ParamsSpec.$, 'Page_SetFreState_Params', [
+    mojo.internal.StructField('state', 0, 0, FreStateSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_AutocompleteResultChanged_ParamsSpec.$, 'Page_AutocompleteResultChanged_Params', [
+    mojo.internal.StructField('result', 0, 0, AutocompleteResultSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_UpdateSelection_ParamsSpec.$, 'Page_UpdateSelection_Params', [
+    mojo.internal.StructField('oldSelection', 0, 0, OmniboxPopupSelectionSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('selection', 8, 0, OmniboxPopupSelectionSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(Page_StepSelection_ParamsSpec.$, 'Page_StepSelection_Params', [
+    mojo.internal.StructField('direction', 0, 0, SelectionDirectionSpec.$, 1, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('step', 4, 0, SelectionStepSpec.$, 1, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_OpenCurrentSelection_ParamsSpec.$, 'Page_OpenCurrentSelection_Params', [
+    mojo.internal.StructField('disposition', 0, 0, WindowOpenDispositionSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_SetAimButtonVisible_ParamsSpec.$, 'Page_SetAimButtonVisible_Params', [
+    mojo.internal.StructField('visible', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_SetAimButtonConfig_ParamsSpec.$, 'Page_SetAimButtonConfig_Params', [
+    mojo.internal.StructField('text', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('tooltip', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('a11yLabel', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('iconUrl', 24, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 40],]);
+mojo.internal.Struct(Page_SetInputText_ParamsSpec.$, 'Page_SetInputText_Params', [
+    mojo.internal.StructField('input', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_SetKeywordSpaceTriggeringEnabled_ParamsSpec.$, 'Page_SetKeywordSpaceTriggeringEnabled_Params', [
+    mojo.internal.StructField('enabled', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_SetAvailableKeywordModels_ParamsSpec.$, 'Page_SetAvailableKeywordModels_Params', [
+    mojo.internal.StructField('models', 0, 0, mojo.internal.Array(InputKeywordModelSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('defaultSearchProviderKeyword', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(Page_SetThumbnail_ParamsSpec.$, 'Page_SetThumbnail_Params', [
+    mojo.internal.StructField('thumbnailUrl', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isDeletable', 8, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(Page_OnContextualInputStatusChanged_ParamsSpec.$, 'Page_OnContextualInputStatusChanged_Params', [
+    mojo.internal.StructField('token', 0, 0, UnguessableTokenSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('status', 8, 0, ContextUploadStatusSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('error_type_$flag', 12, 0, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "error_type_$value",
+        originalFieldName: "errorType",
+    }, undefined),
+    mojo.internal.StructField('error_type_$value', 16, 0, ContextUploadErrorTypeSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "errorType",
+    }, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(Page_OnTabStripChanged_ParamsSpec.$, 'Page_OnTabStripChanged_Params', [], [[0, 8],]);
+mojo.internal.Struct(Page_OnInputStateChanged_ParamsSpec.$, 'Page_OnInputStateChanged_Params', [
+    mojo.internal.StructField('inputState', 0, 0, InputStateSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_AddFileContext_ParamsSpec.$, 'Page_AddFileContext_Params', [
+    mojo.internal.StructField('token', 0, 0, UnguessableTokenSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('fileInfo', 8, 0, SelectedFileInfoSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(Page_UpdateAutoSuggestedTabContext_ParamsSpec.$, 'Page_UpdateAutoSuggestedTabContext_Params', [
+    mojo.internal.StructField('tab', 0, 0, TabInfoSpec$1.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('invocationSource', 8, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(Page_UpdateLensSearchEligibility_ParamsSpec.$, 'Page_UpdateLensSearchEligibility_Params', [
+    mojo.internal.StructField('eligible', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_UpdateContentSharingPolicy_ParamsSpec.$, 'Page_UpdateContentSharingPolicy_Params', [
+    mojo.internal.StructField('enabled', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_UpdateAimPopupEligibility_ParamsSpec.$, 'Page_UpdateAimPopupEligibility_Params', [
+    mojo.internal.StructField('eligible', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_UpdateSmartTabSharingActive_ParamsSpec.$, 'Page_UpdateSmartTabSharingActive_Params', [
+    mojo.internal.StructField('active', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_OnPermissionPromptChanged_ParamsSpec.$, 'Page_OnPermissionPromptChanged_Params', [
+    mojo.internal.StructField('isShowing', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('promptSize', 8, 0, SizeSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(Page_SetRestoredTabIds_ParamsSpec.$, 'Page_SetRestoredTabIds_Params', [
+    mojo.internal.StructField('ids', 0, 0, mojo.internal.Array(mojo.internal.Int32, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_SetAimThreadRestoredTabs_ParamsSpec.$, 'Page_SetAimThreadRestoredTabs_Params', [
+    mojo.internal.StructField('tabs', 0, 0, mojo.internal.Array(TabInfoSpec$1.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_OnScreenshotMenuClosed_ParamsSpec.$, 'Page_OnScreenshotMenuClosed_Params', [], [[0, 8],]);
+mojo.internal.Struct(Page_UpdateProfileInfo_ParamsSpec.$, 'Page_UpdateProfileInfo_Params', [
+    mojo.internal.StructField('avatarUrl', 0, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('name', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('email', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Union(SearchContextAttachmentSpec.$, 'SearchContextAttachment', {
+    'fileAttachment': {
+        'ordinal': 0,
+        'type': FileAttachmentSpec.$,
+    },
+    'tabAttachment': {
+        'ordinal': 1,
+        'type': TabAttachmentSpec.$,
+    },
+});
+var SearchContextAttachmentFieldTags;
+(function (SearchContextAttachmentFieldTags) {
+    SearchContextAttachmentFieldTags[SearchContextAttachmentFieldTags["FILE_ATTACHMENT"] = 0] = "FILE_ATTACHMENT";
+    SearchContextAttachmentFieldTags[SearchContextAttachmentFieldTags["TAB_ATTACHMENT"] = 1] = "TAB_ATTACHMENT";
+})(SearchContextAttachmentFieldTags || (SearchContextAttachmentFieldTags = {}));
+mojo.internal.Union(PageHandler_AddFileContext_ResponseParam_ResultSpec.$, 'PageHandler_AddFileContext_ResponseParam_Result', {
+    'success': {
+        'ordinal': 0,
+        'type': UnguessableTokenSpec.$,
+    },
+    'failure': {
+        'ordinal': 1,
+        'type': ContextUploadErrorTypeSpec.$,
+    },
+});
+var PageHandler_AddFileContext_ResponseParam_ResultFieldTags;
+(function (PageHandler_AddFileContext_ResponseParam_ResultFieldTags) {
+    PageHandler_AddFileContext_ResponseParam_ResultFieldTags[PageHandler_AddFileContext_ResponseParam_ResultFieldTags["SUCCESS"] = 0] = "SUCCESS";
+    PageHandler_AddFileContext_ResponseParam_ResultFieldTags[PageHandler_AddFileContext_ResponseParam_ResultFieldTags["FAILURE"] = 1] = "FAILURE";
+})(PageHandler_AddFileContext_ResponseParam_ResultFieldTags || (PageHandler_AddFileContext_ResponseParam_ResultFieldTags = {}));
+mojo.internal.Union(PageHandler_AddTabContext_ResponseParam_ResultSpec.$, 'PageHandler_AddTabContext_ResponseParam_Result', {
+    'success': {
+        'ordinal': 0,
+        'type': UnguessableTokenSpec.$,
+    },
+    'failure': {
+        'ordinal': 1,
+        'type': ContextUploadErrorTypeSpec.$,
+    },
+});
+var PageHandler_AddTabContext_ResponseParam_ResultFieldTags;
+(function (PageHandler_AddTabContext_ResponseParam_ResultFieldTags) {
+    PageHandler_AddTabContext_ResponseParam_ResultFieldTags[PageHandler_AddTabContext_ResponseParam_ResultFieldTags["SUCCESS"] = 0] = "SUCCESS";
+    PageHandler_AddTabContext_ResponseParam_ResultFieldTags[PageHandler_AddTabContext_ResponseParam_ResultFieldTags["FAILURE"] = 1] = "FAILURE";
+})(PageHandler_AddTabContext_ResponseParam_ResultFieldTags || (PageHandler_AddTabContext_ResponseParam_ResultFieldTags = {}));
+
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+// LINT.IfChange(FileValidationError)
+// These values are persisted to logs. Entries should not be renumbered and
+// numeric values should never be reused.
+var ComposeboxFileValidationError;
+(function (ComposeboxFileValidationError) {
+    ComposeboxFileValidationError[ComposeboxFileValidationError["NONE"] = 0] = "NONE";
+    ComposeboxFileValidationError[ComposeboxFileValidationError["TOO_MANY_FILES"] = 1] = "TOO_MANY_FILES";
+    ComposeboxFileValidationError[ComposeboxFileValidationError["FILE_EMPTY"] = 2] = "FILE_EMPTY";
+    ComposeboxFileValidationError[ComposeboxFileValidationError["FILE_SIZE_TOO_LARGE"] = 3] = "FILE_SIZE_TOO_LARGE";
+    ComposeboxFileValidationError[ComposeboxFileValidationError["MAX_VALUE"] = 3] = "MAX_VALUE";
+})(ComposeboxFileValidationError || (ComposeboxFileValidationError = {}));
+// LINT.ThenChange(//tools/metrics/histograms/metadata/contextual_search/enums.xml:FileValidationError)
+// LINT.IfChange(ContextType)
+// These values are persisted to logs. Entries should not be renumbered and
+// numeric values should never be reused.
+var ContextType;
+(function (ContextType) {
+    ContextType[ContextType["TAB"] = 0] = "TAB";
+    ContextType[ContextType["FILE"] = 1] = "FILE";
+    ContextType[ContextType["IMAGE"] = 2] = "IMAGE";
+    ContextType[ContextType["IMAGE_GEN"] = 3] = "IMAGE_GEN";
+    ContextType[ContextType["DEEP_RESEARCH"] = 4] = "DEEP_RESEARCH";
+    ContextType[ContextType["CANVAS"] = 5] = "CANVAS";
+    ContextType[ContextType["AUTO_MODEL"] = 6] = "AUTO_MODEL";
+    ContextType[ContextType["THINKING_MODEL"] = 7] = "THINKING_MODEL";
+    ContextType[ContextType["REGULAR_MODEL"] = 8] = "REGULAR_MODEL";
+    ContextType[ContextType["PRO_NO_GEN_UI_MODEL"] = 9] = "PRO_NO_GEN_UI_MODEL";
+    ContextType[ContextType["UNKNOWN"] = 10] = "UNKNOWN";
+    ContextType[ContextType["DRIVE"] = 11] = "DRIVE";
+    ContextType[ContextType["MAX_VALUE"] = 11] = "MAX_VALUE";
+})(ContextType || (ContextType = {}));
+// LINT.ThenChange(//components/omnibox/common/omnibox_metrics_utils.h:ContextType,
+// //tools/metrics/histograms/metadata/contextual_search/enums.xml:ContextType)
+// These values are sorted by precedence. The error with the highest value
+// will be the one shown to the user if multiple errors apply.
+var ProcessFilesError;
+(function (ProcessFilesError) {
+    ProcessFilesError[ProcessFilesError["NONE"] = 0] = "NONE";
+    ProcessFilesError[ProcessFilesError["INVALID_TYPE"] = 1] = "INVALID_TYPE";
+    ProcessFilesError[ProcessFilesError["FILE_TOO_LARGE"] = 2] = "FILE_TOO_LARGE";
+    ProcessFilesError[ProcessFilesError["FILE_EMPTY"] = 3] = "FILE_EMPTY";
+    ProcessFilesError[ProcessFilesError["MAX_FILES_EXCEEDED"] = 4] = "MAX_FILES_EXCEEDED";
+    ProcessFilesError[ProcessFilesError["MAX_IMAGES_EXCEEDED"] = 5] = "MAX_IMAGES_EXCEEDED";
+    ProcessFilesError[ProcessFilesError["MAX_PDFS_EXCEEDED"] = 6] = "MAX_PDFS_EXCEEDED";
+    ProcessFilesError[ProcessFilesError["FILE_UPLOAD_NOT_ALLOWED"] = 7] = "FILE_UPLOAD_NOT_ALLOWED";
+})(ProcessFilesError || (ProcessFilesError = {}));
+var TabSuggestionsState;
+(function (TabSuggestionsState) {
+    TabSuggestionsState[TabSuggestionsState["NOT_STARTED"] = 0] = "NOT_STARTED";
+    TabSuggestionsState[TabSuggestionsState["LOADING"] = 1] = "LOADING";
+    TabSuggestionsState[TabSuggestionsState["LOADED"] = 2] = "LOADED";
+})(TabSuggestionsState || (TabSuggestionsState = {}));
+const FILE_VALIDATION_ERRORS_MAP = new Map([
+    [
+        ContextUploadErrorType$1.kBrowserProcessingError,
+        'composeboxFileUploadFailed',
+    ],
+    [
+        ContextUploadErrorType$1.kImageProcessingError,
+        'composeFileTypesAllowedError',
+    ],
+    [
+        ContextUploadErrorType$1.kServerSizeLimitExceeded,
+        'composeboxFileUploadInvalidTooLarge',
+    ],
+    [
+        ContextUploadErrorType$1.kUnknown,
+        'composeboxFileUploadValidationFailed',
+    ],
+    [
+        ContextUploadErrorType$1.kBrowserProcessingFileTooLargeError,
+        'composeboxFileUploadInvalidTooLarge',
+    ],
+    [
+        ContextUploadErrorType$1.kBrowserProcessingFileEmptyError,
+        'composeboxFileUploadInvalidEmptySize',
+    ],
+    [
+        ContextUploadErrorType$1.kBrowserProcessingMaxFilesExceededError,
+        'maxFilesReachedError',
+    ],
+    [
+        ContextUploadErrorType$1.kBrowserProcessingUnsupportedFileTypeError,
+        'composeFileTypesAllowedError',
+    ],
+    [
+        ContextUploadErrorType$1.kBrowserProcessingFileUploadNotAllowedError,
+        'composeboxFileUploadNotAllowed',
+    ],
+    [
+        ContextUploadErrorType$1.kBrowserProcessingMaxImagesExceededError,
+        'maxImagesReachedError',
+    ],
+    [
+        ContextUploadErrorType$1.kBrowserProcessingMaxPdfsExceededError,
+        'maxPdfsReachedError',
+    ],
+]);
+class ComposeboxFile {
+    uuid;
+    name;
+    objectUrl;
+    dataUrl;
+    type;
+    inputType;
+    status;
+    url;
+    tabId;
+    isDeletable;
+    iconName;
+    supportsUnimodal;
+    thumbnailUrl;
+    iconUrl;
+    origin;
+    delayUpload;
+    singleTabType;
+    // True if this is a placeholder ("ghost") entry created from an upload
+    // status update for a token the frontend does not know about yet. Its
+    // metadata, including `inputType`, is not yet known and must not be relied
+    // on until the entry is replaced by a fully hydrated one.
+    isGhost;
+    constructor(uuid, name, type, inputType, options) {
+        this.uuid = uuid;
+        this.name = name;
+        this.type = type;
+        this.inputType = inputType;
+        this.objectUrl = options?.objectUrl ?? null;
+        this.dataUrl = options?.dataUrl ?? null;
+        this.status = options?.status ?? ContextUploadStatus$1.kNotUploaded;
+        this.url = options?.url ?? null;
+        this.tabId = options?.tabId ?? null;
+        this.isDeletable = options?.isDeletable ?? true;
+        this.iconName = options?.iconName ?? null;
+        this.supportsUnimodal = options?.supportsUnimodal ?? false;
+        this.thumbnailUrl = options?.thumbnailUrl ?? null;
+        this.iconUrl = options?.iconUrl ?? null;
+        this.origin = options?.origin;
+        this.delayUpload = options?.delayUpload ?? false;
+        this.singleTabType = options?.singleTabType;
+        this.isGhost = options?.isGhost ?? false;
+    }
+    static createFromFile(uuid, file, status = ContextUploadStatus$1.kNotUploaded, options) {
+        const inputType = file.type.includes('image') ? InputType$1.kLensImage :
+            InputType$1.kLensFile;
+        return new ComposeboxFile(uuid, file.name, file.type, inputType, {
+            status,
+            ...options,
+        });
+    }
+    static createFromTab(uuid, tabId, title, url, options) {
+        return new ComposeboxFile(uuid, title, 'tab', InputType$1.kBrowserTab, {
+            status: ContextUploadStatus$1.kUploadSuccessful,
+            tabId,
+            url,
+            ...options,
+        });
+    }
+    static createFromInjectedInput(uuid, dataUrl, name = 'Pasted Image', iconName = null) {
+        return new ComposeboxFile(uuid, name, 'injectedinput', InputType$1.kLensImage, {
+            dataUrl,
+            objectUrl: dataUrl,
+            status: ContextUploadStatus$1.kUploadSuccessful,
+            iconName,
+        });
+    }
+}
+function isAutoAddedOrigin(origin) {
+    return origin === TabAttachmentSource.kAutoAdded ||
+        origin === TabAttachmentSource.kCurrentTabChip;
+}
+function hasOnlyAutoAddedTabs(files) {
+    if (files.size === 0) {
+        return false;
+    }
+    for (const file of files.values()) {
+        if (file.inputType !== InputType$1.kBrowserTab ||
+            !isAutoAddedOrigin(file.origin)) {
+            return false;
+        }
+    }
+    return true;
+}
+class ComposeboxInputModel {
+    attachedContext;
+    smartTabSharingActive;
+    tabFaviconChipsToCoinsEnabled;
+    input;
+    selectedMatchIndex;
+    hasResult;
+    activeTool;
+    get files() {
+        return this.attachedContext;
+    }
+    constructor(params) {
+        this.attachedContext =
+            params?.attachedContext ?? params?.files ?? new Map();
+        this.smartTabSharingActive = params?.smartTabSharingActive ?? false;
+        this.tabFaviconChipsToCoinsEnabled =
+            params?.tabFaviconChipsToCoinsEnabled ?? false;
+        this.input = params?.input ?? '';
+        this.selectedMatchIndex = params?.selectedMatchIndex ?? -1;
+        this.hasResult = params?.hasResult ?? false;
+        this.activeTool = params?.activeTool;
+    }
+    hasTabs() {
+        return (this.tabFaviconChipsToCoinsEnabled &&
+            Array.from(this.attachedContext.values()).some(f => !!f.url)) ||
+            this.smartTabSharingActive;
+    }
+    hasNonTabFiles() {
+        return Array.from(this.attachedContext.values()).some(f => !f.url);
+    }
+    getNonTabFileNum() {
+        return Array.from(this.attachedContext.values())
+            .filter(file => file.inputType !== InputType$1.kBrowserTab)
+            .length;
+    }
+    getSharedTabs() {
+        return Array.from(this.attachedContext.values())
+            .filter(file => !!file.url)
+            .map(file => ({
+            tabId: file.tabId,
+            title: file.name,
+            url: file.url,
+            // A tab coin is "loading" while its context upload is still in
+            // flight. This mirrors `pendingUploads`, which gates the submit
+            // button, so the skeleton and the disabled submit button agree.
+            isLoading: !isContextUploadStatusTerminal(file.status),
+        }));
+    }
+    hasFiles() {
+        return this.attachedContext.size > 0;
+    }
+    hasMultipleFiles() {
+        return this.attachedContext.size > 1 || this.smartTabSharingActive;
+    }
+    hasOnlyAutoAddedTabs() {
+        return hasOnlyAutoAddedTabs(this.attachedContext);
+    }
+    hasUnimodalFile() {
+        return Array.from(this.attachedContext.values())
+            .some(file => file.supportsUnimodal);
+    }
+    hasValidQuery() {
+        if (this.hasUnimodalFile()) {
+            return true;
+        }
+        if (this.selectedMatchIndex >= 0 && this.hasResult) {
+            return true;
+        }
+        return this.input.trim().length > 0;
+    }
+    hasContent(ignoreAutoAddedTabs = false) {
+        const hasFiles = this.hasFiles() &&
+            !(ignoreAutoAddedTabs && this.hasOnlyAutoAddedTabs());
+        return (this.activeTool !== undefined &&
+            this.activeTool !== ToolMode$1.kUnspecified) ||
+            this.input.trim().length > 0 || hasFiles;
+    }
+    canSubmit() {
+        return this.hasValidQuery() || this.hasFiles();
+    }
+}
+var SingleTabType;
+(function (SingleTabType) {
+    SingleTabType["RECENT_TAB"] = "RecentTab";
+    SingleTabType["CURRENT_TAB"] = "CurrentTab";
+})(SingleTabType || (SingleTabType = {}));
+var GlifAnimationState;
+(function (GlifAnimationState) {
+    GlifAnimationState["INELIGIBLE"] = "ineligible";
+    GlifAnimationState["SPINNER_ONLY"] = "spinner-only";
+    GlifAnimationState["STARTED"] = "started";
+    GlifAnimationState["FINISHED"] = "finished";
+})(GlifAnimationState || (GlifAnimationState = {}));
+var VoiceSearchAction;
+(function (VoiceSearchAction) {
+    VoiceSearchAction[VoiceSearchAction["ACTIVATE"] = 0] = "ACTIVATE";
+    VoiceSearchAction[VoiceSearchAction["QUERY_SUBMITTED"] = 1] = "QUERY_SUBMITTED";
+})(VoiceSearchAction || (VoiceSearchAction = {}));
+var SubmitButtonIconType;
+(function (SubmitButtonIconType) {
+    SubmitButtonIconType["FORWARD"] = "forward";
+    SubmitButtonIconType["UPWARD"] = "upward";
+})(SubmitButtonIconType || (SubmitButtonIconType = {}));
+// LINT.IfChange(ContextualSearchInputStateDeletionType)
+var ContextualSearchInputStateDeletionType;
+(function (ContextualSearchInputStateDeletionType) {
+    ContextualSearchInputStateDeletionType[ContextualSearchInputStateDeletionType["FILE"] = 0] = "FILE";
+    ContextualSearchInputStateDeletionType[ContextualSearchInputStateDeletionType["TAB"] = 1] = "TAB";
+    ContextualSearchInputStateDeletionType[ContextualSearchInputStateDeletionType["TOOL"] = 2] = "TOOL";
+    ContextualSearchInputStateDeletionType[ContextualSearchInputStateDeletionType["MAX_VALUE"] = 2] = "MAX_VALUE";
+})(ContextualSearchInputStateDeletionType || (ContextualSearchInputStateDeletionType = {}));
+// LINT.ThenChange(//tools/metrics/histograms/metadata/contextual_search/enums.xml:ContextualSearchInputStateDeletionType)
+// LINT.IfChange(SingleTabMenuItemAction)
+// These values are persisted to logs. Entries should not be renumbered and
+// numeric values should never be reused.
+var SingleTabMenuItemAction;
+(function (SingleTabMenuItemAction) {
+    SingleTabMenuItemAction[SingleTabMenuItemAction["RECENT_TAB_SELECTED"] = 0] = "RECENT_TAB_SELECTED";
+    SingleTabMenuItemAction[SingleTabMenuItemAction["RECENT_TAB_DESELECTED"] = 1] = "RECENT_TAB_DESELECTED";
+    SingleTabMenuItemAction[SingleTabMenuItemAction["RECENT_TAB_SUBMITTED"] = 2] = "RECENT_TAB_SUBMITTED";
+    SingleTabMenuItemAction[SingleTabMenuItemAction["CURRENT_TAB_SELECTED"] = 3] = "CURRENT_TAB_SELECTED";
+    SingleTabMenuItemAction[SingleTabMenuItemAction["CURRENT_TAB_DESELECTED"] = 4] = "CURRENT_TAB_DESELECTED";
+    SingleTabMenuItemAction[SingleTabMenuItemAction["CURRENT_TAB_SUBMITTED"] = 5] = "CURRENT_TAB_SUBMITTED";
+    SingleTabMenuItemAction[SingleTabMenuItemAction["MAX_VALUE"] = 5] = "MAX_VALUE";
+})(SingleTabMenuItemAction || (SingleTabMenuItemAction = {}));
+// LINT.ThenChange(//components/omnibox/common/omnibox_metrics_utils.h:SingleTabMenuItemAction,
+// //tools/metrics/histograms/metadata/contextual_search/enums.xml:ContextualSearchSingleTabMenuItemAction)
+function recordSingleTabMenuItemAction(action, composeboxSource) {
+    recordEnumerationValue(`ContextualSearch.SingleTabMenuItem.Action.${composeboxSource}`, action, SingleTabMenuItemAction.MAX_VALUE + 1);
+}
+// LINT.IfChange(RichImageSuggestBatchLoadStatus)
+var RichImageSuggestBatchLoadStatus;
+(function (RichImageSuggestBatchLoadStatus) {
+    RichImageSuggestBatchLoadStatus[RichImageSuggestBatchLoadStatus["CACHED"] = 0] = "CACHED";
+    RichImageSuggestBatchLoadStatus[RichImageSuggestBatchLoadStatus["LOADED"] = 1] = "LOADED";
+    RichImageSuggestBatchLoadStatus[RichImageSuggestBatchLoadStatus["TIMED_OUT"] = 2] = "TIMED_OUT";
+    RichImageSuggestBatchLoadStatus[RichImageSuggestBatchLoadStatus["SUPERSEDED"] = 3] = "SUPERSEDED";
+    RichImageSuggestBatchLoadStatus[RichImageSuggestBatchLoadStatus["MAX_VALUE"] = 3] = "MAX_VALUE";
+})(RichImageSuggestBatchLoadStatus || (RichImageSuggestBatchLoadStatus = {}));
+// LINT.ThenChange(//tools/metrics/histograms/metadata/contextual_search/enums.xml:RichImageSuggestBatchLoadStatus)
+function recordEnumerationValue(metricName, value, enumSize) {
+    const metricsService = chrome.histograms || chrome.metricsPrivate;
+    if (metricsService) {
+        metricsService.recordEnumerationValue(metricName, value, enumSize);
+    }
+}
+function recordUserAction(metricName) {
+    const metricsService = chrome.histograms || chrome.metricsPrivate;
+    if (metricsService) {
+        metricsService.recordUserAction(metricName);
+    }
+}
+function recordBoolean$1(metricName, value) {
+    const metricsService = chrome.histograms || chrome.metricsPrivate;
+    if (metricsService) {
+        metricsService.recordBoolean(metricName, value);
+    }
+}
+function recordCount(metricName, value) {
+    const metricsService = chrome.histograms || chrome.metricsPrivate;
+    if (metricsService) {
+        metricsService.recordCount(metricName, value);
+    }
+}
+function recordTime(metricName, value) {
+    const metricsService = chrome.histograms || chrome.metricsPrivate;
+    if (metricsService) {
+        metricsService.recordTime(metricName, value);
+    }
+}
+function recordRichImageSuggestBatchLoadStatus(status, composeboxSource) {
+    recordEnumerationValue(`ContextualSearch.RichImageSuggest.BatchLoadStatus.${composeboxSource}`, status, RichImageSuggestBatchLoadStatus.MAX_VALUE + 1);
+}
+function recordRichImageSuggestBatchLoadLatency(latencyMs, composeboxSource) {
+    recordTime(`ContextualSearch.RichImageSuggest.BatchLoadLatency.${composeboxSource}`, Math.round(latencyMs));
+}
+function recordRichImageSuggestClicked(composeboxSource) {
+    recordCount(`ContextualSearch.RichImageSuggest.Clicked.${composeboxSource}`, 1);
+}
+function recordRichImageSuggestShown(composeboxSource) {
+    recordCount(`ContextualSearch.RichImageSuggest.Shown.${composeboxSource}`, 1);
+}
+// TODO(crbug.com/468329884): Consider making this a new contextual entry
+// source so the realbox and composebox don't both get logged as NTP.
+function recordContextAdditionMethod(additionMethod, composeboxSource) {
+    recordEnumerationValue('ContextualSearch.ContextAdded.ContextAddedMethod.' + composeboxSource, additionMethod, 3 /* ComposeboxContextAddedMethod.MAX_VALUE */ + 1);
+}
+// LINT.IfChange(getContextTypeString)
+function getContextTypeString(type) {
+    switch (type) {
+        case ContextType.TAB:
+            return 'Tab';
+        case ContextType.FILE:
+            return 'File';
+        case ContextType.IMAGE:
+            return 'Image';
+        case ContextType.IMAGE_GEN:
+            return 'ImageGen';
+        case ContextType.DEEP_RESEARCH:
+            return 'DeepResearch';
+        case ContextType.DRIVE:
+            return 'Drive';
+        case ContextType.CANVAS:
+            return 'Canvas';
+        case ContextType.AUTO_MODEL:
+            return 'AutoModel';
+        case ContextType.THINKING_MODEL:
+            return 'ThinkingModel';
+        case ContextType.REGULAR_MODEL:
+            return 'RegularModel';
+        case ContextType.PRO_NO_GEN_UI_MODEL:
+            return 'ProNoGenUiModel';
+        case ContextType.UNKNOWN:
+            return 'Unknown';
+        default:
+            return 'Unknown';
+    }
+}
+// LINT.ThenChange(//components/omnibox/common/omnibox_metrics_utils.cc:GetContextTypeString)
+function recordContextualElementClickedMetric(composeboxSource, popupType, contextType) {
+    const metricName = `${composeboxSource}.AimEntrypoint.${popupType}.ContextualElement.Clicked`;
+    recordEnumerationValue(metricName, contextType, ContextType.MAX_VALUE + 1);
+    recordUserAction(`${metricName}.${getContextTypeString(contextType)}`);
+}
+function recordContextualElementShownMetric(composeboxSource, popupType, contextType) {
+    const metricName = `${composeboxSource}.AimEntrypoint.${popupType}.ContextualElement.Shown`;
+    recordEnumerationValue(metricName, contextType, ContextType.MAX_VALUE + 1);
+}
+function recordToolModeSelection(mode, composeboxSource, popupType) {
+    let contextType = ContextType.UNKNOWN;
+    switch (mode) {
+        case ToolMode$1.kImageGen:
+            contextType = ContextType.IMAGE_GEN;
+            break;
+        case ToolMode$1.kDeepSearch:
+            contextType = ContextType.DEEP_RESEARCH;
+            break;
+        case ToolMode$1.kCanvas:
+            contextType = ContextType.CANVAS;
+            break;
+    }
+    recordContextualElementClickedMetric(composeboxSource, popupType, contextType);
+}
+function recordToolModeShown(mode, composeboxSource, popupType) {
+    let contextType = ContextType.UNKNOWN;
+    switch (mode) {
+        case ToolMode$1.kImageGen:
+            contextType = ContextType.IMAGE_GEN;
+            break;
+        case ToolMode$1.kDeepSearch:
+            contextType = ContextType.DEEP_RESEARCH;
+            break;
+        case ToolMode$1.kCanvas:
+            contextType = ContextType.CANVAS;
+            break;
+    }
+    recordContextualElementShownMetric(composeboxSource, popupType, contextType);
+}
+function recordModelModeSelection(model, composeboxSource, popupType) {
+    let contextType = ContextType.UNKNOWN;
+    switch (model) {
+        case ModelMode$1.kGeminiRegular:
+            contextType = ContextType.REGULAR_MODEL;
+            break;
+        case ModelMode$1.kGeminiPro:
+            contextType = ContextType.THINKING_MODEL;
+            break;
+        case ModelMode$1.kGeminiProAutoroute:
+            contextType = ContextType.AUTO_MODEL;
+            break;
+        case ModelMode$1.kGeminiProNoGenUi:
+            contextType = ContextType.PRO_NO_GEN_UI_MODEL;
+            break;
+    }
+    recordContextualElementClickedMetric(composeboxSource, popupType, contextType);
+}
+function recordModelModeShown(model, composeboxSource, popupType) {
+    let contextType = ContextType.UNKNOWN;
+    switch (model) {
+        case ModelMode$1.kGeminiRegular:
+            contextType = ContextType.REGULAR_MODEL;
+            break;
+        case ModelMode$1.kGeminiPro:
+            contextType = ContextType.THINKING_MODEL;
+            break;
+        case ModelMode$1.kGeminiProAutoroute:
+            contextType = ContextType.AUTO_MODEL;
+            break;
+        case ModelMode$1.kGeminiProNoGenUi:
+            contextType = ContextType.PRO_NO_GEN_UI_MODEL;
+            break;
+    }
+    recordContextualElementShownMetric(composeboxSource, popupType, contextType);
+}
+function recordInputTypeShown(type, composeboxSource, popupType) {
+    let contextType = ContextType.UNKNOWN;
+    switch (type) {
+        case InputType$1.kLensFile:
+            contextType = ContextType.FILE;
+            break;
+        case InputType$1.kLensImage:
+            contextType = ContextType.IMAGE;
+            break;
+        case InputType$1.kBrowserTab:
+            contextType = ContextType.TAB;
+            break;
+        case InputType$1.kDrive:
+            contextType = ContextType.DRIVE;
+            break;
+    }
+    recordContextualElementShownMetric(composeboxSource, popupType, contextType);
+}
+function hasAllowedInputs(inputState, usePecApi) {
+    if (!usePecApi) {
+        return true;
+    }
+    return !!inputState &&
+        (inputState.allowedModels.length > 0 ||
+            inputState.allowedTools.length > 0 ||
+            inputState.allowedInputTypes.length > 0);
+}
+/**
+ * Helper to retrieve a boolean from loadTimeData with a fallback if the
+ * value hasn't been set.
+ */
+// TODO(b/474406096): As part of componentization, the use of
+// `loadTimeData.valueExists` in this file should be removed and the
+// per-embedder behavior migrated into the relevant embedder. If a feature does
+// still need to exist in the base component, it should become a property
+// instead.
+function getLoadTimeBoolean(id, defaultValue) {
+    return loadTimeData.valueExists(id) ? loadTimeData.getBoolean(id) :
+        defaultValue;
+}
+function isContextUploadStatusTerminal(status) {
+    switch (status) {
+        case ContextUploadStatus$1.kUploadSuccessful:
+        case ContextUploadStatus$1.kUploadFailed:
+        case ContextUploadStatus$1.kValidationFailed:
+        case ContextUploadStatus$1.kUploadExpired:
+        case ContextUploadStatus$1.kUploadReplaced:
+            return true;
+        case ContextUploadStatus$1.kNotUploaded:
+        case ContextUploadStatus$1.kProcessing:
+        case ContextUploadStatus$1.kUploadStarted:
+        case ContextUploadStatus$1.kProcessingSuggestSignalsReady:
+            return false;
+        default:
+            assertNotReachedCase(status, 'Unknown enum value');
+    }
+}
+function mapUploadErrorToProcessFilesError(errorType) {
+    switch (errorType) {
+        case ContextUploadErrorType$1.kBrowserProcessingFileTooLargeError:
+            return ProcessFilesError.FILE_TOO_LARGE;
+        case ContextUploadErrorType$1.kBrowserProcessingFileEmptyError:
+            return ProcessFilesError.FILE_EMPTY;
+        case ContextUploadErrorType$1.kBrowserProcessingMaxFilesExceededError:
+            return ProcessFilesError.MAX_FILES_EXCEEDED;
+        case ContextUploadErrorType$1.kBrowserProcessingUnsupportedFileTypeError:
+            return ProcessFilesError.INVALID_TYPE;
+        case ContextUploadErrorType$1.kBrowserProcessingFileUploadNotAllowedError:
+            return ProcessFilesError.FILE_UPLOAD_NOT_ALLOWED;
+        case ContextUploadErrorType$1.kBrowserProcessingMaxImagesExceededError:
+            return ProcessFilesError.MAX_IMAGES_EXCEEDED;
+        case ContextUploadErrorType$1.kBrowserProcessingMaxPdfsExceededError:
+            return ProcessFilesError.MAX_PDFS_EXCEEDED;
+        default:
+            return ProcessFilesError.NONE;
+    }
+}
+/**
+ * Returns whether a given tab ID represents a valid browser tab.
+ */
+function isValidTabId(tabId) {
+    return typeof tabId === 'number' && tabId > 0;
+}
+// These values are persisted to logs. Entries should not be renumbered and
+// numeric values should never be reused.
+var SmartTabSharingSurface;
+(function (SmartTabSharingSurface) {
+    SmartTabSharingSurface[SmartTabSharingSurface["OMNIBOX_COMPOSEBOX"] = 0] = "OMNIBOX_COMPOSEBOX";
+    SmartTabSharingSurface[SmartTabSharingSurface["CONTEXTUAL_SEARCHBOX"] = 1] = "CONTEXTUAL_SEARCHBOX";
+    SmartTabSharingSurface[SmartTabSharingSurface["MAX_VALUE"] = 1] = "MAX_VALUE";
+})(SmartTabSharingSurface || (SmartTabSharingSurface = {}));
+// LINT.IfChange(TabPickerSurface)
+// Histogram name suffix identifying which tab picker implementation recorded
+// the sample.
+var TabPickerSurface;
+(function (TabPickerSurface) {
+    // The tab picker page served by the Contextual Tasks component extension
+    // (tab_picker.html, a web-accessible resource the AIM web page embeds).
+    TabPickerSurface["CONTEXTUAL_TASKS_EXTENSION"] = "ContextualTasksExtension";
+    // The tab picker flyout embedded in the in-WebUI composebox action menu in
+    // Contextual Tasks.
+    TabPickerSurface["CONTEXTUAL_TASKS_WEB_UI"] = "ContextualTasksWebUi";
+    // The tab picker flyout embedded in the in-WebUI composebox action menu on
+    // the New Tab Page.
+    TabPickerSurface["NEW_TAB_PAGE"] = "NewTabPage";
+    // The tab picker flyout embedded in the in-WebUI composebox action menu in
+    // the Omnibox.
+    TabPickerSurface["OMNIBOX"] = "Omnibox";
+})(TabPickerSurface || (TabPickerSurface = {}));
+// LINT.ThenChange(//tools/metrics/histograms/metadata/contextual_search/histograms.xml:TabPickerSurface)
+function mapMetricsSourceToTabPickerSurface(metricsSource) {
+    switch (metricsSource) {
+        case 'ContextualTasks':
+            return TabPickerSurface.CONTEXTUAL_TASKS_WEB_UI;
+        case 'NewTabPage':
+            return TabPickerSurface.NEW_TAB_PAGE;
+        case 'Omnibox':
+        case 'OmniboxEverywhere':
+            return TabPickerSurface.OMNIBOX;
+        default:
+            return null;
+    }
+}
+// Largest position the tab picker position histogram records explicitly; higher
+// positions land in the overflow bucket. This is a histogram bound, not a limit
+// on the suggestion list -- that is driven by the
+// NtpComposeboxContextMenuMaxTabSuggestions Finch param, which currently
+// defaults to 3. The bound is deliberately generous so that raising the param
+// does not require changing the histogram.
+const TAB_PICKER_POSITION_HISTOGRAM_MAX = 20;
+/**
+ * Records which tab the user attached from the tab picker, along two
+ * independent axes.
+ *
+ * These are deliberately separate histograms rather than one enum, because the
+ * two properties are orthogonal and frequently co-occur:
+ *  - `isActiveTab` comes from TabInfo.showInCurrentTabChip, which the browser
+ *    computes by comparing the tab's URL against the active tab's URL.
+ *  - `index` is the tab's position in the suggestion list, which the browser
+ *    sorts by descending recency. Index 0 is the most recently active eligible
+ *    tab, and is the entry the UI badges as "Recent".
+ *
+ * `SelectedTabIsActive` is only recorded when an active tab candidate is
+ * present in the suggestion list (`hasActiveTabCandidate` is true, or
+ * `isActiveTab` is true). In full tab mode or on the New Tab Page, the active
+ * tab is an internal chrome:// page and is excluded from the list, so no sample
+ * is recorded to avoid skewing the metric.
+ */
+function recordTabPickerTabSelected(surface, isActiveTab, index, hasActiveTabCandidate = false) {
+    if (hasActiveTabCandidate || isActiveTab) {
+        recordBoolean$1(`ContextualSearch.TabPicker.SelectedTabIsActive.${surface}`, isActiveTab);
+    }
+    if (index < 0) {
+        // The tab is no longer in the suggestion list; position is meaningless.
+        return;
+    }
+    recordEnumerationValue(`ContextualSearch.TabPicker.SelectedTabPosition.${surface}`, Math.min(index, TAB_PICKER_POSITION_HISTOGRAM_MAX), TAB_PICKER_POSITION_HISTOGRAM_MAX + 1);
+}
+// Returns a CSP-safe image URL using Chrome's SanitizedImageSource
+// (//image?...).
+function computeImageUrl(url) {
+    if (!url) {
+        return '';
+    }
+    return `//image?staticEncode=true&encodeType=webp&url=${encodeURIComponent(url)}`;
+}
+
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/* @fileoverview Utilities for determining the current platform. */
+/** Whether we are using a Mac or not. */
+const isMac = /Mac/.test(navigator.platform);
+/** Whether this is on the Windows platform or not. */
+const isWindows = /Win/.test(navigator.platform);
+/** Whether this is on Android. */
+const isAndroid = /Android/.test(navigator.userAgent);
+/** Whether this is on iOS. */
+const isIOS = /CriOS/.test(navigator.userAgent);
+
+// Copyright 2016 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @return The scale factors supported by this platform for webui resources.
+ */
+function getSupportedScaleFactors() {
+    const supportedScaleFactors = [];
+    if (!isIOS) {
+        // This matches the code in ResourceBundle::InitSharedInstance() that
+        // supports SCALE_FACTOR_100P on all non-iOS platforms.
+        supportedScaleFactors.push(1);
+    }
+    if (!isIOS && !isAndroid) {
+        // All desktop platforms support zooming which also updates the renderer's
+        // device scale factors (a.k.a devicePixelRatio), and these platforms have
+        // high DPI assets for 2x.  Let the renderer pick the closest image for
+        // the current device scale factor.
+        supportedScaleFactors.push(2);
+    }
+    else {
+        // For other platforms that use fixed device scale factor, use
+        // the window's device pixel ratio.
+        // TODO(oshima): Investigate corresponding to
+        // ResourceBundle::InitSharedInstance() more closely.
+        supportedScaleFactors.push(window.devicePixelRatio);
+    }
+    return supportedScaleFactors;
+}
+/**
+ * Generates a CSS url string.
+ * @param s The URL to generate the CSS url for.
+ * @return The CSS url string.
+ */
+function getUrlForCss(s) {
+    // http://www.w3.org/TR/css3-values/#uris
+    // Parentheses, commas, whitespace characters, single quotes (') and double
+    // quotes (") appearing in a URI must be escaped with a backslash
+    const s2 = s.replace(/(\(|\)|\,|\s|\'|\"|\\)/g, '\\$1');
+    return `url("${s2}")`;
+}
+/**
+ * Generates a CSS image-set for a chrome:// url.
+ * An entry in the image set is added for each of getSupportedScaleFactors().
+ * The scale-factor-specific url is generated by replacing the first instance
+ * of 'scalefactor' in |path| with the numeric scale factor.
+ *
+ * @param path The URL to generate an image set for.
+ *     'scalefactor' should be a substring of |path|.
+ * @return The CSS image-set.
+ */
+function getImageSet(path) {
+    const supportedScaleFactors = getSupportedScaleFactors();
+    const replaceStartIndex = path.indexOf('SCALEFACTOR');
+    if (replaceStartIndex < 0) {
+        return getUrlForCss(path);
+    }
+    let s = '';
+    for (let i = 0; i < supportedScaleFactors.length; ++i) {
+        const scaleFactor = supportedScaleFactors[i];
+        const pathWithScaleFactor = path.substr(0, replaceStartIndex) +
+            scaleFactor + path.substr(replaceStartIndex + 'scalefactor'.length);
+        s += getUrlForCss(pathWithScaleFactor) + ' ' + scaleFactor + 'x';
+        if (i !== supportedScaleFactors.length - 1) {
+            s += ', ';
+        }
+    }
+    return 'image-set(' + s + ')';
+}
+function getBaseFaviconUrl() {
+    const baseUrl = window.location.protocol === 'chrome-extension:' ?
+        '/_favicon/' :
+        'chrome://favicon2/';
+    const faviconUrl = new URL(baseUrl, window.location.origin);
+    faviconUrl.searchParams.set('size', '16');
+    faviconUrl.searchParams.set('scaleFactor', 'SCALEFACTORx');
+    return faviconUrl;
+}
+/**
+ * Returns whether `url` is a favicon request URL, i.e. one that was or could
+ * have been produced by `getFavicon()` or `getFaviconUrl()`. In extension pages
+ * this is the `/_favicon/` URL of the extension, otherwise chrome://favicon2.
+ */
+function isFaviconUrl(url) {
+    return url.startsWith('chrome://favicon2/') ||
+        /^chrome-extension:\/\/[^/]+\/_favicon\//.test(url);
+}
+function getDefaultFaviconUrlParams() {
+    return {
+        isSyncedUrlForHistoryUi: false,
+        remoteIconUrlForUma: '',
+        size: 16,
+        forceLightMode: false,
+        fallbackToHost: true,
+        forceEmptyDefaultFavicon: false,
+        scaleFactor: '',
+    };
+}
+/**
+ * Creates a favicon request URL based on the given parameters.
+ *
+ * @param url URL of the original page
+ * @param optionalParams Options object that specifies additional parameters to
+ *     configure the favicon request URL that's constructed by this function.
+ *
+ * @return URL for the favicon request.
+ */
+function getFaviconUrl(url, optionalParams) {
+    const params = Object.assign(getDefaultFaviconUrlParams(), optionalParams);
+    // Note: URL param keys used below must match those in the description of
+    // chrome://favicon2 format in components/favicon_base/favicon_url_parser.h.
+    const faviconUrl = getBaseFaviconUrl();
+    faviconUrl.searchParams.set('pageUrl', url);
+    faviconUrl.searchParams.set('size', params.size.toString());
+    // TODO(dbeam): use the presence of 'allowGoogleServerFallback' to
+    // indicate true, otherwise false.
+    const fallback = params.isSyncedUrlForHistoryUi ? '1' : '0';
+    faviconUrl.searchParams.set('allowGoogleServerFallback', fallback);
+    if (params.isSyncedUrlForHistoryUi) {
+        faviconUrl.searchParams.set('iconUrl', params.remoteIconUrlForUma);
+    }
+    if (params.forceLightMode) {
+        faviconUrl.searchParams.set('forceLightMode', 'true');
+    }
+    if (!params.fallbackToHost) {
+        faviconUrl.searchParams.set('fallbackToHost', '0');
+    }
+    if (params.forceEmptyDefaultFavicon) {
+        faviconUrl.searchParams.set('forceEmptyDefaultFavicon', '1');
+    }
+    if (params.scaleFactor) {
+        faviconUrl.searchParams.set('scaleFactor', params.scaleFactor);
+    }
+    return faviconUrl.toString();
+}
+/**
+ * Creates a CSS image-set for a favicon request based on a page URL.
+ *
+ * @param url URL of the original page
+ * @param isSyncedUrlForHistoryUi Should be set to true only if the
+ *     caller is an UI aimed at displaying user history, and the requested url
+ *     is known to be present in Chrome sync data.
+ * @param remoteIconUrlForUma In case the entry is contained in sync
+ *     data, we can pass the associated icon url.
+ * @param size The favicon size.
+ * @param forceLightMode Flag to force the service to show the light
+ *     mode version of the default favicon.
+ * @param fallbackToHost To allow for disabling the best match fallback
+ *     behavior.
+ * @param forceEmptyDefaultFavicon Flag to force the service to return an empty
+ *     image as the default favicon.
+ * @param scaleFactor The scale factor for the requested favicon (e.g. '2x').
+ *
+ * @return image-set for the favicon.
+ */
+function getFaviconForPageURL(url, isSyncedUrlForHistoryUi, remoteIconUrlForUma = '', size = 16, forceLightMode = false, fallbackToHost = true, forceEmptyDefaultFavicon = false, scaleFactor = '') {
+    return getImageSet(getFaviconUrl(url, {
+        isSyncedUrlForHistoryUi,
+        remoteIconUrlForUma,
+        size,
+        forceLightMode,
+        fallbackToHost,
+        forceEmptyDefaultFavicon,
+        scaleFactor,
+    }));
+}
+
+let instance$n = null;
+function getCss$i() {
+    return instance$n || (instance$n = [...[], css `[hidden],:host([hidden]){display:none !important}`]);
+}
+
+// Copyright 2012 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * Make a string safe for Polymer bindings that are inner-h-t-m-l or other
+ * innerHTML use.
+ * @param rawString The unsanitized string
+ * @param opts Optional additional allowed tags and attributes.
+ */
+function sanitizeInnerHtmlInternal(rawString, opts) {
+    opts = opts || {};
+    const html = parseHtmlSubset(`<b>${rawString}</b>`, opts.tags, opts.attrs)
+        .firstElementChild;
+    return html.innerHTML;
+}
+// 
+let sanitizedPolicy = null;
+/**
+ * Same as |sanitizeInnerHtmlInternal|, but it passes through sanitizedPolicy
+ * to create a TrustedHTML.
+ */
+function sanitizeInnerHtml(rawString, opts) {
+    assert(window.trustedTypes);
+    if (sanitizedPolicy === null) {
+        // Initialize |sanitizedPolicy| lazily.
+        sanitizedPolicy = window.trustedTypes.createPolicy('sanitize-inner-html', {
+            createHTML: sanitizeInnerHtmlInternal,
+            createScript: () => assertNotReached(),
+            createScriptURL: () => assertNotReached(),
+        });
+    }
+    return sanitizedPolicy.createHTML(rawString, opts);
+}
+const allowAttribute = (_node, _value) => true;
+/** Allow-list of attributes in parseHtmlSubset. */
+const allowedAttributes = new Map([
+    [
+        'href',
+        (node, value) => {
+            // Only allow a[href] starting with chrome:// or https:// or equaling
+            // to #.
+            return node.tagName === 'A' &&
+                (value.startsWith('chrome://') || value.startsWith('https://') ||
+                    value === '#');
+        },
+    ],
+    [
+        'target',
+        (node, value) => {
+            // Only allow a[target='_blank'].
+            // TODO(dbeam): are there valid use cases for target !== '_blank'?
+            return node.tagName === 'A' && value === '_blank';
+        },
+    ],
+]);
+/** Allow-list of optional attributes in parseHtmlSubset. */
+const allowedOptionalAttributes = new Map([
+    ['class', allowAttribute],
+    ['id', allowAttribute],
+    ['is', (_node, value) => value === 'action-link' || value === ''],
+    ['role', (_node, value) => value === 'link'],
+    [
+        'src',
+        (node, value) => {
+            // Only allow img[src] starting with chrome://
+            return node.tagName === 'IMG' &&
+                value.startsWith('chrome://');
+        },
+    ],
+    ['tabindex', allowAttribute],
+    ['aria-description', allowAttribute],
+    ['aria-hidden', allowAttribute],
+    ['aria-label', allowAttribute],
+    ['aria-labelledby', allowAttribute],
+]);
+/** Allow-list of tag names in parseHtmlSubset. */
+const allowedTags = new Set(['A', 'B', 'I', 'BR', 'DIV', 'EM', 'KBD', 'P', 'PRE', 'SPAN', 'STRONG']);
+/** Allow-list of optional tag names in parseHtmlSubset. */
+const allowedOptionalTags = new Set(['IMG', 'LI', 'UL']);
+/**
+ * This policy maps a given string to a `TrustedHTML` object
+ * without performing any validation. Callsites must ensure
+ * that the resulting object will only be used in inert
+ * documents. Initialized lazily.
+ */
+let unsanitizedPolicy;
+/**
+ * @param optTags an Array to merge.
+ * @return Set of allowed tags.
+ */
+function mergeTags(optTags) {
+    const clone = new Set(allowedTags);
+    optTags.forEach(str => {
+        const tag = str.toUpperCase();
+        if (allowedOptionalTags.has(tag)) {
+            clone.add(tag);
+        }
+    });
+    return clone;
+}
+/**
+ * @param optAttrs an Array to merge.
+ * @return Map of allowed attributes.
+ */
+function mergeAttrs(optAttrs) {
+    const clone = new Map(allowedAttributes);
+    optAttrs.forEach(key => {
+        if (allowedOptionalAttributes.has(key)) {
+            clone.set(key, allowedOptionalAttributes.get(key));
+        }
+    });
+    return clone;
+}
+function walk(n, f) {
+    f(n);
+    for (let i = 0; i < n.childNodes.length; i++) {
+        walk(n.childNodes[i], f);
+    }
+}
+function assertElement(tags, node) {
+    if (!tags.has(node.tagName)) {
+        throw Error(node.tagName + ' is not supported');
+    }
+}
+function assertAttribute(attrs, attrNode, node) {
+    const n = attrNode.nodeName;
+    const v = attrNode.nodeValue || '';
+    if (!attrs.has(n) || !attrs.get(n)(node, v)) {
+        throw Error(node.tagName + '[' + n + '="' + v +
+            '"] is not supported');
+    }
+}
+/**
+ * Parses a very small subset of HTML. This ensures that insecure HTML /
+ * javascript cannot be injected into WebUI.
+ * @param s The string to parse.
+ * @param extraTags Optional extra allowed tags.
+ * @param extraAttrs
+ *     Optional extra allowed attributes (all tags are run through these).
+ * @throws an Error in case of non supported markup.
+ * @return A document fragment containing the DOM tree.
+ */
+function parseHtmlSubset(s, extraTags, extraAttrs) {
+    const tags = extraTags ? mergeTags(extraTags) : allowedTags;
+    const attrs = extraAttrs ? mergeAttrs(extraAttrs) : allowedAttributes;
+    const doc = document.implementation.createHTMLDocument('');
+    const r = doc.createRange();
+    r.selectNode(doc.body);
+    if (window.trustedTypes) {
+        if (!unsanitizedPolicy) {
+            unsanitizedPolicy =
+                window.trustedTypes.createPolicy('parse-html-subset', {
+                    createHTML: (untrustedHTML) => untrustedHTML,
+                    createScript: () => assertNotReached(),
+                    createScriptURL: () => assertNotReached(),
+                });
+        }
+        s = unsanitizedPolicy.createHTML(s);
+    }
+    // This does not execute any scripts because the document has no view.
+    const df = r.createContextualFragment(s);
+    walk(df, function (node) {
+        switch (node.nodeType) {
+            case Node.ELEMENT_NODE:
+                assertElement(tags, node);
+                const nodeAttrs = node.attributes;
+                for (let i = 0; i < nodeAttrs.length; ++i) {
+                    assertAttribute(attrs, nodeAttrs[i], node);
+                }
+                break;
+            case Node.COMMENT_NODE:
+            case Node.DOCUMENT_FRAGMENT_NODE:
+            case Node.TEXT_NODE:
+                break;
+            default:
+                throw Error('Node type ' + node.nodeType + ' is not supported');
+        }
+    });
+    return df;
+}
+
+const sheet$1 = new CSSStyleSheet();
+sheet$1.replaceSync(`html{--google-blue-50-rgb:232,240,254;--google-blue-50:rgb(var(--google-blue-50-rgb));--google-blue-100-rgb:210,227,252;--google-blue-100:rgb(var(--google-blue-100-rgb));--google-blue-200-rgb:174,203,250;--google-blue-200:rgb(var(--google-blue-200-rgb));--google-blue-300-rgb:138,180,248;--google-blue-300:rgb(var(--google-blue-300-rgb));--google-blue-400-rgb:102,157,246;--google-blue-400:rgb(var(--google-blue-400-rgb));--google-blue-500-rgb:66,133,244;--google-blue-500:rgb(var(--google-blue-500-rgb));--google-blue-600-rgb:26,115,232;--google-blue-600:rgb(var(--google-blue-600-rgb));--google-blue-700-rgb:25,103,210;--google-blue-700:rgb(var(--google-blue-700-rgb));--google-blue-800-rgb:24,90,188;--google-blue-800:rgb(var(--google-blue-800-rgb));--google-blue-900-rgb:23,78,166;--google-blue-900:rgb(var(--google-blue-900-rgb));--google-green-50-rgb:230,244,234;--google-green-50:rgb(var(--google-green-50-rgb));--google-green-200-rgb:168,218,181;--google-green-200:rgb(var(--google-green-200-rgb));--google-green-300-rgb:129,201,149;--google-green-300:rgb(var(--google-green-300-rgb));--google-green-400-rgb:91,185,116;--google-green-400:rgb(var(--google-green-400-rgb));--google-green-500-rgb:52,168,83;--google-green-500:rgb(var(--google-green-500-rgb));--google-green-600-rgb:30,142,62;--google-green-600:rgb(var(--google-green-600-rgb));--google-green-700-rgb:24,128,56;--google-green-700:rgb(var(--google-green-700-rgb));--google-green-800-rgb:19,115,51;--google-green-800:rgb(var(--google-green-800-rgb));--google-green-900-rgb:13,101,45;--google-green-900:rgb(var(--google-green-900-rgb));--google-grey-50-rgb:248,249,250;--google-grey-50:rgb(var(--google-grey-50-rgb));--google-grey-100-rgb:241,243,244;--google-grey-100:rgb(var(--google-grey-100-rgb));--google-grey-200-rgb:232,234,237;--google-grey-200:rgb(var(--google-grey-200-rgb));--google-grey-300-rgb:218,220,224;--google-grey-300:rgb(var(--google-grey-300-rgb));--google-grey-400-rgb:189,193,198;--google-grey-400:rgb(var(--google-grey-400-rgb));--google-grey-500-rgb:154,160,166;--google-grey-500:rgb(var(--google-grey-500-rgb));--google-grey-600-rgb:128,134,139;--google-grey-600:rgb(var(--google-grey-600-rgb));--google-grey-700-rgb:95,99,104;--google-grey-700:rgb(var(--google-grey-700-rgb));--google-grey-800-rgb:60,64,67;--google-grey-800:rgb(var(--google-grey-800-rgb));--google-grey-900-rgb:32,33,36;--google-grey-900:rgb(var(--google-grey-900-rgb));--google-grey-900-white-4-percent:#292a2d;--google-purple-200-rgb:215,174,251;--google-purple-200:rgb(var(--google-purple-200-rgb));--google-purple-900-rgb:104,29,168;--google-purple-900:rgb(var(--google-purple-900-rgb));--google-red-100-rgb:244,199,195;--google-red-100:rgb(var(--google-red-100-rgb));--google-red-300-rgb:242,139,130;--google-red-300:rgb(var(--google-red-300-rgb));--google-red-500-rgb:234,67,53;--google-red-500:rgb(var(--google-red-500-rgb));--google-red-600-rgb:217,48,37;--google-red-600:rgb(var(--google-red-600-rgb));--google-red-700-rgb:197,57,41;--google-red-700:rgb(var(--google-red-700-rgb));--google-yellow-50-rgb:254,247,224;--google-yellow-50:rgb(var(--google-yellow-50-rgb));--google-yellow-100-rgb:254,239,195;--google-yellow-100:rgb(var(--google-yellow-100-rgb));--google-yellow-200-rgb:253,226,147;--google-yellow-200:rgb(var(--google-yellow-200-rgb));--google-yellow-300-rgb:253,214,51;--google-yellow-300:rgb(var(--google-yellow-300-rgb));--google-yellow-400-rgb:252,201,52;--google-yellow-400:rgb(var(--google-yellow-400-rgb));--google-yellow-500-rgb:251,188,4;--google-yellow-500:rgb(var(--google-yellow-500-rgb));--google-yellow-700-rgb:240,147,0;--google-yellow-700:rgb(var(--google-yellow-700-rgb));--cr-card-background-color:white;--cr-shadow-key-color_:color-mix(in srgb,var(--cr-shadow-color) 30%,transparent);--cr-shadow-ambient-color_:color-mix(in srgb,var(--cr-shadow-color) 15%,transparent);--cr-elevation-1:var(--cr-shadow-key-color_) 0 1px 2px 0,var(--cr-shadow-ambient-color_) 0 1px 3px 1px;--cr-elevation-2:var(--cr-shadow-key-color_) 0 1px 2px 0,var(--cr-shadow-ambient-color_) 0 2px 6px 2px;--cr-elevation-3:var(--cr-shadow-key-color_) 0 1px 3px 0,var(--cr-shadow-ambient-color_) 0 4px 8px 3px;--cr-elevation-4:var(--cr-shadow-key-color_) 0 2px 3px 0,var(--cr-shadow-ambient-color_) 0 6px 10px 4px;--cr-elevation-5:var(--cr-shadow-key-color_) 0 4px 4px 0,var(--cr-shadow-ambient-color_) 0 8px 12px 6px;--cr-card-shadow:var(--cr-elevation-2);--cr-focused-item-color:var(--google-grey-300);--cr-form-field-label-color:var(--google-grey-700);--cr-hairline-rgb:0,0,0;--cr-iph-anchor-highlight-color:rgba(var(--google-blue-600-rgb),0.1);--cr-menu-background-color:white;--cr-menu-background-focus-color:var(--google-grey-400);--cr-menu-shadow:var(--cr-elevation-2);--cr-separator-color:rgba(0,0,0,.06);--cr-title-text-color:rgb(90,90,90);--cr-scrollable-border-color:var(--google-grey-300);--cr-button-edge-spacing:12px;--cr-controlled-by-spacing:24px;--cr-default-input-max-width:264px;--cr-icon-ripple-size:36px;--cr-icon-ripple-padding:8px;--cr-icon-size:20px;--cr-icon-button-margin-start:16px;--cr-icon-ripple-margin:calc(var(--cr-icon-ripple-padding) * -1);--cr-section-min-height:48px;--cr-section-two-line-min-height:64px;--cr-section-padding:20px;--cr-section-vertical-padding:12px;--cr-section-indent-width:40px;--cr-section-indent-padding:calc(var(--cr-section-padding) + var(--cr-section-indent-width));--cr-section-vertical-margin:21px;--cr-centered-card-max-width:680px;--cr-centered-card-width-percentage:0.96;--cr-hairline:1px solid rgba(var(--cr-hairline-rgb),.14);--cr-separator-height:1px;--cr-separator-line:var(--cr-separator-height) solid var(--cr-separator-color);--cr-toolbar-overlay-animation-duration:150ms;--cr-toolbar-height:56px;--cr-card-border-radius:8px;--cr-disabled-opacity:.38;--cr-form-field-bottom-spacing:16px;--cr-form-field-label-font-size:.625rem;--cr-form-field-label-height:1em;--cr-form-field-label-line-height:1;--cr-fallback-color-outline:rgb(116,119,117);--cr-fallback-color-primary:rgb(11,87,208);--cr-fallback-color-on-primary:rgb(255,255,255);--cr-fallback-color-primary-container:rgb(211,227,253);--cr-fallback-color-on-primary-container:rgb(4,30,73);--cr-fallback-color-secondary-container:rgb(194,231,255);--cr-fallback-color-on-secondary-container:rgb(0,29,53);--cr-fallback-color-neutral-container:rgb(242,242,242);--cr-fallback-color-neutral-outline:rgb(199,199,199);--cr-fallback-color-surface:rgb(255,255,255);--cr-fallback-color-surface1:rgb(248,250,253);--cr-fallback-color-surface2:rgb(243,246,252);--cr-fallback-color-surface3:rgb(239,243,250);--cr-fallback-color-surface4:rgb(237,242,250);--cr-fallback-color-surface5:rgb(234,240,249);--cr-fallback-color-on-surface-rgb:31,31,31;--cr-fallback-color-on-surface:rgb(var(--cr-fallback-color-on-surface-rgb));--cr-fallback-color-surface-variant:rgb(225,227,225);--cr-fallback-color-on-surface-variant:rgb(68,71,70);--cr-fallback-color-on-surface-subtle:rgb(71,71,71);--cr-fallback-color-inverse-primary:rgb(168,199,250);--cr-fallback-color-inverse-surface:rgb(48,48,48);--cr-fallback-color-inverse-on-surface:rgb(242,242,242);--cr-fallback-color-tonal-container:rgb(211,227,253);--cr-fallback-color-on-tonal-container:rgb(4,30,73);--cr-fallback-color-tonal-outline:rgb(168,199,250);--cr-fallback-color-error:rgb(179,38,30);--cr-fallback-color-divider:rgb(211,227,253);--cr-fallback-color-state-hover-on-prominent_:rgba(253,252,251,.1);--cr-fallback-color-state-on-subtle-rgb_:31,31,31;--cr-fallback-color-state-hover-on-subtle_:rgba(var(--cr-fallback-color-state-on-subtle-rgb_),.06);--cr-fallback-color-state-ripple-neutral-on-subtle_:rgba(var(--cr-fallback-color-state-on-subtle-rgb_),.08);--cr-fallback-color-state-ripple-primary-rgb_:124,172,248;--cr-fallback-color-state-ripple-primary_:rgba(var(--cr-fallback-color-state-ripple-primary-rgb_),0.32);--cr-fallback-color-base-container:rgb(236,239,247);--cr-fallback-color-disabled-background:rgba(var(--cr-fallback-color-on-surface-rgb),.12);--cr-fallback-color-disabled-foreground:rgba(var(--cr-fallback-color-on-surface-rgb),var(--cr-disabled-opacity));--cr-hover-background-color:var(--color-sys-state-hover,rgba(var(--cr-fallback-color-on-surface-rgb),.08));--cr-hover-on-prominent-background-color:var(--color-sys-state-hover-on-prominent,var(--cr-fallback-color-state-hover-on-prominent_));--cr-hover-on-subtle-background-color:var(--color-sys-state-hover-on-subtle,var(--cr-fallback-color-state-hover-on-subtle_));--cr-active-background-color:var(--color-sys-state-pressed,rgba(var(--cr-fallback-color-on-surface-rgb),.12));--cr-active-on-primary-background-color:var(--color-sys-state-ripple-primary,var(--cr-fallback-color-state-ripple-primary_));--cr-active-neutral-on-subtle-background-color:var(--color-sys-state-ripple-neutral-on-subtle,var(--cr-fallback-color-state-ripple-neutral-on-subtle_));--cr-focus-outline-color:var(--color-sys-state-focus-ring,var(--cr-fallback-color-primary));--cr-focus-outline-inverse-color:var(--color-sys-state-focus-ring-inverse,var(--cr-fallback-color-inverse-primary));--cr-primary-text-color:var(--color-primary-foreground,var(--cr-fallback-color-on-surface));--cr-secondary-text-color:var(--color-secondary-foreground,var(--cr-fallback-color-on-surface-variant));--cr-link-color:var(--color-link-foreground-default,var(--cr-fallback-color-primary));--cr-button-height:36px;--cr-shadow-color:var(--color-sys-shadow,rgb(0,0,0));--cr-checked-color:var(--color-checkbox-foreground-checked,var(--cr-fallback-color-primary))}html[webui-refresh-2026]{--cr-card-background-color:var(--color-webui-card-background)}@media (prefers-color-scheme:dark){html{--cr-fallback-color-outline:rgb(142,145,143);--cr-fallback-color-primary:rgb(168,199,250);--cr-fallback-color-on-primary:rgb(6,46,111);--cr-fallback-color-primary-container:rgb(8,66,160);--cr-fallback-color-on-primary-container:rgb(211,227,253);--cr-fallback-color-secondary-container:rgb(0,74,119);--cr-fallback-color-on-secondary-container:rgb(194,231,255);--cr-fallback-color-neutral-container:rgb(40,40,40);--cr-fallback-color-neutral-outline:rgb(117,117,117);--cr-fallback-color-surface:rgb(31,31,31);--cr-fallback-color-surface1:rgb(39,40,42);--cr-fallback-color-surface2:rgb(45,47,49);--cr-fallback-color-surface3:rgb(51,52,56);--cr-fallback-color-surface4:rgb(52,54,58);--cr-fallback-color-surface5:rgb(56,58,62);--cr-fallback-color-on-surface-rgb:227,227,227;--cr-fallback-color-surface-variant:rgb(68,71,70);--cr-fallback-color-on-surface-variant:rgb(196,199,197);--cr-fallback-color-on-surface-subtle:rgb(199,199,199);--cr-fallback-color-inverse-primary:rgb(11,87,208);--cr-fallback-color-inverse-surface:rgb(227,227,227);--cr-fallback-color-inverse-on-surface:rgb(31,31,31);--cr-fallback-color-tonal-container:rgb(0,74,119);--cr-fallback-color-on-tonal-container:rgb(194,231,255);--cr-fallback-color-tonal-outline:rgb(4,125,183);--cr-fallback-color-error:rgb(242,184,181);--cr-fallback-color-divider:rgb(94,94,94);--cr-fallback-color-state-hover-on-prominent_:rgba(31,31,31,.06);--cr-fallback-color-state-on-subtle-rgb_:253,252,251;--cr-fallback-color-state-hover-on-subtle_:rgba(var(--cr-fallback-color-state-on-subtle-rgb_),.10);--cr-fallback-color-state-ripple-neutral-on-subtle_:rgba(var(--cr-fallback-color-state-on-subtle-rgb_),.16);--cr-fallback-color-state-ripple-primary-rgb_:76,141,246;--cr-fallback-color-base-container:rgba(40,40,40,1);--cr-card-background-color:var(--google-grey-900-white-4-percent);--cr-focused-item-color:var(--google-grey-800);--cr-form-field-label-color:var(--dark-secondary-color);--cr-hairline-rgb:255,255,255;--cr-iph-anchor-highlight-color:rgba(var(--google-grey-100-rgb),0.1);--cr-menu-background-color:var(--google-grey-900);--cr-menu-background-focus-color:var(--google-grey-700);--cr-menu-background-sheen:rgba(255,255,255,.06);--cr-menu-shadow:rgba(0,0,0,.3) 0 1px 2px 0,rgba(0,0,0,.15) 0 3px 6px 2px;--cr-separator-color:rgba(255,255,255,.1);--cr-title-text-color:var(--cr-primary-text-color);--cr-scrollable-border-color:var(--google-grey-700)}}@media (forced-colors:active){html{--cr-focus-outline-hcm:2px solid transparent;--cr-border-hcm:2px solid transparent;--cr-fallback-color-disabled-background:Canvas;--cr-fallback-color-disabled-foreground:GrayText}}@media (prefers-reduced-motion:reduce){html{--cr-animations-disabled:1}}`);
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet$1];
+
+let instance$m = null;
+function getCss$h() {
+    return instance$m || (instance$m = [...[], css `.icon-arrow-back{--cr-icon-image:url(//resources/images/icon_arrow_back_old.svg)}.icon-arrow-dropdown{--cr-icon-image:url(//resources/images/icon_arrow_dropdown_old.svg)}.icon-arrow-drop-down-cr23{--cr-icon-image:url(//resources/images/icon_arrow_drop_down_cr23_old.svg)}.icon-arrow-drop-up-cr23{--cr-icon-image:url(//resources/images/icon_arrow_drop_up_cr23_old.svg)}.icon-arrow-upward{--cr-icon-image:url(//resources/images/icon_arrow_upward_old.svg)}.icon-arrow-forward{--cr-icon-image:url(//resources/images/icon_arrow_forward_old.svg)}.icon-cancel{--cr-icon-image:url(//resources/images/icon_cancel_old.svg)}.icon-clear{--cr-icon-image:url(//resources/images/icon_clear_old.svg)}.icon-copy-content{--cr-icon-image:url(//resources/images/icon_copy_content_old.svg)}.icon-delete-gray{--cr-icon-image:url(//resources/images/icon_delete_gray_old.svg)}.icon-edit{--cr-icon-image:url(//resources/images/icon_edit_old.svg)}.icon-file{--cr-icon-image:url(//resources/images/icon_filetype_generic_old.svg)}.icon-folder-open{--cr-icon-image:url(//resources/images/icon_folder_open_old.svg)}.icon-picture-delete{--cr-icon-image:url(//resources/images/icon_picture_delete_old.svg)}.icon-expand-less{--cr-icon-image:url(//resources/images/icon_expand_less_old.svg)}.icon-expand-more{--cr-icon-image:url(//resources/images/icon_expand_more_old.svg)}.icon-external{--cr-icon-image:url(//resources/images/open_in_new_old.svg)}.icon-more-vert{--cr-icon-image:url(//resources/images/icon_more_vert_old.svg)}.icon-refresh{--cr-icon-image:url(//resources/images/icon_refresh_old.svg)}.icon-search{--cr-icon-image:url(//resources/images/icon_search.svg)}.icon-settings{--cr-icon-image:url(//resources/images/icon_settings_old.svg)}.icon-visibility{--cr-icon-image:url(//resources/images/icon_visibility_old.svg)}.icon-visibility-off{--cr-icon-image:url(//resources/images/icon_visibility_off_old.svg)}.subpage-arrow{--cr-icon-image:url(//resources/images/arrow_right_old.svg)}.cr-icon{-webkit-mask-image:var(--cr-icon-image);-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;-webkit-mask-size:var(--cr-icon-size);background-color:var(--cr-icon-color,var(--google-grey-700));flex-shrink:0;height:var(--cr-icon-ripple-size);margin-inline-end:var(--cr-icon-ripple-margin);margin-inline-start:var(--cr-icon-button-margin-start);user-select:none;width:var(--cr-icon-ripple-size)}:host-context([dir=rtl]) .cr-icon{transform:scaleX(-1)}.cr-icon.no-overlap{margin-inline-end:0;margin-inline-start:0}@media (prefers-color-scheme:dark){.cr-icon{background-color:var(--cr-icon-color,var(--google-grey-500))}}:host-context([webui-rounded-icons]){.icon-arrow-back{--cr-icon-image:url(//resources/images/icon_arrow_back.svg)}.icon-arrow-drop-down-cr23{--cr-icon-image:url(//resources/images/icon_arrow_drop_down_cr23.svg)}.icon-arrow-drop-up-cr23{--cr-icon-image:url(//resources/images/icon_arrow_drop_up_cr23.svg)}.icon-arrow-dropdown{--cr-icon-image:url(//resources/images/icon_arrow_dropdown.svg)}.icon-arrow-forward{--cr-icon-image:url(//resources/images/icon_arrow_forward.svg)}.icon-arrow-upward{--cr-icon-image:url(//resources/images/icon_arrow_upward.svg)}.icon-cancel{--cr-icon-image:url(//resources/images/icon_cancel.svg)}.icon-clear{--cr-icon-image:url(//resources/images/icon_clear.svg)}.icon-copy-content{--cr-icon-image:url(//resources/images/icon_copy_content.svg)}.icon-delete-gray{--cr-icon-image:url(//resources/images/icon_delete_gray.svg)}.icon-edit{--cr-icon-image:url(//resources/images/icon_edit.svg)}.icon-expand-less{--cr-icon-image:url(//resources/images/icon_expand_less.svg)}.icon-expand-more{--cr-icon-image:url(//resources/images/icon_expand_more.svg)}.icon-external{--cr-icon-image:url(//resources/images/open_in_new.svg)}.icon-file{--cr-icon-image:url(//resources/images/icon_filetype_generic.svg)}.icon-folder-open{--cr-icon-image:url(//resources/images/icon_folder_open.svg)}.icon-more-vert{--cr-icon-image:url(//resources/images/icon_more_vert.svg)}.icon-picture-delete{--cr-icon-image:url(//resources/images/icon_picture_delete.svg)}.icon-refresh{--cr-icon-image:url(//resources/images/icon_refresh.svg)}.icon-settings{--cr-icon-image:url(//resources/images/icon_settings.svg)}.icon-visibility{--cr-icon-image:url(//resources/images/icon_visibility.svg)}.icon-visibility-off{--cr-icon-image:url(//resources/images/icon_visibility_off.svg)}.subpage-arrow{--cr-icon-image:url(//resources/images/arrow_right.svg)}}`]);
+}
+
+let instance$l = null;
+function getCss$g() {
+    return instance$l || (instance$l = [...[getCss$h()], css `.icon-folder-open{--cr-icon-image:url(//resources/brave-icons/folder.svg)}.icon-edit{--cr-icon-image:url(//resources/brave-icons/edit-pencil.svg)}`]);
+}
+
+let instance$k = null;
+function getCss$f() {
+    return instance$k || (instance$k = [...[getCss$i(), getCss$g()], css `[actionable]{cursor:pointer}.hr{border-top:var(--cr-separator-line)}.cr-separators>*:not([first]){border-top:var(--cr-separator-line)}[scrollable]{border-color:transparent;border-style:solid;border-width:1px 0;overflow-y:auto}[scrollable].is-scrolled{border-top-color:var(--cr-scrollable-border-color)}[scrollable].can-scroll:not(.scrolled-to-bottom){border-bottom-color:var(--cr-scrollable-border-color)}[scrollable] iron-list>:not(.no-outline):focus-visible,[selectable]:focus-visible,[selectable]>:focus-visible{outline:solid 2px var(--cr-focus-outline-color);outline-offset:-2px}.scroll-container{display:flex;flex-direction:column;min-height:1px}[selectable]>*{cursor:pointer}.cr-centered-card-container{box-sizing:border-box;display:block;height:inherit;margin:0 auto;max-width:var(--cr-centered-card-max-width);min-width:550px;position:relative;width:calc(100% * var(--cr-centered-card-width-percentage))}.cr-row{align-items:center;border-top:var(--cr-separator-line);display:flex;min-height:var(--cr-section-min-height);padding:0 var(--cr-section-padding)}.cr-row.first,.cr-row.continuation{border-top:none}.cr-row-gap{padding-inline-start:16px}.cr-button-gap{margin-inline-start:8px}paper-tooltip::part(tooltip),cr-tooltip::part(tooltip){border-radius:var(--paper-tooltip-border-radius,2px);font-size:92.31%;font-weight:500;max-width:330px;min-width:var(--paper-tooltip-min-width,200px);padding:var(--paper-tooltip-padding,10px 8px)}.cr-padded-text{padding-block-end:var(--cr-section-vertical-padding);padding-block-start:var(--cr-section-vertical-padding)}.cr-title-text{color:var(--cr-title-text-color);font-size:107.6923%;font-weight:500}.cr-secondary-text{color:var(--cr-secondary-text-color);font-weight:400}.cr-form-field-label{color:var(--cr-form-field-label-color);display:block;font-size:var(--cr-form-field-label-font-size);font-weight:500;letter-spacing:.4px;line-height:var(--cr-form-field-label-line-height);margin-bottom:8px}.cr-vertical-tab{align-items:center;display:flex}.cr-vertical-tab::before{border-radius:0 3px 3px 0;content:'';display:block;flex-shrink:0;height:var(--cr-vertical-tab-height,100%);width:4px}.cr-vertical-tab.selected::before{background:var(--cr-vertical-tab-selected-color,var(--cr-checked-color))}:host-context([dir=rtl]) .cr-vertical-tab::before{transform:scaleX(-1)}.iph-anchor-highlight{background-color:var(--cr-iph-anchor-highlight-color)}`]);
+}
+
+let instance$j = null;
+function getCss$e() {
+    return instance$j || (instance$j = [...[getCss$i()], css `:host{align-items:center;display:inline-flex;justify-content:center;position:relative;vertical-align:middle;fill:var(--iron-icon-fill-color,currentcolor);stroke:var(--iron-icon-stroke-color,none);width:var(--iron-icon-width,24px);height:var(--iron-icon-height,24px)}:host-context([webui-refresh-2026]){&:host(:focus){border-radius:2px;outline:solid 2px var(--cr-focus-outline-color)}}`]);
+}
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+let iconsetMap = null;
+class IconsetMap extends EventTarget {
+    iconsets_ = new Map();
+    static getInstance() {
+        return iconsetMap || (iconsetMap = new IconsetMap());
+    }
+    static resetInstanceForTesting(instance) {
+        iconsetMap = instance;
+    }
+    get(id) {
+        return this.iconsets_.get(id) || null;
+    }
+    set(id, iconset) {
+        assert(!this.iconsets_.has(id), `Tried to add a second iconset with id '${id}'`);
+        this.iconsets_.set(id, iconset);
+        this.dispatchEvent(new CustomEvent('cr-iconset-added', { detail: id }));
+    }
+}
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class CrIconElement extends CrLitElement {
+    static get is() {
+        return 'cr-icon';
+    }
+    static get styles() {
+        return getCss$e();
+    }
+    static get properties() {
+        return {
+            /**
+             * The name of the icon to use. The name should be of the form:
+             * `iconset_name:icon_name`.
+             */
+            icon: { type: String },
+        };
+    }
+    #icon_accessor_storage = '';
+    get icon() { return this.#icon_accessor_storage; }
+    set icon(value) { this.#icon_accessor_storage = value; }
+    iconsetName_ = '';
+    iconName_ = '';
+    iconset_ = null;
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('icon')) {
+            const [iconsetName, iconName] = this.icon.split(':');
+            this.iconName_ = iconName || '';
+            this.iconsetName_ = iconsetName || '';
+            this.updateIcon_();
+        }
+    }
+    updateIcon_() {
+        if (this.iconName_ === '' && this.iconset_) {
+            this.iconset_.removeIcon(this);
+        }
+        else if (this.iconsetName_) {
+            const iconsetMap = IconsetMap.getInstance();
+            this.iconset_ = iconsetMap.get(this.iconsetName_);
+            assert(this.iconset_, `Could not find iconset for: '${this.iconsetName_}:${this.iconName_}'`);
+            this.iconset_.applyIcon(this, this.iconName_);
+        }
+    }
+}
+customElements.define(CrIconElement.is, CrIconElement);
+
+// Copyright (c) 2024 The Brave Authors. All rights reserved.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this file,
+// You can obtain one at https://mozilla.org/MPL/2.0/.
+function injectStyle(element, css) {
+    const originalStyles = element.styles;
+    Object.defineProperty(element, 'styles', {
+        get() {
+            return [
+                ...originalStyles,
+                css
+            ];
+        }
+    });
+    element.elementStyles = element.finalizeStyles(element.styles);
+}
+
+// Copyright (c) 2024 The Brave Authors. All rights reserved.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this file,
+// You can obtain one at https://mozilla.org/MPL/2.0/.
+// 
+const leoIcons = window.leoIcons;
+// Maps Chromium icons to their equivalent Brave icons.
+const iconMap = {
+    // chrome://app-settings icons
+    'app-management:location': 'location-on',
+    'app-management:camera': 'video-camera',
+    'app-management:microphone': 'microphone',
+    'settings:accessibility': 'accessibility',
+    'settings:security': 'lock',
+    'settings:search': 'search',
+    'settings:palette': 'appearance',
+    'settings:password-manager': 'list-checks',
+    'settings:language': 'product-translate',
+    'settings:build': 'settings',
+    'settings:restart-alt': 'backward',
+    'settings:location-on': 'location-on', // location
+    'privacy:location-on': 'location-on', // location
+    'privacy:location-off': 'location-off', // location off
+    'cr:videocam': 'video-camera', // camera
+    'privacy:videocam-off': 'video-camera-off', // camera off
+    'cr:mic': 'microphone', // microphone
+    'privacy:mic': 'microphone', // microphone
+    'privacy:mic-off': 'microphone-off', // microphone off
+    'privacy:sensors': 'motion-sensor', // motion sensors
+    'privacy:sensors-off': 'motion-sensor-off', // motion sensors
+    'privacy:notifications': 'notification', // notifications
+    'privacy:notifications-off': 'notification-off', // notifications off
+    'privacy:code': 'code', // javascript
+    'privacy:code-off': 'code-off', // javascript
+    'settings:cookie': 'cookie', // cookies
+    'privacy:cookie': 'cookie', // cookies
+    'privacy:lock': 'lock', // security
+    'privacy:imagesmode': 'image', // images
+    'privacy:hide-image': 'image-off', // images off
+    'cr:open-in-new': 'launch', // popups & redirects
+    'privacy:open-in-new-off': 'launch-off', // popups & redirects off
+    'settings:ads': '', // intrusive ads (unused)
+    'cr:sync': 'product-sync', // background sync
+    'privacy:volume-up': 'volume-on', // sound
+    'privacy:volume-off': 'volume-off', // sound off
+    'cr:download': 'download', // automatic downloads
+    'privacy:protocol-handler': 'protocol-handler', // protocol handler
+    'privacy:protocol-handler-off': 'protocol-handler-off', // protocol handler off
+    'privacy:file-download-off': 'download-off', // automatic downloads off
+    'privacy:piano': 'media-visualizer', // midi devices
+    'privacy:piano-off': 'media-visualizer-off', // midi devices off
+    'privacy:usb': 'usb', // usb devices
+    'privacy:usb-off': 'usb-off', // usb devices off
+    'privacy:developer-board': 'cpu-chip', // serial ports
+    'privacy:developer-board-off': 'cpu-chip-off', // serial ports off
+    'privacy:file-save': 'file-edit', // file editing
+    'privacy:file-save-off': 'file-corrupted', // file editing off
+    'privacy:videogame-asset': 'sparkles', // hid devices
+    'privacy:videogame-asset-off': 'sparkles-off', // hid devices off
+    'privacy:sync-saved-locally': 'key-lock', // protected content ids
+    'privacy:web-asset-off': 'key-lock-off', // protected content off
+    'privacy:content-paste': 'copy', // clipboard
+    'privacy:content-paste-off': 'copy-off', // clipboard off
+    'privacy:credit-card': 'credit-card', // payment handlers
+    'privacy:credit-card-off': 'credit-card-off', // payment handlers
+    'settings:bluetooth-searching': 'bluetooth', // bluetooth searching
+    'settings:bluetooth-disabled': 'bluetooth-off', // bluetooth off
+    'privacy:warning': 'warning-triangle-outline', // insecure content
+    'privacy:federated-identity-api': '', // federated identity (unused)
+    'privacy:cardboard': 'virtual-reality', // virtual reality & augmented reality
+    'privacy:cardboard-off': 'virtual-reality-off', // virtual reality & augmented reality off
+    'privacy:select-window': 'windows-open', // window management
+    'privacy:select-window-off': 'window-tab-close', // window management off
+    'privacy:font-download': 'font-size', // fonts
+    'privacy:font-download-off': 'font-size-off', // fonts off
+    'privacy:zoom-in': 'search-zoom-in', // zoom levels
+    'privacy:drive-pdf': 'file', // pdfs
+    'privacy:open-in-browser': 'window', // open in browser
+    'settings20:chrome-product': 'hearts',
+    'settings20:incognito-unfilled': 'product-private-window',
+    'settings20:incognito': 'product-private-window',
+    'settings20:lightbulb': 'idea',
+    'settings20:lightbulb-2': 'idea',
+    'cr:delete': 'trash', // delete browsing data
+    'cr:security': 'lock',
+    'privacy:page-info': 'tune', // privacy page additional settings
+    'cr:fullscreen': 'fullscreen-on', // automatic fullscreen
+    'settings:picture-in-picture': 'picture-in-picture', // picture in picture
+    'cr:file-download': 'download',
+    'cr:search': 'search',
+    'cr:print': 'print',
+    'cr:add': 'plus-add',
+    'cr:expand-more': 'carat-down',
+    'cr:chevron-right': 'carat-right',
+    'cr:arrow-back': 'browser-back',
+    'cr:more-vert': 'more-vertical',
+    'cr:clear': 'close',
+    'sp:filter-list': 'filter',
+    'settings:download': 'download',
+    'settings:performance': 'cpu-chip',
+    'bookmarks:delete': 'trash',
+    'bookmarks:move': 'folder-export',
+    'bookmarks:bookmarks-bar': 'window',
+    'bookmarks:visual-view': 'list-bullet-default',
+    'bookmarks:compact-view': 'content-compact',
+    'tab-search:auto-tab-groups': 'product-brave-leo', // tab organization
+};
+injectStyle(CrIconElement, css `:host {
+  --leo-icon-size: var(--iron-icon-width, 24px);
+  --leo-icon-color: var(--iron-icon-fill-color, currentColor);
+ }`);
+const proto = CrIconElement.prototype;
+const old = proto.updateIcon_;
+proto.updateIcon_ = function (...args) {
+    const removeAllOfType = (type) => {
+        for (const node of this.shadowRoot.querySelectorAll(type))
+            node.remove();
+    };
+    // Upstream's `kWebUIRoundedIcons` rollout picks between a rounded icon name
+    // and a legacy "-old" suffixed name at runtime depending on the feature
+    // state. Both refer to the same icon, so strip the suffix before mapping to
+    // keep overrides working regardless of the feature's enabled state.
+    const unroundedIcon = this.icon.replace(/-old$/, '');
+    const name = iconMap[this.icon] ?? iconMap[unroundedIcon];
+    if (name || leoIcons.has(this.icon)) {
+        removeAllOfType('svg');
+        let leoIcon = this.shadowRoot.querySelector('leo-icon');
+        if (!leoIcon) {
+            leoIcon = document.createElement('leo-icon');
+            this.shadowRoot.append(leoIcon);
+        }
+        leoIcon.setAttribute('name', name ?? this.icon);
+    }
+    else {
+        removeAllOfType('leo-icon');
+        old.apply(this, args);
+    }
+};
+
+// Copyright 2011 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview EventTracker is a simple class that manages the addition and
+ * removal of DOM event listeners. In particular, it keeps track of all
+ * listeners that have been added and makes it easy to remove some or all of
+ * them without requiring all the information again. This is particularly handy
+ * when the listener is a generated function such as a lambda or the result of
+ * calling Function.bind.
+ */
+class EventTracker {
+    listeners_ = [];
+    /**
+     * Add an event listener - replacement for EventTarget.addEventListener.
+     * @param target The DOM target to add a listener to.
+     * @param eventType The type of event to subscribe to.
+     * @param listener The listener to add.
+     * @param capture Whether to invoke during the capture phase. Defaults to
+     *     false.
+     */
+    add(target, eventType, listener, capture = false) {
+        const h = {
+            target: target,
+            eventType: eventType,
+            listener: listener,
+            capture: capture,
+        };
+        this.listeners_.push(h);
+        target.addEventListener(eventType, listener, capture);
+    }
+    /**
+     * Remove any specified event listeners added with this EventTracker.
+     * @param target The DOM target to remove a listener from.
+     * @param eventType The type of event to remove.
+     */
+    remove(target, eventType) {
+        this.listeners_ = this.listeners_.filter(listener => {
+            if (listener.target === target &&
+                (!eventType || (listener.eventType === eventType))) {
+                EventTracker.removeEventListener(listener);
+                return false;
+            }
+            return true;
+        });
+    }
+    /** Remove all event listeners added with this EventTracker. */
+    removeAll() {
+        this.listeners_.forEach(listener => EventTracker.removeEventListener(listener));
+        this.listeners_ = [];
+    }
+    /**
+     * Remove a single event listener given it's tracking entry. It's up to the
+     * caller to ensure the entry is removed from listeners_.
+     * @param entry The entry describing the listener to
+     * remove.
+     */
+    static removeEventListener(entry) {
+        entry.target.removeEventListener(entry.eventType, entry.listener, entry.capture);
+    }
+}
+
+let instance$i = null;
+function getCss$d() {
+    return instance$i || (instance$i = [...[], css `:host{bottom:0;display:block;left:0;overflow:hidden;pointer-events:none;position:absolute;right:0;top:0;transform:translate3d(0,0,0)}.ripple{background-color:currentcolor;left:0;opacity:var(--paper-ripple-opacity,0.25);pointer-events:none;position:absolute;will-change:height,transform,width}.ripple,:host(.circle){border-radius:50%}`]);
+}
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const MAX_RADIUS_PX = 300;
+const MIN_DURATION_MS = 800;
+/** @return The distance between (x1, y1) and (x2, y2). */
+function distance(x1, y1, x2, y2) {
+    const xDelta = x1 - x2;
+    const yDelta = y1 - y2;
+    return Math.sqrt(xDelta * xDelta + yDelta * yDelta);
+}
+class CrRippleElement extends CrLitElement {
+    static get is() {
+        return 'cr-ripple';
+    }
+    static get styles() {
+        return getCss$d();
+    }
+    static get properties() {
+        return {
+            holdDown: { type: Boolean },
+            recenters: { type: Boolean },
+            noink: { type: Boolean },
+        };
+    }
+    #holdDown_accessor_storage = false;
+    get holdDown() { return this.#holdDown_accessor_storage; }
+    set holdDown(value) { this.#holdDown_accessor_storage = value; }
+    #recenters_accessor_storage = false;
+    get recenters() { return this.#recenters_accessor_storage; }
+    set recenters(value) { this.#recenters_accessor_storage = value; }
+    #noink_accessor_storage = false;
+    get noink() { return this.#noink_accessor_storage; }
+    set noink(value) { this.#noink_accessor_storage = value; }
+    ripples_ = [];
+    eventTracker_ = new EventTracker();
+    connectedCallback() {
+        super.connectedCallback();
+        assert(this.parentNode);
+        const keyEventTarget = this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE ?
+            this.parentNode.host :
+            this.parentElement;
+        this.eventTracker_.add(keyEventTarget, 'pointerdown', (e) => this.uiDownAction(e));
+        this.eventTracker_.add(keyEventTarget, 'pointerup', () => this.uiUpAction());
+        // 'pointerup' does not fire if the pointer is moved outside the bounds of
+        // `keyEventTarget` before releasing, so also listen for `pointerout`.
+        this.eventTracker_.add(keyEventTarget, 'pointerout', () => this.uiUpAction());
+        this.eventTracker_.add(keyEventTarget, 'keydown', (e) => {
+            if (e.defaultPrevented) {
+                return;
+            }
+            if (e.key === 'Enter') {
+                this.onEnterKeydown_();
+                return;
+            }
+            if (e.key === ' ') {
+                this.onSpaceKeydown_();
+            }
+        });
+        this.eventTracker_.add(keyEventTarget, 'keyup', (e) => {
+            if (e.defaultPrevented) {
+                return;
+            }
+            if (e.key === ' ') {
+                this.onSpaceKeyup_();
+            }
+        });
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.eventTracker_.removeAll();
+    }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('holdDown')) {
+            this.holdDownChanged_(this.holdDown, changedProperties.get('holdDown'));
+        }
+    }
+    uiDownAction(e) {
+        if (e !== undefined && e.button !== 0) {
+            // Ignore secondary mouse button clicks.
+            return;
+        }
+        if (!this.noink) {
+            this.downAction_(e);
+        }
+    }
+    downAction_(e) {
+        if (this.ripples_.length && this.holdDown) {
+            return;
+        }
+        this.showRipple_(e);
+    }
+    clear() {
+        this.hideRipple_();
+        this.holdDown = false;
+    }
+    showAndHoldDown() {
+        this.ripples_.forEach(ripple => {
+            ripple.remove();
+        });
+        this.ripples_ = [];
+        this.holdDown = true;
+    }
+    showRipple_(e) {
+        const rect = this.getBoundingClientRect();
+        const roundedCenterX = function () {
+            return Math.round(rect.width / 2);
+        };
+        const roundedCenterY = function () {
+            return Math.round(rect.height / 2);
+        };
+        let x = 0;
+        let y = 0;
+        const centered = !e;
+        if (centered) {
+            x = roundedCenterX();
+            y = roundedCenterY();
+        }
+        else {
+            x = Math.round(e.clientX - rect.left);
+            y = Math.round(e.clientY - rect.top);
+        }
+        const corners = [
+            { x: 0, y: 0 },
+            { x: rect.width, y: 0 },
+            { x: 0, y: rect.height },
+            { x: rect.width, y: rect.height },
+        ];
+        const cornerDistances = corners.map(function (corner) {
+            return Math.round(distance(x, y, corner.x, corner.y));
+        });
+        const radius = Math.min(MAX_RADIUS_PX, Math.max.apply(Math, cornerDistances));
+        const startTranslate = `${x - radius}px, ${y - radius}px`;
+        let endTranslate = startTranslate;
+        if (this.recenters && !centered) {
+            endTranslate =
+                `${roundedCenterX() - radius}px, ${roundedCenterY() - radius}px`;
+        }
+        const ripple = document.createElement('div');
+        ripple.classList.add('ripple');
+        ripple.style.height = ripple.style.width = (2 * radius) + 'px';
+        this.ripples_.push(ripple);
+        this.shadowRoot.appendChild(ripple);
+        ripple.animate({
+            transform: [
+                `translate(${startTranslate}) scale(0)`,
+                `translate(${endTranslate}) scale(1)`,
+            ],
+        }, {
+            duration: Math.max(MIN_DURATION_MS, Math.log(radius) * radius) || 0,
+            easing: 'cubic-bezier(.2, .9, .1, .9)',
+            fill: 'forwards',
+        });
+    }
+    uiUpAction() {
+        if (!this.noink) {
+            this.upAction_();
+        }
+    }
+    upAction_() {
+        if (!this.holdDown) {
+            this.hideRipple_();
+        }
+    }
+    hideRipple_() {
+        if (this.ripples_.length === 0) {
+            return;
+        }
+        this.ripples_.forEach(function (ripple) {
+            const opacity = (ripple.computedStyleMap().get('opacity') ?? null);
+            if (opacity === null) {
+                ripple.remove();
+                return;
+            }
+            const animation = ripple.animate({
+                opacity: [opacity.value, 0],
+            }, {
+                duration: 150,
+                fill: 'forwards',
+            });
+            animation.finished.then(() => {
+                ripple.remove();
+            });
+        });
+        this.ripples_ = [];
+    }
+    onEnterKeydown_() {
+        this.uiDownAction();
+        window.setTimeout(() => {
+            this.uiUpAction();
+        }, 1);
+    }
+    onSpaceKeydown_() {
+        this.uiDownAction();
+    }
+    onSpaceKeyup_() {
+        this.uiUpAction();
+    }
+    holdDownChanged_(newHoldDown, oldHoldDown) {
+        if (oldHoldDown === undefined) {
+            return;
+        }
+        if (newHoldDown) {
+            this.downAction_();
+        }
+        else {
+            this.upAction_();
+        }
+    }
+}
+customElements.define(CrRippleElement.is, CrRippleElement);
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const CrRippleMixin = (superClass) => {
+    class CrRippleMixin extends superClass {
+        static get properties() {
+            return {
+                /**
+                 * If true, the element will not produce a ripple effect when
+                 * interacted with via the pointer.
+                 */
+                noink: { type: Boolean },
+            };
+        }
+        #noink_accessor_storage = false;
+        get noink() { return this.#noink_accessor_storage; }
+        set noink(value) { this.#noink_accessor_storage = value; }
+        rippleContainer = null;
+        ripple_ = null;
+        updated(changedProperties) {
+            super.updated(changedProperties);
+            if (changedProperties.has('noink') && this.hasRipple()) {
+                assert(this.ripple_);
+                this.ripple_.noink = this.noink;
+            }
+        }
+        ensureRippleOnPointerdown() {
+            // 'capture: true' is necessary so that the cr-ripple is created early
+            // enough so that it also receives the 'pointerdown' event. Otherwise
+            // the ripple is created, but not shown on the 1st click.
+            this.addEventListener('pointerdown', () => this.ensureRipple(), { capture: true });
+        }
+        /**
+         * Ensures this element contains a ripple effect. For startup efficiency
+         * the ripple effect is dynamically added on demand when needed.
+         */
+        ensureRipple() {
+            if (this.hasRipple()) {
+                return;
+            }
+            this.ripple_ = this.createRipple();
+            this.ripple_.noink = this.noink;
+            const rippleContainer = this.rippleContainer || this.shadowRoot;
+            assert(rippleContainer);
+            rippleContainer.appendChild(this.ripple_);
+        }
+        /**
+         * Returns the `<cr-ripple>` element used by this element to create
+         * ripple effects. The element's ripple is created on demand, when
+         * necessary, and calling this method will force the
+         * ripple to be created.
+         */
+        getRipple() {
+            this.ensureRipple();
+            assert(this.ripple_);
+            return this.ripple_;
+        }
+        /**
+         * Returns true if this element currently contains a ripple effect.
+         */
+        hasRipple() {
+            return Boolean(this.ripple_);
+        }
+        /**
+         * Create the element's ripple effect via creating a `<cr-ripple
+         * id="ink">` instance. Override this method to customize the ripple
+         * element.
+         */
+        createRipple() {
+            const ripple = document.createElement('cr-ripple');
+            ripple.id = 'ink';
+            return ripple;
+        }
+    }
+    return CrRippleMixin;
+};
+
+let instance$h = null;
+function getCss$c() {
+    return instance$h || (instance$h = [...[], css `:host{--cr-icon-button-fill-color:currentColor;--cr-icon-button-icon-start-offset:0;--cr-icon-button-icon-size:20px;--cr-icon-button-size:32px;--cr-icon-button-height:var(--cr-icon-button-size);--cr-icon-button-transition:150ms ease-in-out;--cr-icon-button-width:var(--cr-icon-button-size);-webkit-tap-highlight-color:transparent;border-radius:50%;color:var(--cr-icon-button-stroke-color,var(--cr-icon-button-fill-color));cursor:pointer;display:inline-flex;flex-shrink:0;height:var(--cr-icon-button-height);margin-inline-end:var(--cr-icon-button-margin-end,var(--cr-icon-ripple-margin));margin-inline-start:var(--cr-icon-button-margin-start);outline:none;overflow:hidden;pointer-events:auto;position:relative;user-select:none;vertical-align:middle;width:var(--cr-icon-button-width)}:host(:hover:not([disabled])){background-color:var(--cr-icon-button-hover-background-color,var(--cr-hover-background-color))}:host(:focus-visible:focus){box-shadow:inset 0 0 0 2px var(--cr-icon-button-focus-outline-color,var(--cr-focus-outline-color))}@media (forced-colors:active){:host(:focus-visible:focus){outline:var(--cr-focus-outline-hcm)}}#ink{--paper-ripple-opacity:1;color:var(--cr-icon-button-active-background-color,var(--cr-active-background-color))}:host([disabled]){cursor:initial;opacity:var(--cr-disabled-opacity);pointer-events:none}:host(.no-overlap){--cr-icon-button-margin-end:0;--cr-icon-button-margin-start:0}:host-context([dir=rtl]):host(:not([suppress-rtl-flip]):not([multiple-icons_])){transform:scaleX(-1)}:host-context([dir=rtl]):host(:not([suppress-rtl-flip])[multiple-icons_]) cr-icon{transform:scaleX(-1)}:host(:not([iron-icon])) #maskedImage{-webkit-mask-image:var(--cr-icon-image);-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;-webkit-mask-size:var(--cr-icon-button-icon-size);-webkit-transform:var(--cr-icon-image-transform,none);background-color:var(--cr-icon-button-fill-color);height:100%;transition:background-color var(--cr-icon-button-transition);width:100%}@media (forced-colors:active){:host(:not([iron-icon])) #maskedImage{background-color:ButtonText}}#icon{align-items:center;border-radius:4px;display:flex;height:100%;justify-content:center;padding-inline-start:var(--cr-icon-button-icon-start-offset);pointer-events:none;position:relative;width:100%}cr-icon{--iron-icon-fill-color:var(--cr-icon-button-fill-color);--iron-icon-stroke-color:var(--cr-icon-button-stroke-color,none);--iron-icon-height:var(--cr-icon-button-icon-size);--iron-icon-width:var(--cr-icon-button-icon-size);transition:fill var(--cr-icon-button-transition),stroke var(--cr-icon-button-transition)}@media (prefers-color-scheme:dark){:host{--cr-icon-button-fill-color:var(--google-grey-500)}}`]);
+}
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$c() {
+    return html `
+<div id="icon">
+  <div id="maskedImage"></div>
+</div>`;
+}
+
+// Copyright 2018 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview 'cr-icon-button' is a button which displays an icon with a
+ * ripple. It can be interacted with like a normal button using click as well as
+ * space and enter to effectively click the button and fire a 'click' event.
+ *
+ * There are two sources to icons:
+ * Option 1: CSS classes defined in cr_icons.css.
+ * Option 2: SVG icons defined in a cr-iconset or iron-iconset-svg,
+ *     with the name passed to cr-icon-button via the |ironIcon| property.
+ *
+ * Example of using CSS classes:
+ * In the .html.ts template file (if using a .html template file instead, the
+ * import should be in the corresponding .ts file):
+ * import 'chrome://resources/cr_elements/cr_icons.css.js';
+ *
+ * export function getHtml() {
+ *   return html`
+ *     <cr-icon-button class="icon-class-name"></cr-icon-button>`;
+ * }
+ *
+ * When an icon is specified using a class, the expectation is the
+ * class will set an image to the --cr-icon-image variable.
+ *
+ * Example of using a cr-iconset to supply an icon via the iron-icon parameter:
+ * In the .html.ts template file (if using a .html template file instead, the
+ * import should be in the corresponding .ts file):
+ * import 'chrome://resources/cr_elements/icons.html.js';
+ *
+ * export function getHtml() {
+ *   return html`
+ *     <cr-icon-button iron-icon="cr:icon-key"></cr-icon-button>`;
+ * }
+ *
+ * The color of the icon can be overridden using CSS variables. When using
+ * the ironIcon property to populate cr-icon-button's internal <cr-icon>, the
+ * following CSS variables for fill and stroke can be overridden for cr-icon:
+ * --iron-icon-button-fill-color
+ * --iron-icon-button-stroke-color
+ *
+ * When not using the ironIcon property, cr-icon-button will not create a
+ * <cr-icon>, so the cr-icon related CSS variables above are ignored.
+ *
+ * When using the ironIcon property, more than one icon can be specified by
+ * setting the |ironIcon| property to a comma-delimited list of keys.
+ */
+const CrIconbuttonElementBase = CrRippleMixin(CrLitElement);
+class CrIconButtonElement extends CrIconbuttonElementBase {
+    static get is() {
+        return 'cr-icon-button';
+    }
+    static get styles() {
+        return getCss$c();
+    }
+    render() {
+        return getHtml$c.bind(this)();
+    }
+    static get properties() {
+        return {
+            disabled: {
+                type: Boolean,
+                reflect: true,
+            },
+            ironIcon: {
+                type: String,
+                reflect: true,
+            },
+            suppressRtlFlip: {
+                type: Boolean,
+                value: false,
+                reflect: true,
+            },
+            multipleIcons_: {
+                type: Boolean,
+                reflect: true,
+            },
+        };
+    }
+    #disabled_accessor_storage = false;
+    get disabled() { return this.#disabled_accessor_storage; }
+    set disabled(value) { this.#disabled_accessor_storage = value; }
+    #ironIcon_accessor_storage;
+    get ironIcon() { return this.#ironIcon_accessor_storage; }
+    set ironIcon(value) { this.#ironIcon_accessor_storage = value; }
+    #suppressRtlFlip_accessor_storage = false;
+    get suppressRtlFlip() { return this.#suppressRtlFlip_accessor_storage; }
+    set suppressRtlFlip(value) { this.#suppressRtlFlip_accessor_storage = value; }
+    #multipleIcons__accessor_storage = false;
+    get multipleIcons_() { return this.#multipleIcons__accessor_storage; }
+    set multipleIcons_(value) { this.#multipleIcons__accessor_storage = value; }
+    /**
+     * It is possible to activate a tab when the space key is pressed down. When
+     * this element has focus, the keyup event for the space key should not
+     * perform a 'click'. |spaceKeyDown_| tracks when a space pressed and
+     * handled by this element. Space keyup will only result in a 'click' when
+     * |spaceKeyDown_| is true. |spaceKeyDown_| is set to false when element
+     * loses focus.
+     */
+    spaceKeyDown_ = false;
+    constructor() {
+        super();
+        this.addEventListener('blur', this.onBlur_.bind(this));
+        this.addEventListener('click', this.onClick_.bind(this));
+        this.addEventListener('keydown', this.onKeyDown_.bind(this));
+        this.addEventListener('keyup', this.onKeyUp_.bind(this));
+        this.ensureRippleOnPointerdown();
+    }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('ironIcon')) {
+            const icons = (this.ironIcon || '').split(',');
+            this.multipleIcons_ = icons.length > 1;
+        }
+    }
+    firstUpdated() {
+        if (!this.hasAttribute('role')) {
+            this.setAttribute('role', 'button');
+        }
+        if (!this.hasAttribute('tabindex')) {
+            this.setAttribute('tabindex', '0');
+        }
+    }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('disabled')) {
+            this.setAttribute('aria-disabled', this.disabled ? 'true' : 'false');
+            this.disabledChanged_(this.disabled, changedProperties.get('disabled'));
+        }
+        if (changedProperties.has('ironIcon')) {
+            this.onIronIconChanged_();
+        }
+    }
+    disabledChanged_(newValue, oldValue) {
+        if (!newValue && oldValue === undefined) {
+            return;
+        }
+        if (this.disabled) {
+            this.blur();
+        }
+        this.setAttribute('tabindex', String(this.disabled ? -1 : 0));
+    }
+    onBlur_() {
+        this.spaceKeyDown_ = false;
+    }
+    onClick_(e) {
+        if (this.disabled) {
+            e.stopImmediatePropagation();
+        }
+    }
+    onIronIconChanged_() {
+        this.shadowRoot.querySelectorAll('cr-icon').forEach(el => el.remove());
+        if (!this.ironIcon) {
+            return;
+        }
+        const icons = (this.ironIcon || '').split(',');
+        icons.forEach(async (icon) => {
+            const crIcon = document.createElement('cr-icon');
+            crIcon.icon = icon;
+            crIcon.setAttribute('part', 'icon');
+            this.$.icon.appendChild(crIcon);
+            await crIcon.updateComplete;
+            crIcon.shadowRoot.querySelectorAll('svg, img')
+                .forEach(child => child.setAttribute('role', 'none'));
+        });
+    }
+    onKeyDown_(e) {
+        if (e.key !== ' ' && (e.key !== 'Enter' || (isMac && e.ctrlKey))) {
+            return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.repeat) {
+            return;
+        }
+        if (e.key === 'Enter') {
+            this.click();
+        }
+        else if (e.key === ' ') {
+            this.spaceKeyDown_ = true;
+        }
+    }
+    onKeyUp_(e) {
+        if (e.key === ' ' || (e.key === 'Enter' && !(isMac && e.ctrlKey))) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        if (this.spaceKeyDown_ && e.key === ' ') {
+            this.spaceKeyDown_ = false;
+            this.click();
+        }
+    }
+}
+customElements.define(CrIconButtonElement.is, CrIconButtonElement);
+
+let instance$g = null;
+function getCss$b() {
+    return instance$g || (instance$g = [...[], css `:host{clip:rect(0 0 0 0);height:1px;overflow:hidden;position:fixed;width:1px}`]);
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$b() {
+    return html `
+<div id="messages" role="alert" aria-live="polite" aria-relevant="additions">
+</div>`;
+}
+
+// Copyright 2021 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * 150ms seems to be around the minimum time required for screen readers to
+ * read out consecutively queued messages.
+ */
+const TIMEOUT_MS = 150;
+/**
+ * A map of an HTML element to its corresponding CrA11yAnnouncerElement. There
+ * may be multiple CrA11yAnnouncerElements on a page, especially for cases in
+ * which the DocumentElement's CrA11yAnnouncerElement becomes hidden or
+ * deactivated (eg. when a modal dialog causes the CrA11yAnnouncerElement to
+ * become inaccessible).
+ */
+const instances = new Map();
+function getInstance(container = document.body) {
+    if (instances.has(container)) {
+        return instances.get(container);
+    }
+    assert(container.isConnected);
+    const instance = new CrA11yAnnouncerElement();
+    container.appendChild(instance);
+    instances.set(container, instance);
+    return instance;
+}
+class CrA11yAnnouncerElement extends CrLitElement {
+    static get is() {
+        return 'cr-a11y-announcer';
+    }
+    static get styles() {
+        return getCss$b();
+    }
+    render() {
+        return getHtml$b.bind(this)();
+    }
+    currentTimeout_ = null;
+    messages_ = [];
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.currentTimeout_ !== null) {
+            clearTimeout(this.currentTimeout_);
+            this.currentTimeout_ = null;
+        }
+        for (const [parent, instance] of instances) {
+            if (instance === this) {
+                instances.delete(parent);
+                break;
+            }
+        }
+    }
+    announce(message, timeout = TIMEOUT_MS) {
+        if (this.currentTimeout_ !== null) {
+            clearTimeout(this.currentTimeout_);
+            this.currentTimeout_ = null;
+        }
+        this.messages_.push(message);
+        this.currentTimeout_ = setTimeout(() => {
+            const messagesDiv = this.shadowRoot.querySelector('#messages');
+            messagesDiv.innerHTML = window.trustedTypes.emptyHTML;
+            // 
+            // VoiceOver on Mac does not seem to consistently read out the contents of
+            // a static alert element. Toggling the role of alert seems to force VO
+            // to consistently read out the messages.
+            messagesDiv.removeAttribute('role');
+            messagesDiv.setAttribute('role', 'alert');
+            // 
+            for (const message of this.messages_) {
+                const div = document.createElement('div');
+                div.textContent = message;
+                messagesDiv.appendChild(div);
+            }
+            // Dispatch a custom event to allow consumers to know when certain alerts
+            // have been sent to the screen reader.
+            this.dispatchEvent(new CustomEvent('cr-a11y-announcer-messages-sent', { bubbles: true, detail: { messages: this.messages_.slice() } }));
+            this.messages_.length = 0;
+            this.currentTimeout_ = null;
+        }, timeout);
+    }
+}
+customElements.define(CrA11yAnnouncerElement.is, CrA11yAnnouncerElement);
+
+// Copyright 2021 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @return Whether the passed tagged template literal is a valid array.
+ */
+function isValidArray(arr) {
+    if (arr instanceof Array && Object.isFrozen(arr)) {
+        return true;
+    }
+    return false;
+}
+/**
+ * Checks if the passed tagged template literal only contains static string.
+ * And return the string in the literal if so.
+ * Throws an Error if the passed argument is not supported literals.
+ */
+function getStaticString(literal) {
+    const isStaticString = isValidArray(literal) && !!literal.raw &&
+        isValidArray(literal.raw) && literal.length === literal.raw.length &&
+        literal.length === 1;
+    assert(isStaticString, 'static_types.js only allows static strings');
+    return literal.join('');
+}
+function createTypes(_ignore, literal) {
+    return getStaticString(literal);
+}
+/**
+ * Rules used to enforce static literal checks.
+ */
+const rules = {
+    createHTML: createTypes,
+    createScript: createTypes,
+    createScriptURL: createTypes,
+};
+/**
+ * This policy returns Trusted Types if the passed literal is static.
+ */
+let staticPolicy;
+if (window.trustedTypes) {
+    staticPolicy = window.trustedTypes.createPolicy('static-types', rules);
+}
+else {
+    staticPolicy = rules;
+}
+/**
+ * Returns TrustedHTML if the passed literal is static.
+ */
+function getTrustedHTML(literal) {
+    return staticPolicy.createHTML('', literal);
+}
+/**
+ * Returns TrustedScriptURL if the passed literal is static.
+ */
+function getTrustedScriptURL(literal) {
+    return staticPolicy.createScriptURL('', literal);
+}
+
+// Copyright (c) 2024 The Brave Authors. All rights reserved.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this file,
+// You can obtain one at https://mozilla.org/MPL/2.0/.
+function getHtml$a() {
+    return html `
+<leo-button id="button" kind="outline" size="${this.size}">
+  <slot slot="icon-before" name="prefix-icon"></slot>
+  <slot></slot>
+  <slot slot="icon-after" name="suffix-icon"></slot>
+</leo-button>`;
+}
+
+// Copyright (c) 2024 The Brave Authors. All rights reserved.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this file,
+// You can obtain one at https://mozilla.org/MPL/2.0/.
+class CrButtonElement extends CrLitElement {
+    static get is() {
+        return 'cr-button';
+    }
+    static get styles() {
+        return css `
+      :host {
+        display: inline-block;
+        height: min-content;
+      }
+
+      :host(.cancel-button) {
+        margin-inline-end: var(--leo-spacing-m);
+      }
+
+      leo-button {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+      }
+    `;
+    }
+    render() {
+        return getHtml$a.bind(this)();
+    }
+    static get properties() {
+        return {
+            disabled: {
+                type: Boolean,
+                reflect: true,
+            },
+            class: {
+                type: String,
+                reflect: true,
+            },
+            size: {
+                type: String,
+                reflect: true,
+            },
+            noink: { type: Boolean },
+        };
+    }
+    #disabled_accessor_storage = false;
+    get disabled() { return this.#disabled_accessor_storage; }
+    set disabled(value) { this.#disabled_accessor_storage = value; }
+    #class_accessor_storage = '';
+    get class() { return this.#class_accessor_storage; }
+    set class(value) { this.#class_accessor_storage = value; }
+    #size_accessor_storage = 'small';
+    get size() { return this.#size_accessor_storage; }
+    set size(value) { this.#size_accessor_storage = value; }
+    #noink_accessor_storage = false;
+    // Upstream's CrRippleMixin API; there is no ripple to disable here.
+    get noink() { return this.#noink_accessor_storage; }
+    set noink(value) { this.#noink_accessor_storage = value; }
+    onClick_(e) {
+        if (this.disabled) {
+            e.stopImmediatePropagation();
+        }
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('click', this.onClick_);
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('click', this.onClick_);
+    }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('class')) {
+            this.classChanged();
+        }
+        if (changedProperties.has('disabled')) {
+            // TODO(petemill): This should be a $= binding but the leo-button
+            // has a bug with treating it as a boolean attribute
+            // https://github.com/brave/leo/issues/690.
+            if (this.disabled) {
+                this.$.button.setAttribute('isDisabled', '_');
+            }
+            else {
+                this.$.button.removeAttribute('isDisabled');
+            }
+        }
+        if (changedProperties.has('size')) {
+            this.$.button.setAttribute('size', this.size);
+        }
+    }
+    classChanged() {
+        let kind = 'outline';
+        if (this.classList.contains('action-button')) {
+            kind = 'filled';
+        }
+        // Avatar buttons should not have a border
+        const avatar = this.classList.contains('avatar');
+        if (avatar || this.classList.contains('plain')) {
+            kind = 'plain';
+        }
+        // Avatar buttons should be round.
+        if (avatar) {
+            this.$.button.setAttribute('fab', '');
+        }
+        this.$.button.setAttribute('kind', kind);
+    }
+    // Shim for Chromium
+    getRipple() { return null; }
+    hasRipple() { return false; }
+}
+customElements.define(CrButtonElement.is, CrButtonElement);
+
+let instance$f = null;
+function getCss$a() {
+    return instance$f || (instance$f = [...[], css `:host{display:none}`]);
+}
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$9() {
+    return html `
+<svg id="baseSvg" xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 ${this.size} ${this.size}" preserveAspectRatio="xMidYMid meet"
+    focusable="false">
+</svg>
+<slot></slot>`;
+}
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const APPLIED_ICON_CLASS = 'cr-iconset-svg-icon_';
+class CrIconsetElement extends CrLitElement {
+    static get is() {
+        return 'cr-iconset';
+    }
+    static get styles() {
+        return getCss$a();
+    }
+    render() {
+        return getHtml$9.bind(this)();
+    }
+    static get properties() {
+        return {
+            /**
+             * The name of the iconset.
+             */
+            name: { type: String },
+            /**
+             * The size of an individual icon. Note that icons must be square.
+             */
+            size: { type: Number },
+        };
+    }
+    #name_accessor_storage = '';
+    get name() { return this.#name_accessor_storage; }
+    set name(value) { this.#name_accessor_storage = value; }
+    #size_accessor_storage = 24;
+    get size() { return this.#size_accessor_storage; }
+    set size(value) { this.#size_accessor_storage = value; }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('name')) {
+            assert(changedProperties.get('name') === undefined);
+            IconsetMap.getInstance().set(this.name, this);
+        }
+    }
+    /**
+     * Applies an icon to the given element.
+     *
+     * An svg icon is prepended to the element's shadowRoot, which should always
+     * exist.
+     * @param element Element to which the icon is applied.
+     * @param iconName Name of the icon to apply.
+     * @return The svg element which renders the icon.
+     */
+    applyIcon(element, iconName) {
+        // Remove old svg element
+        this.removeIcon(element);
+        // install new svg element
+        const svg = this.cloneIcon_(iconName);
+        if (svg) {
+            // Add special class so we can identify it in remove.
+            svg.classList.add(APPLIED_ICON_CLASS);
+            // insert svg element into shadow root
+            element.shadowRoot.insertBefore(svg, element.shadowRoot.childNodes[0]);
+            return svg;
+        }
+        return null;
+    }
+    /**
+     * Produce installable clone of the SVG element matching `id` in this
+     * iconset, or null if there is no matching element.
+     * @param iconName Name of the icon to apply.
+     */
+    createIcon(iconName) {
+        return this.cloneIcon_(iconName);
+    }
+    /**
+     * Remove an icon from the given element by undoing the changes effected
+     * by `applyIcon`.
+     */
+    removeIcon(element) {
+        // Remove old svg element
+        const oldSvg = element.shadowRoot.querySelector(`.${APPLIED_ICON_CLASS}`);
+        if (oldSvg) {
+            oldSvg.remove();
+        }
+    }
+    /**
+     * Produce installable clone of the SVG element matching `id` in this
+     * iconset, or `undefined` if there is no matching element.
+     *
+     * Returns an installable clone of the SVG element matching `id` or null if
+     * no such element exists.
+     */
+    cloneIcon_(id) {
+        const sourceSvg = this.querySelector(`g[id="${id}"]`);
+        if (!sourceSvg) {
+            return null;
+        }
+        const svgClone = this.$.baseSvg.cloneNode(true);
+        const content = sourceSvg.cloneNode(true);
+        content.removeAttribute('id');
+        const contentViewBox = content.getAttribute('viewBox');
+        if (contentViewBox) {
+            svgClone.setAttribute('viewBox', contentViewBox);
+        }
+        svgClone.style.display = 'block';
+        svgClone.style.height = '100%';
+        svgClone.style.width = '100%';
+        svgClone.style.pointerEvents = 'none';
+        svgClone.appendChild(content);
+        return svgClone;
+    }
+}
+customElements.define(CrIconsetElement.is, CrIconsetElement);
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+// Icons used by <ntp-logo> and <ntp-doodle-share-dialog>. Defined inline,
+// rather than referenced by URL, so that they render regardless of the host
+// document's base URL (e.g. when the elements are reused outside of
+// chrome://new-tab-page).
+const div$3 = document.createElement('div');
+div$3.innerHTML = getTrustedHTML `
+<cr-iconset name="ntp-doodle">
+  <svg>
+    <defs>
+      <g id="copy" viewBox="0 0 24 24">
+        <path d="M9 18c-.496 0-.918-.176-1.27-.527a1.732 1.732 0 0 1-.53-1.274v-12c0-.496.175-.918.53-1.27A1.732 1.732 0 0 1 9 2.4h9.602c.492 0 .918.18 1.27.53.35.352.526.774.526 1.27v12c0 .496-.175.918-.527 1.274a1.735 1.735 0 0 1-1.27.527Zm0-1.8h9.602v-12H9Zm-3.602 5.402c-.492 0-.918-.18-1.27-.532a1.729 1.729 0 0 1-.526-1.27V6.899A.872.872 0 0 1 4.497 6c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64v12.903h10.5a.88.88 0 0 1 .903.894.872.872 0 0 1-.258.64.872.872 0 0 1-.645.267ZM9 16.199v-12Zm0 0"/>
+      </g>
+      <g id="copy-old" viewBox="0 0 48 48">
+        <path d="M35.25 14a.76.76 0 0 1 .75.75v25.5a.76.76 0 0 1-.75.75h-16.5a.76.76 0 0 1-.75-.75v-25.5a.76.76 0 0 1 .75-.75h16.5m0-4h-16.5A4.77 4.77 0 0 0 14 14.75v25.5A4.77 4.77 0 0 0 18.75 45h16.5A4.77 4.77 0 0 0 40 40.25v-25.5A4.77 4.77 0 0 0 35.25 10z"/>
+        <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="4" d="M9 38V9.75A4.77 4.77 0 0 1 13.75 5h19.16"/>
+      </g>
+      <g id="facebook" viewBox="0 0 48 48">
+        <path fill="#3a589b" d="M43.5 48h-39C2 48 0 46 0 43.5v-39C0 2 2 0 4.5 0h39C46 0 48 2 48 4.5v39c0 2.5-2 4.5-4.5 4.5z"/>
+        <path fill="#fff" d="m39.4 29.4.9-7.3h-7.2v-4.7c0-2.1.6-3.5 3.6-3.5h3.8V7.5c-.7-.1-2.9-.3-5.6-.3-5.5 0-9.3 3.4-9.3 9.6v5.3h-6.2v7.3h6.2V48h7.5V29.4h6.3z"/>
+      </g>
+      <g id="mail" viewBox="0 0 48 48">
+        <path fill="#9da6aa" d="M43.5 48h-39C2 48 0 46 0 43.5v-39C0 2 2 0 4.5 0h39C46 0 48 2 48 4.5v39c0 2.5-2 4.5-4.5 4.5z"/>
+        <path fill="#fff" d="M35.9 12.8H12.1c-2.2 0-4 1.8-4 4v14.4c0 2.2 1.8 4 4 4h23.8c2.2 0 4-1.8 4-4V16.8c0-2.2-1.8-4-4-4z"/>
+        <path fill="none" stroke="#9da6aa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M35.4 17.2 24 26.1l-11.4-8.9"/>
+      </g>
+      <g id="share" viewBox="0 0 24 24">
+        <path d="M16.2 21.602c-.833 0-1.54-.293-2.126-.875a2.904 2.904 0 0 1-.875-2.125c0-.153.035-.395.102-.727L7.375 14.25a3.044 3.044 0 0 1-.902.55 2.87 2.87 0 0 1-1.075.2c-.832 0-1.539-.293-2.125-.875A2.898 2.898 0 0 1 2.398 12c0-.832.293-1.543.875-2.125A2.904 2.904 0 0 1 5.398 9c.387 0 .743.066 1.079.2.332.132.632.316.898.55l5.926-3.625a2.26 2.26 0 0 1-.074-.344 2.29 2.29 0 0 1-.028-.383c0-.832.293-1.539.875-2.125a2.904 2.904 0 0 1 2.125-.875c.836 0 1.543.293 2.125.875a2.89 2.89 0 0 1 .875 2.125c0 .836-.289 1.543-.875 2.125-.582.586-1.289.875-2.125.875a2.87 2.87 0 0 1-1.074-.199 3.075 3.075 0 0 1-.898-.55L8.3 11.272c.031.118.058.235.074.348.016.113.023.238.023.379 0 .14-.007.266-.023.379-.016.113-.043.23-.074.348l5.926 3.625c.265-.235.566-.418.898-.551.336-.133.691-.2 1.074-.2.836 0 1.543.29 2.125.876.586.582.875 1.289.875 2.125 0 .832-.289 1.539-.875 2.125a2.892 2.892 0 0 1-2.125.875Zm0-1.801c.34 0 .624-.117.855-.348.23-.226.343-.512.343-.851 0-.34-.113-.625-.343-.856a1.164 1.164 0 0 0-.856-.348c-.34 0-.625.118-.855.348a1.16 1.16 0 0 0-.344.856c0 .34.113.625.344.851.23.23.515.348.855.348ZM5.397 13.199c.34 0 .625-.117.856-.347.23-.235.348-.52.348-.852 0-.332-.118-.617-.348-.852a1.164 1.164 0 0 0-.856-.347c-.34 0-.625.117-.851.347-.23.235-.348.52-.348.852 0 .332.117.617.348.852.226.23.512.347.851.347Zm11.653-6.945c.234-.23.347-.516.347-.856 0-.34-.113-.625-.343-.851a1.164 1.164 0 0 0-.856-.348c-.34 0-.625.117-.855.348-.23.226-.344.512-.344.851 0 .34.117.625.352.856.23.23.515.348.847.348.336 0 .617-.118.852-.348Zm-.852 12.348ZM5.4 12Zm10.8-6.602Zm0 0"/>
+      </g>
+      <g id="share-old" viewBox="0 0 18 18">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9775 12.6075C11.375 12.2325 11.9075 12 12.5 12C13.745 12 14.75 13.005 14.75 14.25C14.75 15.495 13.745 16.5 12.5 16.5C11.255 16.5 10.25 15.495 10.25 14.25C10.25 14.07 10.28 13.8975 10.3175 13.7325L5.03 10.6425C4.625 11.0175 4.0925 11.25 3.5 11.25C2.255 11.25 1.25 10.245 1.25 9C1.25 7.755 2.255 6.75 3.5 6.75C4.0925 6.75 4.625 6.9825 5.03 7.3575L10.3175 4.275C10.28 4.11 10.25 3.93 10.25 3.75C10.25 2.505 11.255 1.5 12.5 1.5C13.745 1.5 14.75 2.505 14.75 3.75C14.75 4.995 13.745 6 12.5 6C11.9075 6 11.3675 5.7675 10.97 5.3925L5.6825 8.475C5.72 8.6475 5.75 8.82 5.75 9C5.75 9.18 5.72 9.3525 5.6825 9.525L10.9775 12.6075ZM13.25 3.75C13.25 3.3375 12.9125 3 12.5 3C12.0875 3 11.75 3.3375 11.75 3.75C11.75 4.1625 12.0875 4.5 12.5 4.5C12.9125 4.5 13.25 4.1625 13.25 3.75ZM3.5 9.75C3.0875 9.75 2.75 9.4125 2.75 9C2.75 8.5875 3.0875 8.25 3.5 8.25C3.9125 8.25 4.25 8.5875 4.25 9C4.25 9.4125 3.9125 9.75 3.5 9.75ZM11.75 14.25C11.75 14.6625 12.0875 15 12.5 15C12.9125 15 13.25 14.6625 13.25 14.25C13.25 13.8375 12.9125 13.5 12.5 13.5C12.0875 13.5 11.75 13.8375 11.75 14.25Z"/>
+      </g>
+      <g id="twitter" viewBox="0 0 48 48">
+        <path fill="#3aaae1" d="M43.5 48h-39C2 48 0 46 0 43.5v-39C0 2 2 0 4.5 0h39C46 0 48 2 48 4.5v39c0 2.5-2 4.5-4.5 4.5z"/>
+        <path fill="#fff" d="M39.3 15.5c-1.1.5-2.3.8-3.5.9 1.2-.7 2.2-1.9 2.6-3.3-1.1.7-2.5 1.2-3.8 1.5-1.1-1.1-2.6-1.9-4.4-1.9-3.3 0-6 2.7-6 6 0 .5.1.9.1 1.3-4.9-.3-9.4-2.6-12.4-6.3-.5.9-.8 1.9-.8 3 0 2 1.1 3.9 2.7 5-1 0-1.9-.3-2.7-.8v.1c0 2.9 2 5.3 4.8 5.9-.5.1-1.1.2-1.6.2-.4 0-.8-.1-1.1-.1.8 2.4 3 4.1 5.6 4.2-2 1.6-4.7 2.5-7.4 2.5-.5 0-1 0-1.4-.1 2.7 1.7 5.8 2.7 9.2 2.7 11 0 17-9.1 17-17v-.8c1.3-.8 2.3-1.8 3.1-3z"/>
+      </g>
+    </defs>
+  </svg>
+</cr-iconset>`;
+const iconsets$3 = div$3.querySelectorAll('cr-iconset');
+for (const iconset of iconsets$3) {
+    document.head.appendChild(iconset);
+}
+
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * Converts an SkColor object to a string in the form
+ * "rgba(<red>, <green>, <blue>, <alpha>)".
+ * @param skColor The input color.
+ * @return The rgba string.
+ */
+function skColorToRgba(skColor) {
+    const a = (skColor.value >> 24) & 0xff;
+    const r = (skColor.value >> 16) & 0xff;
+    const g = (skColor.value >> 8) & 0xff;
+    const b = skColor.value & 0xff;
+    return `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(2)})`;
+}
+/**
+ * Converts a string of the form "#rrggbb" to an SkColor object.
+ * @param hexColor The color string.
+ * @return The SkColor object,
+ */
+function hexColorToSkColor(hexColor) {
+    if (!/^#[0-9a-f]{6}$/.test(hexColor)) {
+        return { value: 0 };
+    }
+    const r = parseInt(hexColor.substring(1, 3), 16);
+    const g = parseInt(hexColor.substring(3, 5), 16);
+    const b = parseInt(hexColor.substring(5, 7), 16);
+    return { value: 0xff000000 + (r << 16) + (g << 8) + b };
+}
+
+// chrome/browser/ui/webui/ntp_microsoft_auth/ntp_microsoft_auth_shared_ui.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+({ $: mojo.internal.Enum() });
+var AuthType;
+(function (AuthType) {
+    AuthType[AuthType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    AuthType[AuthType["MAX_VALUE"] = 1] = "MAX_VALUE";
+    AuthType[AuthType["kSilent"] = 0] = "kSilent";
+    AuthType[AuthType["kPopup"] = 1] = "kPopup";
+})(AuthType || (AuthType = {}));
+class MicrosoftAuthUntrustedDocumentPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'new_tab_page.mojom.MicrosoftAuthUntrustedDocument', scope);
+    }
+}
+class MicrosoftAuthUntrustedDocumentRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(MicrosoftAuthUntrustedDocumentPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    acquireTokenPopup() {
+        this.proxy.sendMessage(0, MicrosoftAuthUntrustedDocument_AcquireTokenPopup_ParamsSpec.$, null, [], false);
+    }
+    acquireTokenSilent() {
+        this.proxy.sendMessage(1, MicrosoftAuthUntrustedDocument_AcquireTokenSilent_ParamsSpec.$, null, [], false);
+    }
+    signOut() {
+        this.proxy.sendMessage(2, MicrosoftAuthUntrustedDocument_SignOut_ParamsSpec.$, null, [], false);
+    }
+}
+const MicrosoftAuthUntrustedDocument_AcquireTokenPopup_ParamsSpec = { $: {} };
+const MicrosoftAuthUntrustedDocument_AcquireTokenSilent_ParamsSpec = { $: {} };
+const MicrosoftAuthUntrustedDocument_SignOut_ParamsSpec = { $: {} };
+mojo.internal.Struct(MicrosoftAuthUntrustedDocument_AcquireTokenPopup_ParamsSpec.$, 'MicrosoftAuthUntrustedDocument_AcquireTokenPopup_Params', [], [[0, 8],]);
+mojo.internal.Struct(MicrosoftAuthUntrustedDocument_AcquireTokenSilent_ParamsSpec.$, 'MicrosoftAuthUntrustedDocument_AcquireTokenSilent_Params', [], [[0, 8],]);
+mojo.internal.Struct(MicrosoftAuthUntrustedDocument_SignOut_ParamsSpec.$, 'MicrosoftAuthUntrustedDocument_SignOut_Params', [], [[0, 8],]);
+
+// components/ntp_tiles/tile_type.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const TileTypeSpec = { $: mojo.internal.Enum() };
+var TileType;
+(function (TileType) {
+    TileType[TileType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    TileType[TileType["MAX_VALUE"] = 2] = "MAX_VALUE";
+    TileType[TileType["kTopSites"] = 0] = "kTopSites";
+    TileType[TileType["kCustomLinks"] = 1] = "kCustomLinks";
+    TileType[TileType["kEnterpriseShortcuts"] = 2] = "kEnterpriseShortcuts";
+})(TileType || (TileType = {}));
+
+// chrome/browser/ui/webui/new_tab_page/new_tab_page.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const NtpBackgroundImageSourceSpec = { $: mojo.internal.Enum() };
+var NtpBackgroundImageSource;
+(function (NtpBackgroundImageSource) {
+    NtpBackgroundImageSource[NtpBackgroundImageSource["MIN_VALUE"] = 0] = "MIN_VALUE";
+    NtpBackgroundImageSource[NtpBackgroundImageSource["MAX_VALUE"] = 6] = "MAX_VALUE";
+    NtpBackgroundImageSource[NtpBackgroundImageSource["kNoImage"] = 0] = "kNoImage";
+    NtpBackgroundImageSource[NtpBackgroundImageSource["kFirstPartyThemeWithoutDailyRefresh"] = 1] = "kFirstPartyThemeWithoutDailyRefresh";
+    NtpBackgroundImageSource[NtpBackgroundImageSource["kFirstPartyThemeWithDailyRefresh"] = 2] = "kFirstPartyThemeWithDailyRefresh";
+    NtpBackgroundImageSource[NtpBackgroundImageSource["kThirdPartyTheme"] = 3] = "kThirdPartyTheme";
+    NtpBackgroundImageSource[NtpBackgroundImageSource["kUploadedImage"] = 4] = "kUploadedImage";
+    NtpBackgroundImageSource[NtpBackgroundImageSource["kWallpaperSearch"] = 5] = "kWallpaperSearch";
+    NtpBackgroundImageSource[NtpBackgroundImageSource["kWallpaperSearchInspiration"] = 6] = "kWallpaperSearchInspiration";
+})(NtpBackgroundImageSource || (NtpBackgroundImageSource = {}));
+const DoodleImageTypeSpec = { $: mojo.internal.Enum() };
+var DoodleImageType;
+(function (DoodleImageType) {
+    DoodleImageType[DoodleImageType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    DoodleImageType[DoodleImageType["MAX_VALUE"] = 1] = "MAX_VALUE";
+    DoodleImageType[DoodleImageType["kAnimation"] = 0] = "kAnimation";
+    DoodleImageType[DoodleImageType["kStatic"] = 1] = "kStatic";
+})(DoodleImageType || (DoodleImageType = {}));
+const DoodleShareChannelSpec = { $: mojo.internal.Enum() };
+var DoodleShareChannel;
+(function (DoodleShareChannel) {
+    DoodleShareChannel[DoodleShareChannel["MIN_VALUE"] = 0] = "MIN_VALUE";
+    DoodleShareChannel[DoodleShareChannel["MAX_VALUE"] = 3] = "MAX_VALUE";
+    DoodleShareChannel[DoodleShareChannel["kFacebook"] = 0] = "kFacebook";
+    DoodleShareChannel[DoodleShareChannel["kTwitter"] = 1] = "kTwitter";
+    DoodleShareChannel[DoodleShareChannel["kEmail"] = 2] = "kEmail";
+    DoodleShareChannel[DoodleShareChannel["kLinkCopy"] = 3] = "kLinkCopy";
+})(DoodleShareChannel || (DoodleShareChannel = {}));
+const CustomizeDialogActionSpec = { $: mojo.internal.Enum() };
+var CustomizeDialogAction;
+(function (CustomizeDialogAction) {
+    CustomizeDialogAction[CustomizeDialogAction["MIN_VALUE"] = 0] = "MIN_VALUE";
+    CustomizeDialogAction[CustomizeDialogAction["MAX_VALUE"] = 11] = "MAX_VALUE";
+    CustomizeDialogAction[CustomizeDialogAction["kCancelClicked"] = 0] = "kCancelClicked";
+    CustomizeDialogAction[CustomizeDialogAction["kDoneClicked"] = 1] = "kDoneClicked";
+    CustomizeDialogAction[CustomizeDialogAction["kOpenClicked"] = 2] = "kOpenClicked";
+    CustomizeDialogAction[CustomizeDialogAction["kBackgroundsBackClicked"] = 3] = "kBackgroundsBackClicked";
+    CustomizeDialogAction[CustomizeDialogAction["kBackgroundsNoBackgroundSelected"] = 4] = "kBackgroundsNoBackgroundSelected";
+    CustomizeDialogAction[CustomizeDialogAction["kBackgroundsCollectionOpened"] = 5] = "kBackgroundsCollectionOpened";
+    CustomizeDialogAction[CustomizeDialogAction["kBackgroundsRefreshToggleClicked"] = 6] = "kBackgroundsRefreshToggleClicked";
+    CustomizeDialogAction[CustomizeDialogAction["kBackgroundsImageSelected"] = 7] = "kBackgroundsImageSelected";
+    CustomizeDialogAction[CustomizeDialogAction["kBackgroundsUploadFromDeviceClicked"] = 8] = "kBackgroundsUploadFromDeviceClicked";
+    CustomizeDialogAction[CustomizeDialogAction["kShortcutsCustomLinksClicked"] = 9] = "kShortcutsCustomLinksClicked";
+    CustomizeDialogAction[CustomizeDialogAction["kShortcutsMostVisitedClicked"] = 10] = "kShortcutsMostVisitedClicked";
+    CustomizeDialogAction[CustomizeDialogAction["kShortcutsVisibilityToggleClicked"] = 11] = "kShortcutsVisibilityToggleClicked";
+})(CustomizeDialogAction || (CustomizeDialogAction = {}));
+const OptInStatusSpec = { $: mojo.internal.Enum() };
+var OptInStatus;
+(function (OptInStatus) {
+    OptInStatus[OptInStatus["MIN_VALUE"] = 0] = "MIN_VALUE";
+    OptInStatus[OptInStatus["MAX_VALUE"] = 2] = "MAX_VALUE";
+    OptInStatus[OptInStatus["kExplicitOptIn"] = 0] = "kExplicitOptIn";
+    OptInStatus[OptInStatus["kImplicitOptIn"] = 1] = "kImplicitOptIn";
+    OptInStatus[OptInStatus["kOptOut"] = 2] = "kOptOut";
+})(OptInStatus || (OptInStatus = {}));
+class PageHandlerFactoryPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'new_tab_page.mojom.PageHandlerFactory', scope);
+    }
+}
+class PageHandlerFactoryRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PageHandlerFactoryPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    createPageHandler(page, handler) {
+        this.proxy.sendMessage(0, PageHandlerFactory_CreatePageHandler_ParamsSpec.$, null, [
+            page,
+            handler
+        ], false);
+    }
+}
+/**
+ * An object which receives request messages for the PageHandlerFactory
+ * mojom interface. Must be constructed over an object which implements that
+ * interface.
+ */
+class PageHandlerFactoryReceiver {
+    helper_internal_;
+    $;
+    onConnectionError;
+    constructor(impl) {
+        this.helper_internal_ = new mojo.internal.interfaceSupport.InterfaceReceiverHelperInternal(PageHandlerFactoryRemote);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceReceiverHelper(this.helper_internal_);
+        this.helper_internal_.registerHandler(0, PageHandlerFactory_CreatePageHandler_ParamsSpec.$, null, impl.createPageHandler.bind(impl), false);
+        this.onConnectionError = this.helper_internal_.getConnectionErrorEventRouter();
+    }
+}
+class PageHandlerFactory {
+    static get $interfaceName() {
+        return "new_tab_page.mojom.PageHandlerFactory";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new PageHandlerFactoryRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+/**
+ * An object which receives request messages for the PageHandlerFactory
+ * mojom interface and dispatches them as callbacks. One callback receiver exists
+ * on this object for each message defined in the mojom interface, and each
+ * receiver can have any number of listeners added to it.
+ */
+class PageHandlerFactoryCallbackRouter {
+    helper_internal_;
+    $;
+    router_;
+    createPageHandler;
+    onConnectionError;
+    constructor() {
+        this.helper_internal_ = new mojo.internal.interfaceSupport.InterfaceReceiverHelperInternal(PageHandlerFactoryRemote);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceReceiverHelper(this.helper_internal_);
+        this.router_ = new mojo.internal.interfaceSupport.CallbackRouter;
+        this.createPageHandler =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(0, PageHandlerFactory_CreatePageHandler_ParamsSpec.$, null, this.createPageHandler.createReceiverHandler(false /* expectsResponse */), false);
+        this.onConnectionError = this.helper_internal_.getConnectionErrorEventRouter();
+    }
+    /**
+     * @param id An ID returned by a prior call to addListener.
+     * @return True iff the identified listener was found and removed.
+     */
+    removeListener(id) {
+        return this.router_.removeListener(id);
+    }
+}
+let PageHandlerPendingReceiver$2 = class PageHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'new_tab_page.mojom.PageHandler', scope);
+    }
+};
+let PageHandlerRemote$2 = class PageHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PageHandlerPendingReceiver$2, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    setMostVisitedSettings(shortcutsType, shortcutsVisible) {
+        this.proxy.sendMessage(0, PageHandler_SetMostVisitedSettings_ParamsSpec.$, null, [
+            shortcutsType,
+            shortcutsVisible
+        ], false);
+    }
+    getMostVisitedSettings() {
+        return this.proxy.sendMessage(1, PageHandler_GetMostVisitedSettings_ParamsSpec.$, PageHandler_GetMostVisitedSettings_ResponseParamsSpec.$, [], false);
+    }
+    getDoodle() {
+        return this.proxy.sendMessage(2, PageHandler_GetDoodle_ParamsSpec.$, PageHandler_GetDoodle_ResponseParamsSpec.$, [], false);
+    }
+    onDismissModule(moduleId) {
+        this.proxy.sendMessage(3, PageHandler_OnDismissModule_ParamsSpec.$, null, [
+            moduleId
+        ], false);
+    }
+    setModulesVisible(visible) {
+        this.proxy.sendMessage(4, PageHandler_SetModulesVisible_ParamsSpec.$, null, [
+            visible
+        ], false);
+    }
+    updateDisabledModules() {
+        this.proxy.sendMessage(5, PageHandler_UpdateDisabledModules_ParamsSpec.$, null, [], false);
+    }
+    onModulesLoadedWithData(moduleIds) {
+        this.proxy.sendMessage(6, PageHandler_OnModulesLoadedWithData_ParamsSpec.$, null, [
+            moduleIds
+        ], false);
+    }
+    onModuleUsed(moduleId) {
+        this.proxy.sendMessage(7, PageHandler_OnModuleUsed_ParamsSpec.$, null, [
+            moduleId
+        ], false);
+    }
+    getModulesIdNames() {
+        return this.proxy.sendMessage(8, PageHandler_GetModulesIdNames_ParamsSpec.$, PageHandler_GetModulesIdNames_ResponseParamsSpec.$, [], false);
+    }
+    getModulesEligibleForRemoval() {
+        return this.proxy.sendMessage(9, PageHandler_GetModulesEligibleForRemoval_ParamsSpec.$, PageHandler_GetModulesEligibleForRemoval_ResponseParamsSpec.$, [], false);
+    }
+    setModulesOrder(moduleIds) {
+        this.proxy.sendMessage(10, PageHandler_SetModulesOrder_ParamsSpec.$, null, [
+            moduleIds
+        ], false);
+    }
+    getModulesOrder() {
+        return this.proxy.sendMessage(11, PageHandler_GetModulesOrder_ParamsSpec.$, PageHandler_GetModulesOrder_ResponseParamsSpec.$, [], false);
+    }
+    updateModulesLoadable() {
+        this.proxy.sendMessage(12, PageHandler_UpdateModulesLoadable_ParamsSpec.$, null, [], false);
+    }
+    setModulesDisabled(moduleIds, disabled, isUserAction) {
+        this.proxy.sendMessage(13, PageHandler_SetModulesDisabled_ParamsSpec.$, null, [
+            moduleIds,
+            disabled,
+            isUserAction
+        ], false);
+    }
+    updateActionChipsVisibility() {
+        this.proxy.sendMessage(14, PageHandler_UpdateActionChipsVisibility_ParamsSpec.$, null, [], false);
+    }
+    updateFooterVisibility() {
+        this.proxy.sendMessage(15, PageHandler_UpdateFooterVisibility_ParamsSpec.$, null, [], false);
+    }
+    incrementComposeButtonShownCount() {
+        this.proxy.sendMessage(16, PageHandler_IncrementComposeButtonShownCount_ParamsSpec.$, null, [], false);
+    }
+    maybeTriggerAutomaticCustomizeChromePromo() {
+        this.proxy.sendMessage(17, PageHandler_MaybeTriggerAutomaticCustomizeChromePromo_ParamsSpec.$, null, [], false);
+    }
+    onOneGoogleBarRendered(time) {
+        this.proxy.sendMessage(18, PageHandler_OnOneGoogleBarRendered_ParamsSpec.$, null, [
+            time
+        ], false);
+    }
+    onCustomizeDialogAction(action) {
+        this.proxy.sendMessage(19, PageHandler_OnCustomizeDialogAction_ParamsSpec.$, null, [
+            action
+        ], false);
+    }
+    onDoodleImageClicked(type, logUrl) {
+        this.proxy.sendMessage(20, PageHandler_OnDoodleImageClicked_ParamsSpec.$, null, [
+            type,
+            logUrl
+        ], false);
+    }
+    onDoodleImageRendered(type, time, logUrl) {
+        return this.proxy.sendMessage(21, PageHandler_OnDoodleImageRendered_ParamsSpec.$, PageHandler_OnDoodleImageRendered_ResponseParamsSpec.$, [
+            type,
+            time,
+            logUrl
+        ], false);
+    }
+    onDoodleShared(channel, doodleId, shareId) {
+        this.proxy.sendMessage(22, PageHandler_OnDoodleShared_ParamsSpec.$, null, [
+            channel,
+            doodleId,
+            shareId
+        ], false);
+    }
+    onAppRendered(time) {
+        this.proxy.sendMessage(23, PageHandler_OnAppRendered_ParamsSpec.$, null, [
+            time
+        ], false);
+    }
+    canShowRealboxContextMenuAnimation() {
+        return this.proxy.sendMessage(24, PageHandler_CanShowRealboxContextMenuAnimation_ParamsSpec.$, PageHandler_CanShowRealboxContextMenuAnimation_ResponseParamsSpec.$, [], false);
+    }
+    recordRealboxContextMenuAnimationImpression(shown) {
+        this.proxy.sendMessage(25, PageHandler_RecordRealboxContextMenuAnimationImpression_ParamsSpec.$, null, [
+            shown
+        ], false);
+    }
+    onContextualSearchIPHEngaged() {
+        this.proxy.sendMessage(26, PageHandler_OnContextualSearchIPHEngaged_ParamsSpec.$, null, [], false);
+    }
+};
+/**
+ * An object which receives request messages for the PageHandler
+ * mojom interface. Must be constructed over an object which implements that
+ * interface.
+ */
+class PageHandlerReceiver {
+    helper_internal_;
+    $;
+    onConnectionError;
+    constructor(impl) {
+        this.helper_internal_ = new mojo.internal.interfaceSupport.InterfaceReceiverHelperInternal(PageHandlerRemote$2);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceReceiverHelper(this.helper_internal_);
+        this.helper_internal_.registerHandler(0, PageHandler_SetMostVisitedSettings_ParamsSpec.$, null, impl.setMostVisitedSettings.bind(impl), false);
+        this.helper_internal_.registerHandler(1, PageHandler_GetMostVisitedSettings_ParamsSpec.$, PageHandler_GetMostVisitedSettings_ResponseParamsSpec.$, impl.getMostVisitedSettings.bind(impl), false);
+        this.helper_internal_.registerHandler(2, PageHandler_GetDoodle_ParamsSpec.$, PageHandler_GetDoodle_ResponseParamsSpec.$, impl.getDoodle.bind(impl), false);
+        this.helper_internal_.registerHandler(3, PageHandler_OnDismissModule_ParamsSpec.$, null, impl.onDismissModule.bind(impl), false);
+        this.helper_internal_.registerHandler(4, PageHandler_SetModulesVisible_ParamsSpec.$, null, impl.setModulesVisible.bind(impl), false);
+        this.helper_internal_.registerHandler(5, PageHandler_UpdateDisabledModules_ParamsSpec.$, null, impl.updateDisabledModules.bind(impl), false);
+        this.helper_internal_.registerHandler(6, PageHandler_OnModulesLoadedWithData_ParamsSpec.$, null, impl.onModulesLoadedWithData.bind(impl), false);
+        this.helper_internal_.registerHandler(7, PageHandler_OnModuleUsed_ParamsSpec.$, null, impl.onModuleUsed.bind(impl), false);
+        this.helper_internal_.registerHandler(8, PageHandler_GetModulesIdNames_ParamsSpec.$, PageHandler_GetModulesIdNames_ResponseParamsSpec.$, impl.getModulesIdNames.bind(impl), false);
+        this.helper_internal_.registerHandler(9, PageHandler_GetModulesEligibleForRemoval_ParamsSpec.$, PageHandler_GetModulesEligibleForRemoval_ResponseParamsSpec.$, impl.getModulesEligibleForRemoval.bind(impl), false);
+        this.helper_internal_.registerHandler(10, PageHandler_SetModulesOrder_ParamsSpec.$, null, impl.setModulesOrder.bind(impl), false);
+        this.helper_internal_.registerHandler(11, PageHandler_GetModulesOrder_ParamsSpec.$, PageHandler_GetModulesOrder_ResponseParamsSpec.$, impl.getModulesOrder.bind(impl), false);
+        this.helper_internal_.registerHandler(12, PageHandler_UpdateModulesLoadable_ParamsSpec.$, null, impl.updateModulesLoadable.bind(impl), false);
+        this.helper_internal_.registerHandler(13, PageHandler_SetModulesDisabled_ParamsSpec.$, null, impl.setModulesDisabled.bind(impl), false);
+        this.helper_internal_.registerHandler(14, PageHandler_UpdateActionChipsVisibility_ParamsSpec.$, null, impl.updateActionChipsVisibility.bind(impl), false);
+        this.helper_internal_.registerHandler(15, PageHandler_UpdateFooterVisibility_ParamsSpec.$, null, impl.updateFooterVisibility.bind(impl), false);
+        this.helper_internal_.registerHandler(16, PageHandler_IncrementComposeButtonShownCount_ParamsSpec.$, null, impl.incrementComposeButtonShownCount.bind(impl), false);
+        this.helper_internal_.registerHandler(17, PageHandler_MaybeTriggerAutomaticCustomizeChromePromo_ParamsSpec.$, null, impl.maybeTriggerAutomaticCustomizeChromePromo.bind(impl), false);
+        this.helper_internal_.registerHandler(18, PageHandler_OnOneGoogleBarRendered_ParamsSpec.$, null, impl.onOneGoogleBarRendered.bind(impl), false);
+        this.helper_internal_.registerHandler(19, PageHandler_OnCustomizeDialogAction_ParamsSpec.$, null, impl.onCustomizeDialogAction.bind(impl), false);
+        this.helper_internal_.registerHandler(20, PageHandler_OnDoodleImageClicked_ParamsSpec.$, null, impl.onDoodleImageClicked.bind(impl), false);
+        this.helper_internal_.registerHandler(21, PageHandler_OnDoodleImageRendered_ParamsSpec.$, PageHandler_OnDoodleImageRendered_ResponseParamsSpec.$, impl.onDoodleImageRendered.bind(impl), false);
+        this.helper_internal_.registerHandler(22, PageHandler_OnDoodleShared_ParamsSpec.$, null, impl.onDoodleShared.bind(impl), false);
+        this.helper_internal_.registerHandler(23, PageHandler_OnAppRendered_ParamsSpec.$, null, impl.onAppRendered.bind(impl), false);
+        this.helper_internal_.registerHandler(24, PageHandler_CanShowRealboxContextMenuAnimation_ParamsSpec.$, PageHandler_CanShowRealboxContextMenuAnimation_ResponseParamsSpec.$, impl.canShowRealboxContextMenuAnimation.bind(impl), false);
+        this.helper_internal_.registerHandler(25, PageHandler_RecordRealboxContextMenuAnimationImpression_ParamsSpec.$, null, impl.recordRealboxContextMenuAnimationImpression.bind(impl), false);
+        this.helper_internal_.registerHandler(26, PageHandler_OnContextualSearchIPHEngaged_ParamsSpec.$, null, impl.onContextualSearchIPHEngaged.bind(impl), false);
+        this.onConnectionError = this.helper_internal_.getConnectionErrorEventRouter();
+    }
+}
+let PageHandler$2 = class PageHandler {
+    static get $interfaceName() {
+        return "new_tab_page.mojom.PageHandler";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new PageHandlerRemote$2;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+};
+/**
+ * An object which receives request messages for the PageHandler
+ * mojom interface and dispatches them as callbacks. One callback receiver exists
+ * on this object for each message defined in the mojom interface, and each
+ * receiver can have any number of listeners added to it.
+ */
+class PageHandlerCallbackRouter {
+    helper_internal_;
+    $;
+    router_;
+    setMostVisitedSettings;
+    getMostVisitedSettings;
+    getDoodle;
+    onDismissModule;
+    setModulesVisible;
+    updateDisabledModules;
+    onModulesLoadedWithData;
+    onModuleUsed;
+    getModulesIdNames;
+    getModulesEligibleForRemoval;
+    setModulesOrder;
+    getModulesOrder;
+    updateModulesLoadable;
+    setModulesDisabled;
+    updateActionChipsVisibility;
+    updateFooterVisibility;
+    incrementComposeButtonShownCount;
+    maybeTriggerAutomaticCustomizeChromePromo;
+    onOneGoogleBarRendered;
+    onCustomizeDialogAction;
+    onDoodleImageClicked;
+    onDoodleImageRendered;
+    onDoodleShared;
+    onAppRendered;
+    canShowRealboxContextMenuAnimation;
+    recordRealboxContextMenuAnimationImpression;
+    onContextualSearchIPHEngaged;
+    onConnectionError;
+    constructor() {
+        this.helper_internal_ = new mojo.internal.interfaceSupport.InterfaceReceiverHelperInternal(PageHandlerRemote$2);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceReceiverHelper(this.helper_internal_);
+        this.router_ = new mojo.internal.interfaceSupport.CallbackRouter;
+        this.setMostVisitedSettings =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(0, PageHandler_SetMostVisitedSettings_ParamsSpec.$, null, this.setMostVisitedSettings.createReceiverHandler(false /* expectsResponse */), false);
+        this.getMostVisitedSettings =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(1, PageHandler_GetMostVisitedSettings_ParamsSpec.$, PageHandler_GetMostVisitedSettings_ResponseParamsSpec.$, this.getMostVisitedSettings.createReceiverHandler(true /* expectsResponse */), false);
+        this.getDoodle =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(2, PageHandler_GetDoodle_ParamsSpec.$, PageHandler_GetDoodle_ResponseParamsSpec.$, this.getDoodle.createReceiverHandler(true /* expectsResponse */), false);
+        this.onDismissModule =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(3, PageHandler_OnDismissModule_ParamsSpec.$, null, this.onDismissModule.createReceiverHandler(false /* expectsResponse */), false);
+        this.setModulesVisible =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(4, PageHandler_SetModulesVisible_ParamsSpec.$, null, this.setModulesVisible.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateDisabledModules =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(5, PageHandler_UpdateDisabledModules_ParamsSpec.$, null, this.updateDisabledModules.createReceiverHandler(false /* expectsResponse */), false);
+        this.onModulesLoadedWithData =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(6, PageHandler_OnModulesLoadedWithData_ParamsSpec.$, null, this.onModulesLoadedWithData.createReceiverHandler(false /* expectsResponse */), false);
+        this.onModuleUsed =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(7, PageHandler_OnModuleUsed_ParamsSpec.$, null, this.onModuleUsed.createReceiverHandler(false /* expectsResponse */), false);
+        this.getModulesIdNames =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(8, PageHandler_GetModulesIdNames_ParamsSpec.$, PageHandler_GetModulesIdNames_ResponseParamsSpec.$, this.getModulesIdNames.createReceiverHandler(true /* expectsResponse */), false);
+        this.getModulesEligibleForRemoval =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(9, PageHandler_GetModulesEligibleForRemoval_ParamsSpec.$, PageHandler_GetModulesEligibleForRemoval_ResponseParamsSpec.$, this.getModulesEligibleForRemoval.createReceiverHandler(true /* expectsResponse */), false);
+        this.setModulesOrder =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(10, PageHandler_SetModulesOrder_ParamsSpec.$, null, this.setModulesOrder.createReceiverHandler(false /* expectsResponse */), false);
+        this.getModulesOrder =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(11, PageHandler_GetModulesOrder_ParamsSpec.$, PageHandler_GetModulesOrder_ResponseParamsSpec.$, this.getModulesOrder.createReceiverHandler(true /* expectsResponse */), false);
+        this.updateModulesLoadable =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(12, PageHandler_UpdateModulesLoadable_ParamsSpec.$, null, this.updateModulesLoadable.createReceiverHandler(false /* expectsResponse */), false);
+        this.setModulesDisabled =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(13, PageHandler_SetModulesDisabled_ParamsSpec.$, null, this.setModulesDisabled.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateActionChipsVisibility =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(14, PageHandler_UpdateActionChipsVisibility_ParamsSpec.$, null, this.updateActionChipsVisibility.createReceiverHandler(false /* expectsResponse */), false);
+        this.updateFooterVisibility =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(15, PageHandler_UpdateFooterVisibility_ParamsSpec.$, null, this.updateFooterVisibility.createReceiverHandler(false /* expectsResponse */), false);
+        this.incrementComposeButtonShownCount =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(16, PageHandler_IncrementComposeButtonShownCount_ParamsSpec.$, null, this.incrementComposeButtonShownCount.createReceiverHandler(false /* expectsResponse */), false);
+        this.maybeTriggerAutomaticCustomizeChromePromo =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(17, PageHandler_MaybeTriggerAutomaticCustomizeChromePromo_ParamsSpec.$, null, this.maybeTriggerAutomaticCustomizeChromePromo.createReceiverHandler(false /* expectsResponse */), false);
+        this.onOneGoogleBarRendered =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(18, PageHandler_OnOneGoogleBarRendered_ParamsSpec.$, null, this.onOneGoogleBarRendered.createReceiverHandler(false /* expectsResponse */), false);
+        this.onCustomizeDialogAction =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(19, PageHandler_OnCustomizeDialogAction_ParamsSpec.$, null, this.onCustomizeDialogAction.createReceiverHandler(false /* expectsResponse */), false);
+        this.onDoodleImageClicked =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(20, PageHandler_OnDoodleImageClicked_ParamsSpec.$, null, this.onDoodleImageClicked.createReceiverHandler(false /* expectsResponse */), false);
+        this.onDoodleImageRendered =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(21, PageHandler_OnDoodleImageRendered_ParamsSpec.$, PageHandler_OnDoodleImageRendered_ResponseParamsSpec.$, this.onDoodleImageRendered.createReceiverHandler(true /* expectsResponse */), false);
+        this.onDoodleShared =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(22, PageHandler_OnDoodleShared_ParamsSpec.$, null, this.onDoodleShared.createReceiverHandler(false /* expectsResponse */), false);
+        this.onAppRendered =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(23, PageHandler_OnAppRendered_ParamsSpec.$, null, this.onAppRendered.createReceiverHandler(false /* expectsResponse */), false);
+        this.canShowRealboxContextMenuAnimation =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(24, PageHandler_CanShowRealboxContextMenuAnimation_ParamsSpec.$, PageHandler_CanShowRealboxContextMenuAnimation_ResponseParamsSpec.$, this.canShowRealboxContextMenuAnimation.createReceiverHandler(true /* expectsResponse */), false);
+        this.recordRealboxContextMenuAnimationImpression =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(25, PageHandler_RecordRealboxContextMenuAnimationImpression_ParamsSpec.$, null, this.recordRealboxContextMenuAnimationImpression.createReceiverHandler(false /* expectsResponse */), false);
+        this.onContextualSearchIPHEngaged =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(26, PageHandler_OnContextualSearchIPHEngaged_ParamsSpec.$, null, this.onContextualSearchIPHEngaged.createReceiverHandler(false /* expectsResponse */), false);
+        this.onConnectionError = this.helper_internal_.getConnectionErrorEventRouter();
+    }
+    /**
+     * @param id An ID returned by a prior call to addListener.
+     * @return True iff the identified listener was found and removed.
+     */
+    removeListener(id) {
+        return this.router_.removeListener(id);
+    }
+}
+let PagePendingReceiver$1 = class PagePendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'new_tab_page.mojom.Page', scope);
+    }
+};
+let PageRemote$1 = class PageRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PagePendingReceiver$1, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    setTheme(theme) {
+        this.proxy.sendMessage(0, Page_SetTheme_ParamsSpec.$, null, [
+            theme
+        ], false);
+    }
+    setDisabledModules(all, ids) {
+        this.proxy.sendMessage(1, Page_SetDisabledModules_ParamsSpec.$, null, [
+            all,
+            ids
+        ], false);
+    }
+    setModulesLoadable() {
+        this.proxy.sendMessage(2, Page_SetModulesLoadable_ParamsSpec.$, null, [], false);
+    }
+    setActionChipsVisibility(visible) {
+        this.proxy.sendMessage(3, Page_SetActionChipsVisibility_ParamsSpec.$, null, [
+            visible
+        ], false);
+    }
+    showWebstoreToast() {
+        this.proxy.sendMessage(4, Page_ShowWebstoreToast_ParamsSpec.$, null, [], false);
+    }
+    setWallpaperSearchButtonVisibility(visible) {
+        this.proxy.sendMessage(5, Page_SetWallpaperSearchButtonVisibility_ParamsSpec.$, null, [
+            visible
+        ], false);
+    }
+    footerVisibilityUpdated(visible) {
+        this.proxy.sendMessage(6, Page_FooterVisibilityUpdated_ParamsSpec.$, null, [
+            visible
+        ], false);
+    }
+    connectToParentDocument(childUntrustedDocumentRemote) {
+        this.proxy.sendMessage(7, Page_ConnectToParentDocument_ParamsSpec.$, null, [
+            childUntrustedDocumentRemote
+        ], false);
+    }
+};
+/**
+ * An object which receives request messages for the Page
+ * mojom interface. Must be constructed over an object which implements that
+ * interface.
+ */
+class PageReceiver {
+    helper_internal_;
+    $;
+    onConnectionError;
+    constructor(impl) {
+        this.helper_internal_ = new mojo.internal.interfaceSupport.InterfaceReceiverHelperInternal(PageRemote$1);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceReceiverHelper(this.helper_internal_);
+        this.helper_internal_.registerHandler(0, Page_SetTheme_ParamsSpec.$, null, impl.setTheme.bind(impl), false);
+        this.helper_internal_.registerHandler(1, Page_SetDisabledModules_ParamsSpec.$, null, impl.setDisabledModules.bind(impl), false);
+        this.helper_internal_.registerHandler(2, Page_SetModulesLoadable_ParamsSpec.$, null, impl.setModulesLoadable.bind(impl), false);
+        this.helper_internal_.registerHandler(3, Page_SetActionChipsVisibility_ParamsSpec.$, null, impl.setActionChipsVisibility.bind(impl), false);
+        this.helper_internal_.registerHandler(4, Page_ShowWebstoreToast_ParamsSpec.$, null, impl.showWebstoreToast.bind(impl), false);
+        this.helper_internal_.registerHandler(5, Page_SetWallpaperSearchButtonVisibility_ParamsSpec.$, null, impl.setWallpaperSearchButtonVisibility.bind(impl), false);
+        this.helper_internal_.registerHandler(6, Page_FooterVisibilityUpdated_ParamsSpec.$, null, impl.footerVisibilityUpdated.bind(impl), false);
+        this.helper_internal_.registerHandler(7, Page_ConnectToParentDocument_ParamsSpec.$, null, impl.connectToParentDocument.bind(impl), false);
+        this.onConnectionError = this.helper_internal_.getConnectionErrorEventRouter();
+    }
+}
+class Page {
+    static get $interfaceName() {
+        return "new_tab_page.mojom.Page";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new PageRemote$1;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+/**
+ * An object which receives request messages for the Page
+ * mojom interface and dispatches them as callbacks. One callback receiver exists
+ * on this object for each message defined in the mojom interface, and each
+ * receiver can have any number of listeners added to it.
+ */
+let PageCallbackRouter$1 = class PageCallbackRouter {
+    helper_internal_;
+    $;
+    router_;
+    setTheme;
+    setDisabledModules;
+    setModulesLoadable;
+    setActionChipsVisibility;
+    showWebstoreToast;
+    setWallpaperSearchButtonVisibility;
+    footerVisibilityUpdated;
+    connectToParentDocument;
+    onConnectionError;
+    constructor() {
+        this.helper_internal_ = new mojo.internal.interfaceSupport.InterfaceReceiverHelperInternal(PageRemote$1);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceReceiverHelper(this.helper_internal_);
+        this.router_ = new mojo.internal.interfaceSupport.CallbackRouter;
+        this.setTheme =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(0, Page_SetTheme_ParamsSpec.$, null, this.setTheme.createReceiverHandler(false /* expectsResponse */), false);
+        this.setDisabledModules =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(1, Page_SetDisabledModules_ParamsSpec.$, null, this.setDisabledModules.createReceiverHandler(false /* expectsResponse */), false);
+        this.setModulesLoadable =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(2, Page_SetModulesLoadable_ParamsSpec.$, null, this.setModulesLoadable.createReceiverHandler(false /* expectsResponse */), false);
+        this.setActionChipsVisibility =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(3, Page_SetActionChipsVisibility_ParamsSpec.$, null, this.setActionChipsVisibility.createReceiverHandler(false /* expectsResponse */), false);
+        this.showWebstoreToast =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(4, Page_ShowWebstoreToast_ParamsSpec.$, null, this.showWebstoreToast.createReceiverHandler(false /* expectsResponse */), false);
+        this.setWallpaperSearchButtonVisibility =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(5, Page_SetWallpaperSearchButtonVisibility_ParamsSpec.$, null, this.setWallpaperSearchButtonVisibility.createReceiverHandler(false /* expectsResponse */), false);
+        this.footerVisibilityUpdated =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(6, Page_FooterVisibilityUpdated_ParamsSpec.$, null, this.footerVisibilityUpdated.createReceiverHandler(false /* expectsResponse */), false);
+        this.connectToParentDocument =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(7, Page_ConnectToParentDocument_ParamsSpec.$, null, this.connectToParentDocument.createReceiverHandler(false /* expectsResponse */), false);
+        this.onConnectionError = this.helper_internal_.getConnectionErrorEventRouter();
+    }
+    /**
+     * @param id An ID returned by a prior call to addListener.
+     * @return True iff the identified listener was found and removed.
+     */
+    removeListener(id) {
+        return this.router_.removeListener(id);
+    }
+};
+const BackgroundImageSpec = { $: {} };
+const ThemeSpec = { $: {} };
+const ImageDoodleSpec = { $: {} };
+const AllModeImageDoodleSpec = { $: {} };
+const DoodleSpec = { $: {} };
+const ModuleIdNameSpec = { $: {} };
+const PageHandlerFactory_CreatePageHandler_ParamsSpec = { $: {} };
+const PageHandler_SetMostVisitedSettings_ParamsSpec = { $: {} };
+const PageHandler_GetMostVisitedSettings_ParamsSpec = { $: {} };
+const PageHandler_GetMostVisitedSettings_ResponseParamsSpec = { $: {} };
+const PageHandler_GetDoodle_ParamsSpec = { $: {} };
+const PageHandler_GetDoodle_ResponseParamsSpec = { $: {} };
+const PageHandler_OnDismissModule_ParamsSpec = { $: {} };
+const PageHandler_SetModulesVisible_ParamsSpec = { $: {} };
+const PageHandler_UpdateDisabledModules_ParamsSpec = { $: {} };
+const PageHandler_OnModulesLoadedWithData_ParamsSpec = { $: {} };
+const PageHandler_OnModuleUsed_ParamsSpec = { $: {} };
+const PageHandler_GetModulesIdNames_ParamsSpec = { $: {} };
+const PageHandler_GetModulesIdNames_ResponseParamsSpec = { $: {} };
+const PageHandler_GetModulesEligibleForRemoval_ParamsSpec = { $: {} };
+const PageHandler_GetModulesEligibleForRemoval_ResponseParamsSpec = { $: {} };
+const PageHandler_SetModulesOrder_ParamsSpec = { $: {} };
+const PageHandler_GetModulesOrder_ParamsSpec = { $: {} };
+const PageHandler_GetModulesOrder_ResponseParamsSpec = { $: {} };
+const PageHandler_UpdateModulesLoadable_ParamsSpec = { $: {} };
+const PageHandler_SetModulesDisabled_ParamsSpec = { $: {} };
+const PageHandler_UpdateActionChipsVisibility_ParamsSpec = { $: {} };
+const PageHandler_UpdateFooterVisibility_ParamsSpec = { $: {} };
+const PageHandler_IncrementComposeButtonShownCount_ParamsSpec = { $: {} };
+const PageHandler_MaybeTriggerAutomaticCustomizeChromePromo_ParamsSpec = { $: {} };
+const PageHandler_OnOneGoogleBarRendered_ParamsSpec = { $: {} };
+const PageHandler_OnCustomizeDialogAction_ParamsSpec = { $: {} };
+const PageHandler_OnDoodleImageClicked_ParamsSpec = { $: {} };
+const PageHandler_OnDoodleImageRendered_ParamsSpec = { $: {} };
+const PageHandler_OnDoodleImageRendered_ResponseParamsSpec = { $: {} };
+const PageHandler_OnDoodleShared_ParamsSpec = { $: {} };
+const PageHandler_OnAppRendered_ParamsSpec = { $: {} };
+const PageHandler_CanShowRealboxContextMenuAnimation_ParamsSpec = { $: {} };
+const PageHandler_CanShowRealboxContextMenuAnimation_ResponseParamsSpec = { $: {} };
+const PageHandler_RecordRealboxContextMenuAnimationImpression_ParamsSpec = { $: {} };
+const PageHandler_OnContextualSearchIPHEngaged_ParamsSpec = { $: {} };
+const Page_SetTheme_ParamsSpec = { $: {} };
+const Page_SetDisabledModules_ParamsSpec = { $: {} };
+const Page_SetModulesLoadable_ParamsSpec = { $: {} };
+const Page_SetActionChipsVisibility_ParamsSpec = { $: {} };
+const Page_ShowWebstoreToast_ParamsSpec = { $: {} };
+const Page_SetWallpaperSearchButtonVisibility_ParamsSpec = { $: {} };
+const Page_FooterVisibilityUpdated_ParamsSpec = { $: {} };
+const Page_ConnectToParentDocument_ParamsSpec = { $: {} };
+mojo.internal.Struct(BackgroundImageSpec.$, 'BackgroundImage', [
+    mojo.internal.StructField('url', 0, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url2x', 8, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('attributionUrl', 16, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('size', 24, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('repeatX', 32, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('repeatY', 40, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('positionX', 48, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('positionY', 56, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('imageSource', 64, 0, NtpBackgroundImageSourceSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 80],]);
+mojo.internal.Struct(ThemeSpec.$, 'Theme', [
+    mojo.internal.StructField('textColor', 0, 0, SkColorSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('backgroundColor', 8, 0, SkColorSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isBaseline', 16, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isGm3', 16, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isCustomBackground', 16, 2, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('dailyRefreshEnabled', 16, 3, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isDark', 16, 4, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('logoColor', 24, 0, SkColorSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('backgroundImageCollectionId', 32, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('backgroundImage', 40, 0, BackgroundImageSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('backgroundImageAttribution1', 48, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('backgroundImageAttribution2', 56, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('backgroundImageAttributionUrl', 64, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('mostVisited', 72, 0, MostVisitedThemeSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 88],]);
+mojo.internal.Struct(ImageDoodleSpec.$, 'ImageDoodle', [
+    mojo.internal.StructField('imageUrl', 0, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('animationUrl', 8, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('width', 16, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('height', 20, 0, mojo.internal.Uint32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('backgroundColor', 24, 0, SkColorSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('imageImpressionLogUrl', 32, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('animationImpressionLogUrl', 40, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 56],]);
+mojo.internal.Struct(AllModeImageDoodleSpec.$, 'AllModeImageDoodle', [
+    mojo.internal.StructField('light', 0, 0, ImageDoodleSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('dark', 8, 0, ImageDoodleSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('onClickUrl', 16, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shareUrl', 24, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 40],]);
+mojo.internal.Struct(DoodleSpec.$, 'Doodle', [
+    mojo.internal.StructField('image', 0, 0, AllModeImageDoodleSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('description', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(ModuleIdNameSpec.$, 'ModuleIdName', [
+    mojo.internal.StructField('id', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('name', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandlerFactory_CreatePageHandler_ParamsSpec.$, 'PageHandlerFactory_CreatePageHandler_Params', [
+    mojo.internal.StructField('page', 0, 0, mojo.internal.InterfaceProxy(PageRemote$1), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('handler', 8, 0, mojo.internal.InterfaceRequest(PageHandlerPendingReceiver$2), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_SetMostVisitedSettings_ParamsSpec.$, 'PageHandler_SetMostVisitedSettings_Params', [
+    mojo.internal.StructField('shortcutsType', 0, 0, TileTypeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shortcutsVisible', 4, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetMostVisitedSettings_ParamsSpec.$, 'PageHandler_GetMostVisitedSettings_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetMostVisitedSettings_ResponseParamsSpec.$, 'PageHandler_GetMostVisitedSettings_ResponseParams', [
+    mojo.internal.StructField('shortcutsType', 0, 0, TileTypeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shortcutsVisible', 4, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetDoodle_ParamsSpec.$, 'PageHandler_GetDoodle_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetDoodle_ResponseParamsSpec.$, 'PageHandler_GetDoodle_ResponseParams', [
+    mojo.internal.StructField('doodle', 0, 0, DoodleSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_OnDismissModule_ParamsSpec.$, 'PageHandler_OnDismissModule_Params', [
+    mojo.internal.StructField('moduleId', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_SetModulesVisible_ParamsSpec.$, 'PageHandler_SetModulesVisible_Params', [
+    mojo.internal.StructField('visible', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_UpdateDisabledModules_ParamsSpec.$, 'PageHandler_UpdateDisabledModules_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_OnModulesLoadedWithData_ParamsSpec.$, 'PageHandler_OnModulesLoadedWithData_Params', [
+    mojo.internal.StructField('moduleIds', 0, 0, mojo.internal.Array(mojo.internal.String, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_OnModuleUsed_ParamsSpec.$, 'PageHandler_OnModuleUsed_Params', [
+    mojo.internal.StructField('moduleId', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetModulesIdNames_ParamsSpec.$, 'PageHandler_GetModulesIdNames_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetModulesIdNames_ResponseParamsSpec.$, 'PageHandler_GetModulesIdNames_ResponseParams', [
+    mojo.internal.StructField('data', 0, 0, mojo.internal.Array(ModuleIdNameSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetModulesEligibleForRemoval_ParamsSpec.$, 'PageHandler_GetModulesEligibleForRemoval_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetModulesEligibleForRemoval_ResponseParamsSpec.$, 'PageHandler_GetModulesEligibleForRemoval_ResponseParams', [
+    mojo.internal.StructField('moduleIds', 0, 0, mojo.internal.Array(mojo.internal.String, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_SetModulesOrder_ParamsSpec.$, 'PageHandler_SetModulesOrder_Params', [
+    mojo.internal.StructField('moduleIds', 0, 0, mojo.internal.Array(mojo.internal.String, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_GetModulesOrder_ParamsSpec.$, 'PageHandler_GetModulesOrder_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetModulesOrder_ResponseParamsSpec.$, 'PageHandler_GetModulesOrder_ResponseParams', [
+    mojo.internal.StructField('moduleIds', 0, 0, mojo.internal.Array(mojo.internal.String, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_UpdateModulesLoadable_ParamsSpec.$, 'PageHandler_UpdateModulesLoadable_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_SetModulesDisabled_ParamsSpec.$, 'PageHandler_SetModulesDisabled_Params', [
+    mojo.internal.StructField('moduleIds', 0, 0, mojo.internal.Array(mojo.internal.String, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('disabled', 8, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isUserAction', 8, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_UpdateActionChipsVisibility_ParamsSpec.$, 'PageHandler_UpdateActionChipsVisibility_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_UpdateFooterVisibility_ParamsSpec.$, 'PageHandler_UpdateFooterVisibility_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_IncrementComposeButtonShownCount_ParamsSpec.$, 'PageHandler_IncrementComposeButtonShownCount_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_MaybeTriggerAutomaticCustomizeChromePromo_ParamsSpec.$, 'PageHandler_MaybeTriggerAutomaticCustomizeChromePromo_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_OnOneGoogleBarRendered_ParamsSpec.$, 'PageHandler_OnOneGoogleBarRendered_Params', [
+    mojo.internal.StructField('time', 0, 0, mojo.internal.Double, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_OnCustomizeDialogAction_ParamsSpec.$, 'PageHandler_OnCustomizeDialogAction_Params', [
+    mojo.internal.StructField('action', 0, 0, CustomizeDialogActionSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_OnDoodleImageClicked_ParamsSpec.$, 'PageHandler_OnDoodleImageClicked_Params', [
+    mojo.internal.StructField('type', 0, 0, DoodleImageTypeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('logUrl', 8, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_OnDoodleImageRendered_ParamsSpec.$, 'PageHandler_OnDoodleImageRendered_Params', [
+    mojo.internal.StructField('type', 0, 0, DoodleImageTypeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('time', 8, 0, mojo.internal.Double, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('logUrl', 16, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(PageHandler_OnDoodleImageRendered_ResponseParamsSpec.$, 'PageHandler_OnDoodleImageRendered_ResponseParams', [
+    mojo.internal.StructField('imageClickParams', 0, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('interactionLogUrl', 8, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shareId', 16, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(PageHandler_OnDoodleShared_ParamsSpec.$, 'PageHandler_OnDoodleShared_Params', [
+    mojo.internal.StructField('channel', 0, 0, DoodleShareChannelSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('doodleId', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('shareId', 16, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(PageHandler_OnAppRendered_ParamsSpec.$, 'PageHandler_OnAppRendered_Params', [
+    mojo.internal.StructField('time', 0, 0, mojo.internal.Double, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_CanShowRealboxContextMenuAnimation_ParamsSpec.$, 'PageHandler_CanShowRealboxContextMenuAnimation_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_CanShowRealboxContextMenuAnimation_ResponseParamsSpec.$, 'PageHandler_CanShowRealboxContextMenuAnimation_ResponseParams', [
+    mojo.internal.StructField('canShow', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_RecordRealboxContextMenuAnimationImpression_ParamsSpec.$, 'PageHandler_RecordRealboxContextMenuAnimationImpression_Params', [
+    mojo.internal.StructField('shown', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_OnContextualSearchIPHEngaged_ParamsSpec.$, 'PageHandler_OnContextualSearchIPHEngaged_Params', [], [[0, 8],]);
+mojo.internal.Struct(Page_SetTheme_ParamsSpec.$, 'Page_SetTheme_Params', [
+    mojo.internal.StructField('theme', 0, 0, ThemeSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_SetDisabledModules_ParamsSpec.$, 'Page_SetDisabledModules_Params', [
+    mojo.internal.StructField('all', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('ids', 8, 0, mojo.internal.Array(mojo.internal.String, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(Page_SetModulesLoadable_ParamsSpec.$, 'Page_SetModulesLoadable_Params', [], [[0, 8],]);
+mojo.internal.Struct(Page_SetActionChipsVisibility_ParamsSpec.$, 'Page_SetActionChipsVisibility_Params', [
+    mojo.internal.StructField('visible', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_ShowWebstoreToast_ParamsSpec.$, 'Page_ShowWebstoreToast_Params', [], [[0, 8],]);
+mojo.internal.Struct(Page_SetWallpaperSearchButtonVisibility_ParamsSpec.$, 'Page_SetWallpaperSearchButtonVisibility_Params', [
+    mojo.internal.StructField('visible', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_FooterVisibilityUpdated_ParamsSpec.$, 'Page_FooterVisibilityUpdated_Params', [
+    mojo.internal.StructField('visible', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(Page_ConnectToParentDocument_ParamsSpec.$, 'Page_ConnectToParentDocument_Params', [
+    mojo.internal.StructField('childUntrustedDocumentRemote', 0, 0, mojo.internal.InterfaceProxy(MicrosoftAuthUntrustedDocumentRemote), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+const browserProxyFactory$1 = new MojoBrowserProxyFactory(PageHandlerRemote$2, PageCallbackRouter$1, (remote, receiver) => PageHandlerFactory.getRemote().createPageHandler(remote, receiver));
+
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function $$(element, selector) {
+    return element.shadowRoot.querySelector(selector);
+}
+/**
+ * Queries |selector| on |root| and returns the resulting element. Throws
+ * exception if there is no resulting element or if element is not of type
+ * |type|.
+ */
+function strictQuery(root, selector, type) {
+    const element = root.querySelector(selector);
+    assert(element && element instanceof type);
+    return element;
+}
+
+// Copyright 2021 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+let instance$e = null;
+let lazyLoadPromise = null;
+/** Abstracts some builtin JS functions to mock them in tests. */
+let WindowProxy$1 = class WindowProxy {
+    static getInstance() {
+        return instance$e || (instance$e = new WindowProxy());
+    }
+    static setInstance(newInstance) {
+        instance$e = newInstance;
+    }
+    navigate(href) {
+        window.location.href = href;
+    }
+    open(url) {
+        window.open(url, '_blank');
+    }
+    setTimeout(callback, duration) {
+        return window.setTimeout(callback, duration);
+    }
+    clearTimeout(id) {
+        window.clearTimeout(id !== null ? id : undefined);
+    }
+    random() {
+        return Math.random();
+    }
+    createIframeSrc(src) {
+        return src;
+    }
+    matchMedia(query) {
+        return window.matchMedia(query);
+    }
+    now() {
+        return Date.now();
+    }
+    /** Returns promise that resolves when lazy rendering should be started. */
+    waitForLazyRender() {
+        return new Promise(resolve => {
+            requestIdleCallback(() => resolve(), { timeout: 500 });
+        });
+    }
+    /**
+     * Adds a <script> tag that holds the lazy loaded code, if not already
+     * added, and returns a promise that resolves when it has loaded.
+     */
+    ensureLazyLoaded() {
+        if (!lazyLoadPromise) {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = getTrustedScriptURL `./lazy_load.js`;
+            document.body.appendChild(script);
+            lazyLoadPromise = new Promise(resolve => {
+                script.onload = () => resolve();
+            });
+        }
+        return lazyLoadPromise;
+    }
+    /**
+     * Posts |message| on |target| at |targetOrigin| (or on its content window if
+     * |target| is an iframe).
+     */
+    postMessage(target, message, targetOrigin) {
+        const targetWindow = target instanceof HTMLIFrameElement ? target.contentWindow : target;
+        targetWindow.postMessage(message, targetOrigin);
+    }
+    /** Returns `window.location.href` wrapped in a URL object. */
+    get url() {
+        return new URL(window.location.href);
+    }
+    get onLine() {
+        return window.navigator.onLine;
+    }
+};
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$8() {
+    // clang-format off
+    return html `<!--_html_template_start_-->
+${this.disableFileInputs ? html `<slot></slot>` : html `
+  <div id="fileUploadWrapper"
+    @open-image-upload="${this.onOpenImageUpload_}"
+    @open-file-upload="${this.onOpenFileUpload_}">
+    <slot></slot>
+  </div>
+  <input type="file"
+      accept="${this.imageFileTypes_}"
+      id="imageInput"
+      @change="${this.onFileChange_}"
+      multiple
+      hidden>
+  </input>
+  <input type="file"
+      accept="${this.attachmentFileTypes_}"
+      id="fileInput"
+      @change="${this.onFileChange_}"
+      multiple
+      hidden>
+  </input>
+`}
+<!--_html_template_end_-->`;
+    // clang-format off
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class ComposeboxFileInputsElement extends CrLitElement {
+    static get is() {
+        return 'cr-composebox-file-inputs';
+    }
+    render() {
+        return getHtml$8.bind(this)();
+    }
+    static get properties() {
+        return {
+            disableFileInputs: { type: Boolean },
+            attachmentFileTypes_: { type: String },
+            imageFileTypes_: { type: String },
+        };
+    }
+    #disableFileInputs_accessor_storage = false;
+    get disableFileInputs() { return this.#disableFileInputs_accessor_storage; }
+    set disableFileInputs(value) { this.#disableFileInputs_accessor_storage = value; }
+    #attachmentFileTypes__accessor_storage = loadTimeData.getBoolean('lensSendRawFileMediaTypesEnabled') ?
+        '*/*' :
+        loadTimeData.getString('composeboxAttachmentFileTypes');
+    // Comma separated list of file types.
+    get attachmentFileTypes_() { return this.#attachmentFileTypes__accessor_storage; }
+    set attachmentFileTypes_(value) { this.#attachmentFileTypes__accessor_storage = value; }
+    #imageFileTypes__accessor_storage = loadTimeData.getString('composeboxImageFileTypes');
+    // Comma separated list of file types.
+    get imageFileTypes_() { return this.#imageFileTypes__accessor_storage; }
+    set imageFileTypes_(value) { this.#imageFileTypes__accessor_storage = value; }
+    onOpenFileUpload_() {
+        this.openFilePicker();
+    }
+    onOpenImageUpload_() {
+        this.openImagePicker();
+    }
+    openFilePicker() {
+        if (this.disableFileInputs) {
+            return;
+        }
+        this.shadowRoot?.querySelector('#fileInput')?.click();
+    }
+    openImagePicker() {
+        if (this.disableFileInputs) {
+            return;
+        }
+        this.shadowRoot?.querySelector('#imageInput')?.click();
+    }
+    onFileChange_(e) {
+        const input = e.target;
+        this.fire('file-change', { files: input.files });
+        input.value = '';
+    }
+}
+customElements.define(ComposeboxFileInputsElement.is, ComposeboxFileInputsElement);
+
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const div$2 = document.createElement('div');
+if (document.documentElement.hasAttribute('webui-rounded-icons') ||
+    document.documentElement.hasAttribute('rounded-icons')) {
+    div$2.innerHTML = getTrustedHTML `
+<cr-iconset name="composebox">
+  <svg>
+    <defs>
+      <g id="google-lens-2">
+        <path d="M12.008 15.898a2.816 2.816 0 0 1-2.059-.843 2.778 2.778 0 0 1-.847-2.047c0-.805.28-1.492.843-2.059a2.778 2.778 0 0 1 2.047-.847c.805 0 1.492.28 2.059.843.566.563.847 1.246.847 2.047 0 .805-.28 1.492-.843 2.059a2.778 2.778 0 0 1-2.047.847Zm4.64 3.454A1.847 1.847 0 0 1 16.102 18c0-.535.183-.984.546-1.352A1.847 1.847 0 0 1 18 16.102c.535 0 .984.183 1.352.546.363.368.546.817.546 1.352 0 .535-.183.984-.546 1.352a1.847 1.847 0 0 1-1.352.546c-.535 0-.984-.183-1.352-.546ZM7.2 20.398c-1 0-1.847-.347-2.55-1.046-.7-.704-1.047-1.551-1.047-2.551v-1.5a.884.884 0 0 1 .894-.903c.254 0 .465.086.64.262a.86.86 0 0 1 .262.64v1.5c0 .497.18.919.532 1.27.351.352.773.532 1.27.532h3.902a.872.872 0 0 1 .898.895.878.878 0 0 1-.258.64.86.86 0 0 1-.64.261ZM3.863 12.34a.86.86 0 0 1-.261-.64V9c0-1 .347-1.852 1.046-2.55.704-.7 1.551-1.052 2.551-1.052h2l.653-1.296c.082-.153.191-.274.324-.364a.79.79 0 0 1 .469-.136h2.71a.79.79 0 0 1 .47.136c.132.09.241.211.323.364l.653 1.296h2c1 0 1.847.352 2.55 1.051.7.7 1.047 1.551 1.047 2.551v3.102a.872.872 0 0 1-.895.898.878.878 0 0 1-.64-.258.86.86 0 0 1-.261-.64V9c0-.496-.18-.918-.532-1.27a1.717 1.717 0 0 0-1.27-.53H7.2c-.497 0-.919.175-1.27.53A1.732 1.732 0 0 0 5.398 9v2.7a.884.884 0 0 1-.894.902.866.866 0 0 1-.64-.262Zm0 0"></path>
+      </g>
+      <g id="add-photo-alternate">
+        <path d="M12 12Zm-6.602 8.398c-.492 0-.918-.175-1.27-.527a1.735 1.735 0 0 1-.526-1.27V5.399c0-.492.175-.918.527-1.27a1.735 1.735 0 0 1 1.27-.526H12.3a.872.872 0 0 1 .898.895.878.878 0 0 1-.258.64.86.86 0 0 1-.64.261H5.398v13.204h13.204v-6.903a.872.872 0 0 1 .895-.898c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64v6.903c0 .492-.175.918-.527 1.27a1.735 1.735 0 0 1-1.27.526Zm1.204-3.597h10.796L13.801 12l-2.7 3.602-1.8-2.403ZM16.8 7.199h-.895a.887.887 0 0 1-.644-.258.852.852 0 0 1-.262-.636.878.878 0 0 1 .902-.899h.903v-.902c0-.258.086-.473.261-.645a.872.872 0 0 1 .641-.257.87.87 0 0 1 .637.257.872.872 0 0 1 .258.641v.898h.894c.254 0 .465.086.64.258a.858.858 0 0 1 .262.637.872.872 0 0 1-.257.64.863.863 0 0 1-.645.262h-.902v.903a.878.878 0 0 1-.898.902.863.863 0 0 1-.637-.258.872.872 0 0 1-.258-.64Zm0 0"></path>
+      </g>
+      <g id="drive" viewBox="0 0 20 20">
+        <path d="M5.938 17a3.447 3.447 0 0 1-1.75-.469 3.507 3.507 0 0 1-1.293-1.281 3.416 3.416 0 0 1-.477-1.75c0-.625.16-1.207.477-1.75l4.085-7a3.505 3.505 0 0 1 1.282-1.281A3.384 3.384 0 0 1 10 3c.625 0 1.203.156 1.738.469.535.312.965.738 1.282 1.281l4.085 7c.317.543.477 1.125.477 1.75s-.16 1.207-.477 1.75c-.32.543-.75.969-1.293 1.281a3.447 3.447 0 0 1-1.75.469Zm0-1.5h4.125l-2.876-5H5.356l-1.168 2c-.18.32-.269.652-.269 1s.09.68.27 1c.18.32.425.566.738.738.312.176.652.262 1.011.262ZM10 12.395l1.082-1.895H8.918Zm1.793 3.105h2.27c.359 0 .699-.086 1.011-.262.313-.172.559-.418.739-.738.18-.32.269-.652.269-1s-.09-.68-.27-1L13.73 8.918l-2.875 4.977ZM6.23 9h5.707l.918-1.582L11.73 5.5a1.923 1.923 0 0 0-.73-.738 1.971 1.971 0 0 0-1-.262c-.36 0-.695.086-1 .262a1.923 1.923 0 0 0-.73.738Zm0 0"></path>
+      </g>
+      <g id="attach-file">
+        <path d="M17.398 16.2c0 1.5-.523 2.773-1.574 3.823-1.05 1.051-2.328 1.579-3.824 1.579-1.516 0-2.797-.547-3.836-1.641-1.043-1.09-1.562-2.402-1.562-3.938V6.301c0-1.086.378-2.004 1.136-2.762.758-.762 1.68-1.14 2.762-1.14 1.102 0 2.023.402 2.773 1.203.75.796 1.125 1.757 1.125 2.875v9.125a2.31 2.31 0 0 1-.695 1.699c-.465.465-1.035.699-1.703.699-.684 0-1.254-.242-1.71-.727-.462-.484-.688-1.078-.688-1.773V6.898A.872.872 0 0 1 10.497 6c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64v8.704A.583.583 0 0 0 12 16.2a.583.583 0 0 0 .602-.598V6.3c0-.586-.207-1.078-.614-1.489a2.028 2.028 0 0 0-1.492-.613 1.99 1.99 0 0 0-1.488.637c-.406.426-.61.93-.61 1.516v9.847c0 1 .352 1.848 1.051 2.54.7.69 1.551 1.046 2.551 1.062 1 .015 1.852-.344 2.55-1.074.7-.735 1.052-1.618 1.052-2.653V6.898A.872.872 0 0 1 16.497 6c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64Zm0 0"></path>
+      </g>
+      <g id="add-circle">
+        <path d="M11.102 12.898v3a.872.872 0 0 0 .895.902.878.878 0 0 0 .64-.257.869.869 0 0 0 .261-.645v-3h3a.872.872 0 0 0 .902-.895.878.878 0 0 0-.257-.64.869.869 0 0 0-.645-.261h-3v-3a.872.872 0 0 0-.895-.902.878.878 0 0 0-.64.257.869.869 0 0 0-.261.645v3h-3a.872.872 0 0 0-.902.895c0 .253.085.464.257.64a.869.869 0 0 0 .645.261Zm.906 8.704c-1.32 0-2.567-.25-3.735-.75a9.706 9.706 0 0 1-3.062-2.063 9.706 9.706 0 0 1-2.063-3.062 9.398 9.398 0 0 1-.75-3.739c0-1.324.25-2.566.75-3.726A9.743 9.743 0 0 1 5.211 5.21a9.706 9.706 0 0 1 3.062-2.063 9.398 9.398 0 0 1 3.739-.75c1.324 0 2.566.25 3.726.75a9.743 9.743 0 0 1 3.051 2.063 9.688 9.688 0 0 1 2.063 3.059c.5 1.16.75 2.402.75 3.722 0 1.32-.25 2.567-.75 3.735a9.706 9.706 0 0 1-2.063 3.062 9.688 9.688 0 0 1-3.059 2.063 9.31 9.31 0 0 1-3.722.75ZM12 19.8c2.168 0 4.008-.758 5.523-2.278 1.52-1.515 2.278-3.355 2.278-5.523 0-2.168-.758-4.008-2.278-5.523-1.515-1.52-3.355-2.278-5.523-2.278-2.168 0-4.008.758-5.523 2.278C4.957 7.992 4.199 9.832 4.199 12c0 2.168.758 4.008 2.278 5.523 1.515 1.52 3.355 2.278 5.523 2.278ZM12 12Zm0 0"></path>
+      </g>
+      <g id="check-circle-filled">
+        <path d="m10.727 13.05-1.5-1.476a.864.864 0 0 0-.625-.273.857.857 0 0 0-.625.273.88.88 0 0 0-.278.637c0 .242.094.457.278.64l2.125 2.126c.183.183.39.273.625.273.23 0 .441-.09.625-.273l4.671-4.676a.88.88 0 0 0 .278-.637.883.883 0 0 0-.278-.64.857.857 0 0 0-.625-.274c-.23 0-.441.09-.625.273ZM12 21.603a9.369 9.369 0 0 1-3.727-.75 9.706 9.706 0 0 1-3.062-2.063 9.706 9.706 0 0 1-2.063-3.062A9.369 9.369 0 0 1 2.398 12c0-1.332.25-2.578.75-3.738A9.743 9.743 0 0 1 5.211 5.21a9.706 9.706 0 0 1 3.062-2.063c1.168-.5 2.41-.75 3.727-.75 1.332 0 2.578.25 3.738.75a9.743 9.743 0 0 1 3.051 2.063 9.743 9.743 0 0 1 2.063 3.05c.5 1.16.75 2.407.75 3.739 0 1.316-.25 2.559-.75 3.727a9.706 9.706 0 0 1-2.063 3.062 9.743 9.743 0 0 1-3.05 2.063c-1.16.5-2.407.75-3.739.75Zm0 0"></path>
+      </g>
+      <g id="draft-spark" viewBox="0 0 16 16">
+        <path d="M8 8Zm.102 6.398a.577.577 0 0 1-.43-.171.574.574 0 0 1-.172-.422.592.592 0 0 1 .602-.606h3.5V5.602H9.398a.572.572 0 0 1-.425-.176A.577.577 0 0 1 8.8 5V2.8H4.398v5a.568.568 0 0 1-.171.427.56.56 0 0 1-.422.171.577.577 0 0 1-.43-.171.572.572 0 0 1-.176-.426v-5c0-.332.117-.614.352-.848.238-.234.52-.351.847-.351h4.704c.156 0 .308.027.449.082.144.054.277.144.398.265l2.5 2.5a1.184 1.184 0 0 1 .352.852v7.898c0 .332-.117.614-.352.848-.238.234-.52.351-.847.351Zm-4.52.801c-.066 0-.11-.031-.133-.097a3.441 3.441 0 0 0-.926-1.645 3.441 3.441 0 0 0-1.644-.926c-.063-.02-.094-.066-.094-.133 0-.078.031-.12.098-.132a3.415 3.415 0 0 0 1.64-.926c.461-.461.774-1.008.93-1.645.02-.062.063-.093.129-.093.078 0 .125.03.133.097.168.633.48 1.18.937 1.637.457.457 1.004.77 1.637.934.063.007.094.05.094.128 0 .067-.031.114-.098.137a3.403 3.403 0 0 0-1.644.922c-.461.461-.77 1.012-.926 1.648-.012.063-.055.094-.133.094Zm0 0"></path>
+      </g>
+      <g id="travel-explore" viewBox="0 0 16 16">
+        <path d="M1.602 7.992c0-.883.164-1.71.5-2.484.332-.774.789-1.45 1.375-2.031a6.392 6.392 0 0 1 2.035-1.375A6.197 6.197 0 0 1 8 1.602c1.39 0 2.617.382 3.684 1.156a6.51 6.51 0 0 1 2.3 2.976.694.694 0 0 1-.007.524.613.613 0 0 1-.36.351.525.525 0 0 1-.449-.058.694.694 0 0 1-.3-.367 5.312 5.312 0 0 0-1.126-1.774A5.121 5.121 0 0 0 10 3.215v.387c0 .328-.117.609-.352.847a1.16 1.16 0 0 1-.847.352H7.199v.8a.769.769 0 0 1-.23.57.774.774 0 0 1-.57.227h-.797V8H5.8a.583.583 0 0 1 .597.602v1h-.796L2.918 6.918c-.031.176-.059.355-.082.531-.023.18-.035.364-.035.551 0 1.355.449 2.527 1.347 3.516.903.988 2.012 1.546 3.336 1.668.157.023.282.09.375.207.094.117.141.257.141.418 0 .16-.063.3-.191.418a.538.538 0 0 1-.446.14c-1.62-.156-2.984-.84-4.097-2.05-1.11-1.212-1.664-2.653-1.664-4.325Zm11.535 5.578L11.5 11.95a2.861 2.861 0 0 1-.707.335 2.76 2.76 0 0 1-.793.113c-.777 0-1.438-.27-1.984-.816a2.698 2.698 0 0 1-.817-1.98 2.7 2.7 0 0 1 .817-1.985A2.697 2.697 0 0 1 10 6.801c.777 0 1.438.27 1.984.816.543.543.817 1.203.817 1.98 0 .278-.04.544-.117.794-.079.25-.188.488-.332.71l1.636 1.637c.117.117.18.258.18.41a.579.579 0 0 1-.184.418.596.596 0 0 1-.425.184c-.16 0-.301-.059-.422-.18Zm-2.004-2.832c.312-.308.469-.687.469-1.133 0-.449-.157-.828-.465-1.14A1.545 1.545 0 0 0 10.004 8c-.445 0-.824.152-1.137.46a1.542 1.542 0 0 0-.469 1.138c0 .445.157.824.465 1.136.309.309.688.465 1.133.465.445 0 .824-.152 1.137-.46Zm0 0"></path>
+      </g>
+      <g id="photo-prints" viewBox="0 0 16 16">
+        <path d="M9.617 9.2c.301 0 .582-.055.848-.169.27-.113.508-.265.719-.465a2.445 2.445 0 0 0 .668-1.184.294.294 0 0 0-.067-.265.237.237 0 0 0-.25-.082c-.23.035-.45.11-.656.219-.207.11-.395.242-.563.394-.21.204-.375.434-.492.692-.117.262-.183.55-.207.86Zm-.035 0a2.365 2.365 0 0 0-.219-.864 2.392 2.392 0 0 0-.511-.703 2.364 2.364 0 0 0-.559-.383 2.515 2.515 0 0 0-.66-.215.258.258 0 0 0-.258.078.288.288 0 0 0-.074.27c.054.234.14.453.261.652.118.203.258.38.422.531.211.2.454.352.723.465.27.114.563.168.875.168Zm.02-2.083c.152 0 .289-.058.406-.168a.56.56 0 0 0 .176-.418v-.148l.125.086c.129.09.273.113.433.074a.582.582 0 0 0 .375-.293.498.498 0 0 0 .051-.418.72.72 0 0 0-.266-.379l-.117-.086.133-.082a.612.612 0 0 0 .258-.36.562.562 0 0 0-.059-.433.617.617 0 0 0-.367-.293.513.513 0 0 0-.434.063l-.132.09v-.168a.562.562 0 0 0-.176-.41.578.578 0 0 0-.418-.172.546.546 0 0 0-.406.171.57.57 0 0 0-.168.41v.169l-.141-.09a.52.52 0 0 0-.434-.063.66.66 0 0 0-.359.266.584.584 0 0 0-.074.453.62.62 0 0 0 .277.371l.133.078-.137.067a.519.519 0 0 0-.289.351.562.562 0 0 0 .074.45c.09.156.211.25.368.288.156.04.3.016.433-.07L9 6.367v.168c0 .164.059.3.172.414a.59.59 0 0 0 .43.168ZM9.59 5.95a.542.542 0 0 1-.406-.168.554.554 0 0 1-.168-.414c0-.156.058-.293.168-.41a.551.551 0 0 1 .418-.172c.152 0 .289.055.406.172a.573.573 0 0 1 .176.418.55.55 0 0 1-.176.41.587.587 0 0 1-.418.164ZM6 11.2c-.367 0-.66-.11-.875-.324-.215-.215-.324-.508-.324-.875V2.8c0-.366.11-.66.324-.874.215-.219.508-.324.875-.324h7.2c.366 0 .66.105.874.324.219.215.324.508.324.875V10c0 .367-.105.66-.324.875-.215.215-.508.324-.875.324ZM6 10h7.2V2.8H6Zm3.602-3.602ZM3.715 13.2Zm.203 1.2a1.134 1.134 0 0 1-.883-.239 1.167 1.167 0 0 1-.469-.793l-.964-7.152a1.14 1.14 0 0 1 .238-.89c.207-.263.476-.415.808-.458l.301-.035a.561.561 0 0 1 .469.145.594.594 0 0 1 .184.453.59.59 0 0 1-.145.398.582.582 0 0 1-.375.207l-.281.031.949 7.133 7.7-1.031a.606.606 0 0 1 .456.113.566.566 0 0 1 .227.403.591.591 0 0 1-.113.449.575.575 0 0 1-.403.234Zm0 0"></path>
+      </g>
+      <g id="autorenew" viewBox="0 0 16 16">
+        <path d="M4.398 8c0 .133.012.266.028.398.015.137.035.262.058.387a.798.798 0 0 1-.043.465.521.521 0 0 1-.324.316.58.58 0 0 1-.457-.023.524.524 0 0 1-.293-.344 4.051 4.051 0 0 1-.125-.582A4.546 4.546 0 0 1 3.2 8c0-1.344.473-2.488 1.418-3.434.946-.945 2.106-1.398 3.485-1.367l-.536-.531a.596.596 0 0 1-.183-.426.59.59 0 0 1 .183-.426.59.59 0 0 1 .426-.183c.16 0 .301.062.426.183l1.566 1.567a.579.579 0 0 1 .184.418.57.57 0 0 1-.184.414l-1.566 1.57A.543.543 0 0 1 8 5.957a.595.595 0 0 1-.418-.191.583.583 0 0 1 0-.848l.52-.52c-1.047-.02-1.922.325-2.637 1.036C4.754 6.144 4.398 7 4.398 8Zm7.204 0c0-.133-.012-.266-.028-.398a5.38 5.38 0 0 0-.058-.387.81.81 0 0 1 .043-.473.575.575 0 0 1 .324-.324.531.531 0 0 1 .449 0 .506.506 0 0 1 .285.332c.055.2.098.402.133.61.035.202.05.417.05.64 0 1.332-.472 2.477-1.417 3.426-.945.949-2.106 1.406-3.485 1.375l.536.531a.596.596 0 0 1 .183.426.59.59 0 0 1-.183.426.59.59 0 0 1-.426.183c-.16 0-.301-.062-.426-.183l-1.566-1.567a.579.579 0 0 1-.184-.418.57.57 0 0 1 .184-.414l1.566-1.57a.592.592 0 0 1 .852 0 .583.583 0 0 1 0 .852l-.536.535c1.047.02 1.922-.325 2.637-1.036C11.246 9.856 11.602 9 11.602 8Zm0 0"></path>
+      </g>
+      <g id="bolt" viewBox="0 0 16 16">
+        <path d="M7.285 11.852 10.332 8h-2.48l.433-3.684-2.887 4.485h2.434ZM6.398 10H4.301a.543.543 0 0 1-.516-.309.572.572 0 0 1 .016-.609l4.515-7.047a.636.636 0 0 1 .383-.308.81.81 0 0 1 .5.007.697.697 0 0 1 .39.309.701.701 0 0 1 .11.492l-.5 4.266h2.367c.254 0 .438.11.543.332a.571.571 0 0 1-.074.633l-4.933 6.25a.841.841 0 0 1-.41.27.656.656 0 0 1-.477-.052.816.816 0 0 1-.356-.343.648.648 0 0 1-.074-.473Zm1.47-1.918Zm0 0"></path>
+      </g>
+      <g id="timer" viewBox="0 0 16 16">
+        <path d="M6.602 2.398a.577.577 0 0 1-.43-.171A.574.574 0 0 1 6 1.805a.592.592 0 0 1 .602-.606h2.796c.172 0 .313.059.43.172a.583.583 0 0 1 .172.426.599.599 0 0 1-.172.43.592.592 0 0 1-.43.171Zm1.824 7.028A.566.566 0 0 0 8.602 9V6.2a.583.583 0 0 0-.598-.598.583.583 0 0 0-.43.171.572.572 0 0 0-.176.426V9c0 .172.059.313.172.426a.578.578 0 0 0 .426.176.587.587 0 0 0 .43-.176Zm-2.61 4.531a5.639 5.639 0 0 1-2.973-2.977 5.359 5.359 0 0 1-.445-2.18c0-.777.149-1.507.446-2.183a5.622 5.622 0 0 1 1.199-1.773A5.744 5.744 0 0 1 5.816 3.64a5.43 5.43 0 0 1 2.176-.442c.649 0 1.27.11 1.863.324.598.22 1.149.52 1.66.91l.458-.453a.53.53 0 0 1 .41-.171c.156.003.297.07.418.191a.579.579 0 0 1 .183.418.577.577 0 0 1-.183.414l-.434.453c.387.5.692 1.047.906 1.645.22.597.329 1.222.329 1.87 0 .778-.149 1.505-.446 2.18a5.639 5.639 0 0 1-2.972 2.977A5.388 5.388 0 0 1 8 14.398a5.388 5.388 0 0 1-2.184-.441Zm5.301-2.039c.856-.855 1.281-1.895 1.281-3.117 0-1.223-.425-2.262-1.28-3.117C10.261 4.828 9.222 4.398 8 4.398c-1.223 0-2.262.43-3.117 1.286-.856.855-1.281 1.894-1.281 3.117 0 1.222.425 2.261 1.28 3.117.856.855 1.895 1.281 3.118 1.281 1.223 0 2.262-.426 3.117-1.281ZM8 8.801Zm0 0"></path>
+      </g>
+      <g id="acute" viewBox="0 -960 960 960">
+        <path d="M600-160q-134,0-227-93T280-480q0-133 93-226.5T600-800q133,0 226.5,93.5T920-480q0,134-93.5,227T600-160Zm0-80q100,0 170-70t70-170T770-650T600-720T430-650T360-480t70,170t170,70Zm91-91l57-57L640-496V-640H560v177L691-331ZM80-600v-80H240v80H80ZM40-440v-80H240v80H40ZM80-280v-80H240v80H80ZM600-480Z" fill="currentColor"/>
+      </g>
+      <g id="nanoBanana-custom" viewBox="0 0 24 24">
+        <path d="M2 22.4004H22V2.40039H2V22.4004Z" fill="url(#pattern0_1500_179774)"/>
+          <defs>
+          <pattern id="pattern0_1500_179774" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image0_1500_179774" transform="scale(0.00625)"/>
+          </pattern>
+          <image id="image0_1500_179774" width="160" height="160" preserveAspectRatio="none" xlink:href="data:image/png;base64,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"/>
+        </defs>
+      </g>
+      <g id="nanoBanana-clank" viewBox="0 0 20 20">
+        <path d="M1.37226 14.8626C1.55039 15.2313 2.2957 15.2079 2.70664 15.0782C3.75664 14.747 4.40977 13.8438 4.40977 13.8438L9.82227 11.547L11.4801 10.6767C11.4801 10.6767 11.802 10.1298 11.1582 9.7126C10.5145 9.29541 10.0629 9.26416 10.0629 9.26416L8.19727 10.4517C8.19727 10.4517 6.99258 9.51416 5.76914 9.37197C4.60039 9.2376 3.1457 10.1876 2.76289 11.9813C2.45195 13.436 1.95976 13.9485 1.81133 14.1376C1.66289 14.3282 1.21914 14.547 1.37226 14.8626Z" fill="#FF8E00"/>
+        <path d="M7.85609 5.02331C8.33578 3.43581 8.94203 1.578 9.85765 0.942061C10.6686 0.379561 11.4577 0.481123 11.8327 0.726436C11.8327 0.726436 12.5092 1.003 12.6873 1.70144C12.9811 2.84831 12.5952 4.22487 12.3436 5.64675C12.092 7.06862 11.9608 8.04675 11.8467 9.18894C11.8358 9.29206 9.94672 12.6546 9.94672 12.6546L8.4389 13.4624C8.4389 13.4624 7.28734 10.9717 7.30453 10.6202C7.32015 10.2671 7.50609 6.18269 7.85609 5.02331Z" fill="#FFE4B4"/>
+        <path d="M11.7893 10.4595C11.8096 10.8392 10.8939 13.8658 10.8939 13.8658L8.4377 13.4595C8.4377 13.4595 6.69551 12.4283 6.64707 10.558C6.57207 7.73767 7.05488 6.40955 7.40488 5.25017C7.88613 3.6658 8.95801 1.5783 9.86582 0.931422C10.3986 0.551735 10.9893 0.495485 11.2314 0.54236C11.2314 0.54236 9.61894 1.80486 8.80332 3.96424C7.98769 6.12361 7.79551 8.61892 7.79551 8.61892C7.79551 8.61892 8.39551 9.06111 9.81113 9.26424C10.9049 9.42205 11.8486 9.15486 11.8486 9.15486C11.8486 9.15486 11.7627 9.9783 11.7893 10.4595Z" fill="#FFE265"/>
+        <path d="M6.66758 13.0858L7.65039 11.0327L7.59727 10.3014C7.59727 10.3014 7.38789 9.68738 8.6957 10.6796C9.30195 11.1389 9.66758 11.9858 9.66758 11.9858C9.66758 11.9858 9.85195 11.5296 10.4988 10.9264C11.0738 10.3921 11.8473 10.1327 11.8473 10.1327C11.8473 10.1327 13.4535 9.8202 13.6285 9.95613C14.7613 10.8405 15.5895 11.9171 15.5895 11.9171L16.4223 15.0655L17.8066 15.9139C17.8066 15.9139 17.4285 16.4671 16.8816 16.2608C16.4551 16.0999 15.927 15.6171 15.6426 15.0093C15.252 14.1733 14.4316 12.5921 14.0145 12.0921C13.2082 11.1296 12.4176 10.778 11.8285 11.0577C11.1582 11.3749 11.6941 14.5405 11.6941 14.5405L16.0035 18.1671L16.077 18.6608C16.077 18.6608 15.4504 19.2624 13.7238 19.2061C11.9973 19.1499 9.68789 18.5108 8.22695 16.5186C6.93789 14.7624 6.66758 13.0858 6.66758 13.0858Z" fill="#FFA726"/>
+        <path d="M10.0652 13.2749C10.0277 14.1421 10.5684 15.4562 11.8184 16.5515C13.0668 17.6468 14.3855 18.0093 15.2043 18.0718C15.798 18.1171 15.9746 17.778 15.9746 17.778C15.9746 17.778 14.7777 16.6765 13.8887 15.7937C13.0449 14.9546 12.1262 13.1921 11.9262 12.3812C11.7262 11.5702 11.9074 11.0249 11.9074 11.0249C11.9074 11.0249 11.5199 11.1327 10.9496 11.7046C10.3965 12.2593 10.0855 12.7937 10.0652 13.2749Z" fill="#FFB803"/>
+        <path d="M15.3988 18.553C15.5285 18.8545 15.9738 18.867 16.1676 18.6998C16.3504 18.542 16.5285 18.228 16.3441 17.8764C16.2223 17.6452 15.8223 17.5811 15.5973 17.7608C15.3723 17.9405 15.2816 18.2795 15.3988 18.553Z" fill="#875B54"/>
+        <path d="M16.287 15.2876C16.7995 15.9985 17.3136 16.1063 17.5261 16.1297C17.712 16.1516 17.9151 15.9141 17.8917 15.6954C17.8683 15.4766 17.5089 15.1688 17.4651 14.4969C17.4214 13.8251 17.4745 11.361 16.1073 9.94537C15.1433 8.94849 13.962 9.29224 13.1995 9.55631C12.3401 9.85318 11.8448 10.1344 11.8448 10.1344C11.8448 10.1344 12.548 10.086 13.7605 11.0422C14.4651 11.5985 14.8792 12.3626 15.2698 13.2391C15.5511 13.8735 15.9261 14.7876 16.287 15.2876Z" fill="#FEE4B4"/>
+        <path d="M2.65605 17.1219C2.7998 17.4094 3.15137 17.5875 3.46231 17.5735C4.12012 17.5454 4.72012 17.2063 5.38418 16.35C6.32324 15.1375 7.14043 12.2282 7.75293 11.4532C8.16699 10.9297 8.68262 10.6704 8.68262 10.6704C8.68262 10.6704 8.39824 10.4297 8.11387 10.2813C7.82949 10.1329 7.14199 10.2032 7.14199 10.2032L4.20762 14.9188L2.65605 17.1219Z" fill="#FEB804"/>
+        <path d="M4.31367 10.6969C3.66992 11.6172 3.58555 12.425 3.48867 13.25C3.40117 13.9953 3.22148 15.5625 2.95117 16.0734C2.6793 16.5844 2.41523 16.9172 2.70742 17.2281C2.99961 17.5391 3.85898 17.4281 4.47617 16.7563C4.97305 16.2141 5.24805 15.6234 5.62148 14.7563C5.99492 13.8891 6.54492 11.8422 7.25898 10.9172C7.71523 10.3266 8.16992 10.3094 8.16992 10.3094C8.16992 10.3094 7.56836 9.81875 6.41992 9.80625C5.39023 9.79531 4.84961 9.93125 4.31367 10.6969Z" fill="#FFE4B4"/>
+      </g>
+      <g id="notes-spark">
+        <path d="M18.602 22.8c-.102 0-.168-.05-.204-.152a5.135 5.135 0 0 0-1.386-2.46 5.213 5.213 0 0 0-2.473-1.395c-.094-.027-.14-.094-.14-.191 0-.118.05-.184.152-.204.949-.23 1.77-.695 2.46-1.386a5.213 5.213 0 0 0 1.395-2.473c.028-.094.094-.14.196-.14.113 0 .183.05.199.152a5.351 5.351 0 0 0 3.86 3.851c.093.016.14.082.14.2 0 .097-.051.164-.153.199-.949.234-1.77.695-2.46 1.387a5.174 5.174 0 0 0-1.391 2.472c-.016.094-.082.14-.195.14ZM4.5 16.8a.872.872 0 0 1-.64-.257.863.863 0 0 1-.258-.637c0-.254.086-.469.257-.644A.86.86 0 0 1 4.5 15h7.2c.253 0 .468.086.64.258a.852.852 0 0 1 .262.637.875.875 0 0 1-.262.644.875.875 0 0 1-.64.262Zm0-4.5a.872.872 0 0 1-.64-.257.863.863 0 0 1-.258-.637c0-.254.086-.469.257-.644A.86.86 0 0 1 4.5 10.5h15c.254 0 .469.086.64.258a.863.863 0 0 1 .258.637.887.887 0 0 1-.898.906Zm0-4.5a.872.872 0 0 1-.64-.257.863.863 0 0 1-.258-.637c0-.254.086-.468.257-.644A.86.86 0 0 1 4.5 6h15c.254 0 .469.086.64.258a.863.863 0 0 1 .258.637.887.887 0 0 1-.898.906Zm0 0"></path>
+      </g>
+      <g id="stop-filled">
+        <path d="M6.602 15.598V8.395c0-.497.175-.918.527-1.27a1.734 1.734 0 0 1 1.273-.523h7.203c.497 0 .918.175 1.27.527.352.351.523.777.523 1.273v7.203c0 .497-.175.918-.527 1.27a1.734 1.734 0 0 1-1.273.523H8.395c-.497 0-.918-.175-1.27-.527a1.734 1.734 0 0 1-.523-1.273Zm0 0"></path>
+      </g>
+      <g id="tab">
+        <path d="M4.2 17.398h15.6v-6.597h-5.698a.88.88 0 0 1-.903-.903V6.602h-9Zm0 1.801c-.497 0-.919-.176-1.27-.527a1.747 1.747 0 0 1-.532-1.274V6.594c0-.496.18-.918.532-1.27a1.74 1.74 0 0 1 1.27-.523h15.6c.497 0 .919.176 1.27.527.352.356.532.777.532 1.274v10.804c0 .496-.18.918-.532 1.27a1.74 1.74 0 0 1-1.27.523Zm0-1.8V6.601Zm0 0"></path>
+      </g>
+      <g id="screensaverAuto" viewBox="0 -960 960 960">
+        <path d="M160-720v480-480Zm0 560q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h320v80H160v480h640v-280h80v280q0 33-23.5 56.5T800-160H160Zm580-400q-6 0-8-6-16-61-60.5-105.5T566-732q-6-2-6-8 0-7 6-8 61-16 105.5-60.5T732-914q2-6 8-6 7 0 8 6 17 61 61 105.5T914-748q6 1 6 8 0 6-6 8-61 16-105.5 60.5T748-566q-1 6-8 6Z" fill="currentColor"/>
+      </g>
+  </defs>
+  </svg>
+</cr-iconset>
+<cr-iconset name="thumbnail" size=24>
+  <svg>
+    <defs>
+      <g id="drive-pdf">
+        <path d="M16.492 12.793h.606a.586.586 0 0 0 .43-.172.56.56 0 0 0 .171-.422.584.584 0 0 0-.597-.594H16.5v-.804h.602a.586.586 0 0 0 .598-.602.593.593 0 0 0-.169-.426.586.586 0 0 0-.43-.171H16.5c-.34 0-.625.113-.855.343a1.16 1.16 0 0 0-.344.856v3c0 .172.058.316.176.43a.577.577 0 0 0 .421.167.571.571 0 0 0 .422-.168.595.595 0 0 0 .172-.433Zm-8.992.008h.898c.34 0 .625-.117.856-.348.23-.226.348-.512.348-.851V10.8c0-.34-.118-.625-.348-.856a1.16 1.16 0 0 0-.856-.343H7.102a.774.774 0 0 0-.57.226.769.769 0 0 0-.231.57v3.391a.592.592 0 0 0 .597.61.586.586 0 0 0 .602-.598Zm0-1.2v-.8h.898v.8Zm5.398 2.797c.34 0 .625-.113.856-.343.23-.23.348-.516.348-.856v-2.398c0-.34-.118-.625-.348-.856a1.16 1.16 0 0 0-.856-.343h-1.875c-.074 0-.128.015-.168.054a.241.241 0 0 0-.054.168v4.352c0 .066.02.12.054.16.04.043.094.062.168.062ZM12 13.2v-2.398h.898v2.398Zm-6.602 7.2c-.492 0-.918-.176-1.27-.528a1.735 1.735 0 0 1-.526-1.27V5.399c0-.492.175-.918.527-1.27a1.735 1.735 0 0 1 1.27-.526h13.203c.492 0 .918.175 1.27.527.35.351.526.777.526 1.27v13.203c0 .492-.175.918-.527 1.27a1.735 1.735 0 0 1-1.27.526Zm0 0"></path>
+      </g>
+      <g id="attach-file">
+        <path d="M17.398 16.2c0 1.5-.523 2.773-1.574 3.823-1.05 1.051-2.328 1.579-3.824 1.579-1.516 0-2.797-.547-3.836-1.641-1.043-1.09-1.562-2.402-1.562-3.938V6.301c0-1.086.378-2.004 1.136-2.762.758-.762 1.68-1.14 2.762-1.14 1.102 0 2.023.402 2.773 1.203.75.796 1.125 1.757 1.125 2.875v9.125a2.31 2.31 0 0 1-.695 1.699c-.465.465-1.035.699-1.703.699-.684 0-1.254-.242-1.71-.727-.462-.484-.688-1.078-.688-1.773V6.898A.872.872 0 0 1 10.497 6c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64v8.704A.583.583 0 0 0 12 16.2a.583.583 0 0 0 .602-.598V6.3c0-.586-.207-1.078-.614-1.489a2.028 2.028 0 0 0-1.492-.613 1.99 1.99 0 0 0-1.488.637c-.406.426-.61.93-.61 1.516v9.847c0 1 .352 1.848 1.051 2.54.7.69 1.551 1.046 2.551 1.062 1 .015 1.852-.344 2.55-1.074.7-.735 1.052-1.618 1.052-2.653V6.898A.872.872 0 0 1 16.497 6c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64Zm0 0"></path>
+      </g>
+    </defs>
+  </svg>
+</cr-iconset>
+<cr-iconset name="aim" size=24>
+  <svg>
+    <defs>
+      <g id="unspecified-custom" viewBox="0 -960 960 960">
+      </g>
+      <g id="add">
+        <path d="M11.102 12.898H6.898A.872.872 0 0 1 6 12.003c0-.253.086-.464.258-.64a.86.86 0 0 1 .64-.261h4.204V6.898A.872.872 0 0 1 11.997 6c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64v4.204h4.204a.872.872 0 0 1 .898.895.878.878 0 0 1-.258.64.86.86 0 0 1-.64.261h-4.204v4.204a.872.872 0 0 1-.895.898.878.878 0 0 1-.64-.258.86.86 0 0 1-.261-.64Zm0 0"></path>
+      </g>
+      <g id="check">
+        <path d="m9.727 14.773 7.472-7.472a.88.88 0 0 1 .637-.278c.242 0 .457.094.64.278a.87.87 0 0 1 .274.636.87.87 0 0 1-.273.637L10.375 16.7a.874.874 0 0 1-.637.278.874.874 0 0 1-.636-.278l-3.579-3.574a.87.87 0 0 1-.273-.637.87.87 0 0 1 .273-.636.883.883 0 0 1 .641-.278.88.88 0 0 1 .637.278Zm0 0"></path>
+      </g>
+      <g id="format-quote-filled">
+        <path d="m7.102 15.45 1.074-1.876c-.785 0-1.477-.308-2.074-.933a3.105 3.105 0 0 1-.903-2.243c0-.898.309-1.656.926-2.273.617-.617 1.375-.926 2.273-.926.903 0 1.66.309 2.278.926.617.617.926 1.375.926 2.273 0 .286-.043.559-.125.829a3.794 3.794 0 0 1-.329.75l-2.5 4.375a.868.868 0 0 1-.316.324.873.873 0 0 1-.457.125.861.861 0 0 1-.79-.45.83.83 0 0 1 .017-.902Zm7.199 0 1.074-1.876c-.785 0-1.477-.308-2.074-.933a3.105 3.105 0 0 1-.903-2.243c0-.898.309-1.656.926-2.273.617-.617 1.375-.926 2.278-.926.898 0 1.656.309 2.273.926.617.617.926 1.375.926 2.273 0 .286-.04.559-.113.829-.075.265-.18.515-.313.75l-2.523 4.375a.91.91 0 0 1-.32.324.873.873 0 0 1-.458.125.855.855 0 0 1-.785-.45.823.823 0 0 1 .012-.902Zm0 0"></path>
+      </g>
+      <g id="invertedQuoteFilled-custom" viewBox="0 -960 960 960">
+        <path d="M698-660l-58 100q66 0 113 47t47 113q0 66-47 113t-113 47q-66 0-113-47t-47-113q0-23 5.5-42.5T502-480l127-220q5-9 14-14.5t20-5.5q23 0 34.5 20t.5 40ZM338-660l-58 100q66 0 113 47t47 113q0 66-47 113t-113 47q-66 0-113-47t-47-113q0-23 5.5-42.5T142-480l127-220q5-9 14-14.5t20-5.5q23 0 34.5 20t.5 40Z" fill="currentColor"/>
+      </g>
+      <g id="image">
+        <path d="M5.398 20.398c-.492 0-.918-.175-1.27-.535a1.75 1.75 0 0 1-.526-1.261V5.398c0-.48.175-.902.527-1.261.351-.36.777-.535 1.27-.535h13.203c.492 0 .918.175 1.27.535.35.36.526.781.526 1.261v13.204c0 .48-.175.902-.527 1.261-.351.36-.777.535-1.27.535Zm0-1.796h13.204V5.398H5.398Zm0 0V5.398ZM7.5 16.8h9.004c.18 0 .312-.086.394-.25.086-.168.067-.324-.046-.477l-2.704-3.597a.393.393 0 0 0-.347-.204c-.149 0-.262.067-.352.204l-2.347 3.125-1.454-1.926a.398.398 0 0 0-.347-.2c-.149 0-.262.067-.352.2l-1.793 2.398a.408.408 0 0 0-.05.477c.09.164.218.25.394.25Zm0 0"></path>
+      </g>
+      <g id="followUp-custom" viewBox="0 0 24 24">
+        <path d="M5 5V9C5 9.83334 5.29166 10.5417 5.875 11.125C6.45833 11.7083 7.16666 12 8 12H17.175L13.575 8.4L15 7L21 13L15 19L13.575 17.6L17.175 14H8C6.61667 14 5.4375 13.5125 4.4625 12.5375C3.4875 11.5625 3 10.3833 3 9V5H5Z" fill="currentColor"/>
+      </g>
+      <g id="drive-pdf">
+        <path d="M16.492 12.793h.606a.586.586 0 0 0 .43-.172.56.56 0 0 0 .171-.422.584.584 0 0 0-.597-.594H16.5v-.804h.602a.586.586 0 0 0 .598-.602.593.593 0 0 0-.169-.426.586.586 0 0 0-.43-.171H16.5c-.34 0-.625.113-.855.343a1.16 1.16 0 0 0-.344.856v3c0 .172.058.316.176.43a.577.577 0 0 0 .421.167.571.571 0 0 0 .422-.168.595.595 0 0 0 .172-.433Zm-8.992.008h.898c.34 0 .625-.117.856-.348.23-.226.348-.512.348-.851V10.8c0-.34-.118-.625-.348-.856a1.16 1.16 0 0 0-.856-.343H7.102a.774.774 0 0 0-.57.226.769.769 0 0 0-.231.57v3.391a.592.592 0 0 0 .597.61.586.586 0 0 0 .602-.598Zm0-1.2v-.8h.898v.8Zm5.398 2.797c.34 0 .625-.113.856-.343.23-.23.348-.516.348-.856v-2.398c0-.34-.118-.625-.348-.856a1.16 1.16 0 0 0-.856-.343h-1.875c-.074 0-.128.015-.168.054a.241.241 0 0 0-.054.168v4.352c0 .066.02.12.054.16.04.043.094.062.168.062ZM12 13.2v-2.398h.898v2.398Zm-6.602 7.2c-.492 0-.918-.176-1.27-.528a1.735 1.735 0 0 1-.526-1.27V5.399c0-.492.175-.918.527-1.27a1.735 1.735 0 0 1 1.27-.526h13.203c.492 0 .918.175 1.27.527.35.351.526.777.526 1.27v13.203c0 .492-.175.918-.527 1.27a1.735 1.735 0 0 1-1.27.526Zm0-1.797h13.204V5.398H5.398Zm0-13.204v13.204Zm0 0"></path>
+      </g>
+      <g id="close-small">
+        <path d="m12 13.273-2.922 2.903a.872.872 0 0 1-.629.273.857.857 0 0 1-.625-.273.857.857 0 0 1-.273-.625c0-.235.09-.442.273-.63L10.727 12 7.824 9.102a.864.864 0 0 1-.273-.625c0-.235.09-.442.273-.625a.862.862 0 0 1 .625-.278c.235 0 .442.094.63.278L12 10.75l2.898-2.898a.868.868 0 0 1 .625-.278c.235 0 .442.094.625.278.184.183.278.39.278.625 0 .23-.094.441-.278.625L13.25 12l2.898 2.922c.184.187.278.394.278.629a.862.862 0 0 1-.278.625.857.857 0 0 1-.625.273.864.864 0 0 1-.625-.273Zm0 0"></path>
+      </g>
+    </defs>
+  </svg>
+</cr-iconset>`;
+}
+else {
+    div$2.innerHTML = getTrustedHTML `
+<cr-iconset name="composebox">
+  <svg>
+    <defs>
+      <g id="google-lens-2" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
+        <path d="M480.24-324Q432-324 398-357.76q-34-33.77-34-82Q364-488 397.76-522q33.77-34 82-34Q528-556 562-522.24q34 33.77 34 82Q596-392 562.24-358q-33.77 34-82 34ZM720-164q-32 0-54-22t-22-54q0-32 22-54t54-22q32 0 54 22t22 54q0 32-22 54t-54 22Zm-432 20q-60 0-102-42t-42-102v-96h72v96q0 29.7 21.15 50.85Q258.3-216 288-216h192v72H288Zm456-296v-160q0-29.7-21.15-50.85Q701.7-672 672-672H288q-29.7 0-50.85 21.15Q216-629.7 216-600v144h-72v-144q0-60 42-102t102-42h80l36-72h152l36 72h80q60 0 102 42t42 102v160h-72Z"/>
+      </g>
+      <g id="add-photo-alternate">
+        <path d="M5 21C4.45 21 3.975 20.8083 3.575 20.425C3.19167 20.025 3 19.55 3 19V5C3 4.45 3.19167 3.98333 3.575 3.6C3.975 3.2 4.45 3 5 3H13C13 3.28333 13 3.59167 13 3.925C13 4.25833 13 4.61667 13 5H5V19H19V11C19.3833 11 19.7417 11 20.075 11C20.4083 11 20.7167 11 21 11V19C21 19.55 20.8 20.025 20.4 20.425C20.0167 20.8083 19.55 21 19 21H5ZM6 17H18L14.25 12L11.25 16L9 13L6 17ZM17 9V7H15V5H17V3H19V5H21V7H19V9H17Z" fill="currentColor"/>
+      </g>
+      <g id="drive" viewBox="0 0 20 20">
+        <path d="M5.938 17a3.447 3.447 0 0 1-1.75-.469 3.507 3.507 0 0
+          1-1.293-1.281 3.416 3.416 0 0 1-.477-1.75c0-.625.16-1.207.477-1.75
+          l4.085-7a3.505 3.505 0 0 1 1.282-1.281A3.384 3.384 0 0 1 10 3c.625 0
+          1.203.156 1.738.469.535.312.965.738 1.282 1.281l4.085 7c.317.543
+          .477 1.125.477 1.75s-.16 1.207-.477 1.75c-.32.543-.75.969-1.293
+          1.281a3.447 3.447 0 0 1-1.75.469Zm0-1.5h4.125l-2.876-5H5.356l-1.168
+          2c-.18.32-.269.652-.269 1s.09.68.27 1c.18.32.425.566.738.738.312
+          .176.652.262 1.011.262ZM10 12.395l1.082-1.895H8.918Zm1.793
+          3.105h2.27c.359 0 .699-.086 1.011-.262.313-.172.559-.418.739-.738
+          .18-.32.269-.652.269-1s-.09-.68-.27-1L13.73 8.918l-2.875
+          4.977ZM6.23 9h5.707l.918-1.582L11.73 5.5a1.923 1.923 0 0
+          0-.73-.738 1.971 1.971 0 0 0-1-.262c-.36 0-.695.086-1 .262a1.923
+          1.923 0 0 0-.73.738Zm0 0"></path>
+      </g>
+      <g id="attach-file">
+        <path d="M18 15.75C18 17.4833 17.3917 18.9583 16.175 20.175C14.9583 21.3917 13.4833 22 11.75 22C10.0167 22 8.54167 21.3917 7.325 20.175C6.10833 18.9583 5.5 17.4833 5.5 15.75V6.5C5.5 5.25 5.93333 4.19167 6.8 3.325C7.68333 2.44167 8.75 2 10 2C11.25 2 12.3083 2.44167 13.175 3.325C14.0583 4.19167 14.5 5.25 14.5 6.5V15.25C14.5 16.0167 14.2333 16.6667 13.7 17.2C13.1667 17.7333 12.5167 18 11.75 18C10.9833 18 10.3333 17.7333 9.8 17.2C9.26667 16.6667 9 16.0167 9 15.25V6H11V15.25C11 15.4667 11.0667 15.65 11.2 15.8C11.35 15.9333 11.5333 16 11.75 16C11.9667 16 12.1417 15.9333 12.275 15.8C12.425 15.65 12.5 15.4667 12.5 15.25V6.5C12.4833 5.8 12.2333 5.20833 11.75 4.725C11.2833 4.24167 10.7 4 10 4C9.3 4 8.70833 4.24167 8.225 4.725C7.74167 5.20833 7.5 5.8 7.5 6.5V15.75C7.48333 16.9333 7.89167 17.9417 8.725 18.775C9.55833 19.5917 10.5667 20 11.75 20C12.9167 20 13.9083 19.5917 14.725 18.775C15.5417 17.9417 15.9667 16.9333 16 15.75V6H18V15.75Z" fill="currentColor"/>
+      </g>
+      <g id="add-circle" viewBox="0 -960 960 960">
+        <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" fill="currentColor"/>
+      </g>
+      <g id="check-circle-filled" viewBox="0 -960 960 960">
+        <path d="m424-296 282-282-56-56-226 226-114-114-56 56 170 170Zm56 216q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z" fill="currentColor"/>
+      </g>
+      <g id="draft-spark" viewBox="0 0 16 16">
+        <path d="M11.6 14.4H7.6C7.6 14.2111 7.6 14.0222 7.6 13.8333C7.6 13.6333 7.6 13.4222 7.6 13.2H11.6V5.6H8.8V2.8H4.4V8.4C4.26667 8.4 4.13333 8.4 4 8.4C3.86667 8.4 3.72778 8.4 3.58333 8.4C3.51667 8.4 3.45 8.4 3.38333 8.4C3.32778 8.4 3.26667 8.4 3.2 8.4V2.8C3.2 2.46667 3.31667 2.18333 3.55 1.95C3.78333 1.71667 4.06667 1.6 4.4 1.6H9.6L12.8 4.8V13.2C12.8 13.5333 12.6833 13.8167 12.45 14.05C12.2167 14.2833 11.9333 14.4 11.6 14.4ZM3.58333 15.2C3.57222 15.2 3.52778 15.1667 3.45 15.1C3.29444 14.4667 2.98333 13.9222 2.51667 13.4667C2.06111 13 1.51667 12.6889 0.883333 12.5333C0.861111 12.5222 0.827778 12.4778 0.783333 12.4C0.783333 12.3778 0.816667 12.3333 0.883333 12.2667C1.51667 12.1111 2.06111 11.8056 2.51667 11.35C2.98333 10.8833 3.29444 10.3333 3.45 9.7C3.46111 9.67778 3.50556 9.64444 3.58333 9.6C3.60556 9.6 3.65 9.63333 3.71667 9.7C3.88333 10.3333 4.19444 10.8778 4.65 11.3333C5.10556 11.7889 5.65 12.1 6.28333 12.2667C6.30556 12.2667 6.33889 12.3111 6.38333 12.4C6.38333 12.4111 6.35 12.4556 6.28333 12.5333C5.65 12.6889 5.1 13 4.63333 13.4667C4.17778 13.9222 3.87222 14.4667 3.71667 15.1C3.71667 15.1222 3.67222 15.1556 3.58333 15.2Z" fill="currentColor"/>
+      </g>
+      <g id="travel-explore" viewBox="0 0 16 16">
+        <path d="M0.447222 6.99401C0.447222 6.08019 0.614385 5.22766 0.948711 4.43642C1.29418 3.64519 1.76781 2.95425 2.36959 2.36361C2.97138 1.76182 3.66789 1.29376 4.45913 0.959439C5.25036 0.613969 6.09732 0.441235 7 0.441235C8.40417 0.441235 9.64674 0.825709 10.7277 1.59466C11.8087 2.36361 12.5944 3.35544 13.0847 4.57015C13.1627 4.77075 13.1627 4.97134 13.0847 5.17194C13.0067 5.36139 12.8674 5.48955 12.6668 5.55641C12.4997 5.62328 12.3269 5.60656 12.1486 5.50626C11.9814 5.40597 11.8644 5.26666 11.7976 5.08836C11.5413 4.45314 11.1679 3.89036 10.6776 3.40001C10.1984 2.89853 9.6356 2.51405 8.98924 2.24659V2.61435C8.98924 2.94867 8.87222 3.23285 8.6382 3.46688C8.40417 3.68976 8.12556 3.8012 7.80238 3.8012H6.19762V4.60359C6.19762 4.82647 6.11961 5.01592 5.96359 5.17194C5.81872 5.31681 5.63484 5.38925 5.41195 5.38925H4.60957V6.99401H4.69316C4.89375 6.99401 5.06091 7.06088 5.19464 7.19461C5.32837 7.32834 5.39524 7.48993 5.39524 7.67938V8.56534H4.60957L1.95169 5.90745C1.91825 6.08576 1.89039 6.26407 1.86811 6.44238C1.84582 6.62068 1.83467 6.80456 1.83467 6.99401C1.83467 8.29788 2.25815 9.43459 3.10511 10.4041C3.96321 11.3737 5.01634 11.9365 6.26448 12.0925C6.44279 12.1371 6.58209 12.2318 6.68239 12.3767C6.78269 12.5104 6.82727 12.6664 6.81612 12.8447C6.79383 13.0342 6.70468 13.1957 6.54866 13.3295C6.39264 13.4521 6.21434 13.4911 6.01374 13.4465C4.44241 13.2236 3.12183 12.5048 2.05198 11.2901C0.982143 10.0754 0.447222 8.64335 0.447222 6.99401ZM12.1152 12.6775L10.5271 11.1062C10.3043 11.2399 10.0702 11.3458 9.82505 11.4238C9.59102 11.4907 9.34028 11.5241 9.07282 11.5241C8.27044 11.5241 7.59064 11.2455 7.03343 10.6883C6.47622 10.1311 6.19762 9.45688 6.19762 8.66564C6.19762 7.86326 6.47622 7.18346 7.03343 6.62625C7.59064 6.06905 8.27044 5.79044 9.07282 5.79044C9.86406 5.79044 10.5383 6.06905 11.0955 6.62625C11.6527 7.18346 11.9313 7.85769 11.9313 8.64892C11.9313 8.92753 11.8923 9.18942 11.8143 9.43459C11.7474 9.67976 11.6471 9.90822 11.5134 10.12L13.1014 11.708C13.2352 11.8529 13.302 12.0145 13.302 12.1928C13.302 12.3711 13.2352 12.5327 13.1014 12.6775C12.9566 12.8113 12.7894 12.8781 12.6 12.8781C12.4216 12.8781 12.2601 12.8113 12.1152 12.6775ZM9.0561 10.1367C9.46844 10.1367 9.81948 9.99737 10.1092 9.71876C10.399 9.42902 10.5438 9.07797 10.5438 8.66564C10.5438 8.2533 10.399 7.90226 10.1092 7.61251C9.83062 7.32277 9.48515 7.17789 9.07282 7.17789C8.66048 7.17789 8.30944 7.32277 8.01969 7.61251C7.72994 7.89112 7.58507 8.23659 7.58507 8.64892C7.58507 9.06126 7.72437 9.4123 8.00298 9.70205C8.29272 9.9918 8.64377 10.1367 9.0561 10.1367Z" fill="currentColor"/>
+      </g>
+      <g id="photo-prints" viewBox="0 0 16 16">
+        <path d="M8.72178 8.114C9.02267 8.114 9.30127 8.05828 9.55759 7.94684C9.82505 7.8354 10.0702 7.67938 10.2931 7.47878C10.438 7.33391 10.5661 7.16675 10.6776 6.9773C10.789 6.7767 10.8782 6.56496 10.945 6.34208C10.9785 6.23064 10.9506 6.13034 10.8615 6.04118C10.7834 5.95203 10.6887 5.92417 10.5773 5.9576C10.3544 5.99104 10.1427 6.06347 9.94206 6.17491C9.75261 6.27521 9.57988 6.40337 9.42386 6.55939C9.21212 6.75998 9.04496 6.99401 8.92237 7.26147C8.81093 7.51779 8.74406 7.80197 8.72178 8.114ZM8.68834 8.114C8.66606 7.80197 8.58805 7.51222 8.45432 7.24476C8.33173 6.9773 8.16457 6.74327 7.95283 6.54267C7.78567 6.38665 7.60179 6.26407 7.40119 6.17491C7.21174 6.07462 7.00557 6.00218 6.78269 5.9576C6.67125 5.92417 6.57095 5.95203 6.4818 6.04118C6.40379 6.13034 6.37593 6.23064 6.39821 6.34208C6.45394 6.56496 6.53752 6.7767 6.64896 6.9773C6.77154 7.16675 6.91642 7.33391 7.08358 7.47878C7.29532 7.67938 7.53492 7.8354 7.80238 7.94684C8.06984 8.05828 8.36516 8.114 8.68834 8.114ZM8.70506 6.02447C8.86108 6.02447 8.99481 5.96875 9.10625 5.85731C9.22884 5.74586 9.29013 5.60656 9.29013 5.4394V5.28895L9.40714 5.37253C9.54087 5.46169 9.68575 5.48955 9.84177 5.45612C10.0089 5.41154 10.1371 5.31124 10.2262 5.15522C10.3042 5.03264 10.321 4.89333 10.2764 4.73732C10.2318 4.5813 10.1427 4.45314 10.0089 4.35284L9.89192 4.26926L10.0256 4.18568C10.1594 4.09653 10.243 3.97951 10.2764 3.83464C10.321 3.67862 10.2987 3.52817 10.2095 3.3833C10.1315 3.23842 10.0145 3.1437 9.85848 3.09912C9.70246 3.05454 9.55759 3.07683 9.42386 3.16599L9.29013 3.24957V3.08241C9.29013 2.92639 9.22884 2.79266 9.10625 2.68122C8.99481 2.55863 8.85551 2.49734 8.68834 2.49734C8.53233 2.49734 8.3986 2.55863 8.28715 2.68122C8.17571 2.79266 8.11999 2.92639 8.11999 3.08241V3.24957L7.96954 3.16599C7.82467 3.07683 7.67422 3.05454 7.51821 3.09912C7.37333 3.1437 7.25632 3.23285 7.16716 3.36658C7.08915 3.51146 7.06687 3.6619 7.1003 3.81792C7.14487 3.97394 7.2396 4.09653 7.38448 4.18568L7.51821 4.26926L7.36776 4.33613C7.22288 4.41413 7.12816 4.53115 7.08358 4.68717C7.05015 4.84319 7.07801 4.99363 7.16716 5.13851C7.25632 5.29453 7.3789 5.39482 7.53492 5.4394C7.69094 5.47283 7.83581 5.44497 7.96954 5.35582L8.10327 5.27224V5.4394C8.10327 5.60656 8.159 5.74586 8.27044 5.85731C8.38188 5.96875 8.52675 6.02447 8.70506 6.02447ZM8.68834 4.85433C8.53233 4.85433 8.3986 4.79861 8.28715 4.68717C8.17571 4.57573 8.11999 4.43642 8.11999 4.26926C8.11999 4.11324 8.17571 3.97951 8.28715 3.86807C8.3986 3.74548 8.5379 3.68419 8.70506 3.68419C8.86108 3.68419 8.99481 3.74548 9.10625 3.86807C9.22884 3.97951 9.29013 4.11324 9.29013 4.26926C9.29013 4.43642 9.22884 4.57573 9.10625 4.68717C8.99481 4.79861 8.85551 4.85433 8.68834 4.85433ZM5.14449 10.2537C4.72102 10.2537 4.38112 10.1311 4.1248 9.88593C3.87963 9.62961 3.75704 9.28971 3.75704 8.86623V1.7451C3.75704 1.32162 3.87963 0.987299 4.1248 0.742127C4.38112 0.485811 4.72102 0.357653 5.14449 0.357653H12.2656C12.6891 0.357653 13.0234 0.485811 13.2686 0.742127C13.5249 0.987299 13.6531 1.32162 13.6531 1.7451V8.86623C13.6531 9.28971 13.5249 9.62961 13.2686 9.88593C13.0234 10.1311 12.6891 10.2537 12.2656 10.2537H5.14449ZM5.14449 8.86623H12.2656V1.7451H5.14449V8.86623ZM2.8878 13.6304C2.52004 13.6861 2.18014 13.5969 1.86811 13.3629C1.56721 13.1177 1.38891 12.8113 1.33318 12.4435L0.380357 5.37253C0.324636 4.98249 0.41379 4.63702 0.647818 4.33613C0.89299 4.02409 1.20503 3.84578 1.58393 3.8012L1.90154 3.76777C2.11328 3.75663 2.28601 3.81792 2.41974 3.95165C2.56462 4.08538 2.63705 4.25812 2.63705 4.46986C2.63705 4.64816 2.58133 4.80418 2.46989 4.93791C2.35845 5.07164 2.21357 5.14408 2.03527 5.15522L1.76781 5.18866L2.70392 12.2596L10.2931 11.2232C10.4937 11.2009 10.6664 11.2511 10.8113 11.3737C10.9673 11.4851 11.0565 11.6356 11.0788 11.825C11.1122 12.0145 11.0676 12.1872 10.945 12.3432C10.8336 12.4992 10.6832 12.5884 10.4937 12.6107L2.8878 13.6304Z" fill="currentColor"/>
+      </g>
+      <g id="autorenew" viewBox="0 0 16 16">
+        <path d="M 3.773438 10.390625 C 3.570312 10.035156 3.410156 9.660156 3.289062 9.257812 C 3.167969 8.855469 3.109375 8.433594 3.109375 7.992188 C 3.109375 6.632812 3.585938 5.46875 4.546875 4.503906 C 5.503906 3.539062 6.675781 3.074219 8.058594 3.109375 L 8.0625 3.109375 L 7.175781 2.21875 L 8.066406 1.328125 L 10.539062 3.800781 L 8.066406 6.273438 L 7.175781 5.382812 L 8.0625 4.492188 L 8.070312 4.492188 C 7.0625 4.46875 6.214844 4.804688 5.523438 5.496094 C 4.835938 6.191406 4.492188 7.019531 4.492188 7.992188 C 4.492188 8.246094 4.515625 8.484375 4.5625 8.714844 C 4.613281 8.941406 4.683594 9.164062 4.78125 9.382812 Z M 7.933594 14.675781 L 5.460938 12.203125 L 7.933594 9.726562 L 8.824219 10.621094 L 7.9375 11.511719 L 7.929688 11.511719 C 8.9375 11.535156 9.785156 11.199219 10.476562 10.503906 C 11.164062 9.8125 11.507812 8.980469 11.507812 8.007812 C 11.507812 7.753906 11.484375 7.515625 11.4375 7.285156 C 11.386719 7.058594 11.316406 6.835938 11.21875 6.617188 L 12.226562 5.613281 C 12.429688 5.96875 12.589844 6.34375 12.710938 6.742188 C 12.832031 7.144531 12.890625 7.566406 12.890625 8.007812 C 12.890625 9.355469 12.414062 10.515625 11.453125 11.488281 C 10.496094 12.460938 9.324219 12.929688 7.941406 12.894531 L 7.9375 12.894531 L 8.824219 13.78125 Z M 7.933594 14.675781" fill="currentColor"/>
+      </g>
+      <g id="bolt" viewBox="0 0 16 16">
+        <path d="M 7.285156 11.851562 L 10.332031 8 L 7.851562 8 L 8.285156 4.316406 L 5.398438 8.800781 L 7.832031 8.800781 Z M 5.601562 14.398438 L 6.398438 10 L 3.199219 10 L 8.601562 1.601562 L 9.800781 1.601562 L 9.199219 6.800781 L 12.800781 6.800781 L 6.800781 14.398438 Z M 7.867188 8.082031 Z M 7.867188 8.082031" fill="currentColor"/>
+      </g>
+      <g id="timer" viewBox="0 0 16 16">
+        <path d="M 5.875 2.398438 L 5.875 1.078125 L 10.125 1.078125 L 10.125 2.398438 Z M 7.339844 9.710938 L 8.660156 9.710938 L 8.660156 5.699219 L 7.339844 5.699219 Z M 8 14.644531 C 7.199219 14.644531 6.453125 14.492188 5.761719 14.191406 C 5.070312 13.890625 4.464844 13.480469 3.945312 12.964844 C 3.425781 12.449219 3.015625 11.84375 2.714844 11.148438 C 2.414062 10.457031 2.265625 9.710938 2.265625 8.910156 C 2.265625 8.113281 2.414062 7.367188 2.714844 6.675781 C 3.019531 5.980469 3.429688 5.375 3.945312 4.859375 C 4.464844 4.339844 5.070312 3.929688 5.761719 3.628906 C 6.457031 3.328125 7.199219 3.175781 7.992188 3.175781 C 8.644531 3.175781 9.273438 3.285156 9.878906 3.5 C 10.488281 3.71875 11.046875 4.023438 11.558594 4.414062 L 12.476562 3.515625 L 13.398438 4.441406 L 12.503906 5.355469 C 12.894531 5.859375 13.195312 6.414062 13.414062 7.019531 C 13.628906 7.625 13.734375 8.257812 13.734375 8.914062 C 13.734375 9.710938 13.585938 10.457031 13.285156 11.148438 C 12.984375 11.84375 12.574219 12.449219 12.054688 12.964844 C 11.535156 13.480469 10.929688 13.890625 10.238281 14.191406 C 9.546875 14.492188 8.800781 14.644531 8 14.644531 Z M 8 13.261719 C 9.210938 13.261719 10.238281 12.839844 11.085938 11.996094 C 11.929688 11.152344 12.351562 10.125 12.351562 8.910156 C 12.351562 7.699219 11.929688 6.671875 11.085938 5.828125 C 10.238281 4.980469 9.210938 4.558594 8 4.558594 C 6.789062 4.558594 5.761719 4.980469 4.914062 5.828125 C 4.070312 6.671875 3.648438 7.699219 3.648438 8.910156 C 3.648438 10.125 4.070312 11.152344 4.914062 11.996094 C 5.761719 12.839844 6.789062 13.261719 8 13.261719 Z M 8 8.910156 Z M 8 8.910156" fill="currentColor"/>
+      </g>
+      <g id="acute" viewBox="0 -960 960 960">
+        <path d="M600-160q-134,0-227-93T280-480q0-133 93-226.5T600-800q133,0 226.5,93.5T920-480q0,134-93.5,227T600-160Zm0-80q100,0 170-70t70-170T770-650T600-720T430-650T360-480t70,170t170,70Zm91-91l57-57L640-496V-640H560v177L691-331ZM80-600v-80H240v80H80ZM40-440v-80H240v80H40ZM80-280v-80H240v80H80ZM600-480Z" fill="currentColor"/>
+      </g>
+      <g id="nanoBanana-custom" viewBox="0 0 24 24">
+        <path d="M2 22.4004H22V2.40039H2V22.4004Z" fill="url(#pattern0_1500_179774)"/>
+          <defs>
+          <pattern id="pattern0_1500_179774" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image0_1500_179774" transform="scale(0.00625)"/>
+          </pattern>
+          <image id="image0_1500_179774" width="160" height="160" preserveAspectRatio="none" xlink:href="data:image/png;base64,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"/>
+        </defs>
+      </g>
+      <g id="nanoBanana-clank" viewBox="0 0 20 20">
+        <path d="M1.37226 14.8626C1.55039 15.2313 2.2957 15.2079 2.70664 15.0782C3.75664 14.747 4.40977 13.8438 4.40977 13.8438L9.82227 11.547L11.4801 10.6767C11.4801 10.6767 11.802 10.1298 11.1582 9.7126C10.5145 9.29541 10.0629 9.26416 10.0629 9.26416L8.19727 10.4517C8.19727 10.4517 6.99258 9.51416 5.76914 9.37197C4.60039 9.2376 3.1457 10.1876 2.76289 11.9813C2.45195 13.436 1.95976 13.9485 1.81133 14.1376C1.66289 14.3282 1.21914 14.547 1.37226 14.8626Z" fill="#FF8E00"/>
+        <path d="M7.85609 5.02331C8.33578 3.43581 8.94203 1.578 9.85765 0.942061C10.6686 0.379561 11.4577 0.481123 11.8327 0.726436C11.8327 0.726436 12.5092 1.003 12.6873 1.70144C12.9811 2.84831 12.5952 4.22487 12.3436 5.64675C12.092 7.06862 11.9608 8.04675 11.8467 9.18894C11.8358 9.29206 9.94672 12.6546 9.94672 12.6546L8.4389 13.4624C8.4389 13.4624 7.28734 10.9717 7.30453 10.6202C7.32015 10.2671 7.50609 6.18269 7.85609 5.02331Z" fill="#FFE4B4"/>
+        <path d="M11.7893 10.4595C11.8096 10.8392 10.8939 13.8658 10.8939 13.8658L8.4377 13.4595C8.4377 13.4595 6.69551 12.4283 6.64707 10.558C6.57207 7.73767 7.05488 6.40955 7.40488 5.25017C7.88613 3.6658 8.95801 1.5783 9.86582 0.931422C10.3986 0.551735 10.9893 0.495485 11.2314 0.54236C11.2314 0.54236 9.61894 1.80486 8.80332 3.96424C7.98769 6.12361 7.79551 8.61892 7.79551 8.61892C7.79551 8.61892 8.39551 9.06111 9.81113 9.26424C10.9049 9.42205 11.8486 9.15486 11.8486 9.15486C11.8486 9.15486 11.7627 9.9783 11.7893 10.4595Z" fill="#FFE265"/>
+        <path d="M6.66758 13.0858L7.65039 11.0327L7.59727 10.3014C7.59727 10.3014 7.38789 9.68738 8.6957 10.6796C9.30195 11.1389 9.66758 11.9858 9.66758 11.9858C9.66758 11.9858 9.85195 11.5296 10.4988 10.9264C11.0738 10.3921 11.8473 10.1327 11.8473 10.1327C11.8473 10.1327 13.4535 9.8202 13.6285 9.95613C14.7613 10.8405 15.5895 11.9171 15.5895 11.9171L16.4223 15.0655L17.8066 15.9139C17.8066 15.9139 17.4285 16.4671 16.8816 16.2608C16.4551 16.0999 15.927 15.6171 15.6426 15.0093C15.252 14.1733 14.4316 12.5921 14.0145 12.0921C13.2082 11.1296 12.4176 10.778 11.8285 11.0577C11.1582 11.3749 11.6941 14.5405 11.6941 14.5405L16.0035 18.1671L16.077 18.6608C16.077 18.6608 15.4504 19.2624 13.7238 19.2061C11.9973 19.1499 9.68789 18.5108 8.22695 16.5186C6.93789 14.7624 6.66758 13.0858 6.66758 13.0858Z" fill="#FFA726"/>
+        <path d="M10.0652 13.2749C10.0277 14.1421 10.5684 15.4562 11.8184 16.5515C13.0668 17.6468 14.3855 18.0093 15.2043 18.0718C15.798 18.1171 15.9746 17.778 15.9746 17.778C15.9746 17.778 14.7777 16.6765 13.8887 15.7937C13.0449 14.9546 12.1262 13.1921 11.9262 12.3812C11.7262 11.5702 11.9074 11.0249 11.9074 11.0249C11.9074 11.0249 11.5199 11.1327 10.9496 11.7046C10.3965 12.2593 10.0855 12.7937 10.0652 13.2749Z" fill="#FFB803"/>
+        <path d="M15.3988 18.553C15.5285 18.8545 15.9738 18.867 16.1676 18.6998C16.3504 18.542 16.5285 18.228 16.3441 17.8764C16.2223 17.6452 15.8223 17.5811 15.5973 17.7608C15.3723 17.9405 15.2816 18.2795 15.3988 18.553Z" fill="#875B54"/>
+        <path d="M16.287 15.2876C16.7995 15.9985 17.3136 16.1063 17.5261 16.1297C17.712 16.1516 17.9151 15.9141 17.8917 15.6954C17.8683 15.4766 17.5089 15.1688 17.4651 14.4969C17.4214 13.8251 17.4745 11.361 16.1073 9.94537C15.1433 8.94849 13.962 9.29224 13.1995 9.55631C12.3401 9.85318 11.8448 10.1344 11.8448 10.1344C11.8448 10.1344 12.548 10.086 13.7605 11.0422C14.4651 11.5985 14.8792 12.3626 15.2698 13.2391C15.5511 13.8735 15.9261 14.7876 16.287 15.2876Z" fill="#FEE4B4"/>
+        <path d="M2.65605 17.1219C2.7998 17.4094 3.15137 17.5875 3.46231 17.5735C4.12012 17.5454 4.72012 17.2063 5.38418 16.35C6.32324 15.1375 7.14043 12.2282 7.75293 11.4532C8.16699 10.9297 8.68262 10.6704 8.68262 10.6704C8.68262 10.6704 8.39824 10.4297 8.11387 10.2813C7.82949 10.1329 7.14199 10.2032 7.14199 10.2032L4.20762 14.9188L2.65605 17.1219Z" fill="#FEB804"/>
+        <path d="M4.31367 10.6969C3.66992 11.6172 3.58555 12.425 3.48867 13.25C3.40117 13.9953 3.22148 15.5625 2.95117 16.0734C2.6793 16.5844 2.41523 16.9172 2.70742 17.2281C2.99961 17.5391 3.85898 17.4281 4.47617 16.7563C4.97305 16.2141 5.24805 15.6234 5.62148 14.7563C5.99492 13.8891 6.54492 11.8422 7.25898 10.9172C7.71523 10.3266 8.16992 10.3094 8.16992 10.3094C8.16992 10.3094 7.56836 9.81875 6.41992 9.80625C5.39023 9.79531 4.84961 9.93125 4.31367 10.6969Z" fill="#FFE4B4"/>
+      </g>
+      <g id="notes-spark" viewBox="0 -960 960 960">
+        <path d="M740-40q-1 0-8-6-16-61-60.5-105.5T566-212q-2-1-6-8 0-2 6-8 61-16 105.5-60.5T732-394q1-2 8-6 2 0 8 6 17 61 61 105.5T914-228q2 0 6 8 0 1-6 8-61 16-105.5 60.5T748-46q0 2-8 6ZM120-280v-80h360v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" fill="currentColor"/>
+      </g>
+      <g id="stop-filled" viewBox="0 0 12 12">
+        <path
+            d="M2 0H10A2 2 0 0 1 12 2V10A2 2 0 0 1 10 12
+               H2A2 2 0 0 1 0 10V2A2 2 0 0 1 2 0Z"
+            fill="currentColor"/>
+      </g>
+      <g id="tab" viewBox="0 -960 960 960">
+        <path d="M160-240h640v-320H520v-160H160v480Zm0 80q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80v-480 480Z" fill="currentColor"/>
+      </g>
+      <g id="screensaverAuto" viewBox="0 -960 960 960">
+        <path d="M160-720v480-480Zm0 560q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h320v80H160v480h640v-280h80v280q0 33-23.5 56.5T800-160H160Zm580-400q-6 0-8-6-16-61-60.5-105.5T566-732q-6-2-6-8 0-7 6-8 61-16 105.5-60.5T732-914q2-6 8-6 7 0 8 6 17 61 61 105.5T914-748q6 1 6 8 0 6-6 8-61 16-105.5 60.5T748-566q-1 6-8 6Z" fill="currentColor"/>
+      </g>
+  </defs>
+  </svg>
+</cr-iconset>
+<cr-iconset name="thumbnail" size=18>
+  <svg>
+    <defs>
+      <g id="drive-pdf" viewBox="0 -960 960 960">
+        <path d="M620-360h60v-80h60v-60h-60v-40h60v-60H620v240Zm-400 0h60v-80h60q17 0 28.5-11.5T380-480v-80q0-17-11.5-28.5T340-600H220v240Zm60-140v-40h40v40h-40Zm136 140h120q17 0 28.5-11.5T576-400v-160q0-17-11.5-28.5T536-600H416v240Zm60-60v-120h40v120h-40ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Z" fill="currentColor"/>
+      </g>
+      <g id="attach-file" viewBox="0 0 24 24">
+        <path d="M18 15.75C18 17.4833 17.3917 18.9583 16.175 20.175C14.9583 21.3917 13.4833 22 11.75 22C10.0167 22 8.54167 21.3917 7.325 20.175C6.10833 18.9583 5.5 17.4833 5.5 15.75V6.5C5.5 5.25 5.93333 4.19167 6.8 3.325C7.68333 2.44167 8.75 2 10 2C11.25 2 12.3083 2.44167 13.175 3.325C14.0583 4.19167 14.5 5.25 14.5 6.5V15.25C14.5 16.0167 14.2333 16.6667 13.7 17.2C13.1667 17.7333 12.5167 18 11.75 18C10.9833 18 10.3333 17.7333 9.8 17.2C9.26667 16.6667 9 16.0167 9 15.25V6H11V15.25C11 15.4667 11.0667 15.65 11.2 15.8C11.35 15.9333 11.5333 16 11.75 16C11.9667 16 12.1417 15.9333 12.275 15.8C12.425 15.65 12.5 15.4667 12.5 15.25V6.5C12.4833 5.8 12.2333 5.20833 11.75 4.725C11.2833 4.24167 10.7 4 10 4C9.3 4 8.70833 4.24167 8.225 4.725C7.74167 5.20833 7.5 5.8 7.5 6.5V15.75C7.48333 16.9333 7.89167 17.9417 8.725 18.775C9.55833 19.5917 10.5667 20 11.75 20C12.9167 20 13.9083 19.5917 14.725 18.775C15.5417 17.9417 15.9667 16.9333 16 15.75V6H18V15.75Z" fill="currentColor"/>
+      </g>
+    </defs>
+  </svg>
+</cr-iconset>
+<cr-iconset name="aim" size=24>
+  <svg>
+    <defs>
+      <g id="unspecified-custom" viewBox="0 -960 960 960">
+      </g>
+      <g id="add" viewBox="0 -960 960 960">
+        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" fill="currentColor"/>
+      </g>
+      <g id="check" viewBox="0 -960 960 960">
+        <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" fill="currentColor"/>
+      </g>
+      <g id="format-quote-filled" viewBox="0 -960 960 960">
+        <path d="m228-240 92-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 23-5.5 42.5T458-480L320-240h-92Zm360 0 92-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 23-5.5 42.5T818-480L680-240h-92Z" fill="currentColor"/>
+      </g>
+      <g id="invertedQuoteFilled-custom" viewBox="0 -960 960 960">
+        <path d="M698-660l-58 100q66 0 113 47t47 113q0 66-47 113t-113 47q-66 0-113-47t-47-113q0-23 5.5-42.5T502-480l127-220q5-9 14-14.5t20-5.5q23 0 34.5 20t.5 40ZM338-660l-58 100q66 0 113 47t47 113q0 66-47 113t-113 47q-66 0-113-47t-47-113q0-23 5.5-42.5T142-480l127-220q5-9 14-14.5t20-5.5q23 0 34.5 20t.5 40Z" fill="currentColor"/>
+      </g>
+      <g id="image" viewBox="0 -960 960 960">
+        <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z" fill="currentColor"/>
+      </g>
+      <g id="followUp-custom" viewBox="0 0 24 24">
+        <path d="M5 5V9C5 9.83334 5.29166 10.5417 5.875 11.125C6.45833 11.7083 7.16666 12 8 12H17.175L13.575 8.4L15 7L21 13L15 19L13.575 17.6L17.175 14H8C6.61667 14 5.4375 13.5125 4.4625 12.5375C3.4875 11.5625 3 10.3833 3 9V5H5Z" fill="currentColor"/>
+      </g>
+      <g id="drive-pdf" viewBox="0 -960 960 960">
+        <path d="M620-360h60v-80h60v-60h-60v-40h60v-60H620v240Zm-400 0h60v-80h60q17 0 28.5-11.5T380-480v-80q0-17-11.5-28.5T340-600H220v240Zm60-140v-40h40v40h-40Zm136 140h120q17 0 28.5-11.5T576-400v-160q0-17-11.5-28.5T536-600H416v240Zm60-60v-120h40v120h-40ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" fill="currentColor"/>
+      </g>
+      <g id="close-small" width="10" height="10" viewBox="0 0 10 10">
+        <path d="M1.4 9.9751L4.76837e-07 8.5751L3.6 4.9751L4.76837e-07 1.4001L1.4 9.63211e-05L5 3.6001L8.575 9.63211e-05L9.975 1.4001L6.375 4.9751L9.975 8.5751L8.575 9.9751L5 6.3751L1.4 9.9751Z" fill="currentColor"/>
+      </g>
+    </defs>
+  </svg>
+</cr-iconset>`;
+}
+const iconsets$2 = div$2.querySelectorAll('cr-iconset');
+for (const iconset of iconsets$2) {
+    document.head.appendChild(iconset);
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+// This iconset contains SVG icons keyed by numeric integer IDs matching
+// `omnibox::IconResourceIds` protobuf enum values from `SearchboxConfig`
+// (see `third_party/omnibox_proto/icon_resource_ids.proto`).
+//
+// By directly registering integer IDs with `<cr-iconset name="searchbox_config">`,
+// WebUI components can dynamically render icons via `searchbox_config:${config.icon}`
+// without needing an intermediate TypeScript enum or local mapping table. If an icon
+// ID is not present in this iconset (e.g. unknown or 0), <cr-icon> gracefully
+// renders nothing.
+// LINT.IfChange(SearchboxConfigIcons)
+const div$1 = document.createElement('div');
+if (document.documentElement.hasAttribute('webui-rounded-icons') ||
+    document.documentElement.hasAttribute('rounded-icons')) {
+    div$1.innerHTML = getTrustedHTML `
+<cr-iconset name="searchbox_config">
+  <svg>
+    <defs>
+      <!-- IconResourceIds::ADD_PHOTO_ALTERNATE (proto ID: 93) -->
+      <g id="93">
+        <path d="M12 12Zm-6.602 8.398c-.492 0-.918-.175-1.27-.527a1.735 1.735 0 0 1-.526-1.27V5.399c0-.492.175-.918.527-1.27a1.735 1.735 0 0 1 1.27-.526H12.3a.872.872 0 0 1 .898.895.878.878 0 0 1-.258.64.86.86 0 0 1-.64.261H5.398v13.204h13.204v-6.903a.872.872 0 0 1 .895-.898c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64v6.903c0 .492-.175.918-.527 1.27a1.735 1.735 0 0 1-1.27.526Zm1.204-3.597h10.796L13.801 12l-2.7 3.602-1.8-2.403ZM16.8 7.199h-.895a.887.887 0 0 1-.644-.258.852.852 0 0 1-.262-.636.878.878 0 0 1 .902-.899h.903v-.902c0-.258.086-.473.261-.645a.872.872 0 0 1 .641-.257.87.87 0 0 1 .637.257.872.872 0 0 1 .258.641v.898h.894c.254 0 .465.086.64.258a.858.858 0 0 1 .262.637.872.872 0 0 1-.257.64.863.863 0 0 1-.645.262h-.902v.903a.878.878 0 0 1-.898.902.863.863 0 0 1-.637-.258.872.872 0 0 1-.258-.64Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::DRIVE (proto ID: 103) -->
+      <g id="103" viewBox="0 0 20 20">
+        <path d="M5.938 17a3.447 3.447 0 0 1-1.75-.469 3.507 3.507 0 0 1-1.293-1.281 3.416 3.416 0 0 1-.477-1.75c0-.625.16-1.207.477-1.75l4.085-7a3.505 3.505 0 0 1 1.282-1.281A3.384 3.384 0 0 1 10 3c.625 0 1.203.156 1.738.469.535.312.965.738 1.282 1.281l4.085 7c.317.543.477 1.125.477 1.75s-.16 1.207-.477 1.75c-.32.543-.75.969-1.293 1.281a3.447 3.447 0 0 1-1.75.469Zm0-1.5h4.125l-2.876-5H5.356l-1.168 2c-.18.32-.269.652-.269 1s.09.68.27 1c.18.32.425.566.738.738.312.176.652.262 1.011.262ZM10 12.395l1.082-1.895H8.918Zm1.793 3.105h2.27c.359 0 .699-.086 1.011-.262.313-.172.559-.418.739-.738.18-.32.269-.652.269-1s-.09-.68-.27-1L13.73 8.918l-2.875 4.977ZM6.23 9h5.707l.918-1.582L11.73 5.5a1.923 1.923 0 0 0-.73-.738 1.971 1.971 0 0 0-1-.262c-.36 0-.695.086-1 .262a1.923 1.923 0 0 0-.73.738Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::ATTACH_FILE (proto ID: 92) -->
+      <g id="92">
+        <path d="M17.398 16.2c0 1.5-.523 2.773-1.574 3.823-1.05 1.051-2.328 1.579-3.824 1.579-1.516 0-2.797-.547-3.836-1.641-1.043-1.09-1.562-2.402-1.562-3.938V6.301c0-1.086.378-2.004 1.136-2.762.758-.762 1.68-1.14 2.762-1.14 1.102 0 2.023.402 2.773 1.203.75.796 1.125 1.757 1.125 2.875v9.125a2.31 2.31 0 0 1-.695 1.699c-.465.465-1.035.699-1.703.699-.684 0-1.254-.242-1.71-.727-.462-.484-.688-1.078-.688-1.773V6.898A.872.872 0 0 1 10.497 6c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64v8.704A.583.583 0 0 0 12 16.2a.583.583 0 0 0 .602-.598V6.3c0-.586-.207-1.078-.614-1.489a2.028 2.028 0 0 0-1.492-.613 1.99 1.99 0 0 0-1.488.637c-.406.426-.61.93-.61 1.516v9.847c0 1 .352 1.848 1.051 2.54.7.69 1.551 1.046 2.551 1.062 1 .015 1.852-.344 2.55-1.074.7-.735 1.052-1.618 1.052-2.653V6.898A.872.872 0 0 1 16.497 6c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::DRAFT_SPARK (proto ID: 96) -->
+      <g id="96" viewBox="0 0 16 16">
+        <path d="M8 8Zm.102 6.398a.577.577 0 0 1-.43-.171.574.574 0 0 1-.172-.422.592.592 0 0 1 .602-.606h3.5V5.602H9.398a.572.572 0 0 1-.425-.176A.577.577 0 0 1 8.8 5V2.8H4.398v5a.568.568 0 0 1-.171.427.56.56 0 0 1-.422.171.577.577 0 0 1-.43-.171.572.572 0 0 1-.176-.426v-5c0-.332.117-.614.352-.848.238-.234.52-.351.847-.351h4.704c.156 0 .308.027.449.082.144.054.277.144.398.265l2.5 2.5a1.184 1.184 0 0 1 .352.852v7.898c0 .332-.117.614-.352.848-.238.234-.52.351-.847.351Zm-4.52.801c-.066 0-.11-.031-.133-.097a3.441 3.441 0 0 0-.926-1.645 3.441 3.441 0 0 0-1.644-.926c-.063-.02-.094-.066-.094-.133 0-.078.031-.12.098-.132a3.415 3.415 0 0 0 1.64-.926c.461-.461.774-1.008.93-1.645.02-.062.063-.093.129-.093.078 0 .125.03.133.097.168.633.48 1.18.937 1.637.457.457 1.004.77 1.637.934.063.007.094.05.094.128 0 .067-.031.114-.098.137a3.403 3.403 0 0 0-1.644.922c-.461.461-.77 1.012-.926 1.648-.012.063-.055.094-.133.094Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::TRAVEL_EXPLORE (proto ID: 94) -->
+      <g id="94" viewBox="0 0 16 16">
+        <path d="M1.602 7.992c0-.883.164-1.71.5-2.484.332-.774.789-1.45 1.375-2.031a6.392 6.392 0 0 1 2.035-1.375A6.197 6.197 0 0 1 8 1.602c1.39 0 2.617.382 3.684 1.156a6.51 6.51 0 0 1 2.3 2.976.694.694 0 0 1-.007.524.613.613 0 0 1-.36.351.525.525 0 0 1-.449-.058.694.694 0 0 1-.3-.367 5.312 5.312 0 0 0-1.126-1.774A5.121 5.121 0 0 0 10 3.215v.387c0 .328-.117.609-.352.847a1.16 1.16 0 0 1-.847.352H7.199v.8a.769.769 0 0 1-.23.57.774.774 0 0 1-.57.227h-.797V8H5.8a.583.583 0 0 1 .597.602v1h-.796L2.918 6.918c-.031.176-.059.355-.082.531-.023.18-.035.364-.035.551 0 1.355.449 2.527 1.347 3.516.903.988 2.012 1.546 3.336 1.668.157.023.282.09.375.207.094.117.141.257.141.418 0 .16-.063.3-.191.418a.538.538 0 0 1-.446.14c-1.62-.156-2.984-.84-4.097-2.05-1.11-1.212-1.664-2.653-1.664-4.325Zm11.535 5.578L11.5 11.95a2.861 2.861 0 0 1-.707.335 2.76 2.76 0 0 1-.793.113c-.777 0-1.438-.27-1.984-.816a2.698 2.698 0 0 1-.817-1.98 2.7 2.7 0 0 1 .817-1.985A2.697 2.697 0 0 1 10 6.801c.777 0 1.438.27 1.984.816.543.543.817 1.203.817 1.98 0 .278-.04.544-.117.794-.079.25-.188.488-.332.71l1.636 1.637c.117.117.18.258.18.41a.579.579 0 0 1-.184.418.596.596 0 0 1-.425.184c-.16 0-.301-.059-.422-.18Zm-2.004-2.832c.312-.308.469-.687.469-1.133 0-.449-.157-.828-.465-1.14A1.545 1.545 0 0 0 10.004 8c-.445 0-.824.152-1.137.46a1.542 1.542 0 0 0-.469 1.138c0 .445.157.824.465 1.136.309.309.688.465 1.133.465.445 0 .824-.152 1.137-.46Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::PHOTO_PRINTS (proto ID: 102) -->
+      <g id="102" viewBox="0 0 16 16">
+        <path d="M9.617 9.2c.301 0 .582-.055.848-.169.27-.113.508-.265.719-.465a2.445 2.445 0 0 0 .668-1.184.294.294 0 0 0-.067-.265.237.237 0 0 0-.25-.082c-.23.035-.45.11-.656.219-.207.11-.395.242-.563.394-.21.204-.375.434-.492.692-.117.262-.183.55-.207.86Zm-.035 0a2.365 2.365 0 0 0-.219-.864 2.392 2.392 0 0 0-.511-.703 2.364 2.364 0 0 0-.559-.383 2.515 2.515 0 0 0-.66-.215.258.258 0 0 0-.258.078.288.288 0 0 0-.074.27c.054.234.14.453.261.652.118.203.258.38.422.531.211.2.454.352.723.465.27.114.563.168.875.168Zm.02-2.083c.152 0 .289-.058.406-.168a.56.56 0 0 0 .176-.418v-.148l.125.086c.129.09.273.113.433.074a.582.582 0 0 0 .375-.293.498.498 0 0 0 .051-.418.72.72 0 0 0-.266-.379l-.117-.086.133-.082a.612.612 0 0 0 .258-.36.562.562 0 0 0-.059-.433.617.617 0 0 0-.367-.293.513.513 0 0 0-.434.063l-.132.09v-.168a.562.562 0 0 0-.176-.41.578.578 0 0 0-.418-.172.546.546 0 0 0-.406.171.57.57 0 0 0-.168.41v.169l-.141-.09a.52.52 0 0 0-.434-.063.66.66 0 0 0-.359.266.584.584 0 0 0-.074.453.62.62 0 0 0 .277.371l.133.078-.137.067a.519.519 0 0 0-.289.351.562.562 0 0 0 .074.45c.09.156.211.25.368.288.156.04.3.016.433-.07L9 6.367v.168c0 .164.059.3.172.414a.59.59 0 0 0 .43.168ZM9.59 5.95a.542.542 0 0 1-.406-.168.554.554 0 0 1-.168-.414c0-.156.058-.293.168-.41a.551.551 0 0 1 .418-.172c.152 0 .289.055.406.172a.573.573 0 0 1 .176.418.55.55 0 0 1-.176.41.587.587 0 0 1-.418.164ZM6 11.2c-.367 0-.66-.11-.875-.324-.215-.215-.324-.508-.324-.875V2.8c0-.366.11-.66.324-.874.215-.219.508-.324.875-.324h7.2c.366 0 .66.105.874.324.219.215.324.508.324.875V10c0 .367-.105.66-.324.875-.215.215-.508.324-.875.324ZM6 10h7.2V2.8H6Zm3.602-3.602ZM3.715 13.2Zm.203 1.2a1.134 1.134 0 0 1-.883-.239 1.167 1.167 0 0 1-.469-.793l-.964-7.152a1.14 1.14 0 0 1 .238-.89c.207-.263.476-.415.808-.458l.301-.035a.561.561 0 0 1 .469.145.594.594 0 0 1 .184.453.59.59 0 0 1-.145.398.582.582 0 0 1-.375.207l-.281.031.949 7.133 7.7-1.031a.606.606 0 0 1 .456.113.566.566 0 0 1 .227.403.591.591 0 0 1-.113.449.575.575 0 0 1-.403.234Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::AUTORENEW (proto ID: 90) -->
+      <g id="90" viewBox="0 0 16 16">
+        <path d="M4.398 8c0 .133.012.266.028.398.015.137.035.262.058.387a.798.798 0 0 1-.043.465.521.521 0 0 1-.324.316.58.58 0 0 1-.457-.023.524.524 0 0 1-.293-.344 4.051 4.051 0 0 1-.125-.582A4.546 4.546 0 0 1 3.2 8c0-1.344.473-2.488 1.418-3.434.946-.945 2.106-1.398 3.485-1.367l-.536-.531a.596.596 0 0 1-.183-.426.59.59 0 0 1 .183-.426.59.59 0 0 1 .426-.183c.16 0 .301.062.426.183l1.566 1.567a.579.579 0 0 1 .184.418.57.57 0 0 1-.184.414l-1.566 1.57A.543.543 0 0 1 8 5.957a.595.595 0 0 1-.418-.191.583.583 0 0 1 0-.848l.52-.52c-1.047-.02-1.922.325-2.637 1.036C4.754 6.144 4.398 7 4.398 8Zm7.204 0c0-.133-.012-.266-.028-.398a5.38 5.38 0 0 0-.058-.387.81.81 0 0 1 .043-.473.575.575 0 0 1 .324-.324.531.531 0 0 1 .449 0 .506.506 0 0 1 .285.332c.055.2.098.402.133.61.035.202.05.417.05.64 0 1.332-.472 2.477-1.417 3.426-.945.949-2.106 1.406-3.485 1.375l.536.531a.596.596 0 0 1 .183.426.59.59 0 0 1-.183.426.59.59 0 0 1-.426.183c-.16 0-.301-.062-.426-.183l-1.566-1.567a.579.579 0 0 1-.184-.418.57.57 0 0 1 .184-.414l1.566-1.57a.592.592 0 0 1 .852 0 .583.583 0 0 1 0 .852l-.536.535c1.047.02 1.922-.325 2.637-1.036C11.246 9.856 11.602 9 11.602 8Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::BOLT (proto ID: 91) -->
+      <g id="91" viewBox="0 0 16 16">
+        <path d="M7.285 11.852 10.332 8h-2.48l.433-3.684-2.887 4.485h2.434ZM6.398 10H4.301a.543.543 0 0 1-.516-.309.572.572 0 0 1 .016-.609l4.515-7.047a.636.636 0 0 1 .383-.308.81.81 0 0 1 .5.007.697.697 0 0 1 .39.309.701.701 0 0 1 .11.492l-.5 4.266h2.367c.254 0 .438.11.543.332a.571.571 0 0 1-.074.633l-4.933 6.25a.841.841 0 0 1-.41.27.656.656 0 0 1-.477-.052.816.816 0 0 1-.356-.343.648.648 0 0 1-.074-.473Zm1.47-1.918Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::TIMER (proto ID: 97) -->
+      <g id="97" viewBox="0 0 16 16">
+        <path d="M6.602 2.398a.577.577 0 0 1-.43-.171A.574.574 0 0 1 6 1.805a.592.592 0 0 1 .602-.606h2.796c.172 0 .313.059.43.172a.583.583 0 0 1 .172.426.599.599 0 0 1-.172.43.592.592 0 0 1-.43.171Zm1.824 7.028A.566.566 0 0 0 8.602 9V6.2a.583.583 0 0 0-.598-.598.583.583 0 0 0-.43.171.572.572 0 0 0-.176.426V9c0 .172.059.313.172.426a.578.578 0 0 0 .426.176.587.587 0 0 0 .43-.176Zm-2.61 4.531a5.639 5.639 0 0 1-2.973-2.977 5.359 5.359 0 0 1-.445-2.18c0-.777.149-1.507.446-2.183a5.622 5.622 0 0 1 1.199-1.773A5.744 5.744 0 0 1 5.816 3.64a5.43 5.43 0 0 1 2.176-.442c.649 0 1.27.11 1.863.324.598.22 1.149.52 1.66.91l.458-.453a.53.53 0 0 1 .41-.171c.156.003.297.07.418.191a.579.579 0 0 1 .183.418.577.577 0 0 1-.183.414l-.434.453c.387.5.692 1.047.906 1.645.22.597.329 1.222.329 1.87 0 .778-.149 1.505-.446 2.18a5.639 5.639 0 0 1-2.972 2.977A5.388 5.388 0 0 1 8 14.398a5.388 5.388 0 0 1-2.184-.441Zm5.301-2.039c.856-.855 1.281-1.895 1.281-3.117 0-1.223-.425-2.262-1.28-3.117C10.261 4.828 9.222 4.398 8 4.398c-1.223 0-2.262.43-3.117 1.286-.856.855-1.281 1.894-1.281 3.117 0 1.222.425 2.261 1.28 3.117.856.855 1.895 1.281 3.118 1.281 1.223 0 2.262-.426 3.117-1.281ZM8 8.801Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::ACUTE (proto ID: 107) -->
+      <g id="107" viewBox="0 -960 960 960">
+        <path d="M600-160q-134,0-227-93T280-480q0-133 93-226.5T600-800q133,0 226.5,93.5T920-480q0,134-93.5,227T600-160Zm0-80q100,0 170-70t70-170T770-650T600-720T430-650T360-480t70,170t170,70Zm91-91l57-57L640-496V-640H560v177L691-331ZM80-600v-80H240v80H80ZM40-440v-80H240v80H40ZM80-280v-80H240v80H80ZM600-480Z" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::IMAGE_CREATE (proto ID: 108) -->
+      <g id="108" viewBox="0 0 24 24">
+        <path d="M10.2,22q-2.1,0-3.25-0.09T5,21.43Q4.2,21 3.6,20.4T2.58,19q-0.4-0.8-0.49-1.95T2,13.8V10.2Q2,8.13 2.09,6.97Q2.18,5.82 2.58,5.02Q3,4.22 3.6,3.63Q4.2,3.02 5,2.6Q5.8,2.2 6.95,2.1T10.2,2h3.6q2.07,0 3.23,0.1t1.95,0.5q0.8,0.43 1.4,1.03q0.6,0.6 1.03,1.4q0.4,0.8 0.5,1.95Q22,8.13 22,10.2v3.6q0,2.1-0.1,3.25T21.4,19q-0.43,0.8-1.03,1.4q-0.6,0.6-1.4,1.03q-0.8,0.4-1.95,0.49T13.8,22H10.2ZM20,12.6V10.2q0-1.72-0.02-2.68T19.6,5.93q-0.25-0.5-0.64-0.89T18.08,4.4q-0.65-0.35-1.6-0.38T13.8,4H10.2Q8.48,4 7.51,4.02T5.9,4.4Q5.4,4.65 5.01,5.04Q4.63,5.43 4.38,5.93Q4.03,6.57 4.01,7.52Q4,8.48 4,10.2v0.95q0.8-0.57 1.8-0.92T8.08,9.88q1.15,0 2.1,0.27q0.95,0.28 1.75,0.93q0.35-0.75 0.5-1.56t0.15-1.64V6.02q0-0.43 0.32-0.72T13.65,5H16.4q0.47,0 0.82,0.29t0.35,0.74V7.3q0.7,0.85 1.08,1.86q0.38,1.01 0.38,2.11q0,0.28-0.01,0.51Q19,12.02 18.95,12.27q0.28,0.05 0.54,0.14T20,12.6ZM10.2,20h3.6q1.72,0 2.68-0.01t1.6-0.36q0.5-0.25 0.89-0.64T19.6,18.1q0.27-0.55 0.34-1.29T20,14.83q-0.35-0.2-0.74-0.36t-0.84-0.24q-0.3,0.72-0.74,1.36t-0.96,1.16q-1.08,1.07-2.48,1.66T11.28,19Q9.8,19 8.46,18.46Q7.13,17.93 6.08,16.9Q5.1,15.95 5.63,14.69t1.93-1.24Q8.4,13.48 9.24,13.3q0.84-0.17 1.49-0.63q-0.58-0.42-1.21-0.61T8.08,11.88q-1.4,0-2.35,0.56T4,13.8q0,1.73 0.01,2.69T4.38,18.1q0.25,0.5 0.64,0.89T5.9,19.63q0.65,0.35 1.61,0.36T10.2,20Zm1.07-3q1.2,0 2.24-0.46t1.84-1.26q0.77-0.78 1.22-1.79q0.45-1.01 0.45-2.19q0-0.85-0.31-1.63t-0.89-1.4Q15.7,8.15 15.64,7.99q-0.06-0.16-0.06-0.36V7h-1V7.88q0,1.45-0.39,2.84t-1.26,2.56q-0.88,1.2-2.26,1.68t-2.89,0.5q-0.08,0-0.11,0.09T7.7,15.68q0.73,0.65 1.65,0.99Q10.28,17 11.28,17Z" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::BANANA (proto ID: 100) -->
+      <g id="100" viewBox="0 0 24 24">
+        <path d="M2 22.4004H22V2.40039H2V22.4004Z" fill="url(#pattern0_1500_179774)"/>
+          <defs>
+          <pattern id="pattern0_1500_179774" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image0_1500_179774" transform="scale(0.00625)"/>
+          </pattern>
+          <image id="image0_1500_179774" width="160" height="160" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAABY9UlEQVR4nO29ebxtaVHf/a16nrX3PtM9997uvj3Q9EA3DTTzoGBEwREhMfqKr4k4BogTTgkRjTgnmpjBgShOcUgcYpwVBVQQX1BAZJZJmpmGnu98ztl7reepev+oZ+1zmzh09x3Ojdz6fG6fe0+fYa29atdT9atf/Qou2AXbQ5O9voDTtVvf/5bOza5C/ErNs2um09VN0I+Y6Fus1PcCvtfXeMH+dpM7P/rBvb6G+2SlPzHTuvOU5PWfifJJgl3s7isgCc0Ll+6D5vpHMln778Bb9vp6L9jfbHLnR96z19dwr62euOWTU9JvzfjnaNJOUwIRHMPNERHQjDlU54NVVp4P/PJeX/cF+z8te13s9TXcY9s+esfqJPGNkyzfkoSDKgISWUT8NSFJQRSXhKIkH64eys5PmK6tAz+1t3dwwT7Wsqru9TXcIzt++0cPTqbyn3OWZyKC4CAJkQSASkJSxsURSZgkwBHv6EQ3hsXR/1BZuQP4rT29kQt2N8tezv8IuH3i5L4u+Y8k7Muo4JowTWRRRARJiuYJqLbjV1EEw8BBRemmswMs5s+fL/yNwAf2+p4uWFgeFjt7fQ1/ryUp35sSX4YXHEHRiHiiqCY0ZVzi6EUljmIEceJsVkNKIkt+zCQPXwc8b6/v6YKF5Une60v4u62v6ZlK+QYXQ13CsYSIdKLEcaw4CVWFlHBJiENycBHMFNHa/NOfXUv9U+DFe31vFwyy17LX1/C329qlD+Lozc8TsVStoO6QEkgCFMdxLxiCSsIJYFMY/6MRANXxLOATtNoBSfIN88r/B2zt3c1dMIBcOH9DoGwf+ZeKPahahWq4V4hTNnI/HNE4igNtdjADhWWhgoILjuAqiApi9iQVfTLwB3t4excMyHqe9kJMp4/2+dEvwgpeDaEduW5YLWgqKF18HoUkSIuO4y25jBFR448Z2IBbXUnY07nggHtuOXF+HsGl8Pli9f5Ux91wnIhzGRfBPT5vXhGvKCmcTOModjcAHI1U0RRxQUhUKlbLZ/WeHgy8ay/v8+Pd8rycf63SbuPQJXLy9qdhFasVp4LXiGiSUU3tY0Z0ApqjEHEQX2aBYBXUQRQRhZyQmqH0AFeq8GQuOOCe2vl5BA/zT5WyeGS1AdyiuBBBUwJN4VCquCZEOjRlRATDqVZQyQ0P3HVGR8BBVEgpY+aI66P28jYvGGSR868TIlaeDHTigonhHoEMCOyvVbcAQsXa0SqSmtN5K0KiS+Jjedz+4dE1BuoDDN0HHD+X93fBdi3becZW2rj4uktO3nbTp1qpreCwyPcwPOsu9ieKSnM2F7xVHILirUMCxpKNJSA54VUxN3AD14ck8auAt+3dHX98W07nmQOWxdajqcP14nXXUTBc4jgViHzQKjYSEbREtLOKi6Mpg0t8f3PKgGrCeVUSKobDAVc9uIe3+3FvmfOMjFDmJz5Z8FUXxRHMWzctJUQVaHSrBrCIKAi4jFANRNTzduqOZ298nQik1AVVqw6du63vxX1esLA8whXng61f8sDp9h3vf5xZpVrBbAArUTgAKqNTKS6CqpBUqJKAhGtUyLS8VpZHtEch446YYeHa4EzE/Iq9ut8LBlns/DmC+52tq2xYPByveG0O6BVIgEE16CpgCFFcVFdA0NYTblhNc77RvAXMOIbdFvE9mnHsonN/pxdstKya9voads3rQ8zrpaDEYUsUFJoRzSAJd8Wt4mZoIrzQR0IqoMLIcXTAzcIpCfAaCNzQC24LainzPbnXCwZArufR6287xz9R8Ul1x4gKWFoHJABmXdKuJGC96Pdaxev4+b/hDeUO5ncvt6TRtkQu5IB7aFmk2+trAGByyXWyOPyB67Ghtd4EF48qWMayAgRrJAMaSB15oZeKe/t77lBysGXwiIziqCieMlKiq6JdQtUv3bObvmDkbrKy19cAQJ2fvFTMHmjmmMcRO+Zu5o3goh4nbsv7HJDxf2rDCN3xariWFg2VwANhtyviuBXcKnUxbO7B7V6wZrkszhNKXFq51utwDVjD+UqLfjFcpI1uP7rQbuLX/i0gmpa0fAmXBYlJOaAd6wXz6DFbWVCHfrpHd3zBgFyH8yMH7HK6slrd7w02gWi7pdRFdHPDLQXNWWxJPj214vURdI5/RfekQTBj/icaNH6S4T5Bpnni5qeGyQt2Di3TnS9H8PbVqmgpAaWIg3tqvjjmfL4sNEQkig8EE0WkIgVcwVNqhe8IRYdbRickgWRQw9Sh2grUDPR7dOsf15ah7vU1AOB1cQNmeAOgzRbLI9ZccMKpGqS8jH7e+sJCipM4erytT6yYRPyLY9gxwDz+7W6I+Jojq1xwwD2xfD7Iw6S1Q1Pvj91/JJm6DVg1NCdEgrlSvaKecJcW3SLf05F4sBxUkjYr4o23IJhZuJ6MrtsIriIk7TYU2wcc3dtX4ePTck57D8Pk6erq0B/bP5KkkDSSXsCVlHL0fFvHAyKWCSkgGrfACSUtp5IMawxoaWC1YDVgHRfADK8DIklxP4/Q+I8vyzJ2B/bQyuLkAdz3G2PHQkEbmxmLzoe0yIcgkkEzI0Aoy4gYhIWAX3a7H9LyQWlHdrAbAMtUq6tmdn4kwh+HlovtfQ6oVg4A+9wds9oGhwrW3hzaCZobuZRGMBj7u8CS5kIroL1GXihtRiR6cqhqlLpuUVkr4HY/UbkaeMe5u+MLNlqW84CTb6W/RN33C7Q+b2CA7uCquHsQU7UdoTZE6w0Jar471AJt+s01jl6VaN2529JXR4wwmNWOiqy4yP49u/mPc8tjTrWXlqZrB4etw6vuxPEpOahXWZZSG0niyHWsEV5GUDqUElxaddyIC6IxQOzuuFVGKMdp3EIESyBeKFYu5IB7ZLna3o9lzlbWZ8OJOxBjCUL7yHIZcUAVcg4dGFpBsjyDR2KBttabj5Fy7BrLchbErWLDAnMYhh1sGHCXi8/9XV8wgHw+8FFrmc9wp3rBfMBrj5mhnkg54VmDoFpDgk19pOc3gqo5SA2IxhzxsTWnoDnmRaB9DIimliH4haJo0hv38PY/ri2Pyf1eWi11GlNsu7SXhiNDY0EHclKhLEh5glgOZrPSmKkajOeUgq7qHkSFFIoK0goVSR2aCxnBNFNrpVp9sDtrXNCKOeeW4ynvrbkz9REkNsfc46rcIxJKG0yigqc4Rm1AZYJ4RDrRUbQoNfzQdj8nu/1lmqqWpBRFShz1a2B7D4h+HFrO50ER4vgEtziCa8HKgEtrqaUO1xo5XAObl3nd6EwokE7JDZsch7av8VGqo1XWrTCJ6nqgDP2q2YVuyF5Y7vu9F6iczPZ3Y0W7C4s3rWeiF2xuLJMFt2jZ1QFwPI8k1a5FvbGNIqeghhEFpf1xl1arGJjdD5cbgQ+dw9u+YITSz15fA+ExjcenEpw+xkrWcROsgqWO3NpqMVgubebDWuXrYAWkLh0Q7SKPjB5fBMgUMydqQNchohvm3AC8dA9fhI9Ly3lyXvAxJTA7oqI1o9jQZGASbqF4ihnVClKHXThmdLTW7Rg/xkBTDp2YJcdwyQpsR3LTF1QD4wF7cucf55Y5D3JAix4cjFHP65L7Rxs+DzJC/D/zQi0LBMe7DjGJ6TmX3bFMHen5JWR7Wx7opxYj3uhftWDmN0BdBbb37pX4+LNsde8Z0RrDv0tkzz3kM5YyHHWgFm8KWc0pR92XqFXaEUuj8euyVewYeFTCcVy3Lormppg1YKXgbg8A3+SCA55Ty17PAzKCSFzF2PVww1wiRxNDqGD5blHMyQ12YXmy+khXNQuHE21B1BEP7qCr41WC9Dos2tSc47VegqYrgFvO/Svw8Wt5FLvY04voujK0kUoZczgruCmSCCoWcgpTRtv/z0FA9aFx8ZUR15TWxwuf3u0Dj90Qq4U69C1XFBA2QR8EvGEPXoKPWzsvgGjRVIC7Ue59VDwVxTwtxcgjDEYeaFZQ8cAGraDjnhBtMyNj7dEEyx1HVTAaYSHlcHpJqHapmt2wpy/Ex6FlTXvfihNnIW22w1v3QrWhd5UgppohuSn6B6bcJNpi4FwaDCPtB44CRSojZcuWThgyMdJk3MC8jxHNWq7dkxfg49hyHfYeiDaYB5BsiBsuJfC8WrEkpC6c0kqhMmoGhjqWaQKvqBmIgRRo88CohqOOVKxqjEOabeUNQU6Iyjml/BBMLgNuPdv3vHntI9bFy9V1sX3Ibb6KDZpUe00rx1TlFne/FTj/96idpuVLrrxur6+BnYGtIF+54IaYYw5IIsk40zHS8yWIqRJtOSGimNeKU6KOdkGktvJYwTtURxrXyHaIjonVARVBU0ct5TpXruAsOeDm1Y/dtNo/3m349LrYfqza4gHYcECpU1ER0VxE2Hb328DfD7wVeA3weuCOs3FNe215F5zdO0u5m4OUoKqEY7g0uWeNytdKQbKQU4doJpbX9OE8SAhUii1p+OGc3uqP9oPUESsBQou36bqIhkHR6vcJfi3wxjN5fwce+Kn3L4vtz6v9yS9QHx6XqBviFWEAKTiK5ikiGcc3cLsUeATwecBJQkL4ZSC/L8Ib4DzdrXEfLMt5AES7+QKVKiJd7AABsUr1ECDv6JrKAU3ZtGcU36gSjGj1tohGm6h52yUS3beInstec+sHqyimuU3HOaqavdpDgd88E/d10YOffP9+sf2MYfvoMxL9wxNVhIr7+MdQzeF8mpY5rI90svgx68ATHJ6A+790548R/WXx+gr+ARzROToQe2s72ye3RNMAMhMXqg3UsoNjdDJjyQiMKBUt3jxFku6C16MUDCBeI01ssrztH4zLuyIoasMYobohVuOBqzzwdO/nwA1P3j8stp/Rbx35KrX5I5UB8aF1caKCMneoFZce9RK7TzS3TZ+BCCwpZKOJXAr+pXj5PHd/idf5T+D1lfxfLCuSbTix19dA1110YthJc8c3EG9KByPh3oMJ4wWvjtEeVB7p+PHBzUI9y5ryFQVJsdAGJKpkld1vEcIhbNHaf0vezAZO4j5IRmw+8Mlaa3lKv330X6vtfFqiJGHAy4JqdSmi6TjiAbB78WD1dA0B0AmSOnbFlcYbjMWMhGrsBsgXudtn4PyKCC8A3nOfH8Ae2vmxqTB1R1E9oSKXxDrWBNohXhjPXdN4aOoxpO42MCwMr0buDLEuRkcmGstsPPI/QWLWpFH2BbDmayOvcISARMCsfyDVr+VePtCLHv5Prl2cPPKvfXH8y7LMN5VKdYttTXVobxBQVVQiRSBp8B6X8cugLvC6ABTJEzRPIye2gtd561sH2VZFL3KRb3D3Txf4T4j8Cv+X5YfnBRlhsrJyohzXY6PWC5GP4TW1DkiBkpCJkmRcOAguo6NJk+i4u1509HvHta6Gel0WwZEfjir7oTvtVsDKDQY3cg8d8OIb/4nWYefpZeu256fh+CPxOVJHKZAAzfESZZAJ4rXlCaNkCKTcpvho7cRqkecOc/J0JdS8sOh/u+GlQHIk5zZiKg9156fc/RNF5N9zDmCkM2XnRQTsutmWqB6BoF+pZkyGJeePNmzkNVGl4O5kTfHg2ub0SPUs2C/urbvhTY4oYMFlTtgGl0QEU8FrFCmhQTjNXss9mpLbf/2nH7Lh5LfK/PBXi83XrMxbcUG7BkfE2opZaWyd5mQWf2qtWDVS14W2tUqLCdZ8t8dGzUNVkiqSd1dWjFJ1IDOc57j5g0XkucBbzuxTOjuWzwMUBre6hchhgWinSfRqd6V4aceQYa6IZKxW6rATYuNU3GdodlRYkhCcEWJhtzXHmIc16r60nFIr1NjOpO6f7W7/g78jDzz44M96dH/s5h/U4chn0W+x2NmhDj2aMtp1aI5liiOGmbqO1OU2kxz3pClygVIKjpNzRkmoCl3KIR/XXgB3x6tHyZWaxiFEYeatUxRn/Ge4+6+AfCPw8rPzxM6c5fPA/+D4TdUl3wVE1GvzwbX2sdUI8DIgOiVZQiQo+eZOxVpbrQPvIrrFD8JLiSMqZ5DcFBNaUbzcwhR5mSfFesOsYF6vdrNV4G+s0C568Gd8/vz2N/9gOfbBG+pim1pgUQpCR9etYtKhClmDwyjupJzoVlbI0xXSZBL9ahTtMpM0LmCM0suboLpoDE+1fiGj4GZUyeP2p3Bwq5UQiFUMudHd/zvINwC/fzYf3enaeXEEA2ie3iYaiqgxYN72ARdBkgAVL4kqNQRTqYgYailkO6xiVqKQ8C72B0vD/8xwGaABzrvHtBC53wBmmBu1DrjVa/H6cODVp17j5Y/7Ytm69U1ffeLdv/bvfOvDF9twF9gxxOdMGBDtUN8AX4W0H0sXUVin1gnKhK6vTGY93WxCylHpuigpT9Eu9iBzCvO7WiW5kzS1sVLHzLGhkIA89sbdl6xvoYHxyDXm/hPtJl90Dh/lvbJ8HrCxAMiT2YcX0gbPW3SINkiQDpBKLYvGdpmx7NBZCBrVshNagrICwwKvBcmToGuNGF/qWtERUXS5zHCMKl4hOiWXYvWxnOKA93v8V8yOffBl37r1/t99Xt55x6rUD6N+J0m3Ue2R7FF/llTcTBBPpE06OUiRKyl6LdWvZuAqaj2AqJOSkbJC7RFWkG4SU4Bt/ayW0sZdYr5ZRBGvUbwsBrwaKafIHU0ZSiFZ9MBFE4pcaeYvQGUL+JM9eKx/r503EVAk3ayi2wKrDadoYpXxEMbEfOxspNxhotRaQQsmYCm2p3s9ZSmNG5o6pA3gy7hr2Aaa+geOYbWPSCgxk1zcHjVe26FH/j+T4x948Xcee9fPPS/P35zFP0K34kzWV+hWL8J8naHvYP3Gl+eVzRfq9LI172+/3o6/6QG++OgDvX/9dTa86iL3VYFrsPowrHsw1a+h1v2UwZlU6CYFnU7QPInJgq4LSMoNs4oPFbEx8jlWKuZO7gLMWOqHmQX7Oyhs17j5CxD9MuBN5/CR3iM7L4oQgFqH2yWlEwirINEpaDiaN9UExzBVqvaI1Gi3kcACbDZ31Go4WAOfRUY9mVHMsgYrxuvYQ8G9Uvqd5oSVWiulDJ+8mO8cyCsHL9754B/+h+0P/9rn1iOvzJOV46xfsslsfQ1Jwnw+YWd7BVifTy7+qp+o8FsVIMPKgYeKrDz6krr11ut9/tFH1GN/8QTbesdjffFbD/RBpp6uxbpHUuXB7AzXMF8cpNvpmc4yaTIFBNIU8gRDsWpQnNwpmhVNbWqwhJSdSGwTGCv9sf0I8lA3e4GofDnw/r16xn+TZTlPPLCbbdzZp3wEkUtVM0k7agioITi1LnAvAW3kKWgcr9Z6quCoOzrCLtr0ASUW3gTMphFJagHGPjENQ4xwaAalDPTz+aV9kS/fnNpT5I6XPrW/6xWsrO9w8WUHyVmpi222dzI780TWHXztqvek9WvvRmLoudYp3M70ituZ8upu3+N/CuQq37npsX7yzU8qx1/9Kcx/70arL55WfSCWP5HaPZIduwJdVHInTKbhSEk7ZLJClZ5iA9kiN0QMK5UylJA8TLPILUfiD9YEO3mimf+gJv0qzqMB/PMCiAaYrazftSPdB3B78JKv1+AXfBw8lzhe6xAfRUEK5n3Q873GH1tABelStK5Kw92kvd3El5szmyQXApRq1FoYhoHjJ3c2921e9H379F2rJ+56CesbWxw8tAm1Z74D875jsejIWXHrMT14S7dy+e1/911e7sAHZfUzPigX8Vuz/vVX1JNv+GQ79urPycdf8xm2+OWr3V5JrY9hYQ9jIVdSNy5iZR2UgkiH5w43oZaCV4s3VmP1lOpoqaS0e79Np6RV3f7/WvWbgOefxUd5ryzbeTCUBGB3/dWWpskHxy3oIcmrwVRp/D2RhEuDZ0xxol3nxSFlMMHq2O9dhDCRCrguc8KYrEuRJ8U0HFYrQykMpWfoe44fO46xIof2Hds33PmbzFbuZPPgfupiYD53hjLBLDNt+oLzxQJMB5HuXr2YPv2kj+r0k349rT/mN/3QMx5iJ9/0uXbXi75Qtl/6KPG/SIN+AsPWJ2H+ALrZCtPOSDJgOsO7KbWlDEosaLRaKLXuaic20XczR9TRlDCzb0L0r4H/eWaf4H2zfB5IRC9Np6sfEu1Q7XZbU+YBuWCoCMYAloNcUGKqTSeT+Nqx9yuylOAQQg1f2siwE0UK49BSGRiGgcVQ6OcLThw7ytbcuP7aFfTEr6L+PjYOHmBYOPNtp5RQ559kBx8oxajFSF5zSF7eB5s+wWTK29P6094us/v/vGzd9IVy9E+eqdsvfYyVd1G2nsR8eAK2eohJV3EGmKyh3RTr51gZWutRQnbOndwWfNcyUGusLcuTFVR0rVr9btH0Ns4w7/G+2HlTBQPkbuUmNA+aUqcSY5ShGViWi6Y1CS6prWvVBki3nK6xpjV4+HjtoYG8TqhuxfqGUNDyWhn6gcWiZ74zZ+vECe46fIz7X3M1+/V19FuvZf3gJrUXhkXBLRZkq8Tu4loU80byssXEfDj913Pzi2/TTX5c9z3ut23rr59Vbv+Vr5b5r92v+ofo62dSV25gMgEWJ2CyhqQJZoYNwZFMNMElr6h2y7age6EMc3KeIsgDrJbvSSl9OXucD543RQiAwU2a0p0Ol7vHVvQQIYougOCIJWqNnW+SglNXROi6GeQcRIUWCakeFbI2sqrHsa7NWYdS6YeBvp+zvb3FHXfexWRlg/sduIPh9pewvtEhTBn6HjEJ2WCvMBhWggwhBLtlKJbnfT1zE16Tp3yUyVP+3Wzl2j8st/7id8vxVz9N6i0M/o/ZGh7BdDoh2wmYbiCTGWZG7eekFAxxq4VahlaMhYZO7eeAkPMEdf9cq3wt8B/O2DXfBztvckCA6drmLTupuxWrly/pz21OeKxai1USgg2ldToIGKL2WNHWFy5t5HLSipKxX+yoZkQ6ao0e7DAMzHd2OHrXYU5sL3jsDZehJ36b1B2jmxyg3xnwEruLqUEQoEbLLI57GiNFO3M54yfK9vSfvm79muueUQ6//Hl85IXfLPNfXN1ZPIV5fTKztX2kxQno1pBuCkPP0A/kLqOSKMMO1Qq5m5BSFHO132lCnhkz/3pJ6U+JuZM9sfOjF9zMzO6UbvUm0fRoTSE8VL3t+jBrTlTRySQwL3PydIXZ+iYra/uYzNYaFb9ii3noviiQYu6iNgoWOqG6Rv5WK/18zp133cXG5gEumr0PO/wO1jY2WewYpY/pPK91ZG2x5CwuNzQpSZl0qZ4VkcsFDz7GxQ9+fifl/eWWX//+lcXvH+oXxpwn083WSeU40q2i3RR3p5RKUsgpt/vbYTKdohrinmWYk5jg6BXm9m9ynn45e6QOm+U8GEwfzQ+/q3azA29y5IuciktrNU3WmK2uMZmtkqczVjYOMtvYJKcO7VboVlYDfB4WaNMRtDKwdeRWFsfviM5CnuIp4yQkOebKUIyhVk5ub3Nyu+f6B4Bsv47J1Cm1Y5hvL8dDvewqN4gI1tQaorOScdGc5cxHwLvZxd/83ycbj7+tv+nbX9Bt/+417j0L/yxyt0oajsPKBtLNYJhjdUA0kVJm6Of0ONPpSly7V+qwiE2kYp9fq34p8FNn9dr/Fsu1Dnvxe/9Wm+3bfPfqwcuHydpat+/QlXTTKdPVDaYr66RuhubUCAUjASHImz4/RioL0rRH7W2ozNm4+AZkchVbh29FGNr8R0WsYq6UoTLsLLjrzrvIXcfB1VuR/v3IbEq/CBYz1QNTHCdBJcgRqamzmmSQCbhMy3DX2de60xteNL3hJ7b93c/5ycn2i693g75+OjlPSXYUWd2PdpOIhLWAQcoTzAYW8zndZBIdIYsNUqqdWu2fk7uVlwHvPevX/zGWk565vPk+X8TFD+lEuYpargN76oHLr2qCWSNjhThOy8Aw32oaMbXxAwcYdph4z2S6QMtLoX812ALtrmDf/qdh+kiO3PoRZDEPJ+5mFKv0iwVbJ49z5MgRNjemrPE+UldwWQPvo3qsHnqXY76ngbm5JEQ6kAmqK6jI6mLr9rVz8Xot4OUbN/zYV8//+jk/Pdn6w+tcJgz+RGpfmbjDvouRPMXaGzSpgieGfgE43bTDDcpg5EkC4eG19l8DfMu5uP5TLdd67reUTi97dBJN97fS34iXx3jZebRZeQherwZbxSu1DEGvIsgHZobXGg14q1GAmIP1ZIzJpEP1zygnXkVd7OB1TureS1f+B/v3fyG9fSofvemvSOkk09kKrhPm84FjR+/i5Iktrry0o5Pb6VY2KT2IRQ6ZRGKADgKCyWMHJoNMQWag62juNsTt4Ll6DU9u8SdrN/zQ19u7vv5nJtsvubIU2KoPow5zVjSR1g+i3Sy2AJSYn87dpLG9GlG3VKr05MkUr+UrNM9eBLzyXN0DwFlPWwC6Sx8uqunSWoeHYPYYG+aPxcrD3IcHiA9rwXoZmS/B17MasxOq4yxvDCBZXQQ9SxPuBaUwma6QJ7cxHHk9J287ifsE0VWSVkpvzPy3OHRoyvFjD+GDb/9Lug40dxRLHD92hGFRWJ0u6CbHSDqn1gVCIWeBGuoKqUW/2D3SYUxBVxBdR/Mmrnkjd6uXnfUX8xRbDLx0dv33/Ov5X3/7T6zMX3bRvMCJ4cG43Mlq6kgr+1BdsCg7CIXJtIu0oRbGlRilD6w0Z7nE6vCN3WTldcA5E43MKZ0dB/QDDz6oqg9yK48si+1PwMrDxcsD8bqfNpi9ZCVboxtZbXMSAzikLi/FxIMHF2CqWyXnkN5NCfIkg72L7TtvpixWkBTzF16damCWWZNf5+qrv5Dbbr6Cj37gnUxmmWLGXXccpgzONG+T8zaaFqQMYgqVYOJYw/uafjUyBV1D8jqkfUg6gKYVpfbnfOFNz/1/fXL1Vx209/zoD23an68ek00W5Xo4cRcrqUO7KaRtao2xVpEme+IlcFEXdCjRyqT801r7fwb8j3N1/WfsCO4ue+yGWX1gHfpHCP4J1m89olp5ENZf7HUQr32wVhqxYMztZHRAH+Ulo0UWZOXaXiQPObbSY7VvJNUoCHJeQfMOw+F3MWz1QIdbm0ZrE96LrYLZjI30Ym58+FO59dYDHD52O4hz5PBxUrfBdLKDqoFO0NzeHAmoipUEFuOeLh3kGZrWsLSB5H1IWkfSDO8PP2L1yqdOOeeKBY//KV/cdrF94Ff+3bq/Sk6yyXx+CRy/g9X9lzKdrTMsFKOSEZJmqrXOkVeGoUdzInWTzmr/9blb/RPgw+fiyrPqfY+Acskj9tXSP8GtPKnfOfYJ1P5Gt3KZUBNW8Dpgw0ApwVCmqeAn1ZDgVWmJciha+UhzXg7KOrjEAHcNHt/IXrZSYjgnTYHb6I/fTCmCZgeiQIkiRlFb0G8rJ29XDlz+pzzskZ/EK18xoe+Ps+gr+1Yz03wiZnWla7MYNWQ+UMRiAQ6aEZ1gaYbnVdA10FU0rUKa4v3Rh1nZuQH4q9N7LPfeptf+wH+pg9y/vv/nv3qF/ZxMn8nOVkXTYVY2LibVOD1oU/e4UOqA1YqYxTCVJhB/XK39s4DvORfXfZ8joB946FPqibu+Wbx/olhZl5ipbWoDtQ1QhwB4KX0cl23IxjzjWlFvoHGN40AaE2Z0SLpJQCexTIZ+0eNWmOSMJCVpJiWBciuLraNByvQSpL5RFV8dE0d8h8W2oref5IYr38rtN97Ia159gnlfODRTpvlksKZP2boeAlxtgbZ1OBnRLpxQJqAzNE1wjc97OXqNLe56PHvggLZgsXLdN3932b7p6vrR137OdLrJln4yW8ePo2nCZLqGWaHW4E96I/AOpdBlgRKKsWkyoZb+WXmy8hLgL872dWe5DzDMlu/7Irvrwz8+SXaxjEI7baQxRCDr8kbDAQeyKqKTRh6tbXtWm9sd6fbQGueNKF8LYNRhYLFYUIZFgxSif5O6KWki1BMfpSy2QcDqqP4yLqQxUA8l1X6L7eNK6u7kcY/4IB/60CY3/fXAQx4krE6Px04Ra5uYWuU7HuNGwj2m65YaLm0yzdDowJQ5tnPrUyYXP+4X2BuFgtvWH/R931K2vu4qO/bnN04m+9laPBj8dvZddDkpT3FbBIyFR2cEYSiFnCtSKqIVTVxZh/4bJ5PVrwTOKlCc072sgo9sL65bzG99/sokX1wJAifNkVSVlIJ7NzpRgt2ZXgtKVUypgau2aBXOZx5wS7VK0oTVglv0a/EaAzyAucXUW86I9pT5bfSLgVCbi987Lql2BxRSm3GSYc6xuyYcyB/lM59U0fxYrjv0Uab5CDAlctD4YheJ4aVMfHNVnIR7DMIn8ViYKGOv2qk7tzzR6vwT2Kv+6uSBb9u48Tu/48hffv3PrSxetX/I62xvX4HIbey76HIkJ+rgqIU62Gw2xdqIq9VKGQYyjjhPLyX/PvC/zubl5lLu+RF8bGtL+sXic62WRxSPhzVKXKgAXqk2hg7AnNpuLpYPthmFMfJVTjkuIyL2ZaDWyqTLJDQG0K22IfMQn2TsSEgCthh2jlIGR7QN4/iuFK+7gIIlRaqCKtUrh2/v2H/JYb74C3boj90FO7P4PpF2CqfGqilBbPVWGTfp33GCDg0WdnAPBe8PX1Z3bns6e9jgp3vQb68/8FkPPvb2F/zAan0tO/apHDu2j5Qza/sPkXVG9QVmQxRyminFKF7ozKnFyVmmdZh/U15ZfyXwkbN1qXmpu3wPrJThmmGx/USvA9ulD1gCSKrkHEeSyzhcHdBKsVg6M+06rEZ+pzqOEsbxG3PioYJVywBo+3eTM2tHuZWBlCeoZMya+KTPWewcZehrSHG0iOqjDEJw8EErKhXJFSlOrZnDt2QOLD7EbFPwMiHeEW3XXAJxBeaIOZqM2sgIy4EfLagX3AvuA4LFEbd98xdML3nC/yQUTvfEJuvP/dGydfNDt977a1+ykfZxx/AYjhx20mTCysqBgLR8gfUDk5zjWbYTyLwE9ok83obFs4HvPVvXmW2454iB13qdl/66EeIYdfscxUqMAWpKuMuoMBA8tBp0qZTCSVNuagAOfTty3Zr8hFv8DOlwEaxGOwkL4claBlQF9Sa5Zlssto7Rb/eknBqmCKcSVHFfbvVSFTQrng7TTzq20gpdElIySNOgcGkjLbBomdw8lLlyxcqYXlSUAbcFIvMYkvIZ6lN8fsu1dX7bVwDPPQvP7J7a9sYDv/m7y/G/vsFvf8snbOYNjg0P5cTRw+RuhdRNUBuoUlj0PZOuiw4PjopRykDSjJX+2Wmy8lLOUkFyr4qQfr71AKde3uXE2EMO0ZwUSXi1GAQUAlT2EB0ft6YiIdITMIBRzRhKiaS4kUgdpw5N2iw18ukIVNeKC5jnyDdzxutJFidPUoe2irVGZFTGtVyhKqUacxHBaAkHTjLFfIW+TJmmjOoqaDihkKIfLODFEK+kroIUvHZNVq1H2IkHZykqZetgOIpvvf9L08FP+G3gz874U7uH5vDefQ/7gX9bXvesX9q39cbLStrPia2ONLmdzQOXklJH0Z5SWn6eJIo40chvrZJUrqzD4hu62dpZkQbOei86IbX0h/C64aJYkx+TtrmyAklz61rEwx8xvi51UXGNOnxI45sa2uZZQ35jlM5o3+8BoQQnNY5h7fI43BFM3+Ek/c4cM8X6EUds2ipLhaoY2UytkZETpA5yqmQtuE8xpmjagLQCdIQqwwDStJzZbkoEA0bGLBHLceaICZR4l7kqUjts+8OHZOXy5+a1a99M6Dzviem+x75886H/6vsPv+G7fniz/mUeWOfEiUROh1nbOEDXTdpQU5wYxULgiQoy9LEazcvT69D/LvDrZ/r6ch3ueRHitWyI+KTYgFgwqb0xlnNO0CniEGPhUfG6JGopsZNJA84wownxGFmhtHabtrI1YJCESWpFjgVImmjSGk1DRaAOc2pv1DoWQne/5tHpUswSoeokdXJWslbE5pFP0gWxIG2Eg1uA0qQakZAKLEAKQo/UhJtipsRbKrpb0eBJSN9hJ979+dYdfDbwI6f3mE7Pppd/5Qs3HvShG46/44XfcDC/hbv8Uzh+POQ/prO1GF6yEqRbYKgDpcCEGdInuonMrPTPyZOVP+UMq/VnvRdHcCllNWfN2vT4gDafMQDtqNUUAcqNah5jGbUw0Y6AfCqVppXX8jVv1XFtchOiIZ9hbVEhLkjKpJQYxSYD/oiB9XGRoTCu5pLQXmnVcjheOJ+mGGzShg167bFhi1pXyW6IjCoKHhHOVsMpKQgh4SYMAcegqLVXwtuIcYn+Maqw01G3Dj43bz7yNZwDUPdvM7eFrT/wG/992brpAf6+l/3jzck+jpbHcvRIYd+mMVtZW7K7o3lgy86VSutcdTyp1vwM4EfP5LXdK0Kq41OaVoE2NVPRIGyO6LqQETFKrcwXC0qp5KTUNqmvKUEXPV4zp7QdvypNlsyNYGmPvcp2pNrYyhthkMDfah2W9KKYEYmPSis6UqNRJUczaG4OSURcoUA9gZU16rBCnhRIk+hDE/R9WAN6GI9iN9R7xj0kSyjTR365t25Kwk+868raHfjevH7dl7Gnuz662zcf8r3Ps61bruL21zzcJuscLTdy8sRxckp0s1WMGPJyPOSDm0xJrTVmiuvwrMls7UXA+87UVeXcTe75V7sp7m1ZTMhmjOKxQADO7XgcRyAVbwMxBCNDIFlTNG00rBDfiBxKUhOojHM66O42smfGHplHQeIVK/OY0xhbZ602j1lg2WUxa0S9JOOkZssPMShzrD9BzStodwKZzaIIGTn4zEBWgQDEJS2IKrjHLNKOJpDW1O9BBmmRtMOP/9VTarfxrcC/OVMP7r7Z6js2H/GD/6b+5Vf9gh9/1eXWrXB0cTXHjh1lUxM5T0g5WOM1xv5CKaIMaEqo8PAy9F8KfN+ZuqJc7k0O6BY+qEY1AFtCLqkLMR2zcYhcmU1mlNpTalvGIhKKBmMvsobKQfVgaEhqE/2Mw6IthIm0scroNbtBTQ0jbMoJo694i4DSZHFVToFgJDoiu6mit5ZgwctJar+K5ik5r0HeiN/vzZF8BXSAHO1BGBBageKKmjaaU9OdrgrD0WBNb0+wvP716eDj3w389Jl6ePfJVq7/o/2P+s5vP/z6b3vB+s6rNhY42zvXkLrjrG9skvOEzIy6fZzeBjomwZ5JBVWhDosvnqzs+1Xg3WficnLK92qMwb21bGhbiUIgvOF+ViJ/o0UfdRIdpSl+quYlEVJGnRYnqsdRTgIaxujtGBx7ujWYG+rjF0Q1bU1Jv9G7dPevSwq9tGgY+svhdMs23bjStS6ow3F0mKKLI2iaIjppZ2vjALIKWqIwEQcpKEN0sQXEpriX3UKoCpTDgSuenExrWv+efOAx7wf++D4+rzNief/n/ML+h7zzoqN/9cIfODj8xcStY2f7KkSEldU1Jt2MbrbGsNhGXPFqEQVV0MSDS1l8PvCfzsi1lHIvqGvWkD6LXEwl9IlLqSTXaGj7rtq7tMq2y5kk0ig/AVxXFE2ZZFEdB9GzwShC5IGNE7gLUgfEg8S0V+gWRTXecuhTmCztSF+ez/Gj28keWWZrligBGVG2qIspoh05TdDZpYjm9k0JbAqshANiwA5LQJrGmiF8VlTi4RUFOYzIBE68/fKaV/9L2nfjlxDrt/bMJlc+979u+mzz+Nt+6DsODH8md9UnsnXyKsowsL6xSTeZRWCoA9UMLwNJhU6E2s8/b7J24Oc5AzltTt3KPf7i1rigb/3jaTdt0e4UlXrxJSNmqAEw55QDT2L3gY8rByTvLmQRpLFQ2iHp3jRMGzPGjRD00uXRHJCNLK9QYemEACahFLDrocsf3ap1X068YQUbTlDStNGuZjA9GJUxA2iOo9hq9IBxYKdd1xAD8xbR3KwEUC2CV4Whbfw8Nn0EafaCtH7tVwIfuk9P7QzZ7Kp/9e/xYZW3/8hzLx5ezeFq7GxfCSJsrBspd7hMWqvRqeYkdyj9o70OnwT83uleQ/Z7UQWnpDvgRUxzrcH70yauLU2Qe1kRGHi15RHoTSjISI2Y0PA9l6i+2D1axzVVY19XRo6hGZ12S92/Uw7tJkikwcqh+VorhUdF/ObKy+js0igOSwZNwDIMx6l5gswPk3SKdKu0xcUgE5CV5oDE/eZFMGK0IKXHq7RIP+AmEXLLcQLIzNSj+dNE8w+n1Su/hj2tjOf97Op/8x0iuLzjv/3ri/pX63F9Ijv1Gra2t5jkjtnqOl23gpWRwg+Krwz94tM4Ew4Yo3r3zFR1gdUym0yytTCzWOxQdhasrqzSNenYJRm06TPHliBtBWxbvYXEM6X9P7RtvaQdxeP+i7H32qCfRjIYCfyx3DoWVrvI7s9o0XAZ9LztiXOW60cwYvVrewMIwVVk2KHqMUQysshIuuyUfNBBp3EsqxFyCYAvgELAqhqOZ+A+LKU8vLSiajtRJX0BoifSyhXfBBy7j8/vDFg/n171vO/YTN12euePfFuev2JyzJ/A8a2rGfIMTYpKW5Yj8QqpKmb1UWubl+7nNMWN8srGPdrJ0uyvTzjSC8xSKxBznlCHwjD05JRIeIDI1ShDT0rKckVg65pg8UyWqvDtCLQljFIbpkjkH+atAzJWsLtrWEVzw6yafIc28SGpu00RlXbcakQ9j6N3eUkNbwymVdvJNpykahc0/NSh00tBJ4jFGq0oSoLpE5WPQ42OiUjfNozEi+Q0MN0FypH4/m2hSvoK0Hlauexb+FtWQpwbmy8mlz71ezf16JGTN/3G96STf7KZ86M54Tcy38nUYSB3HZo7Op80Usj8iql2l3G6Dlj0nsuZaNJj1W3HzffRTpZJTsjqGrX0u+McEg3teJiV6iUmy4TWAQmHUE0NDR5zwrGPGzml+UDpFxiyJD+YR183jmjCAUeJXbHltY70fuAUTFtCTq1tyZQWEs1pzJqGDarFPEt/HFpnpJMOnV3SWC+RiyIrjGsgwCE50CNSIh3wlu26NLqWNG3CqMh9WynIV8NjLa1c+q3spRPmqy1d/m0/srH+iR/J7/6vP5DvfPX1K36EPj+W2t0PRKn9QOl32HKj2zg0O7TvsnteQPxtv3a6756PsjpyF8gJhEsNkBriPqqJ1E1IOaPj3rMaErLDMODu5NyhklG0FRwExaoVHi7eckZtI5cR7kU18sTWMUnScMSxKtZJ2ytSI0r6mBwE5BKRr8n9Iksn1Pb95nGSelurlUQaPGOtTXcM0UQRJUtGJwcC2/OYwEPbMxgpYCngGSitih+XJcaXxZuQOI4R2HYq9rXw2EmaXfY84PDpPtTTMV3/tF9fe+ih90xv/m/fN731z59Whlu19xsp+YHQXUa1xMKM1X0b1q1efNrSarlbvedHsGq60xiO4kat0W7DjUknqCQcC5aMsWyr1WKIFtLoZJIgJYToGY+qB2OxMHICQ1QykbI0mlUIVbp7yKVZ7GQbV2PVPsKcjrjeEoYZM8kRpA4nHI/hgGXagd/y07Gyx2tsqByOMTKhO1GYbgYeaQPQReRV3x3m0znROw5iJxLHr42AocuybwwO24Zhz2L/o9d0dvm/Yq+XDU4e/KZ8zbd9STrw8meVW3/n6yZHXnO92bswuYYiV7A+m7Cy79AJkXTab5bcFNTvkblzpxl3ych2LmX5wMfkHvNYqqIJyV2oVaUMJMxjEiu13q/QJt5KJU9ie9CIoTSWPuN6BseaJEYc7eaFYoaMk2nJWmjxFgW1pQIeLdtRY4ZWqPjIqPaIiE2sZ6yIpVXpWMWGHZZTSjtKloRONuJSzKIyhvb7WirRtjSJlFaM3R17jDpJ2rC4wdywI8M/Z/OR+2Tlym9kD4SCTjWXy4+z/0t/uNv/mS/Nx176DLvrFZ/nJ256SJ2/KYteQrf2uX/gJ1528+n+nuwnXnaPv7iaHQfuMh/1WeKh1jrCMePzjyiSVCNx7abLCILubjlnFI1MrZKF1p+FyB/bwHobaGLEG71FWHNSnqG5C9xtVLICQld6PPdOuQkTXNvxbruXRYuISvAQaRLAtGU5NuwwDishAchKt9YcbTyOdwesAEg9SI2csHV7xuVM41uLpgArfWxtdxZPc5sfSGvXfRPwl/f8UZ4dcy59J5tf8Z1p/1N/mq1Xf2Y++aZPZu0J72DjM3/2TPz8LBufec+/OL3v+FDrrXUI/ZZxr6CKYzlhrugIc4zs49SilrAkh8YKBlvuSYvAtrvvd1xnGsVFeElKXfSBG4Yyfk3KM/J02mZJWvRqx38bYwqIhlbjqGAEI9qlESvG1t8ohilG9Sbr25Bt955QDFlmmOSVy5DJWsMqWyRseV+YQFo0Tx8C7G5wqVu73hEFqg0C2ilg5ZOq7fyKrt/wrcBvnYkHfbrmvv/DrDzt51l52s8DUM5MlpDtXvygbtIdtzp82DSFLnHfY/2CwXYdSNRaZ6I9hBE7G/f+aiTpTsibRe5ljW7f5kracLh4ZayLaQ5nbW+X10odBph15MmEsujaG2KciGsTcrKshZcfZVxiLb7MA5fNkrbSQMSpTRd6yfexHhtOArLcOdLRnFCEUOToWj7ozRkBjUiIlGBPjy+Nt2hv45HtkXd6AZtfX8vJn9X1Bz0wTQ+8gOj7/YOzrOme07Gu/0ef5+94xa99WFT7lNLEJWGlUuuc2i/IOeOu1Eab8gbwxRqp+BnSKtFwsHAXs0q1VuXmDnIcc4153yCZKHxGPNDdKKWCTEjTKbLTt50zbVu51ca6jpAT2OHdeicNkiH+f0vfKs3pmkPsFilt3NN7jBOICKUd9tkvRSfBnhGfRyTUFt3anhJYRPdECmKtMGrvzTFCB52mEvtfB7DFfivHf4CNhzwqrdzvuzlDDJTzyfLdcpZ7YG52m4geN6sXl34eR4mHZG3ka44so0bsahtzOlpNqq3z4T72M2LfrzYvNa/xfS2IxMYfRaQut/+Y10bzyqRuhqR5aw8bNlS8ptbKa7+1/bAWG6Pv4o5LEE/H4mB0OsVxbSwei0KG0VltgQ3HEacRao3sFZ0eCFKF7TQHHpHzhrLTN4gmLDQOwxHj7Rp7kKU26hk9+FxrOfHPfXjQQ3X1qu9Hp7/B37FI+/82y2b3Tnkhdd1HrPa34n6xW6XUAZUUHY9YUw603rA55gNao9Bw2rvdLGQwJC+LDqHlZO33jKcXoxOaUYuH+JBD67eBTMjTVbTbjuPTO9QqhjW2trXI13BBbxVx68Q4rdAgAOlge7X+cFt96mJtH0jLSRFC7es4MWIQyw+zF9L0ogb/bMXF+4xGTlymIaSKjPIkDTCPCcJT5EQIJ8R6pM6xcuLh1t/xs2n9+s/UyaU/BLzz9B79+WH51EPpnlhK6bYBbhZ4WMpdKw4I5aqRVhBVCHhUyLGpPJ1CSNFTfmI8AHOnVkNVSFnvdlWBJ5a28UeADic1KEfpJjPyZIINMWWHgBRr1zRGwvg9ImMh4a1TMX6OeOZjmd26NqOYQ5slbd0SjcjpPTaE82ljbZv15JVDIPsQTo631zAYCZk37yE1dnUrx6XmFoWjiMIsIj4FfAG+g9vWmvV3PZu1B3yqrNz/hZLXfwm4614+8/PK8r2N5tc/4Snbb/uT3/ggBt1kEoD0sIgmu8syMFErbj2KtI3ftFN4VMEaY1x8lLYZCWi0rl18xGqllvjaKJQNs56hX1CKBowzyUhehUHwQRCNLZI+MnQ8ckBl9ygO39BGgGj0qrGKF2Ij0phAtMpbRhBpPD7FkWGrSYzUGNCynrxyGaRNkC3wnXYiSxzRPuaFA2jIejQcaBmNozJq0IwWpPZxtNeT2HDkBlnc8kOyevXTZXr5T0ta/T3g+H1xgL22+yQOmFJ+p9nuC6cpaFCl9mRA8mRJ0ZP2wkbbrEUaj3xHPC2dYSlo1NjTkhrmhywVF0RjwUok+7HvYugnPkkbSDoqmhWSUAV0iFZDANi72oJjxFvmZ60zEvieNRimQTJETulNKmScO4l7iDdOwOKFWrfwvqDeM/iA1R26lcvQ6f5Gat3CvaUp4yA7zQmbzIe4IZ4jFWk6N952JkNBtMd9J35WPa70t32Kzy7/RJld9SqZXvqLkma/zx638u6t3esI2OwmRLZcWHO3GMVE6OcLdAY5d4hkXIVSd0heSBF7Iu+xdiy3XaNLYNm9MZyl7fdt2J0IadLFdstacclIStEjKXPJBx76jlW5KC2OvOlBdOtLiIUY9GxO2LZGOgjWAOgWiVt3JSpjYljeR64gDeOLr7UWyqNQFlwtcktzjB3wIXrIdcDrnFwOxZGs+4GT4DvxO5tyPZZAhsj33MCHeGN7K5c81lE4FbECDFhdgG1DPYEMR6Y+v+UzmV72JF+531/I9NCvat73IvaY7HpPLY/djHtjIvJekI9gdkNUmNrmLZRSjWRDCy4RWczbavaxMFRp2nQsN1qOVaM7oX6qqfVtQxm/1ArmMZegkWNGHiYknb5h48qn/7L1x3/Gdj5wf52sU2k5lFRMKiZGstZ1iARvvJsWhcPjRW3JJ5RGmx571iOovUxQZRfCk5ZAug24n0S8ULxg1u9Gw24jJH59C6HRutIYDYdwRKsgPeIp+uYtFxw1srGCSI83J7R6AspxZLizk/nNT2R66B/V2RVfK5NLf1+6zd8Rnb2Bs6zxdzqWW3Z9r0xT+mAtcpOq3qCa6Id+SVgsfUHYIc+ctiQZs5gd0fYgQx1mfJinIHNCLKKxZbcUcKyU2A2XEpIyKhW3OdgESRt4OXZ5Wr3mT9au+srnb733v/yU+2JFphuYBDlC2o4tLwG8hX+NPbHG8lVtl+JjDdKiqJ9SwDTRtzE11ObESzbNmNtVqDuhMuUDgxtW5+TZJaTpxahOCbWO7ZZspoiGrjH05EMUJt64kZ7AYwuoU1t1XMJRZQ5s4zaDcgyGO5X5zQ/1yUUPlcll/0Kml72S6UW/L2ntZZxFmbX7atnvwxF8wxOfNn/HK377bZj+Y9G0fCCa0pIQ7+2hjPO5AT7Hn1INMSM3XRIfOXnEvC/Sig0UkRQ92SpUK8hA6DdLGwllhvmRS9Lw+kumK/yiXfmMG7Zv/oXvEOnQyXo8SA0nrNI6Lu7RkVhG5TEKSvudTXmhvQni9B2ZMjGCEK3A8TrbG2asaOVUjZuKeEgVW12QhpPhiN0G6AzxE+CxxTKS5NKcsQRmKLYUco9uioLl5pilMa57RFpuaCegHoPhLlh89JDvbH4h3aHPk9mlb5fu4j+Wbt8fIZPXs8drWkfL2H0TPFLRNxShTylN8mSKJiVpqxFb493dW/CI8claxuGleKiWgtAwqnNihlUndR3LcjR+GSKOteU1ToLcxRElGTc9YCfffwj46MqhZ/6gD4fvP7/td75C8iqCYTI+PIMyrlo9ZcfwWJ27sizQl2kBUbwsi4+IiCO+zDKI+y4C4D7WymAFL9uoFcxD5b+WLdL0IrrpRWg+2KLY8YBnZES8W1SUsvwj43yJVvDcjuWEUFqU7MHmuG/FiGg9Go7Y39b5/AOPksmBR8nkkq9icslbpbvozyXtew2a3+ZuH2JvJIXJu9DvvTSRd6joh5PqdYxStUBawhtxxNXqlBprr7QdyV5jt0fuMmjrnsAyPww5thI9YaJAwWO8U8XbdHk8qKB45Q36D+wHsFu/6+TKFd/zb63cdWg48qqn6mQ9GNASuneuIddW60jHigjZ7qn9GQeYWgtuxPKgERiaFs24LnaMlKOjWps/bp0TDMznuAec4tZjtsCGE6TuIHm6ieaLEZ2Dnwy4hUIwdUfh9AEoiNemPma4a2OKp6YeMVbVPfgC8Qx+MgBzO4KXO6H/yCa68Sme93+KdAd2yPs/QN58h3Sbb0WnbxNde6+T3885gnVySE7ce0uq7zHk7ahcl1RDhMgJxopV6OLoVE1k0rLlRuvTooprE/jRMe9KDb+zgGPSLngcqqo5uggyimAGtufGCjrbN16b3/Efb5ld9uxvph6/qJx8yyemyT5Eo7VmrU3I4Ix4eQRCayfxOMGiS8wwOH7t8mUU4QC3NmDcbiuwwzF3ZOm0kYMqbgPmFfUerQtKXmDDNnU4SprsJ3ebpO7iYND4SahbwAI8oKegDY1i8FGYeJvWi5Zn6FfjNfJI2noJ20HocDmBDG29WLkNX6yskFYeQlp7iKeNp5P3LdADt5EPvFe6S94m+eCrJW++irOYO8q9bcWdau98+U98h9Xh35VS6UtpD7JSFz0pC7PZlJw7zDV0/gyiGBjI3ZTJ6ko4FSP8QiyGdkiToNr7UkG1Yv0QE3XdBBAmszU2D17O+vQjNj2YvhL4xbtd4OrTHrtz84//Qtl618MQxYfjeDmOlxOhiDXMm/pWw9sakXQcIV2Kj39snizQtOLiOE7j53ZHlHdrK93tAC1BeI0CTTOSViCtImkFTeukySZ5uoHmjLIAtsG2wOaRF46Te+MKT/dT6F+jA2qr6tvfPRy0STI1Ym8ISaEzXCcgE1xmIDNMV3HdhO6SQadXvl0nV79YJ5e9CJm8hTPMysnc1yMYQOR1wHEV2Tcyl6OASNjQM2gM5UTuFEeVtiWD1iR3xzHLMQrVBsEkvB01dbmk0CvLahsHryVadJ2r1+n/OVtw4uVvWLnyq5+zc/OP/Vzdfs91OtnAkmFqpDbJZsVxK43IHNFx6Ts28hFj5gRYMrWX0iTQZn9phUz76OOJfgovcVlhx7CWtJWzUhdo2sHTHKvbIRGS10h5lZTXUV2N45ntdjz3LImFYkGExYkjOkJyfNT2e0dnbM+ImN6LHLVFSckRQSVBybgotshd3Zo9yvOBR+nkymfr5Oo3anf/t3azK3+LMyQ3l8U+eJ+/OaX0Viv6bhF/nKpQWqAQjRlYrzW0W9rTiW5GBgkRozoMTcIijtNaS/Raxy6Axs8o/YJSLajw7WiMIabC0C+okw7qLRf9TdfoR3/1lSv3+5rnzD/y4z9t8/dfpd1mFEDiZPFQ1i1jJCT6ww0IjgcbZ3TrHreo2G7JfckKH8dER8xw93M0+MZbJApoBWuRiNpIGxWsR+scrzvUskVNMzStIGlGSlNSPohqRWjO6DsEfjiqRvgp6YIti6WGGbWpgkbWtdbyY2jzsLuzK21QMb7WHKtQh784VBfyOcUmn+PDFV94y/vkp9/4yrf9L04T8M6/9N3/+HS+/9ZHP+k5r8fr41SkqVMRHY6clpEgipGKlEJKGQfMjLKYk5temnvrcrhAbeBrJ8uzzN0Y2n6Rzlr+2NZ9IYINsvm3XuWdv/mH0/s952v6W37ihXX7vddIty+qatmVaqOEDop5wDsjCyH+Hjc2Olbc15gftije7n+M9GOBsgSqWy7pLm3+eaTvt3UQEhHfvMTscdnC0wqWVhGdUHWC5CkpTVGdommKygaqPTAP0qv3Lfdr2jXjA2nXHC9kk6xL48B/PB9vWFqA7fHFSUYozQLM94qmE2xv3fGA+dbkP+bMF26d7H9saz78b+7jhs18+OjWffm+pYnqq7zKs5NqLiKtYm03oxJOIhJtpHbEujuuQq2xpislGuEgWnRYO4KFmCFputLji+gjdV+0qXF1YNsbaWXfKfXqx9iJ333J9Iqv+6rFLT/5Qt/+6+u924zZ3CE0AyPagtSBpQydj3R+b/3iBnjaKDnCEjT3JQwjyz8y3sNIOB2jyhLSIaIh4yx0GyeQGGYKjG+njZ5OkTrFtEOka9o1HaqZlDbQ5A3vLAHryKI5ZGFJtFhCW/H3MS/FtTUHOty1zcQENhsIlaC5AxGyDKzuK2xcDKsr/eO2jpefwf1S7qNaVt5Nau6bqerrTeS9IvIgVYn1qCWOXsmzhtUJ2iW8DAHInnKkVYutPRB5oaBIp3djM0cVrLsPs9aIsM2qKzacWMNuTvxdeNbWO/54evl3PXO4/Wd+vG699eEpb2AqsQGpYcAkWiQck3trg+XjsepNSq49UB2drF3biHsuE0KWMI6MVbXTRJxarriUYNKPuWCPipYhOj+1Q5sDohNEMlUSRVpBo7kpkK0juo6k5pBLcrDtMrXHY5kUAkRMcWKhda0DJnOWa70kIUxxCmZbuA7sPzhwvwckTh7P3ckd/cbj2/M/A159b/0nHzt5eutaRfQ9iL5exB4UcyHtxWxLpzW386cxYkZywfiPEYcMLecRAwziQPviU47y9uCX/L7YrF76HTx3q7rx2Zm/B1D1k699VT70L76cO3/px3zrDZ8sabXNqcSR3OT+USsNW2tR0KRVlwHn4MFhDAx6rJ4DC4wtm+PkH4y957EgC+Jpu4Xx+/C7nZiMBZFqi7KBV9Y6BORi4866jEmOjZ6iMIyQTGCl0nr0QcJtC2kktf+XAsCmwVr00cuuO5htYXUe89fjEd12vyCg2bjk6srhw3DHEb1frXxNqfVW7qV8b170p8fu/sWf+nZ7xrO+7xXV6pckDaW82qhPNAWD5TFGiyDjy+y0OQglJaEma8PntiwERDSgGimYO1lSi37aKF7jmGeepc2HTLhHucjWm7n4i7/cJ4d+2I695J+6TfEcxYkXwX2OWN8m/5oAZmLpdOObIxJ6bw7iS6mPFivZxT7bh5Zbjf//1AjZzoAg1OKRZrgsk0jRVhyhsd5CY1x0rHBd0y7U0qSSfZQ0hiVkM0ZDl91TxpezMdHeM4s1Xm615cTeNgn4GPehgHbGoWuFD9/s3HmETytVXs69dcBS5e//qr/HJKXXUuS9KnKdAtQSjpNGAJV4MVunYZxWC+Gh2gioiZRz0KHaO9gagQFRkqRYXjMWHT4OjwvoBDebut11j/mNKryPi7/ymZIv+q56+Ne+Rmo/IW/imsEzXrdxXTQGsy01r9P4exuEtFwN1pZuw/je82WB4n6KE7T88NRIt2TYiDR/awXE2JZrb1SR3eH8kXUeBU8Ca7AKozPt5qJ3r8ybC4khtZErGlvdcarHm24pf2K+O5tN5IVGy5cd1g5ULr4/fOh94vN+qQ1xjy3XMzDeopreiehrwa7LXUfKE0pZtM2LEEI+AUGMK1xVdCl0vjyWJZrwxQs+QKe0dzNBem0vRDT5aW28ilXDTKfUi++V3jD1PXfp5uc+F1m9yY7+xnfK8KFDTPbhlqPKVo2ZDMb2VziWWMsAl5G6TeG11WRubaDJdo/o8KFTpEKWwXEXI2S8p+XXtYpcHDddtv9E2+8d18W2yDgqJo5H/2jS3jzLzzeZ4oi5u28QW/IPx8LLY7/fKQC9RWcRkzZn08FFhxIHDuotw+12r9Uc8iSffgT8ny/8dvviZ3/Py72UZ6SkkiYdfb+gbG/DyqxFw4b9lSEU2FNHklHltMHYbSWAeWwrz0lbRGqMGSuREI/HVDvizASKT2G4F5L/zRbvLDq94sfk0ue+y4/92g/4zl98gug0BI9U8LoNNpDam7sViGOGwZLJ7Y740CL6KKbeouJuvdKuW3YpXYww01jix3txVOxaUsCkwTs0XRk8rq+xrN3GUVZpp80p99hgnuUNeOS7tvyUt/sKp7cxgp/y+ZFYsns7Fkt6SmLfvhmX399+W1XeeG9f/nzZZbN7+z1/8w/K3Z8tSv9uhQellEIjsDilDmTLoRrl49BS3EKoiLYKs0VBCZSYcKygbY0vktVGkhJbNgKAMeEfmZ33yYTFy+SiZ9/kWw/6Do7/9pdR75h63gjgvG6D90iwC0NVwSRA7BHdcMe9C/bL0glLFDNurfPTwt4p7Jom+nX3HHH8snZlY6UszbkMif6yaYtMozKYtHxu/Lrx1dl1nN1/hyZORDqWx+1YKC4/v3yTtWsaQfWR+1indNPpi+5/Az95/xtW7jUWmB/3aZv39ZndzY4ce8FN6ytf/Urq8KCUMyknyqDLGQ+zEJNMuU2rNbDXzSjFYhJOiGgpROHRWNNjMh0pVmtfLWn0sXgZOb2uIgDDHR+UzS/6OqbXvZbj//vbZP7G610mkHJQ4K1vgwXgnhqXMZxxrKd8XN9aC26Bw3ktqI0gd0sfWoRbCmbC0hPj780Zl/nziAT4sqIOBgS7/EOJittGntj4fZx65PsSeRtVwiLHY/daln+iCxImuyPkWZokXsYrb0Xrtx645L7xC/OBS87cjLMvJi/uS/9lSXUWgkPhdC6tOS4SezhcqGVgsejJxUi5oCvT9kKeMpqprbkOLS/SGGqXoPkHVgeSE6ITF82n64KweMeArPysX/S8v2Dr954vJ//g6ZTbOtJazDL7gkjDm9OTlqC1tidtbpALZgNmQb/yOqDWBw7qdZnPLqPT0gNbTuaN6YNEXjj2vxs7LNruoyOOHiUhbwKMkNXS2dr3LJ8VtIp+vGbu5ny0I3rp84yfl6ieI4R/wOm/Tq2/zzPKWcuZW+RoKf8Zqq8He2LXTSipDwSp1njHWFqW9OYVqU4VXa5Wdc3RAWiVl1pdqldZrcsqU8Zh3RHSUQXpKtKdsXeT1CNv840veSaTR/yxnPjNf8X8dQ+LfmrbmLRc5dX626TIRSHmet3aMutwwtERpfZoHeKItpjaGxUlxnA1RizxU6KjnPJnLEzax9F8jHpO/P8xavru947/XkbFlknvRtjd1GB3onUsXmLjqRtoXn+n5n1fDfz56bzOOafLT+f7P8Z+6s6Sv/JFddh5Yu46UtcFcLp8YVsVXAbcnDzNS+1hkxxH2VjpVWekt7eMkGqFoQ7klMm5W75FY9QxDc709FD1j7Xhth300M/5Rc//U3b+6Jvk5O98GcN7DrA88htcgoOGOmzQn4g3h9XdPNB6zIclGXWMim4DagXGosVOyb9OjWKjcyinRMcW/0yWlW0ULOOR7bvOB2OAXZpIkyAhlO3GWCqnvBFGirjLiL0KKuuv6qZXfSPw5tN9iXPKB0/3Z9zNutnsD8ow/yoVrstdagWCxnHTRiFHBsxIZa99NC9SjjyumuMUtEQXIKXgWYsQmoNJl5jZ+K4V6RaiizPrgKPZLe+z1c/+ZqaPeZFsv/ib2HrpZ1NvndD0qeMCKmgGgtYU3HAHGyvjIdQTbIF7H0BvXYQzNgmOoIU1CboRzmHM09qvWf5nnKPZDXrhhLKbYy7JiX43xxt/xPLnOqOeZjPfFVVqtC5apS06/dWU931L7Y+etjglQK790TPxc5bW8dNv7/OXvqgO829OqaPWxRI/0kYLEUmIVKx66zSAeyWlaBuZVYo5SUZVhQ7EQ4NaUnyNyPJFdwzXyYCcvmbx32ZqgyObL/N9X/taZp/0dNl60dcy//NPxA4LutbURoZ21M2IT+To2XooHMSuu1kUMxbRz2qPe8sTvR3PXtoIZkRFGia3q+oa/qQQTiq7x2grmZdROP4uS6eVU/4eM9C7Yp3aTvB4Y8sy9xMSVjkhafKjkmb/2Wz7jNH1s9n2mfpZuz+0m/za0O98cUp6ac6ZYahLcFOyILnDykBZzEma6SaTmKiz1OZ+tVGYGg7V9FjScqs64N4obDJqxPReF2d//rXedhIu/x+++XUvlZUnfTE7f/Qs+tc9DN8mVPPbcNDIwZIO6KKVZ4Z4AS8NMxwaTNN6sNaD9THOaUNESR970kHOxUaB9qb0cOoA/1jAKEtI5VSnHNOg0aSpP6hLkzEeixxBTDBX3BPu8l5N0+cCvxuE2DNnWc7wDwSY8J9fs0jPebGX/l9oytHyKUEwUANJMd8xDCHcqGZIKUgaEOlipzAwZuDjm7mWUTqj5Snt60K1vgz1rpff61bQadhtwI+ky77rt1m89kvY+cMvkeHNN+InmyMK0ZauxE6RtDyi474qktqgeXNKbMDpIyccI2RrjUHdLVxGpvjIKbRTRaEaTGS7jraby8HYEh1To4BXWmGodfmMSuB8C6vyx5C+H8prz8aLmEXOzjReN5n90rwMn6/KAVVd6us1sB3Nia7mxiiulKENH01bzmE1hntcmqBjbGYPBwxZj9wSoBpg9QJZnHPdvHrbL38Q+AE99N2/QnnjF8n85f+c/k2PxA4r3oGuEWdZjmg4EgY8erAB7bS53zQOGw1goZ6VRlxxLFTa0JdT2hyNLT8aY1dmRLc5pTPSXlfGicLGnqGNzNYFVrZbp8rJpm8slf/iVX5HpJw1ddasZ80BV/607xd/4GXxpTkH3b6WkNxNmkgaxYXVBlKLUYdCSgPShtchKFpJNXYJF+LzPhKu29C7VSRN53m6f++EG4/90QeA/+T7n/dLDG/5fOn//IvoX/8E6q3TiIYrwIyxLx6OmBuWSOsUjX8sNnJ6DCDFKGb7t4/O14aTlsdxA7nbkbHbExaWo3vSioqR5NDOXKs9qZ6kqCMqH5VSf74U/8mJcjP3fI/RfTK59XX3O2s//PD2937a1rE7f0OFg4v5Dov5HBsqeRKLbVqCt0ygxWP1V54krEYOpSmRcoekRF30zOfbODDppqysb7B56H5MO2d9w34G+KqzdjP30lau+qcHqLd+uvSv+X/oX/PplPdejm+1KDhrx3JHOOE4sXYqWAetOlse2bufq3f/OErvn4rrwe7Pu5u1iIi3aFrwOq9Wt99fyslXlGHrZzlDA0f3xOTY2687q7/gvR/8hp+2Yedf1lJYzHcofY+o0E1XWzvHli8cOFkVzXlk9SMisRs4Z2wY6OcLXJwud6xs7GPzkiuYpMK+i/b9B+Dbz+rN3AebXvapGd9+pNT3PJX+1U9heMujsZvXolBpmzdZJZxxPBbHOc+PdR5ORZBZOujdAL6PgVyE3f/vbYquOa973XHr3+Jl8b+8bv9hKVvv5RwrJOTJbP2s/oKVtc2fOXls8VRN6cqUu9j34S03aTmcjNy3sQPSVixY9aYbXcgNgFXVJUkyMAOJ3Gly8LyUI+sPv60AbwB9w+Tgc16IH3u8DG/+LMrrn0h5143YR9fgGKGAsEJI+o7R8WMi46jcMDrm3bC90Rk/tv0B8SYfF6jYUahvwetrxYdXI/V10uVb6faR2Me5NrHbPues/5I3v+Gp3zPMT3w3Dou+B04RLQJorGP3iHh5MgkyqxO4oYbCQi2FOsQSaEmZ1Y1N9l98OStT39p/6f2+CHjxWb+ZM2Tp4OMPYTc/lvLef0R91+Oo776R+pHL8SNdTLZBHM9TYBp/H49r1+ZbunyNgI+Jhg7uc9wPQ/0w2E344m2Yvw7mb+U8kfbN8jdE+TNt3WTyM4u5fnYS+6SUMmVYBE1rMkElUz0m5KRBLGYd2qXlO1wkuHmNH9Jo+rpUVdBucovONu4VFXyvzbffcTvwErjkJaw+aQ3vr8M+cqPYRx5Bff9DsA9fi912P+zofvx4j2+dCKYss6CAi8TgshZctkG2cbaRdAsu72tO9y6Q91BP3oxM7yS2UMD/Mfy0dyZ+x9POyS96w2s/4wv6+fb/FGGt7xfUfkE3m5LyjDr01GGB1VC2n0xXyLOmWdN6vZo1hCoXcxBhMl1hbfMi1jf3s2//6kv2XfGop/MPZJmLd/s7pLsMn1+F3Xk/8WM72JFbsMMZP3wAO7YfP5Fgp8eGbbw/CWkLLyeo778TtyP8X7LKId+No3MW7bFP+OPfevWfPvEzvJavS6owmTZszNHcNSr7IgDRGpxBTTDKZbi1+eI0Dt5EdZyy0M0237xz+P3/IJyv2QB8uP1pNgEua3/+4VjeKd91zn5ZN/nzH+3n9UnAQwViNgRHU8ZaLiDLGdwYhbTaZlqXrIMGWC/5hjLPq5e87pzdxAU7o5bz6iXn7Jc96smf/+43vPw3/mvpd34KvMMKtaUympVMR1n0jLolIqOEW2N5tFkL1VjNQFJEV96Xp5tvPWc3ccHOqOU83TzHv7D7RSvlieY8U9KoLhXwyshuQVozvTXIrY7yaW3IWhM5TxCH6erGG6Wbvv+c3sQFO2MmXo+d81/6ut/7yeuHfud/q8hjxkksQVuv15CUggOYMm5OWcxxN/IkwOtuMmV98wDTlRUuu+7RzwbOyO7aC3buTbbv2puVY2995e8+tQyLXxA4xCgaLSmc0GIBtqYUWHMZEBKaghe4srbJ6r5NNg5c8u7Lrv/EfwLctCc3ccFO28QWd+zZL/+L3/+ZZ5bS/7DCvhG0DyHyoGWlvMs4ljYFpqljffMgK+vrHLr6IT8EPHfPbuCCnbbJiVtev6cX8JY/e+mzrAw/qCoXiThUw6j4uKJBW3/UKqowXdtgtrrB/osvf/flNzz+C4C37+kNXLDTMvF+7yLgaH/+ov/+uTYsvl/cHi6NgDDqv6gkJIVW9HQ6Yba6zmzjwPx+D/7E5wA/t9fXfsFOz2Tn2Hv2+hoAeMsrfuuGYTH/FqvDP1PYSJNJGzh3JGWSZnJOdLM1Lr/h8f8R+Ld7fc0X7PRNDn/kLXt9DUu76fV/3JVSnlKHxTNF5cmTbnIgp0yaTujyhNRN5/svv+FnL7nmkc8Hzn35fsHOuEkdztxg+pmy17/kp1fM7BOmK2tPnK2sPWy6Oj24un7w5tV9l/72bOPSl3Mf9Ygv2Plnsjhx215fwwX7OLb/Hwx4wEWPvFp5AAAAAElFTkSuQmCC"/>
+        </defs>
+      </g>
+    </defs>
+  </svg>
+</cr-iconset>`;
+}
+else {
+    div$1.innerHTML = getTrustedHTML `
+<cr-iconset name="searchbox_config">
+  <svg>
+    <defs>
+      <!-- IconResourceIds::ADD_PHOTO_ALTERNATE (proto ID: 93) -->
+      <g id="93">
+        <path d="M5 21C4.45 21 3.975 20.8083 3.575 20.425C3.19167 20.025 3 19.55 3 19V5C3 4.45 3.19167 3.98333 3.575 3.6C3.975 3.2 4.45 3 5 3H13C13 3.28333 13 3.59167 13 3.925C13 4.25833 13 4.61667 13 5H5V19H19V11C19.3833 11 19.7417 11 20.075 11C20.4083 11 20.7167 11 21 11V19C21 19.55 20.8 20.025 20.4 20.425C20.0167 20.8083 19.55 21 19 21H5ZM6 17H18L14.25 12L11.25 16L9 13L6 17ZM17 9V7H15V5H17V3H19V5H21V7H19V9H17Z" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::DRIVE (proto ID: 103) -->
+      <g id="103" viewBox="0 0 20 20">
+        <path d="M5.938 17a3.447 3.447 0 0 1-1.75-.469 3.507 3.507 0 0
+          1-1.293-1.281 3.416 3.416 0 0 1-.477-1.75c0-.625.16-1.207.477-1.75
+          l4.085-7a3.505 3.505 0 0 1 1.282-1.281A3.384 3.384 0 0 1 10 3c.625 0
+          1.203.156 1.738.469.535.312.965.738 1.282 1.281l4.085 7c.317.543
+          .477 1.125.477 1.75s-.16 1.207-.477 1.75c-.32.543-.75.969-1.293
+          1.281a3.447 3.447 0 0 1-1.75.469Zm0-1.5h4.125l-2.876-5H5.356l-1.168
+          2c-.18.32-.269.652-.269 1s.09.68.27 1c.18.32.425.566.738.738.312
+          .176.652.262 1.011.262ZM10 12.395l1.082-1.895H8.918Zm1.793
+          3.105h2.27c.359 0 .699-.086 1.011-.262.313-.172.559-.418.739-.738
+          .18-.32.269-.652.269-1s-.09-.68-.27-1L13.73 8.918l-2.875
+          4.977ZM6.23 9h5.707l.918-1.582L11.73 5.5a1.923 1.923 0 0
+          0-.73-.738 1.971 1.971 0 0 0-1-.262c-.36 0-.695.086-1 .262a1.923
+          1.923 0 0 0-.73.738Zm0 0"></path>
+      </g>
+
+      <!-- IconResourceIds::ATTACH_FILE (proto ID: 92) -->
+      <g id="92">
+        <path d="M18 15.75C18 17.4833 17.3917 18.9583 16.175 20.175C14.9583 21.3917 13.4833 22 11.75 22C10.0167 22 8.54167 21.3917 7.325 20.175C6.10833 18.9583 5.5 17.4833 5.5 15.75V6.5C5.5 5.25 5.93333 4.19167 6.8 3.325C7.68333 2.44167 8.75 2 10 2C11.25 2 12.3083 2.44167 13.175 3.325C14.0583 4.19167 14.5 5.25 14.5 6.5V15.25C14.5 16.0167 14.2333 16.6667 13.7 17.2C13.1667 17.7333 12.5167 18 11.75 18C10.9833 18 10.3333 17.7333 9.8 17.2C9.26667 16.6667 9 16.0167 9 15.25V6H11V15.25C11 15.4667 11.0667 15.65 11.2 15.8C11.35 15.9333 11.5333 16 11.75 16C11.9667 16 12.1417 15.9333 12.275 15.8C12.425 15.65 12.5 15.4667 12.5 15.25V6.5C12.4833 5.8 12.2333 5.20833 11.75 4.725C11.2833 4.24167 10.7 4 10 4C9.3 4 8.70833 4.24167 8.225 4.725C7.74167 5.20833 7.5 5.8 7.5 6.5V15.75C7.48333 16.9333 7.89167 17.9417 8.725 18.775C9.55833 19.5917 10.5667 20 11.75 20C12.9167 20 13.9083 19.5917 14.725 18.775C15.5417 17.9417 15.9667 16.9333 16 15.75V6H18V15.75Z" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::DRAFT_SPARK (proto ID: 96) -->
+      <g id="96" viewBox="0 0 16 16">
+        <path d="M11.6 14.4H7.6C7.6 14.2111 7.6 14.0222 7.6 13.8333C7.6 13.6333 7.6 13.4222 7.6 13.2H11.6V5.6H8.8V2.8H4.4V8.4C4.26667 8.4 4.13333 8.4 4 8.4C3.86667 8.4 3.72778 8.4 3.58333 8.4C3.51667 8.4 3.45 8.4 3.38333 8.4C3.32778 8.4 3.26667 8.4 3.2 8.4V2.8C3.2 2.46667 3.31667 2.18333 3.55 1.95C3.78333 1.71667 4.06667 1.6 4.4 1.6H9.6L12.8 4.8V13.2C12.8 13.5333 12.6833 13.8167 12.45 14.05C12.2167 14.2833 11.9333 14.4 11.6 14.4ZM3.58333 15.2C3.57222 15.2 3.52778 15.1667 3.45 15.1C3.29444 14.4667 2.98333 13.9222 2.51667 13.4667C2.06111 13 1.51667 12.6889 0.883333 12.5333C0.861111 12.5222 0.827778 12.4778 0.783333 12.4C0.783333 12.3778 0.816667 12.3333 0.883333 12.2667C1.51667 12.1111 2.06111 11.8056 2.51667 11.35C2.98333 10.8833 3.29444 10.3333 3.45 9.7C3.46111 9.67778 3.50556 9.64444 3.58333 9.6C3.60556 9.6 3.65 9.63333 3.71667 9.7C3.88333 10.3333 4.19444 10.8778 4.65 11.3333C5.10556 11.7889 5.65 12.1 6.28333 12.2667C6.30556 12.2667 6.33889 12.3111 6.38333 12.4C6.38333 12.4111 6.35 12.4556 6.28333 12.5333C5.65 12.6889 5.1 13 4.63333 13.4667C4.17778 13.9222 3.87222 14.4667 3.71667 15.1C3.71667 15.1222 3.67222 15.1556 3.58333 15.2Z" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::TRAVEL_EXPLORE (proto ID: 94) -->
+      <g id="94" viewBox="0 0 16 16">
+        <path d="M0.447222 6.99401C0.447222 6.08019 0.614385 5.22766 0.948711 4.43642C1.29418 3.64519 1.76781 2.95425 2.36959 2.36361C2.97138 1.76182 3.66789 1.29376 4.45913 0.959439C5.25036 0.613969 6.09732 0.441235 7 0.441235C8.40417 0.441235 9.64674 0.825709 10.7277 1.59466C11.8087 2.36361 12.5944 3.35544 13.0847 4.57015C13.1627 4.77075 13.1627 4.97134 13.0847 5.17194C13.0067 5.36139 12.8674 5.48955 12.6668 5.55641C12.4997 5.62328 12.3269 5.60656 12.1486 5.50626C11.9814 5.40597 11.8644 5.26666 11.7976 5.08836C11.5413 4.45314 11.1679 3.89036 10.6776 3.40001C10.1984 2.89853 9.6356 2.51405 8.98924 2.24659V2.61435C8.98924 2.94867 8.87222 3.23285 8.6382 3.46688C8.40417 3.68976 8.12556 3.8012 7.80238 3.8012H6.19762V4.60359C6.19762 4.82647 6.11961 5.01592 5.96359 5.17194C5.81872 5.31681 5.63484 5.38925 5.41195 5.38925H4.60957V6.99401H4.69316C4.89375 6.99401 5.06091 7.06088 5.19464 7.19461C5.32837 7.32834 5.39524 7.48993 5.39524 7.67938V8.56534H4.60957L1.95169 5.90745C1.91825 6.08576 1.89039 6.26407 1.86811 6.44238C1.84582 6.62068 1.83467 6.80456 1.83467 6.99401C1.83467 8.29788 2.25815 9.43459 3.10511 10.4041C3.96321 11.3737 5.01634 11.9365 6.26448 12.0925C6.44279 12.1371 6.58209 12.2318 6.68239 12.3767C6.78269 12.5104 6.82727 12.6664 6.81612 12.8447C6.79383 13.0342 6.70468 13.1957 6.54866 13.3295C6.39264 13.4521 6.21434 13.4911 6.01374 13.4465C4.44241 13.2236 3.12183 12.5048 2.05198 11.2901C0.982143 10.0754 0.447222 8.64335 0.447222 6.99401ZM12.1152 12.6775L10.5271 11.1062C10.3043 11.2399 10.0702 11.3458 9.82505 11.4238C9.59102 11.4907 9.34028 11.5241 9.07282 11.5241C8.27044 11.5241 7.59064 11.2455 7.03343 10.6883C6.47622 10.1311 6.19762 9.45688 6.19762 8.66564C6.19762 7.86326 6.47622 7.18346 7.03343 6.62625C7.59064 6.06905 8.27044 5.79044 9.07282 5.79044C9.86406 5.79044 10.5383 6.06905 11.0955 6.62625C11.6527 7.18346 11.9313 7.85769 11.9313 8.64892C11.9313 8.92753 11.8923 9.18942 11.8143 9.43459C11.7474 9.67976 11.6471 9.90822 11.5134 10.12L13.1014 11.708C13.2352 11.8529 13.302 12.0145 13.302 12.1928C13.302 12.3711 13.2352 12.5327 13.1014 12.6775C12.9566 12.8113 12.7894 12.8781 12.6 12.8781C12.4216 12.8781 12.2601 12.8113 12.1152 12.6775ZM9.0561 10.1367C9.46844 10.1367 9.81948 9.99737 10.1092 9.71876C10.399 9.42902 10.5438 9.07797 10.5438 8.66564C10.5438 8.2533 10.399 7.90226 10.1092 7.61251C9.83062 7.32277 9.48515 7.17789 9.07282 7.17789C8.66048 7.17789 8.30944 7.32277 8.01969 7.61251C7.72994 7.89112 7.58507 8.23659 7.58507 8.64892C7.58507 9.06126 7.72437 9.4123 8.00298 9.70205C8.29272 9.9918 8.64377 10.1367 9.0561 10.1367Z" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::PHOTO_PRINTS (proto ID: 102) -->
+      <g id="102" viewBox="0 0 16 16">
+        <path d="M8.72178 8.114C9.02267 8.114 9.30127 8.05828 9.55759 7.94684C9.82505 7.8354 10.0702 7.67938 10.2931 7.47878C10.438 7.33391 10.5661 7.16675 10.6776 6.9773C10.789 6.7767 10.8782 6.56496 10.945 6.34208C10.9785 6.23064 10.9506 6.13034 10.8615 6.04118C10.7834 5.95203 10.6887 5.92417 10.5773 5.9576C10.3544 5.99104 10.1427 6.06347 9.94206 6.17491C9.75261 6.27521 9.57988 6.40337 9.42386 6.55939C9.21212 6.75998 9.04496 6.99401 8.92237 7.26147C8.81093 7.51779 8.74406 7.80197 8.72178 8.114ZM8.68834 8.114C8.66606 7.80197 8.58805 7.51222 8.45432 7.24476C8.33173 6.9773 8.16457 6.74327 7.95283 6.54267C7.78567 6.38665 7.60179 6.26407 7.40119 6.17491C7.21174 6.07462 7.00557 6.00218 6.78269 5.9576C6.67125 5.92417 6.57095 5.95203 6.4818 6.04118C6.40379 6.13034 6.37593 6.23064 6.39821 6.34208C6.45394 6.56496 6.53752 6.7767 6.64896 6.9773C6.77154 7.16675 6.91642 7.33391 7.08358 7.47878C7.29532 7.67938 7.53492 7.8354 7.80238 7.94684C8.06984 8.05828 8.36516 8.114 8.68834 8.114ZM8.70506 6.02447C8.86108 6.02447 8.99481 5.96875 9.10625 5.85731C9.22884 5.74586 9.29013 5.60656 9.29013 5.4394V5.28895L9.40714 5.37253C9.54087 5.46169 9.68575 5.48955 9.84177 5.45612C10.0089 5.41154 10.1371 5.31124 10.2262 5.15522C10.3042 5.03264 10.321 4.89333 10.2764 4.73732C10.2318 4.5813 10.1427 4.45314 10.0089 4.35284L9.89192 4.26926L10.0256 4.18568C10.1594 4.09653 10.243 3.97951 10.2764 3.83464C10.321 3.67862 10.2987 3.52817 10.2095 3.3833C10.1315 3.23842 10.0145 3.1437 9.85848 3.09912C9.70246 3.05454 9.55759 3.07683 9.42386 3.16599L9.29013 3.24957V3.08241C9.29013 2.92639 9.22884 2.79266 9.10625 2.68122C8.99481 2.55863 8.85551 2.49734 8.68834 2.49734C8.53233 2.49734 8.3986 2.55863 8.28715 2.68122C8.17571 2.79266 8.11999 2.92639 8.11999 3.08241V3.24957L7.96954 3.16599C7.82467 3.07683 7.67422 3.05454 7.51821 3.09912C7.37333 3.1437 7.25632 3.23285 7.16716 3.36658C7.08915 3.51146 7.06687 3.6619 7.1003 3.81792C7.14487 3.97394 7.2396 4.09653 7.38448 4.18568L7.51821 4.26926L7.36776 4.33613C7.22288 4.41413 7.12816 4.53115 7.08358 4.68717C7.05015 4.84319 7.07801 4.99363 7.16716 5.13851C7.25632 5.29453 7.3789 5.39482 7.53492 5.4394C7.69094 5.47283 7.83581 5.44497 7.96954 5.35582L8.10327 5.27224V5.4394C8.10327 5.60656 8.159 5.74586 8.27044 5.85731C8.38188 5.96875 8.52675 6.02447 8.70506 6.02447ZM8.68834 4.85433C8.53233 4.85433 8.3986 4.79861 8.28715 4.68717C8.17571 4.57573 8.11999 4.43642 8.11999 4.26926C8.11999 4.11324 8.17571 3.97951 8.28715 3.86807C8.3986 3.74548 8.5379 3.68419 8.70506 3.68419C8.86108 3.68419 8.99481 3.74548 9.10625 3.86807C9.22884 3.97951 9.29013 4.11324 9.29013 4.26926C9.29013 4.43642 9.22884 4.57573 9.10625 4.68717C8.99481 4.79861 8.85551 4.85433 8.68834 4.85433ZM5.14449 10.2537C4.72102 10.2537 4.38112 10.1311 4.1248 9.88593C3.87963 9.62961 3.75704 9.28971 3.75704 8.86623V1.7451C3.75704 1.32162 3.87963 0.987299 4.1248 0.742127C4.38112 0.485811 4.72102 0.357653 5.14449 0.357653H12.2656C12.6891 0.357653 13.0234 0.485811 13.2686 0.742127C13.5249 0.987299 13.6531 1.32162 13.6531 1.7451V8.86623C13.6531 9.28971 13.5249 9.62961 13.2686 9.88593C13.0234 10.1311 12.6891 10.2537 12.2656 10.2537H5.14449ZM5.14449 8.86623H12.2656V1.7451H5.14449V8.86623ZM2.8878 13.6304C2.52004 13.6861 2.18014 13.5969 1.86811 13.3629C1.56721 13.1177 1.38891 12.8113 1.33318 12.4435L0.380357 5.37253C0.324636 4.98249 0.41379 4.63702 0.647818 4.33613C0.89299 4.02409 1.20503 3.84578 1.58393 3.8012L1.90154 3.76777C2.11328 3.75663 2.28601 3.81792 2.41974 3.95165C2.56462 4.08538 2.63705 4.25812 2.63705 4.46986C2.63705 4.64816 2.58133 4.80418 2.46989 4.93791C2.35845 5.07164 2.21357 5.14408 2.03527 5.15522L1.76781 5.18866L2.70392 12.2596L10.2931 11.2232C10.4937 11.2009 10.6664 11.2511 10.8113 11.3737C10.9673 11.4851 11.0565 11.6356 11.0788 11.825C11.1122 12.0145 11.0676 12.1872 10.945 12.3432C10.8336 12.4992 10.6832 12.5884 10.4937 12.6107L2.8878 13.6304Z" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::AUTORENEW (proto ID: 90) -->
+      <g id="90" viewBox="0 0 16 16">
+        <path d="M 3.773438 10.390625 C 3.570312 10.035156 3.410156 9.660156 3.289062 9.257812 C 3.167969 8.855469 3.109375 8.433594 3.109375 7.992188 C 3.109375 6.632812 3.585938 5.46875 4.546875 4.503906 C 5.503906 3.539062 6.675781 3.074219 8.058594 3.109375 L 8.0625 3.109375 L 7.175781 2.21875 L 8.066406 1.328125 L 10.539062 3.800781 L 8.066406 6.273438 L 7.175781 5.382812 L 8.0625 4.492188 L 8.070312 4.492188 C 7.0625 4.46875 6.214844 4.804688 5.523438 5.496094 C 4.835938 6.191406 4.492188 7.019531 4.492188 7.992188 C 4.492188 8.246094 4.515625 8.484375 4.5625 8.714844 C 4.613281 8.941406 4.683594 9.164062 4.78125 9.382812 Z M 7.933594 14.675781 L 5.460938 12.203125 L 7.933594 9.726562 L 8.824219 10.621094 L 7.9375 11.511719 L 7.929688 11.511719 C 8.9375 11.535156 9.785156 11.199219 10.476562 10.503906 C 11.164062 9.8125 11.507812 8.980469 11.507812 8.007812 C 11.507812 7.753906 11.484375 7.515625 11.4375 7.285156 C 11.386719 7.058594 11.316406 6.835938 11.21875 6.617188 L 12.226562 5.613281 C 12.429688 5.96875 12.589844 6.34375 12.710938 6.742188 C 12.832031 7.144531 12.890625 7.566406 12.890625 8.007812 C 12.890625 9.355469 12.414062 10.515625 11.453125 11.488281 C 10.496094 12.460938 9.324219 12.929688 7.941406 12.894531 L 7.9375 12.894531 L 8.824219 13.78125 Z M 7.933594 14.675781" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::BOLT (proto ID: 91) -->
+      <g id="91" viewBox="0 0 16 16">
+        <path d="M 7.285156 11.851562 L 10.332031 8 L 7.851562 8 L 8.285156 4.316406 L 5.398438 8.800781 L 7.832031 8.800781 Z M 5.601562 14.398438 L 6.398438 10 L 3.199219 10 L 8.601562 1.601562 L 9.800781 1.601562 L 9.199219 6.800781 L 12.800781 6.800781 L 6.800781 14.398438 Z M 7.867188 8.082031 Z M 7.867188 8.082031" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::TIMER (proto ID: 97) -->
+      <g id="97" viewBox="0 0 16 16">
+        <path d="M 5.875 2.398438 L 5.875 1.078125 L 10.125 1.078125 L 10.125 2.398438 Z M 7.339844 9.710938 L 8.660156 9.710938 L 8.660156 5.699219 L 7.339844 5.699219 Z M 8 14.644531 C 7.199219 14.644531 6.453125 14.492188 5.761719 14.191406 C 5.070312 13.890625 4.464844 13.480469 3.945312 12.964844 C 3.425781 12.449219 3.015625 11.84375 2.714844 11.148438 C 2.414062 10.457031 2.265625 9.710938 2.265625 8.910156 C 2.265625 8.113281 2.414062 7.367188 2.714844 6.675781 C 3.019531 5.980469 3.429688 5.375 3.945312 4.859375 C 4.464844 4.339844 5.070312 3.929688 5.761719 3.628906 C 6.457031 3.328125 7.199219 3.175781 7.992188 3.175781 C 8.644531 3.175781 9.273438 3.285156 9.878906 3.5 C 10.488281 3.71875 11.046875 4.023438 11.558594 4.414062 L 12.476562 3.515625 L 13.398438 4.441406 L 12.503906 5.355469 C 12.894531 5.859375 13.195312 6.414062 13.414062 7.019531 C 13.628906 7.625 13.734375 8.257812 13.734375 8.914062 C 13.734375 9.710938 13.585938 10.457031 13.285156 11.148438 C 12.984375 11.84375 12.574219 12.449219 12.054688 12.964844 C 11.535156 13.480469 10.929688 13.890625 10.238281 14.191406 C 9.546875 14.492188 8.800781 14.644531 8 14.644531 Z M 8 13.261719 C 9.210938 13.261719 10.238281 12.839844 11.085938 11.996094 C 11.929688 11.152344 12.351562 10.125 12.351562 8.910156 C 12.351562 7.699219 11.929688 6.671875 11.085938 5.828125 C 10.238281 4.980469 9.210938 4.558594 8 4.558594 C 6.789062 4.558594 5.761719 4.980469 4.914062 5.828125 C 4.070312 6.671875 3.648438 7.699219 3.648438 8.910156 C 3.648438 10.125 4.070312 11.152344 4.914062 11.996094 C 5.761719 12.839844 6.789062 13.261719 8 13.261719 Z M 8 8.910156 Z M 8 8.910156" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::ACUTE (proto ID: 107) -->
+      <g id="107" viewBox="0 -960 960 960">
+        <path d="M600-160q-134,0-227-93T280-480q0-133 93-226.5T600-800q133,0 226.5,93.5T920-480q0,134-93.5,227T600-160Zm0-80q100,0 170-70t70-170T770-650T600-720T430-650T360-480t70,170t170,70Zm91-91l57-57L640-496V-640H560v177L691-331ZM80-600v-80H240v80H80ZM40-440v-80H240v80H40ZM80-280v-80H240v80H80ZM600-480Z" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::IMAGE_CREATE (proto ID: 108) -->
+      <g id="108" viewBox="0 0 24 24">
+        <path d="M10.2,22q-2.1,0-3.25-0.09T5,21.43Q4.2,21 3.6,20.4T2.58,19q-0.4-0.8-0.49-1.95T2,13.8V10.2Q2,8.13 2.09,6.97Q2.18,5.82 2.58,5.02Q3,4.22 3.6,3.63Q4.2,3.02 5,2.6Q5.8,2.2 6.95,2.1T10.2,2h3.6q2.07,0 3.23,0.1t1.95,0.5q0.8,0.43 1.4,1.03q0.6,0.6 1.03,1.4q0.4,0.8 0.5,1.95Q22,8.13 22,10.2v3.6q0,2.1-0.1,3.25T21.4,19q-0.43,0.8-1.03,1.4q-0.6,0.6-1.4,1.03q-0.8,0.4-1.95,0.49T13.8,22H10.2ZM20,12.6V10.2q0-1.72-0.02-2.68T19.6,5.93q-0.25-0.5-0.64-0.89T18.08,4.4q-0.65-0.35-1.6-0.38T13.8,4H10.2Q8.48,4 7.51,4.02T5.9,4.4Q5.4,4.65 5.01,5.04Q4.63,5.43 4.38,5.93Q4.03,6.57 4.01,7.52Q4,8.48 4,10.2v0.95q0.8-0.57 1.8-0.92T8.08,9.88q1.15,0 2.1,0.27q0.95,0.28 1.75,0.93q0.35-0.75 0.5-1.56t0.15-1.64V6.02q0-0.43 0.32-0.72T13.65,5H16.4q0.47,0 0.82,0.29t0.35,0.74V7.3q0.7,0.85 1.08,1.86q0.38,1.01 0.38,2.11q0,0.28-0.01,0.51Q19,12.02 18.95,12.27q0.28,0.05 0.54,0.14T20,12.6ZM10.2,20h3.6q1.72,0 2.68-0.01t1.6-0.36q0.5-0.25 0.89-0.64T19.6,18.1q0.27-0.55 0.34-1.29T20,14.83q-0.35-0.2-0.74-0.36t-0.84-0.24q-0.3,0.72-0.74,1.36t-0.96,1.16q-1.08,1.07-2.48,1.66T11.28,19Q9.8,19 8.46,18.46Q7.13,17.93 6.08,16.9Q5.1,15.95 5.63,14.69t1.93-1.24Q8.4,13.48 9.24,13.3q0.84-0.17 1.49-0.63q-0.58-0.42-1.21-0.61T8.08,11.88q-1.4,0-2.35,0.56T4,13.8q0,1.73 0.01,2.69T4.38,18.1q0.25,0.5 0.64,0.89T5.9,19.63q0.65,0.35 1.61,0.36T10.2,20Zm1.07-3q1.2,0 2.24-0.46t1.84-1.26q0.77-0.78 1.22-1.79q0.45-1.01 0.45-2.19q0-0.85-0.31-1.63t-0.89-1.4Q15.7,8.15 15.64,7.99q-0.06-0.16-0.06-0.36V7h-1V7.88q0,1.45-0.39,2.84t-1.26,2.56q-0.88,1.2-2.26,1.68t-2.89,0.5q-0.08,0-0.11,0.09T7.7,15.68q0.73,0.65 1.65,0.99Q10.28,17 11.28,17Z" fill="currentColor"/>
+      </g>
+
+      <!-- IconResourceIds::BANANA (proto ID: 100) -->
+      <g id="100" viewBox="0 0 24 24">
+        <path d="M2 22.4004H22V2.40039H2V22.4004Z" fill="url(#pattern0_1500_179774)"/>
+          <defs>
+          <pattern id="pattern0_1500_179774" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image0_1500_179774" transform="scale(0.00625)"/>
+          </pattern>
+          <image id="image0_1500_179774" width="160" height="160" preserveAspectRatio="none" xlink:href="data:image/png;base64,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"/>
+        </defs>
+      </g>
+    </defs>
+  </svg>
+</cr-iconset>`;
+}
+const iconsets$1 = div$1.querySelectorAll('cr-iconset');
+for (const iconset of iconsets$1) {
+    document.head.appendChild(iconset);
+}
+// LINT.ThenChange(//chrome/browser/ui/omnibox/omnibox_context_menu_controller.cc:SearchboxConfigIcons, //chrome/test/data/webui/cr_components/composebox/contextual_action_menu_test.ts:SearchboxConfigIcons)
+
+let instance$d = null;
+function getCss$9() {
+    return instance$d || (instance$d = [...[], css `:host{background-position:center;background-repeat:no-repeat;background-size:100%;display:flex;flex-shrink:0;height:16px;width:16px}`]);
+}
+
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview This file provides a custom element displaying a tab favicon.
+ */
+class TabFaviconElement extends CrLitElement {
+    static get is() {
+        return 'cr-composebox-tab-favicon';
+    }
+    static get styles() {
+        return getCss$9();
+    }
+    static get properties() {
+        return {
+            /* The URL for which the favicon is shown. */
+            url: { type: String },
+            size: { type: Number },
+            tabId: { type: Number },
+            isSubmitted: { type: Boolean },
+        };
+    }
+    #url_accessor_storage = '';
+    get url() { return this.#url_accessor_storage; }
+    set url(value) { this.#url_accessor_storage = value; }
+    #size_accessor_storage = 16;
+    get size() { return this.#size_accessor_storage; }
+    set size(value) { this.#size_accessor_storage = value; }
+    #tabId_accessor_storage = null;
+    get tabId() { return this.#tabId_accessor_storage; }
+    set tabId(value) { this.#tabId_accessor_storage = value; }
+    #isSubmitted_accessor_storage = false;
+    get isSubmitted() { return this.#isSubmitted_accessor_storage; }
+    set isSubmitted(value) { this.#isSubmitted_accessor_storage = value; }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('url') || changedProperties.has('size') ||
+            changedProperties.has('tabId')) {
+            if (!this.url) {
+                this.style.setProperty('background-image', '');
+            }
+            else {
+                this.style.setProperty('background-image', getFaviconForPageURL(this.url, /*isKnownToSync=*/ false, /*fallbackUrl=*/ '', this.size, false, true));
+            }
+        }
+    }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if ((changedProperties.has('url') || changedProperties.has('tabId')) &&
+            this.url && this.tabId && !this.isSubmitted) {
+            const capturedTabId = this.tabId;
+            this.fire('wait-for-tab-load', {
+                tabId: capturedTabId,
+                onTabLoaded: (faviconDataUrl) => {
+                    if (faviconDataUrl && this.url && this.tabId === capturedTabId) {
+                        this.style.setProperty('background-image', getUrlForCss(faviconDataUrl));
+                    }
+                },
+            });
+        }
+    }
+}
+customElements.define(TabFaviconElement.is, TabFaviconElement);
+
+let instance$c = null;
+function getCss$8() {
+    return instance$c || (instance$c = [...[], css `:host{align-items:center;display:flex;isolation:isolate}.favicon-item{--skeleton-fade-duration:500ms;--skeleton-swap-duration:200ms;--skeleton-stagger-delay:0ms;aspect-ratio:1/1;background-color:#fff;border:2px solid var(--composebox-favicon-border-color,#f2f2f2);border-radius:50%;height:16px;position:relative;width:16px}.favicon-item:nth-child(1){z-index:3}.favicon-item:nth-child(2){--skeleton-stagger-delay:100ms;z-index:2}.favicon-item:nth-child(3){--skeleton-stagger-delay:200ms;z-index:1}.favicon-item:not(:first-child){margin-inline-start:-7px}.favicon-item::after{background-image:var(--favicon-image);background-position:center;background-repeat:no-repeat;background-size:16px;border-radius:50%;content:'';inset:0;pointer-events:none;position:absolute;transition:opacity var(--skeleton-swap-duration) linear}.favicon-item.loading::after{opacity:0;transition:none}.favicon-item::before{background-color:var(--composebox-favicon-skeleton-color,#e1e3e1);border-radius:50%;content:'';inset:0;opacity:0;pointer-events:none;position:absolute;transition:opacity var(--skeleton-swap-duration) linear}.favicon-item.loading::before{animation:skeleton-looping-opacity calc(2 * var(--skeleton-fade-duration)) var(--skeleton-stagger-delay) infinite;opacity:1;transition:none}@keyframes skeleton-looping-opacity{0%{animation-timing-function:cubic-bezier(0.3,0,0.8,0.15);opacity:1}50%{animation-timing-function:linear;opacity:0.5}100%{opacity:1}}@media (prefers-reduced-motion:reduce){.favicon-item.loading::before{animation:none}}#more-items{align-items:center;color:var(--composebox-favicon-more-items-color,var(--color-sys-on-surface-subtle,var(--cr-fallback-color-on-surface-subtle)));display:flex;font-family:inherit;font-size:11px;font-weight:500;line-height:16px;margin-inline-start:4px}@media (forced-colors:active){.favicon-item{border:2px solid ButtonText}#more-items{color:ButtonText}}`]);
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$7() {
+    return html `
+    ${this.visibleTabs_.map(tab => html `
+      <div class="favicon-item ${this.isTabLoading_(tab) ? 'loading' : ''}"
+          style="--favicon-image: ${this.getFaviconUrl_(tab)}"></div>
+    `)}
+    ${this.remainingCount_ > 0 ? html `
+      <div id="more-items">
+        +${this.remainingCount_}
+      </div>` :
+        ''}`;
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+// Keep in sync with the per-coin `--skeleton-stagger-delay` rules in
+// composebox_favicon_group.css.
+const MAX_DISPLAY_COUNT = 3;
+class ComposeboxFaviconGroupElement extends CrLitElement {
+    static get is() {
+        return 'composebox-favicon-group';
+    }
+    static get styles() {
+        return getCss$8();
+    }
+    render() {
+        return getHtml$7.bind(this)();
+    }
+    static get properties() {
+        return {
+            tabs: { type: Array },
+            visibleTabs_: { type: Array },
+            remainingCount_: { type: Number },
+            submittedTabIds: { type: Object },
+        };
+    }
+    #tabs_accessor_storage = [];
+    // Tabs currently shown as context chips, in display order.
+    get tabs() { return this.#tabs_accessor_storage; }
+    set tabs(value) { this.#tabs_accessor_storage = value; }
+    #submittedTabIds_accessor_storage = new Set();
+    // IDs of the tabs in `tabs` that were already submitted in an earlier turn.
+    // Their favicons are not live-updated and never show a loading spinner.
+    get submittedTabIds() { return this.#submittedTabIds_accessor_storage; }
+    set submittedTabIds(value) { this.#submittedTabIds_accessor_storage = value; }
+    #visibleTabs__accessor_storage = [];
+    get visibleTabs_() { return this.#visibleTabs__accessor_storage; }
+    set visibleTabs_(value) { this.#visibleTabs__accessor_storage = value; }
+    #remainingCount__accessor_storage = 0;
+    get remainingCount_() { return this.#remainingCount__accessor_storage; }
+    set remainingCount_(value) { this.#remainingCount__accessor_storage = value; }
+    loadedFavicons_ = new Map();
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('tabs')) {
+            this.onTabsChanged_();
+        }
+    }
+    getTabUrlStr_(url) {
+        return typeof url === 'string' ? url : url.url;
+    }
+    onTabsChanged_() {
+        this.visibleTabs_ = this.tabs.slice(0, MAX_DISPLAY_COUNT);
+        this.remainingCount_ = Math.max(0, this.tabs.length - MAX_DISPLAY_COUNT);
+        // Synchronously prune cached favicons when the tab list or a tab's
+        // navigation URL changes so same-tab navigations never display the
+        // previous page's favicon.
+        const nextLoadedFavicons = new Map();
+        for (const tab of this.visibleTabs_) {
+            if (!tab.tabId) {
+                continue;
+            }
+            const existing = this.loadedFavicons_.get(tab.tabId);
+            if (existing && existing.url === this.getTabUrlStr_(tab.url)) {
+                nextLoadedFavicons.set(tab.tabId, existing);
+            }
+        }
+        this.loadedFavicons_ = nextLoadedFavicons;
+        // Asynchronously request updated favicons from C++ for visible tabs that
+        // do not have a cached favicon for their current URL. Firing
+        // 'wait-for-tab-load' prompts the C++ backend to observe the tab and
+        // invoke `onTabLoaded` once the favicon finishes loading.
+        for (const tab of this.visibleTabs_) {
+            if (tab.tabId && !this.submittedTabIds.has(tab.tabId) &&
+                !this.loadedFavicons_.has(tab.tabId)) {
+                const expectedUrl = this.getTabUrlStr_(tab.url);
+                this.fire('wait-for-tab-load', {
+                    tabId: tab.tabId,
+                    onTabLoaded: (faviconDataUrl) => {
+                        const currentTab = this.visibleTabs_.find(item => item.tabId === tab.tabId);
+                        if (!currentTab ||
+                            this.getTabUrlStr_(currentTab.url) !== expectedUrl) {
+                            return;
+                        }
+                        const newMap = new Map(this.loadedFavicons_);
+                        if (faviconDataUrl) {
+                            newMap.set(tab.tabId, { url: expectedUrl, cssUrl: getUrlForCss(faviconDataUrl) });
+                        }
+                        else {
+                            newMap.delete(tab.tabId);
+                        }
+                        this.loadedFavicons_ = newMap;
+                        // `loadedFavicons_` is non-reactive internal state updated
+                        // asynchronously, so explicitly trigger a re-render with the
+                        // loaded favicon.
+                        this.requestUpdate();
+                    },
+                });
+            }
+        }
+    }
+    // Shows a skeleton coin while the tab strip shows the tab as loading.
+    isTabLoading_(tab) {
+        return tab.isLoading && !this.submittedTabIds.has(tab.tabId);
+    }
+    getFaviconUrl_(tab) {
+        if (typeof tab === 'object' && tab !== null) {
+            const tabObj = tab;
+            const urlStr = this.getTabUrlStr_(tabObj.url);
+            const isSubmitted = tabObj.tabId && this.submittedTabIds.has(tabObj.tabId);
+            const cached = tabObj.tabId && !isSubmitted ?
+                this.loadedFavicons_.get(tabObj.tabId) :
+                undefined;
+            return (cached && cached.url === urlStr ? cached.cssUrl : undefined) ||
+                getFaviconForPageURL(urlStr, false);
+        }
+        return getFaviconForPageURL(tab, false);
+    }
+}
+customElements.define(ComposeboxFaviconGroupElement.is, ComposeboxFaviconGroupElement);
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/* List commonly used icons here to prevent duplication.
+ * Do not add rarely used icons here; place those in your application.
+ * Note that 20px and 24px icons are specified separately (size="", below).
+ *
+ * Icons are rendered at 20x20 px, but we don't have 20 px SVGs for everything.
+ * The 24 px icons are used where 20 px icons are unavailable (which may appear
+ * blurry at 20 px). Please use 20 px icons when available.
+ */
+const div = document.createElement('div');
+if (document.documentElement.hasAttribute('webui-rounded-icons')) {
+    div.innerHTML = getTrustedHTML `
+<cr-iconset name="cr20" size="20">
+  <svg>
+    <defs>
+      <!--
+      Keep these in sorted order by id="".
+      -->
+      <g id="cloud-off">
+        <path d="M5 16c-1.113 0-2.063-.387-2.836-1.164C1.387 14.062 1 13.113 1 12a3.84 3.84 0 0 1 1.082-2.73A3.895 3.895 0 0 1 4.73 8.02c.047-.149.09-.293.137-.434.047-.14.106-.281.176-.418L2.395 4.52a.725.725 0 0 1-.227-.532c0-.199.074-.379.227-.531a.73.73 0 0 1 .53-.227c.204 0 .38.075.532.227l13.086 13.086a.712.712 0 0 1 .227.52.712.712 0 0 1-.227.519.729.729 0 0 1-1.063 0L13.875 16Zm0-1.5h7.375L6.207 8.332c-.055.184-.105.367-.156.555a8.152 8.152 0 0 1-.156.55l-1.063.083c-.664.058-1.223.32-1.664.785A2.375 2.375 0 0 0 2.5 12c0 .691.242 1.281.73 1.77A2.41 2.41 0 0 0 5 14.5Zm4.293-3.082Zm8.207 3.957-1.105-1.082c.32-.168.585-.41.793-.727.207-.316.312-.671.312-1.066 0-.559-.191-1.035-.578-1.422A1.936 1.936 0 0 0 15.5 10.5h-1.375L14 9.145a3.91 3.91 0 0 0-1.293-2.594A3.88 3.88 0 0 0 9.997 5.5c-.34 0-.669.043-.981.125a4.233 4.233 0 0 0-.91.355L7.02 4.895a6.34 6.34 0 0 1 1.41-.657A5.08 5.08 0 0 1 10 4c1.43 0 2.672.484 3.73 1.45 1.055.964 1.645 2.148 1.77 3.55.973 0 1.797.34 2.48 1.02.68.683 1.02 1.507 1.02 2.48 0 .598-.137 1.145-.406 1.645-.27.5-.637.91-1.094 1.23Zm-5.25-5.25Zm0 0"></path>
+      </g>
+      <g id="delete">
+        <path d="M6.5 17c-.414 0-.766-.148-1.059-.441A1.443 1.443 0 0 1 5 15.5v-10h-.25c-.21 0-.39-.07-.535-.215A.713.713 0 0 1 4 4.754c0-.211.07-.39.215-.535A.73.73 0 0 1 4.75 4H8v-.25c0-.21.07-.39.215-.535A.727.727 0 0 1 8.75 3h2.5c.21 0 .39.07.535.215A.727.727 0 0 1 12 3.75V4h3.25c.21 0 .39.07.535.215.145.14.215.32.215.531 0 .211-.07.39-.215.535a.73.73 0 0 1-.535.219H15v9.992c0 .422-.148.778-.441 1.07A1.439 1.439 0 0 1 13.5 17Zm7-11.5h-7v10h7Zm-4.219 8.285a.73.73 0 0 0 .219-.535v-5.5c0-.21-.07-.39-.215-.535A.713.713 0 0 0 8.754 7c-.211 0-.39.07-.535.215A.73.73 0 0 0 8 7.75v5.5c0 .21.07.39.215.535.14.145.32.215.531.215.211 0 .39-.07.535-.215Zm2.5 0A.73.73 0 0 0 12 13.25v-5.5c0-.21-.07-.39-.215-.535A.713.713 0 0 0 11.254 7c-.211 0-.39.07-.535.215a.73.73 0 0 0-.219.535v5.5c0 .21.07.39.215.535.14.145.32.215.531.215.211 0 .39-.07.535-.215ZM6.5 5.5v10Zm0 0"></path>
+      </g>
+      <g id="domain">
+        <path d="M2 15.5v-11c0-.414.148-.766.441-1.059A1.443 1.443 0 0 1 3.5 3h5c.414 0 .766.148 1.059.441.293.293.441.645.441 1.059V6h6.5c.414 0 .766.148 1.059.441.293.293.441.645.441 1.059v8c0 .414-.148.766-.441 1.059A1.443 1.443 0 0 1 16.5 17h-13c-.414 0-.766-.148-1.059-.441A1.443 1.443 0 0 1 2 15.5Zm1.5 0H5V14H3.5Zm0-3.168H5v-1.5H3.5Zm0-3.164H5v-1.5H3.5ZM3.5 6H5V4.5H3.5ZM7 15.5h1.5V14H7Zm0-3.168h1.5v-1.5H7Zm0-3.164h1.5v-1.5H7ZM7 6h1.5V4.5H7Zm3 9.5h6.5v-8H10v1.668h1.5v1.5H10v1.664h1.5v1.5H10Zm3.5-4.832v-1.5H15v1.5Zm0 3.164v-1.5H15v1.5Zm0 0"></path>
+      </g>
+      <g id="family-link">
+        <path d="M11.105 15.293 16 7.688 11.082 2.5 6.02 7.688Zm-.085-6.398ZM8.875 19a2.49 2.49 0 0 1-1.762-.7 3.291 3.291 0 0 1-.968-1.718 1.267 1.267 0 0 0-.442-.695 1.167 1.167 0 0 0-.766-.282c-.207 0-.402.04-.582.125a.889.889 0 0 0-.418.395c-.07.14-.164.258-.285.355a.65.65 0 0 1-.422.145.742.742 0 0 1-.542-.23.74.74 0 0 1-.231-.54c0-.09.016-.168.043-.234.027-.066.063-.137.105-.203a2.83 2.83 0 0 1 1-.969 2.603 2.603 0 0 1 1.352-.367c.684 0 1.262.223 1.742.668.477.445.793 1.008.946 1.688.07.304.214.558.43.761.214.2.48.301.8.301.234 0 .477-.07.719-.207.242-.14.43-.309.554-.504l.02-.039L4.75 8.52a1.27 1.27 0 0 1-.191-.395 1.66 1.66 0 0 1 .035-.984c.062-.176.172-.344.324-.496L10 1.457A1.55 1.55 0 0 1 11.09 1a1.526 1.526 0 0 1 1.078.457l4.914 5.188c.14.148.246.312.313.488a1.584 1.584 0 0 1 .047.992 1.27 1.27 0 0 1-.192.395l-5.98 9.062c-.348.527-.723.898-1.133 1.105A2.752 2.752 0 0 1 8.875 19Zm0 0"></path>
+      </g>
+      <g id="menu">
+        <path d="M3.75 14.5c-.21 0-.39-.07-.535-.215A.713.713 0 0 1 3 13.754c0-.211.07-.39.215-.535A.73.73 0 0 1 3.75 13h12.5c.21 0 .39.07.535.215.145.14.215.32.215.531 0 .211-.07.39-.215.535a.73.73 0 0 1-.535.219Zm0-3.75c-.21 0-.39-.07-.535-.215A.713.713 0 0 1 3 10.004c0-.211.07-.39.215-.535a.73.73 0 0 1 .535-.219h12.5c.21 0 .39.07.535.215.145.14.215.32.215.531 0 .211-.07.39-.215.535a.73.73 0 0 1-.535.219Zm0-3.75c-.21 0-.39-.07-.535-.215A.713.713 0 0 1 3 6.254c0-.211.07-.39.215-.535A.73.73 0 0 1 3.75 5.5h12.5c.21 0 .39.07.535.215.145.14.215.32.215.531 0 .211-.07.39-.215.535A.73.73 0 0 1 16.25 7Zm0 0"></path>
+      </g>
+      <g id="password-manager">
+        <path d="M7.418 11.418C7.805 11.028 8 10.555 8 10c0-.555-.195-1.027-.582-1.418A1.943 1.943 0 0 0 6 8c-.555 0-1.027.195-1.418.582C4.195 8.972 4 9.445 4 10c0 .555.195 1.027.582 1.418.39.387.863.582 1.418.582.555 0 1.027-.195 1.418-.582ZM6 15c-1.39 0-2.57-.484-3.543-1.457C1.484 12.57 1 11.391 1 10c0-1.39.484-2.57 1.457-3.543C3.43 5.484 4.609 5 6 5c1 0 1.91.27 2.73.813A5.086 5.086 0 0 1 10.582 8H17.5c.414 0 .766.148 1.059.441.293.293.441.645.441 1.059v4c0 .414-.148.766-.441 1.059A1.443 1.443 0 0 1 17.5 15h-3c-.414 0-.766-.148-1.059-.441A1.443 1.443 0 0 1 13 13.5V12h-2.418a5.086 5.086 0 0 1-1.852 2.188A4.84 4.84 0 0 1 6 15Zm3.457-4.5H14.5v3h1V12c0-.145.047-.266.145-.36A.492.492 0 0 1 16 11.5c.14 0 .258.047.355.14a.477.477 0 0 1 .145.36v1.5h1v-4H9.457a3.27 3.27 0 0 0-1.156-2.156A3.452 3.452 0 0 0 6 6.5c-.973 0-1.797.34-2.48 1.02C2.84 8.203 2.5 9.027 2.5 10c0 .973.34 1.797 1.02 2.48.683.68 1.507 1.02 2.48 1.02.871 0 1.637-.281 2.3-.844A3.27 3.27 0 0 0 9.458 10.5Zm0 0"></path>
+      </g>
+      
+  </svg>
+</cr-iconset>
+
+<!-- NOTE: In the common case that the final icon will be 20x20, export the SVG
+     at 20px and place it in the section above. -->
+<cr-iconset name="cr" size="24">
+  <svg>
+    <defs>
+      <!--
+      These icons are copied from Polymer's iron-icons and kept in sorted order.
+      -->
+      <g id="add">
+        <path d="M11.102 12.898H6.898A.872.872 0 0 1 6 12.003c0-.253.086-.464.258-.64a.86.86 0 0 1 .64-.261h4.204V6.898A.872.872 0 0 1 11.997 6c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64v4.204h4.204a.872.872 0 0 1 .898.895.878.878 0 0 1-.258.64.86.86 0 0 1-.64.261h-4.204v4.204a.872.872 0 0 1-.895.898.878.878 0 0 1-.64-.258.86.86 0 0 1-.261-.64Zm0 0"></path>
+      </g>
+      <g id="arrow-back">
+        <path d="m8.25 12.898 4.406 4.407c.18.18.27.39.27.633a.913.913 0 0 1-.278.648.893.893 0 0 1-.636.266.855.855 0 0 1-.633-.274l-5.945-5.95a.894.894 0 0 1-.196-.292.891.891 0 0 1-.062-.34c0-.121.02-.234.062-.34.04-.105.102-.199.188-.281l5.949-5.95a.883.883 0 0 1 .64-.277c.247 0 .458.094.633.278a.847.847 0 0 1 .278.633c0 .246-.09.457-.274.636L8.25 11.102H18.3a.872.872 0 0 1 .898.895.878.878 0 0 1-.257.64.86.86 0 0 1-.64.261Zm0 0"></path>
+      </g>
+      <g id="arrow-drop-up">
+        <path d="M8.273 14.398a.419.419 0 0 1-.324-.132.456.456 0 0 1-.125-.317c0-.015.051-.12.149-.32l3.55-3.555a.651.651 0 0 1 .227-.148.636.636 0 0 1 .5 0c.082.031.16.082.227.148l3.55 3.555a.47.47 0 0 1 .11.16c.027.059.039.113.039.172a.444.444 0 0 1-.125.309.43.43 0 0 1-.324.128Zm0 0"></path>
+      </g>
+      <g id="arrow-drop-down">
+        <path d="m11.523 13.926-3.55-3.555a.47.47 0 0 1-.11-.16.393.393 0 0 1-.039-.172c0-.117.043-.219.125-.309a.43.43 0 0 1 .324-.128h7.454c.132 0 .242.043.324.132.082.09.125.196.125.317 0 .015-.051.12-.149.32l-3.55 3.555a.651.651 0 0 1-.227.148.636.636 0 0 1-.5 0 .651.651 0 0 1-.227-.148Zm0 0"></path>
+      </g>
+      <g id="arrow-forward">
+        <path d="M15.75 12.898H5.7a.872.872 0 0 1-.898-.895c-.001-.253.085-.464.257-.64a.86.86 0 0 1 .64-.261H15.75l-4.406-4.407a.866.866 0 0 1-.27-.633c0-.242.094-.457.278-.648a.893.893 0 0 1 .636-.266c.242 0 .453.09.633.274l5.945 5.95c.09.093.157.19.196.292a.891.891 0 0 1 .062.34c0 .121-.02.234-.062.34a.742.742 0 0 1-.188.281l-5.949 5.95c-.184.183-.39.273-.625.26a.923.923 0 0 1-.625-.273.918.918 0 0 1-.273-.652c0-.246.09-.457.273-.637Zm0 0"></path>
+      </g>
+      <g id="arrow-right">
+        <path d="M10.04 16.176a.444.444 0 0 1-.31-.125.43.43 0 0 1-.128-.324V8.273c0-.132.043-.242.132-.324a.456.456 0 0 1 .317-.125c.015 0 .12.051.32.149l3.555 3.55a.651.651 0 0 1 .148.227.636.636 0 0 1 0 .5.651.651 0 0 1-.148.227l-3.555 3.55a.47.47 0 0 1-.16.11.393.393 0 0 1-.172.039Zm0 0"></path>
+      </g>
+      <g id="cancel-filled">
+        <path d="m12 13.273 2.898 2.903c.184.183.399.27.641.262a.926.926 0 0 0 .637-.29.87.87 0 0 0 .273-.636.87.87 0 0 0-.273-.637L13.273 12l2.903-2.898a.879.879 0 0 0 0-1.278.879.879 0 0 0-1.277 0L12 10.727 9.102 7.824a.864.864 0 0 0-.625-.273.857.857 0 0 0-.625.273.88.88 0 0 0-.278.637c0 .242.094.457.278.64L10.727 12l-2.903 2.898a.822.822 0 0 0-.261.625.907.907 0 0 0 .289.625.874.874 0 0 0 .636.278.874.874 0 0 0 .637-.278Zm0 8.329a9.369 9.369 0 0 1-3.727-.75 9.706 9.706 0 0 1-3.062-2.063 9.706 9.706 0 0 1-2.063-3.062A9.369 9.369 0 0 1 2.398 12c0-1.332.25-2.578.75-3.738A9.743 9.743 0 0 1 5.211 5.21a9.706 9.706 0 0 1 3.062-2.063c1.168-.5 2.41-.75 3.727-.75 1.332 0 2.578.25 3.738.75a9.743 9.743 0 0 1 3.051 2.063 9.743 9.743 0 0 1 2.063 3.05c.5 1.16.75 2.407.75 3.739 0 1.316-.25 2.559-.75 3.727a9.706 9.706 0 0 1-2.063 3.062 9.743 9.743 0 0 1-3.05 2.063c-1.16.5-2.407.75-3.739.75Zm0 0"></path>
+      </g>
+      <g id="check">
+        <path d="m9.727 14.773 7.472-7.472a.88.88 0 0 1 .637-.278c.242 0 .457.094.64.278a.87.87 0 0 1 .274.636.87.87 0 0 1-.273.637L10.375 16.7a.874.874 0 0 1-.637.278.874.874 0 0 1-.636-.278l-3.579-3.574a.87.87 0 0 1-.273-.637.87.87 0 0 1 .273-.636.883.883 0 0 1 .641-.278.88.88 0 0 1 .637.278Zm0 0"></path>
+      </g>
+      <g id="check-circle">
+        <path d="m10.727 13.05-1.5-1.476a.864.864 0 0 0-.625-.273.857.857 0 0 0-.625.273.88.88 0 0 0-.278.637c0 .242.094.457.278.64l2.125 2.126c.183.183.39.273.625.273.23 0 .441-.09.625-.273l4.671-4.676a.88.88 0 0 0 .278-.637.883.883 0 0 0-.278-.64.857.857 0 0 0-.625-.274c-.23 0-.441.09-.625.273ZM12 21.603a9.369 9.369 0 0 1-3.727-.75 9.706 9.706 0 0 1-3.062-2.063 9.706 9.706 0 0 1-2.063-3.062A9.369 9.369 0 0 1 2.398 12c0-1.332.25-2.578.75-3.738A9.743 9.743 0 0 1 5.211 5.21a9.706 9.706 0 0 1 3.062-2.063c1.168-.5 2.41-.75 3.727-.75 1.332 0 2.578.25 3.738.75a9.743 9.743 0 0 1 3.051 2.063 9.743 9.743 0 0 1 2.063 3.05c.5 1.16.75 2.407.75 3.739 0 1.316-.25 2.559-.75 3.727a9.706 9.706 0 0 1-2.063 3.062 9.743 9.743 0 0 1-3.05 2.063c-1.16.5-2.407.75-3.739.75Zm0-1.801c2.168 0 4.008-.758 5.523-2.278 1.52-1.515 2.278-3.355 2.278-5.523 0-2.168-.758-4.008-2.278-5.523-1.515-1.52-3.355-2.278-5.523-2.278-2.168 0-4.008.758-5.523 2.278C4.957 7.992 4.199 9.832 4.199 12c0 2.168.758 4.008 2.278 5.523 1.515 1.52 3.355 2.278 5.523 2.278ZM12 12Zm0 0"></path>
+      </g>
+      <g id="chevron-left">
+        <path d="m10.95 12 4.1 4.102a.87.87 0 0 1 .274.636.87.87 0 0 1-.273.637.879.879 0 0 1-1.277 0l-4.75-4.75a.84.84 0 0 1-.188-.29.967.967 0 0 1-.063-.335c0-.117.024-.23.063-.336a.84.84 0 0 1 .187-.289l4.75-4.75a.879.879 0 0 1 1.278 0 .87.87 0 0 1 .273.637.87.87 0 0 1-.273.636Zm0 0"></path>
+      </g>
+      <g id="chevron-right">
+        <path d="m13.05 12-4.1-4.102a.87.87 0 0 1-.274-.636.87.87 0 0 1 .273-.637.879.879 0 0 1 1.277 0l4.75 4.75a.84.84 0 0 1 .188.29c.04.105.063.218.063.335 0 .117-.024.23-.063.336a.84.84 0 0 1-.187.289l-4.75 4.75a.822.822 0 0 1-.625.262.902.902 0 0 1-.625-.285.883.883 0 0 1-.278-.641.88.88 0 0 1 .278-.637Zm0 0"></path>
+      </g>
+      <g id="chrome-product">
+        <path d="M9.45 14.574c.698.7 1.55 1.051 2.55 1.051 1 0 1.852-.352 2.55-1.05.7-.7 1.052-1.552 1.052-2.552s-.352-1.847-1.051-2.546C13.85 8.773 13 8.426 12 8.426c-1 0-1.852.347-2.55 1.05-.7.7-1.052 1.547-1.052 2.547 0 1 .352 1.852 1.051 2.551ZM12 17.426c.184 0 .371-.004.563-.012.19-.012.378-.039.562-.09l-2.45 4.2c-2.402-.266-4.378-1.31-5.937-3.126-1.558-1.816-2.34-3.941-2.34-6.375 0-.714.082-1.418.239-2.109.16-.691.398-1.371.715-2.039l4 6.852A4.988 4.988 0 0 0 9.3 16.71a5.346 5.346 0 0 0 2.699.715Zm0-10.801a5.114 5.114 0 0 0-3.164 1.05 5.499 5.499 0 0 0-1.938 2.7L4.45 6.125a8.93 8.93 0 0 1 3.313-2.738A9.61 9.61 0 0 1 12 2.426c1.582 0 3.074.375 4.477 1.125a9.739 9.739 0 0 1 3.449 3.074Zm8.898 1.8c.25.583.43 1.177.54 1.774.109.602.164 1.211.164 1.824 0 2.586-.836 4.754-2.5 6.516-1.668 1.758-3.793 2.777-6.375 3.063l3.921-6.875c.235-.418.418-.852.551-1.301a5.058 5.058 0 0 0-.176-3.324A5.943 5.943 0 0 0 16 8.426Zm0 0"></path>
+      </g>
+      <g id="close">
+        <path d="m12 13.273-4.102 4.102a.816.816 0 0 1-.625.262.91.91 0 0 1-.625-.285.879.879 0 0 1 0-1.278L10.727 12 6.625 7.898a.83.83 0 0 1-.262-.636.914.914 0 0 1 .285-.637.879.879 0 0 1 1.278 0L12 10.727l4.102-4.102a.87.87 0 0 1 .636-.273.87.87 0 0 1 .637.273.87.87 0 0 1 .273.637.87.87 0 0 1-.273.636L13.273 12l4.102 4.102c.184.183.273.39.273.625 0 .23-.09.441-.273.625a.87.87 0 0 1-.637.273.87.87 0 0 1-.636-.273Zm0 0"></path>
+      </g>
+      <g id="computer">
+        <path d="M2.102 20.398a.872.872 0 0 1-.902-.895c0-.253.085-.464.257-.64a.869.869 0 0 1 .645-.261h19.796a.872.872 0 0 1 .902.895.878.878 0 0 1-.257.64.869.869 0 0 1-.645.261Zm2.097-3c-.496 0-.918-.175-1.27-.527a1.738 1.738 0 0 1-.53-1.27V5.399c0-.492.18-.918.53-1.27a1.729 1.729 0 0 1 1.27-.526h15.602c.496 0 .918.175 1.27.527.35.351.53.777.53 1.27v10.203c0 .492-.18.918-.53 1.27a1.729 1.729 0 0 1-1.27.526Zm0-1.796h15.602V5.398H4.199Zm0 0V5.398Zm0 0"></path>
+      </g>
+      <g id="edit-filled">
+        <path d="M4.504 20.398a.878.878 0 0 1-.64-.257.846.846 0 0 1-.262-.637v-2.172c0-.238.039-.465.125-.684.082-.214.214-.414.398-.597L16.051 4.125a1.728 1.728 0 0 1 1.27-.523c.238 0 .464.039.679.125.215.082.418.214.602.398l1.273 1.273a1.773 1.773 0 0 1 .523 1.266c0 .242-.039.469-.125.688a1.639 1.639 0 0 1-.398.597L7.949 19.875a1.706 1.706 0 0 1-.597.398 1.81 1.81 0 0 1-.68.125ZM17.324 7.95l1.278-1.273-1.278-1.278-1.273 1.278Zm0 0"></path>
+      </g>
+      <g id="delete">
+        <path d="M7.8 20.398c-.495 0-.917-.175-1.273-.527A1.735 1.735 0 0 1 6 18.601v-12h-.3a.872.872 0 0 1-.641-.257.87.87 0 0 1-.258-.637c0-.254.086-.469.258-.644a.86.86 0 0 1 .64-.262h3.903V4.5c0-.254.085-.469.257-.64a.872.872 0 0 1 .641-.258h3c.254 0 .469.086.64.257a.872.872 0 0 1 .258.641v.3h3.903c.254 0 .469.087.64.259a.863.863 0 0 1 .258.636.872.872 0 0 1-.258.64.864.864 0 0 1-.64.267H18V18.59c0 .508-.176.933-.527 1.285a1.74 1.74 0 0 1-1.274.523Zm8.4-13.796H7.8v12h8.4Zm-5.063 9.941a.869.869 0 0 0 .261-.645V9.301a.884.884 0 0 0-.894-.903.866.866 0 0 0-.64.262.86.86 0 0 0-.262.64v6.598a.872.872 0 0 0 .895.902.878.878 0 0 0 .64-.257Zm3 0a.869.869 0 0 0 .261-.645V9.301a.884.884 0 0 0-.894-.903.866.866 0 0 0-.64.262.86.86 0 0 0-.262.64v6.598a.872.872 0 0 0 .895.902.878.878 0 0 0 .64-.257ZM7.8 6.602v12Zm0 0"></path>
+      </g>
+      <g id="devices">
+        <path d="M12.602 10.5Zm-.903 8.7H3.301a.872.872 0 0 1-.64-.259.852.852 0 0 1-.263-.636.86.86 0 0 1 .262-.64.864.864 0 0 1 .64-.267h8.4c.253 0 .468.086.64.258a.858.858 0 0 1 .262.637.875.875 0 0 1-.262.645.86.86 0 0 1-.64.261Zm-6.3-3c-.547 0-.985-.16-1.313-.49-.324-.323-.484-.76-.484-1.312V6.602c0-.551.16-.989.484-1.313.328-.328.766-.488 1.312-.488H19.5c.254 0 .469.086.64.258a.863.863 0 0 1 .258.636.872.872 0 0 1-.257.64.864.864 0 0 1-.641.267H5.398v7.796H11.7c.254 0 .469.086.64.258a.858.858 0 0 1 .263.637.875.875 0 0 1-.262.645.86.86 0 0 1-.64.261ZM19.8 17.397V10.2h-3.602v7.2ZM15.75 19.2c-.418 0-.746-.12-.988-.363-.242-.238-.364-.57-.364-.984V9.75c0-.418.122-.746.364-.988s.57-.364.988-.364h4.5c.418 0 .746.122.988.364s.364.57.364.988v8.102c0 .414-.122.746-.364.984-.242.242-.57.363-.988.363ZM17.992 12a.578.578 0 0 0 .434-.18.564.564 0 0 0 .176-.414.592.592 0 0 0-.61-.605.57.57 0 0 0-.418.172.577.577 0 0 0-.176.433c0 .164.063.301.18.418a.57.57 0 0 0 .414.176ZM18 13.8Zm0 0"></path>
+      </g>
+      <g id="domain">
+        <path d="M2.398 18.602V5.398c0-.492.18-.918.532-1.27a1.729 1.729 0 0 1 1.27-.526h6c.495 0 .917.175 1.273.527.351.351.527.777.527 1.27v1.8h7.8c.497 0 .919.176 1.27.531.352.352.532.774.532 1.27v9.602c0 .492-.18.918-.532 1.27a1.729 1.729 0 0 1-1.27.526H4.2c-.497 0-.919-.175-1.27-.527a1.738 1.738 0 0 1-.532-1.27Zm1.801 0H6V16.8H4.2Zm0-3.801H6V13H4.2ZM4.2 11H6V9.2H4.2Zm0-3.8H6V5.397H4.2Zm4.2 11.402h1.8V16.8H8.4Zm0-3.801h1.8V13H8.4Zm0-3.801h1.8V9.2H8.4Zm0-3.8h1.8V5.397H8.4ZM12 18.601h7.8V9H12v2h1.8v1.8H12v2h1.8v1.802H12Zm4.2-5.801V11H18v1.8Zm0 3.8v-1.8H18v1.8Zm0 0"></path>
+      </g>
+      <g id="download">
+        <path d="M11.656 15.164a.845.845 0 0 1-.281-.187l-3.55-3.551a.83.83 0 0 1-.263-.637.949.949 0 0 1 .278-.64.909.909 0 0 1 .648-.274.87.87 0 0 1 .637.273l1.977 2V4.5a.872.872 0 0 1 .895-.898c.253 0 .464.086.64.257a.86.86 0 0 1 .261.641v7.648l2-2c.18-.183.391-.27.637-.261a.97.97 0 0 1 .652.289.89.89 0 0 1-.011 1.273l-3.551 3.528a.983.983 0 0 1-.293.187.967.967 0 0 1-.336.063.972.972 0 0 1-.34-.063ZM6.594 19.2c-.496 0-.918-.176-1.27-.527a1.749 1.749 0 0 1-.523-1.274V16.5c0-.254.086-.469.258-.64a.863.863 0 0 1 .636-.258c.254 0 .47.085.64.257a.864.864 0 0 1 .267.641v.898h10.796V16.5c0-.254.086-.469.258-.64a.87.87 0 0 1 .637-.258c.254 0 .469.085.645.257a.86.86 0 0 1 .261.641v.898c0 .497-.176.922-.527 1.274a1.744 1.744 0 0 1-1.274.527Zm0 0"></path>
+      </g>
+      <!-- source: https://fonts.google.com/icons?selected=Material+Symbols+Outlined:family_link:FILL@0;wght@0;GRAD@0;opsz@24&icon.size=24&icon.color=%23e8eaed -->
+      <g id="family-link">
+        <path d="M13.324 18.352 19.2 9.227 13.301 3 7.227 9.227Zm-.097-7.676ZM10.648 22.8c-.816 0-1.52-.281-2.109-.84a3.954 3.954 0 0 1-1.164-2.063 1.562 1.562 0 0 0-.531-.835 1.389 1.389 0 0 0-.918-.336c-.25 0-.48.046-.7.148a1.039 1.039 0 0 0-.5.477c-.085.164-.199.308-.343.421a.787.787 0 0 1-.508.176.883.883 0 0 1-.648-.273.896.896 0 0 1-.278-.653c0-.105.016-.199.051-.277.035-.082.074-.164.125-.246.3-.484.7-.871 1.2-1.164.5-.29 1.042-.438 1.624-.438.817 0 1.512.27 2.09.801.574.535.953 1.211 1.137 2.028.082.363.254.668.511.91.258.242.579.363.961.363.286 0 .575-.082.864-.25a1.9 1.9 0 0 0 .668-.602l.02-.046-6.5-9.875a1.625 1.625 0 0 1-.231-.477 1.881 1.881 0 0 1-.07-.512c0-.234.038-.457.113-.672.074-.21.203-.406.386-.59L12 1.75c.184-.184.39-.32.617-.414.23-.09.461-.137.688-.137.23 0 .457.047.683.137.223.094.43.23.614.414L20.5 7.977c.168.175.293.37.375.585a1.91 1.91 0 0 1 .055 1.188 1.533 1.533 0 0 1-.23.477l-7.177 10.875c-.414.632-.867 1.074-1.355 1.324a3.31 3.31 0 0 1-1.52.375Zm0 0"></path>
+      </g>
+      <g id="error-filled">
+        <path d="M12.637 16.543a.852.852 0 0 0 .261-.637.9.9 0 0 0-.253-.644.86.86 0 0 0-.641-.262.878.878 0 0 0-.64.258.852.852 0 0 0-.262.637.9.9 0 0 0 .253.644.875.875 0 0 0 .641.262.878.878 0 0 0 .64-.258Zm0-3.602a.86.86 0 0 0 .261-.64V8.1a.872.872 0 0 0-.895-.902.878.878 0 0 0-.64.258.869.869 0 0 0-.261.645V12.3a.872.872 0 0 0 .895.898.878.878 0 0 0 .64-.258Zm-.63 8.66c-1.32 0-2.566-.25-3.734-.75a9.706 9.706 0 0 1-3.062-2.062 9.706 9.706 0 0 1-2.063-3.062 9.398 9.398 0 0 1-.75-3.739c0-1.324.25-2.566.75-3.726A9.743 9.743 0 0 1 5.211 5.21a9.706 9.706 0 0 1 3.062-2.063 9.398 9.398 0 0 1 3.739-.75c1.324 0 2.566.25 3.726.75a9.743 9.743 0 0 1 3.051 2.063 9.688 9.688 0 0 1 2.063 3.059c.5 1.16.75 2.402.75 3.722 0 1.32-.25 2.567-.75 3.735a9.706 9.706 0 0 1-2.063 3.062 9.688 9.688 0 0 1-3.059 2.063 9.31 9.31 0 0 1-3.722.75Zm0 0"></path>
+      </g>
+      <g id="error">
+        <path d="M12.637 16.543a.852.852 0 0 0 .261-.637.9.9 0 0 0-.253-.644.86.86 0 0 0-.641-.262.878.878 0 0 0-.64.258.852.852 0 0 0-.262.637.9.9 0 0 0 .253.644.875.875 0 0 0 .641.262.878.878 0 0 0 .64-.258Zm0-3.602a.86.86 0 0 0 .261-.64V8.1a.872.872 0 0 0-.895-.902.878.878 0 0 0-.64.258.869.869 0 0 0-.261.645V12.3a.872.872 0 0 0 .895.898.878.878 0 0 0 .64-.258Zm-.63 8.66c-1.32 0-2.566-.25-3.734-.75a9.706 9.706 0 0 1-3.062-2.062 9.706 9.706 0 0 1-2.063-3.062 9.398 9.398 0 0 1-.75-3.739c0-1.324.25-2.566.75-3.726A9.743 9.743 0 0 1 5.211 5.21a9.706 9.706 0 0 1 3.062-2.063 9.398 9.398 0 0 1 3.739-.75c1.324 0 2.566.25 3.726.75a9.743 9.743 0 0 1 3.051 2.063 9.688 9.688 0 0 1 2.063 3.059c.5 1.16.75 2.402.75 3.722 0 1.32-.25 2.567-.75 3.735a9.706 9.706 0 0 1-2.063 3.062 9.688 9.688 0 0 1-3.059 2.063 9.31 9.31 0 0 1-3.722.75Zm-.007-1.8c2.168 0 4.008-.758 5.523-2.278 1.52-1.515 2.278-3.355 2.278-5.523 0-2.168-.758-4.008-2.278-5.523-1.515-1.52-3.355-2.278-5.523-2.278-2.168 0-4.008.758-5.523 2.278C4.957 7.992 4.199 9.832 4.199 12c0 2.168.758 4.008 2.278 5.523 1.515 1.52 3.355 2.278 5.523 2.278ZM12 12Zm0 0"></path>
+      </g>
+      <g id="keyboard-arrow-up">
+        <path d="m12 10.875-4.102 4.102a.87.87 0 0 1-.636.273.87.87 0 0 1-.637-.273.879.879 0 0 1 0-1.278l4.75-4.75A.857.857 0 0 1 12 8.676c.234 0 .441.09.625.273l4.75 4.75c.184.184.273.39.273.625s-.09.442-.273.625a.874.874 0 0 1-.637.278.874.874 0 0 1-.636-.278Zm0 0"></path>
+      </g>
+      <g id="keyboard-arrow-down">
+        <path d="M11.664 15.238a.84.84 0 0 1-.289-.187l-4.75-4.75a.835.835 0 0 1-.262-.637.923.923 0 0 1 .285-.64.879.879 0 0 1 1.278 0L12 13.124l4.102-4.102a.83.83 0 0 1 .636-.261.919.919 0 0 1 .637.289.87.87 0 0 1 .273.636.87.87 0 0 1-.273.637l-4.75 4.727a.84.84 0 0 1-.29.187.967.967 0 0 1-.335.063.967.967 0 0 1-.336-.063Zm0 0"></path>
+      </g>
+      <g id="chrome-extension-filled">
+        <path d="M5.398 20.398c-.492 0-.918-.175-1.27-.527a1.735 1.735 0 0 1-.526-1.27v-3.476c0-.219.066-.41.199-.578a.79.79 0 0 1 .523-.297 2.746 2.746 0 0 0 1.2-.875C5.84 12.977 6 12.515 6 12c0-.516-.16-.977-.477-1.375a2.746 2.746 0 0 0-1.199-.875.8.8 0 0 1-.523-.305.947.947 0 0 1-.2-.593V5.398c0-.492.176-.918.528-1.27a1.735 1.735 0 0 1 1.27-.526h4.203c0-.668.23-1.235.691-1.704a2.317 2.317 0 0 1 1.703-.699c.668 0 1.238.235 1.703.696.469.464.7 1.035.7 1.707h4.203c.492 0 .918.175 1.27.527.35.351.526.777.526 1.27v4.203c.668 0 1.235.23 1.704.691.464.465.699 1.031.699 1.703 0 .668-.235 1.238-.696 1.703-.464.469-1.035.7-1.707.7v4.203c0 .492-.175.918-.527 1.27a1.735 1.735 0 0 1-1.27.526Zm0 0"></path>
+      </g>
+      <g id="fullscreen">
+        <path d="M5.398 18.602H7.5a.872.872 0 0 1 .898.895.878.878 0 0 1-.257.64.86.86 0 0 1-.641.261h-3a.872.872 0 0 1-.64-.257.872.872 0 0 1-.258-.641v-3a.872.872 0 0 1 .895-.898c.253 0 .464.085.64.257a.86.86 0 0 1 .261.641Zm13.204 0V16.5a.872.872 0 0 1 .895-.898c.253 0 .464.085.64.257a.86.86 0 0 1 .261.641v3a.872.872 0 0 1-.257.64.872.872 0 0 1-.641.258h-3a.872.872 0 0 1-.898-.895c0-.253.085-.464.257-.64a.86.86 0 0 1 .641-.261ZM5.398 5.398V7.5a.872.872 0 0 1-.895.898.878.878 0 0 1-.64-.257.86.86 0 0 1-.261-.641v-3c0-.254.086-.469.257-.64a.872.872 0 0 1 .641-.258h3a.872.872 0 0 1 .898.895.878.878 0 0 1-.257.64.86.86 0 0 1-.641.261Zm13.204 0H16.5a.872.872 0 0 1-.898-.895c0-.253.085-.464.257-.64a.86.86 0 0 1 .641-.261h3c.254 0 .469.086.64.257a.872.872 0 0 1 .258.641v3a.872.872 0 0 1-.895.898.878.878 0 0 1-.64-.257.86.86 0 0 1-.261-.641Zm0 0"></path>
+      </g>
+      <g id="group-filled">
+        <path d="M2.398 16.898a2.335 2.335 0 0 1 1.176-2.046 11.97 11.97 0 0 1 2.864-1.227 11.566 11.566 0 0 1 3.164-.426c1.097 0 2.152.14 3.16.426 1.008.285 1.965.691 2.863 1.227a2.335 2.335 0 0 1 1.176 2.047v.5c0 .5-.176.925-.528 1.277a1.736 1.736 0 0 1-1.273.523H4.2c-.5 0-.927-.176-1.274-.523a1.74 1.74 0 0 1-.528-1.278ZM18.125 19.2c.148-.281.266-.574.352-.875.082-.3.125-.61.125-.926v-.5c0-.699-.165-1.347-.489-1.949a4.215 4.215 0 0 0-1.312-1.472c.648.132 1.277.312 1.887.535.609.226 1.187.504 1.738.84a2.335 2.335 0 0 1 1.176 2.047v.5c0 .5-.176.925-.528 1.277a1.736 1.736 0 0 1-1.273.523ZM7.051 10.95C6.35 10.25 6 9.4 6 8.4c0-1 .352-1.848 1.05-2.547.7-.704 1.552-1.051 2.552-1.051s1.847.347 2.546 1.05c.704.7 1.051 1.547 1.051 2.547 0 1-.347 1.852-1.05 2.551-.7.7-1.547 1.051-2.547 1.051-1 0-1.852-.352-2.551-1.05Zm9.898 0C16.25 11.65 15.4 12 14.4 12c-.133 0-.258-.004-.376-.012a2.497 2.497 0 0 1-.375-.062 5.859 5.859 0 0 0 .989-1.614A5 5 0 0 0 15 8.399a4.98 4.98 0 0 0-.363-1.91 5.802 5.802 0 0 0-.989-1.613c.137-.035.262-.055.375-.063.118-.007.243-.011.375-.011 1 0 1.852.347 2.551 1.05.7.7 1.051 1.547 1.051 2.547 0 1-.352 1.852-1.05 2.551Zm0 0"></path>
+      </g>
+      <g id="help">
+        <path d="M12.852 17.648c.23-.23.347-.515.347-.847 0-.336-.117-.617-.347-.852a1.158 1.158 0 0 0-.852-.347c-.332 0-.617.113-.852.347-.23.235-.347.516-.347.852 0 .332.117.617.347.847.235.235.52.352.852.352.332 0 .617-.117.852-.352ZM12 21.602a9.369 9.369 0 0 1-3.727-.75 9.706 9.706 0 0 1-3.062-2.063 9.706 9.706 0 0 1-2.063-3.062A9.369 9.369 0 0 1 2.398 12c0-1.332.25-2.578.75-3.738A9.743 9.743 0 0 1 5.211 5.21a9.706 9.706 0 0 1 3.062-2.063c1.168-.5 2.41-.75 3.727-.75 1.332 0 2.578.25 3.738.75a9.743 9.743 0 0 1 3.051 2.063 9.743 9.743 0 0 1 2.063 3.05c.5 1.16.75 2.407.75 3.739 0 1.316-.25 2.559-.75 3.727a9.706 9.706 0 0 1-2.063 3.062 9.743 9.743 0 0 1-3.05 2.063c-1.16.5-2.407.75-3.739.75Zm0-1.801c2.168 0 4.008-.758 5.523-2.278 1.52-1.515 2.278-3.355 2.278-5.523 0-2.168-.758-4.008-2.278-5.523-1.515-1.52-3.355-2.278-5.523-2.278-2.168 0-4.008.758-5.523 2.278C4.957 7.992 4.199 9.832 4.199 12c0 2.168.758 4.008 2.278 5.523 1.515 1.52 3.355 2.278 5.523 2.278ZM12 12Zm.074-4.3c.434 0 .805.132 1.114.402.308.265.46.605.46 1.023 0 .367-.105.691-.324.977a4.67 4.67 0 0 1-.75.773A6.528 6.528 0 0 0 11.551 12c-.301.418-.442.883-.426 1.398 0 .235.082.422.25.563a.888.888 0 0 0 .602.215c.23 0 .433-.07.597-.215a.954.954 0 0 0 .324-.563 2.34 2.34 0 0 1 .477-.972c.234-.285.484-.551.75-.801.383-.367.695-.773.938-1.227a3.01 3.01 0 0 0 .363-1.449c0-.847-.328-1.554-.989-2.113C13.777 6.277 13 6 12.102 6a3.96 3.96 0 0 0-1.79.414 3.196 3.196 0 0 0-1.335 1.211.767.767 0 0 0-.114.648.71.71 0 0 0 .41.5.948.948 0 0 0 .704.079 1.14 1.14 0 0 0 .574-.375c.183-.235.406-.422.676-.563.265-.144.546-.215.847-.215Zm0 0"></path>
+      </g>
+      <g id="history">
+        <path d="M12 20.398c-2.2 0-4.086-.726-5.664-2.187-1.574-1.457-2.469-3.254-2.688-5.387a.628.628 0 0 1 .215-.586A.908.908 0 0 1 4.5 12c.234 0 .441.066.625.2a.779.779 0 0 1 .324.55c.184 1.648.899 3.04 2.137 4.164C8.828 18.04 10.3 18.602 12 18.602c1.816 0 3.371-.649 4.664-1.938 1.29-1.293 1.938-2.848 1.938-4.664 0-1.816-.649-3.371-1.938-4.664-1.293-1.29-2.848-1.938-4.664-1.938a6.453 6.453 0 0 0-2.863.641 6.372 6.372 0 0 0-2.211 1.762h1.773c.254 0 .469.086.64.258a.852.852 0 0 1 .263.636.86.86 0 0 1-.262.64.864.864 0 0 1-.64.267H4.5a.86.86 0 0 1-.64-.262.872.872 0 0 1-.258-.64V4.5a.872.872 0 0 1 .895-.898c.253 0 .464.086.64.257a.86.86 0 0 1 .261.641v2.352c.77-1 1.723-1.793 2.864-2.375 1.14-.586 2.386-.875 3.738-.875 1.168 0 2.258.218 3.277.664a8.502 8.502 0 0 1 2.66 1.796 8.502 8.502 0 0 1 1.797 2.66c.446 1.02.664 2.11.664 3.278a8.086 8.086 0 0 1-.664 3.277 8.502 8.502 0 0 1-1.797 2.66 8.502 8.502 0 0 1-2.66 1.797 8.086 8.086 0 0 1-3.277.664Zm.898-9.148 2.25 2.25c.184.184.274.39.266.625a.924.924 0 0 1-.289.625.87.87 0 0 1-.637.273.87.87 0 0 1-.636-.273l-2.47-2.469a.97.97 0 0 1-.206-.297.83.83 0 0 1-.074-.347V8.094c0-.254.085-.465.261-.637A.875.875 0 0 1 12 7.199c.25 0 .46.086.637.258a.869.869 0 0 1 .261.645Zm0 0"></path>
+      </g>
+      <g id="info-filled">
+        <path d="M12.637 16.543a.869.869 0 0 0 .261-.645V11.7a.872.872 0 0 0-.895-.898.878.878 0 0 0-.64.258.86.86 0 0 0-.261.64v4.2a.872.872 0 0 0 .895.902.878.878 0 0 0 .64-.258Zm0-7.8a.852.852 0 0 0 .261-.638.9.9 0 0 0-.253-.644.875.875 0 0 0-.641-.262.878.878 0 0 0-.64.258.852.852 0 0 0-.262.637.9.9 0 0 0 .253.644.86.86 0 0 0 .641.262.878.878 0 0 0 .64-.258Zm-.63 12.859c-1.32 0-2.566-.25-3.734-.75a9.706 9.706 0 0 1-3.062-2.063 9.706 9.706 0 0 1-2.063-3.062 9.398 9.398 0 0 1-.75-3.739c0-1.324.25-2.566.75-3.726A9.743 9.743 0 0 1 5.211 5.21a9.706 9.706 0 0 1 3.062-2.063 9.398 9.398 0 0 1 3.739-.75c1.324 0 2.566.25 3.726.75a9.743 9.743 0 0 1 3.051 2.063 9.688 9.688 0 0 1 2.063 3.059c.5 1.16.75 2.402.75 3.722 0 1.32-.25 2.567-.75 3.735a9.706 9.706 0 0 1-2.063 3.062 9.688 9.688 0 0 1-3.059 2.063 9.31 9.31 0 0 1-3.722.75Zm0 0"></path>
+      </g>
+      <g id="info">
+        <path d="M12.637 16.543a.869.869 0 0 0 .261-.645V11.7a.872.872 0 0 0-.895-.898.878.878 0 0 0-.64.258.86.86 0 0 0-.261.64v4.2a.872.872 0 0 0 .895.902.878.878 0 0 0 .64-.258Zm0-7.8a.852.852 0 0 0 .261-.638.9.9 0 0 0-.253-.644.875.875 0 0 0-.641-.262.878.878 0 0 0-.64.258.852.852 0 0 0-.262.637.9.9 0 0 0 .253.644.86.86 0 0 0 .641.262.878.878 0 0 0 .64-.258Zm-.63 12.859c-1.32 0-2.566-.25-3.734-.75a9.706 9.706 0 0 1-3.062-2.063 9.706 9.706 0 0 1-2.063-3.062 9.398 9.398 0 0 1-.75-3.739c0-1.324.25-2.566.75-3.726A9.743 9.743 0 0 1 5.211 5.21a9.706 9.706 0 0 1 3.062-2.063 9.398 9.398 0 0 1 3.739-.75c1.324 0 2.566.25 3.726.75a9.743 9.743 0 0 1 3.051 2.063 9.688 9.688 0 0 1 2.063 3.059c.5 1.16.75 2.402.75 3.722 0 1.32-.25 2.567-.75 3.735a9.706 9.706 0 0 1-2.063 3.062 9.688 9.688 0 0 1-3.059 2.063 9.31 9.31 0 0 1-3.722.75ZM12 19.8c2.168 0 4.008-.758 5.523-2.278 1.52-1.515 2.278-3.355 2.278-5.523 0-2.168-.758-4.008-2.278-5.523-1.515-1.52-3.355-2.278-5.523-2.278-2.168 0-4.008.758-5.523 2.278C4.957 7.992 4.199 9.832 4.199 12c0 2.168.758 4.008 2.278 5.523 1.515 1.52 3.355 2.278 5.523 2.278ZM12 12Zm0 0"></path>
+      </g>
+      <g id="draft-filled">
+        <path d="M6.594 21.602c-.496 0-.918-.18-1.27-.532a1.74 1.74 0 0 1-.523-1.27V4.2c0-.497.176-.919.527-1.27a1.74 1.74 0 0 1 1.274-.532h7.046c.235 0 .465.043.688.125.226.086.422.22.59.403l3.75 3.75c.183.164.316.363.398.586.086.226.125.453.125.687v11.852c0 .496-.176.918-.527 1.27a1.747 1.747 0 0 1-1.274.53ZM13.199 7.5a.88.88 0 0 0 .902.898h3.297L13.2 4.2Zm0 0"></path>
+      </g>
+      <g id="location-on-filled">
+        <path d="M12.012 12.898c.742 0 1.375-.261 1.902-.785a2.629 2.629 0 0 0 .785-1.925c0-.743-.261-1.376-.785-1.899A2.603 2.603 0 0 0 12 7.5c-.75 0-1.387.262-1.914.79A2.6 2.6 0 0 0 9.3 10.2c0 .75.261 1.386.785 1.913a2.629 2.629 0 0 0 1.926.785ZM12 21.625a1.07 1.07 0 0 1-.504-.125.69.69 0 0 1-.328-.375l-.172-.352a9.497 9.497 0 0 0-.594-.953 17.9 17.9 0 0 0-.675-.894 26.445 26.445 0 0 0-2.23-2.113A10.273 10.273 0 0 1 5.5 14.55a7.304 7.304 0 0 1-.977-2.055 8.07 8.07 0 0 1-.324-2.27c0-2.164.75-4.007 2.254-5.535 1.5-1.527 3.336-2.293 5.512-2.293 2.172 0 4.023.766 5.547 2.29C19.039 6.21 19.8 8.063 19.8 10.233c0 .778-.117 1.532-.344 2.266a8.121 8.121 0 0 1-.98 2.05 11.185 11.185 0 0 1-2 2.266 25.79 25.79 0 0 0-2.176 2.11 9.348 9.348 0 0 0-.739.887 6.452 6.452 0 0 0-.585.96l-.176.352c-.086.148-.2.27-.344.363a.854.854 0 0 1-.457.137Zm0 0"></path>
+      </g>
+      <g id="mic-filled">
+        <path d="M9.875 13.523A2.892 2.892 0 0 1 9 11.398v-6c0-.832.293-1.539.875-2.125A2.898 2.898 0 0 1 12 2.398c.832 0 1.543.293 2.125.875.582.586.875 1.293.875 2.125v6c0 .836-.293 1.543-.875 2.125-.582.586-1.293.875-2.125.875-.832 0-1.543-.289-2.125-.875Zm1.227 5.977v-1.574a6.285 6.285 0 0 1-3.766-1.84 6.399 6.399 0 0 1-1.86-3.762.768.768 0 0 1 .196-.652.817.817 0 0 1 .625-.274.87.87 0 0 1 .64.266c.176.172.29.387.336.637.22 1.148.774 2.086 1.665 2.812a4.722 4.722 0 0 0 3.05 1.086 4.716 4.716 0 0 0 3.075-1.097 4.676 4.676 0 0 0 1.664-2.801c.046-.25.16-.465.332-.637a.855.855 0 0 1 .636-.266c.254 0 .465.094.63.274.167.18.234.398.198.652a6.399 6.399 0 0 1-1.859 3.762 6.285 6.285 0 0 1-3.766 1.84V19.5a.872.872 0 0 1-.895.898.878.878 0 0 1-.64-.257.86.86 0 0 1-.261-.641Zm0 0"></path>
+      </g>
+      <g id="more-vert">
+        <path d="M11.996 19.2c-.496 0-.922-.177-1.27-.532a1.737 1.737 0 0 1-.527-1.273c0-.497.176-.918.531-1.27a1.734 1.734 0 0 1 1.274-.523c.496 0 .922.175 1.27.527.351.355.527.781.527 1.277 0 .496-.176.918-.531 1.27a1.749 1.749 0 0 1-1.274.523Zm0-5.4c-.496 0-.922-.175-1.27-.53a1.737 1.737 0 0 1-.527-1.274c0-.496.176-.922.531-1.27a1.737 1.737 0 0 1 1.274-.527c.496 0 .922.176 1.27.531.351.352.527.778.527 1.274s-.176.922-.531 1.27a1.737 1.737 0 0 1-1.274.527Zm0-5.402c-.496 0-.922-.175-1.27-.527a1.752 1.752 0 0 1-.527-1.277c0-.496.176-.918.531-1.27a1.749 1.749 0 0 1 1.274-.523c.496 0 .922.176 1.27.531.351.352.527.777.527 1.273 0 .497-.176.918-.531 1.27a1.734 1.734 0 0 1-1.274.523Zm0 0"></path>
+      </g>
+      <g id="open-in-new">
+        <path d="M5.398 20.398c-.492 0-.918-.175-1.27-.527a1.735 1.735 0 0 1-.526-1.27V5.399c0-.492.175-.918.527-1.27a1.735 1.735 0 0 1 1.27-.526h5.703a.872.872 0 0 1 .898.895.878.878 0 0 1-.258.64.86.86 0 0 1-.64.261H5.398v13.204h13.204v-5.704a.872.872 0 0 1 .895-.898c.253 0 .464.086.64.258a.86.86 0 0 1 .261.64v5.704c0 .492-.175.918-.527 1.27a1.735 1.735 0 0 1-1.27.526ZM18.602 6.676l-8.301 8.3a.816.816 0 0 1-.625.262.907.907 0 0 1-.625-.289.874.874 0 0 1-.278-.636c0-.243.094-.454.278-.637l8.273-8.278h-2.023a.884.884 0 0 1-.903-.894c0-.254.086-.465.262-.64a.86.86 0 0 1 .64-.262h4.2c.254 0 .469.086.64.257a.872.872 0 0 1 .258.641v4.2a.884.884 0 0 1-.894.902.866.866 0 0 1-.64-.262.86.86 0 0 1-.262-.64Zm0 0"></path>
+      </g>
+      <g id="person">
+        <path
+          d="M9.45 10.95c-.7-.7-1.052-1.552-1.052-2.552S8.75 6.551 9.45 5.852C10.15 5.148 11 4.8 12 4.8c1 0 1.852.347 2.55 1.05.7.7 1.052 1.547 1.052 2.547 0 1-.352 1.852-1.051 2.551C13.85 11.65 13 12 12 12c-1 0-1.852-.352-2.55-1.05ZM4.8 17.397v-.597c0-.383.102-.746.313-1.09a2.63 2.63 0 0 1 .864-.86 12.207 12.207 0 0 1 2.906-1.226 11.602 11.602 0 0 1 6.23 0c1.024.285 1.996.691 2.91 1.227.368.214.657.5.864.847.21.352.312.719.312 1.102v.597c0 .497-.176.922-.527 1.274a1.744 1.744 0 0 1-1.274.527H6.594c-.496 0-.918-.176-1.27-.527a1.749 1.749 0 0 1-.523-1.274Zm1.802 0h10.796v-.597a.39.39 0 0 0-.074-.235.49.49 0 0 0-.199-.168 9.306 9.306 0 0 0-2.45-1.046A10.203 10.203 0 0 0 12 15c-.918 0-1.809.117-2.676.352a9.306 9.306 0 0 0-2.449 1.046 1.357 1.357 0 0 0-.2.196.314.314 0 0 0-.073.207Zm6.671-7.73c.352-.352.528-.777.528-1.273 0-.497-.176-.918-.531-1.27a1.734 1.734 0 0 1-1.274-.523c-.496 0-.922.175-1.27.527a1.752 1.752 0 0 0-.527 1.277c0 .496.176.918.531 1.27.352.347.778.523 1.274.523s.922-.176 1.27-.531ZM12 8.398Zm0 9Zm0 0"
+        </path>
+      </g>
+      <g id="person-filled">
+        <path d="M9.45 10.95c-.7-.7-1.052-1.552-1.052-2.552S8.75 6.551 9.45 5.852C10.15 5.148 11 4.8 12 4.8c1 0 1.852.347 2.55 1.05.7.7 1.052 1.547 1.052 2.547 0 1-.352 1.852-1.051 2.551C13.85 11.65 13 12 12 12c-1 0-1.852-.352-2.55-1.05ZM4.8 17.397v-.597c0-.383.102-.746.313-1.09a2.63 2.63 0 0 1 .864-.86 12.235 12.235 0 0 1 2.91-1.226 11.573 11.573 0 0 1 6.226 0c1.024.285 1.996.691 2.91 1.227.368.214.657.5.864.847.21.352.312.719.312 1.102v.597c0 .5-.176.926-.523 1.278a1.751 1.751 0 0 1-1.278.523H6.602c-.5 0-.926-.176-1.278-.523a1.751 1.751 0 0 1-.523-1.278Zm0 0"></path>
+      </g>
+      <g id="print-filled">
+        <path d="M7.8 20.398c-.495 0-.917-.175-1.273-.527A1.729 1.729 0 0 1 6 18.601v-1.796H4.2c-.497 0-.919-.176-1.27-.528A1.743 1.743 0 0 1 2.398 15v-4.2c0-.667.235-1.234.704-1.698A2.303 2.303 0 0 1 4.8 8.398h14.398c.668 0 1.235.235 1.7.704.468.464.703 1.03.703 1.699V15c0 .496-.176.918-.532 1.27a1.715 1.715 0 0 1-1.265.53h-1.801v1.802c0 .492-.176.918-.527 1.27a1.74 1.74 0 0 1-1.278.526ZM18 7.2H6V5.395c0-.497.176-.918.527-1.27a1.74 1.74 0 0 1 1.274-.523h8.398c.496 0 .918.175 1.274.527.351.351.527.777.527 1.27Zm-.305 5.403a.872.872 0 0 0 .64-.258.861.861 0 0 0 .267-.637.887.887 0 0 0-.258-.645.858.858 0 0 0-.637-.261.887.887 0 0 0-.645.258.852.852 0 0 0-.261.636c0 .254.086.47.258.64a.855.855 0 0 0 .636.267Zm-9.894 6h8.398V15H7.801Zm0 0"></path>
+      </g>
+      <g id="schedule">
+        <path d="M12.898 11.25V6.898A.872.872 0 0 0 12.003 6a.878.878 0 0 0-.64.258.86.86 0 0 0-.261.64v4.727c0 .133.023.254.074.363.05.11.117.203.199.285l3.348 3.348a.828.828 0 0 0 .64.266.914.914 0 0 0 .637-.285.879.879 0 0 0 .273-.641.885.885 0 0 0-.28-.64ZM12 21.602a9.347 9.347 0 0 1-3.73-.75 9.688 9.688 0 0 1-3.06-2.063 9.706 9.706 0 0 1-2.062-3.062 9.398 9.398 0 0 1-.75-3.739c0-1.324.25-2.57.75-3.738A9.524 9.524 0 0 1 5.211 5.2a9.805 9.805 0 0 1 3.062-2.052 9.398 9.398 0 0 1 3.739-.75c1.324 0 2.57.254 3.738.758a9.689 9.689 0 0 1 3.047 2.051 9.762 9.762 0 0 1 2.047 3.05A9.342 9.342 0 0 1 21.602 12c0 1.324-.25 2.566-.75 3.73a9.788 9.788 0 0 1-2.051 3.06 9.541 9.541 0 0 1-3.055 2.062c-1.168.5-2.418.75-3.746.75ZM12 12Zm.012 7.8c2.156 0 3.996-.76 5.511-2.288 1.52-1.524 2.278-3.367 2.278-5.524 0-2.156-.758-3.996-2.278-5.511-1.515-1.52-3.355-2.278-5.511-2.278-2.157 0-4 .758-5.524 2.278C4.961 7.992 4.2 9.832 4.2 11.988c0 2.157.762 4 2.29 5.524 1.523 1.527 3.366 2.289 5.523 2.289Zm0 0"></path>
+      </g>
+      <g id="search">
+        <path d="M9.602 15.602c-1.668 0-3.086-.586-4.25-1.75-1.168-1.168-1.75-2.586-1.75-4.25 0-1.668.582-3.086 1.75-4.25 1.164-1.168 2.582-1.75 4.25-1.75 1.664 0 3.082.582 4.25 1.75 1.164 1.164 1.75 2.582 1.75 4.25a5.75 5.75 0 0 1-.313 1.902 6.293 6.293 0 0 1-.863 1.644l5.347 5.352c.184.184.278.39.278.625a.862.862 0 0 1-.278.625.87.87 0 0 1-.636.273.87.87 0 0 1-.637-.273l-5.352-5.324c-.5.367-1.046.652-1.644.863a5.75 5.75 0 0 1-1.902.313Zm0-1.801c1.164 0 2.156-.41 2.972-1.227.817-.816 1.227-1.808 1.227-2.972 0-1.168-.41-2.16-1.227-2.977-.816-.816-1.808-1.227-2.972-1.227-1.168 0-2.16.41-2.977 1.227-.816.816-1.227 1.809-1.227 2.977 0 1.164.41 2.156 1.227 2.972.816.817 1.809 1.227 2.977 1.227Zm0 0"></path>
+      </g>
+      <g id="security">
+        <path d="M12 19.727c1.617-.5 2.96-1.465 4.04-2.891A9.466 9.466 0 0 0 17.925 12H12V4.324L6 6.625v4.5c0 .148.008.297.023.438.02.14.036.289.051.437H12Zm-.3 1.761a1 1 0 0 1-.274-.062c-2.184-.719-3.934-2.043-5.25-3.977-1.317-1.933-1.977-4.039-1.977-6.324v-4.5a1.763 1.763 0 0 1 1.152-1.676l6-2.3A1.82 1.82 0 0 1 12 2.522c.215 0 .434.043.648.125l6 2.301a1.763 1.763 0 0 1 1.153 1.676v4.5c0 2.285-.66 4.39-1.977 6.324-1.316 1.934-3.066 3.258-5.25 3.977a1 1 0 0 1-.273.062 3.87 3.87 0 0 1-.602 0Zm0 0"></path>
+      </g>
+      <!-- The <g> IDs are exposed as global variables in Vulcanized mode, which
+        conflicts with the "settings" namespace of MD Settings. Using an "_icon"
+        suffix prevents the naming conflict. -->
+      <g id="settings-filled">
+        <path d="M11 21.602c-.285 0-.523-.086-.727-.25a1.097 1.097 0 0 1-.375-.653l-.375-1.949a8.72 8.72 0 0 1-1.109-.523c-.36-.204-.7-.434-1.016-.704l-1.875.653c-.25.082-.503.078-.761-.012a1.066 1.066 0 0 1-.586-.488l-1-1.75a1.045 1.045 0 0 1-.125-.739 1.2 1.2 0 0 1 .375-.664l1.472-1.296a8.15 8.15 0 0 1-.074-.602 8.05 8.05 0 0 1 .074-1.852L3.426 9.477a1.2 1.2 0 0 1-.375-.665 1.045 1.045 0 0 1 .125-.738l1-1.75c.133-.234.328-.394.586-.488.258-.09.511-.094.761-.012l1.875.653c.317-.27.657-.5 1.016-.704a8.72 8.72 0 0 1 1.11-.523l.374-1.95c.051-.265.176-.484.375-.652.204-.164.442-.25.727-.25h2c.285 0 .523.086.727.25.199.168.324.387.375.653l.375 1.949a8.72 8.72 0 0 1 1.109.523c.36.204.7.434 1.016.704l1.875-.653c.25-.082.503-.078.761.012.258.094.453.254.586.488l1 1.75c.133.235.176.48.125.739a1.2 1.2 0 0 1-.375.664l-1.472 1.296c.03.204.058.403.074.602a8.05 8.05 0 0 1-.074 1.852l1.472 1.296c.2.184.324.407.375.665.051.257.008.503-.125.738l-1 1.75a1.066 1.066 0 0 1-.586.488c-.258.09-.511.094-.761.012l-1.875-.653c-.317.27-.657.5-1.016.704a8.72 8.72 0 0 1-1.11.523l-.374 1.95c-.051.265-.176.484-.375.652-.204.164-.442.25-.727.25Zm1-6c1 0 1.852-.352 2.55-1.051.7-.7 1.052-1.551 1.052-2.551 0-1-.352-1.852-1.051-2.55C13.85 8.75 13 8.397 12 8.397c-1 0-1.852.352-2.55 1.051-.7.7-1.052 1.551-1.052 2.551 0 1 .352 1.852 1.051 2.55.7.7 1.551 1.052 2.551 1.052Zm0 0"></path>
+      </g>
+      <g id="star-filled">
+        <path d="m12 16.875-4.102 2.45a.892.892 0 0 1-1-.05.876.876 0 0 1-.296-.412.849.849 0 0 1-.028-.539l1.074-4.574-3.625-3.074a.834.834 0 0 1-.273-.465 1.08 1.08 0 0 1 .023-.512.83.83 0 0 1 .278-.41c.133-.11.3-.172.5-.187l4.75-.426 1.875-4.352c.082-.183.199-.32.347-.41a.89.89 0 0 1 .477-.14.89.89 0 0 1 .477.14c.148.09.265.227.347.41L14.7 8.7l4.75.403c.2.015.367.082.5.199a.91.91 0 0 1 .278.426c.046.164.05.332.011.5a.892.892 0 0 1-.289.449l-3.597 3.074 1.074 4.574c.05.184.039.363-.028.54a.876.876 0 0 1-.761.585.915.915 0 0 1-.535-.125Zm0 0"></path>
+      </g>
+      <g id="sync">
+        <path d="M6.602 12c0 .8.16 1.543.484 2.227a5.47 5.47 0 0 0 1.312 1.75V15.3c0-.254.086-.469.258-.64a.858.858 0 0 1 .637-.263c.254 0 .469.086.645.262a.86.86 0 0 1 .261.64v3a.872.872 0 0 1-.258.641.872.872 0 0 1-.64.258h-3a.872.872 0 0 1-.64-.258.852.852 0 0 1-.263-.636.86.86 0 0 1 .262-.64.864.864 0 0 1 .64-.267h.95a7.418 7.418 0 0 1-1.79-2.386A6.906 6.906 0 0 1 4.8 12c0-1.418.368-2.695 1.098-3.836A7.072 7.072 0 0 1 8.813 5.57a.659.659 0 0 1 .636-.011.862.862 0 0 1 .45.52.9.9 0 0 1-.012.683.98.98 0 0 1-.45.511 5.425 5.425 0 0 0-2.066 1.942c-.516.824-.77 1.75-.77 2.785Zm10.796 0c0-.8-.16-1.543-.484-2.227a5.47 5.47 0 0 0-1.312-1.75V8.7a.872.872 0 0 1-.258.64.858.858 0 0 1-.637.263.875.875 0 0 1-.645-.262.86.86 0 0 1-.261-.64v-3c0-.255.086-.47.258-.641a.872.872 0 0 1 .64-.258h3c.254 0 .469.086.64.258a.852.852 0 0 1 .263.636.86.86 0 0 1-.262.64.864.864 0 0 1-.64.267h-.95a7.418 7.418 0 0 1 1.79 2.386c.44.926.66 1.93.66 3.012 0 1.418-.368 2.695-1.098 3.836a7.072 7.072 0 0 1-2.915 2.594.649.649 0 0 1-.636.008.87.87 0 0 1-.45-.524.911.911 0 0 1 .422-1.164 5.458 5.458 0 0 0 2.079-1.926c.53-.832.796-1.773.796-2.824Zm0 0"></path>
+      </g>
+      <g id="thumb-down">
+        <path d="M3 15.602c-.45 0-.863-.188-1.238-.563-.375-.375-.563-.789-.563-1.238v-1.426c0-.133.012-.258.04-.375.023-.117.062-.227.113-.324l2.972-6.977c.153-.347.43-.625.84-.824.406-.2.8-.3 1.188-.3l11.046.027v12l-5.847 5.847c-.317.317-.68.524-1.09.613-.406.09-.774.047-1.098-.136-.324-.184-.535-.48-.625-.887-.093-.41-.09-.855.012-1.34l.852-4.097Zm12.602-.75V5.398H6l-3 6.977v1.426h8.8l-1.226 6.05ZM21 3.602c.516 0 .945.175 1.29.527.339.351.51.777.51 1.27V13.8c0 .496-.171.918-.51 1.27a1.732 1.732 0 0 1-1.29.53h-3.602v-1.8H21V5.398h-3.602V3.602Zm-5.398 1.796v9.454Zm0 0"></path>
+      </g>
+      <g id="thumb-down-filled">
+        <path d="M3 15.602c-.45 0-.863-.184-1.238-.551-.375-.367-.563-.785-.563-1.25v-1.426c0-.133.012-.254.04-.363.023-.11.062-.219.113-.336l2.972-6.977a1.72 1.72 0 0 1 .653-.8c.296-.2.64-.297 1.023-.297h9.602c.5 0 .921.168 1.273.511.352.34.523.77.523 1.285v9.454c0 .25-.046.484-.148.71a1.943 1.943 0 0 1-.398.586l-5.028 5.028c-.3.3-.664.492-1.097.574-.434.082-.801.035-1.102-.148a1.496 1.496 0 0 1-.738-.954 2.596 2.596 0 0 1-.035-1.222l.75-3.824Zm18-12c.484 0 .902.175 1.262.535.36.36.539.781.539 1.261v8.403c0 .484-.18.902-.54 1.261-.359.36-.777.54-1.261.54-.484 0-.902-.18-1.262-.54-.36-.359-.539-.777-.539-1.261V5.398c0-.48.18-.902.54-1.261A1.72 1.72 0 0 1 21 3.602Zm0 0"></path>
+      </g>
+      <g id="thumb-up">
+        <path d="M21 8.375c.45 0 .863.188 1.238.563.375.374.563.789.563 1.238v1.426c0 .132-.012.257-.04.375a1.33 1.33 0 0 1-.113.324l-2.972 6.972c-.153.352-.43.625-.84.829-.406.199-.8.296-1.188.296l-11.046-.023v-12l5.847-5.852a2.18 2.18 0 0 1 1.09-.609c.406-.094.774-.047 1.098.137.324.183.535.476.625.886.093.41.09.856-.012 1.336l-.852 4.102Zm-12.602.75v9.45H18l3-6.973v-1.426h-8.8l1.226-6.051ZM3 20.375c-.516 0-.945-.176-1.29-.527a1.776 1.776 0 0 1-.51-1.274v-8.398c0-.496.171-.918.51-1.274.345-.351.774-.527 1.29-.527h3.602v1.8H3v8.4h3.602v1.8Zm5.398-1.8v-9.45Zm0 0"></path>
+      </g>
+      <g id="thumb-up-filled">
+        <path d="M21 8.398c.45 0 .863.184 1.238.551.375.367.563.785.563 1.25v1.426c0 .133-.012.254-.04.363-.023.11-.062.219-.113.336l-2.972 6.977a1.72 1.72 0 0 1-.653.8c-.296.2-.64.297-1.023.297H8.398c-.5 0-.921-.168-1.273-.511-.352-.34-.523-.77-.523-1.285V9.148c0-.25.046-.484.148-.71.102-.227.234-.422.398-.586l5.028-5.028c.3-.3.664-.492 1.097-.574.434-.082.801-.035 1.102.148.383.22.629.536.738.954.11.414.121.824.035 1.222l-.75 3.824Zm-18 12a1.72 1.72 0 0 1-1.262-.535c-.36-.36-.539-.781-.539-1.261v-8.403c0-.484.18-.902.54-1.261.359-.36.777-.54 1.261-.54.484 0 .902.18 1.262.54.36.359.539.777.539 1.261v8.403c0 .48-.18.902-.54 1.261A1.72 1.72 0 0 1 3 20.398Zm0 0"></path>
+      </g>
+      <g id="videocam">
+        <path d="M5.398 19.2c-.48 0-.902-.18-1.261-.536a1.729 1.729 0 0 1-.535-1.266V6.602c0-.497.175-.922.535-1.274a1.75 1.75 0 0 1 1.261-.527H16.2c.496 0 .918.176 1.274.527.351.352.527.777.527 1.274V10.8l2.824-2.824c.133-.137.297-.168.488-.098.192.07.29.203.29.394v7.45c0 .203-.098.336-.29.402-.19.066-.355.035-.488-.102L18 13.2v4.2c0 .484-.176.906-.527 1.265a1.736 1.736 0 0 1-1.274.535Zm0-1.802H16.2V6.602H5.4Zm0 0V6.602Zm0 0"></path>
+      </g>
+      <g id="warning-filled">
+        <path d="M2.797 20.398a.91.91 0 0 1-.477-.12.86.86 0 0 1-.32-.329.765.765 0 0 1-.113-.449c.008-.168.054-.324.136-.477l9.204-15.347a.727.727 0 0 1 .335-.324c.145-.067.29-.102.438-.102.148 0 .297.035.438.102.14.066.253.171.335.324l9.204 15.347c.082.153.128.309.136.477a.765.765 0 0 1-.113.45.99.99 0 0 1-.324.323.855.855 0 0 1-.473.125Zm9.84-3.253a.86.86 0 0 0 .261-.641.89.89 0 0 0-.253-.64.86.86 0 0 0-.641-.262.89.89 0 0 0-.64.253.86.86 0 0 0-.262.641.89.89 0 0 0 .253.64.86.86 0 0 0 .641.262.89.89 0 0 0 .64-.253Zm0-3.004a.86.86 0 0 0 .261-.641v-3a.872.872 0 0 0-.895-.898.878.878 0 0 0-.64.257.86.86 0 0 0-.261.641v3a.872.872 0 0 0 .895.898.878.878 0 0 0 .64-.257Zm0 0"></path>
+      </g>
+    </defs>
+  </svg>
+</cr-iconset>`;
+}
+else {
+    div.innerHTML = getTrustedHTML `
+<cr-iconset name="cr20" size="20">
+  <svg>
+    <defs>
+      <!--
+      Keep these in sorted order by id="".
+      -->
+      <g id="cloud-off">
+        <path
+          d="M16 18.125L13.875 16H5C3.88889 16 2.94444 15.6111 2.16667 14.8333C1.38889 14.0556 1 13.1111 1 12C1 10.9444 1.36111 10.0347 2.08333 9.27083C2.80556 8.50694 3.6875 8.09028 4.72917 8.02083C4.77083 7.86805 4.8125 7.72222 4.85417 7.58333C4.90972 7.44444 4.97222 7.30555 5.04167 7.16667L1.875 4L2.9375 2.9375L17.0625 17.0625L16 18.125ZM5 14.5H12.375L6.20833 8.33333C6.15278 8.51389 6.09722 8.70139 6.04167 8.89583C6 9.07639 5.95139 9.25694 5.89583 9.4375L4.83333 9.52083C4.16667 9.57639 3.61111 9.84028 3.16667 10.3125C2.72222 10.7708 2.5 11.3333 2.5 12C2.5 12.6944 2.74306 13.2847 3.22917 13.7708C3.71528 14.2569 4.30556 14.5 5 14.5ZM17.5 15.375L16.3958 14.2917C16.7153 14.125 16.9792 13.8819 17.1875 13.5625C17.3958 13.2431 17.5 12.8889 17.5 12.5C17.5 11.9444 17.3056 11.4722 16.9167 11.0833C16.5278 10.6944 16.0556 10.5 15.5 10.5H14.125L14 9.14583C13.9028 8.11806 13.4722 7.25694 12.7083 6.5625C11.9444 5.85417 11.0417 5.5 10 5.5C9.65278 5.5 9.31944 5.54167 9 5.625C8.69444 5.70833 8.39583 5.82639 8.10417 5.97917L7.02083 4.89583C7.46528 4.61806 7.93056 4.40278 8.41667 4.25C8.91667 4.08333 9.44444 4 10 4C11.4306 4 12.6736 4.48611 13.7292 5.45833C14.7847 6.41667 15.375 7.59722 15.5 9C16.4722 9 17.2986 9.34028 17.9792 10.0208C18.6597 10.7014 19 11.5278 19 12.5C19 13.0972 18.8611 13.6458 18.5833 14.1458C18.3194 14.6458 17.9583 15.0556 17.5 15.375Z">
+        </path>
+      </g>
+      <g id="delete">
+        <path
+          d="M 5.832031 17.5 C 5.375 17.5 4.984375 17.335938 4.65625 17.011719 C 4.328125 16.683594 4.167969 16.292969 4.167969 15.832031 L 4.167969 5 L 3.332031 5 L 3.332031 3.332031 L 7.5 3.332031 L 7.5 2.5 L 12.5 2.5 L 12.5 3.332031 L 16.667969 3.332031 L 16.667969 5 L 15.832031 5 L 15.832031 15.832031 C 15.832031 16.292969 15.671875 16.683594 15.34375 17.011719 C 15.015625 17.335938 14.625 17.5 14.167969 17.5 Z M 14.167969 5 L 5.832031 5 L 5.832031 15.832031 L 14.167969 15.832031 Z M 7.5 14.167969 L 9.167969 14.167969 L 9.167969 6.667969 L 7.5 6.667969 Z M 10.832031 14.167969 L 12.5 14.167969 L 12.5 6.667969 L 10.832031 6.667969 Z M 5.832031 5 L 5.832031 15.832031 Z M 5.832031 5 ">
+        </path>
+      </g>
+      <g id="domain" viewBox="0 -960 960 960">
+        <path d="M96-144v-672h384v144h384v528H96Zm72-72h72v-72h-72v72Zm0-152h72v-72h-72v72Zm0-152h72v-72h-72v72Zm0-152h72v-72h-72v72Zm168 456h72v-72h-72v72Zm0-152h72v-72h-72v72Zm0-152h72v-72h-72v72Zm0-152h72v-72h-72v72Zm144 456h312v-384H480v80h72v72h-72v80h72v72h-72v80Zm168-232v-72h72v72h-72Zm0 152v-72h72v72h-72Z"></path>
+      </g>
+      <g id="family-link">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M4.6327 8.00094L10.3199 2L16 8.00094L10.1848 16.8673C10.0995 16.9873 10.0071 17.1074 9.90047 17.2199C9.42417 17.7225 8.79147 18 8.11611 18C7.44076 18 6.80806 17.7225 6.33175 17.2199C5.85545 16.7173 5.59242 16.0497 5.59242 15.3371C5.59242 14.977 5.46445 14.647 5.22275 14.3919C4.98104 14.1369 4.66825 14.0019 4.32701 14.0019H4V12.6667H4.32701C5.00237 12.6667 5.63507 12.9442 6.11137 13.4468C6.58768 13.9494 6.85071 14.617 6.85071 15.3296C6.85071 15.6896 6.97867 16.0197 7.22038 16.2747C7.46209 16.5298 7.77488 16.6648 8.11611 16.6648C8.45735 16.6648 8.77014 16.5223 9.01185 16.2747C9.02396 16.2601 9.03607 16.246 9.04808 16.2319C9.08541 16.1883 9.12176 16.1458 9.15403 16.0947L9.55213 15.4946L4.6327 8.00094ZM10.3199 13.9371L6.53802 8.17116L10.3199 4.1814L14.0963 8.17103L10.3199 13.9371Z">
+        </path>
+      </g>
+      <g id="menu">
+        <path d="M2 4h16v2H2zM2 9h16v2H2zM2 14h16v2H2z"></path>
+      </g>
+      <g id="password-manager">
+        <path d="M5.833 11.667c.458 0 .847-.16 1.167-.479.333-.333.5-.729.5-1.188s-.167-.847-.5-1.167a1.555 1.555 0 0 0-1.167-.5c-.458 0-.854.167-1.188.5A1.588 1.588 0 0 0 4.166 10c0 .458.16.854.479 1.188.333.319.729.479 1.188.479Zm0 3.333c-1.389 0-2.569-.486-3.542-1.458C1.319 12.569.833 11.389.833 10c0-1.389.486-2.569 1.458-3.542C3.264 5.486 4.444 5 5.833 5c.944 0 1.813.243 2.604.729a4.752 4.752 0 0 1 1.833 1.979h7.23c.458 0 .847.167 1.167.5.333.319.5.708.5 1.167v3.958c0 .458-.167.854-.5 1.188A1.588 1.588 0 0 1 17.5 15h-3.75a1.658 1.658 0 0 1-1.188-.479 1.658 1.658 0 0 1-.479-1.188v-1.042H10.27a4.59 4.59 0 0 1-1.813 2A5.1 5.1 0 0 1 5.833 15Zm3.292-4.375h4.625v2.708H15v-1.042a.592.592 0 0 1 .167-.438.623.623 0 0 1 .458-.188c.181 0 .327.063.438.188a.558.558 0 0 1 .188.438v1.042H17.5V9.375H9.125a3.312 3.312 0 0 0-1.167-1.938 3.203 3.203 0 0 0-2.125-.77 3.21 3.21 0 0 0-2.354.979C2.827 8.298 2.5 9.083 2.5 10s.327 1.702.979 2.354a3.21 3.21 0 0 0 2.354.979c.806 0 1.514-.25 2.125-.75.611-.514 1-1.167 1.167-1.958Z"></path>
+      </g>
+      
+  </svg>
+</cr-iconset>
+
+<!-- NOTE: In the common case that the final icon will be 20x20, export the SVG
+     at 20px and place it in the section above. -->
+<cr-iconset name="cr" size="24">
+  <svg>
+    <defs>
+      <!--
+      These icons are copied from Polymer's iron-icons and kept in sorted order.
+      -->
+      <g id="add">
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+      </g>
+      <g id="arrow-back">
+        <path
+          d="m7.824 13 5.602 5.602L12 20l-8-8 8-8 1.426 1.398L7.824 11H20v2Zm0 0">
+        </path>
+      </g>
+      <g id="arrow-drop-up">
+        <path d="M7 14l5-5 5 5z"></path>
+      </g>
+      <g id="arrow-drop-down">
+        <path d="M7 10l5 5 5-5z"></path>
+      </g>
+      <g id="arrow-forward">
+        <path
+          d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z">
+        </path>
+      </g>
+      <g id="arrow-right">
+        <path d="M10 7l5 5-5 5z"></path>
+      </g>
+      <g id="cancel-filled">
+        <path
+          d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
+        </path>
+      </g>
+      <g id="check">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+      </g>
+      <g id="check-circle" viewBox="0 -960 960 960">
+        <path d="m424-296 282-282-56-56-226 226-114-114-56 56 170 170Zm56 216q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path>
+      </g>
+      <g id="chevron-left">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+      </g>
+      <g id="chevron-right">
+        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+      </g>
+      <g id="chrome-product" viewBox="0 -960 960 960">
+        <path d="M336-479q0 60 42 102t102 42q60 0 102-42t42-102q0-60-42-102t-102-42q-60 0-102 42t-42 102Zm144 216q11 0 22.5-.5T525-267L427-99q-144-16-237.5-125T96-479q0-43 9.5-84.5T134-645l160 274q28 51 78 79.5T480-263Zm0-432q-71 0-126.5 42T276-545l-98-170q53-71 132.5-109.5T480-863q95 0 179 45t138 123H480Zm356 72q15 35 21.5 71t6.5 73q0 155-100 260.5T509-96l157-275q14-25 22-52t8-56q0-40-15-77t-41-67h196Z">
+        </path>
+      </g>
+      <g id="close">
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
+        </path>
+      </g>
+      <g id="computer">
+        <path
+          d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z">
+        </path>
+      </g>
+      <g id="edit-filled">
+        <path
+          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z">
+        </path>
+      </g>
+      <g id="delete" viewBox="0 -960 960 960">
+        <path
+          d="M309.37-135.87q-34.48 0-58.74-24.26-24.26-24.26-24.26-58.74v-474.5h-53.5v-83H378.5v-53.5h202.52v53.5h206.11v83h-53.5v474.07q0 35.21-24.26 59.32t-58.74 24.11H309.37Zm341.26-557.5H309.37v474.5h341.26v-474.5ZM379.7-288.24h77.5v-336h-77.5v336Zm123.1 0h77.5v-336h-77.5v336ZM309.37-693.37v474.5-474.5Z">
+        </path>
+      </g>
+      <g id="devices">
+        <path
+          d="M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z">
+        </path>
+      </g>
+      <g id="domain">
+        <path
+          d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z">
+        </path>
+      </g>
+      <g id="download" viewBox="0 -960 960 960">
+        <path d="M480-336 288-528l51-51 105 105v-342h72v342l105-105 51 51-192 192ZM263.72-192Q234-192 213-213.15T192-264v-72h72v72h432v-72h72v72q0 29.7-21.16 50.85Q725.68-192 695.96-192H263.72Z"></path>
+      </g>
+      <g id="draft-filled">
+        <path
+          d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z">
+        </path>
+      </g>
+      <!-- source: https://fonts.google.com/icons?selected=Material+Symbols+Outlined:family_link:FILL@0;wght@0;GRAD@0;opsz@24&icon.size=24&icon.color=%23e8eaed -->
+      <g id="family-link" viewBox="0 -960 960 960">
+        <path
+          d="M390-40q-51 0-90.5-30.5T246-149q-6-23-25-37t-43-14q-16 0-30 6.5T124-175l-61-51q21-26 51.5-40t63.5-14q51 0 91 30t54 79q6 23 25 37t42 14q19 0 34-10t26-25l1-2-276-381q-8-11-11.5-23t-3.5-24q0-16 6-30.5t18-26.5l260-255q11-11 26-17t30-6q15 0 30 6t26 17l260 255q12 12 18 26.5t6 30.5q0 12-3.5 24T825-538L500-88q-18 25-48 36.5T390-40Zm110-185 260-360-260-255-259 256 259 359Zm1-308Z"/>
+        </path>
+      </g>
+      <g id="error-filled">
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z">
+        </path>
+      </g>
+      <g id="error">
+        <path
+          d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z">
+        </path>
+      </g>
+      <g id="keyboard-arrow-up">
+        <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path>
+      </g>
+      <g id="keyboard-arrow-down">
+        <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+      </g>
+      <g id="chrome-extension-filled">
+        <path
+          d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z">
+        </path>
+      </g>
+      <g id="fullscreen">
+        <path
+          d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z">
+        </path>
+      </g>
+      <g id="group-filled">
+        <path
+          d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z">
+        </path>
+      </g>
+      <g id="help">
+        <path
+          d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z">
+        </path>
+      </g>
+      <g id="history">
+        <path
+          d="M12.945312 22.75 C 10.320312 22.75 8.074219 21.839844 6.207031 20.019531 C 4.335938 18.199219 3.359375 15.972656 3.269531 13.34375 L 5.089844 13.34375 C 5.175781 15.472656 5.972656 17.273438 7.480469 18.742188 C 8.988281 20.210938 10.808594 20.945312 12.945312 20.945312 C 15.179688 20.945312 17.070312 20.164062 18.621094 18.601562 C 20.167969 17.039062 20.945312 15.144531 20.945312 12.910156 C 20.945312 10.714844 20.164062 8.855469 18.601562 7.335938 C 17.039062 5.816406 15.15625 5.054688 12.945312 5.054688 C 11.710938 5.054688 10.554688 5.339844 9.480469 5.902344 C 8.402344 6.46875 7.476562 7.226562 6.699219 8.179688 L 9.585938 8.179688 L 9.585938 9.984375 L 3.648438 9.984375 L 3.648438 4.0625 L 5.453125 4.0625 L 5.453125 6.824219 C 6.386719 5.707031 7.503906 4.828125 8.804688 4.199219 C 10.109375 3.566406 11.488281 3.25 12.945312 3.25 C 14.300781 3.25 15.570312 3.503906 16.761719 4.011719 C 17.949219 4.519531 18.988281 5.214844 19.875 6.089844 C 20.761719 6.964844 21.464844 7.992188 21.976562 9.167969 C 22.492188 10.34375 22.75 11.609375 22.75 12.964844 C 22.75 14.316406 22.492188 15.589844 21.976562 16.777344 C 21.464844 17.964844 20.761719 19.003906 19.875 19.882812 C 18.988281 20.765625 17.949219 21.464844 16.761719 21.976562 C 15.570312 22.492188 14.300781 22.75 12.945312 22.75 Z M 16.269531 17.460938 L 12.117188 13.34375 L 12.117188 7.527344 L 13.921875 7.527344 L 13.921875 12.601562 L 17.550781 16.179688 Z M 16.269531 17.460938">
+        </path>
+      </g>
+      <g id="info-filled">
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+        </path>
+      </g>
+      <g id="info">
+        <path
+          d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z">
+        </path>
+      </g>
+      <g id="insert-drive-file">
+        <path
+          d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z">
+        </path>
+      </g>
+      <g id="location-on-filled">
+        <path
+          d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
+        </path>
+      </g>
+      <g id="mic-filled">
+        <path
+          d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z">
+        </path>
+      </g>
+      <g id="more-vert">
+        <path
+          d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z">
+        </path>
+      </g>
+      <g id="open-in-new" viewBox="0 -960 960 960">
+        <path
+          d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h264v72H216v528h528v-264h72v264q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm171-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z">
+        </path>
+      </g>
+      <g id="person">
+        <path
+          d="M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z">
+        </path>
+      </g>
+      <g id="person-filled">
+        <path
+          d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z">
+        </path>
+      </g>
+      <g id="print-filled">
+        <path
+          d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z">
+        </path>
+      </g>
+      <g id="schedule">
+        <path
+          d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z">
+        </path>
+      </g>
+      <g id="search">
+        <path
+          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
+        </path>
+      </g>
+      <g id="security">
+        <path
+          d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z">
+        </path>
+      </g>
+      <!-- The <g> IDs are exposed as global variables in Vulcanized mode, which
+        conflicts with the "settings" namespace of MD Settings. Using an "_icon"
+        suffix prevents the naming conflict. -->
+      <g id="settings-filled">
+        <path
+          d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z">
+        </path>
+      </g>
+      <g id="star-filled">
+        <path
+          d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z">
+        </path>
+      </g>
+      <g id="sync" viewBox="0 -960 960 960">
+        <path
+          d="M216-192v-72h74q-45-40-71.5-95.5T192-480q0-101 61-177.5T408-758v75q-63 23-103.5 77.5T264-480q0 48 19.5 89t52.5 70v-63h72v192H216Zm336-10v-75q63-23 103.5-77.5T696-480q0-48-19.5-89T624-639v63h-72v-192h192v72h-74q45 40 71.5 95.5T768-480q0 101-61 177.5T552-202Z">
+        </path>
+      </g>
+      <g id="thumb-down">
+        <path
+            d="M6 3h11v13l-7 7-1.25-1.25a1.454 1.454 0 0 1-.3-.475c-.067-.2-.1-.392-.1-.575v-.35L9.45 16H3c-.533 0-1-.2-1.4-.6-.4-.4-.6-.867-.6-1.4v-2c0-.117.017-.242.05-.375s.067-.258.1-.375l3-7.05c.15-.333.4-.617.75-.85C5.25 3.117 5.617 3 6 3Zm9 2H6l-3 7v2h9l-1.35 5.5L15 15.15V5Zm0 10.15V5v10.15Zm2 .85v-2h3V5h-3V3h5v13h-5Z">
+        </path>
+      </g>
+      <g id="thumb-down-filled">
+        <path
+            d="M6 3h10v13l-7 7-1.25-1.25a1.336 1.336 0 0 1-.29-.477 1.66 1.66 0 0 1-.108-.574v-.347L8.449 16H3c-.535 0-1-.2-1.398-.602C1.199 15 1 14.535 1 14v-2c0-.117.012-.242.04-.375.022-.133.062-.258.108-.375l3-7.05c.153-.333.403-.618.75-.848A1.957 1.957 0 0 1 6 3Zm12 13V3h4v13Zm0 0">
+        </path>
+      </g>
+      <g id="thumb-up">
+        <path
+            d="M18 21H7V8l7-7 1.25 1.25c.117.117.208.275.275.475.083.2.125.392.125.575v.35L14.55 8H21c.533 0 1 .2 1.4.6.4.4.6.867.6 1.4v2c0 .117-.017.242-.05.375s-.067.258-.1.375l-3 7.05c-.15.333-.4.617-.75.85-.35.233-.717.35-1.1.35Zm-9-2h9l3-7v-2h-9l1.35-5.5L9 8.85V19ZM9 8.85V19 8.85ZM7 8v2H4v9h3v2H2V8h5Z">
+        </path>
+      </g>
+      <g id="thumb-up-filled">
+        <path
+            d="M18 21H8V8l7-7 1.25 1.25c.117.117.21.273.29.477.073.199.108.39.108.574v.347L15.551 8H21c.535 0 1 .2 1.398.602C22.801 9 23 9.465 23 10v2c0 .117-.012.242-.04.375a1.897 1.897 0 0 1-.108.375l-3 7.05a2.037 2.037 0 0 1-.75.848A1.957 1.957 0 0 1 18 21ZM6 8v13H2V8Zm0 0">
+      </g>
+      <g id="videocam" viewBox="0 -960 960 960">
+        <path
+          d="M216-192q-29 0-50.5-21.5T144-264v-432q0-29.7 21.5-50.85Q187-768 216-768h432q29.7 0 50.85 21.15Q720-725.7 720-696v168l144-144v384L720-432v168q0 29-21.15 50.5T648-192H216Zm0-72h432v-432H216v432Zm0 0v-432 432Z">
+        </path>
+      </g>
+      <g id="warning-filled">
+        <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path>
+      </g>
+    </defs>
+  </svg>
+</cr-iconset>`;
+}
+const iconsets = div.querySelectorAll('cr-iconset');
+for (const iconset of iconsets) {
+    document.head.appendChild(iconset);
+}
+
+// Copyright 2012 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * The class name to set on the document element.
+ */
+const CLASS_NAME = 'focus-outline-visible';
+const docsToManager = new Map();
+/**
+ * This class sets a CSS class name on the HTML element of |doc| when the user
+ * presses a key. It removes the class name when the user clicks anywhere.
+ *
+ * This allows you to write CSS like this:
+ *
+ * html.focus-outline-visible my-element:focus {
+ *   outline: 5px auto -webkit-focus-ring-color;
+ * }
+ *
+ * And the outline will only be shown if the user uses the keyboard to get to
+ * it.
+ *
+ */
+class FocusOutlineManager {
+    // Whether focus change is triggered by a keyboard event.
+    focusByKeyboard_ = true;
+    classList_;
+    /**
+     * @param doc The document to attach the focus outline manager to.
+     */
+    constructor(doc) {
+        this.classList_ = doc.documentElement.classList;
+        doc.addEventListener('keydown', (e) => this.onEvent_(true, e), true);
+        doc.addEventListener('mousedown', (e) => this.onEvent_(false, e), true);
+        this.updateVisibility();
+    }
+    onEvent_(focusByKeyboard, e) {
+        if (this.focusByKeyboard_ === focusByKeyboard) {
+            return;
+        }
+        if (e instanceof KeyboardEvent && e.repeat) {
+            // A repeated keydown should not trigger the focus state. For example,
+            // there is a repeated ALT keydown if ALT+CLICK is used to open the
+            // context menu and ALT is not released.
+            return;
+        }
+        this.focusByKeyboard_ = focusByKeyboard;
+        this.updateVisibility();
+    }
+    updateVisibility() {
+        this.visible = this.focusByKeyboard_;
+    }
+    /**
+     * Whether the focus outline should be visible.
+     */
+    set visible(visible) {
+        this.classList_.toggle(CLASS_NAME, visible);
+    }
+    get visible() {
+        return this.classList_.contains(CLASS_NAME);
+    }
+    /**
+     * Gets a per document singleton focus outline manager.
+     * @param doc The document to get the |FocusOutlineManager| for.
+     * @return The per document singleton focus outline manager.
+     */
+    static forDocument(doc) {
+        let manager = docsToManager.get(doc);
+        if (!manager) {
+            manager = new FocusOutlineManager(doc);
+            docsToManager.set(doc, manager);
+        }
+        return manager;
+    }
+}
+
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @return The currently focused element (including elements that are
+ *     behind a shadow root), or null if nothing is focused.
+ */
+function getDeepActiveElement() {
+    let a = document.activeElement;
+    while (a && a.shadowRoot && a.shadowRoot.activeElement) {
+        a = a.shadowRoot.activeElement;
+    }
+    return a;
+}
+/**
+ * Check the directionality of the page.
+ * @return True if Chrome is running an RTL UI.
+ */
+function isRTL() {
+    return document.documentElement.dir === 'rtl';
+}
+/**
+ * Replaces '&', '<', '>', '"', and ''' characters with their HTML encoding.
+ * @param original The original string.
+ * @return The string with all the characters mentioned above replaced.
+ */
+function htmlEscape(original) {
+    return original.replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+/**
+ * @return Whether a modifier key was down when processing |e|.
+ */
+function hasKeyModifiers(e) {
+    return e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
+}
+/**
+ * Debounces the given function for the given time. The function is invoked at
+ * the end of the debounce period. This is useful for preventing an expensive
+ * function from being invoked repeatedly over short periods of time.
+ * @param fn The function to debounce.
+ * @param time The time in milliseconds to debounce for.
+ * @return A function that can be called to cancel the debounce.
+ */
+function debounceEnd(fn, time = 50) {
+    let timerId;
+    return () => {
+        clearTimeout(timerId);
+        timerId = setTimeout(fn, time);
+    };
+}
+
+// Copyright 2014 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+// clang-format off
+// clang-format on
+const ACTIVE_CLASS = 'focus-row-active';
+/**
+ * A class to manage focus between given horizontally arranged elements.
+ *
+ * Pressing left cycles backward and pressing right cycles forward in item
+ * order. Pressing Home goes to the beginning of the list and End goes to the
+ * end of the list.
+ *
+ * If an item in this row is focused, it'll stay active (accessible via tab).
+ * If no items in this row are focused, the row can stay active until focus
+ * changes to a node inside |this.boundary_|. If |boundary| isn't specified,
+ * any focus change deactivates the row.
+ */
+class FocusRow {
+    root;
+    delegate;
+    eventTracker = new EventTracker();
+    boundary_;
+    /**
+     * @param root The root of this focus row. Focus classes are
+     *     applied to |root| and all added elements must live within |root|.
+     * @param boundary Focus events are ignored outside of this element.
+     * @param delegate An optional event delegate.
+     */
+    constructor(root, boundary, delegate) {
+        this.root = root;
+        this.boundary_ = boundary || document.documentElement;
+        this.delegate = delegate;
+    }
+    /**
+     * Whether it's possible that |element| can be focused.
+     */
+    static isFocusable(element) {
+        if (!element || element.disabled) {
+            return false;
+        }
+        // We don't check that element.tabIndex >= 0 here because inactive rows
+        // set a tabIndex of -1.
+        let current = element;
+        while (true) {
+            assertInstanceof(current, Element);
+            const style = window.getComputedStyle(current);
+            if (style.visibility === 'hidden' || style.display === 'none') {
+                return false;
+            }
+            const parent = current.parentNode;
+            if (!parent) {
+                return false;
+            }
+            if (parent === current.ownerDocument ||
+                parent instanceof DocumentFragment) {
+                return true;
+            }
+            current = parent;
+        }
+    }
+    /**
+     * A focus override is a function that returns an element that should gain
+     * focus. The element may not be directly selectable for example the element
+     * that can gain focus is in a shadow DOM. Allowing an override via a
+     * function leaves the details of how the element is retrieved to the
+     * component.
+     */
+    static getFocusableElement(element) {
+        const withFocusable = element;
+        if (withFocusable.getFocusableElement) {
+            return withFocusable.getFocusableElement();
+        }
+        return element;
+    }
+    /**
+     * Register a new type of focusable element (or add to an existing one).
+     *
+     * Example: an (X) button might be 'delete' or 'close'.
+     *
+     * When FocusRow is used within a FocusGrid, these types are used to
+     * determine equivalent controls when Up/Down are pressed to change rows.
+     *
+     * Another example: mutually exclusive controls that hide each other on
+     * activation (i.e. Play/Pause) could use the same type (i.e. 'play-pause')
+     * to indicate they're equivalent.
+     *
+     * @param type The type of element to track focus of.
+     * @param selectorOrElement The selector of the element
+     *    from this row's root, or the element itself.
+     * @return Whether a new item was added.
+     */
+    addItem(type, selectorOrElement) {
+        assert(type);
+        let element;
+        if (typeof selectorOrElement === 'string') {
+            element = this.root.querySelector(selectorOrElement);
+        }
+        else {
+            element = selectorOrElement;
+        }
+        if (!element) {
+            return false;
+        }
+        element.setAttribute('focus-type', type);
+        element.tabIndex = this.isActive() ? 0 : -1;
+        this.eventTracker.add(element, 'blur', this.onBlur_.bind(this));
+        this.eventTracker.add(element, 'focus', this.onFocus_.bind(this));
+        this.eventTracker.add(element, 'keydown', this.onKeydown_.bind(this));
+        this.eventTracker.add(element, 'mousedown', this.onMousedown_.bind(this));
+        return true;
+    }
+    /** Dereferences nodes and removes event handlers. */
+    destroy() {
+        this.eventTracker.removeAll();
+    }
+    /**
+     * @param sampleElement An element for to find an equivalent
+     *     for.
+     * @return An equivalent element to focus for
+     *     |sampleElement|.
+     */
+    getCustomEquivalent(_sampleElement) {
+        const focusable = this.getFirstFocusable();
+        assert(focusable);
+        return focusable;
+    }
+    /**
+     * @return All registered elements (regardless of focusability).
+     */
+    getElements() {
+        return Array.from(this.root.querySelectorAll('[focus-type]'))
+            .map(FocusRow.getFocusableElement);
+    }
+    /**
+     * Find the element that best matches |sampleElement|.
+     * @param sampleElement An element from a row of the same
+     *     type which previously held focus.
+     * @return The element that best matches sampleElement.
+     */
+    getEquivalentElement(sampleElement) {
+        if (this.getFocusableElements().indexOf(sampleElement) >= 0) {
+            return sampleElement;
+        }
+        const sampleFocusType = this.getTypeForElement(sampleElement);
+        if (sampleFocusType) {
+            const sameType = this.getFirstFocusable(sampleFocusType);
+            if (sameType) {
+                return sameType;
+            }
+        }
+        return this.getCustomEquivalent(sampleElement);
+    }
+    /**
+     * @param type An optional type to search for.
+     * @return The first focusable element with |type|.
+     */
+    getFirstFocusable(type) {
+        const element = this.getFocusableElements().find(el => !type || el.getAttribute('focus-type') === type);
+        return element || null;
+    }
+    /** @return Registered, focusable elements. */
+    getFocusableElements() {
+        return this.getElements().filter(FocusRow.isFocusable);
+    }
+    /**
+     * @param element An element to determine a focus type for.
+     * @return The focus type for |element| or '' if none.
+     */
+    getTypeForElement(element) {
+        return element.getAttribute('focus-type') || '';
+    }
+    /** @return Whether this row is currently active. */
+    isActive() {
+        return this.root.classList.contains(ACTIVE_CLASS);
+    }
+    /**
+     * Enables/disables the tabIndex of the focusable elements in the FocusRow.
+     * tabIndex can be set properly.
+     * @param active True if tab is allowed for this row.
+     */
+    makeActive(active) {
+        if (active === this.isActive()) {
+            return;
+        }
+        this.getElements().forEach(function (element) {
+            element.tabIndex = active ? 0 : -1;
+        });
+        this.root.classList.toggle(ACTIVE_CLASS, active);
+    }
+    onBlur_(e) {
+        if (!this.boundary_.contains(e.relatedTarget)) {
+            return;
+        }
+        const currentTarget = e.currentTarget;
+        if (this.getFocusableElements().indexOf(currentTarget) >= 0) {
+            this.makeActive(false);
+        }
+    }
+    onFocus_(e) {
+        if (this.delegate) {
+            this.delegate.onFocus(this, e);
+        }
+    }
+    onMousedown_(e) {
+        // Only accept left mouse clicks.
+        if (e.button) {
+            return;
+        }
+        // Allow the element under the mouse cursor to be focusable.
+        const target = e.currentTarget;
+        if (!target.disabled) {
+            target.tabIndex = 0;
+        }
+    }
+    onKeydown_(e) {
+        const elements = this.getFocusableElements();
+        const currentElement = FocusRow.getFocusableElement(e.currentTarget);
+        const elementIndex = elements.indexOf(currentElement);
+        assert(elementIndex >= 0);
+        if (this.delegate && this.delegate.onKeydown(this, e)) {
+            return;
+        }
+        const isShiftTab = !e.altKey && !e.ctrlKey && !e.metaKey && e.shiftKey &&
+            e.key === 'Tab';
+        if (hasKeyModifiers(e) && !isShiftTab) {
+            return;
+        }
+        let index = -1;
+        let shouldStopPropagation = true;
+        if (isShiftTab) {
+            // This always moves back one element, even in RTL.
+            index = elementIndex - 1;
+            if (index < 0) {
+                // Bubble up to focus on the previous element outside the row.
+                return;
+            }
+        }
+        else if (e.key === 'ArrowLeft') {
+            index = elementIndex + (isRTL() ? 1 : -1);
+        }
+        else if (e.key === 'ArrowRight') {
+            index = elementIndex + (isRTL() ? -1 : 1);
+        }
+        else if (e.key === 'Home') {
+            index = 0;
+        }
+        else if (e.key === 'End') {
+            index = elements.length - 1;
+        }
+        else {
+            shouldStopPropagation = false;
+        }
+        const elementToFocus = elements[index];
+        if (elementToFocus) {
+            this.getEquivalentElement(elementToFocus).focus();
+            e.preventDefault();
+        }
+        if (shouldStopPropagation) {
+            e.stopPropagation();
+        }
+    }
+}
+
+// Copyright 2017 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+let hideInk = false;
+document.addEventListener('pointerdown', function () {
+    hideInk = true;
+}, true);
+document.addEventListener('keydown', function () {
+    hideInk = false;
+}, true);
+/**
+ * Attempts to track whether focus outlines should be shown, and if they
+ * shouldn't, removes the "ink" (ripple) from a control while focusing it.
+ * This is helpful when a user is clicking/touching, because it's not super
+ * helpful to show focus ripples in that case. This is Polymer-specific.
+ */
+function focusWithoutInk(toFocus) {
+    // |toFocus| does not have a 'noink' property, so it's unclear whether the
+    // element has "ink" and/or whether it can be suppressed. Just focus().
+    if (!('noink' in toFocus) || !hideInk) {
+        toFocus.focus();
+        return;
+    }
+    const toFocusWithNoInk = toFocus;
+    // Make sure the element is in the document we're listening to events on.
+    assert(document === toFocusWithNoInk.ownerDocument);
+    const { noink } = toFocusWithNoInk;
+    toFocusWithNoInk.noink = true;
+    toFocusWithNoInk.focus();
+    toFocusWithNoInk.noink = noink;
+}
+
+let instance$b = null;
+function getCss$7() {
+    return instance$b || (instance$b = [...[], css `:host{--cr-hairline:1px solid var(--color-menu-separator,var(--cr-fallback-color-divider));--cr-action-menu-disabled-item-color:var(--color-menu-item-foreground-disabled,var(--cr-fallback-color-disabled-foreground));--cr-action-menu-disabled-item-opacity:1;--cr-menu-background-color:var(--color-menu-background,var(--cr-fallback-color-surface));--cr-menu-background-focus-color:var(--cr-hover-background-color);--cr-menu-shadow:var(--cr-elevation-2);--cr-primary-text-color:var(--color-menu-item-foreground,var(--cr-fallback-color-on-surface))}:host dialog{background-color:var(--cr-menu-background-color);border:none;border-radius:var(--cr-menu-border-radius,4px);box-shadow:var(--cr-menu-shadow);margin:0;min-width:128px;outline:none;overflow:var(--cr-action-menu-overflow,auto);padding:0;position:absolute}:host([use-unbounded]) dialog{max-height:none;position:fixed}@media (forced-colors:active){:host dialog{border:var(--cr-border-hcm)}}:host dialog::backdrop{background-color:transparent}:host ::slotted(.dropdown-item){-webkit-tap-highlight-color:transparent;background:none;border:none;border-radius:0;box-sizing:border-box;color:var(--cr-primary-text-color);font:inherit;min-height:32px;padding:8px 24px;text-align:start;user-select:none;width:100%}:host ::slotted(.dropdown-item:not([hidden])){align-items:center;display:flex}:host ::slotted(.dropdown-item[disabled]){color:var(--cr-action-menu-disabled-item-color,var(--cr-primary-text-color));opacity:var(--cr-action-menu-disabled-item-opacity,0.65)}:host ::slotted(.dropdown-item:not([disabled])){cursor:pointer}:host ::slotted(.dropdown-item:focus){background-color:var(--cr-menu-background-focus-color);outline:none}:host dialog[open] ::slotted(.dropdown-item){user-select:auto}:host ::slotted(.dropdown-item:focus-visible){outline:solid 2px var(--cr-focus-outline-color);outline-offset:-2px}@media (forced-colors:active){:host ::slotted(.dropdown-item:focus){outline:var(--cr-focus-outline-hcm)}}.item-wrapper{outline:none;padding:var(--cr-action-menu-padding,8px 0)}`]);
+}
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$6() {
+    return html `
+<dialog id="dialog" part="dialog" @close="${this.onNativeDialogClose_}"
+    @beforetoggle="${this.onDialogBeforetoggle_}"
+    ?unbounded="${this.useUnbounded_}" role="application"
+    aria-roledescription="${this.roleDescription || nothing}">
+  <div id="wrapper" class="item-wrapper" role="menu" tabindex="-1"
+      aria-label="${this.accessibilityLabel || nothing}">
+    <slot id="contentNode" @slotchange="${this.onSlotchange_}"></slot>
+  </div>
+</dialog>`;
+}
+
+// Copyright 2016 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @param e The focusout event.
+ * @param element The element that should contain the focus.
+ * @return Whether the focus is moving outside of the element.
+ */
+function hasFocusoutOutside(e, element) {
+    return !element || !element.contains(e.relatedTarget);
+}
+/**
+ * @return Whether the Unbounded Element API is available. The API is only
+ *     installed in contexts and on platforms that can host an external OS
+ *     surface, so it must be feature detected before use.
+ */
+function isUnboundedSupported() {
+    return 'showUnboundedElement' in HTMLElement.prototype;
+}
+var AnchorAlignment;
+(function (AnchorAlignment) {
+    AnchorAlignment[AnchorAlignment["BEFORE_START"] = -2] = "BEFORE_START";
+    AnchorAlignment[AnchorAlignment["AFTER_START"] = -1] = "AFTER_START";
+    AnchorAlignment[AnchorAlignment["CENTER"] = 0] = "CENTER";
+    AnchorAlignment[AnchorAlignment["BEFORE_END"] = 1] = "BEFORE_END";
+    AnchorAlignment[AnchorAlignment["AFTER_END"] = 2] = "AFTER_END";
+})(AnchorAlignment || (AnchorAlignment = {}));
+const DROPDOWN_ITEM_CLASS = 'dropdown-item';
+const SELECTABLE_DROPDOWN_ITEM_QUERY = `.${DROPDOWN_ITEM_CLASS}:not([hidden]):not([disabled])`;
+const AFTER_END_OFFSET = 10;
+/**
+ * Returns the point to start along the X or Y axis given a start and end
+ * point to anchor to, the length of the target and the direction to anchor
+ * in. If honoring the anchor would force the menu outside of min/max, this
+ * will ignore the anchor position and try to keep the menu within min/max.
+ */
+function getStartPointWithAnchor(start, end, menuLength, anchorAlignment, min, max, unbounded = false) {
+    let startPoint = 0;
+    switch (anchorAlignment) {
+        case AnchorAlignment.BEFORE_START:
+            startPoint = start - menuLength;
+            break;
+        case AnchorAlignment.AFTER_START:
+            startPoint = start;
+            break;
+        case AnchorAlignment.CENTER:
+            startPoint = (start + end - menuLength) / 2;
+            break;
+        case AnchorAlignment.BEFORE_END:
+            startPoint = end - menuLength;
+            break;
+        case AnchorAlignment.AFTER_END:
+            startPoint = end;
+            break;
+        default:
+            assertNotReachedCase();
+    }
+    // Unbounded case clamping: Clamps to screen size as well as max/min.
+    if (unbounded) {
+        const isForward = (anchorAlignment === AnchorAlignment.AFTER_END ||
+            anchorAlignment === AnchorAlignment.AFTER_START);
+        const isBackward = (anchorAlignment === AnchorAlignment.BEFORE_START ||
+            anchorAlignment === AnchorAlignment.BEFORE_END);
+        const spaceForward = max - end;
+        const spaceBackward = start - min;
+        // If opening Forward (DOWN / RIGHT) overflows the screen limit:
+        if (isForward && Number.isFinite(max) && (startPoint + menuLength > max)) {
+            if (spaceBackward >= menuLength || spaceBackward > spaceForward) {
+                // Flip to Backward (UP / LEFT)
+                startPoint = (anchorAlignment === AnchorAlignment.AFTER_END) ?
+                    start - menuLength :
+                    end - menuLength;
+            }
+        }
+        else if (isBackward && Number.isFinite(min) && (startPoint < min)) {
+            // If opening Backward (UP / LEFT) underflows the screen limit:
+            if (spaceForward >= menuLength || spaceForward > spaceBackward) {
+                // Flip to Forward (DOWN / RIGHT)
+                startPoint =
+                    (anchorAlignment === AnchorAlignment.BEFORE_START) ? end : start;
+            }
+        }
+        else if (anchorAlignment === AnchorAlignment.CENTER) {
+            if (Number.isFinite(max) && startPoint + menuLength > max) {
+                startPoint = max - menuLength;
+            }
+            if (Number.isFinite(min) && startPoint < min) {
+                startPoint = min;
+            }
+        }
+        return startPoint;
+    }
+    // Non-unbounded case clamping.
+    if (startPoint + menuLength > max) {
+        startPoint = end - menuLength;
+    }
+    if (startPoint < min) {
+        startPoint = start;
+    }
+    startPoint = Math.max(min, Math.min(startPoint, max - menuLength));
+    return startPoint;
+}
+function getDefaultShowConfig() {
+    return {
+        top: 0,
+        left: 0,
+        height: 0,
+        width: 0,
+        anchorAlignmentX: AnchorAlignment.AFTER_START,
+        anchorAlignmentY: AnchorAlignment.AFTER_START,
+        minX: 0,
+        minY: 0,
+        maxX: 0,
+        maxY: 0,
+    };
+}
+class CrActionMenuElement extends CrLitElement {
+    static get is() {
+        return 'cr-action-menu';
+    }
+    static get styles() {
+        return getCss$7();
+    }
+    render() {
+        return getHtml$6.bind(this)();
+    }
+    static get properties() {
+        return {
+            // Accessibility text of the menu. Should be something along the lines of
+            // "actions", or "more actions".
+            accessibilityLabel: { type: String },
+            // Setting this flag will make the menu listen for content size changes
+            // and reposition to its anchor accordingly.
+            autoReposition: { type: Boolean },
+            // Setting this flag will cause the menu to automatically close when
+            // focus moves outside the menu.
+            autoCloseOnFocusout: { type: Boolean },
+            open: {
+                type: Boolean,
+                notify: true,
+            },
+            // Setting this flag will cause the menu to open as a non-modal dialog.
+            // Useful when the menu needs to remain open while interacting with
+            // other parts of the page.
+            nonModal: {
+                type: Boolean,
+                reflect: true,
+            },
+            // Descriptor of the menu. Should be something along the lines of "menu"
+            roleDescription: { type: String },
+            // Enables Unbounded Element support on the internal <dialog>, allowing
+            // the action menu to render into an external OS surface outside the host
+            // window/WebContents. Position calculations use screen coordinates, and
+            // the menu does not automatically close on host window resize.
+            useUnbounded_: { type: Boolean },
+        };
+    }
+    #accessibilityLabel_accessor_storage;
+    get accessibilityLabel() { return this.#accessibilityLabel_accessor_storage; }
+    set accessibilityLabel(value) { this.#accessibilityLabel_accessor_storage = value; }
+    #autoReposition_accessor_storage = false;
+    get autoReposition() { return this.#autoReposition_accessor_storage; }
+    set autoReposition(value) { this.#autoReposition_accessor_storage = value; }
+    #autoCloseOnFocusout_accessor_storage = false;
+    get autoCloseOnFocusout() { return this.#autoCloseOnFocusout_accessor_storage; }
+    set autoCloseOnFocusout(value) { this.#autoCloseOnFocusout_accessor_storage = value; }
+    #open_accessor_storage = false;
+    get open() { return this.#open_accessor_storage; }
+    set open(value) { this.#open_accessor_storage = value; }
+    #roleDescription_accessor_storage;
+    get roleDescription() { return this.#roleDescription_accessor_storage; }
+    set roleDescription(value) { this.#roleDescription_accessor_storage = value; }
+    #nonModal_accessor_storage = false;
+    get nonModal() { return this.#nonModal_accessor_storage; }
+    set nonModal(value) { this.#nonModal_accessor_storage = value; }
+    #useUnbounded__accessor_storage = false;
+    get useUnbounded_() { return this.#useUnbounded__accessor_storage; }
+    set useUnbounded_(value) { this.#useUnbounded__accessor_storage = value; }
+    /**
+     * Enables unbounded mode, which renders the menu into an external OS
+     * surface, allowing it to extend outside the host window. Unbounded mode is
+     * only enabled if the Unbounded Element API is supported in this
+     * environment, and cannot be disabled once enabled.
+     *
+     * Note: This awaits the pending rendering update so that the `unbounded`
+     * attribute is applied to the inner <dialog> before it resolves.
+     * showUnboundedElement() rejects if that attribute is not already present,
+     * so this must be awaited before the menu is first opened.
+     *
+     * @return Whether unbounded mode is enabled.
+     */
+    async setUnbounded() {
+        if (!isUnboundedSupported()) {
+            console.warn('CrActionMenu: Unbounded Element API is not supported in this ' +
+                'environment.');
+            return false;
+        }
+        this.useUnbounded_ = true;
+        await this.updateComplete;
+        return true;
+    }
+    boundClose_ = null;
+    resizeObserver_ = null;
+    hasMousemoveListener_ = false;
+    anchorElement_ = null;
+    lastConfig_ = null;
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeListeners_();
+    }
+    firstUpdated() {
+        this.addEventListener('keydown', this.onKeyDown_.bind(this));
+        this.addEventListener('mouseover', this.onMouseover_);
+        this.addEventListener('click', this.onClick_);
+        this.addEventListener('focusout', this.onFocusout_.bind(this));
+    }
+    /**
+     * Exposing internal <dialog> elements for tests.
+     */
+    getDialog() {
+        return this.$.dialog;
+    }
+    getUnboundedDialog_() {
+        return this.$.dialog;
+    }
+    showUnboundedDialog_() {
+        this.getUnboundedDialog_()
+            .showUnboundedElement()
+            .then(() => {
+            this.fire('unbounded-shown');
+        })
+            .catch(err => this.handleUnboundedError_('showUnboundedElement', err));
+    }
+    hideUnboundedDialog_() {
+        this.getUnboundedDialog_().hideUnboundedElement().catch(err => this.handleUnboundedError_('hideUnboundedElement', err));
+    }
+    handleUnboundedError_(operation, err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+            // AbortError is expected if the unbounded element is dismissed by user
+            // action (e.g. ESC key) before presentation completes.
+            return;
+        }
+        console.error(`${operation} failed:`, err);
+        if (operation === 'showUnboundedElement') {
+            this.fire('unbounded-show-error');
+        }
+    }
+    removeListeners_() {
+        window.removeEventListener('resize', this.boundClose_);
+        window.removeEventListener('popstate', this.boundClose_);
+        if (this.resizeObserver_) {
+            this.resizeObserver_.disconnect();
+            this.resizeObserver_ = null;
+        }
+    }
+    onFocusout_(e) {
+        if (this.autoCloseOnFocusout && hasFocusoutOutside(e, this)) {
+            this.close();
+        }
+    }
+    onNativeDialogClose_(e) {
+        // Ignore any 'close' events not fired directly by the <dialog> element.
+        if (e.target !== this.$.dialog) {
+            return;
+        }
+        // Catch and re-fire the 'close' event such that it bubbles across Shadow
+        // DOM v1.
+        this.fire('close');
+    }
+    onClick_(e) {
+        if (e.composedPath()[0] === this.$.dialog) {
+            this.close();
+            e.stopPropagation();
+        }
+    }
+    onKeyDown_(e) {
+        e.stopPropagation();
+        if (e.key === 'Tab' || e.key === 'Escape') {
+            this.close();
+            if (e.key === 'Tab') {
+                this.fire('tabkeyclose', { shiftKey: e.shiftKey });
+            }
+            e.preventDefault();
+            return;
+        }
+        if ((e.key !== 'Enter' || (isMac && e.ctrlKey)) && e.key !== 'ArrowUp' &&
+            e.key !== 'ArrowDown') {
+            return;
+        }
+        const options = Array.from(this.querySelectorAll(SELECTABLE_DROPDOWN_ITEM_QUERY));
+        if (options.length === 0) {
+            return;
+        }
+        const focused = getDeepActiveElement();
+        const index = options.findIndex(option => FocusRow.getFocusableElement(option) === focused);
+        if (e.key === 'Enter') {
+            // If a menu item has focus, don't change focus or close menu on 'Enter'.
+            if (index !== -1) {
+                return;
+            }
+            if (isWindows || isMac) {
+                this.close();
+                e.preventDefault();
+                return;
+            }
+        }
+        e.preventDefault();
+        this.updateFocus_(options, index, e.key !== 'ArrowUp');
+        if (!this.hasMousemoveListener_) {
+            this.hasMousemoveListener_ = true;
+            this.addEventListener('mousemove', e => {
+                this.onMouseover_(e);
+                this.hasMousemoveListener_ = false;
+            }, { once: true });
+        }
+    }
+    focusElement_(el) {
+        // preventScroll is only applied when useUnbounded is true to prevent
+        // scrolling the host document while preserving full keyboard
+        // accessibility and focus outline indicators.
+        el.focus({ preventScroll: this.useUnbounded_ });
+    }
+    onMouseover_(e) {
+        const item = e.composedPath()
+            .find(el => el.matches && el.matches(SELECTABLE_DROPDOWN_ITEM_QUERY));
+        this.focusElement_(item || this.$.wrapper);
+    }
+    updateFocus_(options, focusedIndex, next) {
+        const numOptions = options.length;
+        assert(numOptions > 0);
+        let index;
+        if (focusedIndex === -1) {
+            index = next ? 0 : numOptions - 1;
+        }
+        else {
+            const delta = next ? 1 : -1;
+            index = (numOptions + focusedIndex + delta) % numOptions;
+        }
+        this.focusElement_(options[index]);
+    }
+    close(unboundedAlreadyDismissed = false) {
+        if (!this.open) {
+            return;
+        }
+        this.open = false;
+        if (this.useUnbounded_ && !unboundedAlreadyDismissed) {
+            this.hideUnboundedDialog_();
+        }
+        // Removing 'resize' and 'popstate' listeners when dialog is closed.
+        this.removeListeners_();
+        // Closing the native <dialog> is required for both standard and unbounded
+        // menus: hideUnboundedElement() only tears down the external platform
+        // surface, leaving the HTML <dialog> open in DOM until close() is called.
+        this.$.dialog.close();
+        if (this.anchorElement_) {
+            assert(this.anchorElement_);
+            focusWithoutInk(this.anchorElement_);
+            this.anchorElement_ = null;
+        }
+        if (this.lastConfig_) {
+            this.lastConfig_ = null;
+        }
+    }
+    /**
+     * Shows the menu anchored to the given element.
+     */
+    showAt(anchorElement, config) {
+        this.anchorElement_ = anchorElement;
+        // Scroll the anchor element into view so that the bounding rect will be
+        // accurate for where the menu should be shown.
+        this.anchorElement_.scrollIntoViewIfNeeded();
+        const rect = this.anchorElement_.getBoundingClientRect();
+        let height = rect.height;
+        if (config && !config.noOffset &&
+            config.anchorAlignmentY === AnchorAlignment.AFTER_END) {
+            // When an action menu is positioned after the end of an element, the
+            // action menu can appear too far away from the anchor element, typically
+            // because anchors tend to have padding. So we offset the height a bit
+            // so the menu shows up slightly closer to the content of anchor.
+            height -= AFTER_END_OFFSET;
+        }
+        this.showAtPosition(Object.assign({
+            top: rect.top,
+            left: rect.left,
+            height: height,
+            width: rect.width,
+            // Default to anchoring towards the left.
+            anchorAlignmentX: AnchorAlignment.BEFORE_END,
+        }, config));
+        this.focusElement_(this.$.wrapper);
+    }
+    /**
+     * Shows the menu anchored to the given box. The anchor alignment is
+     * specified as an X and Y alignment which represents a point in the anchor
+     * where the menu will align to, which can have the menu either before or
+     * after the given point in each axis. Center alignment places the center of
+     * the menu in line with the center of the anchor. Coordinates are relative to
+     * the top-left of the viewport.
+     *
+     *            y-start
+     *         _____________
+     *         |           |
+     *         |           |
+     *         |   CENTER  |
+     * x-start |     x     | x-end
+     *         |           |
+     *         |anchor box |
+     *         |___________|
+     *
+     *             y-end
+     *
+     * For example, aligning the menu to the inside of the top-right edge of
+     * the anchor, extending towards the bottom-left would use a alignment of
+     * (BEFORE_END, AFTER_START), whereas centering the menu below the bottom
+     * edge of the anchor would use (CENTER, AFTER_END).
+     */
+    showAtPosition(config) {
+        // Save the scroll position of the viewport.
+        const doc = document.scrollingElement;
+        const scrollLeft = doc.scrollLeft;
+        const scrollTop = doc.scrollTop;
+        // Reset position so that layout isn't affected by the previous position,
+        // and so that the dialog is positioned at the top-start corner of the
+        // document.
+        this.resetStyle_();
+        this.nonModal ? this.$.dialog.show() : this.$.dialog.showModal();
+        this.open = true;
+        if (this.useUnbounded_) {
+            this.positionDialog_(config);
+            this.showUnboundedDialog_();
+        }
+        else {
+            config.top += scrollTop;
+            config.left += scrollLeft;
+            this.positionDialog_(Object.assign({
+                minX: scrollLeft,
+                minY: scrollTop,
+                maxX: scrollLeft + doc.clientWidth,
+                maxY: scrollTop + doc.clientHeight,
+            }, config));
+        }
+        // Restore the scroll position.
+        doc.scrollTop = scrollTop;
+        doc.scrollLeft = scrollLeft;
+        this.addListeners_();
+        // Focus the first selectable item.
+        const openedByKey = FocusOutlineManager.forDocument(document).visible;
+        if (openedByKey) {
+            const firstSelectableItem = this.querySelector(SELECTABLE_DROPDOWN_ITEM_QUERY);
+            if (firstSelectableItem) {
+                requestAnimationFrame(() => {
+                    // Wait for the next animation frame for the dialog to become visible.
+                    this.focusElement_(firstSelectableItem);
+                });
+            }
+        }
+    }
+    resetStyle_() {
+        this.$.dialog.style.left = '';
+        this.$.dialog.style.right = '';
+        this.$.dialog.style.top = '0';
+    }
+    /**
+     * Position the dialog using the coordinates in config. Coordinates are
+     * relative to the top-left of the viewport when scrolled to (0, 0).
+     */
+    positionDialog_(config) {
+        this.lastConfig_ = config;
+        const c = Object.assign(getDefaultShowConfig(), config);
+        if (this.useUnbounded_) {
+            // In unbounded mode, the menu can render outside the host window.
+            // Compute boundary coordinates relative to the physical screen origin so
+            // the dialog is clamped to the visible monitor rather than the host
+            // document.
+            const screenLeft = window.screenX;
+            const screenTop = window.screenY;
+            const screenWidth = window.screen.availWidth;
+            const screenHeight = window.screen.availHeight;
+            if (config.minX === undefined) {
+                c.minX = -screenLeft;
+            }
+            if (config.minY === undefined) {
+                c.minY = -screenTop;
+            }
+            if (config.maxX === undefined) {
+                c.maxX = screenWidth - screenLeft;
+            }
+            if (config.maxY === undefined) {
+                c.maxY = screenHeight - screenTop;
+            }
+        }
+        const top = c.top;
+        const left = c.left;
+        const bottom = top + c.height;
+        const right = left + c.width;
+        // Flip the X anchor in RTL.
+        const rtl = getComputedStyle(this).direction === 'rtl';
+        if (rtl) {
+            c.anchorAlignmentX *= -1;
+        }
+        const offsetWidth = this.$.dialog.offsetWidth;
+        const menuLeft = getStartPointWithAnchor(left, right, offsetWidth, c.anchorAlignmentX, c.minX, c.maxX, this.useUnbounded_);
+        if (rtl) {
+            const menuRight = document.scrollingElement.clientWidth - menuLeft - offsetWidth;
+            this.$.dialog.style.right = menuRight + 'px';
+        }
+        else {
+            this.$.dialog.style.left = menuLeft + 'px';
+        }
+        const menuTop = getStartPointWithAnchor(top, bottom, this.$.dialog.offsetHeight, c.anchorAlignmentY, c.minY, c.maxY, this.useUnbounded_);
+        this.$.dialog.style.top = menuTop + 'px';
+    }
+    onSlotchange_() {
+        for (const node of this.$.contentNode.assignedElements({ flatten: true })) {
+            if (node.classList.contains(DROPDOWN_ITEM_CLASS) &&
+                !node.getAttribute('role')) {
+                node.setAttribute('role', 'menuitem');
+            }
+        }
+    }
+    /**
+     * In unbounded mode, the native OS popup window can be dismissed directly by
+     * light dismiss (e.g. clicking outside the host document), firing a
+     * Blink 'beforetoggle' ToggleEvent when its presentation state transitions to
+     * 'closed'. We listen for this event to close the dialog when the unbounded
+     * window gets light dismissed.
+     */
+    onDialogBeforetoggle_(e) {
+        if (!this.useUnbounded_) {
+            return;
+        }
+        const toggleEvent = e;
+        if (toggleEvent.newState === 'closed' && this.open) {
+            this.close(/*unboundedAlreadyDismissed=*/ true);
+        }
+    }
+    addListeners_() {
+        this.boundClose_ = this.boundClose_ || (() => {
+            if (this.$.dialog.open) {
+                this.close();
+            }
+        });
+        window.addEventListener('resize', this.boundClose_);
+        window.addEventListener('popstate', this.boundClose_);
+        if (this.autoReposition) {
+            this.resizeObserver_ = new ResizeObserver(() => {
+                if (this.lastConfig_) {
+                    this.positionDialog_(this.lastConfig_);
+                    this.fire('cr-action-menu-repositioned'); // For easier testing.
+                }
+            });
+            this.resizeObserver_.observe(this.$.dialog);
+        }
+    }
+}
+customElements.define(CrActionMenuElement.is, CrActionMenuElement);
+
+// ui/webui/resources/cr_components/search/plural_string_provider.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class PluralStringProviderPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'plural_string.mojom.PluralStringProvider', scope);
+    }
+}
+class PluralStringProviderRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PluralStringProviderPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    getPluralString(messageName, count) {
+        return this.proxy.sendMessage(0, PluralStringProvider_GetPluralString_ParamsSpec.$, PluralStringProvider_GetPluralString_ResponseParamsSpec.$, [
+            messageName,
+            count
+        ], false);
+    }
+}
+class PluralStringProvider {
+    static get $interfaceName() {
+        return "plural_string.mojom.PluralStringProvider";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new PluralStringProviderRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+const PluralStringProvider_GetPluralString_ParamsSpec = { $: {} };
+const PluralStringProvider_GetPluralString_ResponseParamsSpec = { $: {} };
+mojo.internal.Struct(PluralStringProvider_GetPluralString_ParamsSpec.$, 'PluralStringProvider_GetPluralString_Params', [
+    mojo.internal.StructField('messageName', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('count', 8, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PluralStringProvider_GetPluralString_ResponseParamsSpec.$, 'PluralStringProvider_GetPluralString_ResponseParams', [
+    mojo.internal.StructField('text', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+let instance$a = null;
+/**
+ * PluralStringProxy backed by the plural_string.mojom.PluralStringProvider
+ * interface. Unlike PluralStringProxyImpl this does not rely on chrome.send, so
+ * it also works in non-WebUI hosts such as extension pages.
+ *
+ * Used by the shared searchbox and composebox components. Every host that
+ * renders components using this (e.g. the composebox contextual action menu or
+ * entrypoint button) must bind plural_string.mojom.PluralStringProvider;
+ * requesting an unbound interface terminates the renderer. Tests that render
+ * such components on a host without the binding should install a fake via
+ * `MojoPluralStringProxy.setInstance()`.
+ */
+class MojoPluralStringProxy {
+    remote_ = null;
+    async getPluralString(messageName, itemCount) {
+        // Bind lazily so hosts that never need a plural string don't request the
+        // interface.
+        if (!this.remote_) {
+            this.remote_ = PluralStringProvider.getRemote();
+        }
+        const { text } = await this.remote_.getPluralString(messageName, itemCount);
+        return text;
+    }
+    // The tuple variants are not supported.
+    getPluralStringTupleWithComma() {
+        return Promise.reject(new Error('Not supported'));
+    }
+    getPluralStringTupleWithPeriods() {
+        return Promise.reject(new Error('Not supported'));
+    }
+    static getInstance() {
+        return instance$a || (instance$a = new MojoPluralStringProxy());
+    }
+    static setInstance(obj) {
+        instance$a = obj;
+    }
+}
+
+// Copyright 2021 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview
+ * 'I18nMixinLit' is a Mixin offering loading of internationalization
+ * strings. Typically it is used as [[i18n('someString')]] computed bindings or
+ * for this.i18n('foo'). It is not needed for HTML $i18n{otherString}, which is
+ * handled by a C++ templatizer.
+ */
+const I18nMixinLit = (superClass) => {
+    class I18nMixinLit extends superClass {
+        /**
+         * Returns a translated string where $1 to $9 are replaced by the given
+         * values.
+         * @param id The ID of the string to translate.
+         * @param varArgs Values to replace the placeholders $1 to $9 in the
+         *     string.
+         * @return A translated, substituted string.
+         */
+        i18nRaw_(id, ...varArgs) {
+            return varArgs.length === 0 ? loadTimeData.getString(id) :
+                loadTimeData.getStringF(id, ...varArgs);
+        }
+        /**
+         * Returns a translated string where $1 to $9 are replaced by the given
+         * values. Also sanitizes the output to filter out dangerous HTML/JS.
+         * Use with Lit bindings that are *not* innerHTML.
+         * NOTE: This is not related to $i18n{foo} in HTML, see file overview.
+         * @param id The ID of the string to translate.
+         * @param varArgs Values to replace the placeholders $1 to $9 in the
+         *     string.
+         * @return A translated, sanitized, substituted string.
+         */
+        i18n(id, ...varArgs) {
+            const rawString = this.i18nRaw_(id, ...varArgs);
+            return parseHtmlSubset(`<b>${rawString}</b>`).firstChild.textContent;
+        }
+        /**
+         * Similar to 'i18n', returns a translated, sanitized, substituted
+         * string. It receives the string ID and a dictionary containing the
+         * substitutions as well as optional additional allowed tags and
+         * attributes. Use with Lit bindings that are innerHTML.
+         * @param id The ID of the string to translate.
+         */
+        i18nAdvanced(id, opts) {
+            opts = opts || {};
+            const rawString = this.i18nRaw_(id, ...(opts.substitutions || []));
+            return sanitizeInnerHtml(rawString, opts);
+        }
+        /**
+         * Similar to 'i18n', with an unused |locale| parameter used to trigger
+         * updates when the locale changes.
+         * @param locale The UI language used.
+         * @param id The ID of the string to translate.
+         * @param varArgs Values to replace the placeholders $1 to $9 in the
+         *     string.
+         * @return A translated, sanitized, substituted string.
+         */
+        i18nDynamic(_locale, id, ...varArgs) {
+            return this.i18n(id, ...varArgs);
+        }
+        /**
+         * Similar to 'i18nDynamic', but varArgs values are interpreted as keys
+         * in loadTimeData. This allows generation of strings that take other
+         * localized strings as parameters.
+         * @param locale The UI language used.
+         * @param id The ID of the string to translate.
+         * @param varArgs Values to replace the placeholders $1 to $9
+         *     in the string. Values are interpreted as strings IDs if found in
+         * the list of localized strings.
+         * @return A translated, sanitized, substituted string.
+         */
+        i18nRecursive(locale, id, ...varArgs) {
+            let args = varArgs;
+            if (args.length > 0) {
+                // Try to replace IDs with localized values.
+                args = args.map(str => {
+                    return this.i18nExists(str) ? loadTimeData.getString(str) : str;
+                });
+            }
+            return this.i18nDynamic(locale, id, ...args);
+        }
+        /**
+         * Returns true if a translation exists for |id|.
+         */
+        i18nExists(id) {
+            return loadTimeData.valueExists(id);
+        }
+    }
+    return I18nMixinLit;
+};
+
+let instance$9 = null;
+function getCss$6() {
+    return instance$9 || (instance$9 = [...[getCss$g()], css `#menu{--color-sys-divider:var(--color-composebox-file-carousel-divider);--cr-menu-background-color:var(--color-composebox-background,var(--search-background-color));--cr-menu-border-radius:16px;--cr-menu-shadow:var(--cr-elevation-3);--cr-primary-text-color:var(--color-composebox-file-chip-text);--cr-hover-background-color:var(--color-composebox-context-entrypoint-hover-background)}:host(:not([unbounded-menu-enabled])) #menu::part(dialog){max-height:var(--contextual-menu-max-height,min(540px,100vh - 16px))}:host(:not([unbounded-menu-enabled])) .menu-outer-wrapper{display:contents}:host(:not([unbounded-menu-enabled])) .main-menu-card{display:contents}:host(:not([unbounded-menu-enabled])) .share-tabs-flyout{position:fixed;position-anchor:--share-tabs-anchor}:host(:not([unbounded-menu-enabled])) .share-tabs-flyout[data-position='right']{left:anchor(right);right:auto;top:anchor(top)}:host(:not([unbounded-menu-enabled])) .share-tabs-flyout[data-position='left']{left:auto;right:anchor(left);top:anchor(top)}:host(:not([unbounded-menu-enabled])) .share-tabs-flyout[data-position='bottom']{inset-inline-start:calc(anchor(start) + var(--share-tabs-flyout-indent,0px));top:anchor(bottom)}:host([unbounded-menu-enabled]) #menu{--cr-action-menu-overflow:visible}:host([unbounded-menu-enabled]) #menu::part(dialog){background:transparent;border:none;box-shadow:none;margin:-16px;overflow:visible;padding:16px;z-index:1001}:host([unbounded-menu-enabled]) .menu-outer-wrapper{align-items:flex-start;display:flex;flex-direction:row}:host([unbounded-menu-enabled]) .menu-outer-wrapper[data-flyout-position='left']{flex-direction:row-reverse}:host([unbounded-menu-enabled]) .menu-outer-wrapper[data-flyout-position='bottom']{flex-direction:column}:host([unbounded-menu-enabled]) .main-menu-card{background-color:var(--cr-menu-background-color);border-radius:16px;box-shadow:var(--cr-elevation-3);box-sizing:border-box;display:flex;flex-direction:column;max-height:var(--contextual-menu-max-height,min(540px,100vh - 16px));overflow-y:auto;overflow-x:hidden;padding:8px 0;width:320px}:host([unbounded-menu-enabled][context-management-enabled]) .main-menu-card{width:240px}:host([unbounded-menu-enabled]) .share-tabs-flyout{position:relative}#menu[scrollable]::part(dialog)::-webkit-scrollbar{width:12px}#menu[scrollable]::part(dialog)::-webkit-scrollbar-thumb{background-color:var(--color-sys-surface-variant,#E1E3E1);background-clip:padding-box;border:4px solid transparent;border-radius:100px}#menu[scrollable]::part(dialog)::-webkit-scrollbar-track{margin-bottom:15px;margin-top:15px}.suggestion-container{position:relative}.tab-preview{background-color:var(--color-sys-surface-container-high);border-radius:12px;border:1px solid var(--color-sys-outline);box-shadow:0 4px 12px 0 rgba(0,0,0,0.15);display:none;height:125px;inset-inline-start:100%;margin-inline-start:8px;object-fit:cover;object-position:top;position:absolute;top:50%;transform:translateY(-50%);width:200px}.dropdown-item:hover+.tab-preview{display:block}#tabHeader,#toolHeader,#modelHeader,#automaticallyAddTabsHeader,#manuallyAddTabsHeader{color:var(--cr-primary-text-color);font-size:11px;font-weight:500;line-height:16px;margin:0;padding:8px 14px 4px 14px}.dropdown-item{--iron-icon-height:16px;--iron-icon-width:16px;align-items:center;background:transparent;border:none;color:var(--cr-primary-text-color);cursor:pointer;display:flex;font-family:var(--cr-composebox-context-menu-font-family,inherit);font-size:13px;font-weight:400;gap:8px;height:32px;justify-content:flex-start;max-width:320px;padding:6px 14px;text-align:left;width:100%}:host([context-management-enabled]) .dropdown-item{max-width:240px}composebox-favicon-group{--composebox-favicon-border-color:var(--cr-menu-background-color,var(--color-composebox-background,#fff));--composebox-favicon-skeleton-color:var(--color-sys-surface-variant,var(--cr-fallback-color-surface-variant));margin-inline-end:10px;margin-inline-start:auto}:host([enable-multi-tab-selection_]) .main-menu-card .dropdown-item{width:320px}:host([context-management-enabled][enable-multi-tab-selection_]) .main-menu-card .dropdown-item{width:240px}:host([context-management-enabled]) .share-tabs-flyout .dropdown-item{max-width:none !important;width:100% !important}.dropdown-item:hover{background-color:var(--color-context-menu-hover-background,var(--cr-hover-background-color))}.dropdown-item:focus{background-color:var(--color-context-menu-hover-background,var(--cr-hover-background-color));outline:none}.dropdown-item:focus-visible{outline:2px solid var(--cr-focus-outline-color);outline-offset:-2px}.dropdown-item[disabled]{color:var(--color-composebox-context-entrypoint-text-disabled);cursor:default}.dropdown-item[disabled]:hover{background-color:transparent}#menu hr{background:var(--color-sys-divider);border:none;flex-shrink:0;height:1px;margin:8px 0}.tab-title{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#createImage{--iron-icon-height:16px;--iron-icon-width:16px}.multi-tab-icon{--iron-icon-height:16px;--iron-icon-width:16px;flex-shrink:0;margin-left:auto}#multi-tab-add{color:var(--color-composebox-context-menu-text,var(--color-composebox-file-chip-text))}#multi-tab-check{color:var(--color-composebox-context-menu-checkbox-override,var(--color-composebox-tab-selector-button-selected))}.dropdown-item[disabled] #multi-tab-add,.dropdown-item[disabled] #multi-tab-check{color:var(--color-composebox-context-entrypoint-text-disabled)}#model-check{--iron-icon-height:16px;--iron-icon-width:16px}.toggle-item{display:flex;justify-content:space-between;align-items:center}.share-tabs-container{max-width:320px;position:relative;width:100%}:host([context-management-enabled]) .share-tabs-container{max-width:240px}#shareTabsTrigger{anchor-name:--share-tabs-anchor}.share-tabs-arrow{--iron-icon-height:16px;--iron-icon-width:16px;flex-shrink:0}.share-tabs-flyout{background-color:var(--cr-menu-background-color);border-radius:16px;box-shadow:var(--cr-elevation-3);box-sizing:border-box;max-height:var(--share-tabs-flyout-max-height,344px);overflow-y:auto;overflow-x:hidden;padding:8px 0;width:320px;z-index:10}.share-tabs-flyout:not([hidden]){display:flex;flex-direction:column}.share-tabs-flyout::-webkit-scrollbar{width:12px}.share-tabs-flyout::-webkit-scrollbar-thumb{background-color:var(--color-sys-surface-variant,#E1E3E1);background-clip:padding-box;border:4px solid transparent;border-radius:100px}.share-tabs-flyout::-webkit-scrollbar-track{margin-bottom:15px;margin-top:15px}.share-tabs-flyout[hidden]{display:none}.share-tabs-flyout .dropdown-item{box-sizing:border-box;max-width:none !important;width:100% !important}.share-tabs-check{--iron-icon-height:16px;--iron-icon-width:16px;flex-shrink:0;margin-inline-start:auto}@media (forced-colors:active){:host([unbounded-menu-enabled]) .main-menu-card,.share-tabs-flyout{border:1px solid CanvasText}#menu hr{background:CanvasText;forced-color-adjust:none}.dropdown-item:hover:not([disabled]),.dropdown-item:focus-visible:not([disabled]){background-color:Highlight;color:HighlightText;forced-color-adjust:none}}`]);
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$5() {
+    // clang-format off
+    return html `<!--_html_template_start_-->
+  <cr-action-menu id="menu" role-description="${this.i18n('menu')}"
+      @close="${this.onMenuClose_}"
+      ?auto-reposition="${!this.disableAutoReposition}">
+    <div class="menu-outer-wrapper" role="presentation">
+      <div class="main-menu-card" role="presentation">
+        ${(this.tabSuggestions?.length > 0 || this.smartTabSharingActive) &&
+        this.isInputTypeAllowed_(InputType.kBrowserTab) ? html `
+          ${this.contextManagementInComposeboxEnabled ? html `
+            ${this.shouldShowSingleTabItem_() ? html `
+              <button id="singleTabItem" class="dropdown-item"
+                  role="${this.enableMultiTabSelection_ ?
+        'menuitemcheckbox' : 'menuitem'}"
+                  aria-checked="${this.enableMultiTabSelection_ &&
+        this.isTabSelected_(this.singleTab_)}"
+                  title="${this.singleTab_.title}"
+                  data-index="${this.singleTabIndex_}"
+                  aria-label="
+                    ${this.getInputTypeLabel_(InputType.kBrowserTab)}
+                    : ${this.singleTab_.title}"
+                  ?disabled="${this.isTabDisabled_(this.singleTab_)}"
+                  @click="${this.onTabClick_}">
+                <cr-composebox-tab-favicon .url="${this.singleTab_.url}"
+                    .tabId="${this.singleTab_.tabId}"
+                    .isSubmitted="${this.isTabSelected_(this.singleTab_)}">
+                </cr-composebox-tab-favicon>
+                <span class="tab-title">${this.singleTab_.title}</span>
+                ${(this.enableMultiTabSelection_ &&
+        this.isTabSelected_(this.singleTab_)) ? html `
+                  <cr-icon class="share-tabs-check" icon="cr:check">
+                    </cr-icon>
+                ` : ''}
+              </button>
+            ` : ''}
+            <div class="share-tabs-container" role="presentation">
+              ${this.smartTabSharingVisible &&
+        this.smartTabSharingActive ? html `
+                <button class="dropdown-item"
+                    id="smartTabSharingItem"
+                    role="menuitemcheckbox"
+                    aria-checked="true"
+                    ?disabled="${this.isShareTabsTriggerDisabled_()}"
+                    @click="${this.onSmartTabSharingItemClick_}">
+                  <cr-icon icon="composebox:screensaverAuto"></cr-icon>
+                  <span class="tab-title">
+                    ${this.i18n('stsMegaplusShareRelevantOpenTabs')}</span>
+                  <cr-icon class="share-tabs-check" icon="cr:check"></cr-icon>
+                </button>
+              ` : html `
+                <button id="shareTabsTrigger" class="dropdown-item"
+                    role="menuitem"
+                    aria-haspopup="menu"
+                    aria-expanded="${this.shareTabsFlyoutOpen}"
+                    ?disabled="${this.isShareTabsTriggerDisabled_()}"
+                    title="${this.getShareTabsTooltip_()}"
+                    @pointerenter="${this.onShareTabsRowPointerenter_}"
+                    @pointerleave="${this.onShareTabsRowPointerleave_}"
+                    @keydown="${this.onShareTabsRowKeydown_}">
+                  <cr-icon icon="composebox:tab"></cr-icon>
+                  <span class="tab-title">
+                    ${this.sharingTabsText_}
+                  </span>
+                  <composebox-favicon-group .tabs="${this.getSelectedTabs_()}"
+                    .submittedTabIds="${this.getSubmittedTabIds_()}"
+                    title="${this.i18n('sharingTabsWithGoogle')}">
+                  </composebox-favicon-group>
+                  <cr-icon class="share-tabs-arrow" icon="cr:chevron-right">
+                    </cr-icon>
+                </button>
+              `}
+            </div>
+            <hr aria-hidden="true"/>
+          ` : html `
+            ${(this.showContextMenuHeaders_ &&
+        this.tabSuggestions.length > 0) ? html `
+              <h4 id="tabHeader" aria-hidden="true">
+                ${this.getInputTypeLabel_(InputType.kBrowserTab)}</h4>` : ''}
+            ${this.tabSuggestions.map((tab, index) => html `
+              <div class="suggestion-container" role="presentation">
+                <button class="dropdown-item"
+                    role="${this.enableMultiTabSelection_ ? 'menuitemcheckbox'
+        : 'menuitem'}"
+                    aria-checked="${this.enableMultiTabSelection_ &&
+        this.isTabSelected_(tab)}"
+                    title="${tab.title}" data-index="${index}"
+                    aria-label="
+                      ${this.getInputTypeLabel_(InputType.kBrowserTab)}
+                      : ${tab.title}"
+                    ?disabled="${this.isTabDisabled_(tab)}"
+                    @pointerenter="${this.onTabPointerenter_}"
+                    @click="${this.onTabClick_}">
+                  <cr-composebox-tab-favicon .url="${tab.url}"
+                       .tabId="${tab.tabId}"
+                       .isSubmitted="${this.isTabSelected_(tab)}">
+                  </cr-composebox-tab-favicon>
+                  <span class="tab-title">${tab.title}</span>
+                  ${this.enableMultiTabSelection_ ? html `
+                    ${(this.isTabSelected_(tab)) ? html `
+                      <cr-icon class="multi-tab-icon"
+                          icon="composebox:check-circle-filled"
+                          id="multi-tab-check">
+                      </cr-icon>
+                    ` : html `
+                      <cr-icon class="multi-tab-icon"
+                          icon="composebox:add-circle" id="multi-tab-add">
+                      </cr-icon>
+                    `}
+                  ` : ''}
+                </button>
+                ${this.shouldShowTabPreview_() ? html `
+                  <img class="tab-preview" .src="${this.tabPreviewUrl_}">
+                ` : ''}
+              </div>
+            `)}
+          <hr aria-hidden="true"/>
+          `}
+        ` : ''}
+      ${this.isInputTypeAllowed_(InputType.kLensImage) ? html `
+        <button id="imageUpload" class="dropdown-item" role="menuitem"
+            @click="${this.onImageUploadClick_}"
+            ?disabled="${this.isInputTypeDisabled_(InputType.kLensImage)}">
+          <cr-icon icon="composebox:add-photo-alternate"></cr-icon>
+          ${this.getInputTypeLabel_(InputType.kLensImage)}
+        </button>` : ''}
+      ${this.isInputTypeAllowed_(InputType.kLensFile) ? html `
+        <button id="fileUpload" class="dropdown-item"
+            role="menuitem"
+            @click="${this.onFileUploadClick_}"
+            ?disabled="${this.isInputTypeDisabled_(InputType.kLensFile)}">
+        <cr-icon icon="composebox:attach-file"></cr-icon>
+        ${this.getInputTypeLabel_(InputType.kLensFile)}
+      </button>` : ''}
+      ${this.isInputTypeAllowed_(InputType.kDrive) ? html `
+        <button id="driveUpload" class="dropdown-item" role="menuitem"
+            @click="${this.onDriveUploadClick_}"
+            ?disabled="${this.isInputTypeDisabled_(InputType.kDrive)}">
+          <cr-icon icon="composebox:drive"></cr-icon>
+          ${this.getInputTypeLabel_(InputType.kDrive)}
+        </button>` : ''}
+
+      <!-- Show separator if tools AND something above is visible -->
+      ${(this.inputState?.allowedTools.length ?? 0) > 0 &&
+        this.isInputTypeAllowed_(InputType.kLensImage, InputType.kLensFile, InputType.kDrive) ?
+        html `<hr aria-hidden="true"/>` : ''}
+
+      ${(this.inputState?.allowedTools.length ?? 0) > 0 ? html `
+          ${this.showContextMenuHeaders_ && this.getToolHeader_() ? html `
+            <h4 id="toolHeader" aria-hidden="true">
+              ${this.getToolHeader_()}</h4>` : ''}` : ''}
+
+      ${this.inputState?.allowedTools.map(mode => html `
+        <button class="dropdown-item" data-mode="${mode}"
+            role="menuitemradio"
+            aria-checked="${this.isToolActive_(mode)}"
+            aria-label="${this.showContextMenuHeaders_ &&
+        this.getToolHeader_() ?
+        `${this.getToolHeader_()}: ` : ''}${this.getToolLabel_(mode)}"
+            title="${this.getToolTooltip_(mode)}"
+            @click="${this.onToolClick_}"
+            ?disabled="${this.isToolDisabled_(mode)}">
+          ${this.getIconForToolMode_(mode) ? html `
+            <cr-icon icon="${this.getIconForToolMode_(mode)}"></cr-icon>
+          ` : ''}
+          <span>${this.getToolLabel_(mode)}</span>
+          ${this.isToolActive_(mode) ? html `
+            <cr-icon class="multi-tab-icon"
+                icon="cr:check"></cr-icon>
+          ` : ''}
+        </button>`)}
+
+      <!-- Show separator if models AND something above is visible -->
+      ${(this.inputState?.allowedModels.length ?? 0) > 0 &&
+        ((this.inputState?.allowedTools.length ?? 0) > 0 ||
+            this.isInputTypeAllowed_(InputType.kLensImage, InputType.kLensFile, InputType.kDrive)) ? html `<hr aria-hidden="true"/>` : ''}
+
+      ${(this.inputState?.allowedModels.length ?? 0) > 0 ? html `
+          ${this.showContextMenuHeaders_ && this.getModelHeader_() ? html `
+            <h4 id="modelHeader" aria-hidden="true">
+              ${this.getModelHeader_()}</h4>` : ''}` : ''}
+
+      ${this.inputState?.allowedModels.map(mode => html `
+        <button class="dropdown-item"
+            role="menuitemradio"
+            aria-checked="${this.isModelActive_(mode)}"
+            aria-label="${this.showContextMenuHeaders_ &&
+        this.getModelHeader_() ?
+        `${this.getModelHeader_()}: ` : ''}${this.getModelLabel_(mode)}"
+            data-model="${mode}"
+            title="${this.getModelTooltip_(mode)}"
+            @click="${this.onModelClick_}"
+            ?disabled="${this.isModelDisabled_(mode)}">
+          ${this.getIconForModelMode_(mode) ? html `
+            <cr-icon icon="${this.getIconForModelMode_(mode)}"></cr-icon>
+          ` : ''}
+          <span>${this.getModelLabel_(mode)}</span>
+          ${this.isModelActive_(mode) ? html `
+            <cr-icon class="multi-tab-icon"
+                icon="cr:check" id="model-check"></cr-icon>` : ''}
+        </button>`)}
+      </div>
+
+      ${this.contextManagementInComposeboxEnabled &&
+        this.isInputTypeAllowed_(InputType.kBrowserTab) &&
+        !(this.smartTabSharingVisible && this.smartTabSharingActive) &&
+        (this.tabSuggestions && this.tabSuggestions.length > 0) ? html `
+        <div class="share-tabs-flyout" role="menu"
+            ?hidden="${!this.shareTabsFlyoutOpen}"
+            aria-hidden="${!this.shareTabsFlyoutOpen}"
+            data-position="${this.shareTabsFlyoutPosition_}"
+            @pointerenter="${this.onShareTabsFlyoutPointerenter_}"
+            @pointerleave="${this.onShareTabsFlyoutPointerleave_}"
+            @keydown="${this.onShareTabsFlyoutKeydown_}">
+          ${this.smartTabSharingVisible ? html `
+            ${this.showContextMenuHeaders_ ? html `
+              <h4 id="automaticallyAddTabsHeader" aria-hidden="true">
+                ${this.i18n('stsMegaplusAutomaticallyAddTabsHeader')}</h4>
+            ` : ''}
+            <button class="dropdown-item"
+                id="smartTabSharingItemFlyout"
+                role="menuitemcheckbox"
+                aria-checked="false"
+                ?hidden="${!this.shareTabsFlyoutOpen}"
+                ?disabled="${this.isShareTabsTriggerDisabled_()}"
+                @click="${this.onSmartTabSharingItemClick_}">
+              <cr-icon icon="composebox:screensaverAuto"></cr-icon>
+              <span class="tab-title">
+                ${this.i18n('stsMegaplusShareRelevantOpenTabs')}</span>
+            </button>
+            <hr aria-hidden="true"/>
+            ${this.showContextMenuHeaders_ ? html `
+              <h4 id="manuallyAddTabsHeader" aria-hidden="true">
+                ${this.i18n('stsMegaplusManuallyAddTabsHeader')}</h4>
+            ` : ''}
+          ` : ''}
+
+          ${this.tabSuggestions.map((tab, index) => html `
+            <div class="suggestion-container" role="presentation">
+              <button class="dropdown-item"
+                  role="${this.enableMultiTabSelection_ ?
+        'menuitemcheckbox' : 'menuitem'}"
+                  aria-checked="${this.enableMultiTabSelection_ &&
+        this.isTabSelected_(tab)}"
+                  title="${tab.title}" data-index="${index}"
+                  aria-label="
+                    ${this.getInputTypeLabel_(InputType.kBrowserTab)}
+                    : ${tab.title}"
+                  ?disabled="${this.isTabDisabled_(tab)}"
+                  ?hidden="${!this.shareTabsFlyoutOpen}"
+                  @click="${this.onTabClick_}">
+              <cr-composebox-tab-favicon .url="${tab.url}"
+                  .tabId="${tab.tabId}"
+                  .isSubmitted="${this.isTabSelected_(tab)}">
+              </cr-composebox-tab-favicon>
+              <span class="tab-title">${tab.title}</span>
+              ${(this.enableMultiTabSelection_ &&
+        this.isTabSelected_(tab)) ? html `
+                <cr-icon class="share-tabs-check" icon="cr:check">
+                  </cr-icon>
+              ` : ''}
+              </button>
+            </div>
+          `)}
+        </div>` : ''}
+    </div>
+  </cr-action-menu>
+  <!--_html_template_end_-->`;
+    // clang-format on
+}
+
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * Abstracts built-in JS functions in order to mock in tests.
+ */
+let instance$8 = null;
+class WindowProxy {
+    static getInstance() {
+        return instance$8 || (instance$8 = new WindowProxy());
+    }
+    static setInstance(obj) {
+        instance$8 = obj;
+    }
+    setTimeout(callback, duration) {
+        return window.setTimeout(callback, duration);
+    }
+    clearTimeout(id) {
+        window.clearTimeout(id !== null ? id : undefined);
+    }
+    navigate(url) {
+        window.location.href = url;
+    }
+    matchMedia(query) {
+        return window.matchMedia(query);
+    }
+    hasWebkitSpeechRecognition() {
+        return 'webkitSpeechRecognition' in window;
+    }
+    createSpeechRecognition() {
+        return new window.webkitSpeechRecognition();
+    }
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/** The width of the dropdown menu in pixels. */
+const MENU_WIDTH_PX = 190;
+const SHARE_TABS_MENU_WIDTH_PX = 240;
+const SHARE_TABS_FLYOUT_CLOSE_DELAY_MS = 300;
+const SHARE_TABS_FLYOUT_GAP_PX = 0;
+const DEFAULT_FLYOUT_WIDTH_PX = 320;
+const VIEWPORT_BUFFER_PX = 16;
+const MIN_MENU_HEIGHT_PX = 100;
+const SHARE_TABS_FLYOUT_MAX_HEIGHT_PX = 344;
+const SHARE_TABS_FLYOUT_INDENT_PX = 114;
+// From the CSS file (default max-height):
+const DEFAULT_MAX_MENU_HEIGHT_PX = 540;
+// Gap between tab shared menu and context menu in px.
+const MENU_GAP = 0;
+// Time in MS to associate 'PointerLeave' events with
+// adding first tab.
+const FIRST_TAB_DELAY = 1000;
+function querySelectorAllShadows(root, selector) {
+    const results = [];
+    if (root instanceof HTMLElement && root.matches(selector)) {
+        results.push(root);
+    }
+    if (root instanceof Element && root.shadowRoot) {
+        results.push(...querySelectorAllShadows(root.shadowRoot, selector));
+    }
+    root.childNodes.forEach(child => {
+        results.push(...querySelectorAllShadows(child, selector));
+    });
+    return results;
+}
+const ContextualActionMenuElementBase = I18nMixinLit(CrLitElement);
+class ContextualActionMenuElement extends ContextualActionMenuElementBase {
+    static get is() {
+        return 'cr-composebox-contextual-action-menu';
+    }
+    static get styles() {
+        return getCss$6();
+    }
+    render() {
+        return getHtml$5.bind(this)();
+    }
+    static get properties() {
+        return {
+            fileNum: { type: Number },
+            nonTabFileNum: { type: Number },
+            selectedTabIds: { type: Object },
+            aimThreadRestoredTabs: { type: Array },
+            tabSuggestions: { type: Array },
+            inputState: { type: Object },
+            smartTabSharingActive: { type: Boolean },
+            smartTabSharingVisible: { type: Boolean },
+            enableMultiTabSelection_: {
+                reflect: true,
+                type: Boolean,
+            },
+            tabPreviewUrl_: { type: String },
+            tabPreviewsEnabled_: { type: Boolean },
+            showContextMenuHeaders_: { type: Boolean },
+            disableAutoReposition: { type: Boolean },
+            contextManagementInComposeboxEnabled: {
+                reflect: true,
+                type: Boolean,
+                attribute: 'context-management-enabled',
+            },
+            shareTabsFlyoutOpen: {
+                reflect: true,
+                type: Boolean,
+                attribute: 'share-tabs-flyout-open',
+            },
+            shareTabsFlyoutPosition_: { type: String },
+            sharingTabsText_: { type: String },
+            isSidePanel: { type: Boolean },
+            recentTabId: { type: Number },
+            unboundedMenuEnabled: {
+                reflect: true,
+                type: Boolean,
+                attribute: 'unbounded-menu-enabled',
+            },
+            isOpen_: { type: Boolean },
+            contextMenuTooltipsEnabled: { type: Boolean },
+            singleTabIndex_: { type: Number },
+            singleTab_: { type: Object },
+        };
+    }
+    #recentTabId_accessor_storage = null;
+    get recentTabId() { return this.#recentTabId_accessor_storage; }
+    set recentTabId(value) { this.#recentTabId_accessor_storage = value; }
+    #fileNum_accessor_storage = 0;
+    get fileNum() { return this.#fileNum_accessor_storage; }
+    set fileNum(value) { this.#fileNum_accessor_storage = value; }
+    #nonTabFileNum_accessor_storage = 0;
+    get nonTabFileNum() { return this.#nonTabFileNum_accessor_storage; }
+    set nonTabFileNum(value) { this.#nonTabFileNum_accessor_storage = value; }
+    #selectedTabIds_accessor_storage = new Map();
+    get selectedTabIds() { return this.#selectedTabIds_accessor_storage; }
+    set selectedTabIds(value) { this.#selectedTabIds_accessor_storage = value; }
+    #aimThreadRestoredTabs_accessor_storage = [];
+    get aimThreadRestoredTabs() { return this.#aimThreadRestoredTabs_accessor_storage; }
+    set aimThreadRestoredTabs(value) { this.#aimThreadRestoredTabs_accessor_storage = value; }
+    #tabSuggestions_accessor_storage = [];
+    get tabSuggestions() { return this.#tabSuggestions_accessor_storage; }
+    set tabSuggestions(value) { this.#tabSuggestions_accessor_storage = value; }
+    #inputState_accessor_storage = null;
+    get inputState() { return this.#inputState_accessor_storage; }
+    set inputState(value) { this.#inputState_accessor_storage = value; }
+    #smartTabSharingActive_accessor_storage = false;
+    get smartTabSharingActive() { return this.#smartTabSharingActive_accessor_storage; }
+    set smartTabSharingActive(value) { this.#smartTabSharingActive_accessor_storage = value; }
+    #smartTabSharingVisible_accessor_storage = false;
+    get smartTabSharingVisible() { return this.#smartTabSharingVisible_accessor_storage; }
+    set smartTabSharingVisible(value) { this.#smartTabSharingVisible_accessor_storage = value; }
+    #contextManagementInComposeboxEnabled_accessor_storage = false;
+    get contextManagementInComposeboxEnabled() { return this.#contextManagementInComposeboxEnabled_accessor_storage; }
+    set contextManagementInComposeboxEnabled(value) { this.#contextManagementInComposeboxEnabled_accessor_storage = value; }
+    #contextMenuTooltipsEnabled_accessor_storage = getLoadTimeBoolean('composeboxContextMenuTooltipsEnabled', false);
+    get contextMenuTooltipsEnabled() { return this.#contextMenuTooltipsEnabled_accessor_storage; }
+    set contextMenuTooltipsEnabled(value) { this.#contextMenuTooltipsEnabled_accessor_storage = value; }
+    #disableAutoReposition_accessor_storage = false;
+    get disableAutoReposition() { return this.#disableAutoReposition_accessor_storage; }
+    set disableAutoReposition(value) { this.#disableAutoReposition_accessor_storage = value; }
+    #isSidePanel_accessor_storage = false;
+    get isSidePanel() { return this.#isSidePanel_accessor_storage; }
+    set isSidePanel(value) { this.#isSidePanel_accessor_storage = value; }
+    #shareTabsFlyoutOpen_accessor_storage = false;
+    get shareTabsFlyoutOpen() { return this.#shareTabsFlyoutOpen_accessor_storage; }
+    set shareTabsFlyoutOpen(value) { this.#shareTabsFlyoutOpen_accessor_storage = value; }
+    #unboundedMenuEnabled_accessor_storage = false;
+    get unboundedMenuEnabled() { return this.#unboundedMenuEnabled_accessor_storage; }
+    set unboundedMenuEnabled(value) { this.#unboundedMenuEnabled_accessor_storage = value; }
+    setShareTabsFlyoutOpen_(open) {
+        if (this.shareTabsFlyoutOpen === open) {
+            return;
+        }
+        this.shareTabsFlyoutOpen = open;
+        this.fire('share-tabs-flyout-open-changed', { open });
+    }
+    #enableMultiTabSelection__accessor_storage = loadTimeData.getBoolean('composeboxContextMenuEnableMultiTabSelection');
+    get enableMultiTabSelection_() { return this.#enableMultiTabSelection__accessor_storage; }
+    set enableMultiTabSelection_(value) { this.#enableMultiTabSelection__accessor_storage = value; }
+    #tabPreviewUrl__accessor_storage = '';
+    get tabPreviewUrl_() { return this.#tabPreviewUrl__accessor_storage; }
+    set tabPreviewUrl_(value) { this.#tabPreviewUrl__accessor_storage = value; }
+    #tabPreviewsEnabled__accessor_storage = loadTimeData.getBoolean('composeboxShowContextMenuTabPreviews');
+    get tabPreviewsEnabled_() { return this.#tabPreviewsEnabled__accessor_storage; }
+    set tabPreviewsEnabled_(value) { this.#tabPreviewsEnabled__accessor_storage = value; }
+    maxFileCount_ = loadTimeData.getInteger('composeboxFileMaxCount');
+    metricsSource_ = loadTimeData.getString('composeboxSource');
+    #showContextMenuHeaders__accessor_storage = loadTimeData.getBoolean('ShowContextMenuHeaders');
+    get showContextMenuHeaders_() { return this.#showContextMenuHeaders__accessor_storage; }
+    set showContextMenuHeaders_(value) { this.#showContextMenuHeaders__accessor_storage = value; }
+    enableTabDeselection_ = getLoadTimeBoolean('composeboxContextMenuEnableTabDeselection', false);
+    // Whether the "single tab" arm of context management is enabled.
+    singleTabMenuItemEnabled_ = getLoadTimeBoolean('composeboxSingleTabMenuItemEnabled', false);
+    #singleTabIndex__accessor_storage = -1;
+    // Index in `tabSuggestions` of the tab backing the single tab menu item
+    // (-1 if none), and the tab itself.
+    get singleTabIndex_() { return this.#singleTabIndex__accessor_storage; }
+    set singleTabIndex_(value) { this.#singleTabIndex__accessor_storage = value; }
+    #singleTab__accessor_storage = null;
+    get singleTab_() { return this.#singleTab__accessor_storage; }
+    set singleTab_(value) { this.#singleTab__accessor_storage = value; }
+    #shareTabsFlyoutPosition__accessor_storage = 'right';
+    get shareTabsFlyoutPosition_() { return this.#shareTabsFlyoutPosition__accessor_storage; }
+    set shareTabsFlyoutPosition_(value) { this.#shareTabsFlyoutPosition__accessor_storage = value; }
+    #sharingTabsText__accessor_storage = '';
+    get sharingTabsText_() { return this.#sharingTabsText__accessor_storage; }
+    set sharingTabsText_(value) { this.#sharingTabsText__accessor_storage = value; }
+    // Only close menu if the context management flag and the
+    // `keepMenuOpenOnTabSelectForRealbox` param are enabled.
+    get closeMenuOnSelect() {
+        return this.contextManagementInComposeboxEnabled &&
+            !getLoadTimeBoolean('keepMenuOpenOnTabSelectForRealbox', false);
+    }
+    closeTimer_ = null;
+    pointerOverTrigger_ = false;
+    pointerOverFlyout_ = false;
+    shouldResetFlyoutScroll_ = true;
+    firstTabBeingAdded_ = false;
+    pendingTabAddId_ = null;
+    anchor_ = null;
+    wasShareTabsTriggerShown_ = false;
+    wasShareTabsFlyoutOpen_ = false;
+    wasSmartTabSharingOptionShown_ = false;
+    #isOpen__accessor_storage = false;
+    get isOpen_() { return this.#isOpen__accessor_storage; }
+    set isOpen_(value) { this.#isOpen__accessor_storage = value; }
+    get supportedTools_() {
+        return new Map([
+            [
+                ToolMode.kImageGen,
+                {
+                    icon: 'composebox:nanoBanana-custom',
+                },
+            ],
+            [
+                ToolMode.kDeepSearch,
+                {
+                    icon: 'composebox:travel-explore',
+                },
+            ],
+            [
+                ToolMode.kCanvas,
+                {
+                    icon: 'composebox:draft-spark',
+                },
+            ],
+        ]);
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this.setAttribute('style', `--menu-gap: ${MENU_GAP}px;`);
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.resetShareTabsFlyout_();
+    }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('tabSuggestions') ||
+            changedProperties.has('recentTabId')) {
+            this.singleTabIndex_ = this.computeSingleTabIndex_();
+            this.singleTab_ = this.singleTabIndex_ === -1 ?
+                null :
+                this.tabSuggestions[this.singleTabIndex_];
+        }
+        if (!this.closeMenuOnSelect && changedProperties.has('selectedTabIds') &&
+            this.pendingTabAddId_ !== null) {
+            if (this.selectedTabIds.has(this.pendingTabAddId_)) {
+                // Tab was added. Start the timer now to ignore pointerleave.
+                this.firstTabBeingAdded_ = true;
+                WindowProxy.getInstance().setTimeout(() => {
+                    this.firstTabBeingAdded_ = false;
+                    if (!this.pointerOverTrigger_ && !this.pointerOverFlyout_) {
+                        this.scheduleCloseTimer_();
+                    }
+                }, FIRST_TAB_DELAY);
+                this.pendingTabAddId_ = null;
+            }
+        }
+    }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (this.contextManagementInComposeboxEnabled) {
+            if (changedProperties.has('selectedTabIds') ||
+                changedProperties.has('aimThreadRestoredTabs')) {
+                this.updateSharingTabsText_();
+            }
+            this.manageShareTabsInitialFocus_(changedProperties);
+        }
+        if (changedProperties.has('shareTabsFlyoutOpen') &&
+            this.shareTabsFlyoutOpen) {
+            this.updateFlyoutPosition_();
+        }
+        if (changedProperties.has('tabSuggestions') ||
+            changedProperties.has('inputState')) {
+            this.updateScrollable_();
+            if (this.open && this.anchor_) {
+                if (changedProperties.has('tabSuggestions') &&
+                    !this.shareTabsFlyoutOpen) {
+                    this.showAt(this.anchor_);
+                }
+                else {
+                    this.reposition_();
+                }
+            }
+            if (this.shareTabsFlyoutOpen) {
+                this.updateFlyoutPosition_();
+            }
+        }
+        const isShownNow = this.isOpen_ &&
+            this.isInputTypeAllowed_(InputType.kBrowserTab) &&
+            this.contextManagementInComposeboxEnabled &&
+            (this.tabSuggestions?.length > 0 || this.smartTabSharingActive) &&
+            !(this.smartTabSharingVisible && this.smartTabSharingActive);
+        if (isShownNow && !this.wasShareTabsTriggerShown_) {
+            recordBoolean$1('ContextualSearch.AddTabsButton.Shown.' + this.metricsSource_, true);
+        }
+        this.wasShareTabsTriggerShown_ = isShownNow;
+        const isFlyoutOpenNow = this.contextManagementInComposeboxEnabled &&
+            this.shareTabsFlyoutOpen && this.tabSuggestions &&
+            this.tabSuggestions.length > 0;
+        if (isFlyoutOpenNow && !this.wasShareTabsFlyoutOpen_) {
+            recordBoolean$1('ContextualSearch.AddTabsFlyout.Shown.' + this.metricsSource_, true);
+        }
+        this.wasShareTabsFlyoutOpen_ = isFlyoutOpenNow;
+        const isOptionVisibleDirectly = this.isOpen_ &&
+            this.smartTabSharingVisible && this.smartTabSharingActive;
+        const isOptionVisibleInFlyout = isFlyoutOpenNow && this.smartTabSharingVisible;
+        if ((isOptionVisibleDirectly || isOptionVisibleInFlyout) &&
+            !this.wasSmartTabSharingOptionShown_) {
+            let surface = null;
+            if (this.metricsSource_ === 'NewTabPage' ||
+                this.metricsSource_ === 'Omnibox') {
+                surface = SmartTabSharingSurface.OMNIBOX_COMPOSEBOX;
+            }
+            else if (this.metricsSource_ === 'ContextualTasks') {
+                surface = SmartTabSharingSurface.CONTEXTUAL_SEARCHBOX;
+            }
+            if (surface !== null) {
+                recordEnumerationValue('ContextualSearch.SmartTabSharing.MenuOptionShown', surface, SmartTabSharingSurface.MAX_VALUE + 1);
+                this.wasSmartTabSharingOptionShown_ = true;
+            }
+        }
+    }
+    get open() {
+        return this.$.menu.open;
+    }
+    close() {
+        this.$.menu.close();
+    }
+    onWindowBlur_ = this.close.bind(this);
+    layoutResizeObserver_ = null;
+    lastConfig_;
+    reposition_() {
+        if (!this.anchor_ || !this.open || !this.lastConfig_) {
+            return;
+        }
+        const rect = this.anchor_.getBoundingClientRect();
+        if (rect.width === 0 && rect.height === 0 && rect.top === 0 &&
+            rect.left === 0) {
+            return;
+        }
+        const height = rect.height;
+        const doc = document.scrollingElement || document.documentElement;
+        const scrollLeft = doc.scrollLeft;
+        const scrollTop = doc.scrollTop;
+        const config = {
+            ...this.lastConfig_,
+            top: rect.top + scrollTop,
+            left: rect.left + scrollLeft,
+            height: height,
+            width: rect.width,
+        };
+        this.$.menu.positionDialog_(config);
+        if (this.shareTabsFlyoutOpen) {
+            this.updateFlyoutPosition_();
+        }
+    }
+    getDialog() {
+        return this.$.menu.getDialog();
+    }
+    computeMenuWidth_() {
+        return this.contextManagementInComposeboxEnabled ?
+            SHARE_TABS_MENU_WIDTH_PX :
+            MENU_WIDTH_PX;
+    }
+    // Determines where menu can be placed automatically by renderer
+    // based on the menu's set max/min heights.
+    constrainMenuHeight_(maxHeight) {
+        // Height limit is either the constant, or window size (minus buffer).
+        const defaultMaxHeight = Math.min(DEFAULT_MAX_MENU_HEIGHT_PX, window.innerHeight - VIEWPORT_BUFFER_PX);
+        // Cap menu height based on the limit. Make sure it is above minimum.
+        const constrainedHeight = Math.max(MIN_MENU_HEIGHT_PX, Math.min(defaultMaxHeight, maxHeight));
+        // Always set the max height, even if the current height is smaller
+        // than the max height in case later asynchronous suggestion loading
+        // creates larger height, which will cause the menu to overlap with the plus button.
+        this.$.menu.style.setProperty('--contextual-menu-max-height', `${constrainedHeight}px`);
+    }
+    computeHorizontalLimit_(iconRect) {
+        let limitX = window.innerWidth;
+        const obstacleButtons = querySelectorAllShadows(document.body, '#voiceSearchButton, .voice-icon, #voiceSearch, #lensSearchButton, #lensIcon, .lens-icon');
+        for (const btn of obstacleButtons) {
+            const btnRect = btn.getBoundingClientRect();
+            if (btnRect.width > 0 && btnRect.height > 0) {
+                // Only consider obstacles that are in the same rough horizontal row/band as the anchor
+                if (btnRect.bottom > iconRect.top - 20 &&
+                    btnRect.top < iconRect.bottom + 20) {
+                    if (btnRect.left > iconRect.left) {
+                        limitX = Math.min(limitX, btnRect.left);
+                    }
+                }
+            }
+        }
+        return limitX;
+    }
+    showAt(anchor) {
+        this.wasSmartTabSharingOptionShown_ = false;
+        this.shouldResetFlyoutScroll_ = true;
+        this.anchor_ = anchor;
+        const rect = anchor.getBoundingClientRect();
+        if (rect.width === 0 && rect.height === 0 && rect.top === 0 &&
+            rect.left === 0) {
+            return;
+        }
+        const menuWidth = this.computeMenuWidth_();
+        // Clear any previous max height limit before measuring natural full height.
+        this.$.menu.style.removeProperty('--contextual-menu-max-height');
+        // Show the menu initially to render it and measure its natural height.
+        this.$.menu.showAt(anchor, {
+            width: menuWidth,
+            anchorAlignmentX: AnchorAlignment.AFTER_START,
+            anchorAlignmentY: AnchorAlignment.AFTER_END,
+            noOffset: true,
+        });
+        this.isOpen_ = true;
+        const iconElement = anchor.querySelector('#entrypointIcon') || anchor;
+        const iconRect = iconElement.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        const fullMenuHeight = this.$.menu.getDialog().scrollHeight;
+        const requiredHeight = fullMenuHeight + VIEWPORT_BUFFER_PX;
+        const doc = document.scrollingElement || document.documentElement;
+        const scrollLeft = doc.scrollLeft;
+        const scrollTop = doc.scrollTop;
+        const clientWidth = doc.clientWidth;
+        const clientHeight = doc.clientHeight;
+        let config = {
+            width: menuWidth,
+            noOffset: true,
+            minX: scrollLeft + VIEWPORT_BUFFER_PX,
+            minY: scrollTop + VIEWPORT_BUFFER_PX,
+            maxX: scrollLeft + clientWidth - VIEWPORT_BUFFER_PX,
+            maxY: scrollTop + clientHeight - VIEWPORT_BUFFER_PX,
+        };
+        if (spaceBelow >= requiredHeight) {
+            this.constrainMenuHeight_(spaceBelow - VIEWPORT_BUFFER_PX);
+            config = {
+                ...config,
+                anchorAlignmentX: AnchorAlignment.AFTER_START,
+                anchorAlignmentY: AnchorAlignment.AFTER_END,
+            };
+        }
+        else if (spaceAbove >= requiredHeight) {
+            this.constrainMenuHeight_(spaceAbove - VIEWPORT_BUFFER_PX);
+            config = {
+                ...config,
+                anchorAlignmentX: AnchorAlignment.AFTER_START,
+                anchorAlignmentY: AnchorAlignment.BEFORE_START,
+            };
+        }
+        else {
+            // Neither below nor above has enough space for the full menu.
+            let shouldAnchorRight = Math.max(spaceBelow, spaceAbove) < requiredHeight;
+            const horizontalLimit = this.computeHorizontalLimit_(iconRect);
+            // iconRect.right is the left edge of the right-anchored menu.
+            const menuRight = iconRect.right + menuWidth;
+            if (menuRight > horizontalLimit - VIEWPORT_BUFFER_PX) {
+                shouldAnchorRight = false;
+            }
+            if (shouldAnchorRight) {
+                const availableSpace = window.innerHeight - VIEWPORT_BUFFER_PX * 2;
+                if (fullMenuHeight > availableSpace) {
+                    this.constrainMenuHeight_(availableSpace);
+                }
+                config = {
+                    ...config,
+                    top: iconRect.top,
+                    left: iconRect.left,
+                    width: iconRect.width,
+                    height: iconRect.height,
+                    anchorAlignmentX: AnchorAlignment.AFTER_END,
+                    anchorAlignmentY: AnchorAlignment.AFTER_START,
+                };
+            }
+            else {
+                const anchorAlignmentY = spaceBelow >= spaceAbove ?
+                    AnchorAlignment.AFTER_END :
+                    AnchorAlignment.BEFORE_START;
+                const availableSpace = anchorAlignmentY === AnchorAlignment.AFTER_END ?
+                    spaceBelow :
+                    spaceAbove;
+                this.constrainMenuHeight_(availableSpace - VIEWPORT_BUFFER_PX);
+                config = {
+                    ...config,
+                    anchorAlignmentX: AnchorAlignment.AFTER_START,
+                    anchorAlignmentY,
+                };
+            }
+        }
+        // Position the menu using the finalized alignment.
+        this.lastConfig_ = config;
+        this.$.menu.showAt(anchor, config);
+        this.reposition_();
+        window.addEventListener('blur', this.onWindowBlur_);
+        if (this.layoutResizeObserver_) {
+            this.layoutResizeObserver_.disconnect();
+        }
+        this.layoutResizeObserver_ = new ResizeObserver(() => {
+            this.reposition_();
+        });
+        this.layoutResizeObserver_.observe(document.body);
+        if (this.contextManagementInComposeboxEnabled) {
+            this.updateSharingTabsText_();
+            if (this.shareTabsFlyoutOpen) {
+                this.updateFlyoutPosition_();
+            }
+        }
+        this.updateScrollable_();
+    }
+    manageShareTabsInitialFocus_(changedProperties) {
+        // Manually manage the initial keyboard focus for the "Share Tabs" menu item.
+        // Because `tabSuggestions` are fetched asynchronously, the
+        // `#shareTabsTrigger` button may not exist in the DOM at the exact moment
+        // the menu is opened. This causes the underlying <cr-action-menu> to
+        // incorrectly assign the initial focus to the next available item. To fix
+        // this, we reclaim the focus once the tab data arrives and the DOM is updated.
+        if (changedProperties.has('tabSuggestions')) {
+            const isNowPopulated = this.tabSuggestions && this.tabSuggestions.length > 0;
+            if (isNowPopulated && this.open) {
+                requestAnimationFrame(() => {
+                    const triggerBtn = this.shadowRoot.querySelector('#shareTabsTrigger');
+                    if (triggerBtn) {
+                        triggerBtn.focus();
+                    }
+                });
+            }
+        }
+    }
+    updateSharingTabsText_() {
+        const restoredCount = (this.aimThreadRestoredTabs?.length > 0) ?
+            this.aimThreadRestoredTabs.length :
+            0;
+        const totalTabs = this.selectedTabIds.size + restoredCount;
+        if (!this.contextManagementInComposeboxEnabled || totalTabs === 0) {
+            this.sharingTabsText_ = this.i18n('shareTabs');
+            return;
+        }
+        MojoPluralStringProxy.getInstance()
+            .getPluralString('sharingTabs', totalTabs)
+            .then((s) => {
+            this.sharingTabsText_ = s;
+        });
+    }
+    isItemDisabled_(item, disabledItems) {
+        if (!this.inputState || !disabledItems) {
+            return true;
+        }
+        return disabledItems.includes(item);
+    }
+    isToolAllowed_(tool) {
+        return this.isItemAllowed_(tool, this.inputState?.allowedTools);
+    }
+    isToolDisabled_(tool) {
+        if (this.isToolActive_(tool)) {
+            return false;
+        }
+        return this.isItemDisabled_(tool, this.inputState?.disabledTools);
+    }
+    isToolActive_(tool) {
+        if (!this.inputState) {
+            return false;
+        }
+        return this.inputState.activeTool === tool;
+    }
+    isModelAllowed_(model) {
+        return this.isItemAllowed_(model, this.inputState?.allowedModels);
+    }
+    isModelDisabled_(model) {
+        return this.isItemDisabled_(model, this.inputState?.disabledModels);
+    }
+    isModelActive_(model) {
+        if (!this.inputState) {
+            return false;
+        }
+        return this.inputState.activeModel === model;
+    }
+    isTabSelected_(tabOrId) {
+        const tabId = typeof tabOrId === 'number' ? tabOrId : tabOrId.tabId;
+        const isAimThreadRestored = this.contextManagementInComposeboxEnabled &&
+            (this.aimThreadRestoredTabs || []).some(restoredTab => {
+                if (typeof tabOrId === 'object') {
+                    return restoredTab.tabId === tabId &&
+                        restoredTab.url === tabOrId.url;
+                }
+                return restoredTab.tabId === tabId;
+            });
+        return this.selectedTabIds.has(tabId) || isAimThreadRestored;
+    }
+    getSubmittedTabIds_() {
+        return new Set((this.aimThreadRestoredTabs || []).map(t => t.tabId));
+    }
+    getToolLabel_(tool) {
+        if (this.inputState) {
+            const config = this.inputState.toolConfigs.find(c => c.tool === tool);
+            if (config && config.menuLabel) {
+                return config.menuLabel;
+            }
+        }
+        switch (tool) {
+            case ToolMode.kDeepSearch:
+                return this.i18n('deepSearch');
+            case ToolMode.kImageGen:
+                return this.i18n('createImages');
+            case ToolMode.kCanvas:
+                return this.i18n('canvas');
+            default:
+                return '';
+        }
+    }
+    getModelLabel_(model) {
+        if (this.inputState) {
+            const config = this.inputState.modelConfigs.find(c => c.model === model);
+            if (config && config.menuLabel) {
+                return config.menuLabel;
+            }
+        }
+        switch (model) {
+            // We don't have a string for the regular model in the client code.
+            case ModelMode.kGeminiRegular:
+                return '';
+            case ModelMode.kGeminiProAutoroute:
+                return this.i18n('geminiModelAuto');
+            case ModelMode.kGeminiPro:
+                return this.i18n('geminiModelThinking');
+            default:
+                return '';
+        }
+    }
+    getToolTooltip_(tool) {
+        if (!this.contextMenuTooltipsEnabled) {
+            return '';
+        }
+        if (this.inputState) {
+            const config = this.inputState.toolConfigs.find(c => c.tool === tool);
+            if (config && config.menuTooltip) {
+                return config.menuTooltip;
+            }
+        }
+        return '';
+    }
+    getModelTooltip_(model) {
+        if (!this.contextMenuTooltipsEnabled) {
+            return '';
+        }
+        if (this.inputState) {
+            const config = this.inputState.modelConfigs.find(c => c.model === model);
+            if (config && config.menuTooltip) {
+                return config.menuTooltip;
+            }
+        }
+        return '';
+    }
+    getShareTabsTooltip_() {
+        if (!this.contextMenuTooltipsEnabled) {
+            return '';
+        }
+        return this.getSelectedTabs_().length > 0 ?
+            this.i18n('sharingTabsWithGoogle') :
+            this.i18n('addOpenTabsToAskAnything');
+    }
+    getToolHeader_() {
+        if (this.inputState && this.inputState.toolsSectionConfig) {
+            return this.inputState.toolsSectionConfig.header;
+        }
+        return '';
+    }
+    getModelHeader_() {
+        if (this.inputState && this.inputState.modelSectionConfig) {
+            return this.inputState.modelSectionConfig.header;
+        }
+        return '';
+    }
+    getInputTypeLabel_(inputType) {
+        if (this.inputState && this.inputState.inputTypeConfigs) {
+            const config = this.inputState.inputTypeConfigs.find(c => c.inputType === inputType);
+            if (config && config.menuLabel) {
+                return config.menuLabel;
+            }
+        }
+        switch (inputType) {
+            case InputType.kBrowserTab:
+                return this.i18n('addTab');
+            case InputType.kLensImage:
+                return this.i18n('addImage');
+            case InputType.kLensFile:
+                return this.i18n('uploadFile');
+            case InputType.kDrive:
+                return this.i18n('addDriveFile');
+            default:
+                return '';
+        }
+    }
+    isItemAllowed_(item, allowedItems) {
+        if (!this.inputState || !allowedItems) {
+            return false;
+        }
+        return allowedItems.includes(item);
+    }
+    isInputTypeAllowed_(...types) {
+        return types.some(type => this.isItemAllowed_(type, this.inputState?.allowedInputTypes));
+    }
+    isInputTypeDisabled_(inputType) {
+        const limitReached = this.fileNum >= this.maxFileCount_;
+        if (this.inputState) {
+            return limitReached ||
+                (this.inputState.disabledInputTypes || []).includes(inputType);
+        }
+        return limitReached;
+    }
+    isShareTabsTriggerDisabled_() {
+        return this.selectedTabIds.size === 0 &&
+            (this.inputState?.disabledInputTypes ||
+                []).includes(InputType.kBrowserTab);
+    }
+    // Checks if a tab item in the context menu should be disabled.
+    isTabDisabled_(tab) {
+        const isRestored = this.contextManagementInComposeboxEnabled &&
+            (this.aimThreadRestoredTabs || [])
+                .some(restoredTab => restoredTab.tabId === tab.tabId &&
+                restoredTab.url === tab.url);
+        if (isRestored) {
+            if (this.enableTabDeselection_ && this.isTabSelected_(tab)) {
+                return false;
+            }
+            return true;
+        }
+        // Tabs selected in the current turn must remain enabled for deselection.
+        const isCurrentlySelected = this.selectedTabIds.has(tab.tabId);
+        if (isCurrentlySelected) {
+            return false;
+        }
+        if (this.isInputTypeDisabled_(InputType.kBrowserTab)) {
+            return true;
+        }
+        if (this.enableMultiTabSelection_) {
+            let maxTotal = this.maxFileCount_;
+            if (this.inputState && this.inputState.maxTotalInputs > 0) {
+                maxTotal = this.inputState.maxTotalInputs;
+            }
+            const totalSelected = this.nonTabFileNum + this.selectedTabIds.size +
+                (this.contextManagementInComposeboxEnabled ?
+                    (this.aimThreadRestoredTabs || []).length :
+                    0);
+            const limitReached = totalSelected >= maxTotal;
+            // Disable unselected tabs only when the total selected count reaches the limit.
+            return limitReached;
+        }
+        return false; // Default: Do not disable tabs if not in the multi-select limit scenario.
+    }
+    getSelectedTabs_() {
+        // Get the selected tab IDs from the `selectedTabIds` map and
+        // `aimThreadRestoredTabs`. Because of how maps work in JS, the order when
+        // converting to an array is least recently added to most recently added.
+        const suggestionsMap = new Map(this.tabSuggestions.map(tab => [tab.tabId, tab]));
+        const allSelectedIds = [
+            ...this.selectedTabIds.keys(),
+        ];
+        // Get selected tabs in the order they were added. But because the selected
+        // IDs lists have tabIds, and not the TabInfo, convert them back to an array
+        // of non-empty TabInfos. Then, reverse it to get most recent item first so
+        // its favicon is always leftmost.
+        const activeRestoredTabs = allSelectedIds.map(id => suggestionsMap.get(id))
+            .filter((tab) => !!tab)
+            .reverse();
+        const reversedRestored = this.contextManagementInComposeboxEnabled ?
+            [...(this.aimThreadRestoredTabs || [])].reverse() :
+            [];
+        return activeRestoredTabs.concat(reversedRestored);
+    }
+    // The single tab menu item mirrors the tab the backend reports as most
+    // recent, the current tab in the side panel, or the most recently active tab
+    // on the NTP. Returns its index in `tabSuggestions`, or -1 if the arm is
+    // disabled or the tab is not among the suggestions.
+    computeSingleTabIndex_() {
+        if (!this.singleTabMenuItemEnabled_ || this.recentTabId === null) {
+            return -1;
+        }
+        return this.tabSuggestions.findIndex(tab => tab.tabId === this.recentTabId);
+    }
+    // Whether to render the single tab menu item. `singleTab_` is null when the
+    // arm is disabled; the row is also hidden while Smart Tab Sharing is active,
+    // since the STS toggle replaces the manual tab section.
+    shouldShowSingleTabItem_() {
+        return this.singleTab_ !== null &&
+            !(this.smartTabSharingVisible && this.smartTabSharingActive);
+    }
+    onSmartTabSharingItemClick_() {
+        this.toggleSmartTabSharing_();
+        this.$.menu.close();
+    }
+    toggleSmartTabSharing_() {
+        this.fire('smart-tab-sharing-active-changed', {
+            active: !this.smartTabSharingActive,
+        });
+    }
+    setSmartTabSharingToggle(active) {
+        this.fire('smart-tab-sharing-active-changed', { active });
+    }
+    onTabClick_(e) {
+        e.stopPropagation();
+        const tabElement = e.currentTarget;
+        const singleTabType = tabElement.id === 'singleTabItem' ?
+            (this.isSidePanel ? SingleTabType.CURRENT_TAB :
+                SingleTabType.RECENT_TAB) :
+            undefined;
+        const tabInfo = this.tabSuggestions[Number(tabElement.dataset['index'])];
+        assert(tabInfo);
+        if (!this.closeMenuOnSelect) {
+            // First tab takes ~1000ms to be added. During this time, ignore
+            // `pointerLeave` events caused by adding the first tab.
+            this.pendingTabAddId_ = tabInfo.tabId;
+            this.firstTabBeingAdded_ = true;
+            WindowProxy.getInstance().setTimeout(() => {
+                if (this.pendingTabAddId_ === tabInfo.tabId) {
+                    this.firstTabBeingAdded_ = false;
+                    this.pendingTabAddId_ = null;
+                    if (!this.pointerOverTrigger_ && !this.pointerOverFlyout_) {
+                        this.scheduleCloseTimer_();
+                    }
+                }
+            }, FIRST_TAB_DELAY * 5);
+        }
+        const isRestored = this.contextManagementInComposeboxEnabled &&
+            (this.aimThreadRestoredTabs ||
+                []).some(restoredTab => restoredTab.tabId === tabInfo.tabId);
+        if (this.isTabSelected_(tabInfo.tabId)) {
+            // Allow deselecting the tab if the explicit tab deselection feature is
+            // enabled. If disabled, we only allow deselecting newly-added tabs
+            // (non-restored) when multi-tab selection is enabled.
+            if (this.enableTabDeselection_ ||
+                (this.enableMultiTabSelection_ && !isRestored)) {
+                if (singleTabType) {
+                    recordSingleTabMenuItemAction(singleTabType === SingleTabType.CURRENT_TAB ?
+                        SingleTabMenuItemAction.CURRENT_TAB_DESELECTED :
+                        SingleTabMenuItemAction.RECENT_TAB_DESELECTED, this.metricsSource_);
+                }
+                this.deleteTabContext_(tabInfo.tabId);
+                return;
+            }
+        }
+        if (singleTabType) {
+            recordSingleTabMenuItemAction(singleTabType === SingleTabType.CURRENT_TAB ?
+                SingleTabMenuItemAction.CURRENT_TAB_SELECTED :
+                SingleTabMenuItemAction.RECENT_TAB_SELECTED, this.metricsSource_);
+        }
+        this.recordTabSelectedMetric_(tabInfo);
+        this.addTabContext_(tabInfo, singleTabType);
+        recordContextAdditionMethod(0 /* ComposeboxContextAddedMethod.CONTEXT_MENU */, this.metricsSource_);
+    }
+    recordTabSelectedMetric_(tabInfo) {
+        if (this.contextManagementInComposeboxEnabled) {
+            recordBoolean$1('ContextualSearch.AddTabsFlyout.TabSelected.' + this.metricsSource_, true);
+        }
+        const surface = mapMetricsSourceToTabPickerSurface(this.metricsSource_);
+        if (surface) {
+            const hasActiveTab = this.tabSuggestions.some(tab => tab.showInCurrentTabChip);
+            recordTabPickerTabSelected(surface, tabInfo.showInCurrentTabChip, this.tabSuggestions.findIndex(tab => tab.tabId === tabInfo.tabId), hasActiveTab);
+        }
+    }
+    maybeCloseMenuBasedOnEntrypoint_() {
+        if (!this.enableMultiTabSelection_ ||
+            (this.closeMenuOnSelect && this.metricsSource_ === 'NewTabPage') ||
+            this.metricsSource_ === 'Omnibox' || this.unboundedMenuEnabled ||
+            this.metricsSource_ === 'OmniboxEverywhere') {
+            this.$.menu.close();
+        }
+    }
+    deleteTabContext_(tabId) {
+        this.fire('delete-tab-context', { tabId: tabId, fromUserAction: true });
+        this.maybeCloseMenuBasedOnEntrypoint_();
+    }
+    addTabContext_(tabInfo, singleTabType) {
+        this.fire('add-tab-context', {
+            id: tabInfo.tabId,
+            title: tabInfo.title,
+            url: tabInfo.url,
+            delayUpload: false,
+            origin: TabAttachmentSource.kContextMenu,
+            singleTabType,
+        });
+        this.maybeCloseMenuBasedOnEntrypoint_();
+    }
+    get hasTabSuggestions_() {
+        return !!this.tabSuggestions && this.tabSuggestions.length > 0;
+    }
+    onShareTabsRowPointerenter_() {
+        if (this.isShareTabsTriggerDisabled_()) {
+            return;
+        }
+        if (!this.hasTabSuggestions_) {
+            return;
+        }
+        recordBoolean$1('ContextualSearch.AddTabsButton.Hovered.' + this.metricsSource_, true);
+        this.pointerOverTrigger_ = true;
+        this.cancelCloseTimer_();
+        this.setShareTabsFlyoutOpen_(true);
+        this.updateFlyoutPosition_();
+    }
+    onShareTabsRowPointerleave_() {
+        if (!this.hasTabSuggestions_) {
+            return;
+        }
+        this.pointerOverTrigger_ = false;
+        if (this.firstTabBeingAdded_) {
+            return;
+        }
+        this.scheduleCloseTimer_();
+    }
+    onShareTabsFlyoutPointerenter_() {
+        if (!this.hasTabSuggestions_) {
+            return;
+        }
+        // Do NOT reset firstTabBeingAdded_ here, it should only be reset by timers.
+        this.pointerOverFlyout_ = true;
+        this.cancelCloseTimer_();
+    }
+    onShareTabsFlyoutPointerleave_() {
+        if (!this.hasTabSuggestions_) {
+            return;
+        }
+        this.pointerOverFlyout_ = false;
+        if (this.firstTabBeingAdded_) {
+            return;
+        }
+        this.scheduleCloseTimer_();
+    }
+    onShareTabsRowKeydown_(e) {
+        if (this.isShareTabsTriggerDisabled_()) {
+            return;
+        }
+        if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
+            if (!this.hasTabSuggestions_) {
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            recordBoolean$1('ContextualSearch.AddTabsButton.Clicked.' + this.metricsSource_, true);
+            this.setShareTabsFlyoutOpen_(true);
+            this.updateFlyoutPosition_();
+            this.updateComplete.then(() => {
+                const firstTabItem = this.shadowRoot.querySelector('.share-tabs-flyout button.dropdown-item:not([disabled])');
+                if (firstTabItem) {
+                    firstTabItem.focus();
+                }
+            });
+        }
+    }
+    // For navigating the tab submenu once in the submenu.
+    onShareTabsFlyoutKeydown_(e) {
+        if (e.key === 'ArrowLeft' || e.key === 'Escape') {
+            e.preventDefault();
+            e.stopPropagation();
+            this.setShareTabsFlyoutOpen_(false);
+            const row = this.shadowRoot.querySelector('#shareTabsTrigger');
+            if (row) {
+                row.focus();
+            }
+            return;
+        }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Tab') {
+            const flyout = this.shadowRoot.querySelector('.share-tabs-flyout');
+            if (!flyout) {
+                return;
+            }
+            const items = Array.from(flyout.querySelectorAll('button.dropdown-item:not([disabled])'));
+            if (items.length === 0) {
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            const focused = this.shadowRoot.activeElement;
+            const index = items.indexOf(focused);
+            const next = e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey);
+            const numOptions = items.length;
+            let nextIndex;
+            if (index === -1) {
+                nextIndex = next ? 0 : numOptions - 1;
+            }
+            else {
+                const delta = next ? 1 : -1;
+                nextIndex = (numOptions + index + delta) % numOptions;
+            }
+            items[nextIndex].focus();
+        }
+    }
+    updateFlyoutPosition_() {
+        this.updateComplete.then(() => {
+            const trigger = this.shadowRoot.querySelector('#shareTabsTrigger');
+            const flyout = this.shadowRoot.querySelector('.share-tabs-flyout');
+            if (!trigger || !flyout) {
+                return;
+            }
+            if (this.shouldResetFlyoutScroll_) {
+                // Reset scroll position to top when freshly opening the flyout so the
+                // recent tabs list starts from the top.
+                flyout.scrollTop = 0;
+                requestAnimationFrame(() => {
+                    if (flyout) {
+                        flyout.scrollTop = 0;
+                    }
+                });
+                this.shouldResetFlyoutScroll_ = false;
+            }
+            const triggerRect = trigger.getBoundingClientRect();
+            const flyoutWidth = flyout.offsetWidth || DEFAULT_FLYOUT_WIDTH_PX;
+            const viewportWidth = window.innerWidth;
+            if (flyoutWidth + SHARE_TABS_FLYOUT_GAP_PX <=
+                viewportWidth - triggerRect.right) {
+                this.shareTabsFlyoutPosition_ = 'right';
+            }
+            else if (triggerRect.left >= flyoutWidth + SHARE_TABS_FLYOUT_GAP_PX) {
+                this.shareTabsFlyoutPosition_ = 'left';
+            }
+            else {
+                this.shareTabsFlyoutPosition_ = 'bottom';
+            }
+            flyout.setAttribute('data-position', this.shareTabsFlyoutPosition_);
+            // In unbounded mode, the dialog uses a flex container to expand around
+            // both menu cards. Align the top of the flyout row with the trigger
+            // item using margin-top relative to the main menu card, and set
+            // data-flyout-position to drive the flex-direction.
+            if (this.unboundedMenuEnabled) {
+                const wrapper = this.shadowRoot.querySelector('.menu-outer-wrapper');
+                if (wrapper) {
+                    wrapper.setAttribute('data-flyout-position', this.shareTabsFlyoutPosition_);
+                }
+                if (this.shareTabsFlyoutPosition_ !== 'bottom') {
+                    const card = this.shadowRoot.querySelector('.main-menu-card');
+                    const offsetTop = (trigger && card) ?
+                        Math.max(0, trigger.getBoundingClientRect().top -
+                            card.getBoundingClientRect().top) :
+                        Math.max(0, trigger.offsetTop);
+                    flyout.style.marginTop = `${offsetTop}px`;
+                }
+                else {
+                    flyout.style.marginTop = '0px';
+                }
+            }
+            let flyoutIndent = 0;
+            if (this.shareTabsFlyoutPosition_ === 'bottom') {
+                const rtl = getComputedStyle(this).direction === 'rtl';
+                if (rtl) {
+                    const maxRight = triggerRect.right - flyoutWidth - VIEWPORT_BUFFER_PX;
+                    flyoutIndent =
+                        Math.max(0, Math.min(SHARE_TABS_FLYOUT_INDENT_PX, maxRight));
+                }
+                else {
+                    const maxLeft = viewportWidth - triggerRect.left - flyoutWidth -
+                        VIEWPORT_BUFFER_PX;
+                    flyoutIndent =
+                        Math.max(0, Math.min(SHARE_TABS_FLYOUT_INDENT_PX, maxLeft));
+                }
+            }
+            flyout.style.setProperty('--share-tabs-flyout-indent', `${flyoutIndent}px`);
+            let flyoutTop = triggerRect.top;
+            if (this.shareTabsFlyoutPosition_ === 'bottom') {
+                flyoutTop = triggerRect.bottom + SHARE_TABS_FLYOUT_GAP_PX;
+            }
+            const spaceBelow = window.innerHeight - flyoutTop;
+            const maxFlyoutHeight = Math.max(MIN_MENU_HEIGHT_PX, Math.min(SHARE_TABS_FLYOUT_MAX_HEIGHT_PX, spaceBelow - VIEWPORT_BUFFER_PX));
+            flyout.style.maxHeight = `${maxFlyoutHeight}px`;
+        });
+    }
+    scheduleCloseTimer_() {
+        this.cancelCloseTimer_();
+        this.closeTimer_ = WindowProxy.getInstance().setTimeout(() => {
+            this.closeTimer_ = null;
+            if (!this.pointerOverTrigger_ && !this.pointerOverFlyout_) {
+                this.setShareTabsFlyoutOpen_(false);
+            }
+        }, SHARE_TABS_FLYOUT_CLOSE_DELAY_MS);
+    }
+    cancelCloseTimer_() {
+        if (this.closeTimer_ !== null) {
+            WindowProxy.getInstance().clearTimeout(this.closeTimer_);
+            this.closeTimer_ = null;
+        }
+    }
+    resetShareTabsFlyout_() {
+        this.cancelCloseTimer_();
+        this.pointerOverTrigger_ = false;
+        this.pointerOverFlyout_ = false;
+        this.shouldResetFlyoutScroll_ = true;
+        this.setShareTabsFlyoutOpen_(false);
+        const flyout = this.shadowRoot.querySelector('.share-tabs-flyout');
+        if (flyout) {
+            flyout.style.maxHeight = '';
+            flyout.style.removeProperty('--share-tabs-flyout-indent');
+        }
+    }
+    updateScrollable_() {
+        this.updateComplete.then(() => {
+            const dialog = this.$.menu.getDialog();
+            if (this.open && dialog) {
+                const isScrollable = dialog.scrollHeight > dialog.offsetHeight;
+                this.$.menu.toggleAttribute('scrollable', isScrollable);
+            }
+        });
+    }
+    onTabPointerenter_(e) {
+        if (!this.tabPreviewsEnabled_) {
+            return;
+        }
+        const tabElement = e.currentTarget;
+        const tabInfo = this.tabSuggestions[Number(tabElement.dataset['index'])];
+        assert(tabInfo);
+        // Clear the preview URL before fetching the new one to make sure an old
+        // or incorrect preview doesn't show while the new one is loading.
+        this.tabPreviewUrl_ = '';
+        this.fire('get-tab-preview', {
+            tabId: tabInfo.tabId,
+            onPreviewFetched: (previewDataUrl) => {
+                this.tabPreviewUrl_ = previewDataUrl;
+            },
+        });
+    }
+    shouldShowTabPreview_() {
+        return this.tabPreviewsEnabled_ && this.tabPreviewUrl_ !== '';
+    }
+    onImageUploadClick_() {
+        this.fire('open-image-upload');
+        this.$.menu.close();
+    }
+    onDriveUploadClick_() {
+        this.fire('open-drive-upload');
+        this.$.menu.close();
+    }
+    onFileUploadClick_() {
+        this.fire('open-file-upload');
+        this.$.menu.close();
+    }
+    onToolClick_(e) {
+        const toolMode = Number(e.currentTarget.dataset['mode']);
+        this.fire('tool-click', { toolMode });
+        this.$.menu.close();
+    }
+    onModelClick_(e) {
+        const button = e.currentTarget;
+        const model = Number(button.dataset['model']);
+        this.fire('model-click', { model });
+        this.$.menu.close();
+    }
+    onMenuClose_() {
+        window.removeEventListener('blur', this.onWindowBlur_);
+        if (this.layoutResizeObserver_) {
+            this.layoutResizeObserver_.disconnect();
+            this.layoutResizeObserver_ = null;
+        }
+        this.lastConfig_ = undefined;
+        this.resetShareTabsFlyout_();
+        this.$.menu.style.removeProperty('--contextual-menu-max-height');
+        this.wasShareTabsTriggerShown_ = false;
+        this.wasShareTabsFlyoutOpen_ = false;
+        this.wasSmartTabSharingOptionShown_ = false;
+        this.isOpen_ = false;
+        this.fire('close');
+    }
+    getIconForToolMode_(mode) {
+        if (getLoadTimeBoolean('useSearchboxConfigIconIds', false)) {
+            const config = this.inputState?.toolConfigs.find(c => c.tool === mode);
+            return `searchbox_config:${config ? config.icon : 0}`;
+        }
+        // Fallback to legacy hardcoded tool mapping if flag is disabled.
+        return this.supportedTools_.get(mode)?.icon;
+    }
+    getIconForModelMode_(mode) {
+        if (getLoadTimeBoolean('useSearchboxConfigIconIds', false) &&
+            this.inputState) {
+            const config = this.inputState.modelConfigs.find(c => c.model === mode);
+            if (config && config.icon) {
+                return `searchbox_config:${config.icon}`;
+            }
+        }
+        // Fallback to legacy hardcoded model mapping if flag is disabled or no icon
+        // is specified in config.
+        switch (mode) {
+            case ModelMode.kGeminiRegular:
+                return 'composebox:acute';
+            case ModelMode.kGeminiProAutoroute:
+                return 'composebox:autorenew';
+            case ModelMode.kGeminiPro:
+            case ModelMode.kGeminiProNoGenUi:
+                return 'composebox:timer';
+            case ModelMode.kGeminiFlashLatest:
+                return 'composebox:bolt';
+            default:
+                return undefined;
+        }
+    }
+}
+customElements.define(ContextualActionMenuElement.is, ContextualActionMenuElement);
+
+let instance$7 = null;
+function getCss$5() {
+    return instance$7 || (instance$7 = [...[getCss$g()], css `:host{--button-height:36px;--cr-focus-outline-color:var(--color-searchbox-results-icon-focused-outline);--duration:1800ms;--fulfillment-background:#fff;--glif-gradient:conic-gradient(#3186ff00 0deg,#34a853ff 43deg,#ffd314ff 65deg,#ff4641ff 105deg,#3186ffff 144deg,#3186ffff 150deg,#3186ff00 250deg);--gradient-width:2px;--input-background:#fff;--input-foreground:#0a0a0a;--standard-curve:cubic-bezier(0.4,0,0.2,1);--text-animation-curve:cubic-bezier(0.38,0.72,0,1);--icon-animation-duration:1100ms;--icon-rotation-start-angle:0deg;--icon-rotation-end-angle:90deg;--icon-rotation-curve:cubic-bezier(0.001,0,0,1);--icon-pulse-scale-0:1;--icon-pulse-scale-18:1.2;--icon-pulse-scale-100:1;--icon-pulse-curve-0:cubic-bezier(0.05,1.05,0.1,1);--icon-pulse-curve-18:var(--standard-curve);--icon-color-curve:linear}.glow-container{display:inline-block;height:var(--button-height);margin-left:2px;position:relative;width:var(--button-height)}cr-button#entrypoint{width:max-content}cr-button#entrypoint:focus{outline-offset:0}@keyframes slide-in{to{transform:translateX(0)}}@keyframes fade-in{to{opacity:1}}:host([glif-animation-state='spinner-only']) #description{opacity:0}:host([glif-animation-state='started']) #description{animation:slide-in 1000ms 820ms var(--text-animation-curve) forwards,fade-in 850ms 970ms var(--text-animation-curve) forwards;opacity:0;transform:translateX(-12px)}.aim-c{border-radius:100%;inset:0;pointer-events:none;position:absolute}.aim-gradient-outer-blur,.aim-gradient-solid{inset:0;overflow:hidden;pointer-events:none;position:absolute;animation:rotate-gradient calc(var(--duration) / 1.5) var(--standard-curve) infinite}.aim-gradient-outer-blur:before,.aim-gradient-solid:before{background:var(--glif-gradient);bottom:0;content:'';height:200%;left:0;opacity:0;position:absolute;right:0;scale:2 2;top:-50%;will-change:transform,opacity}.aim-gradient-outer-blur{filter:blur(2px);opacity:0.35;transform:translate3d(0,0,0)}.dark .aim-gradient-outer-blur{filter:blur(3px);opacity:0.7}@keyframes rotate-gradient{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}:host([glif-animation-state='finished']) .aim-gradient-outer-blur,:host([glif-animation-state='ineligible']) .aim-gradient-outer-blur,:host([glif-animation-state='finished']) .aim-gradient-solid,:host([glif-animation-state='ineligible']) .aim-gradient-solid{animation-play-state:paused;opacity:0}@keyframes fade-in-out{0%{opacity:0}20%{opacity:1}50%{opacity:1}100%{opacity:0}}:host([glif-animation-state='started']) .aim-gradient-outer-blur:before,:host([glif-animation-state='started']) .aim-gradient-solid:before{animation:fade-in-out var(--duration) linear both}@keyframes opacity-fade-in-and-stay{from{opacity:0}to{opacity:1}}:host([glif-animation-state='spinner-only']) .aim-gradient-outer-blur:before,:host([glif-animation-state='spinner-only']) .aim-gradient-solid:before{animation:opacity-fade-in-and-stay 300ms 250ms linear forwards}:host([glif-animation-state='finished']) .aim-gradient-outer-blur:before,:host([glif-animation-state='finished']) .aim-gradient-solid:before{opacity:0}@keyframes rotate-gradient-entry{from{transform:rotate(0deg)}to{transform:rotate(540deg)}}:host([glif-animation-state='started']) .aim-gradient-outer-blur,:host([glif-animation-state='started']) .aim-gradient-solid{animation-duration:var(--duration);animation-fill-mode:both;animation-iteration-count:1;animation-name:rotate-gradient-entry}:host([glif-animation-state='spinner-only']) .aim-background{animation:opacity-fade-in-and-stay 300ms 150ms linear forwards;background-color:var(--fulfillment-background)}.aim-background{background-color:var(--input-background);clip-path:inset(0 0 0 0 round calc(var(--button-height) * 2));filter:blur(4px);inset:var(--gradient-width);position:absolute;will-change:background-color}:host([glif-animation-state='started']) .aim-background{animation:background-fade var(--duration) linear both}:host([glif-animation-state='finished']) .aim-background{opacity:0}@keyframes background-fade{0%{background:var(--input-background)}20%{background:var(--fulfillment-background)}50%{background:var(--fulfillment-background)}100%{background:var(--input-background)}}:host([glif-animation-state='started'][energy-effect-animation-enabled]) #entrypointIcon,:host([glif-animation-state='started'][energy-effect-animation-enabled]) cr-icon-button#entrypoint::part(icon){--iron-icon-fill-color:currentColor;animation:icon-rotate var(--icon-animation-duration) var(--cr-composebox-entrypoint-icon-animation-delay,0ms) var(--icon-rotation-curve),icon-pulse var(--icon-animation-duration) var(--cr-composebox-entrypoint-icon-animation-delay,0ms),icon-color var(--icon-animation-duration) var(--cr-composebox-entrypoint-icon-animation-delay,0ms) var(--icon-color-curve)}@keyframes icon-rotate{from{rotate:var(--icon-rotation-start-angle)}to{rotate:var(--icon-rotation-end-angle)}}@keyframes icon-pulse{0%{scale:var(--icon-pulse-scale-0);animation-timing-function:var(--icon-pulse-curve-0)}18%{scale:var(--icon-pulse-scale-18);animation-timing-function:var(--icon-pulse-curve-18)}100%{scale:var(--icon-pulse-scale-100)}}@keyframes icon-color{0%{color:var(--composebox-context-menu-entrypoint-button-color,var(--cr-button-text-color))}3%{color:#a6b9ff}27%{color:#7f9cff}45%{color:#3186ff}88%{color:#3186ff}100%{color:var(--composebox-context-menu-entrypoint-button-color,var(--cr-button-text-color))}}@keyframes hover-background-delay{to{--cr-hover-background-color:var(--color-composebox-context-entrypoint-hover-background)}}cr-icon-button{border-radius:var(--cr-composebox-entrypoint-border-radius,50%)}#entrypoint{--composebox-favicon-border-color:#f2f2f2;--cr-button-disabled-text-color:var(--color-composebox-context-entrypoint-text-disabled);--cr-button-text-color:var(--color-composebox-file-chip-text);--cr-hover-background-color:var(--cr-icon-button-hover-background-color);--cr-icon-button-height:var(--cr-composebox-entrypoint-height,var(--cr-icon-button-size));--cr-icon-button-margin-start:0;--cr-icon-button-width:var(--cr-composebox-entrypoint-width,var(--cr-icon-button-size));--icon-block-padding-small:10px;border:initial;gap:4px;position:relative;z-index:5}@media (prefers-color-scheme:dark){:host([apply-context-button-background]) #entrypoint{--composebox-favicon-border-color:#4e5059}}:host([apply-context-button-background]) #entrypoint,:host([is-lens-searchbox_]) #entrypoint{--composebox-favicon-skeleton-color:var(--color-sys-surface-variant,var(--cr-fallback-color-surface-variant))}#entrypoint:not(:hover){background-color:var(--cr-composebox-entrypoint-background-color,transparent)}:host([is-oblong-shape]) #entrypoint{--cr-composebox-entrypoint-width:40px;border-radius:100px;color:var(--composebox-context-menu-entrypoint-button-color,var(--color-sys-on-surface,--cr-fallback-color-on-surface));margin-inline-start:var(--contextual-entrypoint-oblong-margin-inline-start,0)}:host([apply-context-button-background].menu-open) #entrypoint{background-color:var(--cr-icon-button-hover-background-color,var(--cr-active-neutral-on-subtle-background-color))}:host([is-lens-searchbox_]) #entrypoint{--composebox-favicon-border-color:var(--color-sys-surface-container,#f2f2f2)}@media (prefers-color-scheme:dark){:host([is-lens-searchbox_]) #entrypoint{--composebox-favicon-border-color:var(--color-composebox-context-entrypoint-background,#4e5059)}}:host([has-virtual-focus]) #entrypoint{box-shadow:inset 0 0 0 2px var(--cr-focus-outline-color)}:host([glif-animation-state='started']) #entrypoint,:host([glif-animation-state='spinner-only']) #entrypoint{--cr-hover-background-color:transparent;animation:hover-background-delay 0ms 1850ms linear forwards;--icon-block-padding-small:8px}#entrypoint:not([disabled]){--cr-icon-button-fill-color:currentColor;color:var(--composebox-context-menu-entrypoint-button-color,var(--cr-button-text-color))}#entrypointPlaceholder{display:inline-block;width:36px}#description{display:block;font-size:13px}@media (forced-colors:active){#entrypoint:not([disabled]){--cr-button-text-color:ButtonText;--cr-icon-button-fill-color:ButtonText;color:ButtonText}#entrypoint{animation:none;background-color:ButtonFace;border:1px solid ButtonText;box-sizing:border-box;forced-color-adjust:none}#entrypoint:hover:not([disabled]),:host(.menu-open) #entrypoint:not([disabled]){--cr-button-text-color:HighlightText;--cr-hover-background-color:Highlight;--cr-icon-button-fill-color:HighlightText !important;--cr-icon-button-hover-background-color:Highlight;background-color:Highlight;border-color:Highlight;color:HighlightText}}@container style(--cr-animations-disabled:1){:host([glif-animation-state]) .aim-gradient-outer-blur,:host([glif-animation-state]) .aim-gradient-solid,:host([glif-animation-state]) .aim-background{display:none}:host([glif-animation-state]) #entrypointIcon,:host([glif-animation-state]) cr-icon-button#entrypoint::part(icon),:host([glif-animation-state]) #entrypoint{animation:none !important}:host([glif-animation-state]) #description{animation:none;opacity:1;transform:none}}.pill-button{--cr-composebox-entrypoint-background-color:var(--color-composebox-context-entrypoint-hover-background,rgba(0,0,0,0.05));min-width:auto;padding:0 10px 0 8px}.pill-button cr-icon{width:20px;height:20px;margin-right:4px}.sts-active-coin{flex-shrink:0;width:20px;height:20px}cr-button:not(.pill-button) .sts-active-coin{margin-inline-start:auto;margin-inline-end:10px}`]);
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$4() {
+    // clang-format off
+    return html `<!--_html_template_start_-->
+  <div id="${this.getWrapperId_()}" class="${this.getWrapperCssClass_()}"
+      @pointerenter="${this.onEntrypointPointerenter_}">
+    ${this.showContextMenuDescription && !this.windowWidthBelowThreshold_ ? html `
+      <cr-button id="entrypoint"
+          class="ai-mode-button"
+          part="entrypoint-button"
+          @click="${this.onEntrypointClick_}"
+          title="${this.getEntrypointAriaLabel_()}" noink
+          aria-label="${this.getEntrypointAriaLabel_()}">
+        <cr-icon id="entrypointIcon" icon="cr:add" slot="prefix-icon"
+            aria-hidden="true"
+            @animationend="${this.onIconAnimationend_}"></cr-icon>
+        <span id="description"
+            aria-hidden="true"
+            @animationend="${this.onDescriptionAnimationend_}">
+          ${this.i18n('addContext')}
+        </span>
+        ${this.smartTabSharingActive ? html `
+          <cr-icon class="sts-active-coin" icon="composebox:screensaverAuto"
+              aria-hidden="true"
+              title="${this.i18n('stsMegaplusShareRelevantOpenTabs')}"></cr-icon>
+        ` : html `
+          ${this.tabFaviconChipsToCoinsEnabled_ &&
+        this.getTabs_().length > 0 ? html `
+            <composebox-favicon-group .tabs="${this.getTabs_()}"
+                .submittedTabIds="${this.getSubmittedTabIds_()}"
+                aria-hidden="true"
+                title="${this.i18n('sharingTabsWithGoogle')}">
+            </composebox-favicon-group>
+          ` : ''}
+        `}
+      </cr-button>
+    ` : html `
+      ${this.smartTabSharingActive ||
+        (this.tabFaviconChipsToCoinsEnabled_ &&
+            this.getTabs_().length > 0) ? html `
+        <cr-button id="entrypoint"
+            class="ai-mode-button pill-button"
+            part="entrypoint-button"
+            @click="${this.onEntrypointClick_}"
+            title="${this.getEntrypointAriaLabel_()}" noink
+            aria-label="${this.getEntrypointAriaLabel_()}">
+          <cr-icon id="entrypointIcon" icon="cr:add" slot="prefix-icon"
+              aria-hidden="true"
+              @animationend="${this.onIconAnimationend_}"></cr-icon>
+          ${this.smartTabSharingActive ? html `
+            <cr-icon class="sts-active-coin" icon="composebox:screensaverAuto"
+                aria-hidden="true"
+                title="${this.i18n('stsMegaplusShareRelevantOpenTabs')}"></cr-icon>
+          ` : html `
+            <composebox-favicon-group .tabs="${this.getTabs_()}"
+                .submittedTabIds="${this.getSubmittedTabIds_()}"
+                aria-hidden="true"
+                title="${this.i18n('sharingTabsWithGoogle')}">
+            </composebox-favicon-group>
+          `}
+        </cr-button>
+      ` : html `
+        <cr-icon-button id="entrypoint"
+            class="ai-mode-button"
+            part="context-menu-entrypoint-icon entrypoint-button"
+            iron-icon="cr:add"
+            @click="${this.onEntrypointClick_}"
+            title="${this.getEntrypointAriaLabel_()}" noink
+            aria-label="${this.getEntrypointAriaLabel_()}"
+            @animationend="${this.onIconAnimationend_}">
+        </cr-icon-button>
+      `}
+    `}
+    ${!this.energyEffectAnimationEnabled && !this.disableFallbackGlifAnimation && this.glifAnimationState !== GlifAnimationState.INELIGIBLE ? html `
+      <div class="aim-gradient-outer-blur aim-c"></div>
+      <div class="aim-gradient-solid aim-c"></div>
+      <div class="aim-background aim-c"
+          @animationend="${this.onAimBackgroundAnimationend_}">
+      </div>
+    ` : ''}
+  </div>
+<!--_html_template_end_-->`;
+    // clang-format on
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const ContextualEntrypointButtonElementBase = I18nMixinLit(CrLitElement);
+class ContextualEntrypointButtonElement extends ContextualEntrypointButtonElementBase {
+    static get is() {
+        return 'cr-composebox-contextual-entrypoint-button';
+    }
+    static get styles() {
+        return getCss$5();
+    }
+    render() {
+        return getHtml$4.bind(this)();
+    }
+    static get properties() {
+        return {
+            // =========================================================================
+            // Public properties
+            // =========================================================================
+            showContextMenuDescription: { type: Boolean },
+            inputState: { type: Object },
+            glifAnimationState: { type: String, reflect: true },
+            hasVirtualFocus: { type: Boolean, reflect: true },
+            applyContextButtonBackground: { type: Boolean, reflect: true },
+            isOblongShape: { type: Boolean, reflect: true },
+            windowWidthBelowThreshold_: { type: Boolean },
+            sharedTabs: { type: Array },
+            restoredTabs: { type: Array },
+            tabFaviconChipsToCoinsEnabled_: { type: Boolean },
+            energyEffectAnimationEnabled: { type: Boolean, reflect: true },
+            disableFallbackGlifAnimation: { type: Boolean },
+            smartTabSharingActive: { type: Boolean },
+            entrypointAriaLabel_: { type: String },
+            isLensSearchbox_: {
+                type: Boolean,
+                reflect: true,
+            },
+        };
+    }
+    #showContextMenuDescription_accessor_storage = false;
+    get showContextMenuDescription() { return this.#showContextMenuDescription_accessor_storage; }
+    set showContextMenuDescription(value) { this.#showContextMenuDescription_accessor_storage = value; }
+    #inputState_accessor_storage = null;
+    get inputState() { return this.#inputState_accessor_storage; }
+    set inputState(value) { this.#inputState_accessor_storage = value; }
+    #sharedTabs_accessor_storage = [];
+    get sharedTabs() { return this.#sharedTabs_accessor_storage; }
+    set sharedTabs(value) { this.#sharedTabs_accessor_storage = value; }
+    #restoredTabs_accessor_storage = [];
+    get restoredTabs() { return this.#restoredTabs_accessor_storage; }
+    set restoredTabs(value) { this.#restoredTabs_accessor_storage = value; }
+    #glifAnimationState_accessor_storage = GlifAnimationState.INELIGIBLE;
+    get glifAnimationState() { return this.#glifAnimationState_accessor_storage; }
+    set glifAnimationState(value) { this.#glifAnimationState_accessor_storage = value; }
+    #hasVirtualFocus_accessor_storage = false;
+    get hasVirtualFocus() { return this.#hasVirtualFocus_accessor_storage; }
+    set hasVirtualFocus(value) { this.#hasVirtualFocus_accessor_storage = value; }
+    #applyContextButtonBackground_accessor_storage = false;
+    get applyContextButtonBackground() { return this.#applyContextButtonBackground_accessor_storage; }
+    set applyContextButtonBackground(value) { this.#applyContextButtonBackground_accessor_storage = value; }
+    #isOblongShape_accessor_storage = false;
+    get isOblongShape() { return this.#isOblongShape_accessor_storage; }
+    set isOblongShape(value) { this.#isOblongShape_accessor_storage = value; }
+    #energyEffectAnimationEnabled_accessor_storage = false;
+    get energyEffectAnimationEnabled() { return this.#energyEffectAnimationEnabled_accessor_storage; }
+    set energyEffectAnimationEnabled(value) { this.#energyEffectAnimationEnabled_accessor_storage = value; }
+    #disableFallbackGlifAnimation_accessor_storage = false;
+    get disableFallbackGlifAnimation() { return this.#disableFallbackGlifAnimation_accessor_storage; }
+    set disableFallbackGlifAnimation(value) { this.#disableFallbackGlifAnimation_accessor_storage = value; }
+    #smartTabSharingActive_accessor_storage = false;
+    get smartTabSharingActive() { return this.#smartTabSharingActive_accessor_storage; }
+    set smartTabSharingActive(value) { this.#smartTabSharingActive_accessor_storage = value; }
+    #entrypointAriaLabel__accessor_storage = '';
+    get entrypointAriaLabel_() { return this.#entrypointAriaLabel__accessor_storage; }
+    set entrypointAriaLabel_(value) { this.#entrypointAriaLabel__accessor_storage = value; }
+    #windowWidthBelowThreshold__accessor_storage = false;
+    get windowWidthBelowThreshold_() { return this.#windowWidthBelowThreshold__accessor_storage; }
+    set windowWidthBelowThreshold_(value) { this.#windowWidthBelowThreshold__accessor_storage = value; }
+    #isLensSearchbox__accessor_storage = loadTimeData.valueExists('isLensSearchbox') &&
+        loadTimeData.getBoolean('isLensSearchbox');
+    get isLensSearchbox_() { return this.#isLensSearchbox__accessor_storage; }
+    set isLensSearchbox_(value) { this.#isLensSearchbox__accessor_storage = value; }
+    #tabFaviconChipsToCoinsEnabled__accessor_storage = loadTimeData.getBoolean('tabFaviconChipsToCoinsEnabled');
+    get tabFaviconChipsToCoinsEnabled_() { return this.#tabFaviconChipsToCoinsEnabled__accessor_storage; }
+    set tabFaviconChipsToCoinsEnabled_(value) { this.#tabFaviconChipsToCoinsEnabled__accessor_storage = value; }
+    showContextMenuDescriptionEnabled_ = getLoadTimeBoolean('composeboxShowContextMenuDescription', false);
+    metricsSource_ = loadTimeData.getString('composeboxSource');
+    eventTracker_ = new EventTracker();
+    constructor() {
+        super();
+    }
+    // Return reversed lists of restored (historical) and
+    // shared tabs (selected tabs).
+    getTabs_() {
+        if (this.smartTabSharingActive) {
+            return [];
+        }
+        const reversedShared = [...this.sharedTabs].reverse();
+        const reversedRestored = [...(this.restoredTabs || [])].reverse();
+        return reversedShared.concat(reversedRestored);
+    }
+    getSubmittedTabIds_() {
+        return new Set((this.restoredTabs || []).map(t => t.tabId));
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this.eventTracker_.add(WindowProxy.getInstance().matchMedia('(width <= 264px)'), 'change', (e) => {
+            this.windowWidthBelowThreshold_ = e.matches;
+        });
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.eventTracker_.removeAll();
+    }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('inputState') && this.inputState) {
+            const inToolMode = this.inputState.activeTool !== ToolMode.kUnspecified;
+            if (this.showContextMenuDescriptionEnabled_) {
+                this.showContextMenuDescription = !inToolMode;
+            }
+        }
+        if (changedProperties.has('sharedTabs') ||
+            changedProperties.has('restoredTabs') ||
+            changedProperties.has('smartTabSharingActive')) {
+            this.updateAriaLabel_();
+        }
+    }
+    async updateAriaLabel_() {
+        const baseLabel = this.i18n('addContextTitle');
+        const tabCount = this.getTabs_().length;
+        if (tabCount === 0) {
+            this.entrypointAriaLabel_ = baseLabel;
+            return;
+        }
+        const sharingTabsStr = await MojoPluralStringProxy.getInstance().getPluralString('sharingTabs', tabCount);
+        this.entrypointAriaLabel_ = `${baseLabel}, ${sharingTabsStr}`;
+    }
+    getEntrypointAriaLabel_() {
+        return this.entrypointAriaLabel_ || this.i18n('addContextTitle');
+    }
+    onEntrypointClick_(e) {
+        e.stopPropagation();
+        const metricName = 'ContextualSearch.ContextMenuEntry.Clicked.' + this.metricsSource_;
+        recordBoolean$1(metricName, true);
+        const entrypoint = this.shadowRoot.querySelector('#entrypoint');
+        assert(entrypoint);
+        this.fire('context-menu-entrypoint-click', {
+            x: entrypoint.getBoundingClientRect().left,
+            y: entrypoint.getBoundingClientRect().bottom,
+        });
+    }
+    onEntrypointPointerenter_() {
+        this.fire('context-menu-entrypoint-hover');
+    }
+    onIconAnimationend_(e) {
+        this.onAnimationEnd_(e, 'icon-rotate');
+    }
+    onDescriptionAnimationend_(e) {
+        this.onAnimationEnd_(e, 'slide-in');
+    }
+    onAimBackgroundAnimationend_(e) {
+        if (this.showContextMenuDescription) {
+            return;
+        }
+        this.onAnimationEnd_(e, 'background-fade');
+    }
+    onAnimationEnd_(e, animationName) {
+        if (e.animationName === animationName) {
+            this.glifAnimationState = GlifAnimationState.FINISHED;
+        }
+    }
+    getWrapperId_() {
+        return this.glifAnimationState !== GlifAnimationState.INELIGIBLE ?
+            'glowWrapper' :
+            '';
+    }
+    getWrapperCssClass_() {
+        return this.glifAnimationState !== GlifAnimationState.INELIGIBLE ?
+            'glow-container' :
+            '';
+    }
+}
+customElements.define(ContextualEntrypointButtonElement.is, ContextualEntrypointButtonElement);
+
+let instance$6 = null;
+function getCss$4() {
+    return instance$6 || (instance$6 = [...[getCss$g()], css `:host{width:var(--cr-composebox-entrypoint-width,auto)}#entrypointButton.menu-open::part(entrypoint-button){--cr-hover-background-color:var(--cr-icon-button-hover-background-color);background-color:var(--cr-icon-button-hover-background-color)}`]);
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$3() {
+    // clang-format off
+    return html `<!--_html_template_start_-->
+    ${hasAllowedInputs(this.inputState, this.usePecApi) ? html `
+      <cr-composebox-contextual-entrypoint-button id="entrypointButton"
+          exportparts="context-menu-entrypoint-icon, entrypoint-button"
+          .inputState="${this.inputState}"
+          .sharedTabs="${this.sharedTabs}"
+          .restoredTabs="${this.aimThreadRestoredTabs}"
+          .smartTabSharingActive="${this.smartTabSharingActive}"
+          @context-menu-entrypoint-click="${this.onContextMenuEntrypointClick_}"
+          @context-menu-entrypoint-hover="${this.onContextMenuEntrypointHover_}"
+          ?show-context-menu-description="${this.showContextMenuDescription}"
+          .glifAnimationState="${this.glifAnimationState}"
+          .energyEffectAnimationEnabled="${this.energyEffectAnimationEnabled}"
+          .disableFallbackGlifAnimation="${this.disableFallbackGlifAnimation}">
+      </cr-composebox-contextual-entrypoint-button>
+    ` : ''}
+    <cr-composebox-contextual-action-menu id="menu"
+        .fileNum="${this.fileNum}"
+        .nonTabFileNum="${this.nonTabFileNum}"
+        .isSidePanel="${this.isSidePanel}"
+        .selectedTabIds="${this.selectedTabIds}"
+        .aimThreadRestoredTabs="${this.aimThreadRestoredTabs}"
+        .tabSuggestions="${this.tabSuggestions}"
+        .recentTabId="${this.recentTabId}"
+        .inputState="${this.inputState}"
+        .smartTabSharingActive="${this.smartTabSharingActive}"
+        .smartTabSharingVisible="${this.smartTabSharingVisible}"
+        .contextManagementInComposeboxEnabled="${this.contextManagementInComposeboxEnabled}"
+        .contextMenuTooltipsEnabled="${this.composeboxContextMenuTooltipsEnabled}"
+        .disableAutoReposition="${this.disableAutoReposition}"
+        .shareTabsFlyoutOpen="${this.shareTabsFlyoutOpen}"
+        .unboundedMenuEnabled="${this.unboundedMenuEnabled}"
+        @close="${this.onMenuClose_}">
+    </cr-composebox-contextual-action-menu>
+  <!--_html_template_end_-->`;
+    // clang-format on
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const ContextualEntrypointAndMenuElementBase = I18nMixinLit(CrLitElement);
+class ContextualEntrypointAndMenuElement extends ContextualEntrypointAndMenuElementBase {
+    static get is() {
+        return 'cr-composebox-contextual-entrypoint-and-menu';
+    }
+    static get styles() {
+        return getCss$4();
+    }
+    render() {
+        return getHtml$3.bind(this)();
+    }
+    static get properties() {
+        return {
+            // =========================================================================
+            // Public properties
+            // =========================================================================
+            fileNum: { type: Number },
+            nonTabFileNum: { type: Number },
+            showContextMenuDescription: { type: Boolean },
+            smartTabSharingActive: { type: Boolean },
+            smartTabSharingVisible: { type: Boolean },
+            contextManagementInComposeboxEnabled: { type: Boolean },
+            composeboxContextMenuTooltipsEnabled: { type: Boolean },
+            hasImageFiles: {
+                reflect: true,
+                type: Boolean,
+            },
+            selectedTabIds: { type: Object },
+            aimThreadRestoredTabs: { type: Array },
+            tabSuggestions: { type: Array },
+            inputState: { type: Object },
+            tabSuggestionsState: { type: Number },
+            glifAnimationState: { type: String },
+            searchboxLayoutMode: { type: String },
+            disableAutoReposition: { type: Boolean },
+            isSidePanel: { type: Boolean },
+            usePecApi: { type: Boolean },
+            energyEffectAnimationEnabled: { type: Boolean, reflect: true },
+            disableFallbackGlifAnimation: { type: Boolean },
+            recentTabId: { type: Number },
+            shareTabsFlyoutOpen: { type: Boolean },
+            unboundedMenuEnabled: {
+                reflect: true,
+                type: Boolean,
+                attribute: 'unbounded-menu-enabled',
+            },
+            // =========================================================================
+            // Protected properties
+            // =========================================================================
+            enableMultiTabSelection_: {
+                reflect: true,
+                type: Boolean,
+            },
+            sharedTabs: { type: Array },
+        };
+    }
+    #fileNum_accessor_storage = 0;
+    get fileNum() { return this.#fileNum_accessor_storage; }
+    set fileNum(value) { this.#fileNum_accessor_storage = value; }
+    #nonTabFileNum_accessor_storage = 0;
+    get nonTabFileNum() { return this.#nonTabFileNum_accessor_storage; }
+    set nonTabFileNum(value) { this.#nonTabFileNum_accessor_storage = value; }
+    #showContextMenuDescription_accessor_storage = false;
+    get showContextMenuDescription() { return this.#showContextMenuDescription_accessor_storage; }
+    set showContextMenuDescription(value) { this.#showContextMenuDescription_accessor_storage = value; }
+    #smartTabSharingActive_accessor_storage = false;
+    get smartTabSharingActive() { return this.#smartTabSharingActive_accessor_storage; }
+    set smartTabSharingActive(value) { this.#smartTabSharingActive_accessor_storage = value; }
+    #smartTabSharingVisible_accessor_storage = false;
+    get smartTabSharingVisible() { return this.#smartTabSharingVisible_accessor_storage; }
+    set smartTabSharingVisible(value) { this.#smartTabSharingVisible_accessor_storage = value; }
+    #contextManagementInComposeboxEnabled_accessor_storage = false;
+    get contextManagementInComposeboxEnabled() { return this.#contextManagementInComposeboxEnabled_accessor_storage; }
+    set contextManagementInComposeboxEnabled(value) { this.#contextManagementInComposeboxEnabled_accessor_storage = value; }
+    #composeboxContextMenuTooltipsEnabled_accessor_storage = getLoadTimeBoolean('composeboxContextMenuTooltipsEnabled', false);
+    get composeboxContextMenuTooltipsEnabled() { return this.#composeboxContextMenuTooltipsEnabled_accessor_storage; }
+    set composeboxContextMenuTooltipsEnabled(value) { this.#composeboxContextMenuTooltipsEnabled_accessor_storage = value; }
+    #selectedTabIds_accessor_storage = new Map();
+    get selectedTabIds() { return this.#selectedTabIds_accessor_storage; }
+    set selectedTabIds(value) { this.#selectedTabIds_accessor_storage = value; }
+    #aimThreadRestoredTabs_accessor_storage = [];
+    get aimThreadRestoredTabs() { return this.#aimThreadRestoredTabs_accessor_storage; }
+    set aimThreadRestoredTabs(value) { this.#aimThreadRestoredTabs_accessor_storage = value; }
+    #tabSuggestions_accessor_storage = [];
+    get tabSuggestions() { return this.#tabSuggestions_accessor_storage; }
+    set tabSuggestions(value) { this.#tabSuggestions_accessor_storage = value; }
+    #inputState_accessor_storage = null;
+    get inputState() { return this.#inputState_accessor_storage; }
+    set inputState(value) { this.#inputState_accessor_storage = value; }
+    #glifAnimationState_accessor_storage = GlifAnimationState.INELIGIBLE;
+    get glifAnimationState() { return this.#glifAnimationState_accessor_storage; }
+    set glifAnimationState(value) { this.#glifAnimationState_accessor_storage = value; }
+    #sharedTabs_accessor_storage = [];
+    get sharedTabs() { return this.#sharedTabs_accessor_storage; }
+    set sharedTabs(value) { this.#sharedTabs_accessor_storage = value; }
+    #recentTabId_accessor_storage = null;
+    get recentTabId() { return this.#recentTabId_accessor_storage; }
+    set recentTabId(value) { this.#recentTabId_accessor_storage = value; }
+    #shareTabsFlyoutOpen_accessor_storage = false;
+    get shareTabsFlyoutOpen() { return this.#shareTabsFlyoutOpen_accessor_storage; }
+    set shareTabsFlyoutOpen(value) { this.#shareTabsFlyoutOpen_accessor_storage = value; }
+    #unboundedMenuEnabled_accessor_storage = false;
+    get unboundedMenuEnabled() { return this.#unboundedMenuEnabled_accessor_storage; }
+    set unboundedMenuEnabled(value) { this.#unboundedMenuEnabled_accessor_storage = value; }
+    #tabSuggestionsState_accessor_storage = TabSuggestionsState.NOT_STARTED;
+    get tabSuggestionsState() { return this.#tabSuggestionsState_accessor_storage; }
+    set tabSuggestionsState(value) { this.#tabSuggestionsState_accessor_storage = value; }
+    menuOpenDelayMs = 200;
+    openTimeoutId_ = null;
+    #hasImageFiles_accessor_storage = false;
+    get hasImageFiles() { return this.#hasImageFiles_accessor_storage; }
+    set hasImageFiles(value) { this.#hasImageFiles_accessor_storage = value; }
+    #searchboxLayoutMode_accessor_storage = '';
+    get searchboxLayoutMode() { return this.#searchboxLayoutMode_accessor_storage; }
+    set searchboxLayoutMode(value) { this.#searchboxLayoutMode_accessor_storage = value; }
+    #disableAutoReposition_accessor_storage = false;
+    get disableAutoReposition() { return this.#disableAutoReposition_accessor_storage; }
+    set disableAutoReposition(value) { this.#disableAutoReposition_accessor_storage = value; }
+    #usePecApi_accessor_storage = false;
+    get usePecApi() { return this.#usePecApi_accessor_storage; }
+    set usePecApi(value) { this.#usePecApi_accessor_storage = value; }
+    #energyEffectAnimationEnabled_accessor_storage = false;
+    get energyEffectAnimationEnabled() { return this.#energyEffectAnimationEnabled_accessor_storage; }
+    set energyEffectAnimationEnabled(value) { this.#energyEffectAnimationEnabled_accessor_storage = value; }
+    #isSidePanel_accessor_storage = false;
+    get isSidePanel() { return this.#isSidePanel_accessor_storage; }
+    set isSidePanel(value) { this.#isSidePanel_accessor_storage = value; }
+    #disableFallbackGlifAnimation_accessor_storage = false;
+    get disableFallbackGlifAnimation() { return this.#disableFallbackGlifAnimation_accessor_storage; }
+    set disableFallbackGlifAnimation(value) { this.#disableFallbackGlifAnimation_accessor_storage = value; }
+    #enableMultiTabSelection__accessor_storage = loadTimeData.getBoolean('composeboxContextMenuEnableMultiTabSelection');
+    get enableMultiTabSelection_() { return this.#enableMultiTabSelection__accessor_storage; }
+    set enableMultiTabSelection_(value) { this.#enableMultiTabSelection__accessor_storage = value; }
+    // TODO(crbug.com/499310611): Explore avoiding/removing this local property.
+    shouldOpenMenuForMultiSelection_ = false;
+    openMenuForMultiSelection() {
+        if (this.enableMultiTabSelection_) {
+            this.shouldOpenMenuForMultiSelection_ = true;
+            this.requestUpdate();
+        }
+    }
+    getEntrypointElements_() {
+        const entrypointButton = this.shadowRoot?.querySelector('#entrypointButton');
+        const entrypoint = entrypointButton?.shadowRoot?.querySelector('#entrypoint');
+        return { entrypointButton, entrypoint };
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.openTimeoutId_ !== null) {
+            window.clearTimeout(this.openTimeoutId_);
+            this.openTimeoutId_ = null;
+        }
+    }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('tabSuggestionsState')) {
+            if (this.tabSuggestionsState !== TabSuggestionsState.LOADING &&
+                this.openTimeoutId_ !== null) {
+                window.clearTimeout(this.openTimeoutId_);
+                this.openTimeoutId_ = null;
+                this.$.menu.updateComplete.then(() => {
+                    this.showMenuAtEntrypoint_();
+                });
+            }
+        }
+        if (this.shouldOpenMenuForMultiSelection_) {
+            const { entrypointButton, entrypoint } = this.getEntrypointElements_();
+            // Clear the flag if the entrypoint is fully or partially rendered, or if
+            // inputState is truthy (valid) but the entrypoint is not rendered
+            // (ex: because `hasAllowedInputs()` returned false based on
+            // `usePecApi` or disabled inputs) to prevent a delayed pop open.
+            if (entrypoint || entrypointButton || this.inputState) {
+                this.shouldOpenMenuForMultiSelection_ = false;
+            }
+            if (entrypoint) {
+                this.showMenuAtEntrypoint_();
+            }
+            else if (entrypointButton) {
+                // Button is in the DOM but hasn't finished rendering its own shadow
+                // root.
+                entrypointButton.updateComplete.then(() => {
+                    this.showMenuAtEntrypoint_();
+                });
+            }
+        }
+    }
+    closeMenu() {
+        this.$.menu.close();
+    }
+    onMenuClose_() {
+        const { entrypointButton } = this.getEntrypointElements_();
+        if (entrypointButton) {
+            entrypointButton.classList.remove('menu-open');
+        }
+        this.fire('context-menu-closed');
+    }
+    onContextMenuEntrypointClick_() {
+        if (this.openTimeoutId_ !== null) {
+            return;
+        }
+        if (this.tabSuggestionsState === TabSuggestionsState.NOT_STARTED) {
+            this.tabSuggestionsState = TabSuggestionsState.LOADING;
+            this.fire('request-tab-suggestions-load');
+        }
+        if (this.tabSuggestionsState === TabSuggestionsState.LOADING) {
+            this.openTimeoutId_ = window.setTimeout(() => {
+                this.openTimeoutId_ = null;
+                this.showMenuAtEntrypoint_();
+            }, this.menuOpenDelayMs);
+        }
+        else {
+            this.showMenuAtEntrypoint_();
+        }
+    }
+    onContextMenuEntrypointHover_() {
+        this.fire('context-menu-entrypoint-hover');
+    }
+    async showMenuAtEntrypoint_() {
+        const { entrypointButton, entrypoint } = this.getEntrypointElements_();
+        if (entrypointButton && entrypoint) {
+            entrypointButton.classList.add('menu-open');
+            await this.updateComplete;
+            await this.$.menu.updateComplete;
+            if (!this.$.menu.open) {
+                this.$.menu.showAt(entrypoint);
+                this.fire('context-menu-opened');
+            }
+        }
+    }
+}
+customElements.define(ContextualEntrypointAndMenuElement.is, ContextualEntrypointAndMenuElement);
+
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(`html{--aim-motion-duration-long:383ms;--aim-motion-duration-short:333ms;--aim-motion-easing:cubic-bezier(0.2,0,0,1)}`);
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/*
+ * @fileoverview Shared constants for the composebox, animated-glow-element,
+ * searchbox.
+ */
+var GlowAnimationState;
+(function (GlowAnimationState) {
+    GlowAnimationState["NONE"] = "";
+    GlowAnimationState["VOICE_EXITED"] = "voice-exited";
+    GlowAnimationState["DRAGGING"] = "dragging";
+    GlowAnimationState["EXPANDING"] = "expanding";
+    GlowAnimationState["SUBMITTING"] = "submitting";
+    GlowAnimationState["LISTENING"] = "listening";
+})(GlowAnimationState || (GlowAnimationState = {}));
+var GlowMode;
+(function (GlowMode) {
+    GlowMode["OUTER_GLOW"] = "outer-glow";
+    GlowMode["INNER_GLOW"] = "inner-glow";
+    GlowMode["NONE"] = "none";
+})(GlowMode || (GlowMode = {}));
+// LINT.ThenChange(//tools/metrics/histograms/metadata/contextual_search/enums.xml:ContextAddedMethod)
+// LINT.IfChange(VoiceSearchState)
+var VoiceSearchState;
+(function (VoiceSearchState) {
+    VoiceSearchState[VoiceSearchState["VOICE_SEARCH_BUTTON_CLICKED"] = 0] = "VOICE_SEARCH_BUTTON_CLICKED";
+    VoiceSearchState[VoiceSearchState["SUCCESSFUL_TRANSCRIPT"] = 1] = "SUCCESSFUL_TRANSCRIPT";
+    VoiceSearchState[VoiceSearchState["VOICE_SEARCH_ERROR"] = 2] = "VOICE_SEARCH_ERROR";
+    VoiceSearchState[VoiceSearchState["VOICE_SEARCH_ERROR_AND_CANCELED"] = 3] = "VOICE_SEARCH_ERROR_AND_CANCELED";
+    VoiceSearchState[VoiceSearchState["VOICE_SEARCH_CANCELED"] = 4] = "VOICE_SEARCH_CANCELED";
+    VoiceSearchState[VoiceSearchState["MAX_VALUE"] = 4] = "MAX_VALUE";
+})(VoiceSearchState || (VoiceSearchState = {}));
+// LINT.ThenChange(//tools/metrics/histograms/metadata/contextual_tasks/enums.xml:VoiceSearchState)
+
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/*
+ * To use, make parent class of interest implement DragDropHost.
+ * Host needs a file entrypoint to submit file in its implementation of
+ * 'addDroppedFiles()'. After, add handler as attribute of parent class. Utilize
+ * event methods from this class as event listeners in parent class.
+ */
+class DragAndDropHandler {
+    host_;
+    dragAndDropEnabled_ = false;
+    /*
+     * Since there are many dragEnter events, keep track of each and
+     * once there are same number of dragLeaves as dragEnters, all dragEnter
+     * events have ended, and thus drag state should end fully.
+     */
+    enterCounter_ = 0;
+    constructor(host, dragAndDropEnabled) {
+        this.host_ = host;
+        this.dragAndDropEnabled_ = dragAndDropEnabled;
+        this.handleDragEnter = this.handleDragEnter.bind(this);
+        this.handleDragLeave = this.handleDragLeave.bind(this);
+        this.handleDragOver = this.handleDragOver.bind(this);
+        this.handleDrop = this.handleDrop.bind(this);
+    }
+    handleDragEnter(e) {
+        if (!this.dragAndDropEnabled_) {
+            return;
+        }
+        e.preventDefault();
+        this.enterCounter_++;
+        // First dragEnter initiates dragging state.
+        if (this.enterCounter_ === 1) {
+            this.host_.isDraggingFile = true;
+            this.host_.animationState = GlowAnimationState.DRAGGING;
+        }
+    }
+    handleDragOver(e) {
+        if (!this.dragAndDropEnabled_) {
+            return;
+        }
+        e.preventDefault();
+    }
+    handleDrop(e) {
+        if (!this.dragAndDropEnabled_) {
+            return;
+        }
+        e.preventDefault();
+        this.enterCounter_ = 0;
+        const files = e.dataTransfer?.files;
+        if (files && files.length > 0) {
+            this.host_.getDropTarget().addDroppedFiles(files);
+        }
+        this.host_.isDraggingFile = false;
+        this.host_.animationState = GlowAnimationState.NONE;
+    }
+    handleDragLeave(e) {
+        if (!this.dragAndDropEnabled_) {
+            return;
+        }
+        e.preventDefault();
+        this.enterCounter_--;
+        // Last dragEnter has left, meaning drag has ended.
+        if (this.enterCounter_ === 0) {
+            this.host_.isDraggingFile = false;
+            this.host_.animationState = GlowAnimationState.NONE;
+        }
+    }
+}
+
+let instance$5 = null;
+function getCss$3() {
+    return instance$5 || (instance$5 = [...[], css `.context-menu-container{align-items:center;cursor:text;display:flex;gap:4px;margin-bottom:var(--contextual-entrypoint-and-carousel-context-menu-container-margin-bottom);padding-inline-start:var(--contextual-entrypoint-and-carousel-context-menu-container-padding-inline-start,4px);flex-wrap:nowrap}#contextEntrypoint{padding-inline-start:var(--contextual-entrypoint-and-carousel-context-entrypoint-padding-inline-start,8px);padding-inline-end:var(--contextual-entrypoint-and-carousel-context-entrypoint-padding-inline-end,8px)}.context-menu-container>*{flex-shrink:0}.context-menu-container:has(.contextual-chip){padding-bottom:var(--contextual-entrypoint-and-carousel-contextual-chip-padding-bottom)}.carousel-divider{border-radius:100px;border-top:1px solid var(--color-composebox-file-carousel-divider);margin-inline-end:16px;margin-inline-start:var(--text-input-inline-start-spacing);margin-top:var(--contextual-entrypoint-and-carousel-carousel-divider-margin-top,20px);margin-bottom:var(--contextual-entrypoint-and-carousel-carousel-divider-margin-bottom,10px)}.upload-button{--cr-icon-button-focus-outline-color:var(--color-searchbox-results-icon-focused-outline);--cr-icon-button-icon-size:24px;--cr-icon-button-hover-background-color:var(--color-searchbox-results-background-hovered);--cr-icon-button-size:48px;color:var(--color-composebox-upload-button);display:flex;flex-wrap:nowrap}.icon-fade{opacity:0;transition:var(--icon-exit-transition)}:host-context([expanding_]) .icon-fade{opacity:1;transition:var(--icon-entry-transition)}:host-context([in-voice-search-mode]) .icon-fade{opacity:0;transition:var(--icon-exit-transition)}.action-icon{--cr-icon-button-focus-outline-color:var(--color-searchbox-results-icon-focused-outline);--cr-icon-button-hover-background-color:var(--color-searchbox-results-background-hovered);--cr-icon-button-margin-end:0;--cr-icon-button-size:36px}#carousel,#voiceSearchCarousel{box-sizing:border-box;margin-bottom:var(--context-non-top-carousel-bottom-margin,8px);margin-top:var(--context-non-top-carousel-top-margin,4px);inset-inline-start:var(--context-carousel-inline-start-spacing,50px);position:relative;width:calc(100% - var(--context-carousel-inline-start-spacing,50px) - var(--context-carousel-inline-end-spacing,50px))}#voiceCarouselContainer{align-self:stretch;order:2}.carousel-container-inner,#voiceCarouselContainerInner{display:flex;flex-direction:column;flex-grow:1;width:100%}#voiceSearchCarousel{width:calc(100% - var(--context-carousel-inline-start-spacing,50px) - max(var(--bottom-actions-width-and-spacing),var(--context-carousel-inline-end-spacing,50px)) - var(--voice-bottom-actions-gap))}#voiceToolChipsContainer{order:3;padding-top:14px;padding-bottom:4px}:host,#voiceCarouselContainer{--voice-bottom-actions-gap:8px;--voice-bottom-actions-inset-inline-end:12px;--voice-search-submit-default-container-size:40px;--voice-search-button-height:var(--cr-composebox-submit-height,var(--voice-search-submit-default-container-size));--voice-search-button-width:var(--cr-composebox-submit-width,var(--voice-search-submit-default-container-size));--bottom-actions-width-and-spacing:calc(2 * var(--voice-search-button-width) + var(--voice-bottom-actions-inset-inline-end) + var(--voice-bottom-actions-gap));--voice-bottom-actions-height:var(--cr-composebox-button-height,var(--voice-search-submit-default-container-size));--voice-bottom-actions-bottom:12px}#voiceSearchCarousel.top{position:relative;top:0}:host([in-voice-search-mode]) #errorScrim{inset:0;position:absolute;z-index:3}:host([in-voice-search-mode]) #composebox{block-size:fit-content;display:none}cr-composebox-voice-search{display:block;pointer-events:none;z-index:2}:host([in-voice-search-mode][is-listening]) cr-composebox-voice-search{inset:0;position:absolute}:host(:not([in-voice-search-mode])) cr-composebox-voice-search{display:none}`]);
+}
+
+let instance$4 = null;
+function getCss$2() {
+    return instance$4 || (instance$4 = [...[getCss$i()], css `:host{display:block;position:absolute;outline:none;z-index:1002;user-select:none;cursor:default}#tooltip{display:block;outline:none;font-size:10px;line-height:1;background-color:var(--paper-tooltip-background,#616161);color:var(--paper-tooltip-text-color,white);padding:8px;border-radius:2px}@keyframes keyFrameFadeInOpacity{0%{opacity:0}100%{opacity:var(--paper-tooltip-opacity,0.9)}}@keyframes keyFrameFadeOutOpacity{0%{opacity:var(--paper-tooltip-opacity,0.9)}100%{opacity:0}}.fade-in-animation{opacity:0;animation-delay:var(--paper-tooltip-delay-in,500ms);animation-name:keyFrameFadeInOpacity;animation-iteration-count:1;animation-timing-function:ease-in;animation-duration:var(--paper-tooltip-duration-in,500ms);animation-fill-mode:forwards}.fade-out-animation{opacity:var(--paper-tooltip-opacity,0.9);animation-delay:var(--paper-tooltip-delay-out,0ms);animation-name:keyFrameFadeOutOpacity;animation-iteration-count:1;animation-timing-function:ease-in;animation-duration:var(--paper-tooltip-duration-out,500ms);animation-fill-mode:forwards}#tooltipOffsetFiller{position:absolute;:host([position='top']) &{top:100%}:host([position='bottom']) &{bottom:100%}:host([position='left']) &{left:100%}:host([position='right']) &{right:100%}:host(:is([position='top'],[position='bottom'])) &{left:0;height:var(--cr-tooltip-offset);width:100%}:host(:is([position='left'],[position='right'])) &{top:0;height:100%;width:var(--cr-tooltip-offset)}}`]);
+}
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$2() {
+    return html `
+<div id="tooltip" hidden part="tooltip">
+  <slot></slot>
+</div>
+<div id="tooltipOffsetFiller"></div>`;
+}
+
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview Tooltip with simple fade-in/out animations. Forked/migrated
+ * from Polymer's paper-tooltip.
+ */
+var TooltipPosition;
+(function (TooltipPosition) {
+    TooltipPosition["TOP"] = "top";
+    TooltipPosition["BOTTOM"] = "bottom";
+    TooltipPosition["LEFT"] = "left";
+    TooltipPosition["RIGHT"] = "right";
+})(TooltipPosition || (TooltipPosition = {}));
+class CrTooltipElement extends CrLitElement {
+    static get is() {
+        return 'cr-tooltip';
+    }
+    static get styles() {
+        return getCss$2();
+    }
+    render() {
+        return getHtml$2.bind(this)();
+    }
+    static get properties() {
+        return {
+            /**
+             * The id of the element that the tooltip is anchored to. This element
+             * must be a sibling of the tooltip. If this property is not set,
+             * then the tooltip will be centered to the parent node containing it.
+             */
+            for: { type: String },
+            /**
+             * Set this to true if you want to manually control when the tooltip
+             * is shown or hidden.
+             */
+            manualMode: { type: Boolean },
+            /**
+             * Positions the tooltip to the top, right, bottom, left of its content.
+             */
+            position: { type: String, reflect: true },
+            /**
+             * If true, no parts of the tooltip will ever be shown offscreen.
+             */
+            fitToVisibleBounds: { type: Boolean },
+            /**
+             * The spacing between the top of the tooltip and the element it is
+             * anchored to.
+             */
+            offset: { type: Number },
+            /**
+             * The delay that will be applied before the `entry` animation is
+             * played when showing the tooltip.
+             */
+            animationDelay: { type: Number },
+            /**
+             * The delay before the tooltip hides itself after moving the pointer
+             * away from the tooltip or target.
+             */
+            hideDelay: { type: Number },
+        };
+    }
+    #animationDelay_accessor_storage = 500;
+    get animationDelay() { return this.#animationDelay_accessor_storage; }
+    set animationDelay(value) { this.#animationDelay_accessor_storage = value; }
+    #fitToVisibleBounds_accessor_storage = false;
+    get fitToVisibleBounds() { return this.#fitToVisibleBounds_accessor_storage; }
+    set fitToVisibleBounds(value) { this.#fitToVisibleBounds_accessor_storage = value; }
+    #hideDelay_accessor_storage = 600;
+    get hideDelay() { return this.#hideDelay_accessor_storage; }
+    set hideDelay(value) { this.#hideDelay_accessor_storage = value; }
+    #for_accessor_storage = '';
+    get for() { return this.#for_accessor_storage; }
+    set for(value) { this.#for_accessor_storage = value; }
+    #manualMode_accessor_storage = false;
+    get manualMode() { return this.#manualMode_accessor_storage; }
+    set manualMode(value) { this.#manualMode_accessor_storage = value; }
+    #offset_accessor_storage = 14;
+    get offset() { return this.#offset_accessor_storage; }
+    set offset(value) { this.#offset_accessor_storage = value; }
+    #position_accessor_storage = TooltipPosition.BOTTOM;
+    get position() { return this.#position_accessor_storage; }
+    set position(value) { this.#position_accessor_storage = value; }
+    animationPlaying_ = false;
+    showing_ = false;
+    manualTarget_;
+    target_ = null;
+    tracker_ = new EventTracker();
+    hideTimeout_ = null;
+    connectedCallback() {
+        super.connectedCallback();
+        this.findTarget_();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (!this.manualMode) {
+            this.removeListeners_();
+        }
+        this.resetHideTimeout_();
+    }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('animationDelay')) {
+            this.style.setProperty('--paper-tooltip-delay-in', `${this.animationDelay}ms`);
+        }
+    }
+    firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
+        this.addEventListener('animationend', () => this.onAnimationEnd_());
+    }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('for')) {
+            this.findTarget_();
+        }
+        if (changedProperties.has('manualMode')) {
+            if (this.manualMode) {
+                this.removeListeners_();
+            }
+            else {
+                this.addListeners_();
+            }
+        }
+        if (changedProperties.has('offset')) {
+            this.style.setProperty('--cr-tooltip-offset', `${this.offset}px`);
+        }
+    }
+    /**
+     * Returns the target element that this tooltip is anchored to. It is
+     * either the element given by the `for` attribute, the element manually
+     * specified through the `target` attribute, or the immediate parent of
+     * the tooltip.
+     */
+    get target() {
+        if (this.manualTarget_) {
+            return this.manualTarget_;
+        }
+        const ownerRoot = this.getRootNode();
+        if (this.for) {
+            return ownerRoot.querySelector(`#${this.for}`);
+        }
+        // If the parentNode is a document fragment, then we need to use the host.
+        const parentNode = this.parentNode;
+        return !!parentNode && parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE ?
+            ownerRoot.host :
+            parentNode;
+    }
+    /**
+     * Sets the target element that this tooltip will be anchored to.
+     */
+    set target(target) {
+        this.manualTarget_ = target;
+        this.findTarget_();
+    }
+    /**
+     * Shows the tooltip programmatically
+     */
+    show() {
+        this.resetHideTimeout_();
+        // If the tooltip is already showing, there's nothing to do.
+        if (this.showing_) {
+            return;
+        }
+        if (!!this.textContent && this.textContent.trim() === '') {
+            const children = this.shadowRoot.querySelector('slot').assignedElements();
+            const hasNonEmptyChild = Array.from(children).some((el) => !!el.textContent && el.textContent.trim() !== '');
+            if (!hasNonEmptyChild) {
+                return;
+            }
+        }
+        this.showing_ = true;
+        this.$.tooltip.hidden = false;
+        this.$.tooltip.classList.remove('fade-out-animation');
+        this.updatePosition();
+        this.animationPlaying_ = true;
+        this.$.tooltip.classList.add('fade-in-animation');
+    }
+    /**
+     * Hides the tooltip programmatically
+     */
+    hide() {
+        // If the tooltip is already hidden, there's nothing to do.
+        if (!this.showing_) {
+            return;
+        }
+        // If the entry animation is still playing, don't try to play the exit
+        // animation since this will reset the opacity to 1. Just end the animation.
+        if (this.animationPlaying_) {
+            this.showing_ = false;
+            // Short-cut and cancel all animations and hide
+            this.$.tooltip.classList.remove('fade-in-animation', 'fade-out-animation');
+            this.$.tooltip.hidden = true;
+            return;
+        }
+        // Play Exit Animation
+        this.$.tooltip.classList.remove('fade-in-animation');
+        this.$.tooltip.classList.add('fade-out-animation');
+        this.showing_ = false;
+        this.animationPlaying_ = true;
+    }
+    queueHide_() {
+        this.resetHideTimeout_();
+        this.hideTimeout_ = setTimeout(() => {
+            this.hide();
+            this.hideTimeout_ = null;
+        }, this.hideDelay);
+    }
+    resetHideTimeout_() {
+        if (this.hideTimeout_ !== null) {
+            clearTimeout(this.hideTimeout_);
+            this.hideTimeout_ = null;
+        }
+    }
+    updatePosition() {
+        if (!this.target_) {
+            return;
+        }
+        const offsetParent = this.offsetParent || this.composedOffsetParent_();
+        if (!offsetParent) {
+            return;
+        }
+        const offset = this.offset;
+        const parentRect = offsetParent.getBoundingClientRect();
+        const targetRect = this.target_.getBoundingClientRect();
+        const tooltipRect = this.$.tooltip.getBoundingClientRect();
+        const horizontalCenterOffset = (targetRect.width - tooltipRect.width) / 2;
+        const verticalCenterOffset = (targetRect.height - tooltipRect.height) / 2;
+        const targetLeft = targetRect.left - parentRect.left;
+        const targetTop = targetRect.top - parentRect.top;
+        let tooltipLeft;
+        let tooltipTop;
+        switch (this.position) {
+            case TooltipPosition.TOP:
+                tooltipLeft = targetLeft + horizontalCenterOffset;
+                tooltipTop = targetTop - tooltipRect.height - offset;
+                break;
+            case TooltipPosition.BOTTOM:
+                tooltipLeft = targetLeft + horizontalCenterOffset;
+                tooltipTop = targetTop + targetRect.height + offset;
+                break;
+            case TooltipPosition.LEFT:
+                tooltipLeft = targetLeft - tooltipRect.width - offset;
+                tooltipTop = targetTop + verticalCenterOffset;
+                break;
+            case TooltipPosition.RIGHT:
+                tooltipLeft = targetLeft + targetRect.width + offset;
+                tooltipTop = targetTop + verticalCenterOffset;
+                break;
+            default:
+                assertNotReachedCase(this.position);
+        }
+        if (this.fitToVisibleBounds) {
+            // Clip the left/right side
+            if (parentRect.left + tooltipLeft + tooltipRect.width >
+                window.innerWidth) {
+                this.style.right = '0px';
+                this.style.left = 'auto';
+            }
+            else {
+                this.style.left = Math.max(0, tooltipLeft) + 'px';
+                this.style.right = 'auto';
+            }
+            // Clip the top/bottom side.
+            if (parentRect.top + tooltipTop + tooltipRect.height >
+                window.innerHeight) {
+                this.style.bottom = (parentRect.height - targetTop + offset) + 'px';
+                this.style.top = 'auto';
+            }
+            else {
+                this.style.top = Math.max(-parentRect.top, tooltipTop) + 'px';
+                this.style.bottom = 'auto';
+            }
+        }
+        else {
+            this.style.left = tooltipLeft + 'px';
+            this.style.top = tooltipTop + 'px';
+        }
+    }
+    findTarget_() {
+        if (!this.manualMode) {
+            this.removeListeners_();
+        }
+        this.target_ = this.target;
+        if (!this.manualMode) {
+            this.addListeners_();
+        }
+    }
+    onAnimationEnd_() {
+        // If no longer showing add class hidden to completely hide tooltip
+        this.animationPlaying_ = false;
+        if (!this.showing_) {
+            this.$.tooltip.classList.remove('fade-out-animation');
+            this.$.tooltip.hidden = true;
+        }
+    }
+    addListeners_() {
+        if (this.target_) {
+            this.tracker_.add(this.target_, 'pointerenter', () => this.show());
+            this.tracker_.add(this.target_, 'focus', () => this.show());
+            this.tracker_.add(this.target_, 'pointerleave', () => this.queueHide_());
+            this.tracker_.add(this.target_, 'blur', () => this.hide());
+            this.tracker_.add(this.target_, 'click', () => this.hide());
+        }
+        this.tracker_.add(this.$.tooltip, 'animationend', () => this.onAnimationEnd_());
+        this.tracker_.add(this, 'pointerenter', () => this.show());
+        this.tracker_.add(this, 'pointerleave', () => this.queueHide_());
+    }
+    removeListeners_() {
+        this.tracker_.removeAll();
+    }
+    /**
+     * Polyfills the old offsetParent behavior from before the spec was changed:
+     * https://github.com/w3c/csswg-drafts/issues/159
+     * This is necessary when the tooltip is inside a <slot>, e.g. when it
+     * is used inside a cr-dialog. In such cases, the tooltip's offsetParent
+     * will be null.
+     */
+    composedOffsetParent_() {
+        if (this.computedStyleMap().get('display').value ===
+            'none') {
+            return null;
+        }
+        for (let ancestor = flatTreeParent(this); ancestor !== null; ancestor = flatTreeParent(ancestor)) {
+            if (!(ancestor instanceof Element)) {
+                continue;
+            }
+            const style = ancestor.computedStyleMap();
+            if (style.get('display').value === 'none') {
+                return null;
+            }
+            if (style.get('display').value === 'contents') {
+                // display:contents nodes aren't in the layout tree so they should be
+                // skipped.
+                continue;
+            }
+            if (style.get('position').value !== 'static') {
+                return ancestor;
+            }
+            if (ancestor.tagName === 'BODY') {
+                return ancestor;
+            }
+        }
+        return null;
+        function flatTreeParent(element) {
+            if (element.assignedSlot) {
+                return element.assignedSlot;
+            }
+            if (element.parentNode instanceof ShadowRoot) {
+                return element.parentNode.host;
+            }
+            return element.parentElement;
+        }
+    }
+}
+customElements.define(CrTooltipElement.is, CrTooltipElement);
+
+let instance$3 = null;
+function getCss$1() {
+    return instance$3 || (instance$3 = [...[getCss$f(), getCss$g()], css `:host{background-color:var(--color-new-tab-page-threads-rail-background);display:block;height:100%}#rail{align-items:center;box-sizing:border-box;cursor:e-resize;display:inline-flex;flex-direction:column;gap:12px;height:100%;padding:24px 12px 20px 12px}:host-context([dir='rtl']) #rail{cursor:w-resize}#iconsContainer{display:flex;flex-direction:column}cr-icon-button{--cr-icon-button-icon-size:24px;--cr-icon-button-size:40px;--cr-icon-button-focus-outline-color:var(--threads-rail-focus-outline-color);--cr-icon-button-fill-color:var(--color-new-tab-page-threads-rail-primary-font);--cr-icon-button-hover-background-color:var(--color-new-tab-page-threads-rail-hover-background);align-items:center;border-radius:12px;display:flex;justify-content:center;margin:0}cr-tooltip{--paper-tooltip-duration-in:150ms;--paper-tooltip-duration-out:150ms;--paper-tooltip-opacity:1}cr-tooltip::part(tooltip){align-items:center;border-radius:4px;box-shadow:var(--cr-elevation-2);display:inline-flex;font-size:12px;font-weight:400;gap:8px;justify-content:center;line-height:16px;min-width:0;padding:2px 6px;white-space:nowrap}#logoButton{--cr-icon-button-fill-color:transparent;background-image:url('//resources/cr_components/searchbox/icons/google_g_gradient.svg');background-position:center;background-repeat:no-repeat;background-size:24px}@media (forced-colors:active){#logoButton{--cr-icon-image:url('//resources/cr_components/searchbox/icons/google_g_gradient.svg')}}`]);
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+function getHtml$1() {
+    // clang-format off
+    return html `<!--_html_template_start_-->
+  <div id="rail">
+    <cr-icon-button id="logoButton"
+        suppress-rtl-flip
+        @click="${this.onLogoClick_}"
+        aria-label="${this.i18n('aimThreadsGoogleSearchLabel')}">
+    </cr-icon-button>
+    <cr-tooltip for="logoButton" position="right" offset="16"
+        animation-delay="0" hide-delay="0">
+      ${this.i18n('aimThreadsGoogleSearchLabel')}
+    </cr-tooltip>
+    <div id="iconsContainer">
+      ${this.getItems_().map((item, index) => html `
+        <cr-icon-button id="railItem-${index}"
+            data-index="${index}"
+            style="${this.getIconStyle_(item) || nothing}"
+            @click="${this.onItemClick_}"
+            aria-label="${item.name || nothing}">
+        </cr-icon-button>
+        ${item.name ? html `
+          <cr-tooltip for="railItem-${index}" position="right"
+              offset="16" animation-delay="0" hide-delay="0">
+            ${item.name}
+          </cr-tooltip>
+        ` : nothing}
+      `)}
+    </div>
+  </div>
+  <!--_html_template_end_-->`;
+    // clang-format on
+}
+
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * Enum matching `omnibox::LhsRailConfig::ClickAction::ClientAction` in
+ * `third_party/omnibox_proto/lhs_rail_config.proto`.
+ */
+var LhsClientAction;
+(function (LhsClientAction) {
+    LhsClientAction[LhsClientAction["UNSPECIFIED"] = 0] = "UNSPECIFIED";
+    LhsClientAction[LhsClientAction["NAVIGATE"] = 1] = "NAVIGATE";
+    LhsClientAction[LhsClientAction["EXPAND_RAIL"] = 2] = "EXPAND_RAIL";
+    LhsClientAction[LhsClientAction["FOCUS_REALBOX_AIM"] = 3] = "FOCUS_REALBOX_AIM";
+})(LhsClientAction || (LhsClientAction = {}));
+const ThreadsRailElementBase = I18nMixinLit(CrLitElement);
+/**
+ * The element for displaying the AI Mode threads rail.
+ */
+class ThreadsRailElement extends ThreadsRailElementBase {
+    static get is() {
+        return 'cr-threads-rail';
+    }
+    static get styles() {
+        return getCss$1();
+    }
+    render() {
+        return getHtml$1.bind(this)();
+    }
+    static get properties() {
+        return {
+            config_: { type: Object },
+        };
+    }
+    #config__accessor_storage = loadTimeData.getValue('lhsRailConfig');
+    get config_() { return this.#config__accessor_storage; }
+    set config_(value) { this.#config__accessor_storage = value; }
+    getItems_() {
+        return this.config_.items ?? [];
+    }
+    getIconStyle_(item) {
+        if (!item.iconSvg) {
+            return '';
+        }
+        return `--cr-icon-image: url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(item.iconSvg)}");`;
+    }
+    constructor() {
+        super();
+    }
+    connectedCallback() {
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+    }
+    onItemClick_(e) {
+        e.stopPropagation();
+        const index = Number(e.currentTarget.dataset['index']);
+        const item = this.getItems_()[index];
+        if (!item) {
+            return;
+        }
+        switch (item.clientAction) {
+            case LhsClientAction.EXPAND_RAIL:
+                this.fire('expand-rail');
+                return;
+            case LhsClientAction.FOCUS_REALBOX_AIM:
+                this.fire('open-composebox');
+                return;
+            case LhsClientAction.NAVIGATE:
+            case LhsClientAction.UNSPECIFIED:
+            default:
+                if (item.targetUrl) {
+                    WindowProxy.getInstance().navigate(item.targetUrl);
+                }
+                return;
+        }
+    }
+    onLogoClick_(e) {
+        e.stopPropagation();
+        const googleBaseUrl = loadTimeData.getString('googleBaseUrl');
+        assert(googleBaseUrl);
+        WindowProxy.getInstance().navigate(googleBaseUrl);
+    }
+}
+customElements.define(ThreadsRailElement.is, ThreadsRailElement);
+
+let instance$2 = null;
+function getCss() {
+    return instance$2 || (instance$2 = [...[], css `:host(:not([hidden])){display:block}#iframe{background-color:transparent;border:none;border-radius:inherit;color-scheme:inherit;display:block;frame-sizing:inherit;height:inherit;max-height:inherit;max-width:inherit;width:inherit}`]);
+}
+
+function getHtml() {
+    return html `<!--_html_template_start_--><!-- #html_wrapper_imports_start
+import {nothing} from '//resources/lit/v3_0/lit.rollup.js';
+#html_wrapper_imports_end -->
+<iframe id="iframe" allow="${this.allow || nothing}" .src="${this.getSrc_()}">
+</iframe>
+<!--_html_template_end_-->`;
+}
+
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview Wrapper around <iframe> element that lets us mock out loading
+ * and postMessaging in tests.
+ */
+class IframeElement extends CrLitElement {
+    static get is() {
+        return 'ntp-iframe';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            allow: {
+                reflect: true,
+                type: String,
+            },
+            src: {
+                reflect: true,
+                type: String,
+            },
+        };
+    }
+    #allow_accessor_storage = '';
+    get allow() { return this.#allow_accessor_storage; }
+    set allow(value) { this.#allow_accessor_storage = value; }
+    #src_accessor_storage = '';
+    get src() { return this.#src_accessor_storage; }
+    set src(value) { this.#src_accessor_storage = value; }
+    // Sends message to iframe.
+    postMessage(message) {
+        assert(this.shadowRoot);
+        WindowProxy$1.getInstance().postMessage(strictQuery(this.shadowRoot, '#iframe', HTMLIFrameElement), message, new URL(this.src).origin);
+    }
+    getSrc_() {
+        return WindowProxy$1.getInstance().createIframeSrc(this.src);
+    }
+}
+customElements.define(IframeElement.is, IframeElement);
+
+// chrome/browser/ui/webui/new_tab_page/action_chips/action_chips.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class ActionChipsHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'action_chips.mojom.ActionChipsHandler', scope);
+    }
+}
+class ActionChipsHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(ActionChipsHandlerPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    startActionChipsRetrieval() {
+        this.proxy.sendMessage(0, ActionChipsHandler_StartActionChipsRetrieval_ParamsSpec.$, null, [], false);
+    }
+    activateMetricsFunnel(funnelName) {
+        this.proxy.sendMessage(1, ActionChipsHandler_ActivateMetricsFunnel_ParamsSpec.$, null, [
+            funnelName
+        ], false);
+    }
+    setActionChipsVisibility(isVisible) {
+        this.proxy.sendMessage(2, ActionChipsHandler_SetActionChipsVisibility_ParamsSpec.$, null, [
+            isVisible
+        ], false);
+    }
+    navigateToAim(queryText, mouseButton, modifiers) {
+        this.proxy.sendMessage(3, ActionChipsHandler_NavigateToAim_ParamsSpec.$, null, [
+            queryText,
+            mouseButton,
+            modifiers
+        ], false);
+    }
+}
+class PagePendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'action_chips.mojom.Page', scope);
+    }
+}
+class PageRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PagePendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    onActionChipsChanged(actionChips) {
+        this.proxy.sendMessage(0, Page_OnActionChipsChanged_ParamsSpec.$, null, [
+            actionChips
+        ], false);
+    }
+}
+/**
+ * An object which receives request messages for the Page
+ * mojom interface and dispatches them as callbacks. One callback receiver exists
+ * on this object for each message defined in the mojom interface, and each
+ * receiver can have any number of listeners added to it.
+ */
+class PageCallbackRouter {
+    helper_internal_;
+    $;
+    router_;
+    onActionChipsChanged;
+    onConnectionError;
+    constructor() {
+        this.helper_internal_ = new mojo.internal.interfaceSupport.InterfaceReceiverHelperInternal(PageRemote);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceReceiverHelper(this.helper_internal_);
+        this.router_ = new mojo.internal.interfaceSupport.CallbackRouter;
+        this.onActionChipsChanged =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(0, Page_OnActionChipsChanged_ParamsSpec.$, null, this.onActionChipsChanged.createReceiverHandler(false /* expectsResponse */), false);
+        this.onConnectionError = this.helper_internal_.getConnectionErrorEventRouter();
+    }
+    /**
+     * @param id An ID returned by a prior call to addListener.
+     * @return True iff the identified listener was found and removed.
+     */
+    removeListener(id) {
+        return this.router_.removeListener(id);
+    }
+}
+class ActionChipsHandlerFactoryPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'action_chips.mojom.ActionChipsHandlerFactory', scope);
+    }
+}
+class ActionChipsHandlerFactoryRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(ActionChipsHandlerFactoryPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    createActionChipsHandler(handler, page) {
+        this.proxy.sendMessage(0, ActionChipsHandlerFactory_CreateActionChipsHandler_ParamsSpec.$, null, [
+            handler,
+            page
+        ], false);
+    }
+}
+class ActionChipsHandlerFactory {
+    static get $interfaceName() {
+        return "action_chips.mojom.ActionChipsHandlerFactory";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new ActionChipsHandlerFactoryRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+const TabInfoSpec = { $: {} };
+const ActionChipSpec = { $: {} };
+const ActionChipsHandler_StartActionChipsRetrieval_ParamsSpec = { $: {} };
+const ActionChipsHandler_ActivateMetricsFunnel_ParamsSpec = { $: {} };
+const ActionChipsHandler_SetActionChipsVisibility_ParamsSpec = { $: {} };
+const ActionChipsHandler_NavigateToAim_ParamsSpec = { $: {} };
+const Page_OnActionChipsChanged_ParamsSpec = { $: {} };
+const ActionChipsHandlerFactory_CreateActionChipsHandler_ParamsSpec = { $: {} };
+mojo.internal.Struct(TabInfoSpec.$, 'TabInfo', [
+    mojo.internal.StructField('tabId', 0, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('title', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 16, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('lastActiveTime', 24, 0, TimeSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 40],]);
+mojo.internal.Struct(ActionChipSpec.$, 'ActionChip', [
+    mojo.internal.StructField('suggestion', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('suggestTemplateInfo', 8, 0, SuggestTemplateInfoSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('tab', 16, 0, TabInfoSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(ActionChipsHandler_StartActionChipsRetrieval_ParamsSpec.$, 'ActionChipsHandler_StartActionChipsRetrieval_Params', [], [[0, 8],]);
+mojo.internal.Struct(ActionChipsHandler_ActivateMetricsFunnel_ParamsSpec.$, 'ActionChipsHandler_ActivateMetricsFunnel_Params', [
+    mojo.internal.StructField('funnelName', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(ActionChipsHandler_SetActionChipsVisibility_ParamsSpec.$, 'ActionChipsHandler_SetActionChipsVisibility_Params', [
+    mojo.internal.StructField('isVisible', 0, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(ActionChipsHandler_NavigateToAim_ParamsSpec.$, 'ActionChipsHandler_NavigateToAim_Params', [
+    mojo.internal.StructField('queryText', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('mouseButton', 8, 0, mojo.internal.Uint8, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('modifiers', 16, 0, ActionModifiersSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(Page_OnActionChipsChanged_ParamsSpec.$, 'Page_OnActionChipsChanged_Params', [
+    mojo.internal.StructField('actionChips', 0, 0, mojo.internal.Array(ActionChipSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(ActionChipsHandlerFactory_CreateActionChipsHandler_ParamsSpec.$, 'ActionChipsHandlerFactory_CreateActionChipsHandler_Params', [
+    mojo.internal.StructField('handler', 0, 0, mojo.internal.InterfaceRequest(ActionChipsHandlerPendingReceiver), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('page', 4, 0, mojo.internal.InterfaceProxy(PageRemote), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * The enum value sent as part of action-chips-retrieval-state-changed.
+ * The handler of the event should expect to receive UPDATED multiple times.
+ */
+var ActionChipsRetrievalState;
+(function (ActionChipsRetrievalState) {
+    // The initial state. This is not sent as part of the event and can be used as
+    // the default value of a variable containing this enum.
+    ActionChipsRetrievalState[ActionChipsRetrievalState["INITIAL"] = 0] = "INITIAL";
+    // The state used in an event firing when the first and only retrieval
+    // request is sent from this component.
+    ActionChipsRetrievalState[ActionChipsRetrievalState["REQUESTED"] = 1] = "REQUESTED";
+    // The state used in events firing when the action chips are updated by a call
+    // from the browser side.
+    ActionChipsRetrievalState[ActionChipsRetrievalState["UPDATED"] = 2] = "UPDATED";
+})(ActionChipsRetrievalState || (ActionChipsRetrievalState = {}));
+class ActionChipsApiProxyImpl {
+    handler;
+    callbackRouter;
+    constructor() {
+        this.handler = new ActionChipsHandlerRemote();
+        this.callbackRouter = new PageCallbackRouter();
+        const factory = ActionChipsHandlerFactory.getRemote();
+        factory.createActionChipsHandler(this.handler.$.bindNewPipeAndPassReceiver(), this.callbackRouter.$.bindNewPipeAndPassRemote());
+    }
+    getHandler() {
+        return this.handler;
+    }
+    getCallbackRouter() {
+        return this.callbackRouter;
+    }
+    static getInstance() {
+        return instance$1 || (instance$1 = new ActionChipsApiProxyImpl());
+    }
+    static setInstance(newInstance) {
+        instance$1 = newInstance;
+    }
+}
+let instance$1 = null;
+
+// Copyright 2021 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/** Records `durationMs` in the `metricName` histogram. */
+function recordDuration(metricName, durationMs) {
+    // In rare cases, chrome.metricsPrivate is not available.
+    // TODO(crbug.com/40162029): Remove this check once the bug is fixed.
+    if (!chrome.metricsPrivate) {
+        return;
+    }
+    chrome.metricsPrivate.recordValue({
+        metricName,
+        type: chrome.metricsPrivate.MetricTypeType.HISTOGRAM_LOG,
+        min: 1,
+        max: 60000, // 60 seconds.
+        buckets: 100,
+    }, Math.floor(durationMs));
+}
+/**
+ * Records the duration between navigation start and `msSinceEpoch` in the
+ * `metricName` histogram.
+ */
+function recordLoadDuration(metricName, msSinceEpoch) {
+    recordDuration(metricName, msSinceEpoch - loadTimeData.getValue('navigationStartTime'));
+}
+/**
+ * Records `value` (expected to be between 0 and 10) into the ten-bucket
+ * `metricName` histogram.
+ */
+function recordPerdecage(metricName, value) {
+    // In rare cases, chrome.metricsPrivate is not available.
+    // TODO(crbug.com/40162029): Remove this check once the bug is fixed.
+    if (!chrome.metricsPrivate) {
+        return;
+    }
+    chrome.metricsPrivate.recordValue({
+        metricName,
+        type: chrome.metricsPrivate.MetricTypeType.HISTOGRAM_LINEAR,
+        min: 1, // Choose 1 if real min is 0.
+        max: 11, // Exclusive.
+        buckets: 12, // Numbers 0-10 and unused overflow bucket of 11.
+    }, value);
+}
+/**
+ * Records that an event has happened rather than a value in the `metricName`
+ * histogram.
+ */
+function recordOccurrence(metricName) {
+    // In rare cases, chrome.metricsPrivate is not available.
+    // TODO(crbug.com/40162029): Remove this check once the bug is fixed.
+    if (!chrome.metricsPrivate) {
+        return;
+    }
+    chrome.metricsPrivate.recordValue({
+        metricName,
+        type: chrome.metricsPrivate.MetricTypeType.HISTOGRAM_LINEAR,
+        min: 1,
+        max: 1,
+        buckets: 1,
+    }, 1);
+}
+function recordEnumeration(metricName, value, enumSize) {
+    // In rare cases, chrome.metricsPrivate is not available.
+    // TODO(crbug.com/40162029): Remove this check once the bug is fixed.
+    if (!chrome.metricsPrivate) {
+        return;
+    }
+    chrome.metricsPrivate.recordEnumerationValue(metricName, value, enumSize);
+}
+function recordBoolean(metricName, value) {
+    // In rare cases, chrome.metricsPrivate is not available.
+    // TODO(crbug.com/40162029): Remove this check once the bug is fixed.
+    if (!chrome.metricsPrivate) {
+        return;
+    }
+    chrome.metricsPrivate.recordBoolean(metricName, value);
+}
+function recordSparseValueWithPersistentHash(metricName, value) {
+    // In rare cases, chrome.metricsPrivate is not available.
+    // TODO(crbug.com/40162029): Remove this check once the bug is fixed.
+    if (!chrome.metricsPrivate) {
+        return;
+    }
+    chrome.metricsPrivate.recordSparseValueWithPersistentHash(metricName, value);
+}
+function recordSmallCount(metricName, value) {
+    // In rare cases, chrome.metricsPrivate is not available.
+    // TODO(crbug.com/40162029): Remove this check once the bug is fixed.
+    if (!chrome.metricsPrivate) {
+        return;
+    }
+    chrome.metricsPrivate.recordSmallCount(metricName, value);
+}
+function recordLogValue(metricName, min, max, buckets, value) {
+    // In rare cases, chrome.metricsPrivate is not available.
+    // TODO(crbug.com/40162029): Remove this check once the bug is fixed.
+    if (!chrome.metricsPrivate) {
+        return;
+    }
+    chrome.metricsPrivate.recordValue({
+        metricName,
+        type: chrome.metricsPrivate.MetricTypeType.HISTOGRAM_LOG,
+        min,
+        max,
+        buckets,
+    }, value);
+}
+function recordLinearValue(metricName, min, max, buckets, value) {
+    // In rare cases, chrome.metricsPrivate is not available.
+    // TODO(crbug.com/40162029): Remove this check once the bug is fixed.
+    if (!chrome.metricsPrivate) {
+        return;
+    }
+    chrome.metricsPrivate.recordValue({
+        metricName,
+        type: chrome.metricsPrivate.MetricTypeType.HISTOGRAM_LINEAR,
+        min,
+        max,
+        buckets,
+    }, value);
+}
+/**
+ * Action the user can perform while using voice search. This enum must match
+ * the numbering for NewTabPageVoiceAction in enums.xml. These values are
+ * persisted to logs. Entries should not be renumbered, removed or reused.
+ */
+var VoiceAction;
+(function (VoiceAction) {
+    VoiceAction[VoiceAction["ACTIVATE"] = 0] = "ACTIVATE";
+    VoiceAction[VoiceAction["ACTIVATE_KEYBOARD"] = 1] = "ACTIVATE_KEYBOARD";
+    VoiceAction[VoiceAction["CLOSE_OVERLAY"] = 2] = "CLOSE_OVERLAY";
+    VoiceAction[VoiceAction["QUERY_SUBMITTED"] = 3] = "QUERY_SUBMITTED";
+    VoiceAction[VoiceAction["SUPPORT_LINK_CLICKED"] = 4] = "SUPPORT_LINK_CLICKED";
+    VoiceAction[VoiceAction["TRY_AGAIN_LINK"] = 5] = "TRY_AGAIN_LINK";
+    VoiceAction[VoiceAction["TRY_AGAIN_MIC_BUTTON"] = 6] = "TRY_AGAIN_MIC_BUTTON";
+    VoiceAction[VoiceAction["MAX_VALUE"] = 6] = "MAX_VALUE";
+})(VoiceAction || (VoiceAction = {}));
+/**
+ * Errors than can occur while using voice search. This enum must match the
+ * numbering for NewTabPageVoiceError in enums.xml. These values are persisted
+ * to logs. Entries should not be renumbered, removed or reused.
+ */
+var VoiceError;
+(function (VoiceError) {
+    VoiceError[VoiceError["ABORTED"] = 0] = "ABORTED";
+    VoiceError[VoiceError["AUDIO_CAPTURE"] = 1] = "AUDIO_CAPTURE";
+    VoiceError[VoiceError["BAD_GRAMMAR"] = 2] = "BAD_GRAMMAR";
+    VoiceError[VoiceError["LANGUAGE_NOT_SUPPORTED"] = 3] = "LANGUAGE_NOT_SUPPORTED";
+    VoiceError[VoiceError["NETWORK"] = 4] = "NETWORK";
+    VoiceError[VoiceError["NO_MATCH"] = 5] = "NO_MATCH";
+    VoiceError[VoiceError["NO_SPEECH"] = 6] = "NO_SPEECH";
+    VoiceError[VoiceError["NOT_ALLOWED"] = 7] = "NOT_ALLOWED";
+    VoiceError[VoiceError["OTHER"] = 8] = "OTHER";
+    VoiceError[VoiceError["SERVICE_NOT_ALLOWED"] = 9] = "SERVICE_NOT_ALLOWED";
+    VoiceError[VoiceError["MAX_VALUE"] = 9] = "MAX_VALUE";
+})(VoiceError || (VoiceError = {}));
+function recordVoiceAction(action) {
+    recordEnumeration('NewTabPage.VoiceActions', action, VoiceAction.MAX_VALUE + 1);
+}
+
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * Implements ParentTrustedPage interface to handle requests from the child
+ * page. This is only connected to the Microsoft Auth iframe.
+ */
+let instance = null;
+class ParentTrustedDocumentProxy {
+    static getInstance() {
+        return instance;
+    }
+    static setInstance(childDocument) {
+        instance = new ParentTrustedDocumentProxy(childDocument);
+    }
+    childDocument_;
+    constructor(childDocument) {
+        this.childDocument_ = childDocument;
+    }
+    getChildDocument() {
+        return this.childDocument_;
+    }
+}
+
+// chrome/browser/ui/webui/new_tab_page/ntp_promo/ntp_promo.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+({ $: mojo.internal.Enum() });
+var ShowNtpPromosResult;
+(function (ShowNtpPromosResult) {
+    ShowNtpPromosResult[ShowNtpPromosResult["MIN_VALUE"] = 0] = "MIN_VALUE";
+    ShowNtpPromosResult[ShowNtpPromosResult["MAX_VALUE"] = 2] = "MAX_VALUE";
+    ShowNtpPromosResult[ShowNtpPromosResult["kShown"] = 0] = "kShown";
+    ShowNtpPromosResult[ShowNtpPromosResult["kNotShownNoPromos"] = 1] = "kNotShownNoPromos";
+    ShowNtpPromosResult[ShowNtpPromosResult["kNotShownDueToPolicy"] = 2] = "kNotShownDueToPolicy";
+})(ShowNtpPromosResult || (ShowNtpPromosResult = {}));
+class NtpPromoHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'ntp_promo.mojom.NtpPromoHandler', scope);
+    }
+}
+class NtpPromoHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(NtpPromoHandlerPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    requestPromos() {
+        this.proxy.sendMessage(0, NtpPromoHandler_RequestPromos_ParamsSpec.$, null, [], false);
+    }
+    onPromoShown(promoId) {
+        this.proxy.sendMessage(1, NtpPromoHandler_OnPromoShown_ParamsSpec.$, null, [
+            promoId
+        ], false);
+    }
+    onPromoClicked(promoId) {
+        this.proxy.sendMessage(2, NtpPromoHandler_OnPromoClicked_ParamsSpec.$, null, [
+            promoId
+        ], false);
+    }
+    onPromoDismissed(promoId) {
+        this.proxy.sendMessage(3, NtpPromoHandler_OnPromoDismissed_ParamsSpec.$, null, [
+            promoId
+        ], false);
+    }
+}
+class NtpPromoClientPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'ntp_promo.mojom.NtpPromoClient', scope);
+    }
+}
+class NtpPromoClientRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(NtpPromoClientPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    setPromo(promo) {
+        this.proxy.sendMessage(0, NtpPromoClient_SetPromo_ParamsSpec.$, null, [
+            promo
+        ], false);
+    }
+}
+/**
+ * An object which receives request messages for the NtpPromoClient
+ * mojom interface and dispatches them as callbacks. One callback receiver exists
+ * on this object for each message defined in the mojom interface, and each
+ * receiver can have any number of listeners added to it.
+ */
+class NtpPromoClientCallbackRouter {
+    helper_internal_;
+    $;
+    router_;
+    setPromo;
+    onConnectionError;
+    constructor() {
+        this.helper_internal_ = new mojo.internal.interfaceSupport.InterfaceReceiverHelperInternal(NtpPromoClientRemote);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceReceiverHelper(this.helper_internal_);
+        this.router_ = new mojo.internal.interfaceSupport.CallbackRouter;
+        this.setPromo =
+            new mojo.internal.interfaceSupport.InterfaceCallbackReceiver(this.router_);
+        this.helper_internal_.registerHandler(0, NtpPromoClient_SetPromo_ParamsSpec.$, null, this.setPromo.createReceiverHandler(false /* expectsResponse */), false);
+        this.onConnectionError = this.helper_internal_.getConnectionErrorEventRouter();
+    }
+    /**
+     * @param id An ID returned by a prior call to addListener.
+     * @return True iff the identified listener was found and removed.
+     */
+    removeListener(id) {
+        return this.router_.removeListener(id);
+    }
+}
+class NtpPromoHandlerFactoryPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'ntp_promo.mojom.NtpPromoHandlerFactory', scope);
+    }
+}
+class NtpPromoHandlerFactoryRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(NtpPromoHandlerFactoryPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    createNtpPromoHandler(client, handler) {
+        this.proxy.sendMessage(0, NtpPromoHandlerFactory_CreateNtpPromoHandler_ParamsSpec.$, null, [
+            client,
+            handler
+        ], false);
+    }
+}
+class NtpPromoHandlerFactory {
+    static get $interfaceName() {
+        return "ntp_promo.mojom.NtpPromoHandlerFactory";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new NtpPromoHandlerFactoryRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+const PromoSpec = { $: {} };
+const NtpPromoHandler_RequestPromos_ParamsSpec = { $: {} };
+const NtpPromoHandler_OnPromoShown_ParamsSpec = { $: {} };
+const NtpPromoHandler_OnPromoClicked_ParamsSpec = { $: {} };
+const NtpPromoHandler_OnPromoDismissed_ParamsSpec = { $: {} };
+const NtpPromoClient_SetPromo_ParamsSpec = { $: {} };
+const NtpPromoHandlerFactory_CreateNtpPromoHandler_ParamsSpec = { $: {} };
+mojo.internal.Struct(PromoSpec.$, 'Promo', [
+    mojo.internal.StructField('id', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('iconName', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('bodyText', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('buttonText', 24, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 40],]);
+mojo.internal.Struct(NtpPromoHandler_RequestPromos_ParamsSpec.$, 'NtpPromoHandler_RequestPromos_Params', [], [[0, 8],]);
+mojo.internal.Struct(NtpPromoHandler_OnPromoShown_ParamsSpec.$, 'NtpPromoHandler_OnPromoShown_Params', [
+    mojo.internal.StructField('promoId', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(NtpPromoHandler_OnPromoClicked_ParamsSpec.$, 'NtpPromoHandler_OnPromoClicked_Params', [
+    mojo.internal.StructField('promoId', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(NtpPromoHandler_OnPromoDismissed_ParamsSpec.$, 'NtpPromoHandler_OnPromoDismissed_Params', [
+    mojo.internal.StructField('promoId', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(NtpPromoClient_SetPromo_ParamsSpec.$, 'NtpPromoClient_SetPromo_Params', [
+    mojo.internal.StructField('promo', 0, 0, PromoSpec.$, null, true /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(NtpPromoHandlerFactory_CreateNtpPromoHandler_ParamsSpec.$, 'NtpPromoHandlerFactory_CreateNtpPromoHandler_Params', [
+    mojo.internal.StructField('client', 0, 0, mojo.internal.InterfaceProxy(NtpPromoClientRemote), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('handler', 8, 0, mojo.internal.InterfaceRequest(NtpPromoHandlerPendingReceiver), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+const browserProxyFactory = new MojoBrowserProxyFactory(NtpPromoHandlerRemote, NtpPromoClientCallbackRouter, (remote, receiver) => NtpPromoHandlerFactory.getRemote().createNtpPromoHandler(remote, receiver));
+
+// Copyright 2023 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * Utility which gives a best effort guess on whether a supplied image file's
+ * bytes represent an image with transparency.
+ */
+function checkTransparency(buffer) {
+    const view = new DataView(buffer);
+    return isTransparentPNG(view) || isTransparentBMP(view) ||
+        isTransparentWebP(view);
+}
+/**
+ * Safely gets Uint8 value from DataView.
+ *
+ * Swallows potential RangeErrors, opting to return null in those cases.
+ */
+function getUint8FromView(view, offset) {
+    try {
+        return view.getUint8(offset);
+    }
+    catch {
+        return null;
+    }
+}
+/**
+ * Safely gets Uint16 value from DataView.
+ *
+ * Swallows potential RangeErrors, opting to return null in those cases.
+ */
+function getUint16FromView(view, offset) {
+    try {
+        return view.getUint16(offset);
+    }
+    catch {
+        return null;
+    }
+}
+/**
+ * Safely gets Uint32 value from DataView.
+ *
+ * Swallows potential RangeErrors, opting to return null in those cases.
+ */
+function getUint32FromView(view, offset) {
+    try {
+        return view.getUint32(offset);
+    }
+    catch {
+        return null;
+    }
+}
+/**
+ * Whether a DataView represents a PNG image.
+ */
+function isPNG(view) {
+    // 89 50 4E 47 is PNG magic number.
+    // Next four bytes should always be 0D 0A 1A 0A.
+    return getUint32FromView(view, 0) === 0x89504E47 &&
+        getUint32FromView(view, 4) === 0x0D0A1A0A;
+}
+function isTransparentPNG(view) {
+    if (!isPNG(view)) {
+        return false;
+    }
+    // We know format field exists in the IHDR chunk. The chunk exists at
+    // offset 8 +8 bytes (size, name) +8 (depth) & +9 (type) = 25 byte offset.
+    const type = getUint8FromView(view, 25);
+    return type === 0x04 || type === 0x06; // grayscale + alpha or RGB + alpha
+}
+/**
+ * Whether a DataView represents a WebP image.
+ */
+function isWebP(view) {
+    // 52 49 46 46 || <ignore 4 bytes> || 57 45 42 50 is the WebP magic number.
+    // R  I  F  F  || <ignore 4 bytes> || W  E  B  P in ASCII.
+    // https://developers.google.com/speed/webp/docs/riff_container#webp_file_header
+    return getUint32FromView(view, 0) === 0x52494646 &&
+        getUint32FromView(view, 8) === 0x57454250;
+}
+/**
+ * Whether a DataView represents a WebP image.
+ * Checks WebP format (VP8 | VP8L | VP8X). VP8 never has an alpha channel. We
+ * make an assumption that VP8X and VP8L always have alpha channels. That is
+ * not true, but does simplify the logic and for practical purposes, this is
+ * good enough of an assumption for us.
+ */
+function isTransparentWebP(view) {
+    if (!isWebP(view)) {
+        return false;
+    }
+    // Fourteenth byte indicates WebP format. There are three variations of WebP
+    // encoding: VP8, VP8L, and VP8X.
+    //
+    // Offset: 12 13 14 15
+    // ASCII:  V  P  8  ? <- ? == " "  || "L"  || "X"
+    // Hex:    56 50 38 ? <- ? == 0x20 || 0x4C || 0x58
+    const format = getUint8FromView(view, 15);
+    // 58 indicates VP8X, 4C indicates VP8L.
+    return format === 0x58 || format === 0x4C;
+}
+/**
+ * Whether a DataView represents a BMP image.
+ */
+function isBMP(view) {
+    // 42 4D is the BMP magic number.
+    return getUint16FromView(view, 0) === 0x424D;
+}
+function isTransparentBMP(view) {
+    if (!isBMP(view)) {
+        return false;
+    }
+    // Check the value of the bit count field, 2 bytes, 28 byte offset.
+    return getUint16FromView(view, 28) === 0x32;
+}
+
+// Copyright 2023 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const SUPPORTED_FILE_TYPES = [
+    'image/bmp',
+    'image/jpeg',
+    'image/png',
+    'image/tiff',
+    'image/webp',
+    'image/x-icon',
+];
+const MAX_C2PA_SEARCH_BYTES = 256 * 1024;
+const C2PA_MARKER = 'urn:c2pa:';
+const MAX_C2PA_PIXELS = 3000000;
+const SUPPORTED_C2PA_FILE_TYPES = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+];
+async function hasC2paMetadata(file) {
+    const slice = file.slice(0, MAX_C2PA_SEARCH_BYTES);
+    const buffer = await slice.arrayBuffer();
+    const text = new TextDecoder('utf-8', { fatal: false }).decode(buffer);
+    return text.includes(C2PA_MARKER);
+}
+const MIME_TYPE_TO_EXTENSION_MAP = new Map([
+    ['image/png', '.png'],
+    ['image/webp', '.webp'],
+    ['image/bmp', '.bmp'],
+    ['image/jpeg', '.jpg'],
+    ['image/tiff', '.tif'],
+    ['image/x-icon', '.ico'],
+]);
+const MAX_LONGEST_EDGE_PIXELS = 1000;
+const TRANSPARENCY_FILL_BG_COLOR = '#ffffff';
+const JPEG_QUALITY = 0.4;
+const DEFAULT_MIME_TYPE = 'image/jpeg';
+// Takes an image file and does the following:
+//   1. Downscales the image so that the longest edge is maxLongestEdgePixels
+//      (default 1000 px). Aspect ratio is preserved.
+//   2. Transcodes the image to jpeg, filling in the background with white if
+//      the original image had transparency.
+// The processed image is returned along with the new image dimensions.
+async function processFile(file, maxLongestEdgePixels = MAX_LONGEST_EDGE_PIXELS) {
+    const image = await readImageFile(file);
+    if (!image) {
+        return { processedFile: file };
+    }
+    const originalImageWidth = image.width;
+    const originalImageHeight = image.height;
+    const isC2paBypassEnabled = loadTimeData.getBoolean('lensBypassCompressionForC2pa');
+    if (isC2paBypassEnabled && SUPPORTED_C2PA_FILE_TYPES.includes(file.type) &&
+        (originalImageWidth * originalImageHeight <= MAX_C2PA_PIXELS)) {
+        if (await hasC2paMetadata(file)) {
+            return {
+                processedFile: file,
+                imageWidth: originalImageWidth,
+                imageHeight: originalImageHeight,
+            };
+        }
+    }
+    const hasTransparency = checkTransparency(await file.arrayBuffer());
+    const blobInfo = await processImage(image, DEFAULT_MIME_TYPE, hasTransparency, maxLongestEdgePixels);
+    if (!blobInfo || !blobInfo.blob) {
+        return {
+            processedFile: file,
+            imageWidth: originalImageWidth,
+            imageHeight: originalImageHeight,
+        };
+    }
+    const processedImage = blobInfo.blob;
+    let imageWidth = blobInfo.imageWidth;
+    let imageHeight = blobInfo.imageHeight;
+    const lastDot = file.name.lastIndexOf('.');
+    const fileName = `${lastDot > 0 ? file.name.slice(0, lastDot) : file.name}${MIME_TYPE_TO_EXTENSION_MAP.get(processedImage.type)}`;
+    let processedFile = new File([processedImage], fileName, { lastModified: Date.now(), type: processedImage.type });
+    if (processedFile.size > file.size) {
+        processedFile = file;
+        imageWidth = originalImageWidth;
+        imageHeight = originalImageHeight;
+    }
+    return { processedFile, imageWidth, imageHeight };
+}
+async function readImageFile(file) {
+    const dataUrl = await readAsDataURL(file);
+    if (!dataUrl || dataUrl instanceof ArrayBuffer) {
+        return null;
+    }
+    return createImageFromDataUrl(dataUrl);
+}
+function processImage(image, mimeType, hasTransparency, maxLongestEdgePixels) {
+    const [width, height] = getDimensions(image, maxLongestEdgePixels);
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext('2d', { alpha: false, desynchronized: true });
+    if (!context) {
+        return null;
+    }
+    if (hasTransparency) {
+        fillBackground(context, canvas.width, canvas.height, TRANSPARENCY_FILL_BG_COLOR);
+    }
+    context.drawImage(image, /*dx=*/ 0, /*dy=*/ 0, width, height);
+    return toBlob(canvas, mimeType, JPEG_QUALITY, width, height);
+}
+function getDimensions(image, maxLongestEdgePixels) {
+    let width = image.width;
+    let height = image.height;
+    if (maxLongestEdgePixels &&
+        (width > maxLongestEdgePixels || height > maxLongestEdgePixels)) {
+        const downscaleRatio = Math.min(maxLongestEdgePixels / width, maxLongestEdgePixels / height);
+        width *= downscaleRatio;
+        height *= downscaleRatio;
+    }
+    return [Math.floor(width), Math.floor(height)];
+}
+function fillBackground(context, canvasWidth, canvasHeight, backgroundColor) {
+    context.fillStyle = backgroundColor;
+    context.fillRect(0, 0, canvasWidth, canvasHeight);
+}
+function toBlob(canvas, type, encodingCompressionRatio, imageWidth, imageHeight) {
+    return new Promise((resolve) => {
+        canvas.toBlob((result) => {
+            if (result) {
+                resolve({ blob: result, imageWidth, imageHeight });
+            }
+            else {
+                resolve({ blob: null, imageWidth, imageHeight });
+            }
+        }, type, encodingCompressionRatio);
+    });
+}
+function readAsDataURL(file) {
+    const fileReader = new FileReader();
+    const promise = new Promise((resolve) => {
+        fileReader.onloadend = () => {
+            resolve(fileReader.result);
+        };
+        fileReader.onerror = () => {
+            // Failed to read file.
+            resolve(null);
+        };
+    });
+    fileReader.readAsDataURL(file);
+    return promise;
+}
+function createImageFromDataUrl(dataUrl) {
+    const image = new Image();
+    const promise = new Promise((resolve) => {
+        image.onload = () => {
+            resolve(image);
+        };
+        image.onerror = () => {
+            // Failed to load image from data url.
+            resolve(null);
+        };
+    });
+    image.src = dataUrl;
+    return promise;
+}
+
+// chrome/browser/new_tab_page/modules/file_suggestion/file_suggestion.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const RecommendationTypeSpec = { $: mojo.internal.Enum() };
+var RecommendationType;
+(function (RecommendationType) {
+    RecommendationType[RecommendationType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    RecommendationType[RecommendationType["MAX_VALUE"] = 2] = "MAX_VALUE";
+    RecommendationType[RecommendationType["kUsed"] = 0] = "kUsed";
+    RecommendationType[RecommendationType["kShared"] = 1] = "kShared";
+    RecommendationType[RecommendationType["kTrending"] = 2] = "kTrending";
+})(RecommendationType || (RecommendationType = {}));
+const FileSpec = { $: {} };
+mojo.internal.Struct(FileSpec.$, 'File', [
+    mojo.internal.StructField('id', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('justificationText', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('iconUrl', 16, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('title', 24, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('itemUrl', 32, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('recommendation_type_$flag', 40, 0, mojo.internal.Bool, false, false /* nullable */, 0, {
+        isPrimary: true,
+        linkedValueFieldName: "recommendation_type_$value",
+        originalFieldName: "recommendationType",
+    }, undefined),
+    mojo.internal.StructField('recommendation_type_$value', 44, 0, RecommendationTypeSpec.$, 0, false /* nullable */, 0, {
+        isPrimary: false,
+        originalFieldName: "recommendationType",
+    }, undefined),
+], [[0, 56],]);
+
+// chrome/browser/new_tab_page/modules/file_suggestion/drive_suggestion.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class DriveSuggestionHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'file_suggestion.mojom.DriveSuggestionHandler', scope);
+    }
+}
+class DriveSuggestionHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(DriveSuggestionHandlerPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    getFiles() {
+        return this.proxy.sendMessage(0, DriveSuggestionHandler_GetFiles_ParamsSpec.$, DriveSuggestionHandler_GetFiles_ResponseParamsSpec.$, [], false);
+    }
+}
+class DriveSuggestionHandler {
+    static get $interfaceName() {
+        return "file_suggestion.mojom.DriveSuggestionHandler";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new DriveSuggestionHandlerRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+const DriveSuggestionHandler_GetFiles_ParamsSpec = { $: {} };
+const DriveSuggestionHandler_GetFiles_ResponseParamsSpec = { $: {} };
+mojo.internal.Struct(DriveSuggestionHandler_GetFiles_ParamsSpec.$, 'DriveSuggestionHandler_GetFiles_Params', [], [[0, 8],]);
+mojo.internal.Struct(DriveSuggestionHandler_GetFiles_ResponseParamsSpec.$, 'DriveSuggestionHandler_GetFiles_ResponseParams', [
+    mojo.internal.StructField('files', 0, 0, mojo.internal.Array(FileSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+
+// chrome/browser/new_tab_page/modules/v2/calendar/calendar_data.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const AttachmentSpec = { $: {} };
+const CalendarEventSpec = { $: {} };
+mojo.internal.Struct(AttachmentSpec.$, 'Attachment', [
+    mojo.internal.StructField('title', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('resourceUrl', 8, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('iconUrl', 16, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(CalendarEventSpec.$, 'CalendarEvent', [
+    mojo.internal.StructField('title', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('startTime', 8, 0, TimeSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('endTime', 16, 0, TimeSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 24, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('location', 32, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('attachments', 40, 0, mojo.internal.Array(AttachmentSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('conferenceUrl', 48, 0, UrlSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isAccepted', 56, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('hasOtherAttendee', 56, 1, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 72],]);
+
+// chrome/browser/new_tab_page/modules/v2/calendar/google_calendar.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class GoogleCalendarPageHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'ntp.calendar.mojom.GoogleCalendarPageHandler', scope);
+    }
+}
+class GoogleCalendarPageHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(GoogleCalendarPageHandlerPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    getEvents() {
+        return this.proxy.sendMessage(0, GoogleCalendarPageHandler_GetEvents_ParamsSpec.$, GoogleCalendarPageHandler_GetEvents_ResponseParamsSpec.$, [], false);
+    }
+}
+class GoogleCalendarPageHandler {
+    static get $interfaceName() {
+        return "ntp.calendar.mojom.GoogleCalendarPageHandler";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new GoogleCalendarPageHandlerRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+const GoogleCalendarPageHandler_GetEvents_ParamsSpec = { $: {} };
+const GoogleCalendarPageHandler_GetEvents_ResponseParamsSpec = { $: {} };
+mojo.internal.Struct(GoogleCalendarPageHandler_GetEvents_ParamsSpec.$, 'GoogleCalendarPageHandler_GetEvents_Params', [], [[0, 8],]);
+mojo.internal.Struct(GoogleCalendarPageHandler_GetEvents_ResponseParamsSpec.$, 'GoogleCalendarPageHandler_GetEvents_ResponseParams', [
+    mojo.internal.StructField('events', 0, 0, mojo.internal.Array(CalendarEventSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+
+// chrome/browser/new_tab_page/modules/file_suggestion/microsoft_files.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class MicrosoftFilesPageHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'file_suggestion.mojom.MicrosoftFilesPageHandler', scope);
+    }
+}
+class MicrosoftFilesPageHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(MicrosoftFilesPageHandlerPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    getFiles() {
+        return this.proxy.sendMessage(0, MicrosoftFilesPageHandler_GetFiles_ParamsSpec.$, MicrosoftFilesPageHandler_GetFiles_ResponseParamsSpec.$, [], false);
+    }
+}
+class MicrosoftFilesPageHandler {
+    static get $interfaceName() {
+        return "file_suggestion.mojom.MicrosoftFilesPageHandler";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new MicrosoftFilesPageHandlerRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+const MicrosoftFilesPageHandler_GetFiles_ParamsSpec = { $: {} };
+const MicrosoftFilesPageHandler_GetFiles_ResponseParamsSpec = { $: {} };
+mojo.internal.Struct(MicrosoftFilesPageHandler_GetFiles_ParamsSpec.$, 'MicrosoftFilesPageHandler_GetFiles_Params', [], [[0, 8],]);
+mojo.internal.Struct(MicrosoftFilesPageHandler_GetFiles_ResponseParamsSpec.$, 'MicrosoftFilesPageHandler_GetFiles_ResponseParams', [
+    mojo.internal.StructField('files', 0, 0, mojo.internal.Array(FileSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+
+// chrome/browser/new_tab_page/modules/v2/most_relevant_tab_resumption/url_visit_types.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const FormFactorSpec = { $: mojo.internal.Enum() };
+var FormFactor;
+(function (FormFactor) {
+    FormFactor[FormFactor["MIN_VALUE"] = 0] = "MIN_VALUE";
+    FormFactor[FormFactor["MAX_VALUE"] = 6] = "MAX_VALUE";
+    FormFactor[FormFactor["kUnknown"] = 0] = "kUnknown";
+    FormFactor[FormFactor["kDesktop"] = 1] = "kDesktop";
+    FormFactor[FormFactor["kPhone"] = 2] = "kPhone";
+    FormFactor[FormFactor["kTablet"] = 3] = "kTablet";
+    FormFactor[FormFactor["kAutomotive"] = 4] = "kAutomotive";
+    FormFactor[FormFactor["kWearable"] = 5] = "kWearable";
+    FormFactor[FormFactor["kTv"] = 6] = "kTv";
+})(FormFactor || (FormFactor = {}));
+const DecorationTypeSpec = { $: mojo.internal.Enum() };
+var DecorationType;
+(function (DecorationType) {
+    DecorationType[DecorationType["MIN_VALUE"] = 0] = "MIN_VALUE";
+    DecorationType[DecorationType["MAX_VALUE"] = 3] = "MAX_VALUE";
+    DecorationType[DecorationType["kVisitedXAgo"] = 0] = "kVisitedXAgo";
+    DecorationType[DecorationType["kMostRecent"] = 1] = "kMostRecent";
+    DecorationType[DecorationType["kFrequentlyVisited"] = 2] = "kFrequentlyVisited";
+    DecorationType[DecorationType["kFrequentlyVisitedAtTime"] = 3] = "kFrequentlyVisitedAtTime";
+})(DecorationType || (DecorationType = {}));
+const VisitSourceSpec = { $: mojo.internal.Enum() };
+var VisitSource;
+(function (VisitSource) {
+    VisitSource[VisitSource["MIN_VALUE"] = 0] = "MIN_VALUE";
+    VisitSource[VisitSource["MAX_VALUE"] = 1] = "MAX_VALUE";
+    VisitSource[VisitSource["kTab"] = 0] = "kTab";
+    VisitSource[VisitSource["kHistory"] = 1] = "kHistory";
+})(VisitSource || (VisitSource = {}));
+const DecorationSpec = { $: {} };
+const URLVisitSpec = { $: {} };
+mojo.internal.Struct(DecorationSpec.$, 'Decoration', [
+    mojo.internal.StructField('type', 0, 0, DecorationTypeSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('displayString', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(URLVisitSpec.$, 'URLVisit', [
+    mojo.internal.StructField('formFactor', 0, 0, FormFactorSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isKnownToSync', 4, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('source', 8, 0, VisitSourceSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('sessionName', 16, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('url', 24, 0, UrlSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('title', 32, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('decoration', 40, 0, DecorationSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('relativeTime', 48, 0, TimeDeltaSpec.$, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('timestamp', 56, 0, TimeSpec.$, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('urlKey', 64, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('trainingRequestId', 72, 0, mojo.internal.Int64, BigInt(0), false /* nullable */, 0, undefined, undefined),
+], [[0, 88],]);
+
+// chrome/browser/new_tab_page/modules/v2/most_relevant_tab_resumption/most_relevant_tab_resumption.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const ScoredURLUserActionSpec = { $: mojo.internal.Enum() };
+var ScoredURLUserAction;
+(function (ScoredURLUserAction) {
+    ScoredURLUserAction[ScoredURLUserAction["MIN_VALUE"] = 0] = "MIN_VALUE";
+    ScoredURLUserAction[ScoredURLUserAction["MAX_VALUE"] = 3] = "MAX_VALUE";
+    ScoredURLUserAction[ScoredURLUserAction["kUnknown"] = 0] = "kUnknown";
+    ScoredURLUserAction[ScoredURLUserAction["kSeen"] = 1] = "kSeen";
+    ScoredURLUserAction[ScoredURLUserAction["kActivated"] = 2] = "kActivated";
+    ScoredURLUserAction[ScoredURLUserAction["kDismissed"] = 3] = "kDismissed";
+})(ScoredURLUserAction || (ScoredURLUserAction = {}));
+let PageHandlerPendingReceiver$1 = class PageHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'ntp.most_relevant_tab_resumption.mojom.PageHandler', scope);
+    }
+};
+let PageHandlerRemote$1 = class PageHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PageHandlerPendingReceiver$1, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    getURLVisits() {
+        return this.proxy.sendMessage(0, PageHandler_GetURLVisits_ParamsSpec.$, PageHandler_GetURLVisits_ResponseParamsSpec.$, [], false);
+    }
+    dismissURLVisit(urlVisit) {
+        this.proxy.sendMessage(1, PageHandler_DismissURLVisit_ParamsSpec.$, null, [
+            urlVisit
+        ], false);
+    }
+    restoreURLVisit(urlVisit) {
+        this.proxy.sendMessage(2, PageHandler_RestoreURLVisit_ParamsSpec.$, null, [
+            urlVisit
+        ], false);
+    }
+    recordAction(action, urlKey, visitRequestId) {
+        this.proxy.sendMessage(3, PageHandler_RecordAction_ParamsSpec.$, null, [
+            action,
+            urlKey,
+            visitRequestId
+        ], false);
+    }
+};
+let PageHandler$1 = class PageHandler {
+    static get $interfaceName() {
+        return "ntp.most_relevant_tab_resumption.mojom.PageHandler";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new PageHandlerRemote$1;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+};
+const PageHandler_GetURLVisits_ParamsSpec = { $: {} };
+const PageHandler_GetURLVisits_ResponseParamsSpec = { $: {} };
+const PageHandler_DismissURLVisit_ParamsSpec = { $: {} };
+const PageHandler_RestoreURLVisit_ParamsSpec = { $: {} };
+const PageHandler_RecordAction_ParamsSpec = { $: {} };
+mojo.internal.Struct(PageHandler_GetURLVisits_ParamsSpec.$, 'PageHandler_GetURLVisits_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetURLVisits_ResponseParamsSpec.$, 'PageHandler_GetURLVisits_ResponseParams', [
+    mojo.internal.StructField('urlVisits', 0, 0, mojo.internal.Array(URLVisitSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_DismissURLVisit_ParamsSpec.$, 'PageHandler_DismissURLVisit_Params', [
+    mojo.internal.StructField('urlVisit', 0, 0, URLVisitSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_RestoreURLVisit_ParamsSpec.$, 'PageHandler_RestoreURLVisit_Params', [
+    mojo.internal.StructField('urlVisit', 0, 0, URLVisitSpec.$, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+mojo.internal.Struct(PageHandler_RecordAction_ParamsSpec.$, 'PageHandler_RecordAction_Params', [
+    mojo.internal.StructField('action', 0, 0, ScoredURLUserActionSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('urlKey', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('visitRequestId', 16, 0, mojo.internal.Int64, BigInt(0), false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+
+// chrome/browser/new_tab_page/modules/v2/calendar/outlook_calendar.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class OutlookCalendarPageHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'ntp.calendar.mojom.OutlookCalendarPageHandler', scope);
+    }
+}
+class OutlookCalendarPageHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(OutlookCalendarPageHandlerPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    getEvents() {
+        return this.proxy.sendMessage(0, OutlookCalendarPageHandler_GetEvents_ParamsSpec.$, OutlookCalendarPageHandler_GetEvents_ResponseParamsSpec.$, [], false);
+    }
+}
+class OutlookCalendarPageHandler {
+    static get $interfaceName() {
+        return "ntp.calendar.mojom.OutlookCalendarPageHandler";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new OutlookCalendarPageHandlerRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+const OutlookCalendarPageHandler_GetEvents_ParamsSpec = { $: {} };
+const OutlookCalendarPageHandler_GetEvents_ResponseParamsSpec = { $: {} };
+mojo.internal.Struct(OutlookCalendarPageHandler_GetEvents_ParamsSpec.$, 'OutlookCalendarPageHandler_GetEvents_Params', [], [[0, 8],]);
+mojo.internal.Struct(OutlookCalendarPageHandler_GetEvents_ResponseParamsSpec.$, 'OutlookCalendarPageHandler_GetEvents_ResponseParams', [
+    mojo.internal.StructField('events', 0, 0, mojo.internal.Array(CalendarEventSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+
+// components/tab_groups/public/mojom/tab_group_types.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+const ColorSpec = { $: mojo.internal.Enum() };
+var Color;
+(function (Color) {
+    Color[Color["MIN_VALUE"] = 0] = "MIN_VALUE";
+    Color[Color["MAX_VALUE"] = 8] = "MAX_VALUE";
+    Color[Color["kGrey"] = 0] = "kGrey";
+    Color[Color["kBlue"] = 1] = "kBlue";
+    Color[Color["kRed"] = 2] = "kRed";
+    Color[Color["kYellow"] = 3] = "kYellow";
+    Color[Color["kGreen"] = 4] = "kGreen";
+    Color[Color["kPink"] = 5] = "kPink";
+    Color[Color["kPurple"] = 6] = "kPurple";
+    Color[Color["kCyan"] = 7] = "kCyan";
+    Color[Color["kOrange"] = 8] = "kOrange";
+})(Color || (Color = {}));
+
+// chrome/browser/new_tab_page/modules/v2/tab_groups/tab_groups.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class PageHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'ntp.tab_groups.mojom.PageHandler', scope);
+    }
+}
+class PageHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(PageHandlerPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    createNewTabGroup() {
+        this.proxy.sendMessage(0, PageHandler_CreateNewTabGroup_ParamsSpec.$, null, [], false);
+    }
+    getTabGroups() {
+        return this.proxy.sendMessage(1, PageHandler_GetTabGroups_ParamsSpec.$, PageHandler_GetTabGroups_ResponseParamsSpec.$, [], false);
+    }
+    openTabGroup(id) {
+        this.proxy.sendMessage(2, PageHandler_OpenTabGroup_ParamsSpec.$, null, [
+            id
+        ], false);
+    }
+}
+class PageHandler {
+    static get $interfaceName() {
+        return "ntp.tab_groups.mojom.PageHandler";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new PageHandlerRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+const TabGroupSpec = { $: {} };
+const PageHandler_CreateNewTabGroup_ParamsSpec = { $: {} };
+const PageHandler_GetTabGroups_ParamsSpec = { $: {} };
+const PageHandler_GetTabGroups_ResponseParamsSpec = { $: {} };
+const PageHandler_OpenTabGroup_ParamsSpec = { $: {} };
+mojo.internal.Struct(TabGroupSpec.$, 'TabGroup', [
+    mojo.internal.StructField('id', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('title', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('updateTime', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('deviceName', 24, 0, mojo.internal.String, null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('totalTabCount', 32, 0, mojo.internal.Int32, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('color', 36, 0, ColorSpec.$, 0, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('faviconUrls', 40, 0, mojo.internal.Array(UrlSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('isSharedTabGroup', 48, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 64],]);
+mojo.internal.Struct(PageHandler_CreateNewTabGroup_ParamsSpec.$, 'PageHandler_CreateNewTabGroup_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetTabGroups_ParamsSpec.$, 'PageHandler_GetTabGroups_Params', [], [[0, 8],]);
+mojo.internal.Struct(PageHandler_GetTabGroups_ResponseParamsSpec.$, 'PageHandler_GetTabGroups_ResponseParams', [
+    mojo.internal.StructField('tabGroups', 0, 0, mojo.internal.Array(TabGroupSpec.$, false), null, true /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('showZeroState', 8, 0, mojo.internal.Bool, false, false /* nullable */, 0, undefined, undefined),
+], [[0, 24],]);
+mojo.internal.Struct(PageHandler_OpenTabGroup_ParamsSpec.$, 'PageHandler_OpenTabGroup_Params', [
+    mojo.internal.StructField('id', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+
+// chrome/browser/ui/webui/new_tab_page/foo/foo.mojom-webui.ts is auto generated by mojom_bindings_generator.py, do not edit
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+class FooHandlerPendingReceiver {
+    handle;
+    constructor(handle) {
+        this.handle = mojo.internal.interfaceSupport.getEndpointForReceiver(handle);
+    }
+    bindInBrowser(scope = 'context') {
+        mojo.internal.interfaceSupport.bind(this.handle, 'foo.mojom.FooHandler', scope);
+    }
+}
+class FooHandlerRemote {
+    proxy;
+    $;
+    onConnectionError;
+    constructor(handle) {
+        this.proxy =
+            new mojo.internal.interfaceSupport.InterfaceRemoteBase(FooHandlerPendingReceiver, handle);
+        this.$ = new mojo.internal.interfaceSupport.InterfaceRemoteBaseWrapper(this.proxy);
+        this.onConnectionError = this.proxy.getConnectionErrorEventRouter();
+    }
+    getData() {
+        return this.proxy.sendMessage(0, FooHandler_GetData_ParamsSpec.$, FooHandler_GetData_ResponseParamsSpec.$, [], false);
+    }
+}
+class FooHandler {
+    static get $interfaceName() {
+        return "foo.mojom.FooHandler";
+    }
+    /**
+     * Returns a remote for this interface which sends messages to the browser.
+     * The browser must have an interface request binder registered for this
+     * interface and accessible to the calling document's frame.
+     */
+    static getRemote() {
+        let remote = new FooHandlerRemote;
+        remote.$.bindNewPipeAndPassReceiver().bindInBrowser();
+        return remote;
+    }
+}
+const FooDataItemSpec = { $: {} };
+const FooHandler_GetData_ParamsSpec = { $: {} };
+const FooHandler_GetData_ResponseParamsSpec = { $: {} };
+mojo.internal.Struct(FooDataItemSpec.$, 'FooDataItem', [
+    mojo.internal.StructField('label', 0, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('value', 8, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+    mojo.internal.StructField('imageUrl', 16, 0, mojo.internal.String, null, false /* nullable */, 0, undefined, undefined),
+], [[0, 32],]);
+mojo.internal.Struct(FooHandler_GetData_ParamsSpec.$, 'FooHandler_GetData_Params', [], [[0, 8],]);
+mojo.internal.Struct(FooHandler_GetData_ResponseParamsSpec.$, 'FooHandler_GetData_ResponseParams', [
+    mojo.internal.StructField('data', 0, 0, mojo.internal.Array(FooDataItemSpec.$, false), null, false /* nullable */, 0, undefined, undefined),
+], [[0, 16],]);
+
+export { $$ as $, getLoadTimeBoolean as A, GlowAnimationState as B, ColorType as C, DoodleImageType as D, EventTracker as E, DragAndDropHandler as F, GlifAnimationState as G, InputSource as H, IconType as I, recordContextualElementClickedMetric as J, KeywordType as K, ContextType as L, ModelMode as M, NavigationPredictor as N, InputType as O, PageHandlerRemote$3 as P, recordInputTypeShown as Q, RenderType as R, SecondaryTextPlacement as S, TabSuggestionsState as T, UrlDeemphasisMode as U, FocusOutlineManager as V, WindowProxy$1 as W, recordToolModeShown as X, recordModelModeShown as Y, DriveDisclaimerStatus as Z, ToolMode as _, assert as a, FormFactor as a$, recordUserAction as a0, recordBoolean$1 as a1, recordEnumerationValue as a2, recordToolModeSelection as a3, recordModelModeSelection as a4, recordCount as a5, recordContextAdditionMethod as a6, strictQuery as a7, IframeElement as a8, RectFSpec as a9, MAX_C2PA_SEARCH_BYTES as aA, processFile as aB, SUPPORTED_C2PA_FILE_TYPES as aC, recordLogValue as aD, recordOccurrence as aE, recordPerdecage as aF, recordSmallCount as aG, VoiceError as aH, checkTransparency as aI, isBMP as aJ, isPNG as aK, isWebP as aL, ActionChipsHandlerRemote as aM, PageCallbackRouter as aN, browserProxyFactory as aO, DriveSuggestionHandlerRemote as aP, RecommendationType as aQ, GoogleCalendarPageHandlerRemote as aR, MicrosoftFilesPageHandlerRemote as aS, PageHandlerRemote$1 as aT, ScoredURLUserAction as aU, AuthType as aV, MicrosoftAuthUntrustedDocumentRemote as aW, OutlookCalendarPageHandlerRemote as aX, PageHandlerRemote as aY, Color as aZ, DecorationType as a_, MojoBrowserProxyFactory as aa, debounceEnd as ab, getTrustedHTML as ac, isWindows as ad, SubmitButtonIconType as ae, TileTypeSpec as af, recordLinearValue as ag, ParentTrustedDocumentProxy as ah, recordDuration as ai, recordBoolean as aj, SearchboxOverride as ak, recordLoadDuration as al, recordVoiceAction as am, VoiceAction as an, VoiceSearchAction as ao, recordSparseValueWithPersistentHash as ap, recordEnumeration as aq, NtpBackgroundImageSource as ar, hexColorToSkColor as as, ShowNtpPromosResult as at, ActionChipsRetrievalState as au, QueryActionOverride as av, SearchboxTutorial as aw, C2PA_MARKER as ax, hasC2paMetadata as ay, MAX_C2PA_PIXELS as az, assertNotReachedCase as b, PageHandler_CanShowRealboxContextMenuAnimation_ResponseParamsSpec as b$, VisitSource as b0, FooHandlerRemote as b1, NtpBackgroundImageSourceSpec as b2, DoodleImageTypeSpec as b3, DoodleShareChannelSpec as b4, DoodleShareChannel as b5, CustomizeDialogActionSpec as b6, CustomizeDialogAction as b7, OptInStatusSpec as b8, OptInStatus as b9, PageHandler_GetDoodle_ResponseParamsSpec as bA, PageHandler_OnDismissModule_ParamsSpec as bB, PageHandler_SetModulesVisible_ParamsSpec as bC, PageHandler_UpdateDisabledModules_ParamsSpec as bD, PageHandler_OnModulesLoadedWithData_ParamsSpec as bE, PageHandler_OnModuleUsed_ParamsSpec as bF, PageHandler_GetModulesIdNames_ParamsSpec as bG, PageHandler_GetModulesIdNames_ResponseParamsSpec as bH, PageHandler_GetModulesEligibleForRemoval_ParamsSpec as bI, PageHandler_GetModulesEligibleForRemoval_ResponseParamsSpec as bJ, PageHandler_SetModulesOrder_ParamsSpec as bK, PageHandler_GetModulesOrder_ParamsSpec as bL, PageHandler_GetModulesOrder_ResponseParamsSpec as bM, PageHandler_UpdateModulesLoadable_ParamsSpec as bN, PageHandler_SetModulesDisabled_ParamsSpec as bO, PageHandler_UpdateActionChipsVisibility_ParamsSpec as bP, PageHandler_UpdateFooterVisibility_ParamsSpec as bQ, PageHandler_IncrementComposeButtonShownCount_ParamsSpec as bR, PageHandler_MaybeTriggerAutomaticCustomizeChromePromo_ParamsSpec as bS, PageHandler_OnOneGoogleBarRendered_ParamsSpec as bT, PageHandler_OnCustomizeDialogAction_ParamsSpec as bU, PageHandler_OnDoodleImageClicked_ParamsSpec as bV, PageHandler_OnDoodleImageRendered_ParamsSpec as bW, PageHandler_OnDoodleImageRendered_ResponseParamsSpec as bX, PageHandler_OnDoodleShared_ParamsSpec as bY, PageHandler_OnAppRendered_ParamsSpec as bZ, PageHandler_CanShowRealboxContextMenuAnimation_ParamsSpec as b_, PageHandlerFactoryPendingReceiver as ba, PageHandlerFactoryRemote as bb, PageHandlerFactoryReceiver as bc, PageHandlerFactory as bd, PageHandlerFactoryCallbackRouter as be, PageHandlerPendingReceiver$2 as bf, PageHandlerRemote$2 as bg, PageHandlerReceiver as bh, PageHandler$2 as bi, PageHandlerCallbackRouter as bj, PagePendingReceiver$1 as bk, PageRemote$1 as bl, PageReceiver as bm, Page as bn, PageCallbackRouter$1 as bo, BackgroundImageSpec as bp, ThemeSpec as bq, ImageDoodleSpec as br, AllModeImageDoodleSpec as bs, DoodleSpec as bt, ModuleIdNameSpec as bu, PageHandlerFactory_CreatePageHandler_ParamsSpec as bv, PageHandler_SetMostVisitedSettings_ParamsSpec as bw, PageHandler_GetMostVisitedSettings_ParamsSpec as bx, PageHandler_GetMostVisitedSettings_ResponseParamsSpec as by, PageHandler_GetDoodle_ParamsSpec as bz, PageCallbackRouter$2 as c, PageHandler_RecordRealboxContextMenuAnimationImpression_ParamsSpec as c0, PageHandler_OnContextualSearchIPHEngaged_ParamsSpec as c1, Page_SetTheme_ParamsSpec as c2, Page_SetDisabledModules_ParamsSpec as c3, Page_SetModulesLoadable_ParamsSpec as c4, Page_SetActionChipsVisibility_ParamsSpec as c5, Page_ShowWebstoreToast_ParamsSpec as c6, Page_SetWallpaperSearchButtonVisibility_ParamsSpec as c7, Page_FooterVisibilityUpdated_ParamsSpec as c8, Page_ConnectToParentDocument_ParamsSpec as c9, ComposeboxFile as cA, FILE_VALIDATION_ERRORS_MAP as cB, ContextualEntrypointAndMenuElement as cC, ProcessFilesError as cD, ComposeboxFileValidationError as cE, recordRichImageSuggestClicked as cF, recordSingleTabMenuItemAction as cG, SingleTabType as cH, SingleTabMenuItemAction as cI, DriveUploadError as cJ, hasAllowedInputs as cK, mapUploadErrorToProcessFilesError as cL, LhsClientAction as cM, ThreadsRailElement as cN, CrButtonElement as cO, ActionChipsApiProxyImpl as ca, TabAttachmentSource as cb, SUPPORTED_FILE_TYPES as cc, CrRippleMixin as cd, htmlEscape as ce, GoogleCalendarPageHandler as cf, OutlookCalendarPageHandler as cg, FooHandler as ch, DriveSuggestionHandler as ci, MicrosoftFilesPageHandler as cj, getFaviconForPageURL as ck, PageHandler$1 as cl, PageHandler as cm, MojoPluralStringProxy as cn, computeImageUrl as co, getUrlForCss as cp, recordRichImageSuggestBatchLoadStatus as cq, RichImageSuggestBatchLoadStatus as cr, recordRichImageSuggestShown as cs, recordRichImageSuggestBatchLoadLatency as ct, WindowProxy as cu, GlowMode as cv, isContextUploadStatusTerminal as cw, ComposeboxInputModel as cx, ContextualSearchInputStateDeletionType as cy, isValidTabId as cz, PageHandlerFactory$1 as d, SuggestStyle as e, getFaviconUrl as f, getCss$i as g, getCss$f as h, isFaviconUrl as i, getCss$g as j, assertNotReached as k, SideType as l, getInstance as m, SelectionLineState as n, KeywordActivationMethod as o, browserProxyFactory$1 as p, skColorToRgba as q, I18nMixinLit as r, sanitizeInnerHtml as s, SelectionDirection as t, SelectionStep as u, SuggestInventory as v, InputMethod as w, isMac as x, hasKeyModifiers as y, getCss$3 as z };
+//# sourceMappingURL=shared.rollup.js.map

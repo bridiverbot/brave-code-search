@@ -1,0 +1,298 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import '//resources/cr_elements/icons.html.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './combobox.css.js';
+import { getHtml } from './combobox.html.js';
+import { getCss as getSharedCss } from './shared_style.css.js';
+export class IwaDevComboboxElement extends CrLitElement {
+    static get is() {
+        return 'iwa-dev-combobox';
+    }
+    static get styles() {
+        return [
+            getSharedCss(),
+            getCss(),
+        ];
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            value: { type: String },
+            label: { type: String },
+            placeholder: { type: String },
+            clearable: { type: Boolean },
+            disabled: { type: Boolean, reflect: true },
+            readonly: { type: Boolean, reflect: true },
+            errorMessage: { type: String, attribute: 'error-message' },
+            options: { type: Array },
+            matchStrategy: { type: String, attribute: 'match-strategy' },
+            showSuggestions_: { type: Boolean, state: true },
+            highlightedIndex_: { type: Number, state: true },
+            filterQuery_: { type: String, state: true },
+        };
+    }
+    #value_accessor_storage = '';
+    get value() { return this.#value_accessor_storage; }
+    set value(value) { this.#value_accessor_storage = value; }
+    #label_accessor_storage = '';
+    get label() { return this.#label_accessor_storage; }
+    set label(value) { this.#label_accessor_storage = value; }
+    #placeholder_accessor_storage = '';
+    get placeholder() { return this.#placeholder_accessor_storage; }
+    set placeholder(value) { this.#placeholder_accessor_storage = value; }
+    #clearable_accessor_storage = false;
+    get clearable() { return this.#clearable_accessor_storage; }
+    set clearable(value) { this.#clearable_accessor_storage = value; }
+    #disabled_accessor_storage = false;
+    get disabled() { return this.#disabled_accessor_storage; }
+    set disabled(value) { this.#disabled_accessor_storage = value; }
+    #readonly_accessor_storage = false;
+    get readonly() { return this.#readonly_accessor_storage; }
+    set readonly(value) { this.#readonly_accessor_storage = value; }
+    #errorMessage_accessor_storage = '';
+    get errorMessage() { return this.#errorMessage_accessor_storage; }
+    set errorMessage(value) { this.#errorMessage_accessor_storage = value; }
+    #options_accessor_storage = [];
+    get options() { return this.#options_accessor_storage; }
+    set options(value) { this.#options_accessor_storage = value; }
+    #matchStrategy_accessor_storage = 'prefix';
+    get matchStrategy() { return this.#matchStrategy_accessor_storage; }
+    set matchStrategy(value) { this.#matchStrategy_accessor_storage = value; }
+    #showSuggestions__accessor_storage = false;
+    get showSuggestions_() { return this.#showSuggestions__accessor_storage; }
+    set showSuggestions_(value) { this.#showSuggestions__accessor_storage = value; }
+    #highlightedIndex__accessor_storage = -1;
+    get highlightedIndex_() { return this.#highlightedIndex__accessor_storage; }
+    set highlightedIndex_(value) { this.#highlightedIndex__accessor_storage = value; }
+    #filterQuery__accessor_storage = '';
+    get filterQuery_() { return this.#filterQuery__accessor_storage; }
+    set filterQuery_(value) { this.#filterQuery__accessor_storage = value; }
+    wasDropdownOpen_ = false;
+    // Exposes the underlying <input> element, matching cr-input.
+    get inputElement() {
+        return this.$.input;
+    }
+    // Overridden to delegate focus to the internal <input> element.
+    focus() {
+        this.$.input.focus();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.wasDropdownOpen_ = false;
+    }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (!this.isConnected) {
+            return;
+        }
+        const isOpen = this.isDropdownOpen_();
+        if (isOpen !== this.wasDropdownOpen_) {
+            this.wasDropdownOpen_ = isOpen;
+            this.shadowRoot?.querySelector('#suggestions')
+                ?.togglePopover(isOpen);
+        }
+    }
+    getDisplayValue_() {
+        if (this.readonly) {
+            const selectedOption = this.options.find(o => o.value === this.value);
+            if (selectedOption?.label) {
+                return selectedOption.label;
+            }
+        }
+        return this.value;
+    }
+    getFilteredOptions_() {
+        if (this.readonly || !this.filterQuery_) {
+            return this.options;
+        }
+        const query = this.filterQuery_.toLowerCase();
+        const matches = (target) => {
+            if (!target) {
+                return false;
+            }
+            const lower = target.toLowerCase();
+            return this.matchStrategy === 'contains' ? lower.includes(query) :
+                lower.startsWith(query);
+        };
+        return this.options.filter(opt => matches(opt.value) || matches(opt.label));
+    }
+    isDropdownOpen_() {
+        return this.showSuggestions_ && !this.errorMessage &&
+            this.getFilteredOptions_().length > 0;
+    }
+    /**
+     * Returns the ID of the currently highlighted suggestion option for
+     * aria-activedescendant, allowing screen readers to announce the active
+     * option during keyboard navigation while focus remains on the input.
+     */
+    getActiveDescendant_() {
+        return this.isDropdownOpen_() && this.highlightedIndex_ >= 0 ?
+            `suggestion-${this.highlightedIndex_}` :
+            undefined;
+    }
+    onInput_() {
+        if (this.readonly) {
+            return;
+        }
+        this.value = this.$.input.value;
+        this.filterQuery_ = this.value.trim().toLowerCase();
+        this.errorMessage = '';
+        this.showSuggestions_ = true;
+        this.highlightedIndex_ = -1;
+        this.fireValueChanged_();
+    }
+    onInputPointerdown_(e) {
+        // In readonly mode, clicking anywhere on the input toggles the dropdown
+        // (behaving like a native <select> element).
+        if (this.readonly) {
+            e.preventDefault();
+            this.toggleSuggestions_();
+        }
+    }
+    onFocus_() {
+        if (this.errorMessage) {
+            return;
+        }
+        this.filterQuery_ = '';
+        if (!this.readonly && this.options.length > 0) {
+            this.showSuggestions_ = true;
+        }
+    }
+    onBlur_() {
+        this.showSuggestions_ = false;
+        this.filterQuery_ = '';
+        this.highlightedIndex_ = -1;
+    }
+    onClearClick_() {
+        this.value = '';
+        this.filterQuery_ = '';
+        this.errorMessage = '';
+        this.highlightedIndex_ = -1;
+        this.$.input.focus();
+        this.showSuggestions_ = false;
+        this.fireValueChanged_();
+    }
+    onTogglePointerdown_(e) {
+        e.preventDefault();
+        this.toggleSuggestions_();
+    }
+    onKeydown_(e) {
+        if (this.showSuggestions_) {
+            this.onKeydownWhenSuggestionsExpanded_(e);
+        }
+        else {
+            this.onKeydownWhenSuggestionsCollapsed_(e);
+        }
+    }
+    onKeydownWhenSuggestionsCollapsed_(e) {
+        if ((e.key === 'ArrowDown' || (this.readonly && e.key === ' ')) &&
+            this.options.length > 0) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.openSuggestions_();
+        }
+    }
+    closeSuggestions_() {
+        this.showSuggestions_ = false;
+        this.highlightedIndex_ = -1;
+    }
+    onKeydownWhenSuggestionsExpanded_(e) {
+        const filtered = this.getFilteredOptions_();
+        const highlighted = filtered[this.highlightedIndex_];
+        // In editable mode, allow typing a space character.
+        if (e.key === ' ' && (!this.readonly || !highlighted)) {
+            return;
+        }
+        switch (e.key) {
+            case 'ArrowDown':
+            case 'ArrowUp':
+                this.navigateHighlight_(e.key === 'ArrowDown' ? 1 : -1, filtered);
+                break;
+            case 'Enter':
+            case ' ':
+                if (highlighted) {
+                    this.selectOption_(highlighted.value);
+                }
+                else {
+                    this.closeSuggestions_();
+                }
+                break;
+            case 'Escape':
+                this.closeSuggestions_();
+                break;
+            default:
+                return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    openSuggestions_() {
+        if (this.options.length === 0) {
+            return;
+        }
+        this.errorMessage = '';
+        this.filterQuery_ = '';
+        this.showSuggestions_ = true;
+        this.highlightedIndex_ = this.getInitialHighlightIndex_(1, this.options);
+        this.scrollHighlightedIntoView_();
+    }
+    navigateHighlight_(step, filtered) {
+        if (filtered.length === 0) {
+            return;
+        }
+        this.highlightedIndex_ = this.highlightedIndex_ >= 0 ?
+            (this.highlightedIndex_ + step + filtered.length) % filtered.length :
+            this.getInitialHighlightIndex_(step, filtered);
+        this.scrollHighlightedIntoView_();
+    }
+    getInitialHighlightIndex_(step, options) {
+        const matchIndex = options.findIndex(o => o.value === this.value);
+        return matchIndex >= 0 ? matchIndex : (step === 1 ? 0 : options.length - 1);
+    }
+    toggleSuggestions_() {
+        if (this.showSuggestions_) {
+            this.closeSuggestions_();
+        }
+        else {
+            this.openSuggestions_();
+            this.$.input.focus();
+        }
+    }
+    /**
+     * Scrolls the highlighted option into view after Lit updates the DOM.
+     * Required because browser focus remains on the input, so the browser
+     * will not auto-scroll.
+     */
+    scrollHighlightedIntoView_() {
+        this.updateComplete.then(() => {
+            this.shadowRoot?.querySelector('.suggestion-item.highlighted')
+                ?.scrollIntoView({ block: 'nearest' });
+        });
+    }
+    // Keeps the dropdown open when the user clicks or drags the scrollbar.
+    onSuggestionsPointerdown_(e) {
+        e.preventDefault();
+    }
+    onOptionPointerdown_(e) {
+        e.preventDefault();
+        this.selectOption_(e.currentTarget.value);
+    }
+    selectOption_(val) {
+        this.value = val;
+        this.filterQuery_ = '';
+        this.errorMessage = '';
+        this.highlightedIndex_ = -1;
+        this.$.input.focus();
+        this.showSuggestions_ = false;
+        this.fireValueChanged_();
+    }
+    fireValueChanged_() {
+        this.fire('value-changed', { value: this.value });
+    }
+}
+customElements.define(IwaDevComboboxElement.is, IwaDevComboboxElement);

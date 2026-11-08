@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/key_value_pair_viewer_shared_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/key_value_pair_viewer_shared_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/key_value_pair_viewer_shared_resources_map.h"
+            type="resource_map_header" />
+    <output filename="key_value_pair_viewer_shared_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_KEY_VALUE_PAIR_VIEWER_SHARED_KEY_VALUE_PAIR_ENTRY_JS" file="${root_gen_dir}/chrome/browser/resources/key_value_pair_viewer_shared/minified/key_value_pair_entry.js" resource_path="shared/key_value_pair_viewer/key_value_pair_entry.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_KEY_VALUE_PAIR_VIEWER_SHARED_KEY_VALUE_PAIR_VIEWER_JS" file="${root_gen_dir}/chrome/browser/resources/key_value_pair_viewer_shared/minified/key_value_pair_viewer.js" resource_path="shared/key_value_pair_viewer/key_value_pair_viewer.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_KEY_VALUE_PAIR_VIEWER_SHARED_KEY_VALUE_PAIR_PARSER_JS" file="${root_gen_dir}/chrome/browser/resources/key_value_pair_viewer_shared/minified/key_value_pair_parser.js" resource_path="shared/key_value_pair_viewer/key_value_pair_parser.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_KEY_VALUE_PAIR_VIEWER_SHARED_KEY_VALUE_PAIR_ENTRY_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/key_value_pair_viewer_shared/minified/key_value_pair_entry.html.js" resource_path="shared/key_value_pair_viewer/key_value_pair_entry.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_KEY_VALUE_PAIR_VIEWER_SHARED_KEY_VALUE_PAIR_VIEWER_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/key_value_pair_viewer_shared/minified/key_value_pair_viewer.html.js" resource_path="shared/key_value_pair_viewer/key_value_pair_viewer.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_KEY_VALUE_PAIR_VIEWER_SHARED_KEY_VALUE_PAIR_ENTRY_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/key_value_pair_viewer_shared/minified/key_value_pair_entry.css.js" resource_path="shared/key_value_pair_viewer/key_value_pair_entry.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_KEY_VALUE_PAIR_VIEWER_SHARED_KEY_VALUE_PAIR_VIEWER_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/key_value_pair_viewer_shared/minified/key_value_pair_viewer.css.js" resource_path="shared/key_value_pair_viewer/key_value_pair_viewer.css.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

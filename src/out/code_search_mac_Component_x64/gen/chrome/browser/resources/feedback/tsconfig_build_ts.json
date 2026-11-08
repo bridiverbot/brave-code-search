@@ -1,0 +1,97 @@
+{
+  "extends": "../../../../../../../tools/typescript/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "/shared/key_value_pair_viewer/*": [
+        "./../key_value_pair_viewer_shared/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app.html.ts",
+    "preprocessed/app.ts",
+    "preprocessed/autofill_metadata_app.html.ts",
+    "preprocessed/autofill_metadata_app.ts",
+    "preprocessed/js/feedback_browser_proxy.ts",
+    "preprocessed/js/feedback_regexes.ts",
+    "preprocessed/js/feedback_util.ts",
+    "preprocessed/js/questionnaire.ts",
+    "preprocessed/js/take_screenshot.ts",
+    "preprocessed/report_unsafe_site/icons.html.ts",
+    "preprocessed/report_unsafe_site/report_unsafe_site_app.ts",
+    "preprocessed/report_unsafe_site/report_unsafe_site_app.html.ts",
+    "preprocessed/system_info_app.html.ts",
+    "preprocessed/system_info_app.ts",
+    "preprocessed/app.css.ts",
+    "preprocessed/css/about_sys.css.ts",
+    "preprocessed/feedback_shared_styles.css.ts",
+    "preprocessed/feedback_shared_vars.css.ts",
+    "preprocessed/report_unsafe_site/report_unsafe_site_app.css.ts",
+    "preprocessed/report_unsafe_site.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../tools/typescript/definitions/chrome_send.d.ts",
+    "../../../../../../../tools/typescript/definitions/feedback_private.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../key_value_pair_viewer_shared/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}
