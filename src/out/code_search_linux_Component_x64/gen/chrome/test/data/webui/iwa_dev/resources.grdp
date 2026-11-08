@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_IWA_DEV_APP_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/iwa_dev/tsc/app_test.js" resource_path="iwa_dev/app_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_IWA_DEV_COMBOBOX_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/iwa_dev/tsc/combobox_test.js" resource_path="iwa_dev/combobox_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_IWA_DEV_INSTALL_DIALOG_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/iwa_dev/tsc/install_dialog_test.js" resource_path="iwa_dev/install_dialog_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_IWA_DEV_UPDATE_OPTIONS_DIALOG_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/iwa_dev/tsc/update_options_dialog_test.js" resource_path="iwa_dev/update_options_dialog_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

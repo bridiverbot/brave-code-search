@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_CHROME_APIS_CHROME_HISTOGRAMS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/chrome_apis/tsc/chrome_histograms_test.js" resource_path="chrome_apis/chrome_histograms_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_CHROME_APIS_CHROME_REQUEST_PRESENTATION_TIME_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/chrome_apis/tsc/chrome_request_presentation_time_test.js" resource_path="chrome_apis/chrome_request_presentation_time_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_CHROME_APIS_CHROME_TIMETICKS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/chrome_apis/tsc/chrome_timeticks_test.js" resource_path="chrome_apis/chrome_timeticks_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

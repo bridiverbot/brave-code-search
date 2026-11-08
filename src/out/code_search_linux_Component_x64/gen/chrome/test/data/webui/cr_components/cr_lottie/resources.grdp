@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_CR_COMPONENTS_CR_LOTTIE_CR_LOTTIE_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/cr_lottie/tsc/cr_lottie_test.js" resource_path="cr_components/cr_lottie/cr_lottie_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_CR_COMPONENTS_CR_LOTTIE_CR_LOTTIE_BLUE_JSON" file="${root_gen_dir}/chrome/test/data/webui/cr_components/cr_lottie/preprocessed/cr_lottie_blue.json" resource_path="cr_components/cr_lottie/cr_lottie_blue.json" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_WEBUI_CR_COMPONENTS_CR_LOTTIE_CR_LOTTIE_GREEN_JSON" file="${root_gen_dir}/chrome/test/data/webui/cr_components/cr_lottie/preprocessed/cr_lottie_green.json" resource_path="cr_components/cr_lottie/cr_lottie_green.json" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_WEBUI_CR_COMPONENTS_CR_LOTTIE_CR_LOTTIE_TOKENIZED_JSON" file="${root_gen_dir}/chrome/test/data/webui/cr_components/cr_lottie/preprocessed/cr_lottie_tokenized.json" resource_path="cr_components/cr_lottie/cr_lottie_tokenized.json" use_base_dir="false" type="BINDATA" />
+</grit-part>

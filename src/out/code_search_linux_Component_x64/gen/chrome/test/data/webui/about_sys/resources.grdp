@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_ABOUT_SYS_ABOUT_SYS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/about_sys/tsc/about_sys_test.js" resource_path="about_sys/about_sys_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_ABOUT_SYS_TEST_ABOUT_SYS_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/about_sys/tsc/test_about_sys_browser_proxy.js" resource_path="about_sys/test_about_sys_browser_proxy.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

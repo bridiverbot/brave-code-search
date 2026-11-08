@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_OMNIBOX_POPUP_AIM_APP_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_popup/tsc/aim_app_test.js" resource_path="omnibox_popup/aim_app_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_OMNIBOX_POPUP_APP_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_popup/tsc/app_test.js" resource_path="omnibox_popup/app_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_OMNIBOX_POPUP_FULL_APP_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_popup/tsc/full_app_test.js" resource_path="omnibox_popup/full_app_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_OMNIBOX_POPUP_OMNIBOX_COMPOSEBOX_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_popup/tsc/omnibox_composebox_test.js" resource_path="omnibox_popup/omnibox_composebox_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_OMNIBOX_POPUP_OMNIBOX_POPUP_CONTEXTUAL_ENTRYPOINT_BUTTON_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_popup/tsc/omnibox_popup_contextual_entrypoint_button_test.js" resource_path="omnibox_popup/omnibox_popup_contextual_entrypoint_button_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_OMNIBOX_POPUP_OMNIBOX_POPUP_CONTEXTUAL_ENTRYPOINT_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_popup/tsc/omnibox_popup_contextual_entrypoint_test.js" resource_path="omnibox_popup/omnibox_popup_contextual_entrypoint_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_OMNIBOX_POPUP_OMNIBOX_POPUP_SEARCHBOX_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_popup/tsc/omnibox_popup_searchbox_test.js" resource_path="omnibox_popup/omnibox_popup_searchbox_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_OMNIBOX_POPUP_TEST_SEARCHBOX_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_popup/tsc/test_searchbox_browser_proxy.js" resource_path="omnibox_popup/test_searchbox_browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_OMNIBOX_POPUP_TEXTFIELD_MODEL_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_popup/tsc/textfield_model_test.js" resource_path="omnibox_popup/textfield_model_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

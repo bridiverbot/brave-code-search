@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_NET_INTERNALS_MAIN_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/net_internals/main_test.js" resource_path="net_internals/main_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_NET_INTERNALS_TEST_UTIL_JS" file="${root_gen_dir}/chrome/test/data/webui/net_internals/test_util.js" resource_path="net_internals/test_util.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_NET_INTERNALS_DNS_VIEW_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/net_internals/dns_view_test.js" resource_path="net_internals/dns_view_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_NET_INTERNALS_DOMAIN_SECURITY_POLICY_VIEW_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/net_internals/domain_security_policy_view_test.js" resource_path="net_internals/domain_security_policy_view_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_NET_INTERNALS_PROXY_VIEW_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/net_internals/proxy_view_test.js" resource_path="net_internals/proxy_view_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_NET_INTERNALS_SHARED_DICTIONARY_VIEW_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/net_internals/shared_dictionary_view_test.js" resource_path="net_internals/shared_dictionary_view_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_NET_INTERNALS_UTILITIES_VIEW_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/net_internals/utilities_view_test.js" resource_path="net_internals/utilities_view_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_NET_INTERNALS_TASK_QUEUE_JS" file="${root_gen_dir}/chrome/test/data/webui/net_internals/task_queue.js" resource_path="net_internals/task_queue.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_SANDBOX_GPU_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/sandbox/tsc/gpu_test.js" resource_path="sandbox/gpu_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_SANDBOX_SANDBOX_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/sandbox/tsc/sandbox_test.js" resource_path="sandbox/sandbox_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
