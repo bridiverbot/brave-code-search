@@ -1,0 +1,9 @@
+{
+  "deps": [
+    "../../../../brave_rewards/core/mojom/engine.build_metadata",
+    "../../../../../../mojo/public/mojom/base/base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../../brave/components/services/bat_rewards/public/interfaces/rewards_engine_factory.mojom"
+  ]
+}

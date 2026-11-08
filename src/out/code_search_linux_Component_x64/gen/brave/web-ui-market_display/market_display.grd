@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/market_display_generated.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/market_display_generated_map.cc" type="resource_file_map_source" />
+    <output filename="grit/market_display_generated_map.h" type="resource_map_header" />
+    <output filename="market_display_generated.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_MARKET_DISPLAY_0301050332CA11EF075A138F20DC7CEB_SVG" file="${root_gen_dir}/brave/web-ui-market_display/0301050332ca11ef075a138f20dc7ceb.svg" resource_path="0301050332ca11ef075a138f20dc7ceb.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_17A4C5244A6FB88476C4C4EEE8872C71_SVG" file="${root_gen_dir}/brave/web-ui-market_display/17a4c5244a6fb88476c4c4eee8872c71.svg" resource_path="17a4c5244a6fb88476c4c4eee8872c71.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_2E6E54F4EFA91A36083687B398F7EBB1_SVG" file="${root_gen_dir}/brave/web-ui-market_display/2e6e54f4efa91a36083687b398f7ebb1.svg" resource_path="2e6e54f4efa91a36083687b398f7ebb1.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_4A7E8776ADDFFEE6D54C21409F489DED_SVG" file="${root_gen_dir}/brave/web-ui-market_display/4a7e8776addffee6d54c21409f489ded.svg" resource_path="4a7e8776addffee6d54c21409f489ded.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_6CECDADF4F8FDC82E5CF92BFBEFD3B6E_PNG" file="${root_gen_dir}/brave/web-ui-market_display/6cecdadf4f8fdc82e5cf92bfbefd3b6e.png" resource_path="6cecdadf4f8fdc82e5cf92bfbefd3b6e.png" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_6EB5281FD96203E3B40A1E3B7384FFDE_SVG" file="${root_gen_dir}/brave/web-ui-market_display/6eb5281fd96203e3b40a1e3b7384ffde.svg" resource_path="6eb5281fd96203e3b40a1e3b7384ffde.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_727A6143EE48A6C659AB2EDBD43EBB4D_SVG" file="${root_gen_dir}/brave/web-ui-market_display/727a6143ee48a6c659ab2edbd43ebb4d.svg" resource_path="727a6143ee48a6c659ab2edbd43ebb4d.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_81A2C3C1985E214EA391E9D7F35E79DC_SVG" file="${root_gen_dir}/brave/web-ui-market_display/81a2c3c1985e214ea391e9d7f35e79dc.svg" resource_path="81a2c3c1985e214ea391e9d7f35e79dc.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_992A7B3C6387CE6CFF58F81B95CE033F_SVG" file="${root_gen_dir}/brave/web-ui-market_display/992a7b3c6387ce6cff58f81b95ce033f.svg" resource_path="992a7b3c6387ce6cff58f81b95ce033f.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_D1958CF23711E876E26F738F6FC98CB7_SVG" file="${root_gen_dir}/brave/web-ui-market_display/d1958cf23711e876e26f738f6fc98cb7.svg" resource_path="d1958cf23711e876e26f738f6fc98cb7.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_D7B8476E423DD06B1CABA70F899580BC_PNG" file="${root_gen_dir}/brave/web-ui-market_display/d7b8476e423dd06b1caba70f899580bc.png" resource_path="d7b8476e423dd06b1caba70f899580bc.png" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_E17A96560BE8483591FC715FDFFE18BC_SVG" file="${root_gen_dir}/brave/web-ui-market_display/e17a96560be8483591fc715fdffe18bc.svg" resource_path="e17a96560be8483591fc715fdffe18bc.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_E378D6B1DD1922423881FC0F3AC2D981_SVG" file="${root_gen_dir}/brave/web-ui-market_display/e378d6b1dd1922423881fc0f3ac2d981.svg" resource_path="e378d6b1dd1922423881fc0f3ac2d981.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_E51794604087C35DA975671E0F215873_SVG" file="${root_gen_dir}/brave/web-ui-market_display/e51794604087c35da975671e0f215873.svg" resource_path="e51794604087c35da975671e0f215873.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_FE68147DB85CB7A34E05D133B9DF461B_SVG" file="${root_gen_dir}/brave/web-ui-market_display/fe68147db85cb7a34e05d133b9df461b.svg" resource_path="fe68147db85cb7a34e05d133b9df461b.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_MARKET_DISPLAY_MARKET_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-market_display/market.bundle.js" resource_path="market.bundle.js" use_base_dir="false" type="BINDATA" />
+    </includes>
+  </release>
+</grit>

@@ -1,0 +1,9 @@
+{
+  "deps": [
+    "../../../../../mojo/public/mojom/base/base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../brave/components/brave_rewards/core/mojom/rewards.mojom",
+    "../../../../../../../../brave/components/brave_rewards/core/mojom/rewards_database.mojom"
+  ]
+}

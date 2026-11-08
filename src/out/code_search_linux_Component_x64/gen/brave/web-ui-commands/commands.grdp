@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+  <include name="IDR_COMMANDS_COMMANDS_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-commands/commands.bundle.js" resource_path="commands.bundle.js" use_base_dir="false" type="BINDATA" />
+</grit-part>
