@@ -1,0 +1,70 @@
+# Copyright 2023 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../../../scripts/build/ninja/devtools_entrypoint.gni")
+import("../../../scripts/build/ninja/devtools_module.gni")
+import("../../../scripts/build/typescript/typescript.gni")
+import("../visibility.gni")
+
+devtools_foundation_module("breakpoints") {
+  sources = [ "BreakpointManager.ts" ]
+
+  ts_deps = [
+    "../../core/common:bundle",
+    "../../core/platform:bundle",
+    "../../core/root:bundle",
+    "../../core/sdk:bundle",
+    "../../core/text_utils:bundle",
+    "../../generated",
+    "../bindings:bundle",
+    "../formatter:bundle",
+    "../source_map_scopes:bundle",
+    "../workspace:bundle",
+  ]
+}
+
+devtools_entrypoint("bundle") {
+  entrypoint = "breakpoints.ts"
+
+  ts_deps = [ ":breakpoints" ]
+
+  visibility = [
+    ":*",
+    "../../entrypoints/main",
+    "../../foundation/*",
+    "../../models/ai_assistance/*",
+    "../../panels/changes/*",
+    "../../panels/settings/*",
+    "../../panels/sources/*",
+    "../../testing/*",
+    "../../ui/components/linkifier/*",
+    "../../ui/legacy/components/utils/*",
+    "../persistence/*",
+    "../workspace_diff/*",
+  ]
+
+  visibility += devtools_models_visibility
+}
+
+devtools_foundation_module("foundation_unittests") {
+  testonly = true
+
+  sources = [ "BreakpointManager.test.ts" ]
+
+  ts_deps = [
+    ":bundle",
+    "../../../extension-api",
+    "../../core/common:bundle",
+    "../../core/platform:bundle",
+    "../../core/root:bundle",
+    "../../core/sdk:bundle",
+    "../../core/text_utils:bundle",
+    "../../generated",
+    "../../testing",
+    "../bindings:bundle",
+    "../formatter:bundle",
+    "../persistence:bundle",
+    "../workspace:bundle",
+  ]
+}
