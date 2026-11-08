@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave ဖြတ်လမ်းလင့်ခ်";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, မူပိုင်ခွင့် 2026 The Brave ပြုစုသူများ။ မူပိုင်ခွင့်များ အားလုံးကို ချုပ်ထိန်းထားသည်။";
+NSAudioCaptureUsageDescription = "Brave အသုံးပြုခွင့်ရှိသည်နှင့် ဝဘ်ဆိုက်များသည် သင့်ထံခွင့်ပြုချက်တောင်းပါမည်။";
+NSBluetoothAlwaysUsageDescription = "Brave အသုံးပြုခွင့်ရှိသည်နှင့် ဝဘ်ဆိုက်များသည် သင့်ထံခွင့်ပြုချက်တောင်းပါမည်။";
+NSBluetoothPeripheralUsageDescription = "Brave အသုံးပြုခွင့်ရှိသည်နှင့် ဝဘ်ဆိုက်များသည် သင့်ထံခွင့်ပြုချက်တောင်းပါမည်။";
+NSCameraUsageDescription = "Brave အသုံးပြုခွင့်ရှိသည်နှင့် ဝဘ်ဆိုက်များသည် သင့်ထံခွင့်ပြုချက်တောင်းပါမည်။";
+NSHumanReadableCopyright = "မူပိုင်ခွင့် 2026 The Brave ပြုစုသူများ။ မူပိုင်ခွင့်များ အားလုံးကို ချုပ်ထိန်းထားသည်။";
+NSLocalNetworkUsageDescription = "ဤပြုလုပ်ချက်သည် သင့အား Brave မှအကြောင်းအရာများကို သင်၏ဒေသန္တရ ကိရိယာများ (ဥပမာ - ရုပ်မြင်သံကြား သို့မဟုတ် အသံခွန်း)သို့ မျှဝေရန် ခွင့်ပြုလိုက်ပါမည်။";
+NSLocationUsageDescription = "Brave အသုံးပြုခွင့်ရှိသည်နှင့် ဝဘ်ဆိုက်များသည် သင့်ထံခွင့်ပြုချက်တောင်းပါမည်။";
+NSMicrophoneUsageDescription = "Brave အသုံးပြုခွင့်ရှိသည်နှင့် ဝဘ်ဆိုက်များသည် သင့်ထံခွင့်ပြုချက်တောင်းပါမည်။";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Brave အသုံးပြုခွင့်ရှိသည်နှင့် ဝဘ်ဆိုက်များသည် သင့်ထံခွင့်ပြုချက်တောင်းပါမည်။";

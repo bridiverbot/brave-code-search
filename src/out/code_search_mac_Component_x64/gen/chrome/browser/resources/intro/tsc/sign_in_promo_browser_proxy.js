@@ -1,0 +1,25 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { SignInPromoPageCallbackRouter, SignInPromoPageHandlerFactory, SignInPromoPageHandlerRemote } from './sign_in_promo.mojom-webui.js';
+export class SignInPromoBrowserProxyImpl {
+    callbackRouter;
+    handler;
+    constructor() {
+        this.callbackRouter = new SignInPromoPageCallbackRouter();
+        this.handler = new SignInPromoPageHandlerRemote();
+        const factory = SignInPromoPageHandlerFactory.getRemote();
+        factory.createSignInPromoPageHandler(this.callbackRouter.$.bindNewPipeAndPassRemote(), this.handler
+            .$.bindNewPipeAndPassReceiver());
+    }
+    static getInstance() {
+        return instance || (instance = new SignInPromoBrowserProxyImpl());
+    }
+    static setInstance(proxy) {
+        instance = proxy;
+    }
+    matchMedia(query) {
+        return window.matchMedia(query);
+    }
+}
+let instance = null;

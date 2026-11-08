@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "የBrave አቋራጭ";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, የቅጂ መብት 2026 የBrave ደራሲያን። ሁሉም መብቶች የተጠበቁ ናቸው።";
+NSAudioCaptureUsageDescription = "አንዴ Brave መዳረሻ ከኖረው በኋላ ድር ጣቢያዎች እርስዎን መዳረሻ መጠየቅ ይችላሉ።";
+NSBluetoothAlwaysUsageDescription = "አንዴ Brave መዳረሻ ከኖረው በኋላ ድር ጣቢያዎች እርስዎን መዳረሻ መጠየቅ ይችላሉ።";
+NSBluetoothPeripheralUsageDescription = "አንዴ Brave መዳረሻ ከኖረው በኋላ ድር ጣቢያዎች እርስዎን መዳረሻ መጠየቅ ይችላሉ።";
+NSCameraUsageDescription = "አንዴ Brave መዳረሻ ከኖረው በኋላ ድር ጣቢያዎች እርስዎን መዳረሻ መጠየቅ ይችላሉ።";
+NSHumanReadableCopyright = "የቅጂ መብት 2026 የBrave ደራሲያን። ሁሉም መብቶች የተጠበቁ ናቸው።";
+NSLocalNetworkUsageDescription = "ይህ Brave ከእርስዎ የተቀመጠ устройство ለምሳሌ ቴሌቪዥን ወይም ስፒከር ውስጥ ይዘት ለመጋራት ይፈቅድልዎታል።";
+NSLocationUsageDescription = "አንዴ Brave መዳረሻ ከኖረው በኋላ ድር ጣቢያዎች እርስዎን መዳረሻ መጠየቅ ይችላሉ።";
+NSMicrophoneUsageDescription = "አንዴ Brave መዳረሻ ከኖረው በኋላ ድር ጣቢያዎች እርስዎን መዳረሻ መጠየቅ ይችላሉ።";
+NSWebBrowserPublicKeyCredentialUsageDescription = "አንዴ Brave መዳረሻ ከኖረው በኋላ ድር ጣቢያዎች እርስዎን መዳረሻ መጠየቅ ይችላሉ።";

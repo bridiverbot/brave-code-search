@@ -1,0 +1,45 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { assert } from 'chrome://resources/js/assert.js';
+import { PrefServiceObserverMixinLit } from './pref_service_observer_mixin_lit.js';
+export const PrefKeyObserverMixinLit = (superClass) => {
+    const superClassBase = PrefServiceObserverMixinLit(superClass);
+    class PrefKeyObserverMixinLit extends superClassBase {
+        static get properties() {
+            return {
+                prefKey: { type: String },
+                pref: { type: Object },
+            };
+        }
+        #prefKey_accessor_storage = '';
+        get prefKey() { return this.#prefKey_accessor_storage; }
+        set prefKey(value) { this.#prefKey_accessor_storage = value; }
+        #pref_accessor_storage = undefined;
+        get pref() { return this.#pref_accessor_storage; }
+        set pref(value) { this.#pref_accessor_storage = value; }
+        observedPref_ = undefined;
+        willUpdate(changedProperties) {
+            super.willUpdate(changedProperties);
+            if (changedProperties.has('prefKey')) {
+                this.onPrefKeyChanged_(this.prefKey, changedProperties.get('prefKey'));
+            }
+            if (changedProperties.has('pref')) {
+                // Disallow setting `pref` directly instead of via `prefKey`.
+                assert(this.pref === this.observedPref_);
+            }
+        }
+        onPrefKeyChanged_(newKey, oldKey) {
+            if (newKey === '' && oldKey === undefined) {
+                return;
+            }
+            // Disallow re-assigning the prefKey after initial assignment.
+            assert(!oldKey);
+            this.addPrefObserver(newKey, pref => {
+                this.observedPref_ = pref;
+                this.pref = pref;
+            });
+        }
+    }
+    return PrefKeyObserverMixinLit;
+};

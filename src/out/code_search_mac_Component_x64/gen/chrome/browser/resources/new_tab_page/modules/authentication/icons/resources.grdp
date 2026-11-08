@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_AUTHENTICATION_MICROSOFT_AUTH_LIGHT_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/modules/authentication/icons/microsoft_auth_light.svg" resource_path="modules/authentication/icons/microsoft_auth_light.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_AUTHENTICATION_MICROSOFT_AUTH_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/modules/authentication/icons/microsoft_auth_dark.svg" resource_path="modules/authentication/icons/microsoft_auth_dark.svg" use_base_dir="false" type="BINDATA" />
+</grit-part>

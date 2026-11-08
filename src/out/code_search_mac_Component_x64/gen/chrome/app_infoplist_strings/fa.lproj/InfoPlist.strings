@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "‏میان‌بر Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, ‏حق نشر 2026 نویسندگان Brave. کلیه حقوق محفوظ است.";
+NSAudioCaptureUsageDescription = "‏وقتی Brave دسترسی داشته باشد، وب‌سایت‌ها می‌توانند مجوز دسترسی درخواست کنند.";
+NSBluetoothAlwaysUsageDescription = "‏وقتی Brave دسترسی داشته باشد، وب‌سایت‌ها می‌توانند مجوز دسترسی درخواست کنند.";
+NSBluetoothPeripheralUsageDescription = "‏وقتی Brave دسترسی داشته باشد، وب‌سایت‌ها می‌توانند مجوز دسترسی درخواست کنند.";
+NSCameraUsageDescription = "‏وقتی Brave دسترسی داشته باشد، وب‌سایت‌ها می‌توانند مجوز دسترسی درخواست کنند.";
+NSHumanReadableCopyright = "‏حق نشر 2026 نویسندگان Brave. کلیه حقوق محفوظ است.";
+NSLocalNetworkUsageDescription = "این امکان را به شما می‌دهد تا محتوا از Brave را به دستگاه‌های محلی خود، مثل تلویزیون یا بلندگو، به اشتراک بگذارید.";
+NSLocationUsageDescription = "‏وقتی Brave دسترسی داشته باشد، وب‌سایت‌ها می‌توانند مجوز دسترسی درخواست کنند.";
+NSMicrophoneUsageDescription = "‏وقتی Brave دسترسی داشته باشد، وب‌سایت‌ها می‌توانند مجوز دسترسی درخواست کنند.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "‏وقتی Brave دسترسی داشته باشد، وب‌سایت‌ها می‌توانند مجوز دسترسی درخواست کنند.";

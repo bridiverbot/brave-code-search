@@ -1,0 +1,4 @@
+// Copyright 2023 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import"//resources/cr_elements/cr_shared_vars.css.js";import{CrLitElement}from"//resources/lit/v3_0/lit.rollup.js";import{getCss}from"./sp_footer.css.js";import{getHtml}from"./sp_footer.html.js";export class SpFooterElement extends CrLitElement{static get is(){return"sp-footer"}static get styles(){return getCss()}render(){return getHtml.bind(this)()}static get properties(){return{pinned:{type:Boolean,reflect:true}}}#pinned_accessor_storage=false;get pinned(){return this.#pinned_accessor_storage}set pinned(value){this.#pinned_accessor_storage=value}firstUpdated(){this.setAttribute("role","toolbar")}}customElements.define(SpFooterElement.is,SpFooterElement);

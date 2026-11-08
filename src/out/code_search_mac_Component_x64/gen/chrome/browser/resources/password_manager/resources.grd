@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/password_manager_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/password_manager_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/password_manager_resources_map.h"
+            type="resource_map_header" />
+    <output filename="password_manager_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_CHECKUP_RESULT_BANNER_COMPROMISED_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/checkup_result_banner_compromised.svg" resource_path="images/checkup_result_banner_compromised.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_CHECKUP_RESULT_BANNER_COMPROMISED_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/checkup_result_banner_compromised_dark.svg" resource_path="images/checkup_result_banner_compromised_dark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_CHECKUP_RESULT_BANNER_ERROR_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/checkup_result_banner_error.svg" resource_path="images/checkup_result_banner_error.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_CHECKUP_RESULT_BANNER_ERROR_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/checkup_result_banner_error_dark.svg" resource_path="images/checkup_result_banner_error_dark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_CHECKUP_RESULT_BANNER_OK_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/checkup_result_banner_ok.svg" resource_path="images/checkup_result_banner_ok.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_CHECKUP_RESULT_BANNER_OK_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/checkup_result_banner_ok_dark.svg" resource_path="images/checkup_result_banner_ok_dark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_CHECKUP_RESULT_BANNER_RUNNING_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/checkup_result_banner_running.svg" resource_path="images/checkup_result_banner_running.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_CHECKUP_RESULT_BANNER_RUNNING_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/checkup_result_banner_running_dark.svg" resource_path="images/checkup_result_banner_running_dark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_PASSWORD_MANAGER_LOGO_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/password_manager_logo.svg" resource_path="images/password_manager_logo.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_PASSWORD_SHARING_FAMILY_BANNER_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/password_sharing_family_banner.svg" resource_path="images/password_sharing_family_banner.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_PASSWORD_SHARING_FAMILY_BANNER_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/password_sharing_family_banner_dark.svg" resource_path="images/password_sharing_family_banner_dark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_PASSWORD_SHARING_PROGRESS_BAR_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/password_sharing_progress_bar.svg" resource_path="images/password_sharing_progress_bar.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_PASSWORD_SHARING_SECURE_LOCK_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/password_sharing_secure_lock.svg" resource_path="images/password_sharing_secure_lock.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_RELAUNCH_CHROME_PROMO_DARK_NON_BRANDED_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/relaunch_chrome_promo_dark_non_branded.svg" resource_path="images/relaunch_chrome_promo_dark_non_branded.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_IMAGES_RELAUNCH_CHROME_PROMO_NON_BRANDED_SVG" file="${root_src_dir}/chrome/browser/resources/password_manager/images/relaunch_chrome_promo_non_branded.svg" resource_path="images/relaunch_chrome_promo_non_branded.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_PASSWORD_MANAGER_HTML" file="${root_gen_dir}/chrome/browser/resources/password_manager/preprocessed/password_manager.html" resource_path="password_manager.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PASSWORD_MANAGER_MANIFEST_WEBMANIFEST" file="${root_gen_dir}/chrome/browser/resources/password_manager/preprocessed/manifest.webmanifest" resource_path="manifest.webmanifest" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PASSWORD_MANAGER_PASSWORD_MANAGER_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/password_manager/minified/password_manager.rollup.js" resource_path="password_manager.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

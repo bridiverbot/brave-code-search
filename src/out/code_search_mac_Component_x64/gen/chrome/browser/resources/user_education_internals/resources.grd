@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/user_education_internals_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/user_education_internals_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/user_education_internals_resources_map.h"
+            type="resource_map_header" />
+    <output filename="user_education_internals_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_USER_EDUCATION_INTERNALS_INDEX_HTML" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/preprocessed/index.html" resource_path="index.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_INTERNALS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_internals.html.js" resource_path="user_education_internals.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_INTERNALS_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_internals.js" resource_path="user_education_internals.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_INTERNALS_CARD_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_internals_card.html.js" resource_path="user_education_internals_card.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_INTERNALS_CARD_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_internals_card.js" resource_path="user_education_internals_card.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_WHATS_NEW_INTERNALS_CARD_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_whats_new_internals_card.html.js" resource_path="user_education_whats_new_internals_card.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_WHATS_NEW_INTERNALS_CARD_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_whats_new_internals_card.js" resource_path="user_education_whats_new_internals_card.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_INTERNALS_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_internals.css.js" resource_path="user_education_internals.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_INTERNALS_CARD_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_internals_card.css.js" resource_path="user_education_internals_card.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_WHATS_NEW_INTERNALS_CARD_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_whats_new_internals_card.css.js" resource_path="user_education_whats_new_internals_card.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_USER_EDUCATION_INTERNALS_USER_EDUCATION_INTERNALS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/user_education_internals/minified/user_education_internals.mojom-webui.js" resource_path="user_education_internals.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

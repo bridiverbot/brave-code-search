@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/new_tab_page_instant_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/new_tab_page_instant_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/new_tab_page_instant_resources_map.h"
+            type="resource_map_header" />
+    <output filename="new_tab_page_instant_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_NEW_TAB_PAGE_INSTANT_MOST_VISITED_TITLE_CSS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page_instant/preprocessed/most_visited_title.css" resource_path="most_visited_title.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NEW_TAB_PAGE_INSTANT_MOST_VISITED_TITLE_HTML" file="${root_gen_dir}/chrome/browser/resources/new_tab_page_instant/preprocessed/most_visited_title.html" resource_path="most_visited_title.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NEW_TAB_PAGE_INSTANT_MOST_VISITED_TITLE_JS" file="${root_gen_dir}/chrome/browser/resources/new_tab_page_instant/minified/most_visited_title.js" resource_path="most_visited_title.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

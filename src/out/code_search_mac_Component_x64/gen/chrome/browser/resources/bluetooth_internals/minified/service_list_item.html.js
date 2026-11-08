@@ -1,0 +1,14 @@
+import{getTrustedHTML}from"//resources/js/static_types.js";export function getTemplate(){return getTrustedHTML`<!--_html_template_start_--><style>:host{--brief-content-background-color:var(--primary-color)}.info-container>h4,.info-container>object-fieldset{margin:1em}h3{font-weight:normal;line-height:1;user-select:none}</style>
+<expandable-list-item>
+  <div slot="brief-content">
+    <div>Service:</div>
+    <div class="header-value"></div>
+  </div>
+  <div slot="expanded-content" class="info-container">
+    <h4>Service Info</h4>
+    <object-fieldset hidden show-all></object-fieldset>
+    <h4>Characteristics</h4>
+    <characteristic-list></characteristic-list>
+  </div>
+</expandable-list-item>
+<!--_html_template_end_-->`}

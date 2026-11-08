@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Кратенка за Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Авторски права 2026 на Авторите на Brave. Сите права се задржани.";
+NSAudioCaptureUsageDescription = "Ако Brave има пристап, тогаш и веб-сајтовите ќе може да ви бараат пристап.";
+NSBluetoothAlwaysUsageDescription = "Ако Brave има пристап, тогаш и веб-сајтовите ќе може да ви бараат пристап.";
+NSBluetoothPeripheralUsageDescription = "Ако Brave има пристап, тогаш и веб-сајтовите ќе може да ви бараат пристап.";
+NSCameraUsageDescription = "Ако Brave има пристап, тогаш и веб-сајтовите ќе може да ви бараат пристап.";
+NSHumanReadableCopyright = "Авторски права 2026 на Авторите на Brave. Сите права се задржани.";
+NSLocalNetworkUsageDescription = "Ово ќе ви овозможи да делите содржина од Brave на вашите локални уреди, како што се ТВ или звучник.";
+NSLocationUsageDescription = "Ако Brave има пристап, тогаш и веб-сајтовите ќе може да ви бараат пристап.";
+NSMicrophoneUsageDescription = "Ако Brave има пристап, тогаш и веб-сајтовите ќе може да ви бараат пристап.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Ако Brave има пристап, тогаш и веб-сајтовите ќе може да ви бараат пристап.";

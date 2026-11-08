@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/webui_browser_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/webui_browser_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/webui_browser_resources_map.h"
+            type="resource_map_header" />
+    <output filename="webui_browser_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_WEBUI_BROWSER_WEBUI_BROWSER_HTML" file="${root_gen_dir}/chrome/browser/resources/webui_browser/preprocessed/webui_browser.html" resource_path="webui_browser.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/app.html.js" resource_path="app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_APP_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARK_BAR_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmark_bar.html.js" resource_path="bookmark_bar.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARK_BAR_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmark_bar.js" resource_path="bookmark_bar.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARK_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmark.html.js" resource_path="bookmark.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARK_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmark.js" resource_path="bookmark.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARKS_BOOKMARK_TREE_NODE_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmarks/bookmark_tree_node.html.js" resource_path="bookmarks/bookmark_tree_node.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARKS_BOOKMARK_TREE_NODE_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmarks/bookmark_tree_node.js" resource_path="bookmarks/bookmark_tree_node.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARKS_BOOKMARKS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmarks/bookmarks.html.js" resource_path="bookmarks/bookmarks.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARKS_BOOKMARKS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmarks/bookmarks.js" resource_path="bookmarks/bookmarks.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_CONTENT_REGION_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/content_region.js" resource_path="content_region.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_EXTENSION_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/extension.html.js" resource_path="extension.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_EXTENSION_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/extension.js" resource_path="extension.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_EXTENSIONS_BAR_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/extensions_bar.js" resource_path="extensions_bar.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_ICONS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/icons.html.js" resource_path="icons.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_SIDE_PANEL_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/side_panel.html.js" resource_path="side_panel.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_SIDE_PANEL_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/side_panel.js" resource_path="side_panel.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_EVENTS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/events.js" resource_path="tab_strip/events.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_ITEMS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/items.js" resource_path="tab_strip/items.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_DRAG_DELEGATE_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab_drag_delegate.js" resource_path="tab_strip/tab_drag_delegate.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_DRAG_HOST_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab_drag_host.js" resource_path="tab_strip/tab_drag_host.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab.html.js" resource_path="tab_strip/tab.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab.js" resource_path="tab_strip/tab.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_GROUP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab_group.html.js" resource_path="tab_strip/tab_group.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_GROUP_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab_group.js" resource_path="tab_strip/tab_group.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_STRIP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab_strip.html.js" resource_path="tab_strip/tab_strip.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_STRIP_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab_strip.js" resource_path="tab_strip/tab_strip.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_WEBUI_BROWSER_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/webui_browser.js" resource_path="webui_browser.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_WEBUI_BROWSER_SEARCHBOX_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/webui_browser_searchbox.html.js" resource_path="webui_browser_searchbox.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_WEBUI_BROWSER_SEARCHBOX_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/webui_browser_searchbox.js" resource_path="webui_browser_searchbox.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_WEBVIEW_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/webview.html.js" resource_path="webview.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_WEBVIEW_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/webview.js" resource_path="webview.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/app.css.js" resource_path="app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARK_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmark.css.js" resource_path="bookmark.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARKS_BOOKMARK_TREE_NODE_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmarks/bookmark_tree_node.css.js" resource_path="bookmarks/bookmark_tree_node.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARKS_BOOKMARKS_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmarks/bookmarks.css.js" resource_path="bookmarks/bookmarks.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_CONTENT_REGION_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/content_region.css.js" resource_path="content_region.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_EXTENSION_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/extension.css.js" resource_path="extension.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_EXTENSIONS_BAR_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/extensions_bar.css.js" resource_path="extensions_bar.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_SIDE_PANEL_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/side_panel.css.js" resource_path="side_panel.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab.css.js" resource_path="tab_strip/tab.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_GROUP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab_group.css.js" resource_path="tab_strip/tab_group.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_TAB_STRIP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip/tab_strip.css.js" resource_path="tab_strip/tab_strip.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_WEBUI_BROWSER_SEARCHBOX_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/webui_browser_searchbox.css.js" resource_path="webui_browser_searchbox.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_WEBVIEW_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/webview.css.js" resource_path="webview.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TABS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tabs.mojom-webui.js" resource_path="tabs.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARK_BAR_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmark_bar.mojom-webui.js" resource_path="bookmark_bar.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BROWSER_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/browser.mojom-webui.js" resource_path="browser.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_BOOKMARKS_API_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/bookmarks_api.mojom-webui.js" resource_path="bookmarks_api.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_NODE_ID_CONVERTER_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/node_id_converter.js" resource_path="node_id_converter.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_API_TYPES_MOJOM_CONVERTERS_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip_api_types.mojom-converters.js" resource_path="tab_strip_api_types.mojom-converters.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_STRIP_API_TYPES_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_strip_api_types.mojom-webui.js" resource_path="tab_strip_api_types.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_DRAG_API_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_drag_api.mojom-webui.js" resource_path="tab_drag_api.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_TAB_GROUP_TYPES_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/webui_browser/minified/tab_group_types.mojom-webui.js" resource_path="tab_group_types.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/net_internals_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/net_internals_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/net_internals_resources_map.h"
+            type="resource_map_header" />
+    <output filename="net_internals_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_NET_INTERNALS_INDEX_HTML" file="${root_gen_dir}/chrome/browser/resources/net_internals/preprocessed/index.html" resource_path="index.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_MAIN_CSS" file="${root_gen_dir}/chrome/browser/resources/net_internals/preprocessed/main.css" resource_path="main.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NET_INTERNALS_BROWSER_BRIDGE_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/browser_bridge.js" resource_path="browser_bridge.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_DNS_VIEW_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/dns_view.js" resource_path="dns_view.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_DOMAIN_SECURITY_POLICY_VIEW_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/domain_security_policy_view.js" resource_path="domain_security_policy_view.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_EVENTS_VIEW_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/events_view.js" resource_path="events_view.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_INDEX_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/index.js" resource_path="index.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_MAIN_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/main.js" resource_path="main.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_PROXY_VIEW_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/proxy_view.js" resource_path="proxy_view.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_SHARED_DICTIONARY_VIEW_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/shared_dictionary_view.js" resource_path="shared_dictionary_view.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_SOCKETS_VIEW_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/sockets_view.js" resource_path="sockets_view.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_TAB_SWITCHER_VIEW_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/tab_switcher_view.js" resource_path="tab_switcher_view.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_UTILITIES_VIEW_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/utilities_view.js" resource_path="utilities_view.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_UTIL_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/util.js" resource_path="util.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_NET_INTERNALS_VIEW_JS" file="${root_gen_dir}/chrome/browser/resources/net_internals/minified/view.js" resource_path="view.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

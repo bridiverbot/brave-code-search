@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/extensions_zero_state_promo_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/extensions_zero_state_promo_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/extensions_zero_state_promo_resources_map.h"
+            type="resource_map_header" />
+    <output filename="extensions_zero_state_promo_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_EXTENSIONS_ZERO_STATE_PROMO_ZERO_STATE_PROMO_HTML" file="${root_gen_dir}/chrome/browser/resources/extensions_zero_state_promo/preprocessed/zero_state_promo.html" resource_path="zero_state_promo.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_EXTENSIONS_ZERO_STATE_PROMO_ZERO_STATE_PROMO_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/extensions_zero_state_promo/minified/zero_state_promo_app.html.js" resource_path="zero_state_promo_app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_EXTENSIONS_ZERO_STATE_PROMO_ZERO_STATE_PROMO_APP_JS" file="${root_gen_dir}/chrome/browser/resources/extensions_zero_state_promo/minified/zero_state_promo_app.js" resource_path="zero_state_promo_app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_EXTENSIONS_ZERO_STATE_PROMO_ICONS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/extensions_zero_state_promo/minified/icons.html.js" resource_path="icons.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_EXTENSIONS_ZERO_STATE_PROMO_ZERO_STATE_PROMO_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/extensions_zero_state_promo/minified/zero_state_promo_app.css.js" resource_path="zero_state_promo_app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_EXTENSIONS_ZERO_STATE_PROMO_ZERO_STATE_PROMO_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/extensions_zero_state_promo/minified/zero_state_promo.mojom-webui.js" resource_path="zero_state_promo.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_EXTENSIONS_ZERO_STATE_PROMO_CUSTOM_HELP_BUBBLE_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/extensions_zero_state_promo/minified/custom_help_bubble.mojom-webui.js" resource_path="custom_help_bubble.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

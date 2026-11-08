@@ -1,0 +1,9 @@
+import {css, CSSResultGroup} from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+import {getCss as getCrSharedStyleLit} from 'chrome://resources/cr_elements/cr_shared_style_lit.css.js';
+import {getCss as getSupportToolSharedLit} from './support_tool_shared_lit.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[getCrSharedStyleLit(),getSupportToolSharedLit()], css`#pii-warning-text{width:520px}#radio-group{width:520px}cr-radio-button{color:var(--cr-title-text-color);padding:8px;padding-inline-start:0}#privacy-disclaimer{color:var(--cr-title-text-color);margin-inline-start:24px;margin-top:-16px}#detected-pii-container{margin-inline-start:36px;width:520px}.detected-pii-item{max-width:520px;padding-bottom:8px;padding-top:8px}cr-expand-button{height:var(--cr-expand-button-icon-size,20px)}.pii-item-collapse{color:var(--cr-title-text-color);margin-bottom:4px;margin-inline-start:36px;margin-top:4px}.pii-details{border:none;border-radius:var(--cr-card-border-radius,4px);padding-bottom:2px;padding-top:2px}cr-button{margin-inline-start:12px}`]);
+}

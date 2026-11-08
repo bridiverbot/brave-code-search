@@ -1,0 +1,25 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_button/cr_button.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './filter_dialog_footer.css.js';
+import { getHtml } from './filter_dialog_footer.html.js';
+export class FilterDialogFooterElement extends CrLitElement {
+    static get is() {
+        return 'filter-dialog-footer';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    onCancelClick() {
+        this.fire('cancel-click');
+    }
+    onApplyClick() {
+        this.fire('apply-click');
+    }
+}
+customElements.define(FilterDialogFooterElement.is, FilterDialogFooterElement);

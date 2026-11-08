@@ -1,0 +1,103 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import '//resources/cr_elements/icons.html.js';
+import './topic_collection_carousel.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './topic_summary_panel.css.js';
+import { getHtml } from './topic_summary_panel.html.js';
+import { getOpenableUrls, getTopicQueries, isTopicsFishfoodFeedbackEnabled, setCollectionFeedback } from './topic_utils.js';
+// The "Summary" tab of the topic details page: the topic's summary, then a
+// carousel per collection. Its "Open related tabs" button fires an
+// `open-related-tabs` event; the page owns opening the tabs.
+//
+// When fishfood feedback is enabled, it also lists the topic's continuation
+// queries for rating, and fires `query-feedbacks-change` when one is rated,
+// and `collection-feedbacks-change` when a collection is rated or one of its
+// pages flagged; the page owns storing the feedback.
+// TODO(crbug.com/558572977): Use internationalized strings once GRD strings
+// are added.
+export class TopicSummaryPanelElement extends CrLitElement {
+    static get is() {
+        return 'topic-summary-panel';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            topic: { type: Object },
+            // The stored fishfood feedback on `topic`, if any.
+            feedback: { type: Object },
+            feedbackEnabled_: { type: Boolean },
+            queries_: { type: Array },
+        };
+    }
+    #topic_accessor_storage = null;
+    get topic() { return this.#topic_accessor_storage; }
+    set topic(value) { this.#topic_accessor_storage = value; }
+    #feedback_accessor_storage = null;
+    get feedback() { return this.#feedback_accessor_storage; }
+    set feedback(value) { this.#feedback_accessor_storage = value; }
+    #feedbackEnabled__accessor_storage = isTopicsFishfoodFeedbackEnabled();
+    get feedbackEnabled_() { return this.#feedbackEnabled__accessor_storage; }
+    set feedbackEnabled_(value) { this.#feedbackEnabled__accessor_storage = value; }
+    #queries__accessor_storage = [];
+    // The queries to rate. Derived from `topic`.
+    get queries_() { return this.#queries__accessor_storage; }
+    set queries_(value) { this.#queries__accessor_storage = value; }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('topic')) {
+            this.queries_ = this.topic ? getTopicQueries(this.topic) : [];
+        }
+    }
+    // Collections are identified by title, which stays meaningful if the
+    // backend reorders them.
+    getCollectionFeedback_(collection) {
+        return this.feedback?.collectionFeedbacks.find(feedback => feedback.title === collection.title) ||
+            null;
+    }
+    onCollectionFeedbackChange_(e) {
+        const collectionFeedbacks = setCollectionFeedback(this.feedback?.collectionFeedbacks || [], e.detail.feedback);
+        this.fire('collection-feedbacks-change', { collectionFeedbacks });
+    }
+    hasOpenableUrls_() {
+        return !!this.topic && getOpenableUrls(this.topic).length > 0;
+    }
+    onOpenRelatedTabsClick_() {
+        this.fire('open-related-tabs');
+    }
+    // Whether the query at `index` in `topic.continuationQueries` is rated
+    // `liked`.
+    isQueryRated_(index, liked) {
+        return !!this.feedback?.queryFeedbacks.some(rated => rated.index === index && rated.liked === liked);
+    }
+    getQueryAriaLabel_(prefix, query) {
+        return `${prefix}: ${query.text}`;
+    }
+    onQueryRatingClick_(e) {
+        const target = e.currentTarget;
+        const index = Number(target.dataset['index']);
+        const liked = target.dataset['liked'] === 'true';
+        const query = this.queries_.find(query => query.index === index);
+        if (!query) {
+            return;
+        }
+        // Clicking the selected rating again clears it. Only rated queries are
+        // stored.
+        const others = (this.feedback?.queryFeedbacks ||
+            []).filter(rated => rated.index !== index);
+        const queryFeedbacks = this.isQueryRated_(index, liked) ? others : [
+            ...others,
+            { index, queryText: query.text, liked },
+        ].sort((a, b) => a.index - b.index);
+        this.fire('query-feedbacks-change', { queryFeedbacks });
+    }
+}
+customElements.define(TopicSummaryPanelElement.is, TopicSummaryPanelElement);

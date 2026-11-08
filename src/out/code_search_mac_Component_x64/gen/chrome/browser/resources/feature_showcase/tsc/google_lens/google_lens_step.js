@@ -1,0 +1,39 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import 'chrome://resources/cr_elements/cr_button/cr_button.js';
+import '../feature_showcase_step.js';
+import { CrLitElement } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { browserProxyFactory } from '../google_lens.mojom-webui.js';
+import { getCss } from './google_lens_step.css.js';
+import { getHtml } from './google_lens_step.html.js';
+export class FeatureShowcaseGoogleLensStepElement extends CrLitElement {
+    static get is() {
+        return 'feature-showcase-google-lens-step';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            buttonsDisabled: { type: Boolean },
+        };
+    }
+    #buttonsDisabled_accessor_storage = false;
+    get buttonsDisabled() { return this.#buttonsDisabled_accessor_storage; }
+    set buttonsDisabled(value) { this.#buttonsDisabled_accessor_storage = value; }
+    onConfirmClick_() {
+        this.buttonsDisabled = true;
+        browserProxyFactory.getInstance().handler.enableGoogleLens();
+        this.fire('step-completed');
+    }
+    onSkipClick_() {
+        this.buttonsDisabled = true;
+        browserProxyFactory.getInstance().handler.skipGoogleLens();
+        this.fire('step-completed');
+    }
+}
+customElements.define(FeatureShowcaseGoogleLensStepElement.is, FeatureShowcaseGoogleLensStepElement);

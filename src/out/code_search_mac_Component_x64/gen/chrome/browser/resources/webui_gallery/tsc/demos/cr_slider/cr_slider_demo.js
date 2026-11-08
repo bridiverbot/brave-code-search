@@ -1,0 +1,70 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_checkbox/cr_checkbox.js';
+import '//resources/cr_elements/cr_slider/cr_slider.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './cr_slider_demo.css.js';
+import { getHtml } from './cr_slider_demo.html.js';
+function createTicks(min, increment, steps) {
+    const ticks = [];
+    for (let i = min; i <= steps; i++) {
+        const tickValue = min + (i * increment);
+        ticks.push({
+            label: `${tickValue}`,
+            value: tickValue,
+        });
+    }
+    return ticks;
+}
+export class CrSliderDemoElement extends CrLitElement {
+    static get is() {
+        return 'cr-slider-demo';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            basicValue_: { type: Number },
+            showMarkers_: { type: Boolean },
+            tickedValue_: { type: Number },
+            ticks_: { type: Array },
+        };
+    }
+    #basicValue__accessor_storage = 5;
+    get basicValue_() { return this.#basicValue__accessor_storage; }
+    set basicValue_(value) { this.#basicValue__accessor_storage = value; }
+    #showMarkers__accessor_storage = false;
+    get showMarkers_() { return this.#showMarkers__accessor_storage; }
+    set showMarkers_(value) { this.#showMarkers__accessor_storage = value; }
+    #tickedValue__accessor_storage = 0;
+    get tickedValue_() { return this.#tickedValue__accessor_storage; }
+    set tickedValue_(value) { this.#tickedValue__accessor_storage = value; }
+    #ticks__accessor_storage = createTicks(0, 5, 5);
+    get ticks_() { return this.#ticks__accessor_storage; }
+    set ticks_(value) { this.#ticks__accessor_storage = value; }
+    getMarkerCount_() {
+        if (!this.showMarkers_) {
+            return 0;
+        }
+        return this.ticks_.length;
+    }
+    getTickValue_() {
+        return this.ticks_[this.tickedValue_].value;
+    }
+    onBasicCrSliderValueChanged_() {
+        this.basicValue_ = this.$.basicSlider.value;
+    }
+    onTickedCrSliderValueChanged_() {
+        this.tickedValue_ = this.$.tickedSlider.value;
+    }
+    onShowMarkersCheckedChanged_(e) {
+        this.showMarkers_ = e.detail.value;
+    }
+}
+export const tagName = CrSliderDemoElement.is;
+customElements.define(CrSliderDemoElement.is, CrSliderDemoElement);

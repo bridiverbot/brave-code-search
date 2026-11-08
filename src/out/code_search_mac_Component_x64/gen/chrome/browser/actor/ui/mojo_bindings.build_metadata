@@ -1,0 +1,10 @@
+{
+  "deps": [
+    "../../../../skia/public/mojom/mojom.build_metadata",
+    "../../../../ui/gfx/geometry/mojom/mojom.build_metadata",
+    "../../../../mojo/public/mojom/base/base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../chrome/browser/actor/ui/actor_overlay.mojom"
+  ]
+}

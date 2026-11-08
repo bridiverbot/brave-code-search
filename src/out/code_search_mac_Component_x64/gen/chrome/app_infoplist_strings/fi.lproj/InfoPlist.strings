@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave-pikanäppäin";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 Brave Software Inc. Kaikki oikeudet pidätetään.";
+NSAudioCaptureUsageDescription = "Kun Braveilla on käyttöoikeus, sivustot voivat pyytää sitä sinulta.";
+NSBluetoothAlwaysUsageDescription = "Kun Braveilla on käyttöoikeus, sivustot voivat pyytää sitä sinulta.";
+NSBluetoothPeripheralUsageDescription = "Kun Braveilla on käyttöoikeus, sivustot voivat pyytää sitä sinulta.";
+NSCameraUsageDescription = "Kun Braveilla on käyttöoikeus, sivustot voivat pyytää sitä sinulta.";
+NSHumanReadableCopyright = "Copyright © 2026 Brave Software Inc. Kaikki oikeudet pidätetään.";
+NSLocalNetworkUsageDescription = "Tämä antaa sinulle mahdollisuuden jakaa sisältöä Bravesta paikallisille laitteille, kuten televisiolle tai kaiuttimelle.";
+NSLocationUsageDescription = "Kun Braveilla on käyttöoikeus, sivustot voivat pyytää sitä sinulta.";
+NSMicrophoneUsageDescription = "Kun Braveilla on käyttöoikeus, sivustot voivat pyytää sitä sinulta.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Kun Braveilla on käyttöoikeus, sivustot voivat pyytää sitä sinulta.";

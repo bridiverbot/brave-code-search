@@ -1,0 +1,12 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{html}from"chrome://resources/lit/v3_0/lit.rollup.js";export function getHtml(){return html`<!--_html_template_start_-->
+<div id="blurLayer"></div>
+<div id="maxBlurLayer" @animationend="${this.onMaxBlurAnimationend_}"></div>
+<div id="swipeEllipse1"></div>
+<div id="swipeEllipse2"></div>
+<div id="loadingCircleDark"></div>
+<div id="loadingCircleLight"></div>
+<indigo-text-overlay id="textOverlay"></indigo-text-overlay>
+<!--_html_template_end_-->`}

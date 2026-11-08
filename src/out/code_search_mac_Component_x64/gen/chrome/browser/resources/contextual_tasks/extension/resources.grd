@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/contextual_tasks_extension_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/contextual_tasks_extension_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/contextual_tasks_extension_resources_map.h"
+            type="resource_map_header" />
+    <output filename="contextual_tasks_extension_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <part file="background_resources.grdp" />
+      <part file="color_scheme_resources.grdp" />
+      <part file="lens_chip_resources.grdp" />
+      <part file="tab_picker_resources.grdp" />
+      <include name="IDR_CONTEXTUAL_TASKS_EXTENSION_CONTEXT_LIBRARY_HTML" file="${root_gen_dir}/chrome/browser/resources/contextual_tasks/extension/preprocessed/context_library.html" resource_path="contextual_tasks_extension/context_library.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTEXTUAL_TASKS_EXTENSION_LENS_BUTTON_HTML" file="${root_gen_dir}/chrome/browser/resources/contextual_tasks/extension/preprocessed/lens_button.html" resource_path="contextual_tasks_extension/lens_button.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTEXTUAL_TASKS_EXTENSION_LENS_CHIP_HTML" file="${root_gen_dir}/chrome/browser/resources/contextual_tasks/extension/preprocessed/lens_chip.html" resource_path="contextual_tasks_extension/lens_chip.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTEXTUAL_TASKS_EXTENSION_MANIFEST_JSON" file="${root_gen_dir}/chrome/browser/resources/contextual_tasks/extension/preprocessed/manifest.json" resource_path="contextual_tasks_extension/manifest.json" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CONTEXTUAL_TASKS_EXTENSION_TAB_PICKER_HTML" file="${root_gen_dir}/chrome/browser/resources/contextual_tasks/extension/preprocessed/tab_picker.html" resource_path="contextual_tasks_extension/tab_picker.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTEXTUAL_TASKS_EXTENSION_CONTEXT_LIBRARY_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/contextual_tasks/extension/minified/context_library.rollup.js" resource_path="contextual_tasks_extension/context_library.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTEXTUAL_TASKS_EXTENSION_LENS_BUTTON_APP_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/contextual_tasks/extension/minified/lens_button_app.rollup.js" resource_path="contextual_tasks_extension/lens_button_app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTEXTUAL_TASKS_EXTENSION_SHARED_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/contextual_tasks/extension/minified/shared.rollup.js" resource_path="contextual_tasks_extension/shared.rollup.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/compose_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/compose_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/compose_resources_map.h"
+            type="resource_map_header" />
+    <output filename="compose_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_COMPOSE_COMPOSE_HTML" file="${root_gen_dir}/chrome/browser/resources/compose/preprocessed/compose.html" resource_path="compose.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_APP_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/app.html.js" resource_path="app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_ANIMATIONS_ANIMATOR_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/animations/animator.js" resource_path="animations/animator.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_ANIMATIONS_APP_ANIMATOR_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/animations/app_animator.js" resource_path="animations/app_animator.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_ANIMATIONS_TEXTAREA_ANIMATOR_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/animations/textarea_animator.js" resource_path="animations/textarea_animator.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_COMPOSE_API_PROXY_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/compose_api_proxy.js" resource_path="compose_api_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_RESULT_TEXT_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/result_text.html.js" resource_path="result_text.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_RESULT_TEXT_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/result_text.js" resource_path="result_text.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_TEXTAREA_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/textarea.html.js" resource_path="textarea.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_TEXTAREA_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/textarea.js" resource_path="textarea.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_WORD_STREAMER_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/word_streamer.js" resource_path="word_streamer.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_ICONS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/icons.html.js" resource_path="icons.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/app.css.js" resource_path="app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_RESULT_TEXT_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/result_text.css.js" resource_path="result_text.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_TEXTAREA_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/textarea.css.js" resource_path="textarea.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_COMPOSE_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/compose.mojom-webui.js" resource_path="compose.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_COMPOSE_COMPOSE_ENUMS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/compose/minified/compose_enums.mojom-webui.js" resource_path="compose_enums.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>
