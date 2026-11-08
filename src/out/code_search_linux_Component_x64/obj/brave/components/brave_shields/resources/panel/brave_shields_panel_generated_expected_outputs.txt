@@ -1,0 +1,4 @@
+gen/brave/components/brave_shields/resources/panel/grit/brave_shields_panel_generated.h
+gen/brave/components/brave_shields/resources/panel/grit/brave_shields_panel_generated_map.cc
+gen/brave/components/brave_shields/resources/panel/grit/brave_shields_panel_generated_map.h
+gen/brave/components/brave_shields/resources/panel/brave_shields_panel_generated.pak

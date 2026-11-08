@@ -1,0 +1,21 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/transpose/v0_2/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Elliott Mahler <join.together@gmail.com>",
+        "CARGO_PKG_VERSION": "0.2.3",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "2",
+        "CARGO_PKG_VERSION_PATCH": "3",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "transpose",
+        "CARGO_PKG_DESCRIPTION": "Utility for transposing multi-dimensional data",
+        "CARGO_PKG_REPOSITORY": "https://github.com/ejmahler/transpose",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/transpose/v0_2/lib/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/chromium_crates_io/vendor/transpose-v0_2/src/lib.rs",
+        "@obj/third_party/rust/transpose/v0_2/lib.rsp.rust"
+    ]
+}

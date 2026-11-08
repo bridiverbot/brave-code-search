@@ -1,0 +1,4 @@
+gen/brave/components/tor/resources/grit/tor_internals_generated.h
+gen/brave/components/tor/resources/grit/tor_internals_generated_map.cc
+gen/brave/components/tor/resources/grit/tor_internals_generated_map.h
+gen/brave/components/tor/resources/tor_internals_generated.pak

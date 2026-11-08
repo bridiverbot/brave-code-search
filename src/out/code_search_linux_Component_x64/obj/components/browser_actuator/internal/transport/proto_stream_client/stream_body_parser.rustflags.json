@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/browser_actuator/internal/transport/proto_stream_client/stream_body_parser",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../components/browser_actuator/internal/transport/proto_stream_client/rust/stream_body_parser.rs",
+        "@obj/components/browser_actuator/internal/transport/proto_stream_client/stream_body_parser.rsp.rust"
+    ]
+}

@@ -1,0 +1,4 @@
+gen/brave/components/cosmetic_filters/resources/grit/cosmetic_filters_generated.h
+gen/brave/components/cosmetic_filters/resources/grit/cosmetic_filters_generated_map.cc
+gen/brave/components/cosmetic_filters/resources/grit/cosmetic_filters_generated_map.h
+gen/brave/components/cosmetic_filters/resources/cosmetic_filters_generated.pak

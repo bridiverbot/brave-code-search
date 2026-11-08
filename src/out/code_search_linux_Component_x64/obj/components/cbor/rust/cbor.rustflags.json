@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/cbor/rust/cbor",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../components/cbor/rust/lib.rs",
+        "@obj/components/cbor/rust/cbor.rsp.rust"
+    ]
+}

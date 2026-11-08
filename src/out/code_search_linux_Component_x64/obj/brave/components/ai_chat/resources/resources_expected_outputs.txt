@@ -1,0 +1,4 @@
+gen/brave/components/ai_chat/resources/grit/ai_chat_ui_generated.h
+gen/brave/components/ai_chat/resources/grit/ai_chat_ui_generated_map.cc
+gen/brave/components/ai_chat/resources/grit/ai_chat_ui_generated_map.h
+gen/brave/components/ai_chat/resources/ai_chat_ui_generated.pak

@@ -1,0 +1,4 @@
+gen/chrome/grit/updater_resources.h
+gen/chrome/grit/updater_resources_map.cc
+gen/chrome/grit/updater_resources_map.h
+gen/chrome/updater_resources.pak

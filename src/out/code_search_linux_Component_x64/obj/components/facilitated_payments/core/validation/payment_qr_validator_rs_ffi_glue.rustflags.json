@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/components/facilitated_payments/core/validation/payment_qr_validator_rs_ffi_glue",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../components/facilitated_payments/core/validation/payment_qr_validator_cxx.rs",
+        "@obj/components/facilitated_payments/core/validation/payment_qr_validator_rs_ffi_glue.rsp.rust"
+    ]
+}

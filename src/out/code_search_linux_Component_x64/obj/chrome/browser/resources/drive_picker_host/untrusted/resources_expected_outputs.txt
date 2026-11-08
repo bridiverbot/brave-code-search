@@ -1,0 +1,4 @@
+gen/chrome/grit/drive_picker_host_untrusted_resources.h
+gen/chrome/grit/drive_picker_host_untrusted_resources_map.cc
+gen/chrome/grit/drive_picker_host_untrusted_resources_map.h
+gen/chrome/drive_picker_host_untrusted_resources.pak

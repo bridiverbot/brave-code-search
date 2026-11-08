@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/content/browser/browser_id_types",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../content/browser/browsing_instance_id.rs",
+        "@obj/content/browser/browser_id_types.rsp.rust"
+    ]
+}
