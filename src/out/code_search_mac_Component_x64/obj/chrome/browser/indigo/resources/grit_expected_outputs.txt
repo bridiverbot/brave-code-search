@@ -1,0 +1,4 @@
+gen/chrome/browser/indigo/resources/indigo_browser_resources.pak
+gen/chrome/browser/indigo/resources/grit/indigo_browser_resources.h
+gen/chrome/browser/indigo/resources/grit/indigo_browser_resources_map.cc
+gen/chrome/browser/indigo/resources/grit/indigo_browser_resources_map.h

@@ -1,0 +1,22 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/num_complex/v0_4/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "The Rust Project Developers",
+        "CARGO_PKG_VERSION": "0.4.6",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "4",
+        "CARGO_PKG_VERSION_PATCH": "6",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "num-complex",
+        "CARGO_PKG_DESCRIPTION": "Complex numbers implementation for Rust",
+        "CARGO_PKG_REPOSITORY": "https://github.com/rust-num/num-complex",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/num_complex/v0_4/lib/crate",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/chromium_crates_io/vendor/num-complex-v0_4/src/lib.rs",
+        "@obj/third_party/rust/num_complex/v0_4/lib.rsp.rust"
+    ]
+}

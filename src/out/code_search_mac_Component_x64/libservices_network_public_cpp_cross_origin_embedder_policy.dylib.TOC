@@ -1,0 +1,22 @@
+          cmd LC_ID_DYLIB
+      cmdsize 104
+         name @rpath/libservices_network_public_cpp_cross_origin_embedder_policy.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN7network25CrossOriginEmbedderPolicyC2Ev
+T __ZN7network25CrossOriginEmbedderPolicyC1Ev
+T __ZN7network25CrossOriginEmbedderPolicyC2ERKS0_
+T __ZN7network25CrossOriginEmbedderPolicyC1ERKS0_
+T __ZN7network25CrossOriginEmbedderPolicyC2EOS0_
+T __ZN7network25CrossOriginEmbedderPolicyC1EOS0_
+T __ZN7network25CrossOriginEmbedderPolicyD2Ev
+T __ZN7network25CrossOriginEmbedderPolicyD1Ev
+T __ZN7network25CrossOriginEmbedderPolicyC2ENS_5mojom30CrossOriginEmbedderPolicyValueE
+T __ZN7network25CrossOriginEmbedderPolicyC1ENS_5mojom30CrossOriginEmbedderPolicyValueE
+T __ZN7network25CrossOriginEmbedderPolicyaSERKS0_
+T __ZN7network25CrossOriginEmbedderPolicyaSEOS0_
+T __ZNK7network25CrossOriginEmbedderPolicyeqERKS0_
+T __ZN7network33CompatibleWithCrossOriginIsolatedERKNS_25CrossOriginEmbedderPolicyE
+T __ZN7network33CompatibleWithCrossOriginIsolatedENS_5mojom30CrossOriginEmbedderPolicyValueE
+T __ZN4mojo12StructTraitsIN7network5mojom33CrossOriginEmbedderPolicyDataViewENS1_25CrossOriginEmbedderPolicyEE4ReadES3_PS4_

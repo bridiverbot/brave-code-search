@@ -1,0 +1,55 @@
+          cmd LC_ID_DYLIB
+      cmdsize 64
+         name @rpath/libmojo_public_system.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T _MojoInitialize
+T _MojoGetTimeTicksNow
+T _MojoClose
+T _MojoQueryHandleSignalsState
+T _MojoCreateMessagePipe
+T _MojoWriteMessage
+T _MojoReadMessage
+T _MojoFuseMessagePipes
+T _MojoCreateDataPipe
+T _MojoWriteData
+T _MojoBeginWriteData
+T _MojoEndWriteData
+T _MojoReadData
+T _MojoBeginReadData
+T _MojoEndReadData
+T _MojoCreateSharedBuffer
+T _MojoDuplicateBufferHandle
+T _MojoMapBuffer
+T _MojoUnmapBuffer
+T _MojoGetBufferInfo
+T _MojoCreateTrap
+T _MojoAddTrigger
+T _MojoRemoveTrigger
+T _MojoArmTrap
+T _MojoCreateMessage
+T _MojoDestroyMessage
+T _MojoSerializeMessage
+T _MojoReserveMessageCapacity
+T _MojoAppendMessageData
+T _MojoGetMessageData
+T _MojoSetMessageContext
+T _MojoGetMessageContext
+T _MojoNotifyBadMessage
+T _MojoWrapPlatformHandle
+T _MojoUnwrapPlatformHandle
+T _MojoWrapPlatformSharedMemoryRegion
+T _MojoUnwrapPlatformSharedMemoryRegion
+T _MojoCreateInvitation
+T _MojoAttachMessagePipeToInvitation
+T _MojoExtractMessagePipeFromInvitation
+T _MojoSendInvitation
+T _MojoAcceptInvitation
+T _MojoSetQuota
+T _MojoQueryQuota
+T _MojoShutdown
+T _MojoSetDefaultProcessErrorHandler
+T _MojoEmbedderGetSystemThunks2
+T _MojoEmbedderGetSystemThunks32
+T _MojoEmbedderSetSystemThunks

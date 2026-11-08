@@ -1,0 +1,35 @@
+          cmd LC_ID_DYLIB
+      cmdsize 64
+         name @rpath/libdisplay_features.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZNK4base12FeatureParamIbLb0EE3GetEv
+T __ZNK4base12FeatureParamIiLb0EE3GetEv
+T __ZNK4base12FeatureParamImLb0EE3GetEv
+T __ZNK4base12FeatureParamIdLb0EE3GetEv
+T __ZNK4base12FeatureParamINSt4__Cr12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEELb0EE3GetEv
+T __ZNK4base12FeatureParamINS_9TimeDeltaELb0EE3GetEv
+T __ZN7display8features28IsEdidBasedDisplayIdsEnabledEv
+T __ZN7display8features24IsOledScaleFactorEnabledEv
+T __ZN7display8features27IsHardwareMirrorModeEnabledEv
+T __ZN7display8features29IsHdcpKeyProvisioningRequiredEv
+T __ZN7display8features26IsPanelSelfRefresh2EnabledEv
+T __ZN7display8features28IsTiledDisplaySupportEnabledEv
+T __ZN7display8features26IsFastDrmMasterDropEnabledEv
+T __ZN7display8features38DoesFormFactorControlSubpixelRenderingEv
+T __ZN7display8features30IsOpsDisplayScaleFactorEnabledEv
+T __ZN7display8features48IsMaxExternalDisplaySupportedNotificationEnabledEv
+D _kCADisplayLinkInBrowser
+D _kCADisplayLinkInGpu
+D _kSkipPostTaskForCallbacks
+D _kEnableEdidBasedDisplayIds
+D _kOledScaleFactorEnabled
+D _kEnableHardwareMirrorMode
+D _kRequireHdcpKeyProvisioning
+D _kPanelSelfRefresh2
+D _kTiledDisplaySupport
+D _kFastDrmMasterDrop
+D _kOpsDisplayScaleFactor
+D _kMaxExternalDisplaySupportedNotification
+S __ZN7display8features45kMaxExternalDisplaySupportedNotificationLimitE

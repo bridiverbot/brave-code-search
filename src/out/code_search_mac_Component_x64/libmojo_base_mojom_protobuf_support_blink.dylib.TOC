@@ -1,0 +1,15 @@
+          cmd LC_ID_DYLIB
+      cmdsize 80
+         name @rpath/libmojo_base_mojom_protobuf_support_blink.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN9mojo_base5mojom5blink12ProtoWrapperC2Ev
+T __ZN9mojo_base5mojom5blink12ProtoWrapperC1Ev
+T __ZN9mojo_base5mojom5blink12ProtoWrapperC2ERKN5blink6StringENS_9BigBufferE
+T __ZN9mojo_base5mojom5blink12ProtoWrapperC1ERKN5blink6StringENS_9BigBufferE
+T __ZN9mojo_base5mojom5blink12ProtoWrapperD2Ev
+T __ZN9mojo_base5mojom5blink12ProtoWrapperD1Ev
+T __ZNK9mojo_base5mojom5blink12ProtoWrapper14WriteIntoTraceEN8perfetto11TracedValueE
+T __ZN9mojo_base5mojom5blink12ProtoWrapper8ValidateEPKvPN4mojo8internal17ValidationContextE
+T __ZN4mojo12StructTraitsIN9mojo_base5mojom20ProtoWrapperDataViewENS_9StructPtrINS2_5blink12ProtoWrapperEEEE4ReadES3_PS7_

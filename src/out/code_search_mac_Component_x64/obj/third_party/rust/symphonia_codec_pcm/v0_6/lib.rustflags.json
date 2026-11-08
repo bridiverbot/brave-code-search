@@ -1,0 +1,22 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/rust/symphonia_codec_pcm/v0_6/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Philip Deljanov <philip.deljanov@gmail.com>",
+        "CARGO_PKG_VERSION": "0.6.1",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "6",
+        "CARGO_PKG_VERSION_PATCH": "1",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "symphonia-codec-pcm",
+        "CARGO_PKG_DESCRIPTION": "Pure Rust PCM audio decoder (a part of project Symphonia).",
+        "CARGO_PKG_REPOSITORY": "https://github.com/pdeljanov/Symphonia",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/symphonia_codec_pcm/v0_6/lib/crate",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/chromium_crates_io/vendor/symphonia-codec-pcm-v0_6/src/lib.rs",
+        "@obj/third_party/rust/symphonia_codec_pcm/v0_6/lib.rsp.rust"
+    ]
+}

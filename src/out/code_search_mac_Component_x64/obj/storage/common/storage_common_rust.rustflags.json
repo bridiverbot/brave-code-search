@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/storage/common/storage_common_rust",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../storage/common/file_system/file_system_types.rs",
+        "@obj/storage/common/storage_common_rust.rsp.rust"
+    ]
+}

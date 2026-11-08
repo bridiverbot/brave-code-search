@@ -1,0 +1,4 @@
+gen/chrome/grit/contextual_cueing_internals_resources.h
+gen/chrome/grit/contextual_cueing_internals_resources_map.cc
+gen/chrome/grit/contextual_cueing_internals_resources_map.h
+gen/chrome/contextual_cueing_internals_resources.pak

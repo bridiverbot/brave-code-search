@@ -1,0 +1,15 @@
+          cmd LC_ID_DYLIB
+      cmdsize 72
+         name @rpath/libcomponents_pref_registry.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN10user_prefs20PrefRegistrySyncableC2Ev
+T __ZN10user_prefs20PrefRegistrySyncableC1Ev
+T __ZN10user_prefs20PrefRegistrySyncableD2Ev
+T __ZN10user_prefs20PrefRegistrySyncableD1Ev
+T __ZN10user_prefs20PrefRegistrySyncableD0Ev
+T __ZN10user_prefs20PrefRegistrySyncable31SetSyncableRegistrationCallbackEN4base17RepeatingCallbackIFvNSt4__Cr17basic_string_viewIcNS3_11char_traitsIcEEEEjEEE
+T __ZN10user_prefs20PrefRegistrySyncable16OnPrefRegisteredENSt4__Cr17basic_string_viewIcNS1_11char_traitsIcEEEEj
+T __ZN10user_prefs20PrefRegistrySyncable16ForkForIncognitoEv
+S __ZTVN10user_prefs20PrefRegistrySyncableE

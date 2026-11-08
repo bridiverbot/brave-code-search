@@ -1,0 +1,13 @@
+          cmd LC_ID_DYLIB
+      cmdsize 72
+         name @rpath/libcomponents_sqlite_encrypted_vfs.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN20sqlite_encrypted_vfs18SqliteEncryptedVfsC2Ev
+T __ZN20sqlite_encrypted_vfs18SqliteEncryptedVfsC1Ev
+T __ZN20sqlite_encrypted_vfs18SqliteEncryptedVfsD2Ev
+T __ZN20sqlite_encrypted_vfs18SqliteEncryptedVfsD1Ev
+T __ZN20sqlite_encrypted_vfs18SqliteEncryptedVfs8RegisterEv
+T __ZN20sqlite_encrypted_vfs18SqliteEncryptedVfs11GetInstanceEv
+S __ZN20sqlite_encrypted_vfs18SqliteEncryptedVfs14kSqliteVfsNameE

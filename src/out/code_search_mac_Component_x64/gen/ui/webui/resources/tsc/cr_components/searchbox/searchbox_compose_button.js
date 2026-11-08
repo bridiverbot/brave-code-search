@@ -1,0 +1,307 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_button/cr_button.js';
+import { I18nMixinLit } from '//resources/cr_elements/i18n_mixin_lit.js';
+import { isFaviconUrl } from '//resources/js/icon.js';
+import { loadTimeData } from '//resources/js/load_time_data.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './searchbox_compose_button.css.js';
+import { getHtml } from './searchbox_compose_button.html.js';
+const SearchboxComposeButtonElementBase = I18nMixinLit(CrLitElement);
+export class SearchboxComposeButtonElement extends SearchboxComposeButtonElementBase {
+    targetAngle = 0;
+    maskCurrAngle = 0;
+    gradientCurrAngle = 0;
+    maskVelocity = 0;
+    springStrength = 0.05;
+    friction = 0.75;
+    isHovering = false;
+    animationFrame = 0;
+    // Legacy rotation variables:
+    aimButtonAngle = 0;
+    currentAngle = 0;
+    velocity = 0;
+    rotationEase = 0.01;
+    legacyFriction = 0.9;
+    then = performance.now();
+    static get is() {
+        return 'cr-searchbox-compose-button';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            labelText: {
+                type: String,
+                reflect: true,
+            },
+            tooltipTitle: {
+                type: String,
+                reflect: true,
+            },
+            a11yLabel: {
+                type: String,
+                reflect: true,
+            },
+            composeIcon: {
+                type: String,
+                reflect: true,
+            },
+            arrowIcon_: {
+                type: String,
+            },
+            showAnimation_: {
+                type: Boolean,
+                reflect: true,
+            },
+            isFuseboxEnabled_: {
+                type: Boolean,
+                reflect: true,
+                attribute: 'is-fusebox-enabled',
+            },
+            energyEffectAnimationEnabled_: {
+                type: Boolean,
+                reflect: true,
+                attribute: 'energy-effect-animation-enabled',
+            },
+            hasVirtualFocus: {
+                type: Boolean,
+                reflect: true,
+            },
+            virtualFocusEnabled: {
+                type: Boolean,
+                reflect: true,
+            },
+            dropdownIsVisible: {
+                type: Boolean,
+            },
+        };
+    }
+    #labelText_accessor_storage = loadTimeData.getString('searchboxComposeButtonText');
+    get labelText() { return this.#labelText_accessor_storage; }
+    set labelText(value) { this.#labelText_accessor_storage = value; }
+    #tooltipTitle_accessor_storage = loadTimeData.getString('searchboxComposeButtonTitle');
+    get tooltipTitle() { return this.#tooltipTitle_accessor_storage; }
+    set tooltipTitle(value) { this.#tooltipTitle_accessor_storage = value; }
+    #a11yLabel_accessor_storage = loadTimeData.getString('searchboxComposeButtonA11yLabel');
+    get a11yLabel() { return this.#a11yLabel_accessor_storage; }
+    set a11yLabel(value) { this.#a11yLabel_accessor_storage = value; }
+    #composeIcon_accessor_storage = loadTimeData.valueExists('searchboxComposeButtonIcon') ?
+        loadTimeData.getString('searchboxComposeButtonIcon') :
+        '//resources/cr_components/searchbox/icons/search_spark.svg';
+    get composeIcon() { return this.#composeIcon_accessor_storage; }
+    set composeIcon(value) { this.#composeIcon_accessor_storage = value; }
+    #hasVirtualFocus_accessor_storage = false;
+    get hasVirtualFocus() { return this.#hasVirtualFocus_accessor_storage; }
+    set hasVirtualFocus(value) { this.#hasVirtualFocus_accessor_storage = value; }
+    #dropdownIsVisible_accessor_storage = false;
+    get dropdownIsVisible() { return this.#dropdownIsVisible_accessor_storage; }
+    set dropdownIsVisible(value) { this.#dropdownIsVisible_accessor_storage = value; }
+    #virtualFocusEnabled_accessor_storage = false;
+    get virtualFocusEnabled() { return this.#virtualFocusEnabled_accessor_storage; }
+    set virtualFocusEnabled(value) { this.#virtualFocusEnabled_accessor_storage = value; }
+    #isFuseboxEnabled__accessor_storage = loadTimeData.getBoolean('isFuseboxEnabled');
+    get isFuseboxEnabled_() { return this.#isFuseboxEnabled__accessor_storage; }
+    set isFuseboxEnabled_(value) { this.#isFuseboxEnabled__accessor_storage = value; }
+    #energyEffectAnimationEnabled__accessor_storage = loadTimeData.getBoolean('energyEffectAnimationEnabled');
+    get energyEffectAnimationEnabled_() { return this.#energyEffectAnimationEnabled__accessor_storage; }
+    set energyEffectAnimationEnabled_(value) { this.#energyEffectAnimationEnabled__accessor_storage = value; }
+    #arrowIcon__accessor_storage = (document.documentElement.hasAttribute('webui-rounded-icons') ?
+        '//resources/cr_components/searchbox/icons/arrow_forward.svg' :
+        '//resources/cr_components/searchbox/icons/arrow_forward_old.svg');
+    get arrowIcon_() { return this.#arrowIcon__accessor_storage; }
+    set arrowIcon_(value) { this.#arrowIcon__accessor_storage = value; }
+    #showAnimation__accessor_storage = false;
+    get showAnimation_() { return this.#showAnimation__accessor_storage; }
+    set showAnimation_(value) { this.#showAnimation__accessor_storage = value; }
+    hasFavicon_() {
+        return isFaviconUrl(this.composeIcon);
+    }
+    focus() {
+        this.$.composeButton?.focus();
+    }
+    blur() {
+        this.$.composeButton?.blur();
+    }
+    firstUpdated() {
+        if (this.$.glowAnimationWrapper) {
+            if (this.isFuseboxEnabled_) {
+                this.$.glowAnimationWrapper.addEventListener('mouseenter', this.onMouseEnter_);
+                this.$.glowAnimationWrapper.addEventListener('mouseleave', this.onMouseLeave_);
+            }
+            if (!this.showAnimation_) {
+                this.$.glowAnimationWrapper.classList.remove('play');
+            }
+            else {
+                this.$.glowAnimationWrapper.addEventListener('animationend', () => {
+                    this.$.glowAnimationWrapper.classList.remove('play');
+                });
+            }
+        }
+    }
+    onMouseEnter_ = () => {
+        if (this.$.glowAnimationWrapper) {
+            this.$.glowAnimationWrapper.classList.remove('play-landing-animation');
+            this.$.glowAnimationWrapper.addEventListener('mousemove', this.onMouseMove);
+            if (this.animationFrame) {
+                cancelAnimationFrame(this.animationFrame);
+            }
+            if (this.energyEffectAnimationEnabled_) {
+                this.$.glowAnimationWrapper.classList.add('hovering');
+                this.isHovering = true;
+                this.animationFrame = requestAnimationFrame(this.renderLoop);
+            }
+            else {
+                this.animationFrame = requestAnimationFrame(this.updateRotation);
+            }
+        }
+    };
+    onMouseLeave_ = () => {
+        if (this.$.glowAnimationWrapper) {
+            this.$.glowAnimationWrapper.removeEventListener('mousemove', this.onMouseMove);
+            if (this.energyEffectAnimationEnabled_) {
+                this.$.glowAnimationWrapper.classList.remove('hovering');
+                this.isHovering = false;
+            }
+            else {
+                cancelAnimationFrame(this.animationFrame);
+            }
+        }
+    };
+    onClick_(e) {
+        e.preventDefault();
+        this.fire('compose-click', {
+            button: e.button,
+            ctrlKey: e.ctrlKey,
+            metaKey: e.metaKey,
+            shiftKey: e.shiftKey,
+            viaKeyboard: e.detail === 0,
+        });
+    }
+    getAngleFromEvent(e) {
+        const rect = this.$.glowAnimationWrapper.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const scaleX = 4;
+        const scaleY = 1.5;
+        const dx = (e.clientX - centerX) / scaleX;
+        const dy = (e.clientY - centerY) / scaleY;
+        return Math.atan2(dy, dx) * (180 / Math.PI);
+    }
+    lerpAngle(start, end, factor) {
+        let delta = end - start;
+        // Normalize delta to between -180 and 180
+        // This makes to take the shortest path around the circle.
+        while (delta > 180) {
+            delta -= 360;
+        }
+        while (delta < -180) {
+            delta += 360;
+        }
+        return start + delta * factor;
+    }
+    onMouseMove = (e) => {
+        if (this.energyEffectAnimationEnabled_) {
+            const newAngle = this.getAngleFromEvent(e);
+            if (this.targetAngle === 0 && this.maskCurrAngle === 0) {
+                this.targetAngle = newAngle;
+                this.maskCurrAngle = newAngle;
+                this.gradientCurrAngle = newAngle;
+            }
+            else {
+                this.targetAngle = newAngle;
+            }
+        }
+        else {
+            this.setCurrentAngle(e.clientX, e.clientY);
+        }
+    };
+    renderLoop = () => {
+        let delta = this.targetAngle - this.maskCurrAngle;
+        while (delta > 180) {
+            delta -= 360;
+        }
+        while (delta < -180) {
+            delta += 360;
+        }
+        this.maskVelocity += delta * this.springStrength;
+        this.maskVelocity *= this.friction;
+        this.maskCurrAngle += this.maskVelocity;
+        // 1. Calculate current distance to the mask
+        let gradientDelta = this.maskCurrAngle - this.gradientCurrAngle;
+        while (gradientDelta > 180) {
+            gradientDelta -= 360;
+        }
+        while (gradientDelta < -180) {
+            gradientDelta += 360;
+        }
+        const distance = Math.abs(gradientDelta);
+        // 2. Define the angular window where the easing curve is active.
+        // 90 degrees captures the wide sweeps of the mouse.
+        const maxDistanceReference = 90;
+        const proximity = Math.min(distance / maxDistanceReference, 1);
+        // 3. Simulate cubic-bezier(0, 0, 0, 1)
+        // Raising this to the 3rd power creates that extreme "sudden brake"
+        // effect close to the target, matching the heavy flatline of the bezier.
+        const easeOutModifier = Math.pow(proximity, 3);
+        // 5. Apply the interpolation
+        this.gradientCurrAngle = this.lerpAngle(this.gradientCurrAngle, this.maskCurrAngle, easeOutModifier);
+        const maskOffset = -167;
+        const gradOffset = 25;
+        this.$.glowAnimationWrapper.style.setProperty('--mask-angle', `${this.maskCurrAngle + maskOffset}deg`);
+        this.$.glowAnimationWrapper.style.setProperty('--gradient-angle', `${this.gradientCurrAngle + maskOffset + gradOffset}deg`);
+        // Keep rendering until both the mask stabilizes AND the gradient fully settles
+        if (this.isHovering || Math.abs(this.maskVelocity) > 0.01 ||
+            Math.abs(gradientDelta) > 0.05) {
+            this.animationFrame = requestAnimationFrame(this.renderLoop);
+        }
+    };
+    // Legacy math & rotation methods:
+    updateRotation = () => {
+        const now = performance.now();
+        const elapsed = now - this.then;
+        // Prevents updating more than 60 fps.
+        if (elapsed > 16.67) {
+            let delta = this.currentAngle - this.aimButtonAngle;
+            // If the delta is too small to be noticeable, don't calculate and update.
+            if (Math.abs(delta) > 10) {
+                // Converts the delta into the shortest angle from -180 to 180 degrees.
+                delta = (((delta % 360) + 540) % 360) - 180;
+                // Normalizes the delta to a clamped decimal between 0.0 and 1.0.
+                const normalizedDelta = this.clampValue(0, 100, Math.abs(delta)) / 300;
+                // Multiply delta by the ease and normalized delta for ease-in
+                // cushioning.
+                this.velocity += delta * this.rotationEase * normalizedDelta;
+                // Apply velocity to the current angle.
+                this.aimButtonAngle += this.velocity;
+                // Apply friction to the velocity so it does not accelerate
+                // indefinitely.
+                this.velocity *= this.legacyFriction;
+                this.setRotationCss(this.aimButtonAngle);
+            }
+            this.then = now - (elapsed % 16.67);
+        }
+        this.animationFrame = requestAnimationFrame(this.updateRotation);
+    };
+    setRotationCss(angle) {
+        this.$.glowAnimationWrapper.style.setProperty('--mouse-angle', `${angle + 180}deg`);
+    }
+    setCurrentAngle(mouseX, mouseY) {
+        const elRect = this.$.glowAnimationWrapper.getBoundingClientRect();
+        const elX = elRect.x + elRect.width * 0.5;
+        const elY = elRect.y + elRect.height * 0.5;
+        this.currentAngle = this.getAngleTo(mouseX, mouseY, elX, elY);
+    }
+    getAngleTo(x1, y1, x2, y2) {
+        return Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+    }
+    clampValue(min, max, val) {
+        return Math.max(min, Math.min(val, max));
+    }
+}
+customElements.define(SearchboxComposeButtonElement.is, SearchboxComposeButtonElement);

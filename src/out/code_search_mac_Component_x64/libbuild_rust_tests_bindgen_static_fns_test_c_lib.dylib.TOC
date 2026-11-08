@@ -1,0 +1,7 @@
+          cmd LC_ID_DYLIB
+      cmdsize 88
+         name @rpath/libbuild_rust_tests_bindgen_static_fns_test_c_lib.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T _mul_two_numbers

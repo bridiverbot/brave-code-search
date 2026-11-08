@@ -1,0 +1,13 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_rust_multiple_dep_versions_exe/v1/test_lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../build/rust/tests/test_rust_multiple_dep_versions_exe/v1/test_lib/crate",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../build/rust/tests/test_rust_multiple_dep_versions_exe/v1/src/lib.rs",
+        "@obj/build/rust/tests/test_rust_multiple_dep_versions_exe/v1/test_lib.rsp.rust"
+    ]
+}

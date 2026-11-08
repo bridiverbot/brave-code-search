@@ -1,0 +1,34 @@
+          cmd LC_ID_DYLIB
+      cmdsize 88
+         name @rpath/libservices_device_public_cpp_device_features.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZNK4base12FeatureParamIbLb0EE3GetEv
+T __ZNK4base12FeatureParamIiLb0EE3GetEv
+T __ZNK4base12FeatureParamImLb0EE3GetEv
+T __ZNK4base12FeatureParamIdLb0EE3GetEv
+T __ZNK4base12FeatureParamINSt4__Cr12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEELb0EE3GetEv
+T __ZNK4base12FeatureParamINS_9TimeDeltaELb0EE3GetEv
+T __ZN8features44IsOsLevelGeolocationPermissionSupportEnabledEv
+T __ZN8features30GetLocationProviderManagerModeEv
+D _kGenericSensorExtraClasses
+D _kSensorsAllowAskBlockPermissionModel
+D _kSensorPrivacyMitigations
+D _kSerialPortConnected
+D _kWebSerialWorldIsolatedCache
+D _kAvoidBluetoothPromptInGetPorts
+D _kWebUsbBlocklist
+D _kWebUsbProtectedClassControlTransferBlock
+D _kWebUsbEnforceStandardRequestAllowlist
+D _kWebUsbHardenEndpointAliasing
+D _kWebUsbResetInvalidatesConfiguration
+D _kWebHidAttributeAllowsBackForwardCache
+D _kLocationProviderManager
+D _kSecurityKeyHidInterfacesAreFido
+D _kWebHidRecursiveFiltering
+D _kHidValidateFeatureReportSize
+D _kSerialSplitDtrAndRts
+D _kHidReportRequestExactLength
+D _kEllipsoidalAltitude
+S __ZN8features29kLocationProviderManagerParamE

@@ -1,0 +1,4 @@
+gen/chrome/grit/unexportable_keys_internals_resources.h
+gen/chrome/grit/unexportable_keys_internals_resources_map.cc
+gen/chrome/grit/unexportable_keys_internals_resources_map.h
+gen/chrome/unexportable_keys_internals_resources.pak

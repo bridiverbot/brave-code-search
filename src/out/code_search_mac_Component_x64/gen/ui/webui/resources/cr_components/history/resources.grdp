@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_CR_COMPONENTS_HISTORY_CONSTANTS_JS" file="${root_gen_dir}/ui/webui/resources/cr_components/history/minified/constants.js" resource_path="cr_components/history/constants.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CR_COMPONENTS_HISTORY_FOREIGN_SESSIONS_MOJOM_WEBUI_JS" file="${root_gen_dir}/ui/webui/resources/cr_components/history/minified/foreign_sessions.mojom-webui.js" resource_path="cr_components/history/foreign_sessions.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CR_COMPONENTS_HISTORY_HISTORY_MOJOM_WEBUI_JS" file="${root_gen_dir}/ui/webui/resources/cr_components/history/minified/history.mojom-webui.js" resource_path="cr_components/history/history.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CR_COMPONENTS_HISTORY_HISTORY_CROSS_DEVICE_SIGNIN_PROMO_MOJOM_WEBUI_JS" file="${root_gen_dir}/ui/webui/resources/cr_components/history/minified/history_cross_device_signin_promo.mojom-webui.js" resource_path="cr_components/history/history_cross_device_signin_promo.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

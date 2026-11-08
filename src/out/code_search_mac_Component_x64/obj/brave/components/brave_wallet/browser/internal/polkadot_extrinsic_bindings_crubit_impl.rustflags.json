@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "gen/brave/components/brave_wallet/browser/internal/polkadot_extrinsic_rs.h.impl.rs",
+        "@obj/brave/components/brave_wallet/browser/internal/polkadot_extrinsic_bindings_crubit_impl.rsp.rust"
+    ]
+}

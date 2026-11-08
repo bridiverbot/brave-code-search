@@ -1,0 +1,16 @@
+          cmd LC_ID_DYLIB
+      cmdsize 56
+         name @rpath/libui_gfx_gfx_skia.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN3gfx14SkPixmapToSpanERK8SkPixmap
+T __ZN3gfx22SkPixmapToWritableSpanERK8SkPixmap
+T __ZN3gfx12SkDataToSpanE5sk_spIK6SkDataE
+T __ZN3gfx12SkDataToSpanEPK6SkData
+T __ZN3gfx26MakeSkDataFromSpanWithCopyEN4base4spanIKhLm18446744073709551615EPS2_EE
+T __ZN3gfx29MakeSkDataFromSpanWithoutCopyEN4base4spanIKhLm18446744073709551615EPS2_EE
+T __ZN3gfx15BitmapsAreEqualERK8SkBitmapS2_
+T __ZN3gfx25SkiaScalarToHarfBuzzUnitsEf
+T __ZN3gfx25HarfBuzzUnitsToSkiaScalarEi
+T __ZN3gfx20HarfBuzzUnitsToFloatEi

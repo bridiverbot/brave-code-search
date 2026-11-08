@@ -1,0 +1,10 @@
+{
+    "rustenv": {
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "gen/third_party/crubit/support/rs_std/rs_alloc.h.impl.rs",
+        "@obj/build/rust/std/rules/alloc_bindings_crubit_impl.rsp.rust"
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/brave/third_party/rust/halo2_legacy_pdqsort/v0_1/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Daira Emma Hopwood <daira@jacaranda.org>, Sean Bowe <sean@electriccoin.co>, Jack Grigg <jack@electriccoin.co>, Kris Nuttycombe <kris@electriccoin.co>, Greg Pfeil <greg@electriccoin.co>",
+        "CARGO_PKG_VERSION": "0.1.0",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "1",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "halo2_legacy_pdqsort",
+        "CARGO_PKG_DESCRIPTION": "A copy of the core::slice::sort module from the Rust 1.56.1 standard library, modified to behave the same on 32-bit platforms as on 64-bit. This is intended to work around a determinism bug in the halo2_proofs crate.",
+        "CARGO_PKG_REPOSITORY": "https://github.com/zcash/halo2_legacy_pdqsort",
+        "CARGO_MANIFEST_DIR": "../../brave/third_party/rust/halo2_legacy_pdqsort/v0_1/lib/crate",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../brave/third_party/rust/chromium_crates_io/vendor/halo2_legacy_pdqsort-v0_1/src/lib.rs",
+        "@obj/brave/third_party/rust/halo2_legacy_pdqsort/v0_1/lib.rsp.rust"
+    ]
+}

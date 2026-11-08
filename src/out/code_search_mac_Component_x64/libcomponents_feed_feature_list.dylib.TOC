@@ -1,0 +1,32 @@
+          cmd LC_ID_DYLIB
+      cmdsize 72
+         name @rpath/libcomponents_feed_feature_list.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZNK4base12FeatureParamIbLb0EE3GetEv
+T __ZNK4base12FeatureParamIiLb0EE3GetEv
+T __ZNK4base12FeatureParamImLb0EE3GetEv
+T __ZNK4base12FeatureParamIdLb0EE3GetEv
+T __ZNK4base12FeatureParamINSt4__Cr12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEELb0EE3GetEv
+T __ZNK4base12FeatureParamINS_9TimeDeltaELb0EE3GetEv
+T __ZN4feed40GetConsentLevelNeededForPersonalizedFeedEv
+D _kInterestFeedV2
+D _kDiscoFeedEndpoint
+D _kXsurfaceMetricsReporting
+D _kFeedLoadingPlaceholder
+D _kFeedImageMemoryCacheSizePercentage
+D _kPersonalizeFeedUnsignedUsers
+D _kFeedNoViewCache
+D _kFeedPerformanceStudy
+D _kSyntheticCapabilities
+D _kFeedSignedOutViewDemotion
+D _kRefreshFeedOnRestart
+D _kFeedContainment
+D _kFeedRecyclerBinderUnmountOnDetach
+D _kFeedStreaming
+D _kFeedAudioOverviews
+D _kAndroidOpenIncognitoAsWindow
+D _kWideScreenFeedForFoldables
+D _kFeedNullItemAnimatorOnScrollRestore
+S __ZN4feed22kFeedCloseRefreshDelayE

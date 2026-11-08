@@ -1,0 +1,41 @@
+          cmd LC_ID_DYLIB
+      cmdsize 88
+         name @rpath/libcomponents_history_core_browser_features.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZNK4base12FeatureParamIbLb0EE3GetEv
+T __ZNK4base12FeatureParamIiLb0EE3GetEv
+T __ZNK4base12FeatureParamImLb0EE3GetEv
+T __ZNK4base12FeatureParamIdLb0EE3GetEv
+T __ZNK4base12FeatureParamINSt4__Cr12basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEELb0EE3GetEv
+T __ZNK4base12FeatureParamINS_9TimeDeltaELb0EE3GetEv
+T __ZN7history38IsBrowsingHistoryFilterByDeviceEnabledEv
+D _kOrganicRepeatableQueries
+D _kPopulateVisitedLinkDatabase
+D _kMostVisitedTilesNewScoring
+D _kRazeOldHistoryDatabase
+D _kBrowsingHistorySimilarVisitsGrouping
+D _kBrowsingHistoryImprovedHostnameSuffixMatching
+D _kBrowsingHistoryFilterByDevice
+D _kBrowsingHistoryFilterByDomain
+D _kBrowsingHistoryFilterByTime
+D _kBrowsingHistoryFilterByActor
+D _kWebHistoryUseNewApi
+D _kHistoryDatabaseWriteAheadLogging
+D _kDeferHistoryBackendInit
+D _kHistoryReportClusterDatabaseMetrics
+D _kHistoryQueryBatchedLookups
+D _kHistoryMoreSearchResults
+S __ZN7history24kMaxNumRepeatableQueriesE
+S __ZN7history29kScaleRepeatableQueriesScoresE
+S __ZN7history27kPrivilegeRepeatableQueriesE
+S __ZN7history39kRepeatableQueriesIgnoreDuplicateVisitsE
+S __ZN7history28kRepeatableQueriesMaxAgeDaysE
+S __ZN7history31kRepeatableQueriesMinVisitCountE
+S __ZN7history29kMvtScoringParamRecencyFactorE
+S __ZN7history27kMvtScoringParamDecayPerDayE
+S __ZN7history34kMvtScoringParamDailyVisitCountCapE
+S __ZN7history37kMvtScoringParamRecencyFactor_ClassicE
+S __ZN7history35kMvtScoringParamRecencyFactor_DecayE
+S __ZN7history44kMvtScoringParamRecencyFactor_DecayStaircaseE

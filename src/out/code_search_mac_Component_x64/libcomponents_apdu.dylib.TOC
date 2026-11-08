@@ -1,0 +1,26 @@
+          cmd LC_ID_DYLIB
+      cmdsize 56
+         name @rpath/libcomponents_apdu.dylib (offset 24)
+   time stamp 0 Thu Jan  1 00:00:00 1970
+      current version 0.0.0
+compatibility version 0.0.0
+T __ZN4apdu11ApduCommand17CreateFromMessageEN4base4spanIKhLm18446744073709551615EPS3_EE
+T __ZN4apdu11ApduCommandC1EhhhhmNSt4__Cr6vectorIhNS1_9allocatorIhEEEE
+T __ZN4apdu11ApduCommandD1Ev
+T __ZN4apdu11ApduCommandC2Ev
+T __ZN4apdu11ApduCommandC1Ev
+T __ZN4apdu11ApduCommandC2EhhhhmNSt4__Cr6vectorIhNS1_9allocatorIhEEEE
+T __ZN4apdu11ApduCommandC2EOS0_
+T __ZN4apdu11ApduCommandC1EOS0_
+T __ZN4apdu11ApduCommandaSEOS0_
+T __ZN4apdu11ApduCommandD2Ev
+T __ZNK4apdu11ApduCommand17GetEncodedCommandEv
+T __ZN4apdu12ApduResponse17CreateFromMessageEN4base4spanIKhLm18446744073709551615EPS3_EE
+T __ZN4apdu12ApduResponseC1ENSt4__Cr6vectorIhNS1_9allocatorIhEEEENS0_6StatusE
+T __ZN4apdu12ApduResponseD1Ev
+T __ZN4apdu12ApduResponseC2ENSt4__Cr6vectorIhNS1_9allocatorIhEEEENS0_6StatusE
+T __ZN4apdu12ApduResponseC2EOS0_
+T __ZN4apdu12ApduResponseC1EOS0_
+T __ZN4apdu12ApduResponseaSEOS0_
+T __ZN4apdu12ApduResponseD2Ev
+T __ZNK4apdu12ApduResponse18GetEncodedResponseEv

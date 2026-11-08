@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/chrome/utility/safe_browsing/mac/dmg_decompress",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "SDKROOT": "../../build/mac_files/xcode_binaries/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../chrome/utility/safe_browsing/mac/rust/decompress/bz2.rs",
+        "@obj/chrome/utility/safe_browsing/mac/dmg_decompress.rsp.rust"
+    ]
+}
