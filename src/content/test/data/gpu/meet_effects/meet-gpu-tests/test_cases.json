@@ -1,0 +1,28 @@
+{
+  "ar_effect_rainbow_wig_and_eyelashes": {
+    "processingConfig": {
+      "effectIds": [539]
+    }
+  },
+  "background_replace_modern_indian_living_room": {
+    "processingConfig": {
+      "effectIds": [467]
+    }
+  },
+  "center_me": {
+    "processingConfig": {
+      "centerMe": 1
+    },
+    "skipPerformanceTest": true
+  },
+  "web_gpu_background_blur_gpu_mid": {
+    "processingConfig": {
+      "effectIds": [93]
+    },
+    "extraFlags": {
+      "allowWebGpuBackgroundBlurReplace": true,
+      "forceSegmentationModelVariant": 4,
+      "forceWebGpu": true
+    }
+  }
+}
