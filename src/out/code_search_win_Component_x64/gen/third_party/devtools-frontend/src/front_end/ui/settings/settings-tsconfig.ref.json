@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/ConsoleSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/ElementsSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/EmulationSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/InspectorMainSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/LayerViewerSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/MainSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/NetworkSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/SettingUIRegistration.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/SourcesSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/TimelineSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/ui/settings/WhatsNewSettings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../core/common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/platform/bundle-tsconfig.ref.json"
+    }
+  ]
+}
