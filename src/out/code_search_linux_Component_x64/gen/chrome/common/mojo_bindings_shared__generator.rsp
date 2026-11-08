@@ -1,0 +1,16 @@
+../../chrome/common/actor.mojom
+../../chrome/common/chrome_render_frame.mojom
+../../chrome/common/google_accounts_private_api_extension.mojom
+../../chrome/common/media/webrtc_logging.mojom
+../../chrome/common/net/net_error_page_support.mojom
+../../chrome/common/net_benchmarking.mojom
+../../chrome/common/network_diagnostics.mojom
+../../chrome/common/network_easter_egg.mojom
+../../chrome/common/open_search_description_document_handler.mojom
+../../chrome/common/plugin.mojom
+../../chrome/common/readaloud/read_aloud.mojom
+../../chrome/common/renderer_configuration.mojom
+../../chrome/common/tab_context_decryption_token_extension.mojom
+../../chrome/common/trusted_vault_encryption_keys_extension.mojom
+../../chrome/common/indigo/indigo.mojom
+../../chrome/common/password_manager/remote_actor_credential_sharing.mojom

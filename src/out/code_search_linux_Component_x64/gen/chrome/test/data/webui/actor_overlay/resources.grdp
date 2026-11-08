@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_ACTOR_OVERLAY_ACTOR_OVERLAY_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/actor_overlay/tsc/actor_overlay_test.js" resource_path="actor_overlay/actor_overlay_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_ACTOR_OVERLAY_TEST_PAGE_HANDLER_JS" file="${root_gen_dir}/chrome/test/data/webui/actor_overlay/tsc/test_page_handler.js" resource_path="actor_overlay/test_page_handler.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
