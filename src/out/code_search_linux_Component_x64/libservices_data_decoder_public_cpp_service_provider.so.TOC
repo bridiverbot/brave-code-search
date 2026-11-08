@@ -1,0 +1,12 @@
+  0x000000000000000e (SONAME)       Library soname: [libservices_data_decoder_public_cpp_service_provider.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+__stack_chk_fail@GLIBC_2.4 U
+strlen@GLIBC_2.2.5 U
+memset@GLIBC_2.2.5 U
+memcpy@GLIBC_2.14 U
+__cxa_finalize@GLIBC_2.2.5 w
+memmove@GLIBC_2.2.5 U
+_ZN12data_decoder15ServiceProvider3GetEv T
+_ZN12data_decoder15ServiceProvider3SetEPS0_ T

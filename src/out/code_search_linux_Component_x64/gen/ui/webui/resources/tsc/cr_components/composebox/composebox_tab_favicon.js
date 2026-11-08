@@ -1,0 +1,66 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { getFaviconForPageURL, getUrlForCss } from '//resources/js/icon.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './composebox_tab_favicon.css.js';
+/**
+ * @fileoverview This file provides a custom element displaying a tab favicon.
+ */
+export class TabFaviconElement extends CrLitElement {
+    static get is() {
+        return 'cr-composebox-tab-favicon';
+    }
+    static get styles() {
+        return getCss();
+    }
+    static get properties() {
+        return {
+            /* The URL for which the favicon is shown. */
+            url: { type: String },
+            size: { type: Number },
+            tabId: { type: Number },
+            isSubmitted: { type: Boolean },
+        };
+    }
+    #url_accessor_storage = '';
+    get url() { return this.#url_accessor_storage; }
+    set url(value) { this.#url_accessor_storage = value; }
+    #size_accessor_storage = 16;
+    get size() { return this.#size_accessor_storage; }
+    set size(value) { this.#size_accessor_storage = value; }
+    #tabId_accessor_storage = null;
+    get tabId() { return this.#tabId_accessor_storage; }
+    set tabId(value) { this.#tabId_accessor_storage = value; }
+    #isSubmitted_accessor_storage = false;
+    get isSubmitted() { return this.#isSubmitted_accessor_storage; }
+    set isSubmitted(value) { this.#isSubmitted_accessor_storage = value; }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('url') || changedProperties.has('size') ||
+            changedProperties.has('tabId')) {
+            if (!this.url) {
+                this.style.setProperty('background-image', '');
+            }
+            else {
+                this.style.setProperty('background-image', getFaviconForPageURL(this.url, /*isKnownToSync=*/ false, /*fallbackUrl=*/ '', this.size, false, true));
+            }
+        }
+    }
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if ((changedProperties.has('url') || changedProperties.has('tabId')) &&
+            this.url && this.tabId && !this.isSubmitted) {
+            const capturedTabId = this.tabId;
+            this.fire('wait-for-tab-load', {
+                tabId: capturedTabId,
+                onTabLoaded: (faviconDataUrl) => {
+                    if (faviconDataUrl && this.url && this.tabId === capturedTabId) {
+                        this.style.setProperty('background-image', getUrlForCss(faviconDataUrl));
+                    }
+                },
+            });
+        }
+    }
+}
+customElements.define(TabFaviconElement.is, TabFaviconElement);

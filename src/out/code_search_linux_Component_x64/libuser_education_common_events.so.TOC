@@ -1,0 +1,7 @@
+  0x000000000000000e (SONAME)       Library soname: [libuser_education_common_events.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+__cxa_finalize@GLIBC_2.2.5 w
+_ZN14user_education33kHelpBubbleNextButtonClickedEventE D
+_ZN14user_education41kHelpBubbleNextButtonClickedEventProviderE D

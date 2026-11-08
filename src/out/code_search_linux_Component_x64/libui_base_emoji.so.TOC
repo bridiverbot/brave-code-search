@@ -1,0 +1,7 @@
+  0x000000000000000e (SONAME)       Library soname: [libui_base_emoji.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+__cxa_finalize@GLIBC_2.2.5 w
+_ZN2ui14ShowEmojiPanelEv T
+_ZN2ui21IsEmojiPanelSupportedEv T

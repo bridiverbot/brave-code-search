@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_POLYMER_V3_0_CODE_CACHE_POLYMER_BUNDLED_MIN_JS_CODE_CACHE" file="${root_gen_dir}/third_party/polymer/v3_0/code_cache/polymer_bundled.min.js.code_cache" resource_path="polymer/v3_0/polymer/polymer_bundled.min.js.code_cache" use_base_dir="false" type="BINDATA" />
+</grit-part>

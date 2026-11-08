@@ -1,0 +1,7 @@
+  0x000000000000000e (SONAME)       Library soname: [libskia_skia_switches.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+__cxa_finalize@GLIBC_2.2.5 w
+_ZN8switches10kTextGammaE R
+_ZN8switches13kTextContrastE R

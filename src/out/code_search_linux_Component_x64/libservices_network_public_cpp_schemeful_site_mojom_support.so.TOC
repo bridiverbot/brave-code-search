@@ -1,0 +1,13 @@
+  0x000000000000000e (SONAME)       Library soname: [libservices_network_public_cpp_schemeful_site_mojom_support.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+_ZN3net13SchemefulSite8FromWireERKN3url6OriginEPS0_ U
+_ZN3url6OriginD1Ev U
+_ZN3url6OriginC1Ev U
+_ZN4mojo12StructTraitsIN3url5mojom14OriginDataViewENS1_6OriginEE4ReadES3_PS4_ U
+strlen@GLIBC_2.2.5 U
+memset@GLIBC_2.2.5 U
+__cxa_finalize@GLIBC_2.2.5 w
+memmove@GLIBC_2.2.5 U
+_ZN4mojo12StructTraitsIN7network5mojom21SchemefulSiteDataViewEN3net13SchemefulSiteEE4ReadES3_PS5_ T

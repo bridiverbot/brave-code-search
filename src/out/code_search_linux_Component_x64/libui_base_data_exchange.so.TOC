@@ -1,0 +1,13 @@
+  0x000000000000000e (SONAME)       Library soname: [libui_base_data_exchange.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+_ZN4base8FilePathC1ERKS0_ U
+_ZN4base8FilePathD1Ev U
+__cxa_finalize@GLIBC_2.2.5 w
+_ZN2ui16DownloadFileInfoC1ERKN4base8FilePathENSt4__Cr10unique_ptrINS_20DownloadFileProviderENS5_14default_deleteIS7_EEEE T
+_ZN2ui16DownloadFileInfoC2ERKN4base8FilePathENSt4__Cr10unique_ptrINS_20DownloadFileProviderENS5_14default_deleteIS7_EEEE T
+_ZN2ui16DownloadFileInfoD1Ev T
+_ZN2ui16DownloadFileInfoD2Ev T
+_ZN2ui34OSExchangeDataProviderFactoryOzone11SetInstanceEPS0_ T
+_ZN2ui34OSExchangeDataProviderFactoryOzone9instance_E B

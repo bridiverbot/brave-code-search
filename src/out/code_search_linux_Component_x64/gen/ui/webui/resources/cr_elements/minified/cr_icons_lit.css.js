@@ -1,0 +1,1 @@
+import{css}from"//resources/lit/v3_0/lit.rollup.js";import{getCss as getCrIconsLitChromium}from"./cr_icons_lit-chromium.css.js";let instance=null;export function getCss(){return instance||(instance=[...[getCrIconsLitChromium()],css`.icon-folder-open{--cr-icon-image:url(//resources/brave-icons/folder.svg)}.icon-edit{--cr-icon-image:url(//resources/brave-icons/edit-pencil.svg)}`])}

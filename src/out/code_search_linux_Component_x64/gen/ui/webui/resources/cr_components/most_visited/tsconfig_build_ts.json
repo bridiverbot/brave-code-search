@@ -1,0 +1,63 @@
+{
+  "extends": "../../../../../../../../tools/typescript/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "../../tsc/cr_components/most_visited",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/most_visited.html.ts",
+    "preprocessed/most_visited.ts",
+    "preprocessed/window_proxy.ts",
+    "preprocessed/most_visited.css.ts",
+    "preprocessed/tile_source.mojom-webui.ts",
+    "preprocessed/most_visited.mojom-webui.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../mojo/tsconfig_build_ts.json"
+    }
+  ]
+}
