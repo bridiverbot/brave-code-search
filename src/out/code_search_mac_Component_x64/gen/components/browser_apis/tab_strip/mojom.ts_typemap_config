@@ -1,0 +1,12 @@
+[
+  {
+    "source": "node_id_converter.ts",
+    "types": [
+      {
+        "converter": "NodeIdConverter",
+        "mojom": "tabs_api.mojom.NodeId",
+        "ts": "string"
+      }
+    ]
+  }
+]

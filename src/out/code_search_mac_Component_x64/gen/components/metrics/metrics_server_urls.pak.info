@@ -1,0 +1,6 @@
+IDS_METRICS_SERVER_URL,30900,../../components/metrics/server_urls.grd
+IDS_INSECURE_METRICS_SERVER_URL,30901,../../components/metrics/server_urls.grd
+IDS_CAST_METRICS_SERVER_URL,30902,../../components/metrics/server_urls.grd
+IDS_UKM_SERVER_URL,30903,../../components/metrics/server_urls.grd
+IDS_DWA_SERVER_URL,30904,../../components/metrics/server_urls.grd
+IDS_PRIVATE_METRICS_SERVER_URL,30905,../../components/metrics/server_urls.grd
