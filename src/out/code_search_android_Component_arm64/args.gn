@@ -1,0 +1,6 @@
+# This file is user-editable. It won't be overwritten as long as it imports
+# args_generated.gni, even if the import statement is commented out.
+
+import("//out/code_search_android_Component_arm64/args_generated.gni")
+
+# Put your extra args AFTER this line.
