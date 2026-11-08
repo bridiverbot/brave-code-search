@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_PDF_PDF_INTERNAL_PLUGIN_WRAPPER_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/pdf/pdf_internal_plugin_wrapper.rollup.js" resource_path="pdf/pdf_internal_plugin_wrapper.rollup.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

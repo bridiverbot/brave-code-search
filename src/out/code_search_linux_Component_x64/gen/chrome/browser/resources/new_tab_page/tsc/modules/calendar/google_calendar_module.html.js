@@ -1,0 +1,23 @@
+import { html } from '//resources/lit/v3_0/lit.rollup.js';
+export function getHtml() {
+    return html `<!--_html_template_start_--><ntp-module-header
+    id="moduleHeader"
+    header-text="$i18n{modulesGoogleCalendarTitle}"
+    .menuItems="${this.getMenuItems_()}"
+    more-actions-text="$i18n{modulesGoogleCalendarMoreActions}"
+    @disable-button-click="${this.onDisableButtonClick_}"
+    @info-button-click="${this.onInfoButtonClick_}">
+</ntp-module-header>
+<ntp-calendar id="calendar"
+    .events="${this.events_}"
+    calendar-link="https://calendar.google.com"
+    module-name="GoogleCalendar">
+</ntp-calendar>
+${this.showInfoDialog_ ? html `
+  <ntp-info-dialog show-on-attach
+      .innerHTML="${this.i18nAdvanced('moduleGoogleCalendarInfo')}"
+      @close="${this.onInfoDialogClose_}">
+  </ntp-info-dialog>
+` : ''}
+<!--_html_template_end_-->`;
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_NEW_TAB_PAGE_CHEVRON_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/icons/chevron.svg" resource_path="icons/chevron.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NEW_TAB_PAGE_DRIVE_LOGO_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/icons/drive_logo.svg" resource_path="icons/drive_logo.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NEW_TAB_PAGE_GENERIC_GLOBE_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/icons/generic_globe.svg" resource_path="icons/generic_globe.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NEW_TAB_PAGE_INFO_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/icons/info.svg" resource_path="icons/info.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NEW_TAB_PAGE_LINK_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/icons/link.svg" resource_path="icons/link.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NEW_TAB_PAGE_LINK_OLD_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/icons/link_old.svg" resource_path="icons/link_old.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NEW_TAB_PAGE_MIC_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/icons/mic.svg" resource_path="icons/mic.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_NEW_TAB_PAGE_MIC_OLD_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/icons/mic_old.svg" resource_path="icons/mic_old.svg" use_base_dir="false" type="BINDATA" />
+</grit-part>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/reset_password_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/reset_password_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/reset_password_resources_map.h"
+            type="resource_map_header" />
+    <output filename="reset_password_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_RESET_PASSWORD_RESET_PASSWORD_HTML" file="${root_gen_dir}/chrome/browser/resources/reset_password/preprocessed/reset_password.html" resource_path="reset_password.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_RESET_PASSWORD_RESET_PASSWORD_JS" file="${root_gen_dir}/chrome/browser/resources/reset_password/minified/reset_password.js" resource_path="reset_password.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_RESET_PASSWORD_RESET_PASSWORD_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/reset_password/minified/reset_password.mojom-webui.js" resource_path="reset_password.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

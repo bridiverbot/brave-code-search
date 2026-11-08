@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/side_panel_reading_list_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/side_panel_reading_list_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/side_panel_reading_list_resources_map.h"
+            type="resource_map_header" />
+    <output filename="side_panel_reading_list_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_SIDE_PANEL_READING_LIST_IMAGES_READ_LATER_EMPTY_SVG" file="${root_src_dir}/chrome/browser/resources/side_panel/reading_list/images/read_later_empty.svg" resource_path="images/read_later_empty.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_IMAGES_READ_LATER_EMPTY_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/side_panel/reading_list/images/read_later_empty_dark.svg" resource_path="images/read_later_empty_dark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_READING_LIST_HTML" file="${root_gen_dir}/chrome/browser/resources/side_panel/reading_list/preprocessed/reading_list.html" resource_path="reading_list.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_READING_LIST_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/reading_list/minified/reading_list_app.html.js" resource_path="reading_list_app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_READING_LIST_APP_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/reading_list/minified/reading_list_app.js" resource_path="reading_list_app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_READING_LIST_ITEM_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/reading_list/minified/reading_list_item.html.js" resource_path="reading_list_item.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_READING_LIST_ITEM_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/reading_list/minified/reading_list_item.js" resource_path="reading_list_item.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_ICONS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/reading_list/minified/icons.html.js" resource_path="icons.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_READING_LIST_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/reading_list/minified/reading_list_app.css.js" resource_path="reading_list_app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_READING_LIST_ITEM_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/reading_list/minified/reading_list_item.css.js" resource_path="reading_list_item.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_READING_LIST_READING_LIST_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/reading_list/minified/reading_list.mojom-webui.js" resource_path="reading_list.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

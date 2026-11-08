@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_TAB_GROUPS_CHROME_TAB_GROUPS_LIGHT_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/modules/tab_groups/icons/chrome_tab_groups_light.svg" resource_path="modules/tab_groups/icons/chrome_tab_groups_light.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_TAB_GROUPS_CHROME_TAB_GROUPS_DARK_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/modules/tab_groups/icons/chrome_tab_groups_dark.svg" resource_path="modules/tab_groups/icons/chrome_tab_groups_dark.svg" use_base_dir="false" type="BINDATA" />
+</grit-part>

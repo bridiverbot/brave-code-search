@@ -1,0 +1,6 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[], css `:host{display:block}:host([hidden]){display:none}#groupSvg,svg{display:block;height:6px;width:6px}:host([size=large]) #groupSvg,:host([size=large]) svg{height:12px;width:12px}#groupDot,circle{fill:var(--group-dot-color)}:host(:not([filled])) #groupDot,:host(:not([filled])) circle{fill:none;stroke:var(--group-dot-color)}`]);
+}

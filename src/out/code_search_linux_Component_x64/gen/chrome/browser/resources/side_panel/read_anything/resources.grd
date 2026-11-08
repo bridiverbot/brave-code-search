@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/side_panel_read_anything_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/side_panel_read_anything_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/side_panel_read_anything_resources_map.h"
+            type="resource_map_header" />
+    <output filename="side_panel_read_anything_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_SIDE_PANEL_READ_ANYTHING_IMAGES_EMPTY_STATE_SVG" file="${root_src_dir}/chrome/browser/resources/side_panel/read_anything/images/empty_state.svg" resource_path="images/empty_state.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_SIDE_PANEL_READ_ANYTHING_APP_READ_ANYTHING_HTML" file="${root_gen_dir}/chrome/browser/resources/side_panel/read_anything/preprocessed/app/read_anything.html" resource_path="app/read_anything.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_READ_ANYTHING_READ_ANYTHING_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/read_anything/minified/read_anything.rollup.js" resource_path="read_anything.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

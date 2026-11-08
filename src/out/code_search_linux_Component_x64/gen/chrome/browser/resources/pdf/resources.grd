@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/pdf_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/pdf_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/pdf_resources_map.h"
+            type="resource_map_header" />
+    <output filename="pdf_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <part file="internal_plugin_resources.grdp" />
+      <part file="excluded_resources.grdp" />
+      <include name="IDR_PDF_INDEX_CSS" file="${root_gen_dir}/chrome/browser/resources/pdf/preprocessed/index.css" resource_path="pdf/index.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_PDF_INDEX_HTML" file="${root_gen_dir}/chrome/browser/resources/pdf/preprocessed/index.html" resource_path="pdf/index.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PDF_INDEX_PRINT_HTML" file="${root_gen_dir}/chrome/browser/resources/pdf/preprocessed/index_print.html" resource_path="pdf/index_print.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PDF_PDF_VIEWER_WRAPPER_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/pdf/minified/pdf_viewer_wrapper.rollup.js" resource_path="pdf/pdf_viewer_wrapper.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PDF_PDF_PRINT_WRAPPER_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/pdf/minified/pdf_print_wrapper.rollup.js" resource_path="pdf/pdf_print_wrapper.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_PDF_SHARED_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/pdf/minified/shared.rollup.js" resource_path="pdf/shared.rollup.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

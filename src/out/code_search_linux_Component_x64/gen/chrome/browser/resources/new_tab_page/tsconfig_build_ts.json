@@ -1,0 +1,289 @@
+{
+  "extends": "../../../../../../../chrome/browser/resources/new_tab_page/tsconfig_base.json",
+  "compilerOptions": {
+    "types": [
+      "dom-speech-recognition",
+      "trusted-types"
+    ],
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_components/color_change_listener/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "chrome://resources/cr_components/color_change_listener/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "//resources/cr_components/composebox/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "chrome://resources/cr_components/composebox/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "//resources/cr_components/help_bubble/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "chrome://resources/cr_components/help_bubble/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "//resources/cr_components/localized_link/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/localized_link/*"
+      ],
+      "chrome://resources/cr_components/localized_link/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/localized_link/*"
+      ],
+      "//resources/cr_components/most_visited/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/most_visited/*"
+      ],
+      "chrome://resources/cr_components/most_visited/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/most_visited/*"
+      ],
+      "//resources/cr_components/page_image_service/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/page_image_service/*"
+      ],
+      "chrome://resources/cr_components/page_image_service/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/page_image_service/*"
+      ],
+      "//resources/cr_components/search/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/search/*"
+      ],
+      "chrome://resources/cr_components/search/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/search/*"
+      ],
+      "//resources/cr_components/searchbox/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "chrome://resources/cr_components/searchbox/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://new-tab-page/shared/*": [
+        "./../new_tab_shared/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app.ts",
+    "preprocessed/doodle_share_dialog.ts",
+    "preprocessed/iframe.ts",
+    "preprocessed/lens_form.ts",
+    "preprocessed/lens_upload_dialog.ts",
+    "preprocessed/logo.ts",
+    "preprocessed/voice_search_overlay.ts",
+    "preprocessed/modules/info_dialog.ts",
+    "preprocessed/modules/module_wrapper.ts",
+    "preprocessed/modules/module_header.ts",
+    "preprocessed/modules/modules.ts",
+    "preprocessed/modules/authentication/microsoft_auth_module.ts",
+    "preprocessed/modules/calendar/calendar.ts",
+    "preprocessed/modules/calendar/calendar_event.ts",
+    "preprocessed/modules/calendar/google_calendar_module.ts",
+    "preprocessed/modules/calendar/outlook_calendar_module.ts",
+    "preprocessed/modules/file_suggestion/file_suggestion.ts",
+    "preprocessed/modules/file_suggestion/drive_module.ts",
+    "preprocessed/modules/file_suggestion/microsoft_files_module.ts",
+    "preprocessed/modules/most_relevant_tab_resumption/module.ts",
+    "preprocessed/modules/tab_groups/module.ts",
+    "preprocessed/modules/dummy/module.ts",
+    "preprocessed/background_manager.ts",
+    "preprocessed/customize_dialog_types.ts",
+    "preprocessed/doodle_icons.html.ts",
+    "preprocessed/i18n_setup.ts",
+    "preprocessed/image_processor.ts",
+    "preprocessed/lazy_load.ts",
+    "preprocessed/left_hand_side.html.ts",
+    "preprocessed/left_hand_side.ts",
+    "preprocessed/lens_upload_dialog_icons.html.ts",
+    "preprocessed/metrics_utils.ts",
+    "preprocessed/new_tab_page_eager.ts",
+    "preprocessed/new_tab_page.ts",
+    "preprocessed/ntp_composebox.html.ts",
+    "preprocessed/ntp_composebox_context_menu.html.ts",
+    "preprocessed/ntp_composebox.ts",
+    "preprocessed/ntp_searchbox.html.ts",
+    "preprocessed/ntp_searchbox.ts",
+    "preprocessed/ntp_searchbox_contextual_entrypoint.html.ts",
+    "preprocessed/transparency.ts",
+    "preprocessed/utils.ts",
+    "preprocessed/window_proxy.ts",
+    "preprocessed/modules/module_descriptor.ts",
+    "preprocessed/modules/module_descriptors.ts",
+    "preprocessed/modules/module_registry.ts",
+    "preprocessed/modules/microsoft_auth_frame_connector.ts",
+    "preprocessed/modules/calendar/common.ts",
+    "preprocessed/modules/calendar/google_calendar_proxy.ts",
+    "preprocessed/modules/calendar/outlook_calendar_proxy.ts",
+    "preprocessed/modules/file_suggestion/file_module_proxy.ts",
+    "preprocessed/modules/file_suggestion/microsoft_files_proxy.ts",
+    "preprocessed/modules/most_relevant_tab_resumption/most_relevant_tab_resumption_proxy.ts",
+    "preprocessed/modules/most_relevant_tab_resumption/page_favicon.ts",
+    "preprocessed/modules/tab_groups/icon_container.html.ts",
+    "preprocessed/modules/tab_groups/icon_container.ts",
+    "preprocessed/modules/tab_groups/tab_groups_proxy.ts",
+    "preprocessed/modules/dummy/foo_proxy.ts",
+    "preprocessed/ntp_promo/individual_promos.html.ts",
+    "preprocessed/ntp_promo/individual_promos.ts",
+    "preprocessed/action_chips/action_chips_proxy.ts",
+    "preprocessed/action_chips/action_chips.html.ts",
+    "preprocessed/action_chips/action_chips.ts",
+    "preprocessed/action_chips/icons.html.ts",
+    "preprocessed/app.html.ts",
+    "preprocessed/doodle_share_dialog.html.ts",
+    "preprocessed/iframe.html.ts",
+    "preprocessed/lens_form.html.ts",
+    "preprocessed/lens_upload_dialog.html.ts",
+    "preprocessed/logo.html.ts",
+    "preprocessed/voice_search_overlay.html.ts",
+    "preprocessed/modules/info_dialog.html.ts",
+    "preprocessed/modules/module_wrapper.html.ts",
+    "preprocessed/modules/module_header.html.ts",
+    "preprocessed/modules/modules.html.ts",
+    "preprocessed/modules/authentication/microsoft_auth_module.html.ts",
+    "preprocessed/modules/calendar/calendar.html.ts",
+    "preprocessed/modules/calendar/calendar_event.html.ts",
+    "preprocessed/modules/calendar/google_calendar_module.html.ts",
+    "preprocessed/modules/calendar/outlook_calendar_module.html.ts",
+    "preprocessed/modules/file_suggestion/file_suggestion.html.ts",
+    "preprocessed/modules/file_suggestion/drive_module.html.ts",
+    "preprocessed/modules/file_suggestion/microsoft_files_module.html.ts",
+    "preprocessed/modules/most_relevant_tab_resumption/module.html.ts",
+    "preprocessed/modules/tab_groups/module.html.ts",
+    "preprocessed/modules/dummy/module.html.ts",
+    "preprocessed/modules/icons.html.ts",
+    "preprocessed/modules/most_relevant_tab_resumption/icons.html.ts",
+    "preprocessed/modules/tab_groups/icons.html.ts",
+    "preprocessed/ntp_promo/ntp_promo_icons.html.ts",
+    "preprocessed/app.css.ts",
+    "preprocessed/doodle_share_dialog.css.ts",
+    "preprocessed/iframe.css.ts",
+    "preprocessed/left_hand_side.css.ts",
+    "preprocessed/lens_form.css.ts",
+    "preprocessed/lens_upload_dialog.css.ts",
+    "preprocessed/logo.css.ts",
+    "preprocessed/ntp_composebox.css.ts",
+    "preprocessed/ntp_searchbox.css.ts",
+    "preprocessed/voice_search_overlay.css.ts",
+    "preprocessed/modules/info_dialog.css.ts",
+    "preprocessed/modules/module_wrapper.css.ts",
+    "preprocessed/modules/module_header.css.ts",
+    "preprocessed/modules/modules.css.ts",
+    "preprocessed/modules/authentication/microsoft_auth_module.css.ts",
+    "preprocessed/modules/calendar/calendar.css.ts",
+    "preprocessed/modules/calendar/calendar_event.css.ts",
+    "preprocessed/modules/file_suggestion/file_suggestion.css.ts",
+    "preprocessed/modules/most_relevant_tab_resumption/module.css.ts",
+    "preprocessed/modules/most_relevant_tab_resumption/page_favicon.css.ts",
+    "preprocessed/modules/tab_groups/icon_container.css.ts",
+    "preprocessed/modules/tab_groups/module.css.ts",
+    "preprocessed/modules/dummy/module.css.ts",
+    "preprocessed/ntp_promo/individual_promos.css.ts",
+    "preprocessed/action_chips/action_chips.css.ts",
+    "preprocessed/drive_suggestion.mojom-webui.ts",
+    "preprocessed/file_suggestion.mojom-webui.ts",
+    "preprocessed/microsoft_files.mojom-webui.ts",
+    "preprocessed/calendar_data.mojom-webui.ts",
+    "preprocessed/google_calendar.mojom-webui.ts",
+    "preprocessed/outlook_calendar.mojom-webui.ts",
+    "preprocessed/most_relevant_tab_resumption.mojom-webui.ts",
+    "preprocessed/url_visit_types.mojom-webui.ts",
+    "preprocessed/tab_groups.mojom-webui.ts",
+    "preprocessed/customize_buttons.mojom-webui.ts",
+    "preprocessed/action_chips.mojom-webui.ts",
+    "preprocessed/new_tab_page.mojom-webui.ts",
+    "preprocessed/ntp_promo.mojom-webui.ts",
+    "preprocessed/ntp_microsoft_auth_shared_ui.mojom-webui.ts",
+    "preprocessed/customize_chrome.mojom-webui.ts",
+    "preprocessed/tile_type.mojom-webui.ts",
+    "preprocessed/composebox_query.mojom-webui.ts",
+    "preprocessed/tab_group_types.mojom-webui.ts",
+    "preprocessed/composebox.mojom-webui.ts",
+    "preprocessed/foo.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../tools/typescript/definitions/chrome_histograms.d.ts",
+    "../../../../../../../tools/typescript/definitions/metrics_private.d.ts",
+    "../../../../../../../tools/typescript/definitions/pending.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../new_tab_shared/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/color_change_listener/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/composebox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/help_bubble/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/localized_link/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/most_visited/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/page_image_service/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/search/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/searchbox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

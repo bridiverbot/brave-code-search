@@ -1,0 +1,13 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../../../chrome/browser/ui/webui/feature_showcase/default_browser.mojom",
+    "../../../../../../../../chrome/browser/ui/webui/feature_showcase/feature_showcase.mojom",
+    "../../../../../../../../chrome/browser/ui/webui/feature_showcase/gemini.mojom",
+    "../../../../../../../../chrome/browser/ui/webui/feature_showcase/google_lens.mojom",
+    "../../../../../../../../chrome/browser/ui/webui/feature_showcase/password_manager.mojom",
+    "../../../../../../../../chrome/browser/ui/webui/feature_showcase/themes_and_customization.mojom"
+  ]
+}

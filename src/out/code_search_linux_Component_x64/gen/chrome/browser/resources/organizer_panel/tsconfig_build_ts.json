@@ -1,0 +1,127 @@
+{
+  "extends": "../../../../../../../tools/typescript/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_components/color_change_listener/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "chrome://resources/cr_components/color_change_listener/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "/tab_group_shared/*": [
+        "./../tab_group_shared/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app.html.ts",
+    "preprocessed/app.ts",
+    "preprocessed/delegates/foreign_tabs_delegate.ts",
+    "preprocessed/delegates/open_tabs_delegate.ts",
+    "preprocessed/delegates/recent_tabs_delegate.ts",
+    "preprocessed/delegates/tab_delegate_utils.ts",
+    "preprocessed/delegates/tab_groups_delegate.ts",
+    "preprocessed/keyboard_arrow_navigation_service.ts",
+    "preprocessed/organizer_list.html.ts",
+    "preprocessed/organizer_list.ts",
+    "preprocessed/organizer_list_section.html.ts",
+    "preprocessed/organizer_list_section.ts",
+    "preprocessed/organizer_list_section_delegate.ts",
+    "preprocessed/organizer_list_section_header.html.ts",
+    "preprocessed/organizer_list_section_header.ts",
+    "preprocessed/organizer_list_section_item.html.ts",
+    "preprocessed/organizer_list_section_item.ts",
+    "preprocessed/organizer_list_section_item_description.html.ts",
+    "preprocessed/organizer_list_section_item_description.ts",
+    "preprocessed/organizer_list_section_item_title.html.ts",
+    "preprocessed/organizer_list_section_item_title.ts",
+    "preprocessed/organizer_panel.ts",
+    "preprocessed/organizer_zero_state.html.ts",
+    "preprocessed/organizer_zero_state.ts",
+    "preprocessed/search_utils.ts",
+    "preprocessed/stacked_favicons.html.ts",
+    "preprocessed/stacked_favicons.ts",
+    "preprocessed/icons.html.ts",
+    "preprocessed/app.css.ts",
+    "preprocessed/organizer_list.css.ts",
+    "preprocessed/organizer_list_section.css.ts",
+    "preprocessed/organizer_list_section_header.css.ts",
+    "preprocessed/organizer_list_section_item.css.ts",
+    "preprocessed/organizer_list_section_item_description.css.ts",
+    "preprocessed/organizer_list_section_item_title.css.ts",
+    "preprocessed/organizer_zero_state.css.ts",
+    "preprocessed/stacked_favicons.css.ts",
+    "preprocessed/foreign_tabs.mojom-webui.ts",
+    "preprocessed/organizer_panel.mojom-webui.ts",
+    "preprocessed/tab_groups.mojom-webui.ts",
+    "preprocessed/tab_search.mojom-webui.ts",
+    "preprocessed/tabs.mojom-webui.ts",
+    "preprocessed/tab_group_types.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tab_group_shared/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/color_change_listener/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

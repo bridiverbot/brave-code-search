@@ -1,0 +1,12 @@
+{
+  "deps": [
+    "../../../../../url/mojom/url_mojom_gurl.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../chrome/browser/ui/webui/intro/finish_or_continue.mojom",
+    "../../../../../../../../chrome/browser/ui/webui/intro/intro.mojom",
+    "../../../../../../../../chrome/browser/ui/webui/intro/sign_in_celebration.mojom",
+    "../../../../../../../../chrome/browser/ui/webui/intro/sign_in_promo.mojom",
+    "../../../../../../../../chrome/browser/ui/webui/intro/welcome.mojom"
+  ]
+}

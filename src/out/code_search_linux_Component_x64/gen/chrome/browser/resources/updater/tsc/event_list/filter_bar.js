@@ -1,0 +1,301 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import './filter_dialog/filter_dialog.js';
+import './filter_dialog/app_dialog.js';
+import './filter_dialog/event_dialog.js';
+import './filter_dialog/outcome_dialog.js';
+import './filter_dialog/scope_dialog.js';
+import './filter_dialog/date_dialog.js';
+import './filter_dialog/type_dialog.js';
+import '//resources/cr_elements/cr_chip/cr_chip.js';
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import '//resources/cr_elements/cr_ripple/cr_ripple.js';
+import '//resources/cr_elements/icons.html.js';
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_checkbox/cr_checkbox.js';
+import '//resources/cr_elements/cr_icon/cr_icon.js';
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import '../icons.html.js';
+import { assertNotReachedCase } from '//resources/js/assert.js';
+import { EventTracker } from '//resources/js/event_tracker.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { localizeEventType, localizeScope, localizeUpdateOutcome } from '../event_history.js';
+import { loadTimeData } from '../i18n_setup.js';
+import { formatDateDigits } from '../tools.js';
+import { getCss } from './filter_bar.css.js';
+import { getHtml } from './filter_bar.html.js';
+import { createDefaultFilterSettings } from './filter_settings.js';
+export var FilterCategory;
+(function (FilterCategory) {
+    FilterCategory["APP"] = "app";
+    FilterCategory["EVENT"] = "event";
+    FilterCategory["OUTCOME"] = "outcome";
+    FilterCategory["DATE"] = "date";
+    FilterCategory["SCOPE"] = "scope";
+})(FilterCategory || (FilterCategory = {}));
+/**
+ * Returns the filter category associated with an element via the
+ * data-filter-category property.
+ */
+export function getFilterCategoryForTarget(target) {
+    return target.dataset['filterCategory'];
+}
+export class FilterBarElement extends CrLitElement {
+    static get is() {
+        return 'filter-bar';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            filterSettings: { type: Object },
+            filterOrder: { type: Array },
+            filterMenuState: { type: String },
+            menuHost: { type: String },
+            focusReturnElement: { type: Object },
+            webuiRoundedIconsEnabled_: { type: Boolean },
+        };
+    }
+    eventTracker = new EventTracker();
+    #filterSettings_accessor_storage = createDefaultFilterSettings();
+    get filterSettings() { return this.#filterSettings_accessor_storage; }
+    set filterSettings(value) { this.#filterSettings_accessor_storage = value; }
+    #filterOrder_accessor_storage = [];
+    get filterOrder() { return this.#filterOrder_accessor_storage; }
+    set filterOrder(value) { this.#filterOrder_accessor_storage = value; }
+    #filterMenuState_accessor_storage = 'closed';
+    get filterMenuState() { return this.#filterMenuState_accessor_storage; }
+    set filterMenuState(value) { this.#filterMenuState_accessor_storage = value; }
+    #menuHost_accessor_storage = 'input';
+    get menuHost() { return this.#menuHost_accessor_storage; }
+    set menuHost(value) { this.#menuHost_accessor_storage = value; }
+    #webuiRoundedIconsEnabled__accessor_storage = loadTimeData.getBoolean('webuiRoundedIconsEnabled');
+    get webuiRoundedIconsEnabled_() { return this.#webuiRoundedIconsEnabled__accessor_storage; }
+    set webuiRoundedIconsEnabled_(value) { this.#webuiRoundedIconsEnabled__accessor_storage = value; }
+    #focusReturnElement_accessor_storage = null;
+    get focusReturnElement() { return this.#focusReturnElement_accessor_storage; }
+    set focusReturnElement(value) { this.#focusReturnElement_accessor_storage = value; }
+    connectedCallback() {
+        super.connectedCallback();
+        this.eventTracker.add(document, 'click', (e) => {
+            if (this.filterMenuState === 'closed') {
+                return;
+            }
+            const path = e.composedPath();
+            if (path.some(el => el === this.$.filterBarInputContainer)) {
+                return;
+            }
+            if (path.some(el => {
+                return el instanceof HTMLElement &&
+                    (el.classList.contains('chip') ||
+                        el.tagName === 'FILTER-DIALOG');
+            })) {
+                return;
+            }
+            this.closeFilterMenu();
+        });
+        if (this.filterOrder.length === 0) {
+            const initialFilterOrder = [];
+            if (this.filterSettings.apps.size > 0) {
+                initialFilterOrder.push(FilterCategory.APP);
+            }
+            if (this.filterSettings.eventTypes.size > 0) {
+                initialFilterOrder.push(FilterCategory.EVENT);
+            }
+            if (this.filterSettings.updateOutcomes.size > 0) {
+                initialFilterOrder.push(FilterCategory.OUTCOME);
+            }
+            if (this.filterSettings.scopes.size > 0) {
+                initialFilterOrder.push(FilterCategory.SCOPE);
+            }
+            if (this.filterSettings.startDate || this.filterSettings.endDate) {
+                initialFilterOrder.push(FilterCategory.DATE);
+            }
+            this.filterOrder = initialFilterOrder;
+        }
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.eventTracker.removeAll();
+    }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('filterSettings')) {
+            this.updateFilterOrder(FilterCategory.APP, this.filterSettings.apps.size > 0);
+            this.updateFilterOrder(FilterCategory.EVENT, this.filterSettings.eventTypes.size > 0);
+            this.updateFilterOrder(FilterCategory.OUTCOME, this.filterSettings.updateOutcomes.size > 0);
+            this.updateFilterOrder(FilterCategory.SCOPE, this.filterSettings.scopes.size > 0);
+            this.updateFilterOrder(FilterCategory.DATE, !!(this.filterSettings.startDate || this.filterSettings.endDate));
+        }
+    }
+    async onRemoveFilterClick(e) {
+        const category = getFilterCategoryForTarget(e.currentTarget);
+        this.updateFilterOrder(category, false);
+        switch (category) {
+            case FilterCategory.APP:
+                this.filterSettings.apps.clear();
+                break;
+            case FilterCategory.EVENT:
+                this.filterSettings.eventTypes.clear();
+                break;
+            case FilterCategory.OUTCOME:
+                this.filterSettings.updateOutcomes.clear();
+                break;
+            case FilterCategory.SCOPE:
+                this.filterSettings.scopes.clear();
+                break;
+            case FilterCategory.DATE:
+                this.filterSettings.startDate = null;
+                this.filterSettings.endDate = null;
+                break;
+            default:
+                assertNotReachedCase(category);
+        }
+        await this.onFiltersChanged(category);
+    }
+    onChipClick(e) {
+        this.editFilter(getFilterCategoryForTarget(e.target));
+    }
+    getFilterLabel(category) {
+        switch (category) {
+            case FilterCategory.APP:
+                return loadTimeData.getStringF('filterChipApp', Array.from(this.filterSettings.apps).join(', '));
+            case FilterCategory.EVENT:
+                return loadTimeData.getStringF('filterChipEventType', Array.from(this.filterSettings.eventTypes)
+                    .map(localizeEventType)
+                    .join(', '));
+            case FilterCategory.OUTCOME:
+                return loadTimeData.getStringF('filterChipUpdateOutcome', Array.from(this.filterSettings.updateOutcomes)
+                    .map(localizeUpdateOutcome)
+                    .join(', '));
+            case FilterCategory.SCOPE:
+                return loadTimeData.getStringF('filterChipUpdaterScope', Array.from(this.filterSettings.scopes)
+                    .map(localizeScope)
+                    .join(', '));
+            case FilterCategory.DATE:
+                return loadTimeData.getStringF('filterChipDate', this.getDateFilterString());
+            default:
+                assertNotReachedCase(category);
+        }
+    }
+    editFilter(category) {
+        this.focusReturnElement = this.shadowRoot.activeElement;
+        this.menuHost = 'chip';
+        this.filterMenuState = category;
+    }
+    closeFilterMenu() {
+        this.filterMenuState = 'closed';
+        this.focusReturnElement?.focus();
+        this.focusReturnElement = null;
+    }
+    updateFilterOrder(category, active) {
+        const index = this.filterOrder.indexOf(category);
+        if (active && index === -1) {
+            this.filterOrder = [...this.filterOrder, category];
+        }
+        else if (!active && index !== -1) {
+            this.filterOrder = this.filterOrder.filter(f => f !== category);
+        }
+    }
+    onTypeSelectionChanged(e) {
+        this.filterMenuState = e.detail;
+    }
+    async onAppFilterChange(e) {
+        this.updateFilterOrder(FilterCategory.APP, e.detail.size > 0);
+        this.filterSettings.apps = new Set(e.detail);
+        this.closeFilterMenu();
+        await this.onFiltersChanged(FilterCategory.APP);
+    }
+    async onEventTypeFilterChange(e) {
+        this.updateFilterOrder(FilterCategory.EVENT, e.detail.size > 0);
+        this.filterSettings.eventTypes = new Set(e.detail);
+        this.closeFilterMenu();
+        await this.onFiltersChanged(FilterCategory.EVENT);
+    }
+    async onUpdateOutcomeFilterChange(e) {
+        this.updateFilterOrder(FilterCategory.OUTCOME, e.detail.size > 0);
+        this.filterSettings.updateOutcomes = new Set(e.detail);
+        this.closeFilterMenu();
+        await this.onFiltersChanged(FilterCategory.OUTCOME);
+    }
+    async onScopeFilterChange(e) {
+        this.updateFilterOrder(FilterCategory.SCOPE, e.detail.size > 0);
+        this.filterSettings.scopes = new Set(e.detail);
+        this.closeFilterMenu();
+        await this.onFiltersChanged(FilterCategory.SCOPE);
+    }
+    async onDateFilterChange(e) {
+        this.updateFilterOrder(FilterCategory.DATE, !!(e.detail.start || e.detail.end));
+        this.filterSettings.startDate = e.detail.start;
+        this.filterSettings.endDate = e.detail.end;
+        this.closeFilterMenu();
+        await this.onFiltersChanged(FilterCategory.DATE);
+    }
+    getDateFilterString() {
+        const format = (d) => formatDateDigits(d);
+        const start = this.filterSettings.startDate ?
+            format(this.filterSettings.startDate) :
+            undefined;
+        const end = this.filterSettings.endDate ?
+            format(this.filterSettings.endDate) :
+            undefined;
+        if (start && end) {
+            return loadTimeData.getStringF('dateFilterRange', start, end);
+        }
+        if (start) {
+            return loadTimeData.getStringF('dateFilterAfter', start);
+        }
+        if (end) {
+            return loadTimeData.getStringF('dateFilterBefore', end);
+        }
+        return '';
+    }
+    async onFiltersChanged(category) {
+        await this.updateComplete;
+        this.fire('filters-changed', category);
+        this.requestUpdate();
+    }
+    async onClearFiltersClick() {
+        this.filterSettings.apps.clear();
+        this.filterSettings.eventTypes.clear();
+        this.filterSettings.updateOutcomes.clear();
+        this.filterSettings.scopes.clear();
+        this.filterSettings.startDate = null;
+        this.filterSettings.endDate = null;
+        this.filterOrder = [];
+        await this.onFiltersChanged('all');
+    }
+    isEditing() {
+        return this.filterMenuState !== 'closed';
+    }
+    isEditingViaInput(category) {
+        return this.filterMenuState === category && this.menuHost === 'input';
+    }
+    getDialogAnchor() {
+        if (this.menuHost === 'input') {
+            return this.shadowRoot.querySelector('#add-filter-button');
+        }
+        if (this.filterMenuState !== 'closed') {
+            return this.shadowRoot.querySelector(`.chip[data-filter-category="${this.filterMenuState}"]`);
+        }
+        return null;
+    }
+    onAddFilterClick() {
+        if (this.menuHost === 'input' && this.filterMenuState !== 'closed') {
+            this.closeFilterMenu();
+            return;
+        }
+        this.focusReturnElement = this.shadowRoot.activeElement;
+        this.menuHost = 'input';
+        this.filterMenuState = 'type';
+    }
+    onFilterDialogClose() {
+        this.closeFilterMenu();
+    }
+}
+customElements.define(FilterBarElement.is, FilterBarElement);

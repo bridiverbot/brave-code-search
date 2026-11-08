@@ -1,0 +1,150 @@
+{
+  "extends": "../../../../../../../tools/typescript/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_components/color_change_listener/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "chrome://resources/cr_components/color_change_listener/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "//resources/cr_components/composebox/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "chrome://resources/cr_components/composebox/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "//resources/cr_components/help_bubble/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "chrome://resources/cr_components/help_bubble/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "//resources/cr_components/most_visited/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/most_visited/*"
+      ],
+      "chrome://resources/cr_components/most_visited/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/most_visited/*"
+      ],
+      "//resources/cr_components/search/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/search/*"
+      ],
+      "chrome://resources/cr_components/search/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/search/*"
+      ],
+      "//resources/cr_components/searchbox/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "chrome://resources/cr_components/searchbox/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/composebox.html.ts",
+    "preprocessed/composebox.ts",
+    "preprocessed/app.html.ts",
+    "preprocessed/app.ts",
+    "preprocessed/fre_chin.html.ts",
+    "preprocessed/fre_chin.ts",
+    "preprocessed/fre_modal.html.ts",
+    "preprocessed/fre_modal.ts",
+    "preprocessed/omnibox.html.ts",
+    "preprocessed/omnibox.ts",
+    "preprocessed/omnibox_everywhere.ts",
+    "preprocessed/profile_icon.html.ts",
+    "preprocessed/profile_icon.ts",
+    "preprocessed/debug/debug_app.html.ts",
+    "preprocessed/debug/debug_app.ts",
+    "preprocessed/browser_proxy.ts",
+    "preprocessed/composebox.css.ts",
+    "preprocessed/app.css.ts",
+    "preprocessed/fre_chin.css.ts",
+    "preprocessed/fre_modal.css.ts",
+    "preprocessed/omnibox.css.ts",
+    "preprocessed/profile_icon.css.ts",
+    "preprocessed/searchbox_shared_style.css.ts",
+    "preprocessed/debug/debug_app.css.ts",
+    "preprocessed/omnibox_everywhere_debug.mojom-webui.ts",
+    "preprocessed/omnibox_everywhere.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../tools/typescript/definitions/pending.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/color_change_listener/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/composebox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/help_bubble/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/most_visited/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/search/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/searchbox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

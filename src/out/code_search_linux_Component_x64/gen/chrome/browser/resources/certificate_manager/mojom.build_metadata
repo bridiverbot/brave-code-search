@@ -1,0 +1,8 @@
+{
+  "deps": [
+    "../../../../mojo/public/mojom/base/base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../chrome/browser/resources/certificate_manager/certificate_manager.mojom"
+  ]
+}

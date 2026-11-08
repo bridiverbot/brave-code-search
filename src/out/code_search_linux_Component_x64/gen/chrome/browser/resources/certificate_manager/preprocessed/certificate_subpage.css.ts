@@ -1,0 +1,8 @@
+import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
+import {getCss as getCrIconsLit} from '//resources/cr_elements/cr_icons_lit.css.js';
+import {getCss as getCrSharedStyleLit} from '//resources/cr_elements/cr_shared_style_lit.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[getCrIconsLit(),getCrSharedStyleLit()], css`#header{align-items:center;display:grid;grid-template-columns:auto auto 1fr;margin-bottom:28px}#backButton{--cr-icon-button-margin-end:10px;--cr-icon-button-margin-start:-10px}certificate-list{padding:20px 0}`]);
+}

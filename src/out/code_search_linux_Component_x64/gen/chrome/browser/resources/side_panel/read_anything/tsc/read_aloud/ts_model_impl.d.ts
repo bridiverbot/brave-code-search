@@ -1,0 +1,31 @@
+import type { ReadAloudModelBrowserProxy } from './read_aloud_model_browser_proxy.js';
+import type { Segment } from './read_aloud_types.js';
+import { DomReadAloudNode } from './read_aloud_types.js';
+export declare class TsReadModelImpl implements ReadAloudModelBrowserProxy {
+    private textSegmenter_;
+    private sentences_;
+    private currentIndex_;
+    private initialized_;
+    getHighlightForCurrentSegmentIndex(index: number, phrases: boolean): Segment[];
+    getCurrentTextSegments(): Segment[];
+    getCurrentTextContent(): string;
+    getAccessibleText(text: string, maxSpeechLength: number): string;
+    resetSpeechToBeginning(): void;
+    moveSpeechForward(): void;
+    moveSpeechBackwards(): void;
+    isInitialized(): boolean;
+    init(context: DomReadAloudNode): void;
+    onNodeWillBeDeleted(deletedNode: Node): void;
+    private resetState_;
+    private buildTextAndOffsets_;
+    private isLineBreakingItem;
+    private processSentencesAndMapSegments_;
+    private moveSuperscriptsToPrecedingSentence_;
+    private findNodesForSentence_;
+    resetModel(): void;
+    private maybeMergeSuperscripts_;
+    private createSegmentsForSentence_;
+    private getAllTextNodesFrom_;
+    private getWordHighlightSegment;
+    private createHighlightSegment;
+}

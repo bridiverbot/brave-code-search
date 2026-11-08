@@ -1,0 +1,19 @@
+import{html}from"//resources/lit/v3_0/lit.rollup.js";export function getHtml(){return html`<!--_html_template_start_--><div id="second-row">
+  <h2 id="tableTitle">$i18n{tableTitle}</h2>
+  <button id="expandAll" @click="${this.onExpandAllClick_}">
+    $i18n{expandAllBtn}
+  </button>
+  <button id="collapseAll" @click="${this.onCollapseAllClick_}">
+    $i18n{collapseAllBtn}
+  </button>
+</div>
+
+<p id="status"></p>
+<div id="spinner"></div>
+
+<div id="table">
+  ${this.entries.map((item=>html`
+    <key-value-pair-entry .entry="${item}" role="row"></key-value-pair-entry>
+  `))}
+</div>
+<!--_html_template_end_-->`}

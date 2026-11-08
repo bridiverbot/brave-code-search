@@ -1,0 +1,7 @@
+import { css } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { getCss as getCrHiddenStyleLit } from 'chrome://resources/cr_elements/cr_hidden_style_lit.css.js';
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[getCrHiddenStyleLit()], css `:host{align-items:center;cursor:default;display:flex;min-height:var(--destination-item-height);padding-inline-end:2px;padding-inline-start:0}cr-icon{--icon-margin:calc((var(--search-icon-size) - var(--iron-icon-width))/2);fill:var(--google-grey-600);flex:0;height:var(--iron-icon-height);margin-inline-end:var(--icon-margin);margin-inline-start:var(--icon-margin);min-width:var(--iron-icon-width);transition:opacity 150ms}@media (prefers-color-scheme:dark){cr-icon{fill:var(--google-grey-500)}}.name,.search-hint,.extension-controlled-indicator{align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.search-hint,.extension-controlled-indicator{color:var(--cr-secondary-text-color);font-size:calc(10/12 * 1em);margin-inline-start:1em}.name{color:var(--cr-primary-text-color);font-size:1em;margin-inline-start:0;padding-inline-start:8px}.extension-controlled-indicator{display:flex;flex:1;justify-content:flex-end;min-width:150px;padding-inline-end:8px}.extension-icon{height:24px;margin-inline-start:1em;width:24px}@media (forced-colors:active){:host(:hover) span{color:HighlightText;forced-color-adjust:none}:host(:hover) cr-icon{fill:HighlightText}}`]);
+}
