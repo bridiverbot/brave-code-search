@@ -1,0 +1,33 @@
+// Copyright 2018 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// vector_icons.h.template is used to generate vector_icons.h. Edit the former
+// rather than the latter.
+
+#ifndef UI_VIEWS_WINDOW_VECTOR_ICONS_VECTOR_ICONS_H_
+#define UI_VIEWS_WINDOW_VECTOR_ICONS_VECTOR_ICONS_H_
+
+namespace gfx {
+struct VectorIcon;
+}
+
+#define VECTOR_ICON_TEMPLATE_H(icon_name) \
+extern const gfx::VectorIcon icon_name;
+
+namespace views {
+
+VECTOR_ICON_TEMPLATE_H(kChromeMaximizeIcon)
+VECTOR_ICON_TEMPLATE_H(kChromeMinimizeIcon)
+VECTOR_ICON_TEMPLATE_H(kChromeRestoreIcon)
+VECTOR_ICON_TEMPLATE_H(kChromeRestoreFilledIcon)
+VECTOR_ICON_TEMPLATE_H(kWindowControlCloseOldIcon)
+VECTOR_ICON_TEMPLATE_H(kWindowControlMaximizeOldIcon)
+VECTOR_ICON_TEMPLATE_H(kWindowControlMinimizeOldIcon)
+VECTOR_ICON_TEMPLATE_H(kWindowControlRestoreOldIcon)
+
+}  // namespace views
+
+#undef VECTOR_ICON_TEMPLATE_H
+
+#endif  // UI_VIEWS_WINDOW_VECTOR_ICONS_VECTOR_ICONS_H_

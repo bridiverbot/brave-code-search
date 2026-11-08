@@ -1,0 +1,4 @@
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";import{BigBufferSpec as mojoBase_mojom_BigBufferSpec}from"./big_buffer.mojom-webui.js";export const ProtoWrapperSpec={$:{}};mojo.internal.Struct(ProtoWrapperSpec.$,"ProtoWrapper",[mojo.internal.StructField("protoName",0,0,mojo.internal.String,null,false,0,undefined,undefined),mojo.internal.StructField("smuggled",8,0,mojoBase_mojom_BigBufferSpec.$,null,false,0,undefined,undefined)],[[0,32]]);
