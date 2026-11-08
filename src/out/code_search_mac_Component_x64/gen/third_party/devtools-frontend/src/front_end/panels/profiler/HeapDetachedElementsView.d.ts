@@ -1,0 +1,62 @@
+import '../../ui/legacy/components/data_grid/data_grid.js';
+import * as Common from '../../core/common/common.js';
+import * as SDK from '../../core/sdk/sdk.js';
+import type * as Protocol from '../../generated/protocol.js';
+import * as UI from '../../ui/legacy/legacy.js';
+import { type DataDisplayDelegate, type ProfileHeader, ProfileType } from './ProfileHeader.js';
+import { WritableProfileHeader } from './WritableProfileHeader.js';
+export interface ParsedElement {
+    elementInfo: Protocol.DOM.DetachedElementInfo;
+    node: SDK.DOMModel.DOMNode;
+    nodeCount: number;
+}
+export interface ViewInput {
+    parsedElements: ParsedElement[];
+}
+export type ViewOutput = undefined;
+export declare const DEFAULT_VIEW: (input: ViewInput, _output: ViewOutput, target: HTMLElement) => void;
+type View = typeof DEFAULT_VIEW;
+export declare class DetachedElementsProfileView extends UI.View.SimpleView implements DataDisplayDelegate {
+    #private;
+    profile: DetachedElementsProfileHeader;
+    readonly parentDataDisplayDelegate: DataDisplayDelegate;
+    constructor(dataDisplayDelegate: DataDisplayDelegate, profile: DetachedElementsProfileHeader, view?: View);
+    wasShown(): void;
+    performUpdate(): void;
+    showProfile(profile: ProfileHeader | null): UI.Widget.Widget | null;
+    showObject(objectId: string, perspectiveName: string): void;
+    linkifyObject(): Promise<Element | null>;
+    populateElementsGrid(detachedElements: Protocol.DOM.DetachedElementInfo[] | null): void;
+}
+declare const DetachedElementsProfileTypeBase: Common.ObjectWrapper.EventMixin<DetachedElementsProfileType.EventTypes, typeof ProfileType>;
+export declare class DetachedElementsProfileType extends DetachedElementsProfileTypeBase {
+    constructor(typeId?: string, description?: string);
+    profileBeingRecorded(): DetachedElementsProfileHeader | null;
+    get buttonTooltip(): Common.UIString.LocalizedString;
+    buttonClicked(): boolean;
+    getDetachedElements(): Promise<void>;
+    get treeItemTitle(): Common.UIString.LocalizedString;
+    get description(): string;
+    isInstantProfile(): boolean;
+    static readonly TypeId = "DetachedElements";
+}
+export declare namespace DetachedElementsProfileType {
+    const enum Events {
+        RECORDING_STOPPED = "RecordingStopped",
+        STATS_UPDATE = "StatsUpdate",
+        DETACHED_ELEMENTS_OBTAINED = "DetachedElementsObtained"
+    }
+    interface EventTypes {
+        [Events.RECORDING_STOPPED]: void;
+        [Events.STATS_UPDATE]: Protocol.HeapProfiler.SamplingHeapProfile | null;
+        [Events.DETACHED_ELEMENTS_OBTAINED]: Protocol.DOM.DetachedElementInfo[] | null;
+    }
+}
+export declare class DetachedElementsProfileHeader extends WritableProfileHeader {
+    #private;
+    readonly detachedElements: Protocol.DOM.DetachedElementInfo[] | null;
+    constructor(heapProfilerModel: SDK.HeapProfilerModel.HeapProfilerModel | null, type: DetachedElementsProfileType, detachedElements: Protocol.DOM.DetachedElementInfo[] | null, title?: string);
+    heapProfilerModel(): SDK.HeapProfilerModel.HeapProfilerModel | null;
+    profileType(): DetachedElementsProfileType;
+}
+export {};
