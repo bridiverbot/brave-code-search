@@ -1,0 +1,65 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://apps/*": [
+        "./../../../../browser/resources/app_home/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app_list_test.ts",
+    "preprocessed/test_app_home_page_handler.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../../tools/typescript/definitions/metrics_private.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/app_home/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    }
+  ]
+}

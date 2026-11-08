@@ -1,0 +1,94 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://updater/*": [
+        "./../../../../browser/resources/updater/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app_test.ts",
+    "preprocessed/app_list/app_list_test.ts",
+    "preprocessed/event_history_test.ts",
+    "preprocessed/event_list/event_list_item_test.ts",
+    "preprocessed/event_list/event_list_test.ts",
+    "preprocessed/event_list/filter_bar_test.ts",
+    "preprocessed/event_list/filter_dialog/app_dialog_test.ts",
+    "preprocessed/event_list/filter_dialog/date_dialog_test.ts",
+    "preprocessed/event_list/filter_dialog/event_dialog_test.ts",
+    "preprocessed/event_list/filter_dialog/filter_dialog_footer_test.ts",
+    "preprocessed/event_list/filter_dialog/filter_dialog_test.ts",
+    "preprocessed/event_list/filter_dialog/keyboard_navigation_test.ts",
+    "preprocessed/event_list/filter_dialog/outcome_dialog_test.ts",
+    "preprocessed/event_list/filter_dialog/scope_dialog_test.ts",
+    "preprocessed/event_list/filter_dialog/type_dialog_test.ts",
+    "preprocessed/event_list/filter_settings_test.ts",
+    "preprocessed/enterprise_policy_table/enterprise_policy_table_section_test.ts",
+    "preprocessed/enterprise_policy_table/enterprise_policy_table_test.ts",
+    "preprocessed/enterprise_policy_table/enterprise_policy_value_test.ts",
+    "preprocessed/updater_state/enterprise_companion_state_card_test.ts",
+    "preprocessed/updater_state/updater_state_card_test.ts",
+    "preprocessed/updater_state/updater_state_test.ts",
+    "preprocessed/tools_test.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/updater/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

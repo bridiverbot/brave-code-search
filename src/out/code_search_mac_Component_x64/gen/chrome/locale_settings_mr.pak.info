@@ -1,0 +1,5 @@
+IDS_SPELLCHECK_DICTIONARY,237,../../chrome/app/resources/locale_settings.grd
+IDS_EDITBOOKMARK_DIALOG_WIDTH_CHARS,15000,../../chrome/app/resources/locale_settings.grd
+IDS_EDITBOOKMARK_DIALOG_HEIGHT_LINES,15001,../../chrome/app/resources/locale_settings.grd
+IDS_WEBSTORE_URL,255,../../chrome/app/resources/locale_settings.grd
+IDS_MEDIA_GALLERIES_DIALOG_CONTENT_WIDTH_CHARS,15002,../../chrome/app/resources/locale_settings.grd

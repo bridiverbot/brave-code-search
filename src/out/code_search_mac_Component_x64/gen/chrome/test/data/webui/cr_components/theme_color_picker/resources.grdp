@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_CR_COMPONENTS_THEME_COLOR_PICKER_CHECK_MARK_WRAPPER_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/theme_color_picker/tsc/check_mark_wrapper_test.js" resource_path="cr_components/theme_color_picker/check_mark_wrapper_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_CR_COMPONENTS_THEME_COLOR_PICKER_THEME_COLOR_PICKER_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/theme_color_picker/tsc/theme_color_picker_test.js" resource_path="cr_components/theme_color_picker/theme_color_picker_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_CR_COMPONENTS_THEME_COLOR_PICKER_THEME_COLOR_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/theme_color_picker/tsc/theme_color_test.js" resource_path="cr_components/theme_color_picker/theme_color_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_CR_COMPONENTS_THEME_COLOR_PICKER_THEME_HUE_SLIDER_DIALOG_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/theme_color_picker/tsc/theme_hue_slider_dialog_test.js" resource_path="cr_components/theme_color_picker/theme_hue_slider_dialog_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

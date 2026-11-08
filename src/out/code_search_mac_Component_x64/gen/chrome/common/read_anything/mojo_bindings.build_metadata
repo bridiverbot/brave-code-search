@@ -1,0 +1,12 @@
+{
+  "deps": [
+    "../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../sandbox/policy/mojom/mojom.build_metadata",
+    "../../../ui/accessibility/mojom/mojom.build_metadata",
+    "../../../url/mojom/url_mojom_gurl.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../chrome/common/read_anything/distillation_evaluator.mojom",
+    "../../../../../../chrome/common/read_anything/read_anything.mojom"
+  ]
+}

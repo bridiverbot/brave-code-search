@@ -1,0 +1,106 @@
+{
+  "extends": "../../../../../../../../../chrome/test/data/webui/cr_components/searchbox/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_components/composebox/*": [
+        "./../../../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "chrome://resources/cr_components/composebox/*": [
+        "./../../../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "//resources/cr_components/searchbox/*": [
+        "./../../../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "chrome://resources/cr_components/searchbox/*": [
+        "./../../../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://new-tab-page/strings.m.js": [
+        "./../../../../../../../../../tools/typescript/definitions/strings.d.ts"
+      ],
+      "chrome://new-tab-page/*": [
+        "./../../../../../browser/resources/new_tab_page/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/keyword_mode_manager_test.ts",
+    "preprocessed/searchbox_dropdown_test.ts",
+    "preprocessed/searchbox_icon_test.ts",
+    "preprocessed/searchbox_input_test.ts",
+    "preprocessed/searchbox_match_test.ts",
+    "preprocessed/searchbox_mixin_test.ts",
+    "preprocessed/searchbox_test_utils.ts",
+    "preprocessed/searchbox_selection_mixin_test.ts",
+    "preprocessed/searchbox_utils_test.ts",
+    "preprocessed/test_searchbox_browser_proxy.ts",
+    "preprocessed/placeholder_text_cycler_test.ts",
+    "../../../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../browser/resources/new_tab_page/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../../ui/webui/resources/cr_components/composebox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../../ui/webui/resources/cr_components/searchbox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

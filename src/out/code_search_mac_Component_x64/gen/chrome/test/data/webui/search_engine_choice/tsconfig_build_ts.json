@@ -1,0 +1,54 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://search-engine-choice/*": [
+        "./../../../../browser/resources/search_engine_choice/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app_refresh_test.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/search_engine_choice/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    }
+  ]
+}

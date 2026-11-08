@@ -1,0 +1,51 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/main.ts",
+    "preprocessed/mojo_file_system_access_test.ts",
+    "preprocessed/foobar.mojom-webui.ts",
+    "preprocessed/mojo_file_system_access_test.mojom-webui.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

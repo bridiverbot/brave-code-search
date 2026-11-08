@@ -1,0 +1,14 @@
+IDR_PRODUCT_LOGO_64,15150,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_PRODUCT_LOGO_128,336,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_PRODUCT_LOGO_256,15151,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_STATUS_TRAY_ICON,15152,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_PRODUCT_LOGO_SVG,15153,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_PRODUCT_LOGO_ANIMATION_SVG,15154,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_PRODUCT_LOGO_16_SHORTCUTS,15186,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_PRODUCT_LOGO_24_SHORTCUTS,15187,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_PRODUCT_LOGO_64_SHORTCUTS,15188,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_PRODUCT_LOGO_128_SHORTCUTS,15189,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_APPS_FOLDER_16,15221,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_APPS_FOLDER_32,15222,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_APPS_FOLDER_OVERLAY_128,15223,../../chrome/app/theme/chrome_unscaled_resources.grd
+IDR_APPS_FOLDER_OVERLAY_512,15224,../../chrome/app/theme/chrome_unscaled_resources.grd

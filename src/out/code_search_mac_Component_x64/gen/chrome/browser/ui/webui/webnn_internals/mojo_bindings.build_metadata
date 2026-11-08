@@ -1,0 +1,9 @@
+{
+  "deps": [
+    "../../../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../../../services/webnn/public/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../chrome/browser/ui/webui/webnn_internals/webnn_internals.mojom"
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_components/color_change_listener/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "chrome://resources/cr_components/color_change_listener/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "//resources/cr_components/localized_link/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/localized_link/*"
+      ],
+      "chrome://resources/cr_components/localized_link/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/localized_link/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/cr_components/app_management/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/app_management/*"
+      ],
+      "chrome://resources/cr_components/app_management/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/app_management/*"
+      ],
+      "//resources/cr_components/customize_color_scheme_mode/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/customize_color_scheme_mode/*"
+      ],
+      "chrome://resources/cr_components/customize_color_scheme_mode/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/customize_color_scheme_mode/*"
+      ],
+      "//resources/cr_components/managed_dialog/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/managed_dialog/*"
+      ],
+      "chrome://resources/cr_components/managed_dialog/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/managed_dialog/*"
+      ],
+      "//resources/cr_components/managed_footnote/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/managed_footnote/*"
+      ],
+      "chrome://resources/cr_components/managed_footnote/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/managed_footnote/*"
+      ],
+      "//resources/cr_components/most_visited/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/most_visited/*"
+      ],
+      "chrome://resources/cr_components/most_visited/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/most_visited/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://customize-chrome-side-panel.top-chrome/strings.m.js": [
+        "./../../../../../../../../tools/typescript/definitions/strings.d.ts"
+      ],
+      "chrome://new-tab-page/strings.m.js": [
+        "./../../../../../../../../tools/typescript/definitions/strings.d.ts"
+      ],
+      "chrome://contextual-tasks/strings.m.js": [
+        "./../../../../../../../../tools/typescript/definitions/strings.d.ts"
+      ],
+      "chrome://new-tab-page/*": [
+        "./../../../../browser/resources/new_tab_page/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/color_change_listener_test.ts",
+    "preprocessed/localized_link_test.ts",
+    "preprocessed/customize_color_scheme_mode_test.ts",
+    "preprocessed/managed_dialog_test.ts",
+    "preprocessed/managed_footnote_test.ts",
+    "preprocessed/most_visited_focus_test.ts",
+    "preprocessed/most_visited_test.ts",
+    "preprocessed/most_visited_test_support.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_event.d.ts",
+    "../../../../../../../../tools/typescript/definitions/settings_private.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/color_change_listener/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/localized_link/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/new_tab_page/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/app_management/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/customize_color_scheme_mode/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/managed_dialog/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/managed_footnote/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/most_visited/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

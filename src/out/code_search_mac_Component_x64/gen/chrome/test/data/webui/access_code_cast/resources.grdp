@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_ACCESS_CODE_CAST_ACCESS_CODE_CAST_APP_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/access_code_cast/tsc/access_code_cast_app_test.js" resource_path="access_code_cast/access_code_cast_app_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_ACCESS_CODE_CAST_BROWSER_PROXY_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/access_code_cast/tsc/browser_proxy_test.js" resource_path="access_code_cast/browser_proxy_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_ACCESS_CODE_CAST_ERROR_MESSAGE_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/access_code_cast/tsc/error_message_test.js" resource_path="access_code_cast/error_message_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_ACCESS_CODE_CAST_PASSCODE_INPUT_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/access_code_cast/tsc/passcode_input_test.js" resource_path="access_code_cast/passcode_input_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_ACCESS_CODE_CAST_TEST_ACCESS_CODE_CAST_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/access_code_cast/tsc/test_access_code_cast_browser_proxy.js" resource_path="access_code_cast/test_access_code_cast_browser_proxy.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
