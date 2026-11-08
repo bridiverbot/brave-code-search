@@ -1,0 +1,430 @@
+# Copyright (c) 2026 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at https://mozilla.org/MPL/2.0/.
+"""git_cr follow-renames — repair brave-core artefacts after upstream renames.
+
+For each file rename found in the Chromium git log for the given revision
+reference or range, updates every brave-core artefact that references the old
+path: chromium_src/ shadow files (move + shadow include + include guard),
+rewrite/ plaster files (move + patch deletion), and all cross-brave-core
+#include/#import/comment/BUILD.gn references.
+
+Usage
+-----
+  git cr follow-renames [--no-git] [--verbose] <ref-or-range>
+
+  Both a single ref and a range are accepted natively.
+
+  # All renames between two Chromium version tags (typical version bump):
+  git cr follow-renames 130.0.6723.58..131.0.6778.85
+
+  # All renames in the last N commits of the Chromium repo:
+  git cr follow-renames HEAD~5..HEAD
+
+  # Renames introduced by a single upstream commit:
+  git cr follow-renames abc123
+"""
+
+from __future__ import annotations
+
+import argparse
+import logging
+from pathlib import Path
+import re
+import subprocess
+
+import _boot  # noqa: F401
+import plaster
+from plaster import PlasterFile
+from terminal import console, terminal
+import repository
+from alias.base import ChangedFiles, format_files
+from alias.source_rewrite import (
+    CPP_EXTENSIONS,
+    compute_guard,
+    find_guard,
+    insert_guard,
+    java_fqn,
+    patch_name_for,
+    rewrite_guard_in_file,
+    update_references,
+    update_shadow_include,
+)
+
+_RenamePair = tuple[Path, Path]
+
+
+def cmd_follow_renames(args: list[str]) -> int:
+    """Parse follow-renames arguments and process all upstream renames."""
+    parser = argparse.ArgumentParser(
+        prog='git cr follow-renames',
+        description=(
+            'Repair brave-core artefacts after upstream Chromium file renames.'
+        ),
+    )
+    parser.add_argument(
+        '--no-git',
+        action='store_true',
+        dest='no_git',
+        help='Use filesystem ops instead of git mv/rm',
+    )
+    parser.add_argument(
+        '--no-run-plaster',
+        action='store_true',
+        dest='no_run_plaster',
+        help='Skip running plaster after moving plaster files',
+    )
+    parser.add_argument(
+        '--no-format',
+        action='store_true',
+        dest='no_format',
+        help='Skip running `pnpm run format` after processing renames',
+    )
+    parser.add_argument(
+        '--verbose', action='store_true', help='Enable verbose logging'
+    )
+    parser.add_argument(
+        'ref_or_range',
+        help=(
+            'Git revision range or single ref in the Chromium repo. '
+            'A bare ref (e.g. HEAD or a tag) is treated as a single '
+            'commit; a range (e.g. old_tag..new_tag) is used as-is.'
+        ),
+    )
+    parsed = parser.parse_args(args)
+
+    renames = _get_chromium_renames(parsed.ref_or_range)
+    changed = ChangedFiles() if renames and not parsed.no_format else None
+
+    moved: list[Path] = []
+    for old_chromium, new_chromium in renames:
+        moved += _repair_chromium_src(old_chromium, new_chromium, parsed.no_git)
+        moved += _repair_plaster_files(
+            old_chromium, new_chromium, parsed.no_git, not parsed.no_run_plaster
+        )
+        update_references(old_chromium, new_chromium)
+        _repair_patch_files(old_chromium, new_chromium, parsed.no_git)
+    moved += _follow_moved_packages(renames, parsed.no_git)
+
+    if changed is not None:
+        _run_format(changed.since())
+
+    # `git mv` stages the move, but not the edits made to the moved files
+    # afterwards, so the rename would otherwise be committed without them.
+    if moved and not parsed.no_git:
+        terminal.run_git('add', *(str(path) for path in moved))
+
+    console.log(f'[bold green]✔[/] {len(renames)} rename(s) processed')
+    return 0
+
+
+_PACKAGE = re.compile(r'^package\s+([\w.]+)\s*;', re.MULTILINE)
+_EXTENDS = re.compile(r'\bclass\s+\w+(?:\s*<[^>{]*>)?\s+extends\s+([\w.]+)')
+
+
+def _follow_moved_packages(
+    renames: list[_RenamePair], no_git: bool
+) -> list[Path]:
+    """Moves Brave's Java subclasses of classes upstream moved to another
+    package along with them, and returns them at their new paths.
+
+    A subclass in the class's old package relies on its package-private
+    members, so it has to share the new package. The `package` line goes with
+    it, and so does every reference `update_references` rewrites (imports,
+    bytecode adapters' slashed names, ProGuard flags, `.gni` source lists).
+    """
+    moved_classes: dict[str, str] = {}
+    for old, new in renames:
+        old_fqn, new_fqn = java_fqn(old), java_fqn(new)
+        if (
+            old_fqn
+            and new_fqn
+            and old_fqn.rpartition('.')[0] != new_fqn.rpartition('.')[0]
+        ):
+            moved_classes[old_fqn] = new_fqn
+    if not moved_classes:
+        return []
+    brave_root = repository.brave.root.resolve()
+    brave_in_src = brave_root.relative_to(repository.chromium.root.resolve())
+    moved = []
+    for path in sorted((brave_root / 'android').rglob('*.java')):
+        text = path.read_bytes().decode('utf-8')
+        package = _PACKAGE.search(text)
+        base = _EXTENDS.search(text)
+        if not package or not base:
+            continue
+        old_package = package.group(1)
+        base_name = base.group(1).rpartition('.')[2]
+        # The pass over upstream's renames may already have renamed the base.
+        new_fqn = next(
+            (
+                new
+                for old, new in moved_classes.items()
+                if old.rpartition('.')[0] == old_package
+                and base_name
+                in (old.rpartition('.')[2], new.rpartition('.')[2])
+            ),
+            None,
+        )
+        old_dir = old_package.replace('.', '/')
+        rel = path.relative_to(brave_root)
+        if new_fqn is None or not rel.parent.as_posix().endswith(old_dir):
+            continue
+        new_package = new_fqn.rpartition('.')[0]
+        new_rel = (
+            Path(
+                rel.parent.as_posix()[: -len(old_dir)]
+                + new_package.replace('.', '/')
+            )
+            / rel.name
+        )
+        new_path = brave_root / new_rel
+        new_path.parent.mkdir(parents=True, exist_ok=True)
+        if no_git:
+            path.rename(new_path)
+        else:
+            terminal.run_git('mv', str(path), str(new_path))
+        text = text[: package.start(1)] + new_package + text[package.end(1) :]
+        # Imports from what is now its own package, which the pass over
+        # upstream's renames added while it was in the old one.
+        text = re.sub(
+            r'^import\s+' + re.escape(new_package) + r'\.\w+\s*;\n',
+            '',
+            text,
+            flags=re.MULTILINE,
+        )
+        new_path.write_text(text, encoding='utf-8', newline='\n')
+        update_references(brave_in_src / rel, brave_in_src / new_rel)
+        moved.append(new_path)
+    return moved
+
+
+def _run_format(paths: list[str]) -> None:
+    """Formats the files the rename repairs changed, and no others."""
+    format_files(paths)
+
+
+def _get_chromium_renames(ref_or_range: str) -> list[_RenamePair]:
+    """Returns net (original → final) rename pairs from the Chromium git log.
+
+    Runs git show --diff-filter=R --name-status in the Chromium repository.
+    Accepts both a single ref (e.g. "HEAD", a tag) and a range
+    (e.g. "old_tag..new_tag"); git show handles both forms natively.
+
+    For ranges, multi-step renames are collapsed: a→b→c becomes a→c, and
+    round-trips (a→b→a) are dropped entirely.
+    """
+    raw = repository.chromium.run_git(
+        'show', '--diff-filter=R', '--name-status', '--format=', ref_or_range
+    )
+    renames: list[_RenamePair] = []
+    for line in raw.splitlines():
+        parts = line.split('\t')
+        if len(parts) == 3 and parts[0].startswith('R'):
+            renames.append((Path(parts[1]), Path(parts[2])))
+    return _collapse_renames(renames) if '..' in ref_or_range else renames
+
+
+def _collapse_renames(renames: list[_RenamePair]) -> list[_RenamePair]:
+    """Collapses chained renames into net (original → final) pairs.
+
+    git show outputs renames newest-first. Processing in reverse
+    (chronological) order lets us compose chains: if a→b was recorded
+    earlier and we now see b→c, we update the entry to a→c. Round-trips
+    (a→b→a) are dropped.
+    """
+    net: dict[Path, Path] = {}
+    for old, new in reversed(renames):
+        origin = next((k for k, v in net.items() if v == old), None)
+        if origin is not None:
+            if origin == new:
+                del net[origin]
+            else:
+                net[origin] = new
+        else:
+            net[old] = new
+    return list(net.items())
+
+
+def _repair_chromium_src(
+    old_chromium: Path, new_chromium: Path, no_git: bool
+) -> list[Path]:
+    """Moves and repairs the chromium_src/ shadow file for one rename, and
+    returns the files it moved, at their new paths.
+
+    If no shadow file exists at chromium_src/old_chromium, this is a no-op.
+    For moved files: updates the shadow #include line (C++ files) and
+    regenerates the include guard (.h files only). A `.lit_mangler.ts` for the
+    old file moves along with it.
+    """
+    moved = []
+    old_mangler = (
+        repository.brave.root
+        / 'chromium_src'
+        / f'{old_chromium}.lit_mangler.ts'
+    )
+    if old_mangler.exists():
+        new_mangler = (
+            repository.brave.root
+            / 'chromium_src'
+            / f'{new_chromium}.lit_mangler.ts'
+        )
+        new_mangler.parent.mkdir(parents=True, exist_ok=True)
+        if no_git:
+            old_mangler.rename(new_mangler)
+        else:
+            terminal.run_git('mv', str(old_mangler), str(new_mangler))
+        moved.append(new_mangler)
+
+    old_shadow = repository.brave.root / 'chromium_src' / old_chromium
+    if not old_shadow.exists():
+        return moved
+
+    new_shadow = repository.brave.root / 'chromium_src' / new_chromium
+    new_shadow.parent.mkdir(parents=True, exist_ok=True)
+
+    if no_git:
+        old_shadow.rename(new_shadow)
+    else:
+        terminal.run_git('mv', str(old_shadow), str(new_shadow))
+    moved.append(new_shadow)
+
+    if new_shadow.suffix.lower() in CPP_EXTENSIONS:
+        update_shadow_include(new_shadow, old_chromium, new_chromium)
+
+    if new_shadow.suffix == '.h':
+        new_guard = compute_guard(
+            repository.chromium.to_repo_relative(new_shadow)
+        )
+        content = new_shadow.read_bytes().decode('utf-8')
+        old_guard = find_guard(content)
+        if old_guard:
+            rewrite_guard_in_file(new_shadow, old_guard, new_guard)
+        else:
+            insert_guard(new_shadow, new_guard)
+    return moved
+
+
+def _repair_plaster_files(
+    old_chromium: Path,
+    new_chromium: Path,
+    no_git: bool,
+    run_plaster: bool = True,
+) -> list[Path]:
+    """Moves the plaster file and deletes the corresponding patch file, and
+    returns the plaster file moved, at its new path.
+
+    Plaster file convention: chromium path A/foo.h lives at
+    rewrite/A/foo.h.yaml. If no plaster file exists, this is a no-op. The
+    old patch file for that plaster gets automatically deleted.
+    """
+    old_dir = plaster.PLASTER_FILES_PATH / old_chromium.parent
+    new_dir = plaster.PLASTER_FILES_PATH / new_chromium.parent
+    old_plaster = old_dir / (old_chromium.name + '.yaml')
+    new_plaster = new_dir / (new_chromium.name + '.yaml')
+    if not old_plaster.exists():
+        return []
+
+    new_plaster.parent.mkdir(parents=True, exist_ok=True)
+
+    if no_git:
+        old_plaster.rename(new_plaster)
+    else:
+        terminal.run_git('mv', str(old_plaster), str(new_plaster))
+
+    # `resolve` reads the path, not the file, so the plaster just moved away
+    # still names the patch it generated.
+    patch_file = plaster.PlasterTarget.resolve(old_plaster).patch
+    if not patch_file.exists():
+        logging.warning(
+            'Expected patch file not found: %s; skipping deletion.', patch_file
+        )
+    else:
+        if no_git:
+            patch_file.unlink()
+        else:
+            terminal.run_git('rm', str(patch_file))
+        patchinfo_file = patch_file.with_suffix('.patchinfo')
+        if patchinfo_file.exists():
+            patchinfo_file.unlink()
+
+    if run_plaster:
+        try:
+            PlasterFile(new_plaster).apply()
+            if not no_git:
+                new_patch = plaster.PlasterTarget.resolve(new_plaster).patch
+                if new_patch.exists():
+                    terminal.run_git('add', str(new_patch))
+        # TODO(https://github.com/brave/brave-browser/issues/55370): Eventually
+        # we should better constrain this to only catch plaster exceptions.
+        except Exception as e:
+            logging.warning('plaster failed to apply %s: %s', new_plaster, e)
+    return [new_plaster]
+
+
+def _repair_patch_files(
+    old_chromium: Path, new_chromium: Path, no_git: bool
+) -> None:
+    """Renames and re-applies the .patch file for one upstream rename.
+
+    If no patch file exists at patches/patch_name_for(old_chromium), this is
+    a no-op. Patches already handled by _repair_plaster_files will have been
+    deleted before this runs, so they are naturally skipped.
+
+    The patch --- and +++ headers are updated to reference the new chromium
+    path, the file is renamed, then git apply --3way is attempted. A warning
+    is logged if the apply fails.
+    """
+    patches_path = repository.brave.root / 'patches'
+    old_patch = patches_path / patch_name_for(old_chromium)
+    if not old_patch.exists():
+        return
+
+    new_patch = patches_path / patch_name_for(new_chromium)
+    new_patch.parent.mkdir(parents=True, exist_ok=True)
+
+    old_path_str = old_chromium.as_posix()
+    new_path_str = new_chromium.as_posix()
+    updated_lines = []
+    for line in (
+        old_patch.read_bytes().decode('utf-8').splitlines(keepends=True)
+    ):
+        if (
+            line.startswith('diff --git ')
+            or line.startswith('--- ')
+            or line.startswith('+++ ')
+        ):
+            line = line.replace(old_path_str, new_path_str)
+        updated_lines.append(line)
+    updated_content = ''.join(updated_lines)
+
+    if no_git:
+        old_patch.rename(new_patch)
+    else:
+        terminal.run_git('mv', str(old_patch), str(new_patch))
+    new_patch.write_text(updated_content, encoding='utf-8', newline='')
+    if not no_git:
+        terminal.run_git('add', str(new_patch))
+
+    try:
+        # `git apply` runs with chromium as its cwd (via run_git's `-C`), so
+        # pass the patch path resolved to absolute; a brave-relative path
+        # would not be found from chromium's cwd.
+        repository.chromium.run_git(
+            'apply',
+            '--3way',
+            '--ignore-space-change',
+            '--ignore-whitespace',
+            str(new_patch.resolve()),
+        )
+    except subprocess.CalledProcessError as e:
+        logging.warning(
+            'Failed to apply %s after rename: %s',
+            new_patch,
+            e.stderr.strip() if e.stderr else str(e),
+        )
+    finally:
+        repository.chromium.run_git(
+            'reset', 'HEAD', '--', new_chromium.as_posix()
+        )
