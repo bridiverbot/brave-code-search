@@ -1,0 +1,15 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../../brave/components/brave_account/mojom/brave_account.mojom",
+    "../../../../../../../brave/components/brave_account/mojom/change_password.mojom",
+    "../../../../../../../brave/components/brave_account/mojom/delete_account.mojom",
+    "../../../../../../../brave/components/brave_account/mojom/get_service_token.mojom",
+    "../../../../../../../brave/components/brave_account/mojom/login.mojom",
+    "../../../../../../../brave/components/brave_account/mojom/register.mojom",
+    "../../../../../../../brave/components/brave_account/mojom/resend_verification_email.mojom",
+    "../../../../../../../brave/components/brave_account/mojom/reset_password.mojom"
+  ]
+}
