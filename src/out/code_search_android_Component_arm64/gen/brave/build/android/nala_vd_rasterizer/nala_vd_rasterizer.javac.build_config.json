@@ -1,0 +1,16 @@
+{
+  "javac_full_interface_classpath": [
+    "obj/brave/build/android/nala_vd_rasterizer/brave_nala_sdk_common.ijar.jar",
+    "obj/brave/build/android/nala_vd_rasterizer/brave_nala_layoutlib_api.ijar.jar",
+    "obj/brave/build/android/nala_vd_rasterizer/brave_nala_android_common.ijar.jar",
+    "obj/third_party/android_deps/org_jetbrains_kotlin_kotlin_stdlib.ijar.jar",
+    "obj/third_party/android_deps/org_jetbrains_annotations.ijar.jar",
+    "obj/third_party/android_deps/com_google_guava_guava.ijar.jar",
+    "obj/third_party/android_deps/com_google_guava_failureaccess.ijar.jar",
+    "obj/third_party/android_deps/org_jspecify_jspecify.ijar.jar",
+    "obj/third_party/android_deps/com_google_j2objc_j2objc_annotations.ijar.jar",
+    "obj/third_party/android_deps/com_google_errorprone_error_prone_annotations.ijar.jar",
+    "obj/build/android/build_java.turbine.jar"
+  ],
+  "sdk_interface_jars": []
+}

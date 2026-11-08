@@ -1,0 +1,13 @@
+{
+  "chromium_code": true,
+  "gn_target": "//brave/browser/autofill/android:options_java_resources",
+  "public_deps_configs": [
+    "gen/brave/android/nala/java_resources.params.json",
+    "gen/brave/build/android/android_brave_strings_grd.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/brave/browser/autofill/android/options_java_resources.res.sources",
+  "resources_zip": "obj/brave/browser/autofill/android/options_java_resources.resources.zip",
+  "rtxt_path": "gen/brave/browser/autofill/android/options_java_resources_R.txt",
+  "type": "android_resources"
+}

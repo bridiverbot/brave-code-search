@@ -1,0 +1,4 @@
+../../brave/browser/password_entry_edit/android/java/src/org/chromium/chrome/browser/password_entry_edit/BlockedCredentialFragmentView.java
+../../brave/browser/password_entry_edit/android/java/src/org/chromium/chrome/browser/password_entry_edit/CredentialEditFragmentView.java
+../../brave/browser/password_entry_edit/android/java/src/org/chromium/chrome/browser/password_entry_edit/CredentialEntryFragmentViewBase.java
+../../brave/browser/password_entry_edit/android/java/src/org/chromium/chrome/browser/password_entry_edit/FederatedCredentialFragmentView.java

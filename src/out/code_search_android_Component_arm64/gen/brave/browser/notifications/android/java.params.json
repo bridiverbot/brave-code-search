@@ -1,0 +1,34 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/brave/browser/notifications/android/brave_java.params.json",
+    "gen/brave/browser/notifications/android/java_resources.params.json",
+    "gen/base/base_java.params.json",
+    "gen/chrome/android/chrome_base_module_resources.params.json",
+    "gen/chrome/browser/notifications/java.params.json",
+    "gen/chrome/browser/notifications/java_resources.params.json",
+    "gen/components/browser_ui/notifications/android/java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/ui/android/ui_no_recycler_view_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/brave/browser/notifications/android/java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//brave/browser/notifications/android:java",
+  "interface_jar_path": "obj/brave/browser/notifications/android/java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome.browser.notifications",
+  "processed_jar_path": "obj/brave/browser/notifications/android/java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/brave/browser/notifications/android/java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/brave/browser/notifications/android/java.javac.jar"
+}

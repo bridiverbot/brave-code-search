@@ -1,0 +1,3 @@
+../../brave/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/BraveStartupHelper.java
+../../brave/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/BraveSyncedTabGroupHelper.java
+../../brave/browser/tab_group_sync/android/java/src/org/chromium/chrome/browser/tab_group_sync/BraveTabGroupSyncControllerImpl.java

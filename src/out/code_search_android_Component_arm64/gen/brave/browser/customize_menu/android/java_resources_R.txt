@@ -1,0 +1,2 @@
+int drawable ic_window_screwdriver 0x7f010001
+int xml brave_customize_menu_preferences 0x7f010001

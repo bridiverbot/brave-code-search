@@ -1,0 +1,6 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss as getBraveAccountRowCommon } from './brave_account_row_common.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[getBraveAccountRowCommon()], css `.delete-account-button{--leo-button-color:var(--leo-color-systemfeedback-error-text)}.details{display:flex;flex-direction:column;gap:var(--leo-spacing-m);padding:0 var(--leo-spacing-2xl) var(--leo-spacing-2xl);.detail{align-items:center;border:1px solid var(--leo-color-divider-subtle);border-radius:var(--leo-radius-xl);column-gap:var(--leo-spacing-xl);display:grid;grid-template-columns:minmax(0,1fr) auto;padding:var(--leo-spacing-xl);row-gap:var(--leo-spacing-s);.label{color:var(--leo-color-text-primary);font:var(--leo-font-default-semibold);grid-column:1}leo-input{grid-column:1/-1;min-width:0}leo-button{grid-column:2}}.account-actions{display:flex;flex-direction:column;gap:var(--leo-spacing-m);margin:var(--leo-spacing-xl) 0 0;leo-icon{display:none}}}`]);
+}

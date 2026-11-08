@@ -1,0 +1,27 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/lifetime_java.params.json",
+    "gen/base/tasks_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/base/unowned_user_data_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//base:unowned_user_data_java",
+  "interface_jar_path": "obj/base/unowned_user_data_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/base/unowned_user_data_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/base/unowned_user_data_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/base/unowned_user_data_java.javac.jar"
+}
