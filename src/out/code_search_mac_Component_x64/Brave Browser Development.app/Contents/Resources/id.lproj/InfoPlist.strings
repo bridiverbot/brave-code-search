@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Pintasan Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Hak Cipta 2026 Pengarang Brave. Semua hak dilindungi undang-undang.";
+NSAudioCaptureUsageDescription = "Setelah Brave memiliki akses, situs dapat meminta akses dari Anda.";
+NSBluetoothAlwaysUsageDescription = "Setelah Brave memiliki akses, situs dapat meminta akses dari Anda.";
+NSBluetoothPeripheralUsageDescription = "Setelah Brave memiliki akses, situs dapat meminta akses dari Anda.";
+NSCameraUsageDescription = "Setelah Brave memiliki akses, situs dapat meminta akses dari Anda.";
+NSHumanReadableCopyright = "Hak Cipta 2026 Pengarang Brave. Semua hak dilindungi undang-undang.";
+NSLocalNetworkUsageDescription = "Ini akan memungkinkan Anda untuk berbagi konten dari Brave ke perangkat lokal Anda, seperti TV atau speaker.";
+NSLocationUsageDescription = "Setelah Brave memiliki akses, situs dapat meminta akses dari Anda.";
+NSMicrophoneUsageDescription = "Setelah Brave memiliki akses, situs dapat meminta akses dari Anda.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Setelah Brave memiliki akses, situs dapat meminta akses dari Anda.";

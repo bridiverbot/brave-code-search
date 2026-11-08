@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave-kortpad";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Kopiereg 2026 Die Brave-outeurs. Alle regte voorbehou.";
+NSAudioCaptureUsageDescription = "Sodra Brave toegang het, sal webwerwe jou kan vra vir toegang.";
+NSBluetoothAlwaysUsageDescription = "Sodra Brave toegang het, sal webwerwe jou kan vra vir toegang.";
+NSBluetoothPeripheralUsageDescription = "Sodra Brave toegang het, sal webwerwe jou kan vra vir toegang.";
+NSCameraUsageDescription = "Sodra Brave toegang het, sal webwerwe jou kan vra vir toegang.";
+NSHumanReadableCopyright = "Kopiereg 2026 Die Brave-outeurs. Alle regte voorbehou.";
+NSLocalNetworkUsageDescription = "Dit sal jou toelaat om inhoud van Brave na jou plaaslike toestelle, soos 'n TV of luidspreker, te deel.";
+NSLocationUsageDescription = "Sodra Brave toegang het, sal webwerwe jou kan vra vir toegang.";
+NSMicrophoneUsageDescription = "Sodra Brave toegang het, sal webwerwe jou kan vra vir toegang.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Sodra Brave toegang het, sal webwerwe jou kan vra vir toegang.";

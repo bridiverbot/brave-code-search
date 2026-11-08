@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave-parancsikon";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 – A Brave szerzői. Minden jog fenntartva.";
+NSAudioCaptureUsageDescription = "Miután hozzáférést biztosított a Bravenak, a webhelyek is hozzáférést kérhetnek.";
+NSBluetoothAlwaysUsageDescription = "Miután hozzáférést biztosított a Bravenak, a webhelyek is hozzáférést kérhetnek.";
+NSBluetoothPeripheralUsageDescription = "Miután hozzáférést biztosított a Bravenak, a webhelyek is hozzáférést kérhetnek.";
+NSCameraUsageDescription = "Miután hozzáférést biztosított a Bravenak, a webhelyek is hozzáférést kérhetnek.";
+NSHumanReadableCopyright = "Copyright © 2026 – A Brave szerzői. Minden jog fenntartva.";
+NSLocalNetworkUsageDescription = "Ez lehetővé teszi, hogy tartalmat ossz meg a Brave-ből a helyi eszközökre, például TV-re vagy hangszóróra.";
+NSLocationUsageDescription = "Miután hozzáférést biztosított a Bravenak, a webhelyek is hozzáférést kérhetnek.";
+NSMicrophoneUsageDescription = "Miután hozzáférést biztosított a Bravenak, a webhelyek is hozzáférést kérhetnek.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Miután hozzáférést biztosított a Bravenak, a webhelyek is hozzáférést kérhetnek.";

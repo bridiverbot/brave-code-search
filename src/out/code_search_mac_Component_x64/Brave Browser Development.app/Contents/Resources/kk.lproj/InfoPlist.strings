@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave пернелер тіркесімі";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 Brave Software Inc. Барлық құқықтар қорғалған.";
+NSAudioCaptureUsageDescription = "Brave браузерінің кіру рұқсаты болса, веб-сайттар сізден кіру рұқсатын сұрайды.";
+NSBluetoothAlwaysUsageDescription = "Brave браузерінің кіру рұқсаты болса, веб-сайттар сізден кіру рұқсатын сұрайды.";
+NSBluetoothPeripheralUsageDescription = "Brave браузерінің кіру рұқсаты болса, веб-сайттар сізден кіру рұқсатын сұрайды.";
+NSCameraUsageDescription = "Brave браузерінің кіру рұқсаты болса, веб-сайттар сізден кіру рұқсатын сұрайды.";
+NSHumanReadableCopyright = "Copyright © 2026 Brave Software Inc. Барлық құқықтар қорғалған.";
+NSLocalNetworkUsageDescription = "Бұл сізге Brave-тан ұйым ішіндегі құрылғыларға, мысалы теледидарь немесе докладчыға мазмұнды ортақ пайдалану мүмкіндігін береді.";
+NSLocationUsageDescription = "Brave браузерінің кіру рұқсаты болса, веб-сайттар сізден кіру рұқсатын сұрайды.";
+NSMicrophoneUsageDescription = "Brave браузерінің кіру рұқсаты болса, веб-сайттар сізден кіру рұқсатын сұрайды.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Brave браузерінің кіру рұқсаты болса, веб-сайттар сізден кіру рұқсатын сұрайды.";

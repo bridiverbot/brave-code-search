@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave ஷார்ட்கட்";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, பதிப்புரிமை 2026 Brave உருவாக்குநர்கள். அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.";
+NSAudioCaptureUsageDescription = "Braveமுக்கு அணுகல் கிடைத்தவுடன், இணையதளங்கள் உங்களிடம் அணுகலைக் கோர முடியும்.";
+NSBluetoothAlwaysUsageDescription = "Braveமுக்கு அணுகல் கிடைத்தவுடன், இணையதளங்கள் உங்களிடம் அணுகலைக் கோர முடியும்.";
+NSBluetoothPeripheralUsageDescription = "Braveமுக்கு அணுகல் கிடைத்தவுடன், இணையதளங்கள் உங்களிடம் அணுகலைக் கோர முடியும்.";
+NSCameraUsageDescription = "Braveமுக்கு அணுகல் கிடைத்தவுடன், இணையதளங்கள் உங்களிடம் அணுகலைக் கோர முடியும்.";
+NSHumanReadableCopyright = "பதிப்புரிமை 2026 Brave உருவாக்குநர்கள். அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.";
+NSLocalNetworkUsageDescription = "இது Brave இலிருந்து உங்கள் உள்ளூர் சாதனங்களான டிவி அல்லது ஸ்பীக்கர் போன்றவற்றுக்கு உள்ளடக்கத்தைப் பகிர அனுமதிக்கும்.";
+NSLocationUsageDescription = "Braveமுக்கு அணுகல் கிடைத்தவுடன், இணையதளங்கள் உங்களிடம் அணுகலைக் கோர முடியும்.";
+NSMicrophoneUsageDescription = "Braveமுக்கு அணுகல் கிடைத்தவுடன், இணையதளங்கள் உங்களிடம் அணுகலைக் கோர முடியும்.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Braveமுக்கு அணுகல் கிடைத்தவுடன், இணையதளங்கள் உங்களிடம் அணுகலைக் கோர முடியும்.";

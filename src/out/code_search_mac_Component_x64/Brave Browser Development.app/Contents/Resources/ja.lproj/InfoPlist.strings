@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave のショートカット";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 The Brave Authors. All rights reserved.";
+NSAudioCaptureUsageDescription = "Brave にアクセスを許可すると、ウェブサイトからアクセスをリクエストできるようになります。";
+NSBluetoothAlwaysUsageDescription = "Brave にアクセスを許可すると、ウェブサイトからアクセスをリクエストできるようになります。";
+NSBluetoothPeripheralUsageDescription = "Brave にアクセスを許可すると、ウェブサイトからアクセスをリクエストできるようになります。";
+NSCameraUsageDescription = "Brave にアクセスを許可すると、ウェブサイトからアクセスをリクエストできるようになります。";
+NSHumanReadableCopyright = "Copyright © 2026 The Brave Authors. All rights reserved.";
+NSLocalNetworkUsageDescription = "これにより、Braveからテレビやスピーカーなどのローカルデバイスにコンテンツを共有できるようになります。";
+NSLocationUsageDescription = "Brave にアクセスを許可すると、ウェブサイトからアクセスをリクエストできるようになります。";
+NSMicrophoneUsageDescription = "Brave にアクセスを許可すると、ウェブサイトからアクセスをリクエストできるようになります。";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Brave にアクセスを許可すると、ウェブサイトからアクセスをリクエストできるようになります。";
