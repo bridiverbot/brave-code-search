@@ -1,0 +1,28 @@
+import {html} from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+  return html`<!--_html_template_start_--><style include="settings-shared site-settings-shared"></style>
+<settings-subpage page-title="$i18n{siteSettingsLocalNetwork}"
+    search-label="$i18n{siteSettingsAllSitesFilter}"
+    search-icon="settings20:filter-list"
+    search-term="{{searchTerm}}" route-path$="[[routePath]]">
+  <div class="content-settings-header secondary">
+    $i18n{siteSettingsLocalNetworkDescription}
+  </div>
+  <settings-category-default-radio-group
+      category="[[contentSettingsTypesEnum_.LOCAL_NETWORK]]"
+      ask-option-label="$i18n{siteSettingsLocalNetworkAsk}"
+      ask-option-icon="settings20:router"
+      block-option-label="$i18n{siteSettingsLocalNetworkBlock}"
+      block-option-icon="settings20:router-off">
+  </settings-category-default-radio-group>
+  <category-setting-exceptions
+      category="[[contentSettingsTypesEnum_.LOCAL_NETWORK]]"
+      block-header=
+          "$i18n{siteSettingsLocalNetworkBlockedExceptions}"
+      allow-header=
+          "$i18n{siteSettingsLocalNetworkAllowedExceptions}"
+      search-filter="[[searchTerm]]">
+  </category-setting-exceptions>
+</settings-subpage>
+<!--_html_template_end_-->`;
+}

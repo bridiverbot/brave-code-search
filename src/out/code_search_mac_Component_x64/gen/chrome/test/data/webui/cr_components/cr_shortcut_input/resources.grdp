@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_CR_COMPONENTS_CR_SHORTCUT_INPUT_CR_SHORTCUT_INPUT_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/cr_shortcut_input/tsc/cr_shortcut_input_test.js" resource_path="cr_components/cr_shortcut_input/cr_shortcut_input_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

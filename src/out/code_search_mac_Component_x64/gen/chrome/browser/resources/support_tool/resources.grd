@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/support_tool_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/support_tool_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/support_tool_resources_map.h"
+            type="resource_map_header" />
+    <output filename="support_tool_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_SUPPORT_TOOL_SUPPORT_TOOL_CONTAINER_HTML" file="${root_gen_dir}/chrome/browser/resources/support_tool/preprocessed/support_tool_container.html" resource_path="support_tool_container.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_URL_GENERATOR_CONTAINER_HTML" file="${root_gen_dir}/chrome/browser/resources/support_tool/preprocessed/url_generator_container.html" resource_path="url_generator_container.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/browser_proxy.js" resource_path="browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_DATA_COLLECTORS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/data_collectors.html.js" resource_path="data_collectors.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_DATA_COLLECTORS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/data_collectors.js" resource_path="data_collectors.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_DATA_EXPORT_DONE_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/data_export_done.html.js" resource_path="data_export_done.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_DATA_EXPORT_DONE_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/data_export_done.js" resource_path="data_export_done.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_ISSUE_DETAILS_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/issue_details.html.js" resource_path="issue_details.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_ISSUE_DETAILS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/issue_details.js" resource_path="issue_details.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_PII_SELECTION_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/pii_selection.html.js" resource_path="pii_selection.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_PII_SELECTION_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/pii_selection.js" resource_path="pii_selection.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_SPINNER_PAGE_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/spinner_page.html.js" resource_path="spinner_page.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_SPINNER_PAGE_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/spinner_page.js" resource_path="spinner_page.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_SUPPORT_TOOL_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/support_tool.html.js" resource_path="support_tool.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_SUPPORT_TOOL_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/support_tool.js" resource_path="support_tool.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_SUPPORT_TOOL_PAGE_MIXIN_LIT_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/support_tool_page_mixin_lit.js" resource_path="support_tool_page_mixin_lit.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_URL_GENERATOR_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/url_generator.html.js" resource_path="url_generator.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_URL_GENERATOR_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/url_generator.js" resource_path="url_generator.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_DATA_COLLECTORS_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/data_collectors.css.js" resource_path="data_collectors.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_DATA_EXPORT_DONE_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/data_export_done.css.js" resource_path="data_export_done.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_ISSUE_DETAILS_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/issue_details.css.js" resource_path="issue_details.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_PII_SELECTION_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/pii_selection.css.js" resource_path="pii_selection.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_SPINNER_PAGE_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/spinner_page.css.js" resource_path="spinner_page.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_SUPPORT_TOOL_SHARED_LIT_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/support_tool_shared_lit.css.js" resource_path="support_tool_shared_lit.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_URL_GENERATOR_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/url_generator.css.js" resource_path="url_generator.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SUPPORT_TOOL_SUPPORT_TOOL_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/support_tool/minified/support_tool.css.js" resource_path="support_tool.css.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

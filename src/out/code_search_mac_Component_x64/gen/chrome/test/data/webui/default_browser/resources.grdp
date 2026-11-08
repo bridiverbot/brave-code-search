@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_DEFAULT_BROWSER_APP_WITH_ILLUSTRATION_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/default_browser/tsc/app_with_illustration_test.js" resource_path="default_browser/app_with_illustration_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_DEFAULT_BROWSER_APP_WITHOUT_ILLUSTRATION_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/default_browser/tsc/app_without_illustration_test.js" resource_path="default_browser/app_without_illustration_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_DEFAULT_BROWSER_TEST_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/default_browser/tsc/test_browser_proxy.js" resource_path="default_browser/test_browser_proxy.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

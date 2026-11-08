@@ -1,0 +1,11 @@
+IDR_PDF_PDF_INTERNAL_PLUGIN_WRAPPER_ROLLUP_JS,18350,gen/chrome/browser/resources/pdf/internal_plugin_resources.grdp
+IDR_PDF_BROWSER_API_JS,18351,gen/chrome/browser/resources/pdf/excluded_resources.grdp
+IDR_PDF_MAIN_JS,18352,gen/chrome/browser/resources/pdf/excluded_resources.grdp
+IDR_PDF_MAIN_PRINT_JS,18353,gen/chrome/browser/resources/pdf/excluded_resources.grdp
+IDR_PDF_PDF_SCRIPTING_API_JS,18354,gen/chrome/browser/resources/pdf/excluded_resources.grdp
+IDR_PDF_INDEX_CSS,18355,gen/chrome/browser/resources/pdf/resources.grd
+IDR_PDF_INDEX_HTML,18356,gen/chrome/browser/resources/pdf/resources.grd
+IDR_PDF_INDEX_PRINT_HTML,18357,gen/chrome/browser/resources/pdf/resources.grd
+IDR_PDF_PDF_VIEWER_WRAPPER_ROLLUP_JS,18358,gen/chrome/browser/resources/pdf/resources.grd
+IDR_PDF_PDF_PRINT_WRAPPER_ROLLUP_JS,18359,gen/chrome/browser/resources/pdf/resources.grd
+IDR_PDF_SHARED_ROLLUP_JS,18360,gen/chrome/browser/resources/pdf/resources.grd

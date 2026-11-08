@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_NEW_TAB_SHARED_CUSTOMIZE_BUTTONS_CUSTOMIZE_BUTTONS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/new_tab_shared/tsc/customize_buttons/customize_buttons_test.js" resource_path="new_tab_shared/customize_buttons/customize_buttons_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

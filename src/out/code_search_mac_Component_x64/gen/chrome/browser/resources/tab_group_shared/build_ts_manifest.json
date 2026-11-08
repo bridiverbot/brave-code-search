@@ -1,0 +1,1 @@
+{"base_dir": "gen/chrome/browser/resources/tab_group_shared/tsc", "files": ["search.js", "search_api_proxy.js", "tab_group_color_helper.js", "tab_group_dot.html.js", "tab_group_dot.js", "tab_group_dot.css.js", "tab_group_shared_vars.css.js", "tab_search.mojom-webui.js", "tabs.mojom-webui.js", "tab_group_types.mojom-webui.js", "search-chromium.js"]}

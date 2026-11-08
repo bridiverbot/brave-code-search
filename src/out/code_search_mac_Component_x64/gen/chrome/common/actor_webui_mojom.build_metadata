@@ -1,0 +1,11 @@
+{
+  "deps": [
+    "glic_enums_mojom.build_metadata",
+    "../../mojo/public/mojom/base/base.build_metadata",
+    "../../skia/public/mojom/mojom.build_metadata",
+    "../../url/mojom/url_mojom_origin.build_metadata"
+  ],
+  "sources": [
+    "../../../../../chrome/common/actor_webui.mojom"
+  ]
+}

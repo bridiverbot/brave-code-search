@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_CR_COMPONENTS_HISTORY_EMBEDDINGS_FILTER_CHIPS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/history_embeddings/tsc/filter_chips_test.js" resource_path="cr_components/history_embeddings/filter_chips_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_CR_COMPONENTS_HISTORY_EMBEDDINGS_HISTORY_EMBEDDINGS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/history_embeddings/tsc/history_embeddings_test.js" resource_path="cr_components/history_embeddings/history_embeddings_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_CR_COMPONENTS_HISTORY_EMBEDDINGS_RESULT_IMAGE_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/history_embeddings/tsc/result_image_test.js" resource_path="cr_components/history_embeddings/result_image_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

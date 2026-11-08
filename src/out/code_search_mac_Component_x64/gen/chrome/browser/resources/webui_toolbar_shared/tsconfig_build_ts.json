@@ -1,0 +1,106 @@
+{
+  "extends": "../../../../../../../tools/typescript/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "composite": true,
+    "declaration": true,
+    "tsBuildInfoFile": "tsconfig_build_ts.tsbuildinfo",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/cr_components/help_bubble/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "chrome://resources/cr_components/help_bubble/*": [
+        "./../../../../ui/webui/resources/tsc/cr_components/help_bubble/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/animation_tracker.ts",
+    "preprocessed/cr_lazy_iconset.ts",
+    "preprocessed/icon_from_table.html.ts",
+    "preprocessed/icon_from_table.ts",
+    "preprocessed/icon_table.ts",
+    "preprocessed/icons.ts",
+    "preprocessed/permission_chip.html.ts",
+    "preprocessed/permission_chip.ts",
+    "preprocessed/permission_chip_delegate.ts",
+    "preprocessed/permission_dashboard.html.ts",
+    "preprocessed/permission_dashboard.ts",
+    "preprocessed/timer_helper.ts",
+    "preprocessed/toolbar_button.ts",
+    "preprocessed/help_bubble_anchor.css.ts",
+    "preprocessed/icon_from_table.css.ts",
+    "preprocessed/permission_chip.css.ts",
+    "preprocessed/permission_dashboard.css.ts",
+    "preprocessed/webui_toolbar_shared_vars.css.ts",
+    "preprocessed/browser_controls_api.mojom-webui.ts",
+    "preprocessed/browser_controls_api_data_model.mojom-webui.ts",
+    "preprocessed/extensions_bar.mojom-webui.ts",
+    "preprocessed/extensions_bar_data_model.mojom-webui.ts",
+    "preprocessed/icon_handle.mojom-webui.ts",
+    "preprocessed/toolbar_ui_api.mojom-webui.ts",
+    "preprocessed/toolbar_ui_api_data_model.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../tools/typescript/definitions/chrome_send.d.ts",
+    "../../../../../../../tools/typescript/definitions/metrics_private.d.ts",
+    "../../../../../../../tools/typescript/definitions/pending.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_components/help_bubble/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

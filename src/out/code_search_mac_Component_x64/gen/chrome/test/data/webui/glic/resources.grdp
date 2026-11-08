@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_GLIC_UNIT_TESTS_GLIC_API_CLIENT_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/glic/tsc/unit_tests/glic_api_client_test.js" resource_path="glic/unit_tests/glic_api_client_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_GLIC_UNIT_TESTS_OBSERVABLE_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/glic/tsc/unit_tests/observable_test.js" resource_path="glic/unit_tests/observable_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_GLIC_UNIT_TESTS_MOJO_LOGGING_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/glic/tsc/unit_tests/mojo_logging_test.js" resource_path="glic/unit_tests/mojo_logging_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_GLIC_UNIT_TESTS_OVERLAY_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/glic/tsc/unit_tests/overlay_test.js" resource_path="glic/unit_tests/overlay_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_GLIC_UNIT_TESTS_TEST_HELPERS_JS" file="${root_gen_dir}/chrome/test/data/webui/glic/tsc/unit_tests/test_helpers.js" resource_path="glic/unit_tests/test_helpers.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_GLIC_UNIT_TESTS_WEBVIEW_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/glic/tsc/unit_tests/webview_test.js" resource_path="glic/unit_tests/webview_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

@@ -1,0 +1,26 @@
+import {html} from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+  return html`<!--_html_template_start_--><style include="settings-shared site-settings-shared"></style>
+<settings-subpage page-title="$i18n{siteSettingsCategoryPopups}"
+    search-label="$i18n{siteSettingsAllSitesFilter}"
+    search-icon="settings20:filter-list"
+    search-term="{{searchTerm}}" route-path$="[[routePath]]">
+  <div class="content-settings-header secondary">
+    $i18n{siteSettingsPopupsDescription}
+  </div>
+  <settings-category-default-radio-group
+      category="[[contentSettingsTypesEnum_.POPUPS]]"
+      allow-option-label="$i18n{siteSettingsPopupsAllowed}"
+      allow-option-icon="cr:open-in-new"
+      block-option-label="$i18n{siteSettingsPopupsBlocked}"
+      block-option-icon="privacy:open-in-new-off">
+  </settings-category-default-radio-group>
+  <category-setting-exceptions
+      category="[[contentSettingsTypesEnum_.POPUPS]]"
+      allow-header="$i18n{siteSettingsPopupsAllowedExceptions}"
+      block-header="$i18n{siteSettingsPopupsBlockedExceptions}"
+      search-filter="[[searchTerm]]">
+  </category-setting-exceptions>
+</settings-subpage>
+<!--_html_template_end_-->`;
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_UNEXPORTABLE_KEYS_INTERNALS_APP_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/unexportable_keys_internals/tsc/app_test.js" resource_path="unexportable_keys_internals/app_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

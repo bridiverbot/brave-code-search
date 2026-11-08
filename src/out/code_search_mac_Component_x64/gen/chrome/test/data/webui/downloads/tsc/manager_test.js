@@ -1,0 +1,266 @@
+// Copyright 2017 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { browserProxyFactory, DangerType, loadTimeData, State } from 'chrome://downloads/downloads.js';
+import { isMac } from 'chrome://resources/js/platform.js';
+import { assertEquals, assertFalse, assertTrue } from 'chrome://webui-test/chai_assert.js';
+import { keyDownOn } from 'chrome://webui-test/keyboard_mock_interactions.js';
+import { isVisible, microtasksFinished } from 'chrome://webui-test/test_util.js';
+import { createDownload, FakePageHandler } from './test_support.js';
+suite('manager tests', function () {
+    let manager;
+    let handler;
+    let callbackRouterRemote;
+    let toastManager;
+    setup(function () {
+        loadTimeData.overrideValues({ 'improvedDownloadWarningsUX': true });
+        document.body.innerHTML = window.trustedTypes.emptyHTML;
+        // Set height to 100% so that the manager has a non-zero height. This is
+        // necessary for the list to know how many items to render. In production
+        // this is done by downloads.html.
+        document.documentElement.setAttribute('style', 'height: 100%;');
+        document.body.setAttribute('style', 'height: 100%;');
+        handler = new FakePageHandler();
+        const { instance, remote } = browserProxyFactory.createForTest(handler);
+        callbackRouterRemote = remote;
+        browserProxyFactory.setInstance(instance);
+        manager = document.createElement('downloads-manager');
+        document.body.appendChild(manager);
+        toastManager = manager.shadowRoot.querySelector('cr-toast-manager');
+        assertTrue(!!toastManager);
+        return microtasksFinished();
+    });
+    test('inserting items at beginning render dates correctly', async () => {
+        const countDates = () => {
+            const items = manager.shadowRoot.querySelectorAll('downloads-item');
+            return Array.from(items).reduce((soFar, item) => {
+                return item.shadowRoot.querySelector('div[id=date]:not(:empty)') ?
+                    soFar + 1 :
+                    soFar;
+            }, 0);
+        };
+        const download1 = createDownload();
+        const download2 = createDownload();
+        callbackRouterRemote.insertItems(0, [download1, download2]);
+        await callbackRouterRemote.$.flushForTesting();
+        await microtasksFinished();
+        assertEquals(1, countDates());
+        callbackRouterRemote.removeItem(0);
+        await callbackRouterRemote.$.flushForTesting();
+        await microtasksFinished();
+        assertEquals(1, countDates());
+        callbackRouterRemote.insertItems(0, [download1]);
+        await callbackRouterRemote.$.flushForTesting();
+        await microtasksFinished();
+        assertEquals(1, countDates());
+    });
+    test('update', async () => {
+        const dangerousDownload = createDownload({
+            dangerType: DangerType.kDangerousFile,
+            state: State.kDangerous,
+        });
+        callbackRouterRemote.insertItems(0, [dangerousDownload]);
+        await callbackRouterRemote.$.flushForTesting();
+        await microtasksFinished();
+        assertTrue(!!manager.shadowRoot.querySelector('downloads-item').shadowRoot
+            .querySelector('.dangerous'));
+        const safeDownload = Object.assign({}, dangerousDownload, {
+            dangerType: DangerType.kNoApplicableDangerType,
+            state: State.kComplete,
+        });
+        callbackRouterRemote.updateItem(0, safeDownload);
+        await callbackRouterRemote.$.flushForTesting();
+        await microtasksFinished();
+        assertFalse(!!manager.shadowRoot.querySelector('downloads-item').shadowRoot
+            .querySelector('.dangerous'));
+    });
+    test('remove', async () => {
+        callbackRouterRemote.insertItems(0, [createDownload({
+                fileName: 'file name',
+                state: State.kComplete,
+                sinceString: 'Today',
+                url: 'a'.repeat(1000),
+            })]);
+        await callbackRouterRemote.$.flushForTesting();
+        await microtasksFinished();
+        const item = manager.shadowRoot.querySelector('downloads-item');
+        const quickRemoveButton = item.shadowRoot.querySelector('#quick-remove');
+        assertTrue(!!quickRemoveButton);
+        quickRemoveButton.click();
+        await handler.whenCalled('remove');
+        callbackRouterRemote.removeItem(0);
+        await callbackRouterRemote.$.flushForTesting();
+        const list = manager.shadowRoot.querySelector('cr-infinite-list');
+        assertTrue(list.hidden);
+        assertTrue(toastManager.isToastOpen);
+    });
+    test('toolbar hasClearableDownloads set correctly', async () => {
+        const clearable = createDownload();
+        callbackRouterRemote.insertItems(0, [clearable]);
+        const checkClearable = async (state) => {
+            const download = createDownload({ state: state });
+            callbackRouterRemote.updateItem(0, download);
+            await callbackRouterRemote.$.flushForTesting();
+            assertTrue(manager.$.toolbar.hasClearableDownloads);
+        };
+        await checkClearable(State.kDangerous);
+        await checkClearable(State.kInProgress);
+        await checkClearable(State.kPaused);
+        await checkClearable(State.kComplete);
+        callbackRouterRemote.removeItem(0);
+        await callbackRouterRemote.$.flushForTesting();
+        assertFalse(manager.$.toolbar.hasClearableDownloads);
+    });
+    test('loadTimeData contains isManaged and browserManagedByOrg', function () {
+        // Check that loadTimeData contains these values.
+        loadTimeData.getBoolean('isManaged');
+        loadTimeData.getString('browserManagedByOrg');
+    });
+    test('toast is shown when clear-all-command is fired', async () => {
+        // Add a download entry so that clear-all-command is applicable.
+        callbackRouterRemote.insertItems(0, [createDownload({
+                fileName: 'file name',
+                state: State.kComplete,
+                sinceString: 'Today',
+                url: 'a'.repeat(1000),
+            })]);
+        await callbackRouterRemote.$.flushForTesting();
+        assertFalse(toastManager.isToastOpen);
+        // Simulate 'alt+c' key combo.
+        keyDownOn(document.documentElement, 0, 'alt', isMac ? 'ç' : 'c');
+        assertTrue(toastManager.isToastOpen);
+    });
+    test('toast is hidden when undo-command is fired', () => {
+        toastManager.show('');
+        assertTrue(toastManager.isToastOpen);
+        // Simulate 'ctrl+z' key combo (or meta+z for Mac).
+        keyDownOn(document.documentElement, 0, isMac ? 'meta' : 'ctrl', 'z');
+        assertFalse(toastManager.isToastOpen);
+    });
+    test('toast is hidden when undo is clicked', () => {
+        toastManager.show('');
+        assertTrue(toastManager.isToastOpen);
+        manager.shadowRoot.querySelector('cr-toast-manager cr-button').click();
+        assertFalse(toastManager.isToastOpen);
+    });
+    test('toast is not hidden when itself is clicked', () => {
+        toastManager.show('');
+        assertTrue(toastManager.isToastOpen);
+        toastManager.$.toast.click();
+        assertTrue(toastManager.isToastOpen);
+    });
+    test('toast is hidden when page is clicked', () => {
+        toastManager.show('');
+        assertTrue(toastManager.isToastOpen);
+        document.body.click();
+        assertFalse(toastManager.isToastOpen);
+    });
+    test('undo is not shown when removing only dangerous items', async () => {
+        callbackRouterRemote.insertItems(0, [
+            createDownload({ isDangerous: true }),
+            createDownload({ isInsecure: true }),
+        ]);
+        await callbackRouterRemote.$.flushForTesting();
+        toastManager.show('', /* hideSlotted= */ false);
+        assertFalse(toastManager.slottedHidden);
+        keyDownOn(document.documentElement, 0, 'alt', isMac ? 'ç' : 'c');
+        assertTrue(toastManager.slottedHidden);
+    });
+    test('undo is shown when removing items', async () => {
+        callbackRouterRemote.insertItems(0, [
+            createDownload(),
+            createDownload({ isDangerous: true }),
+            createDownload({ isInsecure: true }),
+        ]);
+        await callbackRouterRemote.$.flushForTesting();
+        toastManager.show('', /* hideSlotted= */ true);
+        assertTrue(toastManager.slottedHidden);
+        keyDownOn(document.documentElement, 0, 'alt', isMac ? 'ç' : 'c');
+        assertFalse(toastManager.slottedHidden);
+    });
+    test('bypass warning confirmation dialog shown on save-dangerous-click', async () => {
+        document.body.innerHTML = window.trustedTypes.emptyHTML;
+        manager = document.createElement('downloads-manager');
+        document.body.appendChild(manager);
+        callbackRouterRemote.insertItems(0, [
+            createDownload({
+                id: 'itemId',
+                fileName: 'item.pdf',
+                state: State.kDangerous,
+                isDangerous: true,
+                dangerType: DangerType.kDangerousUrl,
+            }),
+        ]);
+        await callbackRouterRemote.$.flushForTesting();
+        await microtasksFinished();
+        const item = manager.shadowRoot.querySelector('downloads-item');
+        assertTrue(!!item);
+        item.fire('save-dangerous-click', { id: item.data?.id || '' });
+        await callbackRouterRemote.$.flushForTesting();
+        const recordOpenId = await handler.whenCalled('recordOpenBypassWarningDialog');
+        assertEquals('itemId', recordOpenId);
+        const dialog = manager.shadowRoot.querySelector('downloads-bypass-warning-confirmation-dialog');
+        assertTrue(!!dialog);
+        assertTrue(dialog.$.dialog.open);
+        assertEquals('item.pdf', dialog.fileName);
+        // Confirm the dialog to download the dangerous file.
+        dialog.$.dialog.close();
+        await callbackRouterRemote.$.flushForTesting();
+        const saveDangerousId = await handler.whenCalled('saveDangerousFromDialogRequiringGesture');
+        assertEquals('itemId', saveDangerousId);
+        assertFalse(dialog.$.dialog.open);
+    });
+    test('bypass warning confirmation dialog records cancellation', async () => {
+        callbackRouterRemote.insertItems(0, [
+            createDownload({
+                id: 'itemId',
+                fileName: 'item.pdf',
+                state: State.kDangerous,
+                isDangerous: true,
+                dangerType: DangerType.kDangerousUrl,
+            }),
+        ]);
+        await callbackRouterRemote.$.flushForTesting();
+        await microtasksFinished();
+        const item = manager.shadowRoot.querySelector('downloads-item');
+        assertTrue(!!item);
+        item.fire('save-dangerous-click', { id: item.data?.id || '' });
+        await callbackRouterRemote.$.flushForTesting();
+        const recordOpenId = await handler.whenCalled('recordOpenBypassWarningDialog');
+        assertEquals('itemId', recordOpenId);
+        const dialog = manager.shadowRoot.querySelector('downloads-bypass-warning-confirmation-dialog');
+        assertTrue(!!dialog);
+        assertTrue(dialog.$.dialog.open);
+        assertEquals('item.pdf', dialog.fileName);
+        // Cancel the dialog and check that it's recorded.
+        dialog.$.dialog.cancel();
+        await callbackRouterRemote.$.flushForTesting();
+        const recordCancelId = await handler.whenCalled('recordCancelBypassWarningDialog');
+        assertEquals('itemId', recordCancelId);
+        assertFalse(dialog.$.dialog.open);
+    });
+    test('bypass warning confirmation dialog closed when file removed', async () => {
+        callbackRouterRemote.insertItems(0, [
+            createDownload({
+                id: 'itemId',
+                state: State.kDangerous,
+                isDangerous: true,
+                dangerType: DangerType.kDangerousUrl,
+            }),
+        ]);
+        await callbackRouterRemote.$.flushForTesting();
+        await microtasksFinished();
+        const item = manager.shadowRoot.querySelector('downloads-item');
+        assertTrue(!!item);
+        item.fire('save-dangerous-click', { id: item.data?.id || '' });
+        await microtasksFinished();
+        const dialog = manager.shadowRoot.querySelector('downloads-bypass-warning-confirmation-dialog');
+        assertTrue(!!dialog);
+        assertTrue(dialog.$.dialog.open);
+        // Remove the file and check that the dialog is hidden.
+        callbackRouterRemote.removeItem(0);
+        await callbackRouterRemote.$.flushForTesting();
+        assertFalse(isVisible(dialog));
+    });
+    // 
+});

@@ -1,0 +1,116 @@
+import {html} from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+  return html`<!--_html_template_start_--><style include="settings-shared md-select">.settings-box{display:flex;justify-content:space-between}.settings-box .icon{margin-inline-end:20px}</style>
+<!--  -->
+<template is="dom-if" if="[[isSemanticHistorySearchAvailable_]]">
+  <settings-toggle-button id="semanticHistorySearchEnabled"
+      class="cr-row"
+      icon="history"
+      pref-key="brave.history_embeddings_enabled"
+      label="$i18n{semanticHistorySearchLabel}"
+      sub-label="$i18n{semanticHistorySearchSubLabel}"
+      learn-more-url="$i18n{semanticHistorySearchLearnMoreURL}">
+    <template is="dom-if" if="[[shouldShowRestartSemanticHistorySearch_(
+        semanticHistorySearchPref_.value)]]">
+      <cr-button on-click="restartBrowser_" slot="more-actions">
+        $i18n{restart}
+      </cr-button>
+    </template>
+  </settings-toggle-button>
+</template>
+<template is="dom-if" if="[[isOnDeviceSpeechModelAvailable_]]">
+  <settings-toggle-button id="onDeviceSpeechModelEnabled"
+      class="cr-row"
+      icon="microphone"
+      pref-key="brave.local_ai.on_device_speech_model_enabled"
+      label="$i18n{onDeviceSpeechModelLabel}"
+      sub-label="$i18n{onDeviceSpeechModelSubLabel}">
+  </settings-toggle-button>
+</template>
+<!--  -->
+<div class="settings-box">
+  <span class="icon" aria-hidden="true">
+    <cr-icon icon="calendar-time"></cr-icon>
+  </span>
+  <div class="start" id="historyRetentionLabelWrapper">
+    <div class="label">$i18n{historyRetentionLabel}</div>
+    <div class="secondary label" id="historyRetentionSubLabel">
+      $i18n{historyRetentionSubLabel}
+    </div>
+  </div>
+  <settings-dropdown-menu id="historyRetention"
+      pref-key="brave.history.retention_days"
+      menu-options="[[historyRetentionOptions_]]">
+  </settings-dropdown-menu>
+</div>
+<div class="settings-box">
+  <div class="start" id="labelWrapper">
+    <div class="label">$i18n{webRTCPolicyLabel}</div>
+    <a id="learnMore" href="$i18n{webRTCLearnMoreURL}" target="_blank">
+      $i18n{webRTCPolicySubLabel}
+    </a>
+  </div>
+  <settings-dropdown-menu label="$i18n{webRTCLearnMoreURL}"
+      pref-key="webrtc.ip_handling_policy"
+      menu-options="[[webRTCPolicies_]]">
+  </settings-dropdown-menu>
+</div>
+<settings-toggle-button id="pushMessagingEnabled"
+    class="cr-row"
+    pref-key="brave.gcm.channel_status"
+    label="$i18n{pushMessagingLabel}">
+    <template is="dom-if" if="[[shouldShowRestart_(
+      pushMessagingPref_.value)]]">
+    <cr-button on-click="restartBrowser_" slot="more-actions">
+      $i18n{restart}
+    </cr-button>
+  </template>
+</settings-toggle-button>
+<settings-toggle-button
+  class="cr-row"
+  pref-key="brave.de_amp.enabled"
+  label="$i18n{deAmpSettingLabel}"
+  sub-label="$i18n{deAmpSettingSubLabel}"
+  learn-more-url="$i18n{deAmpLearnMoreURL}">
+</settings-toggle-button>
+<template is="dom-if" if="[[isDebounceFeatureEnabled_]]">
+  <settings-toggle-button
+    class="cr-row"
+    pref-key="brave.debounce.enabled"
+    label="$i18n{debounceSettingLabel}"
+    sub-label="$i18n{debounceSettingSubLabel}"
+    learn-more-url="$i18n{debounceLearnMoreURL}">
+  </settings-toggle-button>
+</template>
+<settings-toggle-button
+  class="cr-row"
+  pref-key="brave.reduce_language"
+  label="$i18n{reduceLanguageControlLabel}"
+  sub-label="$i18n{reduceLanguageDesc}">
+</settings-toggle-button>
+<div hidden="[[!isRequestOTRFeatureEnabled_]]" class="settings-box">
+    <div class="start" id="labelWrapper">
+        <div class="label">$i18n{requestOTRLabel}</div>
+    </div>
+    <settings-dropdown-menu id="defaultRequestOTR"
+                            pref-key="brave.request_otr.request_otr_action_option"
+                            menu-options="[[requestOTRActions_]]">
+    </settings-dropdown-menu>
+</div>
+<!--  -->
+<template is="dom-if" if="[[isPsstFeatureEnabled_]]">
+  <settings-toggle-button
+    class="cr-row"
+    pref-key="brave.psst.settings.enable_psst"
+    label="$i18n{psstSettingsToggleLabel}"
+    sub-label="$i18n{psstSettingsToggleSubLabel}"
+    learn-more-url="$i18n{psstLearnMoreURL}">
+  </settings-toggle-button>
+</template>
+<!--  -->
+
+<!--  -->
+<settings-do-not-track-toggle id="doNotTrack">
+</settings-do-not-track-toggle>
+<!--_html_template_end_-->`;
+}

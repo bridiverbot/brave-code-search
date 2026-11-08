@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/side_panel_history_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/side_panel_history_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/side_panel_history_resources_map.h"
+            type="resource_map_header" />
+    <output filename="side_panel_history_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_SIDE_PANEL_HISTORY_HISTORY_HTML" file="${root_gen_dir}/chrome/browser/resources/side_panel/history/preprocessed/history.html" resource_path="history.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_HISTORY_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/history/minified/app.html.js" resource_path="app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_HISTORY_APP_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/history/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_HISTORY_HISTORY_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/history/minified/history.js" resource_path="history.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_SIDE_PANEL_HISTORY_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/side_panel/history/minified/app.css.js" resource_path="app.css.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

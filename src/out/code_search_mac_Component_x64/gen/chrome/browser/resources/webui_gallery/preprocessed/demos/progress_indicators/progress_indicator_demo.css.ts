@@ -1,0 +1,9 @@
+import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
+import {getCss as getDemo} from '../demo.css.js';
+import '//resources/cr_elements/cr_shared_vars.css.js';
+import {getCss as getCrSpinnerStyleLit} from '//resources/cr_elements/cr_spinner_style_lit.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[getDemo(),getCrSpinnerStyleLit()], css`cr-progress{--cr-progress-active-color:var(--google-blue-500)}@media (prefers-color-scheme:dark){cr-progress{--cr-progress-active-color:var(--google-blue-300)}}#gradientWithBorder{border:solid 1px var(--google-blue-300);border-radius:16px;box-sizing:border-box;padding:16px;width:100%}#customColors{--cr-loading-gradient-color-start:cyan;--cr-loading-gradient-color-middle:gold;--cr-loading-gradient-color-end:hotpink}`]);
+}

@@ -1,0 +1,192 @@
+// Copyright 2015 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview Element for indicating policies that apply to an
+ * element controlling a settings preference.
+ */
+import '//resources/cr_elements/policy/cr_tooltip_icon.js';
+import { getCss as getCrHiddenStyleCss } from '//resources/cr_elements/cr_hidden_style_lit.css.js';
+import { CrPolicyIndicatorType } from '//resources/cr_elements/policy/cr_policy_types.js';
+import { assertNotReached } from '//resources/js/assert.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getHtml } from './cr_policy_pref_indicator.html.js';
+export class CrPolicyPrefIndicatorElement extends CrLitElement {
+    static get is() {
+        return 'cr-policy-pref-indicator';
+    }
+    static get styles() {
+        return getCrHiddenStyleCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            iconAriaLabel: { type: String },
+            indicatorType: { type: String },
+            indicatorTooltip: { type: String },
+            /**
+             * Optional preference object associated with the indicator.
+             */
+            pref: { type: Object },
+            /**
+             * Optional value for the preference value this indicator is associated
+             * with. If this is set, no indicator will be shown if it is a member
+             * of |pref.userSelectableValues| and is not |pref.recommendedValue|.
+             */
+            associatedValue: { type: Object },
+        };
+    }
+    #iconAriaLabel_accessor_storage = '';
+    get iconAriaLabel() { return this.#iconAriaLabel_accessor_storage; }
+    set iconAriaLabel(value) { this.#iconAriaLabel_accessor_storage = value; }
+    #indicatorType_accessor_storage = CrPolicyIndicatorType.NONE;
+    get indicatorType() { return this.#indicatorType_accessor_storage; }
+    set indicatorType(value) { this.#indicatorType_accessor_storage = value; }
+    #indicatorTooltip_accessor_storage = '';
+    get indicatorTooltip() { return this.#indicatorTooltip_accessor_storage; }
+    set indicatorTooltip(value) { this.#indicatorTooltip_accessor_storage = value; }
+    #pref_accessor_storage;
+    get pref() { return this.#pref_accessor_storage; }
+    set pref(value) { this.#pref_accessor_storage = value; }
+    #associatedValue_accessor_storage;
+    get associatedValue() { return this.#associatedValue_accessor_storage; }
+    set associatedValue(value) { this.#associatedValue_accessor_storage = value; }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        if (changedProperties.has('pref') ||
+            changedProperties.has('associatedValue')) {
+            this.indicatorType = this.getIndicatorTypeForPref_();
+        }
+        if (changedProperties.has('pref') ||
+            changedProperties.has('associatedValue') ||
+            changedProperties.has('indicatorType')) {
+            this.indicatorTooltip = this.getIndicatorTooltipForPref_();
+        }
+    }
+    /**
+     * @return True if the indicator should be shown.
+     */
+    getIndicatorVisible_() {
+        return this.indicatorType !== CrPolicyIndicatorType.NONE;
+    }
+    getIndicatorIcon_() {
+        switch (this.indicatorType) {
+            case CrPolicyIndicatorType.EXTENSION:
+                return 'cr:chrome-extension-filled';
+            case CrPolicyIndicatorType.NONE:
+                return '';
+            case CrPolicyIndicatorType.PRIMARY_USER:
+                return 'cr:group-filled';
+            case CrPolicyIndicatorType.OWNER:
+                return 'cr:person-filled';
+            case CrPolicyIndicatorType.USER_POLICY:
+            case CrPolicyIndicatorType.DEVICE_POLICY:
+            case CrPolicyIndicatorType.RECOMMENDED:
+                return 'cr20:domain';
+            case CrPolicyIndicatorType.PARENT:
+            case CrPolicyIndicatorType.CHILD_RESTRICTION:
+                return 'cr20:family-link';
+            default:
+                assertNotReached();
+        }
+    }
+    /**
+     * @param name The name associated with the indicator. See
+     *     chrome.settingsPrivate.PrefObject.controlledByName
+     * @param matches For RECOMMENDED only, whether the indicator
+     *     value matches the recommended value.
+     * @return The tooltip text for |type|.
+     */
+    getIndicatorTooltip_(type, name, matches) {
+        if (!window.CrPolicyStrings) {
+            return '';
+        } // Tooltips may not be defined, e.g. in OOBE.
+        const CrPolicyStrings = window.CrPolicyStrings;
+        switch (type) {
+            case CrPolicyIndicatorType.EXTENSION:
+                return name.length > 0 ?
+                    CrPolicyStrings.controlledSettingExtension.replace('$1', name) :
+                    CrPolicyStrings.controlledSettingExtensionWithoutName;
+            // 
+            case CrPolicyIndicatorType.USER_POLICY:
+            case CrPolicyIndicatorType.DEVICE_POLICY:
+                return CrPolicyStrings.controlledSettingPolicy;
+            case CrPolicyIndicatorType.RECOMMENDED:
+                return matches ? CrPolicyStrings.controlledSettingRecommendedMatches :
+                    CrPolicyStrings.controlledSettingRecommendedDiffers;
+            case CrPolicyIndicatorType.PARENT:
+                return CrPolicyStrings.controlledSettingParent;
+            case CrPolicyIndicatorType.CHILD_RESTRICTION:
+                return CrPolicyStrings.controlledSettingChildRestriction;
+            default:
+                break;
+        }
+        return '';
+    }
+    /**
+     * @return The indicator type based on |pref| and |associatedValue|.
+     */
+    getIndicatorTypeForPref_() {
+        if (!this.pref) {
+            return CrPolicyIndicatorType.NONE;
+        }
+        const { enforcement, userSelectableValues, controlledBy, recommendedValue } = this.pref;
+        if (enforcement === chrome.settingsPrivate.Enforcement.RECOMMENDED) {
+            if (this.associatedValue !== undefined &&
+                this.associatedValue !== recommendedValue) {
+                return CrPolicyIndicatorType.NONE;
+            }
+            return CrPolicyIndicatorType.RECOMMENDED;
+        }
+        if (enforcement === chrome.settingsPrivate.Enforcement.ENFORCED) {
+            // An enforced preference may also have some values still available for
+            // the user to select from.
+            if (userSelectableValues !== undefined) {
+                if (recommendedValue && this.associatedValue === recommendedValue) {
+                    return CrPolicyIndicatorType.RECOMMENDED;
+                }
+                else if (userSelectableValues.includes(this.associatedValue)) {
+                    return CrPolicyIndicatorType.NONE;
+                }
+            }
+            switch (controlledBy) {
+                case chrome.settingsPrivate.ControlledBy.EXTENSION:
+                    return CrPolicyIndicatorType.EXTENSION;
+                case chrome.settingsPrivate.ControlledBy.PRIMARY_USER:
+                    return CrPolicyIndicatorType.PRIMARY_USER;
+                case chrome.settingsPrivate.ControlledBy.OWNER:
+                    return CrPolicyIndicatorType.OWNER;
+                case chrome.settingsPrivate.ControlledBy.USER_POLICY:
+                    return CrPolicyIndicatorType.USER_POLICY;
+                case chrome.settingsPrivate.ControlledBy.DEVICE_POLICY:
+                    return CrPolicyIndicatorType.DEVICE_POLICY;
+                case chrome.settingsPrivate.ControlledBy.PARENT:
+                    return CrPolicyIndicatorType.PARENT;
+                case chrome.settingsPrivate.ControlledBy.CHILD_RESTRICTION:
+                    return CrPolicyIndicatorType.CHILD_RESTRICTION;
+                default:
+                    break;
+            }
+        }
+        if (enforcement === chrome.settingsPrivate.Enforcement.PARENT_SUPERVISED) {
+            return CrPolicyIndicatorType.PARENT;
+        }
+        return CrPolicyIndicatorType.NONE;
+    }
+    /**
+     * @return The tooltip text for |indicatorType|.
+     */
+    getIndicatorTooltipForPref_() {
+        if (!this.pref) {
+            return '';
+        }
+        const matches = this.pref.value === this.pref.recommendedValue;
+        return this.getIndicatorTooltip_(this.indicatorType, this.pref.controlledByName || '', matches);
+    }
+    getFocusableElement() {
+        return this.$.tooltipIcon.getFocusableElement();
+    }
+}
+customElements.define(CrPolicyPrefIndicatorElement.is, CrPolicyPrefIndicatorElement);
