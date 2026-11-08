@@ -1,0 +1,14 @@
+IDS_PERMISSION_REQUEST_CAMERA_ALLOWED,32800,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_CAMERA,32801,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_MICROPHONE_ALLOWED,32802,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_MICROPHONE,32803,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_GEOLOCATION_ALLOWED,32804,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_GEOLOCATION,32805,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_CAMERA_MICROPHONE_ALLOWED,32806,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_CAMERA_MICROPHONE,32807,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_PRECISE_GEOLOCATION_ALLOWED,32808,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_PRECISE_GEOLOCATION,32809,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_USING_LOCATION,32810,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_INSTALL,32811,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_INSTALL_WITH_HOST,32812,../../third_party/blink/public/strings/permission_element_strings.grd
+IDS_PERMISSION_REQUEST_LAUNCH,32813,../../third_party/blink/public/strings/permission_element_strings.grd

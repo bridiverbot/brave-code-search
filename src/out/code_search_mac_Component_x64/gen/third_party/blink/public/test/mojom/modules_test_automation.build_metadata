@@ -1,0 +1,15 @@
+{
+  "deps": [
+    "../../../../../services/device/public/mojom/mojom.build_metadata",
+    "../../../../../services/device/public/mojom/generic_sensor.build_metadata",
+    "../../mojom/mojom_platform.build_metadata",
+    "../../../../../url/mojom/url_mojom_gurl.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../third_party/blink/public/test/mojom/compute_pressure/web_pressure_manager_automation.test-mojom",
+    "../../../../../../../../third_party/blink/public/test/mojom/device_posture/device_posture_provider_automation.test-mojom",
+    "../../../../../../../../third_party/blink/public/test/mojom/permissions/permission_automation.test-mojom",
+    "../../../../../../../../third_party/blink/public/test/mojom/sensor/web_sensor_provider_automation.test-mojom",
+    "../../../../../../../../third_party/blink/public/test/mojom/webid/federated_auth_request_automation.test-mojom"
+  ]
+}
