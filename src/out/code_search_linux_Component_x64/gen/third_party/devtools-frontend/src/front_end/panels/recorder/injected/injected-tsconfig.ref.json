@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected",
+    "rootDirs": [
+      "../../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/Logger.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/MonotonicArray.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/RecordingClient.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/SelectorComputer.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/SelectorPicker.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/Step.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/injected.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/selectors/ARIASelector.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/selectors/CSSSelector.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/selectors/PierceSelector.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/selectors/Selector.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/selectors/TextSelector.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/selectors/XPath.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected/util.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../third_party/puppeteer/puppeteer-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../third_party/puppeteer-replay/bundle-tsconfig.ref.json"
+    }
+  ]
+}
