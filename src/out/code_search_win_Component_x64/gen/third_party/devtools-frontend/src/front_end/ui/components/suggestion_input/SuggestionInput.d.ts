@@ -1,0 +1,64 @@
+import * as Lit from '../../../ui/lit/lit.js';
+declare global {
+    interface HTMLElementTagNameMap {
+        'devtools-suggestion-input': SuggestionInput;
+        'devtools-editable-content': EditableContent;
+        'devtools-suggestion-box': SuggestionBox;
+    }
+}
+declare class EditableContent extends HTMLElement {
+    #private;
+    static get observedAttributes(): string[];
+    set disabled(disabled: boolean);
+    get disabled(): boolean;
+    set value(value: string);
+    get value(): string;
+    set mimeType(type: string);
+    get mimeType(): string;
+    constructor();
+    attributeChangedCallback(name: string, _: string | null, value: string | null): void;
+}
+export type SuggestionFilter = (option: string, query: string) => boolean;
+/**
+ * @fires SuggestionInitEvent#suggestioninit
+ * @fires SuggestEvent#suggest
+ */
+declare class SuggestionBox extends Lit.LitElement {
+    #private;
+    static properties: typeof Lit.LitElement.properties;
+    options: readonly string[];
+    expression: string;
+    suggestionFilter?: SuggestionFilter;
+    hideExactMatch: boolean;
+    private cursor;
+    constructor();
+    connectedCallback(): void;
+    willUpdate(changedProperties: Lit.PropertyValues<this>): void;
+    protected render(): Lit.TemplateResult | undefined;
+}
+export declare class SuggestionInput extends Lit.LitElement {
+    #private;
+    static shadowRootOptions: ShadowRootInit;
+    static properties: typeof Lit.LitElement.properties;
+    /**
+     * State passed to devtools-suggestion-box.
+     */
+    options: readonly string[];
+    autocomplete?: boolean;
+    suggestionFilter?: SuggestionFilter;
+    hideExactMatch: boolean;
+    expression: string;
+    /**
+     * State passed to devtools-editable-content.
+     */
+    placeholder: string;
+    value: string;
+    disabled: boolean;
+    strikethrough: boolean;
+    mimeType: string;
+    jslogContext?: string;
+    constructor();
+    protected willUpdate(properties: Lit.PropertyValues<this>): void;
+    protected render(): Lit.TemplateResult;
+}
+export {};
