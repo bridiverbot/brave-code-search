@@ -1,0 +1,20 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/std/rules/profiler_builtins",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CFG_DISABLE_UNSTABLE_FEATURES": "0",
+        "STD_ENV_ARCH": "aarch64",
+        "CARGO_PKG_VERSION": "0.0.0",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "0",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "profiler_builtins",
+        "CARGO_MANIFEST_DIR": "../../build/rust/std/rules/profiler_builtins/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust-toolchain/lib/rustlib/src/rust/library/profiler_builtins/src/lib.rs",
+        "@obj/build/rust/std/rules/profiler_builtins.rsp.rust"
+    ]
+}

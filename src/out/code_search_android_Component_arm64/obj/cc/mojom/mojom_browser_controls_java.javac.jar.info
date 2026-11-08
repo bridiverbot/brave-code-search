@@ -1,0 +1,3 @@
+org.chromium.cc.mojom.BrowserControlsOffsetTagModifications,gen/cc/mojom/mojom_browser_controls_java_sources.srcjar/org/chromium/cc/mojom/BrowserControlsOffsetTagModifications.java
+org.chromium.cc.mojom.BrowserControlsOffsetTags,gen/cc/mojom/mojom_browser_controls_java_sources.srcjar/org/chromium/cc/mojom/BrowserControlsOffsetTags.java
+org.chromium.cc.mojom.BrowserControlsParams,gen/cc/mojom/mojom_browser_controls_java_sources.srcjar/org/chromium/cc/mojom/BrowserControlsParams.java
