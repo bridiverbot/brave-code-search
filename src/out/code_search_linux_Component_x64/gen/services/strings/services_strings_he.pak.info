@@ -1,0 +1,5 @@
+IDS_PROXY_RESOLVER_DISPLAY_NAME,32610,../../services/services_strings.grd
+IDS_WINDOWS_SYSTEM_PROXY_RESOLVER_DISPLAY_NAME,32611,../../services/services_strings.grd
+IDS_MAC_SYSTEM_PROXY_RESOLVER_DISPLAY_NAME,32612,../../services/services_strings.grd
+IDS_PDF_OCR_RESULT_BEGIN,32613,../../services/services_strings.grd
+IDS_PDF_OCR_RESULT_END,32614,../../services/services_strings.grd

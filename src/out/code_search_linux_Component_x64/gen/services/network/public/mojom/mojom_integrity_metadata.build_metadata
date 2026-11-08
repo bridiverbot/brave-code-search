@@ -1,0 +1,8 @@
+{
+  "deps": [
+    "mojom_integrity_algorithm.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../services/network/public/mojom/integrity_metadata.mojom"
+  ]
+}
