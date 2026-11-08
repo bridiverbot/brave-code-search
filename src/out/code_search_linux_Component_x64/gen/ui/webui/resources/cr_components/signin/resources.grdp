@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_CR_COMPONENTS_SIGNIN_SIGNIN_JS" file="${root_gen_dir}/ui/webui/resources/cr_components/signin/minified/signin.js" resource_path="cr_components/signin/signin.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CR_COMPONENTS_SIGNIN_SIGNIN_MOJOM_WEBUI_JS" file="${root_gen_dir}/ui/webui/resources/cr_components/signin/minified/signin.mojom-webui.js" resource_path="cr_components/signin/signin.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

@@ -1,0 +1,18 @@
+  0x000000000000000e (SONAME)       Library soname: [libcomponents_continuous_search_common.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+_ZN4base8Location26CurrentWithoutFunctionNameEPKci U
+_ZN7logging10CheckErrorC1EPNS_10LogMessageE U
+_ZN7logging29CreateCheckOpLogMessageStringEPKcPcS2_ U
+_ZN7logging10CheckError8DCheckOpEPcRKN4base8LocationE U
+_ZN7logging10CheckErrorD1Ev U
+_ZN7logging15CheckOpValueStrEm U
+_Znwm U
+_ZdlPvm U
+_ZNSt4__Cr22__libcpp_verbose_abortEPKcz U
+memset@GLIBC_2.2.5 U
+__cxa_finalize@GLIBC_2.2.5 w
+memmove@GLIBC_2.2.5 U
+_ZN17continuous_search13ValidateTitleENSt4__Cr17basic_string_viewIDsNS0_11char_traitsIDsEEEE T
+_ZN17continuous_search18ValidateTitleAsciiENSt4__Cr17basic_string_viewIcNS0_11char_traitsIcEEEE T

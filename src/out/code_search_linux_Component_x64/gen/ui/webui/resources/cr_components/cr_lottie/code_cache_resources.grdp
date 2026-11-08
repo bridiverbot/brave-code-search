@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_CR_COMPONENTS_CR_LOTTIE_CODE_CACHE_CR_LOTTIE_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/cr_lottie/code_cache/cr_lottie.js.code_cache" resource_path="cr_components/cr_lottie/cr_lottie.js.code_cache" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CR_COMPONENTS_CR_LOTTIE_CODE_CACHE_LOTTIE_JSON_PROCESSOR_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/cr_lottie/code_cache/lottie_json_processor.js.code_cache" resource_path="cr_components/cr_lottie/lottie_json_processor.js.code_cache" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CR_COMPONENTS_CR_LOTTIE_CODE_CACHE_CR_LOTTIE_CSS_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/cr_lottie/code_cache/cr_lottie.css.js.code_cache" resource_path="cr_components/cr_lottie/cr_lottie.css.js.code_cache" use_base_dir="false" type="BINDATA" />
+</grit-part>

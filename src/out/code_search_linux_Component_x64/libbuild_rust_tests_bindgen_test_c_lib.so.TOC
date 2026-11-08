@@ -1,0 +1,6 @@
+  0x000000000000000e (SONAME)       Library soname: [libbuild_rust_tests_bindgen_test_c_lib.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+__cxa_finalize@GLIBC_2.2.5 w
+add_two_numbers T
