@@ -1,0 +1,1 @@
+fn run_some_generated_code() -> u32 { 42 }

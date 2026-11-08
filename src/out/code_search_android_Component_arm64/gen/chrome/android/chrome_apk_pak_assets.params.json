@@ -1,0 +1,16 @@
+{
+  "assets": {
+    "disable_compression": true,
+    "sources": [
+      "gen/chrome/android/chrome_apk_paks/chrome_100_percent.pak",
+      "gen/chrome/android/chrome_apk_paks/resources.pak",
+      "gen/chrome/android/chrome_apk_paks/chrome_200_percent.pak"
+    ]
+  },
+  "deps_configs": [
+    "gen/chrome/android/chrome_apk_locale_pak_assets.params.json",
+    "gen/brave/brave_pak_assets.params.json"
+  ],
+  "gn_target": "//chrome/android:chrome_apk_pak_assets",
+  "type": "android_assets"
+}

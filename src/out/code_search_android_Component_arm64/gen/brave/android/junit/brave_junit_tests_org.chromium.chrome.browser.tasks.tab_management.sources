@@ -1,0 +1,6 @@
+../../brave/android/junit/src/org/chromium/chrome/browser/tasks/tab_management/BraveTabGridContextMenuCoordinatorTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/tasks/tab_management/BraveTabGridItemTouchHelperCallbackTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/tasks/tab_management/BraveTabGroupsPaneTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/tasks/tab_management/BraveTabListEditorManagerTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/tasks/tab_management/BraveTabUiFeatureUtilitiesUnitTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/tasks/tab_management/pinned_tabs/BravePinnedTabStripItemContextMenuCoordinatorTest.java

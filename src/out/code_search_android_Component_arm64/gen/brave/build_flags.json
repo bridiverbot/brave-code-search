@@ -1,0 +1,16 @@
+{
+  "enable_ai_chat": true,
+  "enable_ai_chat_tab_management_tool": false,
+  "enable_brave_rewards": true,
+  "enable_brave_wallet": true,
+  "enable_email_aliases": false,
+  "is_android": true,
+  "is_brave_origin_branded": false,
+  "is_desktop": false,
+  "is_ios": false,
+  "is_linux": false,
+  "is_mac": false,
+  "is_official_build": false,
+  "is_storybook": false,
+  "is_win": false
+}

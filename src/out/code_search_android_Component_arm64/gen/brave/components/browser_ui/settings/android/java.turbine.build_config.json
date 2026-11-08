@@ -1,0 +1,13 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/components/browser_ui/settings/android/java.turbine.jar",
+    "obj/components/browser_ui/styles/android/java.turbine.jar",
+    "obj/third_party/androidx/androidx_preference_preference_java.ijar.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

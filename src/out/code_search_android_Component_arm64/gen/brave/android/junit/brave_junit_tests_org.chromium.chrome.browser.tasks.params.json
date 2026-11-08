@@ -1,0 +1,28 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/android/junit/chrome_junit_tests_helper.params.json",
+    "gen/components/browser_ui/media/android/java.params.json",
+    "gen/services/media_session/public/cpp/android/media_session_java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//brave/android/junit:brave_junit_tests_org.chromium.chrome.browser.tasks",
+  "interface_jar_path": "obj/brave/android/junit/brave_junit_tests_org.chromium.chrome.browser.tasks.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome",
+  "processed_jar_path": "obj/brave/android/junit/brave_junit_tests_org.chromium.chrome.browser.tasks.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/brave/android/junit/brave_junit_tests_org.chromium.chrome.browser.tasks.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/brave/android/junit/brave_junit_tests_org.chromium.chrome.browser.tasks.javac.jar"
+}

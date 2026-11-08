@@ -1,0 +1,8 @@
+{
+  "gn_target": "//brave/third_party/android_deps:androidx_media3_media3_exoplayer_hls_java",
+  "public_deps_configs": [
+    "gen/brave/third_party/android_deps/androidx_media3_media3_exoplayer_hls_java__classes.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

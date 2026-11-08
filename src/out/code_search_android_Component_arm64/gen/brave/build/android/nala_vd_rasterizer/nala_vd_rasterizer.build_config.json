@@ -1,0 +1,16 @@
+{
+  "processed_classpath": [
+    "obj/brave/build/android/nala_vd_rasterizer/nala_vd_rasterizer.javac.jar",
+    "../../brave/third_party/android_deps/libs/com_android_tools_sdk_common/sdk-common.jar",
+    "../../brave/third_party/android_deps/libs/com_android_tools_layoutlib_layoutlib_api/layoutlib-api.jar",
+    "../../brave/third_party/android_deps/libs/com_android_tools_common/common.jar",
+    "../../third_party/android_deps/cipd/libs/org_jetbrains_kotlin_kotlin_stdlib/kotlin-stdlib.jar",
+    "../../third_party/android_deps/cipd/libs/org_jetbrains_annotations/annotations.jar",
+    "../../third_party/android_deps/cipd/libs/com_google_guava_guava/guava.jar",
+    "../../third_party/android_deps/cipd/libs/com_google_guava_failureaccess/failureaccess.jar",
+    "../../third_party/android_deps/cipd/libs/org_jspecify_jspecify/jspecify.jar",
+    "../../third_party/android_deps/cipd/libs/com_google_j2objc_j2objc_annotations/j2objc-annotations.jar",
+    "../../third_party/android_deps/cipd/libs/com_google_errorprone_error_prone_annotations/error_prone_annotations.jar",
+    "obj/build/android/build_java.javac.jar"
+  ]
+}

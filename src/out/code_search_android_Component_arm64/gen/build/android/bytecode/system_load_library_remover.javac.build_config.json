@@ -1,0 +1,9 @@
+{
+  "javac_full_interface_classpath": [
+    "obj/third_party/android_deps/org_ow2_asm_asm_commons.ijar.jar",
+    "obj/third_party/android_deps/org_ow2_asm_asm_tree.ijar.jar",
+    "obj/third_party/android_deps/org_ow2_asm_asm.ijar.jar",
+    "obj/build/android/build_java.turbine.jar"
+  ],
+  "sdk_interface_jars": []
+}
