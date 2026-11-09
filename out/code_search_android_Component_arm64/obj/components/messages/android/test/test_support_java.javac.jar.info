@@ -1,0 +1,3 @@
+org.chromium.components.messages.MessagesTestHelper,../../components/messages/android/test/java/src/org/chromium/components/messages/MessagesTestHelper.java
+org.chromium.components.messages.MessagesTestHelperJni,gen/components/messages/android/test/jni_headers.srcjar/org/chromium/components/messages/MessagesTestHelperJni.java
+org.chromium.components.messages.TestMessageDispatcherWrapper,../../components/messages/android/test/java/src/org/chromium/components/messages/TestMessageDispatcherWrapper.java

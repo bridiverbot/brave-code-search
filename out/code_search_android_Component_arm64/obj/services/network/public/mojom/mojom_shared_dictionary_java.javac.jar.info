@@ -1,0 +1,3 @@
+org.chromium.network.mojom.SharedDictionaryError,gen/services/network/public/mojom/mojom_shared_dictionary_java_sources.srcjar/org/chromium/network/mojom/SharedDictionaryError.java
+org.chromium.network.mojom.SharedDictionaryIsolationKey,gen/services/network/public/mojom/mojom_shared_dictionary_java_sources.srcjar/org/chromium/network/mojom/SharedDictionaryIsolationKey.java
+org.chromium.network.mojom.SharedDictionaryUsageInfo,gen/services/network/public/mojom/mojom_shared_dictionary_java_sources.srcjar/org/chromium/network/mojom/SharedDictionaryUsageInfo.java

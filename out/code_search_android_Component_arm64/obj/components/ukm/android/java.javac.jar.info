@@ -1,0 +1,2 @@
+org.chromium.components.ukm.UkmRecorder,../../components/ukm/android/java/src/org/chromium/components/ukm/UkmRecorder.java
+org.chromium.components.ukm.UkmRecorderJni,gen/components/ukm/android/jni_headers.srcjar/org/chromium/components/ukm/UkmRecorderJni.java

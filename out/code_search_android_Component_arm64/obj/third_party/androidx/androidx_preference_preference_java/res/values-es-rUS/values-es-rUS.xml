@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="8016979983985242980" name="copy">"Copiar"</string>
+    <string msgid="4538737816656609903" name="expand_button_title">"Avanzado"</string>
+    <string msgid="5322289270060224450" name="not_set">"Sin establecer"</string>
+    <string msgid="811987176883013580" name="preference_copied">"Se copió \"<xliff:g id="SUMMARY">%1$s</xliff:g>\" en el portapapeles."</string>
+    <string msgid="4958113070631599540" name="summary_collapsed_preference_list">"<xliff:g id="CURRENT_ITEMS">%1$s</xliff:g>, <xliff:g id="ADDED_ITEMS">%2$s</xliff:g>"</string>
+    <string msgid="3516781442212499478" name="v7_preference_off">"DESACTIVADO"</string>
+    <string msgid="5048321755000716519" name="v7_preference_on">"ACTIVADO"</string>
+</resources>

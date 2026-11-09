@@ -1,0 +1,4 @@
+org.chromium.ui.mojom.BrowserColorVariant,gen/ui/base/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/BrowserColorVariant.java
+org.chromium.ui.mojom.ClickModifiers,gen/ui/base/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/ClickModifiers.java
+org.chromium.ui.mojom.ModalType,gen/ui/base/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/ModalType.java
+org.chromium.ui.mojom.WindowOpenDisposition,gen/ui/base/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/WindowOpenDisposition.java

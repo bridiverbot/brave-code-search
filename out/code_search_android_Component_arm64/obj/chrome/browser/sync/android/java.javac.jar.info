@@ -1,0 +1,4 @@
+org.chromium.chrome.browser.sync.SyncServiceFactory,../../chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/SyncServiceFactory.java
+org.chromium.chrome.browser.sync.SyncServiceFactoryJni,gen/chrome/browser/sync/android/jni_headers.srcjar/org/chromium/chrome/browser/sync/SyncServiceFactoryJni.java
+org.chromium.chrome.browser.sync.prefs.CrossDevicePrefTrackerFactory,../../chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/prefs/CrossDevicePrefTrackerFactory.java
+org.chromium.chrome.browser.sync.prefs.CrossDevicePrefTrackerFactoryJni,gen/chrome/browser/sync/android/jni_headers.srcjar/org/chromium/chrome/browser/sync/prefs/CrossDevicePrefTrackerFactoryJni.java

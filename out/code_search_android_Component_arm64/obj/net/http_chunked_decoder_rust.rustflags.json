@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/net/http_chunked_decoder_rust",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../net/http/http_chunked_decoder.rs",
+        "@obj/net/http_chunked_decoder_rust.rsp.rust"
+    ]
+}

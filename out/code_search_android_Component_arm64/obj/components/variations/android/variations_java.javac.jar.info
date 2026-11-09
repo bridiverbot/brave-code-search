@@ -1,0 +1,6 @@
+org.chromium.components.variations.NormalizedMurmurHashEntropyProvider,../../components/variations/android/java/src/org/chromium/components/variations/NormalizedMurmurHashEntropyProvider.java
+org.chromium.components.variations.VariationsAssociatedData,../../components/variations/android/java/src/org/chromium/components/variations/VariationsAssociatedData.java
+org.chromium.components.variations.VariationsAssociatedDataJni,gen/components/variations/android/variations_data_jni.srcjar/org/chromium/components/variations/VariationsAssociatedDataJni.java
+org.chromium.components.variations.VariationsCompressionUtils,../../components/variations/android/java/src/org/chromium/components/variations/VariationsCompressionUtils.java
+org.chromium.components.variations.firstrun.VariationsSeedBridge,../../components/variations/android/java/src/org/chromium/components/variations/firstrun/VariationsSeedBridge.java
+org.chromium.components.variations.firstrun.VariationsSeedFetcher,../../components/variations/android/java/src/org/chromium/components/variations/firstrun/VariationsSeedFetcher.java

@@ -1,0 +1,4 @@
+org.chromium.components.prefs.PrefChangeRegistrar,../../components/prefs/android/java/src/org/chromium/components/prefs/PrefChangeRegistrar.java
+org.chromium.components.prefs.PrefChangeRegistrarJni,gen/components/prefs/android/jni_headers.srcjar/org/chromium/components/prefs/PrefChangeRegistrarJni.java
+org.chromium.components.prefs.PrefService,../../components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java
+org.chromium.components.prefs.PrefServiceJni,gen/components/prefs/android/jni_headers.srcjar/org/chromium/components/prefs/PrefServiceJni.java

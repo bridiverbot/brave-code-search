@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-be/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">Рэклама</string>
+<string name="cast_casting_to_device">Трансляцыя на %1$s</string>
+<string name="cast_closed_captions">Субцітры</string>
+<string name="cast_closed_captions_unavailable">Субцітры недаступныя</string>
+<string name="cast_connecting_to_device">Падключэнне да прылады %1$s</string>
+<string name="cast_disconnect">Адключыць</string>
+<string name="cast_expanded_controller_ad_image_description">Відарыс, які адлюстроўваецца ў той час, калі на прыёмніку Cast прайграецца рэклама</string>
+<string name="cast_expanded_controller_ad_in_progress">Паказваецца рэклама…</string>
+<string name="cast_expanded_controller_background_image">Вокладка альбома</string>
+<string name="cast_expanded_controller_live_head_description">Жывая трансляцыя пачынаецца</string>
+<string name="cast_expanded_controller_live_stream_indicator">Жывая трансляцыя</string>
+<string name="cast_expanded_controller_loading">Загрузка…</string>
+<string name="cast_expanded_controller_skip_ad_label">Прапусціць рэкламу</string>
+<string name="cast_expanded_controller_skip_ad_text">Рэкламу можна прапусціць праз %1$d…</string>
+<string name="cast_forward">Наперад</string>
+<string name="cast_forward_10">Дзесяць секунд наперад</string>
+<string name="cast_forward_30">Трыццаць секунд наперад</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">У ЖЫВЫМ ЭФІРЫ</string>
+<string name="cast_mute">Адключыць гук</string>
+<string name="cast_pause">Паўза</string>
+<string name="cast_play">Прайграць</string>
+<string name="cast_rewind">Перамотка назад</string>
+<string name="cast_rewind_10">Перамотка на дзесяць секунд назад</string>
+<string name="cast_rewind_30">Перамотка на трыццаць секунд назад</string>
+<string name="cast_seek_bar">Элемент прайгравання</string>
+<string name="cast_skip_next">Пераход да наступнага элемента</string>
+<string name="cast_skip_prev">Пераход да папярэдняга элемента</string>
+<string name="cast_stop">Спыніць</string>
+<string name="cast_stop_live_stream">Спыніць перадачу плынню ў рэальным часе</string>
+<string name="cast_tracks_chooser_dialog_audio">Аўдыя</string>
+<string name="cast_tracks_chooser_dialog_cancel">Скасаваць</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">Субцітры</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">Трэк %1$d</string>
+<string name="cast_tracks_chooser_dialog_none">Няма</string>
+<string name="cast_tracks_chooser_dialog_ok">ОК</string>
+<string name="cast_tracks_chooser_dialog_subtitles">Субцітры</string>
+<string name="cast_unmute">Уключыць гук</string>
+<string name="media_notification_channel_name">Трансляцыя</string>
+</resources>

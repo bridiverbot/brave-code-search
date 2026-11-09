@@ -1,0 +1,6 @@
+org.chromium.chrome.browser.ui.hats.ProfileAgeRequirement,gen/chrome/browser/ui/hats/hats_enums.srcjar/org/chromium/chrome/browser/ui/hats/ProfileAgeRequirement.java
+org.chromium.chrome.browser.ui.hats.RequestedBrowserType,gen/chrome/browser/ui/hats/hats_enums.srcjar/org/chromium/chrome/browser/ui/hats/RequestedBrowserType.java
+org.chromium.chrome.browser.ui.hats.SurveyClient,../../chrome/browser/ui/android/hats/java/src/org/chromium/chrome/browser/ui/hats/SurveyClient.java
+org.chromium.chrome.browser.ui.hats.SurveyConfig,../../chrome/browser/ui/android/hats/java/src/org/chromium/chrome/browser/ui/hats/SurveyConfig.java
+org.chromium.chrome.browser.ui.hats.SurveyConfigJni,gen/chrome/browser/ui/android/hats/jni_headers.srcjar/org/chromium/chrome/browser/ui/hats/SurveyConfigJni.java
+org.chromium.chrome.browser.ui.hats.SurveyUiDelegate,../../chrome/browser/ui/android/hats/java/src/org/chromium/chrome/browser/ui/hats/SurveyUiDelegate.java

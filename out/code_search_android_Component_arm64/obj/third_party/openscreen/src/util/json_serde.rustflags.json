@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/openscreen/src/util/json_serde",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/openscreen/src/util/json/serde_json.rs",
+        "@obj/third_party/openscreen/src/util/json_serde.rsp.rust"
+    ]
+}

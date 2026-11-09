@@ -1,0 +1,3 @@
+org.chromium.components.browser_ui.widget.RecyclerViewTestUtils,../../components/browser_ui/widget/android/test/java/src/org/chromium/components/browser_ui/widget/RecyclerViewTestUtils.java
+org.chromium.components.browser_ui.widget.highlight.ViewHighlighterTestUtils,../../components/browser_ui/widget/android/test/java/src/org/chromium/components/browser_ui/widget/highlight/ViewHighlighterTestUtils.java
+org.chromium.components.browser_ui.widget.list_view.FakeListViewTouchTracker,../../components/browser_ui/widget/android/test/java/src/org/chromium/components/browser_ui/widget/list_view/FakeListViewTouchTracker.java

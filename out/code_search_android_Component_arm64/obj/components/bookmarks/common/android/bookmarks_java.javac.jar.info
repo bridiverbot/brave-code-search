@@ -1,0 +1,4 @@
+org.chromium.components.bookmarks.BookmarkBarVisibilityState,gen/components/bookmarks/common/android/bookmark_type_javagen.srcjar/org/chromium/components/bookmarks/BookmarkBarVisibilityState.java
+org.chromium.components.bookmarks.BookmarkId,../../components/bookmarks/common/android/java/src/org/chromium/components/bookmarks/BookmarkId.java
+org.chromium.components.bookmarks.BookmarkItem,../../components/bookmarks/common/android/java/src/org/chromium/components/bookmarks/BookmarkItem.java
+org.chromium.components.bookmarks.BookmarkType,gen/components/bookmarks/common/android/bookmark_type_javagen.srcjar/org/chromium/components/bookmarks/BookmarkType.java

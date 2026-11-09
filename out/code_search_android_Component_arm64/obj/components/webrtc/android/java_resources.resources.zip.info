@@ -1,0 +1,10 @@
+drawable-hdpi/webrtc_audio	../../components/webrtc/android/java/res/drawable-hdpi/webrtc_audio.png
+drawable-hdpi/webrtc_video	../../components/webrtc/android/java/res/drawable-hdpi/webrtc_video.png
+drawable-xhdpi/webrtc_audio	../../components/webrtc/android/java/res/drawable-xhdpi/webrtc_audio.png
+drawable-xhdpi/webrtc_video	../../components/webrtc/android/java/res/drawable-xhdpi/webrtc_video.png
+drawable-xxhdpi/webrtc_audio	../../components/webrtc/android/java/res/drawable-xxhdpi/webrtc_audio.png
+drawable-xxhdpi/webrtc_video	../../components/webrtc/android/java/res/drawable-xxhdpi/webrtc_video.png
+drawable-xxxhdpi/webrtc_audio	../../components/webrtc/android/java/res/drawable-xxxhdpi/webrtc_audio.png
+drawable-xxxhdpi/webrtc_video	../../components/webrtc/android/java/res/drawable-xxxhdpi/webrtc_video.png
+drawable/webrtc_audio	../../components/webrtc/android/java/res/drawable-mdpi/webrtc_audio.png
+drawable/webrtc_video	../../components/webrtc/android/java/res/drawable-mdpi/webrtc_video.png

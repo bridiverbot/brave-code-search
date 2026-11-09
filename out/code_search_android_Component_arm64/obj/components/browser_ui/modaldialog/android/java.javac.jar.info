@@ -1,0 +1,7 @@
+org.chromium.components.browser_ui.modaldialog.AppModalPresenter,../../components/browser_ui/modaldialog/android/java/src/org/chromium/components/browser_ui/modaldialog/AppModalPresenter.java
+org.chromium.components.browser_ui.modaldialog.ModalDialogFeatureList,../../components/browser_ui/modaldialog/android/java/src/org/chromium/components/browser_ui/modaldialog/ModalDialogFeatureList.java
+org.chromium.components.browser_ui.modaldialog.ModalDialogFeatureMap,../../components/browser_ui/modaldialog/android/java/src/org/chromium/components/browser_ui/modaldialog/ModalDialogFeatureMap.java
+org.chromium.components.browser_ui.modaldialog.ModalDialogFeatureMapJni,gen/components/browser_ui/modaldialog/android/modaldialog_jni_headers.srcjar/org/chromium/components/browser_ui/modaldialog/ModalDialogFeatureMapJni.java
+org.chromium.components.browser_ui.modaldialog.ModalDialogView,../../components/browser_ui/modaldialog/android/java/src/org/chromium/components/browser_ui/modaldialog/ModalDialogView.java
+org.chromium.components.browser_ui.modaldialog.ModalDialogViewBinder,../../components/browser_ui/modaldialog/android/java/src/org/chromium/components/browser_ui/modaldialog/ModalDialogViewBinder.java
+org.chromium.components.browser_ui.modaldialog.TabModalPresenter,../../components/browser_ui/modaldialog/android/java/src/org/chromium/components/browser_ui/modaldialog/TabModalPresenter.java

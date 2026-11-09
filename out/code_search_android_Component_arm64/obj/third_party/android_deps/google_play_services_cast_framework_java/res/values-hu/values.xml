@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-hu/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">Hirdetés</string>
+<string name="cast_casting_to_device">Átküldés ide: %1$s</string>
+<string name="cast_closed_captions">Feliratok</string>
+<string name="cast_closed_captions_unavailable">A feliratok nem érhetők el</string>
+<string name="cast_connecting_to_device">Csatlakozás a következőhöz: %1$s</string>
+<string name="cast_disconnect">Szétválasztás</string>
+<string name="cast_expanded_controller_ad_image_description">Ez a kép látható, amíg a Cast-erősítő hirdetést jelenít meg</string>
+<string name="cast_expanded_controller_ad_in_progress">Hirdetés folyamatban…</string>
+<string name="cast_expanded_controller_background_image">Lemezborító</string>
+<string name="cast_expanded_controller_live_head_description">Jelenleg az élő közvetítés elején tart</string>
+<string name="cast_expanded_controller_live_stream_indicator">Élő közvetítés</string>
+<string name="cast_expanded_controller_loading">Betöltés…</string>
+<string name="cast_expanded_controller_skip_ad_label">Hirdetés átugrása</string>
+<string name="cast_expanded_controller_skip_ad_text">A hirdetést átugorhatja %1$d múlva…</string>
+<string name="cast_forward">Előretekerés</string>
+<string name="cast_forward_10">Előretekerés tíz másodperccel</string>
+<string name="cast_forward_30">Előretekerés harminc másodperccel</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">ÉLŐ</string>
+<string name="cast_mute">Némítás</string>
+<string name="cast_pause">Szüneteltetés</string>
+<string name="cast_play">Lejátszás</string>
+<string name="cast_rewind">Visszatekerés</string>
+<string name="cast_rewind_10">Visszatekerés tíz másodperccel</string>
+<string name="cast_rewind_30">Visszatekerés 30 másodperccel</string>
+<string name="cast_seek_bar">Lejátszási keresősáv</string>
+<string name="cast_skip_next">Ugrás a következő elemre</string>
+<string name="cast_skip_prev">Ugrás az előző elemre</string>
+<string name="cast_stop">Leállítás</string>
+<string name="cast_stop_live_stream">Élő közvetítés leállítása</string>
+<string name="cast_tracks_chooser_dialog_audio">Hang</string>
+<string name="cast_tracks_chooser_dialog_cancel">Mégse</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">Feliratok</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">%1$d követése</string>
+<string name="cast_tracks_chooser_dialog_none">Nincs</string>
+<string name="cast_tracks_chooser_dialog_ok">OK</string>
+<string name="cast_tracks_chooser_dialog_subtitles">Feliratok</string>
+<string name="cast_unmute">Némítás feloldása</string>
+<string name="media_notification_channel_name">Átküldés</string>
+</resources>

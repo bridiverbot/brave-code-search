@@ -1,0 +1,4 @@
+org.chromium.chrome.browser.supervised_user.FamilyLinkSettingsTestBridge,../../chrome/browser/supervised_user/android/java/src/org/chromium/chrome/browser/supervised_user/FamilyLinkSettingsTestBridge.java
+org.chromium.chrome.browser.supervised_user.FamilyLinkSettingsTestBridgeJni,gen/chrome/browser/supervised_user/test_support_jni_headers.srcjar/org/chromium/chrome/browser/supervised_user/FamilyLinkSettingsTestBridgeJni.java
+org.chromium.chrome.browser.supervised_user.SupervisedUserServiceTestBridge,../../chrome/browser/supervised_user/android/java/src/org/chromium/chrome/browser/supervised_user/SupervisedUserServiceTestBridge.java
+org.chromium.chrome.browser.supervised_user.SupervisedUserServiceTestBridgeJni,gen/chrome/browser/supervised_user/test_support_jni_headers.srcjar/org/chromium/chrome/browser/supervised_user/SupervisedUserServiceTestBridgeJni.java

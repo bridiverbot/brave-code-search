@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-hi/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">विज्ञापन</string>
+<string name="cast_casting_to_device">%1$s पर कास्ट किया जा रहा है</string>
+<string name="cast_closed_captions">बंद कैप्‍शन</string>
+<string name="cast_closed_captions_unavailable">बंद कैप्शन उपलब्ध नहीं हैं</string>
+<string name="cast_connecting_to_device">%1$s से कनेक्ट हो रहा है</string>
+<string name="cast_disconnect">डिसकनेक्ट करें</string>
+<string name="cast_expanded_controller_ad_image_description">कास्ट पाने वाले के विज्ञापन देखने के दौरान दिखाई जाने वाली इमेज</string>
+<string name="cast_expanded_controller_ad_in_progress">विज्ञापन चल रहा है…</string>
+<string name="cast_expanded_controller_background_image">एल्बम आर्ट</string>
+<string name="cast_expanded_controller_live_head_description">मौजूदा स्थिति, लाइव प्रसारण में सबसे ऊपर है</string>
+<string name="cast_expanded_controller_live_stream_indicator">लाइव प्रसारण</string>
+<string name="cast_expanded_controller_loading">लोड हो रहा है…</string>
+<string name="cast_expanded_controller_skip_ad_label">विज्ञापन छोड़ें</string>
+<string name="cast_expanded_controller_skip_ad_text">आप %1$d में विज्ञापन छोड़ सकते हैं…</string>
+<string name="cast_forward">आगे बढ़ाएं</string>
+<string name="cast_forward_10">दस सेकंड आगे बढ़ाएं</string>
+<string name="cast_forward_30">तीस सेकंड आगे बढ़ाएं</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">लाइव</string>
+<string name="cast_mute">म्यूट करें</string>
+<string name="cast_pause">रोकें</string>
+<string name="cast_play">चलाएं</string>
+<string name="cast_rewind">पीछे ले जाएं</string>
+<string name="cast_rewind_10">दस सेकंड पीछे ले जाएं</string>
+<string name="cast_rewind_30">तीस सेकंड पीछे ले जाएं</string>
+<string name="cast_seek_bar">प्लेबैक आगे-पीछे ले जाने का नियंत्रण</string>
+<string name="cast_skip_next">अगली चीज़ पर जाएं</string>
+<string name="cast_skip_prev">पिछली चीज़ पर जाएं</string>
+<string name="cast_stop">रोकें</string>
+<string name="cast_stop_live_stream">लाइव प्रसारण को रोकें</string>
+<string name="cast_tracks_chooser_dialog_audio">आवाज़</string>
+<string name="cast_tracks_chooser_dialog_cancel">रद्द करें</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">बंद कैप्शन</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">ट्रैक %1$d</string>
+<string name="cast_tracks_chooser_dialog_none">कोई नहीं</string>
+<string name="cast_tracks_chooser_dialog_ok">ठीक है</string>
+<string name="cast_tracks_chooser_dialog_subtitles">सबटाइटल</string>
+<string name="cast_unmute">अनम्यूट करें</string>
+<string name="media_notification_channel_name">Cast</string>
+</resources>

@@ -1,0 +1,2 @@
+robolectric_x64/gen/net/grit/net_resources.h
+robolectric_x64/gen/net/net_resources.pak

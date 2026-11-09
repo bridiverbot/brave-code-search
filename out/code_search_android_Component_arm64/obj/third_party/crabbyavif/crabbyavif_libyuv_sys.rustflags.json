@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/crabbyavif/crabbyavif_libyuv_sys",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../third_party/crabbyavif/crabbyavif_libyuv_sys/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/crabbyavif/src/sys/libyuv-sys/src/lib.rs",
+        "@obj/third_party/crabbyavif/crabbyavif_libyuv_sys.rsp.rust"
+    ]
+}

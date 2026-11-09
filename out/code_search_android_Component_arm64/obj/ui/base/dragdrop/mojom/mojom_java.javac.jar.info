@@ -1,0 +1,2 @@
+org.chromium.ui.mojom.DragEventSource,gen/ui/base/dragdrop/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/DragEventSource.java
+org.chromium.ui.mojom.DragOperation,gen/ui/base/dragdrop/mojom/mojom_java_sources.srcjar/org/chromium/ui/mojom/DragOperation.java

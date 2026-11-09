@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.ui.hats.SurveyController,../../chrome/browser/ui/android/hats/internal/java/src/org/chromium/chrome/browser/ui/hats/SurveyController.java
+org.chromium.chrome.browser.ui.hats.SurveyControllerFactory,../../chrome/browser/ui/android/hats/internal/java/src/org/chromium/chrome/browser/ui/hats/SurveyControllerFactory.java

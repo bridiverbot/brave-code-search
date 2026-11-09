@@ -1,0 +1,21 @@
+{
+    "rustenv": {
+        "OUT_DIR": "robolectric_x64/gen/third_party/rust/sfv/v0_15/lib",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_PKG_AUTHORS": "Tania Batieva <yalyna.ts@gmail.com>",
+        "CARGO_PKG_VERSION": "0.15.0",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "15",
+        "CARGO_PKG_VERSION_PATCH": "0",
+        "CARGO_PKG_VERSION_PRE": "",
+        "CARGO_PKG_NAME": "sfv",
+        "CARGO_PKG_DESCRIPTION": "Structured Field Values for HTTP parser. Implementation of RFC 8941 and RFC 9651.",
+        "CARGO_PKG_REPOSITORY": "https://github.com/undef1nd/sfv",
+        "CARGO_MANIFEST_DIR": "../../third_party/rust/sfv/v0_15/lib/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/chromium_crates_io/vendor/sfv-v0_15/src/lib.rs",
+        "@robolectric_x64/obj/third_party/rust/sfv/v0_15/lib.rsp.rust"
+    ]
+}

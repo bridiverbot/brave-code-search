@@ -1,0 +1,2 @@
+org.chromium.components.data_sharing.SharedGroupTestHelper,../../components/data_sharing/test_support/android/java/src/org/chromium/components/data_sharing/SharedGroupTestHelper.java
+org.chromium.components.data_sharing.TestDataSharingService,../../components/data_sharing/test_support/android/java/src/org/chromium/components/data_sharing/TestDataSharingService.java

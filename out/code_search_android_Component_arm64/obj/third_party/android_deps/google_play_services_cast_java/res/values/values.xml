@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- java/com/google/android/gmscore/integ/client/cast/res/values/cast_ids.xml -->
+<eat-comment/>
+
+<item name="cast_notification_id" type="id"/>
+<!-- java/com/google/android/gmscore/integ/client/cast/res/values/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_dynamic_group_name_format" translation_description="Name for a dynamic group. It consists of the leader device name and the total count minus one. For example, if there are 3 devices in the group, the name of the group may be Living room TV + 2 [CHAR_LIMIT=NONE]"><xliff:g id="dynamic_group_leader_device_name" example="Living room TV">%1$s</xliff:g> + <xliff:g id="dynamic_group_devices_count" example="2">%2$d</xliff:g></string>
+<string name="cast_notification_connected_message">Connected to <xliff:g id="name">%1$s</xliff:g></string>
+<string name="cast_notification_connecting_message">Connecting to <xliff:g id="name">%1$s</xliff:g></string>
+<string name="cast_notification_default_channel_name">Cast</string>
+<string name="cast_notification_disconnect">Disconnect</string>
+</resources>

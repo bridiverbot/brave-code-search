@@ -1,0 +1,5 @@
+androidx.interpolator.view.animation.FastOutExtraSlowInInterpolator,../../third_party/androidx/local_modifications/interpolator/java/src/androidx/interpolator/view/animation/FastOutExtraSlowInInterpolator.java
+androidx.interpolator.view.animation.FastOutLinearInInterpolator,../../third_party/androidx/local_modifications/interpolator/java/src/androidx/interpolator/view/animation/FastOutLinearInInterpolator.java
+androidx.interpolator.view.animation.FastOutSlowInInterpolator,../../third_party/androidx/local_modifications/interpolator/java/src/androidx/interpolator/view/animation/FastOutSlowInInterpolator.java
+androidx.interpolator.view.animation.LinearOutSlowInInterpolator,../../third_party/androidx/local_modifications/interpolator/java/src/androidx/interpolator/view/animation/LinearOutSlowInInterpolator.java
+androidx.interpolator.view.animation.LookupTableInterpolator,../../third_party/androidx/local_modifications/interpolator/java/src/androidx/interpolator/view/animation/LookupTableInterpolator.java

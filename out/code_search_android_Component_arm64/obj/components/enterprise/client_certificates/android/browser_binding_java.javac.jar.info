@@ -1,0 +1,2 @@
+org.chromium.components.enterprise.client_certificates.BrowserKey,../../components/enterprise/client_certificates/android/java/src/org/chromium/components/enterprise/client_certificates/BrowserKey.java
+org.chromium.components.enterprise.client_certificates.BrowserKeyStore,../../components/enterprise/client_certificates/android/java/src/org/chromium/components/enterprise/client_certificates/BrowserKeyStore.java

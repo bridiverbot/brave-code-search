@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.omnibox.geo.PartnerLocationDescriptor,gen/chrome/browser/ui/android/omnibox/partner_location_descriptor_proto_java__protoc_java.srcjar/org/chromium/chrome/browser/omnibox/geo/PartnerLocationDescriptor.java
+org.chromium.chrome.browser.omnibox.geo.PartnerLocationDescriptorIntDef,gen/chrome/browser/ui/android/omnibox/partner_location_descriptor_proto_java__protoc_java.srcjar/org/chromium/chrome/browser/omnibox/geo/PartnerLocationDescriptorIntDef.java

@@ -1,0 +1,7 @@
+org.chromium.chrome.browser.ui.native_page.BasicNativePage,../../chrome/browser/ui/android/native_page/java/src/org/chromium/chrome/browser/ui/native_page/BasicNativePage.java
+org.chromium.chrome.browser.ui.native_page.BasicSmoothTransitionDelegate,../../chrome/browser/ui/android/native_page/java/src/org/chromium/chrome/browser/ui/native_page/BasicSmoothTransitionDelegate.java
+org.chromium.chrome.browser.ui.native_page.BeforeUnloadCallback,../../chrome/browser/ui/android/native_page/java/src/org/chromium/chrome/browser/ui/native_page/BeforeUnloadCallback.java
+org.chromium.chrome.browser.ui.native_page.FrozenNativePage,../../chrome/browser/ui/android/native_page/java/src/org/chromium/chrome/browser/ui/native_page/FrozenNativePage.java
+org.chromium.chrome.browser.ui.native_page.NativePage,../../chrome/browser/ui/android/native_page/java/src/org/chromium/chrome/browser/ui/native_page/NativePage.java
+org.chromium.chrome.browser.ui.native_page.NativePageHost,../../chrome/browser/ui/android/native_page/java/src/org/chromium/chrome/browser/ui/native_page/NativePageHost.java
+org.chromium.chrome.browser.ui.native_page.TouchEnabledDelegate,../../chrome/browser/ui/android/native_page/java/src/org/chromium/chrome/browser/ui/native_page/TouchEnabledDelegate.java

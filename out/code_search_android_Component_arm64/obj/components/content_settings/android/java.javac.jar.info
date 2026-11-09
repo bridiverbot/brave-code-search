@@ -1,0 +1,5 @@
+org.chromium.components.content_settings.ContentSettingsObserver,../../components/content_settings/android/java/src/org/chromium/components/content_settings/ContentSettingsObserver.java
+org.chromium.components.content_settings.ContentSettingsObserverJni,gen/components/content_settings/android/content_settings_jni_headers.srcjar/org/chromium/components/content_settings/ContentSettingsObserverJni.java
+org.chromium.components.content_settings.CookieControlsBridge,../../components/content_settings/android/java/src/org/chromium/components/content_settings/CookieControlsBridge.java
+org.chromium.components.content_settings.CookieControlsBridgeJni,gen/components/content_settings/android/content_settings_jni_headers.srcjar/org/chromium/components/content_settings/CookieControlsBridgeJni.java
+org.chromium.components.content_settings.CookieControlsObserver,../../components/content_settings/android/java/src/org/chromium/components/content_settings/CookieControlsObserver.java

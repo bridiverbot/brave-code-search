@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-b+sr+Latn/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">Oglas</string>
+<string name="cast_casting_to_device">Prebacivanje na %1$s</string>
+<string name="cast_closed_captions">Opcionalni titl</string>
+<string name="cast_closed_captions_unavailable">Opcionalni titl je nedostupan</string>
+<string name="cast_connecting_to_device">Povezuje se sa uređajem %1$s</string>
+<string name="cast_disconnect">Prekini vezu</string>
+<string name="cast_expanded_controller_ad_image_description">Slika koja se prikazuje dok Cast prijemnik reprodukuje oglas</string>
+<string name="cast_expanded_controller_ad_in_progress">Prikazivanje oglasa je u toku…</string>
+<string name="cast_expanded_controller_background_image">Omot albuma</string>
+<string name="cast_expanded_controller_live_head_description">Aktuelni položaj je u vrhu strima uživo</string>
+<string name="cast_expanded_controller_live_stream_indicator">Strim uživo</string>
+<string name="cast_expanded_controller_loading">Učitava se…</string>
+<string name="cast_expanded_controller_skip_ad_label">Preskočite oglas</string>
+<string name="cast_expanded_controller_skip_ad_text">Možete da preskočite oglas za %1$d…</string>
+<string name="cast_forward">Prosledi</string>
+<string name="cast_forward_10">Premotaj deset sekundi unapred</string>
+<string name="cast_forward_30">Premotaj trideset sekundi unapred</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">UŽIVO</string>
+<string name="cast_mute">Isključi zvuk</string>
+<string name="cast_pause">Pauzirajte</string>
+<string name="cast_play">Pusti</string>
+<string name="cast_rewind">Taster za premotavanje unazad</string>
+<string name="cast_rewind_10">Premotaj deset sekundi unazad</string>
+<string name="cast_rewind_30">Premotaj trideset sekundi unazad</string>
+<string name="cast_seek_bar">Kontrola za traženje pri reprodukciji</string>
+<string name="cast_skip_next">Preskoči na sledeću stavku</string>
+<string name="cast_skip_prev">Preskoči na prethodnu stavku</string>
+<string name="cast_stop">Taster za zaustavljanje</string>
+<string name="cast_stop_live_stream">Zaustavi strim uživo</string>
+<string name="cast_tracks_chooser_dialog_audio">Zvuk</string>
+<string name="cast_tracks_chooser_dialog_cancel">Otkaži</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">Opcionalni titl</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">%1$d. pesma</string>
+<string name="cast_tracks_chooser_dialog_none">Ništa</string>
+<string name="cast_tracks_chooser_dialog_ok">Važi</string>
+<string name="cast_tracks_chooser_dialog_subtitles">Titlovi</string>
+<string name="cast_unmute">Uključi zvuk</string>
+<string name="media_notification_channel_name">Prebacivanje</string>
+</resources>

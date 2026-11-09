@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.suggestions.tile.TileSource,gen/components/ntp_tiles/mojo_bindings_java_sources.srcjar/org/chromium/chrome/browser/suggestions/tile/TileSource.java
+org.chromium.ntp_tiles.mojom.TileType,gen/components/ntp_tiles/mojo_bindings_java_sources.srcjar/org/chromium/ntp_tiles/mojom/TileType.java

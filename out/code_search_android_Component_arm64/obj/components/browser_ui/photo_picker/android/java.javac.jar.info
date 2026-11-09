@@ -1,0 +1,17 @@
+org.chromium.components.browser_ui.photo_picker.BitmapScalerTask,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/BitmapScalerTask.java
+org.chromium.components.browser_ui.photo_picker.BitmapUtils,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/BitmapUtils.java
+org.chromium.components.browser_ui.photo_picker.DecodeVideoTask,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/DecodeVideoTask.java
+org.chromium.components.browser_ui.photo_picker.DecoderServiceHost,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/DecoderServiceHost.java
+org.chromium.components.browser_ui.photo_picker.FileEnumWorkerTask,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/FileEnumWorkerTask.java
+org.chromium.components.browser_ui.photo_picker.IDecoderService,gen/components/browser_ui/photo_picker/android/photo_picker_aidl.srcjar/org/chromium/components/browser_ui/photo_picker/IDecoderService.java
+org.chromium.components.browser_ui.photo_picker.IDecoderServiceCallback,gen/components/browser_ui/photo_picker/android/photo_picker_aidl.srcjar/org/chromium/components/browser_ui/photo_picker/IDecoderServiceCallback.java
+org.chromium.components.browser_ui.photo_picker.ImageDecoder,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/ImageDecoder.java
+org.chromium.components.browser_ui.photo_picker.ImageDecoderJni,gen/components/browser_ui/photo_picker/android/photo_picker_jni_headers.srcjar/org/chromium/components/browser_ui/photo_picker/ImageDecoderJni.java
+org.chromium.components.browser_ui.photo_picker.PhotoPickerDialog,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/PhotoPickerDialog.java
+org.chromium.components.browser_ui.photo_picker.PhotoPickerToolbar,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/PhotoPickerToolbar.java
+org.chromium.components.browser_ui.photo_picker.PickerAdapter,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/PickerAdapter.java
+org.chromium.components.browser_ui.photo_picker.PickerBitmap,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/PickerBitmap.java
+org.chromium.components.browser_ui.photo_picker.PickerBitmapView,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/PickerBitmapView.java
+org.chromium.components.browser_ui.photo_picker.PickerBitmapViewHolder,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/PickerBitmapViewHolder.java
+org.chromium.components.browser_ui.photo_picker.PickerCategoryView,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/PickerCategoryView.java
+org.chromium.components.browser_ui.photo_picker.PickerVideoPlayer,../../components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/PickerVideoPlayer.java

@@ -1,0 +1,5 @@
+org.chromium.components.credential_management.CredentialManagerAndroidGetResult,../../components/credential_management/android/java/src/org/chromium/components/credential_management/CredentialManagerAndroidGetResult.java
+org.chromium.components.credential_management.CredentialManagerStoreResult,../../components/credential_management/android/java/src/org/chromium/components/credential_management/CredentialManagerStoreResult.java
+org.chromium.components.credential_management.PasswordCredentialResponse,../../components/credential_management/android/java/src/org/chromium/components/credential_management/PasswordCredentialResponse.java
+org.chromium.components.credential_management.ThirdPartyCredentialManagerBridge,../../components/credential_management/android/java/src/org/chromium/components/credential_management/ThirdPartyCredentialManagerBridge.java
+org.chromium.components.credential_management.ThirdPartyCredentialManagerMetricsRecorder,../../components/credential_management/android/java/src/org/chromium/components/credential_management/ThirdPartyCredentialManagerMetricsRecorder.java

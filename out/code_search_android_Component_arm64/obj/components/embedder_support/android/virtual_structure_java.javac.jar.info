@@ -1,0 +1,2 @@
+org.chromium.components.embedder_support.virtual_structure.PageContentProtoViewStructureBuilder,../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/virtual_structure/PageContentProtoViewStructureBuilder.java
+org.chromium.components.embedder_support.virtual_structure.VirtualStructureProvider,../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/virtual_structure/VirtualStructureProvider.java

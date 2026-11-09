@@ -1,0 +1,3 @@
+org.chromium.components.fcm.FcmBridge,../../components/fcm/android/java/src/org/chromium/components/fcm/FcmBridge.java
+org.chromium.components.fcm.FcmBridgeJni,gen/components/fcm/android/jni_headers.srcjar/org/chromium/components/fcm/FcmBridgeJni.java
+org.chromium.components.fcm.FcmManager,../../components/fcm/android/java/src/org/chromium/components/fcm/FcmManager.java

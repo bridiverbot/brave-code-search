@@ -1,0 +1,5 @@
+org.chromium.blink.mojom.BucketDurability,gen/third_party/blink/public/mojom/quota/quota_java_sources.srcjar/org/chromium/blink/mojom/BucketDurability.java
+org.chromium.blink.mojom.QuotaManagerHost,gen/third_party/blink/public/mojom/quota/quota_java_sources.srcjar/org/chromium/blink/mojom/QuotaManagerHost.java
+org.chromium.blink.mojom.QuotaManagerHost_Internal,gen/third_party/blink/public/mojom/quota/quota_java_sources.srcjar/org/chromium/blink/mojom/QuotaManagerHost_Internal.java
+org.chromium.blink.mojom.QuotaStatusCode,gen/third_party/blink/public/mojom/quota/quota_java_sources.srcjar/org/chromium/blink/mojom/QuotaStatusCode.java
+org.chromium.blink.mojom.UsageBreakdown,gen/third_party/blink/public/mojom/quota/quota_java_sources.srcjar/org/chromium/blink/mojom/UsageBreakdown.java

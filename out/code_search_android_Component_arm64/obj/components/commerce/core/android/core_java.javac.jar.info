@@ -1,0 +1,13 @@
+org.chromium.components.commerce.core.CommerceFeatureUtils,../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/CommerceFeatureUtils.java
+org.chromium.components.commerce.core.CommerceFeatureUtilsJni,gen/components/commerce/core/android/core_jni.srcjar/org/chromium/components/commerce/core/CommerceFeatureUtilsJni.java
+org.chromium.components.commerce.core.CommerceSubscription,../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/CommerceSubscription.java
+org.chromium.components.commerce.core.DiscountClusterType,gen/components/commerce/core/android/java_enum_srcjar.srcjar/org/chromium/components/commerce/core/DiscountClusterType.java
+org.chromium.components.commerce.core.DiscountInfo,../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/DiscountInfo.java
+org.chromium.components.commerce.core.DiscountType,gen/components/commerce/core/android/java_enum_srcjar.srcjar/org/chromium/components/commerce/core/DiscountType.java
+org.chromium.components.commerce.core.IdentifierType,gen/components/commerce/core/android/java_enum_srcjar.srcjar/org/chromium/components/commerce/core/IdentifierType.java
+org.chromium.components.commerce.core.ManagementType,gen/components/commerce/core/android/java_enum_srcjar.srcjar/org/chromium/components/commerce/core/ManagementType.java
+org.chromium.components.commerce.core.PriceBucket,gen/components/commerce/core/android/java_enum_srcjar.srcjar/org/chromium/components/commerce/core/PriceBucket.java
+org.chromium.components.commerce.core.ShoppingService,../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/ShoppingService.java
+org.chromium.components.commerce.core.ShoppingServiceJni,gen/components/commerce/core/android/core_jni.srcjar/org/chromium/components/commerce/core/ShoppingServiceJni.java
+org.chromium.components.commerce.core.SubscriptionType,gen/components/commerce/core/android/java_enum_srcjar.srcjar/org/chromium/components/commerce/core/SubscriptionType.java
+org.chromium.components.commerce.core.SubscriptionsObserver,../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/SubscriptionsObserver.java

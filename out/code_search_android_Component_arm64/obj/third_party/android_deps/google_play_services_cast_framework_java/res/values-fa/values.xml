@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-fa/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">آگهی</string>
+<string name="cast_casting_to_device">درحال پخش محتوا به %1$s</string>
+<string name="cast_closed_captions">زیرنویس ناشنوایان</string>
+<string name="cast_closed_captions_unavailable">زیرنویس ناشنوانایان دردسترس نیست</string>
+<string name="cast_connecting_to_device">درحال اتصال به %1$s</string>
+<string name="cast_disconnect">قطع ارتباط</string>
+<string name="cast_expanded_controller_ad_image_description">تصویری که هنگام نمایش آگهی در گیرنده محتوی نشان داده می‌شود</string>
+<string name="cast_expanded_controller_ad_in_progress">آگهی درحال اجرا…</string>
+<string name="cast_expanded_controller_background_image">جلد آلبوم</string>
+<string name="cast_expanded_controller_live_head_description">موقعیت فعلی در ابتدای جریان مستقیم است</string>
+<string name="cast_expanded_controller_live_stream_indicator">جاری‌سازی زنده</string>
+<string name="cast_expanded_controller_loading">درحال بار کردن…</string>
+<string name="cast_expanded_controller_skip_ad_label">رد شدن از آگهی</string>
+<string name="cast_expanded_controller_skip_ad_text">%1$d دیگر می‌توانید آگهی را رد کنید…</string>
+<string name="cast_forward">به جلو</string>
+<string name="cast_forward_10">ده ثانیه به جلو</string>
+<string name="cast_forward_30">سی ثانیه به جلو</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">زنده</string>
+<string name="cast_mute">بی‌صدا کردن</string>
+<string name="cast_pause">مکث</string>
+<string name="cast_play">پخش</string>
+<string name="cast_rewind">عقب بردن</string>
+<string name="cast_rewind_10">ده ثانیه به عقب</string>
+<string name="cast_rewind_30">سی ثانیه به عقب</string>
+<string name="cast_seek_bar">بازپخش جستجوی کنترل</string>
+<string name="cast_skip_next">پرش به مورد بعدی</string>
+<string name="cast_skip_prev">پرش به مورد قبلی</string>
+<string name="cast_stop">متوقف کردن</string>
+<string name="cast_stop_live_stream">توقف پخش جریانی زنده</string>
+<string name="cast_tracks_chooser_dialog_audio">صوتی</string>
+<string name="cast_tracks_chooser_dialog_cancel">لغو</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">زیرنویس ناشنوایان</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">ردیابی %1$d</string>
+<string name="cast_tracks_chooser_dialog_none">هیچ‌کدام</string>
+<string name="cast_tracks_chooser_dialog_ok">تأیید</string>
+<string name="cast_tracks_chooser_dialog_subtitles">زیرنویس‌ها</string>
+<string name="cast_unmute">باصدا</string>
+<string name="media_notification_channel_name">پخش محتوا</string>
+</resources>

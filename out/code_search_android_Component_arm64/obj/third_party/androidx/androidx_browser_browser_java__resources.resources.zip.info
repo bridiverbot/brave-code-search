@@ -1,0 +1,3 @@
+layout/browser_actions_context_menu_page.xml	../../third_party/androidx/cipd/libs/androidx_browser_browser/browser.aar/res/layout/browser_actions_context_menu_page.xml
+layout/browser_actions_context_menu_row.xml	../../third_party/androidx/cipd/libs/androidx_browser_browser/browser.aar/res/layout/browser_actions_context_menu_row.xml
+xml/image_share_filepaths.xml	../../third_party/androidx/cipd/libs/androidx_browser_browser/browser.aar/res/xml/image_share_filepaths.xml

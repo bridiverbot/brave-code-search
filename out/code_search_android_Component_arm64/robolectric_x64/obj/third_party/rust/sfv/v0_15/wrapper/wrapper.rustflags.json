@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "robolectric_x64/gen/third_party/rust/sfv/v0_15/wrapper/wrapper",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/sfv/v0_15/wrapper/lib.rs",
+        "@robolectric_x64/obj/third_party/rust/sfv/v0_15/wrapper/wrapper.rsp.rust"
+    ]
+}

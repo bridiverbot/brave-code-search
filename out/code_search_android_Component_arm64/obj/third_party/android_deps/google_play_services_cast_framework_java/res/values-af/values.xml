@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-af/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">Advertensie</string>
+<string name="cast_casting_to_device">Saai tans uit na %1$s</string>
+<string name="cast_closed_captions">Onderskrifte</string>
+<string name="cast_closed_captions_unavailable">Onderskrifte is onbeskikbaar</string>
+<string name="cast_connecting_to_device">Koppel tans aan %1$s</string>
+<string name="cast_disconnect">Ontkoppel</string>
+<string name="cast_expanded_controller_ad_image_description">Prent wat gewys word wanneer die uitsaai-ontvanger \'n advertensie speel</string>
+<string name="cast_expanded_controller_ad_in_progress">Onvoltooide advertensie …</string>
+<string name="cast_expanded_controller_background_image">Albumkunswerk</string>
+<string name="cast_expanded_controller_live_head_description">Huidige posisie is by die mees onlangse tydstip van die regstreekse stroom</string>
+<string name="cast_expanded_controller_live_stream_indicator">Regstreekse stroming</string>
+<string name="cast_expanded_controller_loading">Laai tans …</string>
+<string name="cast_expanded_controller_skip_ad_label">Slaan advertensie oor</string>
+<string name="cast_expanded_controller_skip_ad_text">Jy kan advertensie oor %1$d oorslaan …</string>
+<string name="cast_forward">Spoel vorentoe</string>
+<string name="cast_forward_10">Spoel 10 sekondes vorentoe</string>
+<string name="cast_forward_30">Spoel 30 sekondes vorentoe</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">REGSTREEKS</string>
+<string name="cast_mute">Demp</string>
+<string name="cast_pause">Laat wag</string>
+<string name="cast_play">Speel</string>
+<string name="cast_rewind">Spoel terug</string>
+<string name="cast_rewind_10">Spoel tien sekondes terug</string>
+<string name="cast_rewind_30">Spoel dertig sekondes terug</string>
+<string name="cast_seek_bar">Speelsoekkontrole</string>
+<string name="cast_skip_next">Slaan oor na volgende item</string>
+<string name="cast_skip_prev">Slaan oor na vorige item</string>
+<string name="cast_stop">Stop</string>
+<string name="cast_stop_live_stream">Stop regstreekse stroom</string>
+<string name="cast_tracks_chooser_dialog_audio">Oudio</string>
+<string name="cast_tracks_chooser_dialog_cancel">Kanselleer</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">Onderskrifte</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">Snit %1$d</string>
+<string name="cast_tracks_chooser_dialog_none">Geen</string>
+<string name="cast_tracks_chooser_dialog_ok">OK</string>
+<string name="cast_tracks_chooser_dialog_subtitles">Onderskrifte</string>
+<string name="cast_unmute">Ontdemp</string>
+<string name="media_notification_channel_name">Saai uit</string>
+</resources>

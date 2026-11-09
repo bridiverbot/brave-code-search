@@ -1,0 +1,17 @@
+org.chromium.chrome.browser.ui.appmenu.AppMenuBlocker,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuBlocker.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuBookmarkItemProperties,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuBookmarkItemProperties.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuButtonHelper,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuButtonHelper.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuClickHandler,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuClickHandler.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuCoordinator,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuCoordinator.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuDelegate,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuDelegate.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuHandler,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuHandler.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuItemProperties,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuItemProperties.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuItemWithSubmenuProperties,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuItemWithSubmenuProperties.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuObserver,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuObserver.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuPropertiesDelegate,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuPropertiesDelegate.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuRecentEntryItemProperties,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuRecentEntryItemProperties.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuSubmenuHeaderItemProperties,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuSubmenuHeaderItemProperties.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuTabGroupItemProperties,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuTabGroupItemProperties.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuTabItemProperties,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuTabItemProperties.java
+org.chromium.chrome.browser.ui.appmenu.AppMenuUtil,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuUtil.java
+org.chromium.chrome.browser.ui.appmenu.MenuButtonDelegate,../../chrome/browser/ui/android/appmenu/java/src/org/chromium/chrome/browser/ui/appmenu/MenuButtonDelegate.java
