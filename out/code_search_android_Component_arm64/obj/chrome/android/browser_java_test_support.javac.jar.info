@@ -1,0 +1,8 @@
+org.chromium.chrome.browser.gesturenav.ScreenshotCaptureTestHelper,../../chrome/android/javatests/src/org/chromium/chrome/browser/gesturenav/ScreenshotCaptureTestHelper.java
+org.chromium.chrome.browser.gesturenav.ScreenshotCaptureTestHelperJni,gen/chrome/android/test_support_jni_headers.srcjar/org/chromium/chrome/browser/gesturenav/ScreenshotCaptureTestHelperJni.java
+org.chromium.chrome.browser.offlinepages.OfflineTestUtil,../../chrome/android/javatests/src/org/chromium/chrome/browser/offlinepages/OfflineTestUtil.java
+org.chromium.chrome.browser.offlinepages.OfflineTestUtilJni,gen/chrome/android/test_support_jni_headers.srcjar/org/chromium/chrome/browser/offlinepages/OfflineTestUtilJni.java
+org.chromium.chrome.browser.sync.FakeServerHelper,../../chrome/android/javatests/src/org/chromium/chrome/browser/sync/FakeServerHelper.java
+org.chromium.chrome.browser.sync.FakeServerHelperJni,gen/chrome/android/test_support_jni_headers.srcjar/org/chromium/chrome/browser/sync/FakeServerHelperJni.java
+org.chromium.chrome.browser.test.MockCertVerifierRuleAndroid,../../chrome/android/javatests/src/org/chromium/chrome/browser/test/MockCertVerifierRuleAndroid.java
+org.chromium.chrome.browser.test.MockCertVerifierRuleAndroidJni,gen/chrome/android/test_support_jni_headers.srcjar/org/chromium/chrome/browser/test/MockCertVerifierRuleAndroidJni.java

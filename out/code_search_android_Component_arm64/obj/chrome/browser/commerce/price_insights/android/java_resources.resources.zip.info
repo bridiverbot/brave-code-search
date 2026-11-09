@@ -1,0 +1,10 @@
+color/price_tracking_ineligible_button_background_color.xml	../../chrome/browser/commerce/price_insights/android/java/res/color/price_tracking_ineligible_button_background_color.xml
+color/price_tracking_ineligible_button_foreground_color.xml	../../chrome/browser/commerce/price_insights/android/java/res/color/price_tracking_ineligible_button_foreground_color.xml
+drawable/price_insights_sheet_background.xml	../../chrome/browser/commerce/price_insights/android/java/res/drawable/price_insights_sheet_background.xml
+drawable/price_insights_sheet_bottom_corner_background.xml	../../chrome/browser/commerce/price_insights/android/java/res/drawable/price_insights_sheet_bottom_corner_background.xml
+drawable/price_insights_sheet_price_tracking_button_disabled.xml	../../chrome/browser/commerce/price_insights/android/java/res/drawable/price_insights_sheet_price_tracking_button_disabled.xml
+drawable/price_insights_sheet_price_tracking_button_enabled.xml	../../chrome/browser/commerce/price_insights/android/java/res/drawable/price_insights_sheet_price_tracking_button_enabled.xml
+drawable/price_insights_sheet_top_corner_background.xml	../../chrome/browser/commerce/price_insights/android/java/res/drawable/price_insights_sheet_top_corner_background.xml
+layout/price_history_layout.xml	../../chrome/browser/commerce/price_insights/android/java/res/layout/price_history_layout.xml
+layout/price_insights_container.xml	../../chrome/browser/commerce/price_insights/android/java/res/layout/price_insights_container.xml
+layout/price_tracking_layout.xml	../../chrome/browser/commerce/price_insights/android/java/res/layout/price_tracking_layout.xml

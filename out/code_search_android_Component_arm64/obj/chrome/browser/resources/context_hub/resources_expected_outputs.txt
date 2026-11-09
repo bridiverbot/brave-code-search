@@ -1,0 +1,4 @@
+gen/chrome/grit/context_hub_resources.h
+gen/chrome/grit/context_hub_resources_map.cc
+gen/chrome/grit/context_hub_resources_map.h
+gen/chrome/context_hub_resources.pak

@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.policy.CloudManagementAndroidConnection,../../chrome/browser/policy/android/java/src/org/chromium/chrome/browser/policy/CloudManagementAndroidConnection.java
+org.chromium.chrome.browser.policy.CloudManagementAndroidConnectionDelegate,../../chrome/browser/policy/android/java/src/org/chromium/chrome/browser/policy/CloudManagementAndroidConnectionDelegate.java
+org.chromium.chrome.browser.policy.CloudManagementSharedPreferences,../../chrome/browser/policy/android/java/src/org/chromium/chrome/browser/policy/CloudManagementSharedPreferences.java

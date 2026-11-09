@@ -1,0 +1,4 @@
+org.chromium.chrome.browser.ChromeRobolectricTestRunner,../../chrome/android/junit/src/org/chromium/chrome/browser/ChromeRobolectricTestRunner.java
+org.chromium.chrome.browser.bookmarks.FakeBookmarkModel,../../chrome/browser/bookmarks/android/junit/src/org/chromium/chrome/browser/bookmarks/FakeBookmarkModel.java
+org.chromium.chrome.browser.compositor.overlays.strip.TestTabModel,../../chrome/android/junit/src/org/chromium/chrome/browser/compositor/overlays/strip/TestTabModel.java
+org.chromium.chrome.browser.multiwindow.MultiWindowTestUtils,../../chrome/android/junit/src/org/chromium/chrome/browser/multiwindow/MultiWindowTestUtils.java

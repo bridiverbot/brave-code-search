@@ -1,0 +1,4 @@
+org.chromium.chrome.browser.price_tracking.PriceTrackingBottomSheetContentCoordinator,../../chrome/browser/commerce/price_tracking/android/java/src/org/chromium/chrome/browser/price_tracking/PriceTrackingBottomSheetContentCoordinator.java
+org.chromium.chrome.browser.price_tracking.PriceTrackingBottomSheetContentMediator,../../chrome/browser/commerce/price_tracking/android/java/src/org/chromium/chrome/browser/price_tracking/PriceTrackingBottomSheetContentMediator.java
+org.chromium.chrome.browser.price_tracking.PriceTrackingBottomSheetContentProperties,../../chrome/browser/commerce/price_tracking/android/java/src/org/chromium/chrome/browser/price_tracking/PriceTrackingBottomSheetContentProperties.java
+org.chromium.chrome.browser.price_tracking.PriceTrackingBottomSheetContentViewBinder,../../chrome/browser/commerce/price_tracking/android/java/src/org/chromium/chrome/browser/price_tracking/PriceTrackingBottomSheetContentViewBinder.java

@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/build/rust/tests/test_rust_metadata/foo_dependency",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../build/rust/tests/test_rust_metadata/foo_dependency.rs",
+        "@obj/build/rust/tests/test_rust_metadata/foo_dependency.rsp.rust"
+    ]
+}

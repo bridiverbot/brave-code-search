@@ -1,0 +1,4 @@
+drawable/composeplate_button_background.xml	../../chrome/browser/composeplate/android/java/res/drawable/composeplate_button_background.xml
+drawable/composeplate_button_foreground.xml	../../chrome/browser/composeplate/android/java/res/drawable/composeplate_button_foreground.xml
+layout/composeplate_view_beside_mvt_layout.xml	../../chrome/browser/composeplate/android/java/res/layout/composeplate_view_beside_mvt_layout.xml
+layout/composeplate_view_layout.xml	../../chrome/browser/composeplate/android/java/res/layout/composeplate_view_layout.xml

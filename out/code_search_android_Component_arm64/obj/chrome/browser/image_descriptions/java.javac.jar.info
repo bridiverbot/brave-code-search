@@ -1,0 +1,6 @@
+org.chromium.chrome.browser.image_descriptions.ImageDescriptionsController,../../chrome/browser/image_descriptions/android/java/src/org/chromium/chrome/browser/image_descriptions/ImageDescriptionsController.java
+org.chromium.chrome.browser.image_descriptions.ImageDescriptionsControllerDelegate,../../chrome/browser/image_descriptions/android/java/src/org/chromium/chrome/browser/image_descriptions/ImageDescriptionsControllerDelegate.java
+org.chromium.chrome.browser.image_descriptions.ImageDescriptionsControllerJni,gen/chrome/browser/image_descriptions/jni_headers.srcjar/org/chromium/chrome/browser/image_descriptions/ImageDescriptionsControllerJni.java
+org.chromium.chrome.browser.image_descriptions.ImageDescriptionsDialog,../../chrome/browser/image_descriptions/android/java/src/org/chromium/chrome/browser/image_descriptions/ImageDescriptionsDialog.java
+org.chromium.chrome.browser.image_descriptions.ImageDescriptionsSettings,../../chrome/browser/image_descriptions/android/java/src/org/chromium/chrome/browser/image_descriptions/ImageDescriptionsSettings.java
+org.chromium.chrome.browser.image_descriptions.RadioButtonGroupAccessibilityPreference,../../chrome/browser/image_descriptions/android/java/src/org/chromium/chrome/browser/image_descriptions/RadioButtonGroupAccessibilityPreference.java

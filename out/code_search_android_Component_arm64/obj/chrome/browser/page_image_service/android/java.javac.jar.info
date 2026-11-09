@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.page_image_service.ImageServiceBridge,../../chrome/browser/page_image_service/android/java/src/org/chromium/chrome/browser/page_image_service/ImageServiceBridge.java
+org.chromium.chrome.browser.page_image_service.ImageServiceBridgeJni,gen/chrome/browser/page_image_service/android/jni_headers.srcjar/org/chromium/chrome/browser/page_image_service/ImageServiceBridgeJni.java
+org.chromium.chrome.browser.page_image_service.ImageServiceMetrics,../../chrome/browser/page_image_service/android/java/src/org/chromium/chrome/browser/page_image_service/ImageServiceMetrics.java

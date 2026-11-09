@@ -1,0 +1,7 @@
+org.chromium.chrome.browser.partnerbookmarks.FaviconFetchResult,gen/chrome/browser/partnerbookmarks/java_enums.srcjar/org/chromium/chrome/browser/partnerbookmarks/FaviconFetchResult.java
+org.chromium.chrome.browser.partnerbookmarks.PartnerBookmark,../../chrome/browser/partnerbookmarks/android/java/src/org/chromium/chrome/browser/partnerbookmarks/PartnerBookmark.java
+org.chromium.chrome.browser.partnerbookmarks.PartnerBookmarksFaviconThrottle,../../chrome/browser/partnerbookmarks/android/java/src/org/chromium/chrome/browser/partnerbookmarks/PartnerBookmarksFaviconThrottle.java
+org.chromium.chrome.browser.partnerbookmarks.PartnerBookmarksProviderIterator,../../chrome/browser/partnerbookmarks/android/java/src/org/chromium/chrome/browser/partnerbookmarks/PartnerBookmarksProviderIterator.java
+org.chromium.chrome.browser.partnerbookmarks.PartnerBookmarksReader,../../chrome/browser/partnerbookmarks/android/java/src/org/chromium/chrome/browser/partnerbookmarks/PartnerBookmarksReader.java
+org.chromium.chrome.browser.partnerbookmarks.PartnerBookmarksReaderJni,gen/chrome/browser/partnerbookmarks/jni_headers.srcjar/org/chromium/chrome/browser/partnerbookmarks/PartnerBookmarksReaderJni.java
+org.chromium.chrome.browser.partnerbookmarks.PartnerBookmarksShim,../../chrome/browser/partnerbookmarks/android/java/src/org/chromium/chrome/browser/partnerbookmarks/PartnerBookmarksShim.java

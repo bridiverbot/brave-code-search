@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.content_extraction.InnerTextBridge,../../chrome/browser/content_extraction/android/java/src/org/chromium/chrome/browser/content_extraction/InnerTextBridge.java
+org.chromium.chrome.browser.content_extraction.InnerTextBridgeJni,gen/chrome/browser/content_extraction/android/jni_headers.srcjar/org/chromium/chrome/browser/content_extraction/InnerTextBridgeJni.java

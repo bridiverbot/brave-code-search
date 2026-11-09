@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.metrics.SimpleStartupForegroundSessionDetector,../../chrome/browser/android/metrics/java/src/org/chromium/chrome/browser/metrics/SimpleStartupForegroundSessionDetector.java
+org.chromium.chrome.browser.metrics.UmaUtils,../../chrome/browser/android/metrics/java/src/org/chromium/chrome/browser/metrics/UmaUtils.java
+org.chromium.chrome.browser.metrics.UmaUtilsJni,gen/chrome/browser/android/metrics/base_jni_headers.srcjar/org/chromium/chrome/browser/metrics/UmaUtilsJni.java

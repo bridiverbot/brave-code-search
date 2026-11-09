@@ -1,0 +1,6 @@
+org.chromium.chrome.browser.net.SecureDnsManagementMode,gen/chrome/browser/net/secure_dns_management_mode_generated_enum.srcjar/org/chromium/chrome/browser/net/SecureDnsManagementMode.java
+org.chromium.chrome.browser.privacy.secure_dns.SecureDnsBridge,../../chrome/browser/privacy/java/src/org/chromium/chrome/browser/privacy/secure_dns/SecureDnsBridge.java
+org.chromium.chrome.browser.privacy.secure_dns.SecureDnsBridgeJni,gen/chrome/browser/privacy/jni_headers.srcjar/org/chromium/chrome/browser/privacy/secure_dns/SecureDnsBridgeJni.java
+org.chromium.chrome.browser.privacy.secure_dns.SecureDnsProviderPreference,../../chrome/browser/privacy/java/src/org/chromium/chrome/browser/privacy/secure_dns/SecureDnsProviderPreference.java
+org.chromium.chrome.browser.privacy.secure_dns.SecureDnsSettings,../../chrome/browser/privacy/java/src/org/chromium/chrome/browser/privacy/secure_dns/SecureDnsSettings.java
+org.chromium.net.SecureDnsMode,gen/net/dns/public/secure_dns_mode_generated_enum.srcjar/org/chromium/net/SecureDnsMode.java

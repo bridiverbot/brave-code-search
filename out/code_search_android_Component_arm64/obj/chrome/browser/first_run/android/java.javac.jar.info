@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.firstrun.FirstRunStatus,../../chrome/browser/first_run/android/java/src/org/chromium/chrome/browser/firstrun/FirstRunStatus.java
+org.chromium.chrome.browser.firstrun.MobileFreProgress,../../chrome/browser/first_run/android/java/src/org/chromium/chrome/browser/firstrun/MobileFreProgress.java

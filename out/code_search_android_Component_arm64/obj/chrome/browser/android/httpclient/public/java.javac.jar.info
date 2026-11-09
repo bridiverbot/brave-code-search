@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.android.httpclient.ChromeHttpClient,../../chrome/browser/android/httpclient/public/src/org/chromium/chrome/browser/android/httpclient/ChromeHttpClient.java
+org.chromium.chrome.browser.android.httpclient.HttpResponseCallback,../../chrome/browser/android/httpclient/public/src/org/chromium/chrome/browser/android/httpclient/HttpResponseCallback.java

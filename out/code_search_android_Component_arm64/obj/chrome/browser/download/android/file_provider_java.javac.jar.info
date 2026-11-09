@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.download.DirectoryOption,../../chrome/browser/download/android/java/src/org/chromium/chrome/browser/download/DirectoryOption.java
+org.chromium.chrome.browser.download.DownloadDirectoryProvider,../../chrome/browser/download/android/java/src/org/chromium/chrome/browser/download/DownloadDirectoryProvider.java
+org.chromium.chrome.browser.download.DownloadFileProvider,../../chrome/browser/download/android/java/src/org/chromium/chrome/browser/download/DownloadFileProvider.java

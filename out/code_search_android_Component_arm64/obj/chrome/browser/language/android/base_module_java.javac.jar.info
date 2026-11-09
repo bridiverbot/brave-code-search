@@ -1,0 +1,3 @@
+org.chromium.chrome.browser.language.AppLocaleUtils,../../chrome/browser/language/android/java/src/org/chromium/chrome/browser/language/AppLocaleUtils.java
+org.chromium.chrome.browser.language.GlobalAppLocaleController,../../chrome/browser/language/android/java/src/org/chromium/chrome/browser/language/GlobalAppLocaleController.java
+org.chromium.chrome.browser.language.LanguageSplitInstaller,../../chrome/browser/language/android/java/src/org/chromium/chrome/browser/language/LanguageSplitInstaller.java

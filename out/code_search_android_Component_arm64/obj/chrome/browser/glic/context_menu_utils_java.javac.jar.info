@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.glic.GlicContextMenuUtils,../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicContextMenuUtils.java
+org.chromium.chrome.browser.glic.SelectedTextSanitizer,../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/SelectedTextSanitizer.java

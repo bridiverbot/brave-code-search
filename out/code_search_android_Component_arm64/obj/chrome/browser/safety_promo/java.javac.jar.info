@@ -1,0 +1,9 @@
+org.chromium.chrome.browser.safety_promo.SafetyPromoCarouselAdapter,../../chrome/browser/safety_promo/java/src/org/chromium/chrome/browser/safety_promo/SafetyPromoCarouselAdapter.java
+org.chromium.chrome.browser.safety_promo.SafetyPromoCarouselCoordinator,../../chrome/browser/safety_promo/java/src/org/chromium/chrome/browser/safety_promo/SafetyPromoCarouselCoordinator.java
+org.chromium.chrome.browser.safety_promo.SafetyPromoCarouselMediator,../../chrome/browser/safety_promo/java/src/org/chromium/chrome/browser/safety_promo/SafetyPromoCarouselMediator.java
+org.chromium.chrome.browser.safety_promo.SafetyPromoCarouselProperties,../../chrome/browser/safety_promo/java/src/org/chromium/chrome/browser/safety_promo/SafetyPromoCarouselProperties.java
+org.chromium.chrome.browser.safety_promo.SafetyPromoCarouselView,../../chrome/browser/safety_promo/java/src/org/chromium/chrome/browser/safety_promo/SafetyPromoCarouselView.java
+org.chromium.chrome.browser.safety_promo.SafetyPromoCarouselViewBinder,../../chrome/browser/safety_promo/java/src/org/chromium/chrome/browser/safety_promo/SafetyPromoCarouselViewBinder.java
+org.chromium.chrome.browser.safety_promo.SafetyPromoFirstRunView,../../chrome/browser/safety_promo/java/src/org/chromium/chrome/browser/safety_promo/SafetyPromoFirstRunView.java
+org.chromium.chrome.browser.safety_promo.SafetyPromoItem,../../chrome/browser/safety_promo/java/src/org/chromium/chrome/browser/safety_promo/SafetyPromoItem.java
+org.chromium.chrome.browser.safety_promo.SafetyPromoPageIndicatorView,../../chrome/browser/safety_promo/java/src/org/chromium/chrome/browser/safety_promo/SafetyPromoPageIndicatorView.java

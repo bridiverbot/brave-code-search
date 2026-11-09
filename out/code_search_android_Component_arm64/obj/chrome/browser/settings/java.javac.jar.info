@@ -1,0 +1,6 @@
+org.chromium.chrome.browser.settings.ChromeBaseSettingsFragment,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/ChromeBaseSettingsFragment.java
+org.chromium.chrome.browser.settings.ChromeManagedPreferenceDelegate,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/ChromeManagedPreferenceDelegate.java
+org.chromium.chrome.browser.settings.FaviconLoader,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/FaviconLoader.java
+org.chromium.chrome.browser.settings.ProfileDependentSetting,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/ProfileDependentSetting.java
+org.chromium.chrome.browser.settings.SettingsActivityInterface,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/SettingsActivityInterface.java
+org.chromium.chrome.browser.settings.SettingsPage,../../chrome/browser/settings/android/java/src/org/chromium/chrome/browser/settings/SettingsPage.java
