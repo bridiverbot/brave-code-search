@@ -1,0 +1,10 @@
+../../chrome/browser/actor/android/java/res/drawable/actor_gts_tab_indicator_background.xml
+../../chrome/browser/actor/android/java/res/drawable/actor_thumbnail_overlay_outline.xml
+../../chrome/browser/actor/android/java/res/layout/actor_gts_tab_indicator.xml
+../../chrome/browser/actor/android/java/res/layout/actor_handoff_button.xml
+../../chrome/browser/actor/android/java/res/layout/actor_overlay.xml
+../../chrome/browser/actor/android/java/res/layout/actor_picture_in_picture_overlay.xml
+../../chrome/browser/actor/android/java/res/values-night/colors.xml
+../../chrome/browser/actor/android/java/res/values/colors.xml
+../../chrome/browser/actor/android/java/res/values/dimens.xml
+../../chrome/browser/actor/android/java/res/values/styles.xml

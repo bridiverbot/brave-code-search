@@ -1,0 +1,26 @@
+{
+  "all_dex_files": [
+    "obj/chrome/android/webapk/libs/runtime_library/runtime_library_for_assets_java.dex.jar",
+    "obj/build/android/build_java.dex.jar"
+  ],
+  "dist_classpath": [
+    "obj/chrome/android/webapk/libs/runtime_library/runtime_library_for_assets_java.javac.jar",
+    "obj/build/android/build_java.javac.jar"
+  ],
+  "javac_full_classpath": [
+    "obj/chrome/android/webapk/libs/runtime_library/runtime_library_for_assets_java.javac.jar",
+    "obj/build/android/build_java.javac.jar"
+  ],
+  "processed_classpath": [
+    "obj/chrome/android/webapk/libs/runtime_library/runtime_library_for_assets_java.javac.jar",
+    "obj/build/android/build_java.javac.jar"
+  ],
+  "proguard_all_configs": [
+    "../../build/android/chromium_annotations.flags",
+    "../../chrome/android/webapk/libs/runtime_library/runtime_library.proguard.flags"
+  ],
+  "proguard_classpath_jars": [],
+  "sdk_jars": [
+    "../../third_party/android_sdk/public/platforms/android-37.2/android.jar"
+  ]
+}

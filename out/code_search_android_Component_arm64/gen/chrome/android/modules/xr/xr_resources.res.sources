@@ -1,0 +1,10 @@
+../../chrome/android/modules/xr/internal/res/color/immersive_video_button_tint.xml
+../../chrome/android/modules/xr/internal/res/drawable/ic_immersive_video_exit.xml
+../../chrome/android/modules/xr/internal/res/drawable/ic_panorama_horizontal.xml
+../../chrome/android/modules/xr/internal/res/drawable/immersive_video_card_background.xml
+../../chrome/android/modules/xr/internal/res/drawable/immersive_video_control_button_background.xml
+../../chrome/android/modules/xr/internal/res/drawable/immersive_video_orbiter_background.xml
+../../chrome/android/modules/xr/internal/res/layout/immersive_video_control_view.xml
+../../chrome/android/modules/xr/internal/res/layout/immersive_video_format_view.xml
+../../chrome/android/modules/xr/internal/res/values/colors.xml
+../../chrome/android/modules/xr/internal/res/values/styles.xml

@@ -1,0 +1,14 @@
+{
+  "deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json",
+    "gen/chrome/android/webapk/libs/runtime_library/runtime_library_for_assets_java.params.json"
+  ],
+  "gn_target": "//chrome/android/webapk/libs/runtime_library:webapk_runtime_library",
+  "proguard_configs": [
+    "../../chrome/android/webapk/libs/runtime_library/runtime_library.proguard.flags"
+  ],
+  "proguard_enabled": true,
+  "requires_android": true,
+  "supports_android": true,
+  "type": "dist_jar"
+}

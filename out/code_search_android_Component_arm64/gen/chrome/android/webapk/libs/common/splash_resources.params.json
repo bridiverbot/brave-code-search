@@ -1,0 +1,12 @@
+{
+  "chromium_code": true,
+  "gn_target": "//chrome/android/webapk/libs/common:splash_resources",
+  "public_deps_configs": [
+    "gen/components/webapk/android/libs/common/splash_resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/chrome/android/webapk/libs/common/splash_resources.res.sources",
+  "resources_zip": "obj/chrome/android/webapk/libs/common/splash_resources.resources.zip",
+  "rtxt_path": "gen/chrome/android/webapk/libs/common/splash_resources_R.txt",
+  "type": "android_resources"
+}
