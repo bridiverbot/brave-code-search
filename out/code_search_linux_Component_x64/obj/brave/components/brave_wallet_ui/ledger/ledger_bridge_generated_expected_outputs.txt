@@ -1,0 +1,4 @@
+gen/brave/components/ledger_bridge/resources/grit/ledger_bridge_generated.h
+gen/brave/components/ledger_bridge/resources/grit/ledger_bridge_generated_map.cc
+gen/brave/components/ledger_bridge/resources/grit/ledger_bridge_generated_map.h
+gen/brave/components/ledger_bridge/resources/ledger_bridge_generated.pak

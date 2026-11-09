@@ -1,0 +1,8 @@
+{
+    "rustenv": {},
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "gen/components/private_verification_tokens/common/athm_ffi/athm_ffi.h.impl.rs",
+        "@obj/components/private_verification_tokens/common/athm_ffi/athm_ffi_bindings_crubit_impl.rsp.rust"
+    ]
+}

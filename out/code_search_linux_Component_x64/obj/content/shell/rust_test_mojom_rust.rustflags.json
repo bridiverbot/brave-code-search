@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/content/shell/rust_test_mojom_rust",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "gen/content/shell/rust_test_mojom/lib.rs",
+        "@obj/content/shell/rust_test_mojom_rust.rsp.rust"
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/fontconfig/fcint_h_bindgen",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "gen/third_party/fontconfig/fcint_h_bindgen_generator/bindings.rs",
+        "@obj/third_party/fontconfig/fcint_h_bindgen.rsp.rust"
+    ]
+}

@@ -1,0 +1,2 @@
+gen/brave/grit/brave_unscaled_resources.h
+gen/brave/brave_unscaled_resources.pak

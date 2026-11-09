@@ -1,0 +1,4 @@
+gen/brave/components/snap_host/resources/grit/snap_host_generated.h
+gen/brave/components/snap_host/resources/grit/snap_host_generated_map.cc
+gen/brave/components/snap_host/resources/grit/snap_host_generated_map.h
+gen/brave/components/snap_host/resources/snap_host_generated.pak

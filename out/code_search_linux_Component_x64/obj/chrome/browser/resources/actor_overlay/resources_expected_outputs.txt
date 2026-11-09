@@ -1,0 +1,4 @@
+gen/chrome/grit/actor_overlay_resources.h
+gen/chrome/grit/actor_overlay_resources_map.cc
+gen/chrome/grit/actor_overlay_resources_map.h
+gen/chrome/actor_overlay_resources.pak

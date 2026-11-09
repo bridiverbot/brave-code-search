@@ -1,0 +1,12 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/fontconfig/fontconfig_fontations_ffi",
+        "CLIPPY_CONF_DIR": "../../build/config",
+        "CARGO_MANIFEST_DIR": "../../third_party/fontconfig/fontconfig_fontations_ffi/crate"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/fontconfig/src/fc-fontations/mod.rs",
+        "@obj/third_party/fontconfig/fontconfig_fontations_ffi.rsp.rust"
+    ]
+}

@@ -1,0 +1,4 @@
+gen/brave/components/snaps_container/resources/grit/snaps_container_generated.h
+gen/brave/components/snaps_container/resources/grit/snaps_container_generated_map.cc
+gen/brave/components/snaps_container/resources/grit/snaps_container_generated_map.h
+gen/brave/components/snaps_container/resources/snaps_container_generated.pak

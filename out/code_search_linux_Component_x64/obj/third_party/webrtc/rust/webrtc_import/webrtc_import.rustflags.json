@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "gen/third_party/webrtc/rust/webrtc_import/webrtc_import",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/webrtc/rust/webrtc_import/lib.rs",
+        "@obj/third_party/webrtc/rust/webrtc_import/webrtc_import.rsp.rust"
+    ]
+}
