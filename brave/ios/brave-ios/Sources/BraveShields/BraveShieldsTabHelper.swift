@@ -1,0 +1,130 @@
+// Copyright 2025 The Brave Authors. All rights reserved.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+import BraveCore
+import Foundation
+import Web
+
+extension TabDataValues {
+  private struct BraveShieldsTabHelperKey: TabDataKey {
+    static var defaultValue: BraveShieldsTabHelper?
+  }
+  public var braveShieldsHelper: BraveShieldsTabHelper? {
+    get { self[BraveShieldsTabHelperKey.self] }
+    set { self[BraveShieldsTabHelperKey.self] = newValue }
+  }
+}
+
+/// eTLDs that should force aggressive mode when standard is selected.
+/// This is done behind the scenes (the panel will still display standard mode)
+/// to align with Desktop/Android & uBO.
+private let alwaysAggressiveETLDs: Set<String> = ["youtube.com"]
+
+@MainActor
+public class BraveShieldsTabHelper {
+  private weak var tab: (any TabState)?
+  private let braveShieldsSettings: (any BraveShieldsSettings)?
+
+  public init(
+    tab: some TabState,
+    braveShieldsSettings: (any BraveShieldsSettings)?
+  ) {
+    self.tab = tab
+    self.braveShieldsSettings = braveShieldsSettings
+  }
+
+  public func isBraveShieldsEnabled(for url: URL?) -> Bool {
+    guard let url = url ?? tab?.visibleURL else { return false }
+    return braveShieldsSettings?.isBraveShieldsEnabled(for: url) ?? true
+  }
+
+  public func setBraveShieldsEnabled(_ isEnabled: Bool, for url: URL?) {
+    guard let url = url ?? tab?.visibleURL else { return }
+    braveShieldsSettings?.setBraveShieldsEnabled(isEnabled, for: url)
+  }
+
+  public func shieldLevel(
+    for url: URL?,
+    considerAllShieldsOption: Bool,
+    considerAlwaysAggressiveETLDs: Bool = true
+  ) -> ShieldLevel {
+    guard let url = url ?? tab?.visibleURL else { return .disabled }
+    if considerAllShieldsOption && !isBraveShieldsEnabled(for: url) {
+      return .disabled
+    }
+    let shieldLevel = braveShieldsSettings?.adBlockMode(for: url).shieldLevel ?? .standard
+    if considerAlwaysAggressiveETLDs,
+      shieldLevel.isEnabled,
+      let baseDomain = url.baseDomain,
+      alwaysAggressiveETLDs.contains(baseDomain)
+    {
+      return .aggressive
+    }
+    return shieldLevel
+  }
+
+  public func setShieldLevel(_ shieldLevel: ShieldLevel, for url: URL?) {
+    guard let url = url ?? tab?.visibleURL else { return }
+    braveShieldsSettings?.setAdBlockMode(shieldLevel.adBlockMode, for: url)
+  }
+
+  public func setBlockScriptsEnabled(_ isEnabled: Bool, for url: URL?) {
+    guard let url = url ?? tab?.visibleURL else { return }
+    braveShieldsSettings?.setBlockScriptsEnabled(isEnabled, for: url)
+  }
+
+  public func setBlockFingerprintingEnabled(_ isEnabled: Bool, for url: URL?) {
+    guard let url = url ?? tab?.visibleURL else { return }
+    braveShieldsSettings?.setFingerprintMode(isEnabled ? .standardMode : .allowMode, for: url)
+  }
+
+  /// Whether or not a given shield should be enabled based on domain exceptions and the users global preference
+  public func isShieldExpected(
+    for url: URL?,
+    shield: BraveShield,
+    considerAllShieldsOption: Bool
+  ) -> Bool {
+    guard let url = url ?? tab?.visibleURL else { return false }
+    if considerAllShieldsOption && !isBraveShieldsEnabled(for: url) {
+      // Shields is disabled for this url
+      return false
+    }
+    switch shield {
+    case .allOff:
+      return braveShieldsSettings?.isBraveShieldsEnabled(for: url) ?? true
+    case .fpProtection:
+      return (braveShieldsSettings?.fingerprintMode(for: url) ?? .standardMode) == .standardMode
+    case .noScript:
+      return braveShieldsSettings?.isBlockScriptsEnabled(for: url) ?? false
+    }
+  }
+
+  /// Returns the `SiteShredLevel` for the given url, optionally checking if
+  /// Shields is disabled on any host that matches the domain pattern.
+  /// For example, this could occur when Shields is disabled on `one.brave.com`,
+  /// but enabled on `two.brave.com` and Auto Shred default is set to app exit.
+  /// - parameter url: The url to fetch the AutoShredMode for.
+  /// - parameter considerAllShieldsOption: Flag to determine if we check if
+  /// Shields is disabled on any host matching the domain pattern.
+  /// - returns: The `AutoShredMode` for the given URL.
+  public func shredLevel(
+    for url: URL?,
+    considerAllShieldsOption: Bool
+  ) -> SiteShredLevel {
+    guard let url = url ?? tab?.visibleURL else { return .never }
+    return braveShieldsSettings?.autoShredMode(
+      for: url,
+      considerAllShieldsOption: considerAllShieldsOption
+    ).siteShredLevel ?? .never
+  }
+
+  public func setShredLevel(
+    _ shredLevel: SiteShredLevel,
+    for url: URL?
+  ) {
+    guard let url = url ?? tab?.visibleURL else { return }
+    braveShieldsSettings?.setAutoShredMode(shredLevel.autoShredMode, for: url)
+  }
+}
