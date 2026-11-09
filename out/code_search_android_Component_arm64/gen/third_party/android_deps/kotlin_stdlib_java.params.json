@@ -1,0 +1,10 @@
+{
+  "gn_target": "//third_party/android_deps:kotlin_stdlib_java",
+  "preferred_dep": true,
+  "public_deps_configs": [
+    "gen/third_party/android_deps/org_jetbrains_annotations_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlin_kotlin_stdlib_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

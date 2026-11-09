@@ -1,0 +1,8 @@
+{
+  "gn_target": "//third_party/arcore-android-sdk-client:arcore_base_manifest_java",
+  "mergeable_android_manifests": [
+    "../../third_party/arcore-android-sdk-client/AndroidManifest_basesplit.xml"
+  ],
+  "supports_android": true,
+  "type": "group"
+}
