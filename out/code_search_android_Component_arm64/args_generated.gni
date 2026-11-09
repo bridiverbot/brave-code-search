@@ -1,0 +1,31 @@
+# Do not edit, any changes will be lost on next build.
+# To customize build args, use args.gn in the same directory.
+
+import("//brave/build/args/brave_defaults.gni")
+is_asan=false
+is_lsan=false
+enable_full_stack_frames_for_profiling=false
+v8_enable_verify_heap=false
+is_component_build=false
+is_universal_binary=false
+target_cpu="arm64"
+is_official_build=false
+is_debug=false
+brave_channel="development"
+enable_cdm_host_verification=false
+skip_signing=true
+use_remoteexec=true
+use_libfuzzer=false
+enable_update_notifications=false
+import("//brave/build/args/blink_platform_defaults.gni")
+import("//brave/build/args/branding_defaults.gni")
+import("//brave/build/args/android_defaults.gni")
+chrome_pgo_phase=0
+enable_mojom_message_id_scrambling=false
+use_dummy_lastchange=true
+target_os="android"
+android_channel="default"
+chrome_public_manifest_package="com.brave.browser_default"
+target_android_output_format="apk"
+android_override_version_name="1.101.0"
+android_aab_to_apk=false
