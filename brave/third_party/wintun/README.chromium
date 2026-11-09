@@ -1,0 +1,16 @@
+Name: WinTun
+Version: 0.14.1
+URL: https://www.wintun.net/builds/wintun-0.14.1.zip
+Update Mechanism: Manual
+License: Prebuilt Binaries License
+License File: /brave/third_party/wintun/LICENSE.txt
+Security Critical: yes
+Shipped: yes
+
+Description:
+Wintun is a Layer 3 TUN driver for Windows, used by the Brave VPN WireGuard
+service. The signed wintun.dll is shipped unmodified from upstream; only the
+Permitted API (wintun.h) is used at compile time.
+
+Local Modifications:
+None.
