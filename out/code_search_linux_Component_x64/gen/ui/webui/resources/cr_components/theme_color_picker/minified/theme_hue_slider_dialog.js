@@ -1,0 +1,2 @@
+// Copyright (c) 2026 The Brave Authors. All rights reserved.
+import{ThemeHueSliderDialogElement}from"./theme_hue_slider_dialog-chromium.js";const showAtChromium=ThemeHueSliderDialogElement.prototype.showAt;ThemeHueSliderDialogElement.prototype.showAt=function(anchor){showAtChromium.call(this,anchor);const padding=8;const dialog=this.$.dialog;const left=parseFloat(dialog.style.left);dialog.style.left=`${Math.max(padding,Math.min(left,window.innerWidth-dialog.offsetWidth-padding))}px`};export*from"./theme_hue_slider_dialog-chromium.js";

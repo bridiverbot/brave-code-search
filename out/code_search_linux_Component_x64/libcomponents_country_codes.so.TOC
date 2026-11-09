@@ -1,0 +1,16 @@
+  0x000000000000000e (SONAME)       Library soname: [libcomponents_country_codes.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+_ZN4base12ToUpperASCIIENSt4__Cr17basic_string_viewIcNS0_11char_traitsIcEEEE U
+_Znwm U
+_ZdlPvm U
+_ZNSt4__Cr22__libcpp_verbose_abortEPKcz U
+_ZNSt4__Cr12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_mmRKS4_ U
+_ZNSt4__Cr12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE26__erase_external_with_moveEmm U
+setlocale@GLIBC_2.2.5 U
+memchr@GLIBC_2.2.5 U
+strlen@GLIBC_2.2.5 U
+__cxa_finalize@GLIBC_2.2.5 w
+memmove@GLIBC_2.2.5 U
+_ZN13country_codes19GetCurrentCountryIDEv T

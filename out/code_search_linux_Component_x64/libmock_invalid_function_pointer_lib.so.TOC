@@ -1,0 +1,6 @@
+  0x000000000000000e (SONAME)       Library soname: [libmock_invalid_function_pointer_lib.so]
+__gmon_start__ w
+_ITM_deregisterTMCloneTable w
+_ITM_registerTMCloneTable w
+__cxa_finalize@GLIBC_2.2.5 w
+Foo T
