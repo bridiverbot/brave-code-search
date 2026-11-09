@@ -1,0 +1,13 @@
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/EyeDropperBridge.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerAdvanced.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerAdvancedComponent.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerBridge.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerCoordinator.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerDialogView.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerProperties.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerSuggestionProperties.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerSuggestionsView.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerViewBinder.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorSuggestion.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlOnColorChangedListener.java
+../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/WebContentsDelegateAndroid.java

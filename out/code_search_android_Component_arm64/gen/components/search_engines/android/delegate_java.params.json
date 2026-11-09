@@ -1,0 +1,8 @@
+{
+  "gn_target": "//components/search_engines/android:delegate_java",
+  "public_deps_configs": [
+    "gen/components/search_engines/android/java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

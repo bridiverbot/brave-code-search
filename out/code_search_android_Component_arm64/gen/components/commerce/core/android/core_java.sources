@@ -1,0 +1,5 @@
+../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/CommerceFeatureUtils.java
+../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/CommerceSubscription.java
+../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/DiscountInfo.java
+../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/ShoppingService.java
+../../components/commerce/core/android/java/src/org/chromium/components/commerce/core/SubscriptionsObserver.java

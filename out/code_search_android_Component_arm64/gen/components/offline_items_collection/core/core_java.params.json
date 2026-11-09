@@ -1,0 +1,34 @@
+{
+  "bundled_srcjars": [
+    "gen/components/offline_items_collection/core/jni_enums.srcjar",
+    "gen/components/offline_items_collection/core/jni_headers.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/build/android/build_java.params.json",
+    "gen/components/browser_ui/strings/android/browser_ui_strings_grd.params.json",
+    "gen/components/download/public/common/public_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/jni_zero/jni_zero_java.params.json",
+    "gen/ui/android/ui_java.params.json",
+    "gen/url/gurl_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/components/offline_items_collection/core/core_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//components/offline_items_collection/core:core_java",
+  "interface_jar_path": "obj/components/offline_items_collection/core/core_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.components.offline_items_collection",
+  "processed_jar_path": "obj/components/offline_items_collection/core/core_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/components/offline_items_collection/core/core_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/components/offline_items_collection/core/core_java.javac.jar"
+}

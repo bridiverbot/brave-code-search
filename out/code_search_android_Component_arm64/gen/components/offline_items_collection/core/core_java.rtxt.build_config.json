@@ -1,0 +1,5 @@
+{
+  "dependency_rtxt_files": [
+    "gen/components/browser_ui/strings/android/browser_ui_strings_grd.R.txt"
+  ]
+}

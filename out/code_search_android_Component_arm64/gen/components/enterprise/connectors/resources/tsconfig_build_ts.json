@@ -1,0 +1,63 @@
+{
+  "extends": "../../../../../../../tools/typescript/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app.ts",
+    "preprocessed/connectors_tabs.ts",
+    "preprocessed/device_trust_connector.ts",
+    "preprocessed/managed_client_certificate.ts",
+    "preprocessed/provisioning_domain_config.ts",
+    "preprocessed/signals_reporting.ts",
+    "preprocessed/browser_proxy.ts",
+    "preprocessed/connectors_utils.ts",
+    "preprocessed/app.html.ts",
+    "preprocessed/connectors_tabs.html.ts",
+    "preprocessed/device_trust_connector.html.ts",
+    "preprocessed/managed_client_certificate.html.ts",
+    "preprocessed/provisioning_domain_config.html.ts",
+    "preprocessed/signals_reporting.html.ts",
+    "preprocessed/connectors_internals.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

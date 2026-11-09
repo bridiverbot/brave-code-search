@@ -1,0 +1,9 @@
+../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/messaging/ActivityLogItem.java
+../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/messaging/ActivityLogQueryParams.java
+../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/messaging/InstantMessage.java
+../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/messaging/MessageAttribution.java
+../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/messaging/MessageUtils.java
+../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/messaging/MessagingBackendService.java
+../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/messaging/PersistentMessage.java
+../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/messaging/TabGroupMessageMetadata.java
+../../components/collaboration/public/android/java/src/org/chromium/components/collaboration/messaging/TabMessageMetadata.java

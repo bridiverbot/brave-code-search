@@ -1,0 +1,24 @@
+{
+  "bundled_srcjars": [
+    "gen/components/crash/android/anr_data_proto_java__protoc_java.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/protobuf_lite_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/components/crash/android/anr_data_proto_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//components/crash/android:anr_data_proto_java",
+  "interface_jar_path": "obj/components/crash/android/anr_data_proto_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/components/crash/android/anr_data_proto_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/components/crash/android/anr_data_proto_java.javac.jar"
+}

@@ -1,0 +1,7 @@
+import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
+import {getCss as getSharedStyle} from '../shared_style.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[getSharedStyle()], css`body{padding:20px}.url-input{padding:20px 0 20px 0}table{border-collapse:collapse}td{padding:5px}td:nth-child(1){text-align:right;font-weight:bold}`]);
+}
