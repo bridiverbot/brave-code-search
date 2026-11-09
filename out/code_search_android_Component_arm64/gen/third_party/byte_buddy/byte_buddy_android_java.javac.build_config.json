@@ -1,0 +1,13 @@
+{
+  "javac_full_interface_classpath": [
+    "obj/third_party/androidx/androidx_annotation_annotation_jvm.ijar.jar",
+    "obj/third_party/android_deps/org_jetbrains_kotlin_kotlin_stdlib.ijar.jar",
+    "obj/third_party/android_deps/org_jetbrains_annotations.ijar.jar",
+    "obj/third_party/aosp_dalvik/aosp_dalvik_dx_java.ijar.jar",
+    "obj/third_party/android_deps/net_bytebuddy_byte_buddy.ijar.jar",
+    "obj/third_party/android_deps/com_google_code_findbugs_jsr305.ijar.jar"
+  ],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

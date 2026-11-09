@@ -1,0 +1,6 @@
+{
+  "javac_full_classpath_targets": [
+    "//third_party/jni_zero:generate_jni_java",
+    "//third_party/jni_zero:gendeps_java"
+  ]
+}

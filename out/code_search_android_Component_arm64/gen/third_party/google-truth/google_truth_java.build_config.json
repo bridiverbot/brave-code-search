@@ -1,0 +1,15 @@
+{
+  "javac_full_classpath": [
+    "../../third_party/android_deps/cipd/libs/com_google_guava_guava/guava.jar",
+    "../../third_party/android_deps/cipd/libs/com_google_guava_failureaccess/failureaccess.jar",
+    "obj/third_party/junit/junit.javac.jar",
+    "../../third_party/hamcrest/cipd/lib/hamcrest-library.jar",
+    "../../third_party/hamcrest/cipd/lib/hamcrest-core.jar",
+    "../../third_party/android_deps/cipd/libs/org_jspecify_jspecify/jspecify.jar",
+    "../../third_party/android_deps/cipd/libs/com_google_j2objc_j2objc_annotations/j2objc-annotations.jar",
+    "../../third_party/android_deps/cipd/libs/com_google_errorprone_error_prone_annotations/error_prone_annotations.jar"
+  ],
+  "sdk_jars": [
+    "../../third_party/android_sdk/public/platforms/android-37.2/android.jar"
+  ]
+}

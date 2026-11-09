@@ -1,0 +1,9 @@
+../../third_party/jni_zero/java/src/org/jni_zero/CheckDiscard.java
+../../third_party/jni_zero/java/src/org/jni_zero/JniPtr.java
+../../third_party/jni_zero/java/src/org/jni_zero/JniPtrInner.java
+../../third_party/jni_zero/java/src/org/jni_zero/JniStaticTestMocker.java
+../../third_party/jni_zero/java/src/org/jni_zero/JniTestInstanceHolder.java
+../../third_party/jni_zero/java/src/org/jni_zero/JniTypeToken.java
+../../third_party/jni_zero/java/src/org/jni_zero/JniZeroInternal.java
+../../third_party/jni_zero/java/src/org/jni_zero/internal/NullUnmarked.java
+../../third_party/jni_zero/java/src/org/jni_zero/internal/Nullable.java
