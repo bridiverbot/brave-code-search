@@ -1,0 +1,1 @@
+ninja -reapi_keep_exec_stream -fs_min_flush_timeout 300s -reapi_byte_stream_read_threshold 1024 -config googlechrome -local_cache_enable -cache_dir "/home/builder/.cache/brave/siso" -reapi_priority 4
