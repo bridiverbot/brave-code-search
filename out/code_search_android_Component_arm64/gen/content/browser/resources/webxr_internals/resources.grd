@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/webxr_internals_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/webxr_internals_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/webxr_internals_resources_map.h"
+            type="resource_map_header" />
+    <output filename="webxr_internals_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_WEBXR_INTERNALS_WEBXR_INTERNALS_CSS" file="${root_gen_dir}/content/browser/resources/webxr_internals/preprocessed/webxr_internals.css" resource_path="webxr_internals.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_WEBXR_INTERNALS_WEBXR_INTERNALS_HTML" file="${root_gen_dir}/content/browser/resources/webxr_internals/preprocessed/webxr_internals.html" resource_path="webxr_internals.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_ACTIVE_RUNTIME_INFO_TABLE_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/active_runtime_info_table.js" resource_path="active_runtime_info_table.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_DEVICE_INFO_TABLE_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/device_info_table.js" resource_path="device_info_table.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_RUNTIME_CHANGELOG_TABLE_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/runtime_changelog_table.js" resource_path="runtime_changelog_table.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_SESSION_INFO_TABLE_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/session_info_table.js" resource_path="session_info_table.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_SESSION_STATISTICS_TABLE_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/session_statistics_table.js" resource_path="session_statistics_table.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_BROWSER_PROXY_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/browser_proxy.js" resource_path="browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_TIME_UTIL_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/time_util.js" resource_path="time_util.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_WEBXR_INTERNALS_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/webxr_internals.js" resource_path="webxr_internals.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_XR_RUNTIME_UTIL_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/xr_runtime_util.js" resource_path="xr_runtime_util.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_XR_SESSION_UTIL_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/xr_session_util.js" resource_path="xr_session_util.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_ACTIVE_RUNTIME_INFO_TABLE_HTML_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/active_runtime_info_table.html.js" resource_path="active_runtime_info_table.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_DEVICE_INFO_TABLE_HTML_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/device_info_table.html.js" resource_path="device_info_table.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_RUNTIME_CHANGELOG_TABLE_HTML_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/runtime_changelog_table.html.js" resource_path="runtime_changelog_table.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_SESSION_INFO_TABLE_HTML_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/session_info_table.html.js" resource_path="session_info_table.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_SESSION_STATISTICS_TABLE_HTML_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/session_statistics_table.html.js" resource_path="session_statistics_table.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_WEBXR_INTERNALS_MOJOM_WEBUI_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/webxr_internals.mojom-webui.js" resource_path="webxr_internals.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_XR_DEVICE_MOJOM_WEBUI_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/xr_device.mojom-webui.js" resource_path="xr_device.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBXR_INTERNALS_XR_SESSION_MOJOM_WEBUI_JS" file="${root_gen_dir}/content/browser/resources/webxr_internals/minified/xr_session.mojom-webui.js" resource_path="xr_session.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

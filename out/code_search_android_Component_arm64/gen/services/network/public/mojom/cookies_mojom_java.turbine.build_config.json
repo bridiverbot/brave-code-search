@@ -1,0 +1,22 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/mojo/public/java/bindings_java.turbine.jar",
+    "obj/mojo/public/java/system_java.turbine.jar",
+    "obj/services/network/public/mojom/mojom_schemeful_site_java.turbine.jar",
+    "obj/services/network/public/mojom/mojom_storage_access_api_java.turbine.jar",
+    "obj/components/content_settings/core/common/content_settings_enums_java.turbine.jar",
+    "obj/components/content_settings/core/common/content_settings_types_java.turbine.jar",
+    "obj/components/content_settings/core/common/mojo_bindings_java.turbine.jar",
+    "obj/mojo/public/mojom/base/base_java.turbine.jar",
+    "obj/sandbox/policy/mojom/mojom_java.turbine.jar",
+    "obj/url/mojom/url_mojom_gurl_java.turbine.jar",
+    "obj/url/mojom/url_mojom_origin_java.turbine.jar",
+    "obj/third_party/androidx/androidx_annotation_annotation_jvm.ijar.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

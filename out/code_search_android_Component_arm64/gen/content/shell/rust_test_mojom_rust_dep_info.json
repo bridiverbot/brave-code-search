@@ -1,0 +1,8 @@
+[
+  {
+    "mojom_sources": [
+      "content/shell/common/rust_test.test-mojom"
+    ],
+    "target_name": "//content/shell:rust_test_mojom_rust"
+  }
+]

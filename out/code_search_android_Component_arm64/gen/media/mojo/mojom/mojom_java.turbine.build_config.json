@@ -1,0 +1,34 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/mojo/public/java/bindings_java.turbine.jar",
+    "obj/mojo/public/java/system_java.turbine.jar",
+    "obj/media/mojo/mojom/audio_data_java.turbine.jar",
+    "obj/media/mojo/mojom/encryption_pattern_java.turbine.jar",
+    "obj/media/mojo/mojom/media_log_java.turbine.jar",
+    "obj/media/mojo/mojom/media_types_java.turbine.jar",
+    "obj/media/mojo/mojom/speech_recognition_java.turbine.jar",
+    "obj/media/mojo/mojom/web_speech_recognition_java.turbine.jar",
+    "obj/gpu/ipc/common/interfaces_java.turbine.jar",
+    "obj/mojo/public/mojom/base/base_java.turbine.jar",
+    "obj/sandbox/policy/mojom/mojom_java.turbine.jar",
+    "obj/services/media_session/public/mojom/mojom_java.turbine.jar",
+    "obj/services/network/public/mojom/mojom_java.turbine.jar",
+    "obj/services/network/public/mojom/cookies_mojom_java.turbine.jar",
+    "obj/services/network/public/mojom/mojom_storage_access_api_java.turbine.jar",
+    "obj/services/service_manager/public/mojom/mojom_java.turbine.jar",
+    "obj/services/viz/public/mojom/compositing/shared_image_format_java.turbine.jar",
+    "obj/ui/gfx/geometry/mojom/mojom_java.turbine.jar",
+    "obj/ui/gfx/mojom/mojom_java.turbine.jar",
+    "obj/ui/gfx/mojom/hdr_metadata_java.turbine.jar",
+    "obj/ui/gl/mojom/mojom_java.turbine.jar",
+    "obj/url/mojom/url_mojom_gurl_java.turbine.jar",
+    "obj/url/mojom/url_mojom_origin_java.turbine.jar",
+    "obj/third_party/androidx/androidx_annotation_annotation_jvm.ijar.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

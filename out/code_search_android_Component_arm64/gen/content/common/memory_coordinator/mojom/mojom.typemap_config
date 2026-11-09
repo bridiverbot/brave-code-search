@@ -1,0 +1,33 @@
+[
+  {
+    "traits_headers": [
+      "content/common/memory_coordinator/mojom/memory_consumer_traits_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//base"
+    ],
+    "types": [
+      {
+        "copyable_pass_by_value": true,
+        "cpp": "::base::MemoryConsumerTraits",
+        "default_constructible": false,
+        "mojom": "content.mojom.MemoryConsumerTraits"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "content/common/memory_coordinator/mojom/memory_coordinator_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//content/public/common:memory_consumer_update"
+    ],
+    "types": [
+      {
+        "cpp": "::content::MemoryConsumerUpdate",
+        "mojom": "content.mojom.MemoryConsumerUpdate",
+        "move_only": true
+      }
+    ]
+  }
+]

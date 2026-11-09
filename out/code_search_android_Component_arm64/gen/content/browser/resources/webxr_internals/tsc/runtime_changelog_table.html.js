@@ -1,0 +1,14 @@
+import { getTrustedHTML } from '//resources/js/static_types.js';
+export function getTemplate() {
+    return getTrustedHTML `<!--_html_template_start_--><style>h3{color:var(--dark-text-color)}table{border-collapse:collapse;margin-top:20px;width:100%}th,td{border-bottom:1px solid var(--light-gray-color);padding:8px;text-align:start}th{background-color:var(--white-color);color:var(--dark-text-color)}</style>
+<h3>Added/Removed Runtimes</h3>
+<table id="runtime-changelog-table">
+  <tr>
+    <th>Device ID</th>
+    <th>Runtime State</th>
+    <th>Time</th>
+    <th>Supported Features</th>
+    <th>Supports AR</th>
+  </tr>
+</table><!--_html_template_end_-->`;
+}
