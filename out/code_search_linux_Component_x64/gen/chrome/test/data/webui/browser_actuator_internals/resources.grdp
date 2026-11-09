@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_BROWSER_ACTUATOR_INTERNALS_BROWSER_ACTUATOR_INTERNALS_APP_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/browser_actuator_internals/tsc/browser_actuator_internals_app_test.js" resource_path="browser_actuator_internals/browser_actuator_internals_app_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_BROWSER_ACTUATOR_INTERNALS_TEST_BROWSER_ACTUATOR_INTERNALS_UI_HANDLER_JS" file="${root_gen_dir}/chrome/test/data/webui/browser_actuator_internals/tsc/test_browser_actuator_internals_ui_handler.js" resource_path="browser_actuator_internals/test_browser_actuator_internals_ui_handler.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

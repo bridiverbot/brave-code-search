@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_METRICS_INTERNALS_FIELD_TRIALS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/metrics_internals/tsc/field_trials_test.js" resource_path="metrics_internals/field_trials_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_METRICS_INTERNALS_NO_LOGS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/metrics_internals/tsc/no_logs_test.js" resource_path="metrics_internals/no_logs_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_METRICS_INTERNALS_PRIVATE_METRICS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/metrics_internals/tsc/private_metrics_test.js" resource_path="metrics_internals/private_metrics_test.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_METRICS_INTERNALS_UTILS_JS" file="${root_gen_dir}/chrome/test/data/webui/metrics_internals/tsc/utils.js" resource_path="metrics_internals/utils.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_WEBUI_METRICS_INTERNALS_WITH_LOG_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/metrics_internals/tsc/with_log_test.js" resource_path="metrics_internals/with_log_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

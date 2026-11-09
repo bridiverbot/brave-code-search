@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_WEBUI_PASSWORD_MANAGER_INTERNALS_PASSWORD_MANAGER_INTERNALS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/password_manager_internals/tsc/password_manager_internals_test.js" resource_path="password_manager_internals/password_manager_internals_test.js" use_base_dir="false" type="chrome_html" />
+</grit-part>
