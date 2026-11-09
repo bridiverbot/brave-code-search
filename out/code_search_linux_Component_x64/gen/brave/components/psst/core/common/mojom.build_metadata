@@ -1,0 +1,8 @@
+{
+  "deps": [
+    "../../../../../mojo/public/mojom/base/base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../brave/components/psst/core/common/psst_ui_common.mojom"
+  ]
+}
