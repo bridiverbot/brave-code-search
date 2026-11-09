@@ -1,0 +1,5 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[], css `#container{align-content:flex-start;display:grid;grid-row-gap:max(min(calc((100vh - (120px * 4) - (100vh * 1/16 + 24px) * 2) / 4),96px),8px);justify-content:space-evenly;margin:auto;max-width:1088px;padding-bottom:calc(100vh * 1/16 + 24px);padding-top:calc(100vh * 1/16 + 24px)}@media screen and (max-width:254px){#container{grid-template-columns:repeat(1,max(100%/1,112px))}}@media screen and (min-width:255px) and (max-width:366px){#container{grid-template-columns:repeat(2,max(100%/2,112px))}}@media screen and (min-width:367px) and (max-width:479px){#container{grid-template-columns:repeat(3,max(100%/3,112px))}}@media screen and (min-width:480px) and (max-width:591px){#container{grid-template-columns:repeat(4,max(100%/4,112px))}}@media screen and (min-width:591px){#container{grid-template-columns:repeat(5,max(100%/5,112px))}}`]);
+}

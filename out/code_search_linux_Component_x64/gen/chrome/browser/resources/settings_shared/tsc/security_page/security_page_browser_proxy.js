@@ -1,0 +1,50 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/** @fileoverview Handles interprocess communication for the security page. */
+// clang-format off
+import { sendWithPromise } from 'chrome://resources/js/cr.js';
+/**
+ * Contains the possible string values for the secure DNS mode. This must be
+ * kept in sync with the mode names in chrome/browser/net/secure_dns_config.h.
+ */
+// LINT.IfChange(SecureDnsMode)
+export var SecureDnsMode;
+(function (SecureDnsMode) {
+    SecureDnsMode["OFF"] = "off";
+    SecureDnsMode["AUTOMATIC"] = "automatic";
+    SecureDnsMode["SECURE"] = "secure";
+})(SecureDnsMode || (SecureDnsMode = {}));
+// LINT.ThenChange(//chrome/browser/net/secure_dns_config.h:SecureDnsMode)
+/**
+ * Contains the possible management modes. This should be kept in sync with
+ * the management modes in chrome/browser/net/secure_dns_config.h.
+ */
+// LINT.IfChange(SecureDnsUiManagementMode)
+export var SecureDnsUiManagementMode;
+(function (SecureDnsUiManagementMode) {
+    SecureDnsUiManagementMode[SecureDnsUiManagementMode["NO_OVERRIDE"] = 0] = "NO_OVERRIDE";
+    SecureDnsUiManagementMode[SecureDnsUiManagementMode["DISABLED_MANAGED"] = 1] = "DISABLED_MANAGED";
+    SecureDnsUiManagementMode[SecureDnsUiManagementMode["DISABLED_PARENTAL_CONTROLS"] = 2] = "DISABLED_PARENTAL_CONTROLS";
+})(SecureDnsUiManagementMode || (SecureDnsUiManagementMode = {}));
+export class SecurityPageBrowserProxyImpl {
+    getSecureDnsResolverList() {
+        return sendWithPromise('getSecureDnsResolverList');
+    }
+    getSecureDnsSetting() {
+        return sendWithPromise('getSecureDnsSetting');
+    }
+    isValidConfig(entry) {
+        return sendWithPromise('isValidConfig', entry);
+    }
+    probeConfig(entry) {
+        return sendWithPromise('probeConfig', entry);
+    }
+    static getInstance() {
+        return instance || (instance = new SecurityPageBrowserProxyImpl());
+    }
+    static setInstance(obj) {
+        instance = obj;
+    }
+}
+let instance = null;

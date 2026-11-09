@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/certificate_viewer_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/certificate_viewer_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/certificate_viewer_resources_map.h"
+            type="resource_map_header" />
+    <output filename="certificate_viewer_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_CERTIFICATE_VIEWER_CERTIFICATE_VIEWER_CSS" file="${root_gen_dir}/chrome/browser/resources/certificate_viewer/preprocessed/certificate_viewer.css" resource_path="certificate_viewer.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CERTIFICATE_VIEWER_CERTIFICATE_VIEWER_HTML" file="${root_gen_dir}/chrome/browser/resources/certificate_viewer/preprocessed/certificate_viewer.html" resource_path="certificate_viewer.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CERTIFICATE_VIEWER_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/browser/resources/certificate_viewer/minified/browser_proxy.js" resource_path="browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CERTIFICATE_VIEWER_CERTIFICATE_VIEWER_JS" file="${root_gen_dir}/chrome/browser/resources/certificate_viewer/minified/certificate_viewer.js" resource_path="certificate_viewer.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CERTIFICATE_VIEWER_MODIFICATIONS_PANEL_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/certificate_viewer/minified/modifications_panel.html.js" resource_path="modifications_panel.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CERTIFICATE_VIEWER_MODIFICATIONS_PANEL_JS" file="${root_gen_dir}/chrome/browser/resources/certificate_viewer/minified/modifications_panel.js" resource_path="modifications_panel.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CERTIFICATE_VIEWER_MODIFICATIONS_PANEL_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/certificate_viewer/minified/modifications_panel.css.js" resource_path="modifications_panel.css.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

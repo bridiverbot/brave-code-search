@@ -1,0 +1,8 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+import '//resources/cr_elements/cr_shared_vars.css.js';
+import { getCss as getCrSharedStyleLit } from '//resources/cr_elements/cr_shared_style_lit.css.js';
+import { getCss as getCertificateManagerStyle } from './certificate_manager_style.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[getCrSharedStyleLit(), getCertificateManagerStyle()], css `.header-buttons{margin-left:auto}.no-certs{border-top:none}.subpage-padding{padding:0 var(--cr-section-padding)}.list-title{display:flex;align-items:center}.list-title h3{font-weight:400;font-size:14px}`]);
+}

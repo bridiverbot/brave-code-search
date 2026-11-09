@@ -1,0 +1,25 @@
+{
+  "extends": "../../../../../../../../tools/typescript/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "../../../../../../../../chrome/browser/resources/accessibility/reading_mode_gdocs_helper",
+    "outDir": "tsc",
+    "skipLibCheck": true,
+    "paths": {
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "../../../../../../../../chrome/browser/resources/accessibility/reading_mode_gdocs_helper/content.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_event.d.ts",
+    "../../../../../../../../tools/typescript/definitions/runtime.d.ts",
+    "../../../../../../../../tools/typescript/definitions/tabs.d.ts"
+  ]
+}

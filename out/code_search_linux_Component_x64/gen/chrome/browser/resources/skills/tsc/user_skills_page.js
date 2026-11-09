@@ -1,0 +1,128 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import 'chrome://resources/cr_elements/cr_button/cr_button.js';
+import 'chrome://resources/cr_elements/cr_icon/cr_icon.js';
+import 'chrome://resources/cr_elements/icons.html.js';
+import './card.js';
+import './icons.html.js';
+import './error_page.js';
+import './skills_empty.js';
+import { loadTimeData } from '//resources/js/load_time_data.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { SkillsDialogType } from './skill.mojom-webui.js';
+import { SkillsManagementAction, SkillsManagementPage } from './skill_metrics.mojom-webui.js';
+import { SkillsPageBrowserProxy } from './skills_page_browser_proxy.js';
+import { getCss } from './user_skills_page.css.js';
+import { getHtml } from './user_skills_page.html.js';
+export class UserSkillsPageElement extends CrLitElement {
+    static get is() {
+        return 'user-skills-page';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            skills_: { type: Object },
+            searchTerm_: { type: String },
+            addSkillButtonDisabled_: { type: Boolean },
+            shouldDisableBrowseSkillsPage_: { type: Boolean },
+            webuiRoundedIconsEnabled_: { type: Boolean },
+        };
+    }
+    #skills__accessor_storage = new Map();
+    // Map tracking skills by id.
+    get skills_() { return this.#skills__accessor_storage; }
+    set skills_(value) { this.#skills__accessor_storage = value; }
+    #addSkillButtonDisabled__accessor_storage = false;
+    get addSkillButtonDisabled_() { return this.#addSkillButtonDisabled__accessor_storage; }
+    set addSkillButtonDisabled_(value) { this.#addSkillButtonDisabled__accessor_storage = value; }
+    #searchTerm__accessor_storage = '';
+    get searchTerm_() { return this.#searchTerm__accessor_storage; }
+    set searchTerm_(value) { this.#searchTerm__accessor_storage = value; }
+    #shouldDisableBrowseSkillsPage__accessor_storage = loadTimeData.getBoolean('shouldDisableBrowseSkillsPage');
+    get shouldDisableBrowseSkillsPage_() { return this.#shouldDisableBrowseSkillsPage__accessor_storage; }
+    set shouldDisableBrowseSkillsPage_(value) { this.#shouldDisableBrowseSkillsPage__accessor_storage = value; }
+    #webuiRoundedIconsEnabled__accessor_storage = loadTimeData.getBoolean('webuiRoundedIconsEnabled');
+    get webuiRoundedIconsEnabled_() { return this.#webuiRoundedIconsEnabled__accessor_storage; }
+    set webuiRoundedIconsEnabled_(value) { this.#webuiRoundedIconsEnabled__accessor_storage = value; }
+    proxy_ = SkillsPageBrowserProxy.getInstance();
+    listenerIds_ = [];
+    addSkillButtonDisabledTimer_ = undefined;
+    connectedCallback() {
+        super.connectedCallback();
+        this.proxy_.handler.getInitialUserSkills().then(({ skills }) => {
+            this.skills_ = new Map(skills.map(skill => [skill.id, skill]));
+        });
+        this.listenerIds_ = [
+            this.proxy_.callbackRouter.updateSkills.addListener(this.updateSkills_.bind(this)),
+            this.proxy_.callbackRouter.removeSkill.addListener(this.removeSkill_.bind(this)),
+        ];
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.listenerIds_.forEach(id => this.proxy_.callbackRouter.removeListener(id));
+        this.listenerIds_ = [];
+        if (this.addSkillButtonDisabledTimer_) {
+            clearTimeout(this.addSkillButtonDisabledTimer_);
+            this.addSkillButtonDisabledTimer_ = undefined;
+        }
+        this.addSkillButtonDisabled_ = false;
+    }
+    updateSkills_(skills) {
+        this.skills_ = new Map(skills.map(skill => [skill.id, skill]));
+    }
+    removeSkill_(skillId) {
+        this.skills_.delete(skillId);
+        // Manually update as Lit does not detect changes in a map.
+        this.requestUpdate();
+    }
+    // Called whenever the text in the search input field changes.
+    // This event is debounced by the <cr-toolbar> component.
+    onSearchChanged(searchTerm) {
+        this.searchTerm_ = searchTerm;
+        if (this.shouldShowNoSearchResults_()) {
+            this.proxy_.handler.recordSkillsManagementAction(SkillsManagementPage.kYourSkills, SkillsManagementAction.kEmptySearch);
+        }
+        else if (this.searchTerm_.length > 0) {
+            this.proxy_.handler.recordSkillsManagementAction(SkillsManagementPage.kYourSkills, SkillsManagementAction.kNonEmptySearch);
+        }
+    }
+    filteredSkills_() {
+        const term = this.searchTerm_.toLowerCase();
+        const allSkillsArray = Array.from(this.skills_.values());
+        if (!term) {
+            return allSkillsArray;
+        }
+        return allSkillsArray.filter(skill => skill.name.toLowerCase().includes(term) ||
+            skill.prompt.toLowerCase().includes(term));
+    }
+    shouldShowNoSearchResults_() {
+        return this.filteredSkills_().length === 0 && this.searchTerm_.length > 0;
+    }
+    onExploreButtonClick_() {
+        this.proxy_.handler.recordSkillsManagementAction(SkillsManagementPage.kYourSkills, SkillsManagementAction.kClickedBrowseSkills);
+        const path = '/browse';
+        this.fire('route-click', { path });
+    }
+    onAddSkillButtonClick_() {
+        if (this.addSkillButtonDisabled_) {
+            return;
+        }
+        this.proxy_.handler.recordSkillsManagementAction(SkillsManagementPage.kYourSkills, SkillsManagementAction.kClickedAddSkill);
+        this.addSkillButtonDisabled_ = true;
+        SkillsPageBrowserProxy.getInstance().handler.openSkillsDialog(SkillsDialogType.kAdd, /*skill=*/ null);
+        // Disable the button temporarily to prevent double-clicking.
+        // The button will open a dialog to block the page, so we can
+        // safely re-enable it after a short period of time.
+        this.addSkillButtonDisabledTimer_ = setTimeout(() => {
+            this.addSkillButtonDisabled_ = false;
+            this.addSkillButtonDisabledTimer_ = undefined;
+        }, 1000);
+    }
+}
+customElements.define(UserSkillsPageElement.is, UserSkillsPageElement);

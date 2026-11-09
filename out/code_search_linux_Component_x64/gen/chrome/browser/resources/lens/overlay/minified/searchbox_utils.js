@@ -1,0 +1,1 @@
+export function handleEscapeSearchbox(element,searchbox,e){if(e.detail.emptyInput){searchbox.blur();e.detail.event.preventDefault()}else{element.suppressGhostLoader=true}}

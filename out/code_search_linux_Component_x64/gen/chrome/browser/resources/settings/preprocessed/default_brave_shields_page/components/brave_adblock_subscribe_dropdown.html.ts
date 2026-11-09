@@ -1,0 +1,26 @@
+import {html} from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+  return html`<!--_html_template_start_--><style include="cr-shared-style settings-shared">.box{width:100%}.dropdown-item{display:flex;align-items:center;gap:5px}.dropdown-item leo-icon{--leo-icon-size:20px;color:currentColor}</style>
+
+<div class="box">
+  <cr-icon-button class="icon-more-vert"
+      on-click="handleDropdownClick_"
+      focus-type="menu">
+  </cr-icon-button>
+  <cr-action-menu id="menu" role-description="simple">
+    <button class="dropdown-item" on-click="updateSubscription_">
+      <leo-icon name="refresh"></leo-icon>
+      <span>$i18n{adblockUpdateNowButtonLabel}</span>
+    </button>
+    <button class="dropdown-item" on-click="viewSubscription_">
+      <leo-icon name="code"></leo-icon>
+      <span>$i18n{adblockViewSourceButtonLabel}</span>
+    </button>
+    <button class="dropdown-item" on-click="deleteSubscription_">
+      <leo-icon name="trash"></leo-icon>
+      <span>$i18n{adblockUnsubscribeButtonLabel}</span>
+    </button>
+  </cr-action-menu>
+</div>
+<!--_html_template_end_-->`;
+}

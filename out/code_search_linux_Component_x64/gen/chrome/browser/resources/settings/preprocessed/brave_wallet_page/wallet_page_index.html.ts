@@ -1,0 +1,21 @@
+import {html} from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+  return html`<!--_html_template_start_--><style include="settings-shared">cr-view-manager [hidden-by-search],cr-view-manager[show-all] [slot=view][data-parent-view-id]{display:none}cr-view-manager [slot=view]:not(.closing){position:initial}</style>
+
+<cr-view-manager id="viewManager" class="cr-centered-card-container"
+    show-all$="[[shouldShowAll]]">
+  <settings-brave-wallet-page slot="view" id="parent">
+  </settings-brave-wallet-page>
+
+  <settings-brave-web3-domains-page
+    id="web3Domains"
+    slot="view"
+    in-search-mode="[[inSearchMode_]]">
+  </settings-brave-web3-domains-page>
+
+  <settings-wallet-networks-subpage slot="view" id="networks"
+      data-parent-view-id="parent">
+  </settings-wallet-networks-subpage>
+</cr-view-manager>
+<!--_html_template_end_-->`;
+}

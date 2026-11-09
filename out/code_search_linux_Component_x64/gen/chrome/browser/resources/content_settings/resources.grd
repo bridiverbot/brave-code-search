@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/content_settings_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/content_settings_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/content_settings_resources_map.h"
+            type="resource_map_header" />
+    <output filename="content_settings_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_CONTENT_SETTINGS_APP_CSS" file="${root_gen_dir}/chrome/browser/resources/content_settings/preprocessed/app.css" resource_path="app.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CONTENT_SETTINGS_CONTENT_SETTING_PATTERN_SOURCE_CSS" file="${root_gen_dir}/chrome/browser/resources/content_settings/preprocessed/content_setting_pattern_source.css" resource_path="content_setting_pattern_source.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CONTENT_SETTINGS_CR_FRAME_LIST_CSS" file="${root_gen_dir}/chrome/browser/resources/content_settings/preprocessed/cr_frame_list.css" resource_path="cr_frame_list.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CONTENT_SETTINGS_EXPANDABLE_JSON_VIEWER_CSS" file="${root_gen_dir}/chrome/browser/resources/content_settings/preprocessed/expandable_json_viewer.css" resource_path="expandable_json_viewer.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CONTENT_SETTINGS_INDEX_HTML" file="${root_gen_dir}/chrome/browser/resources/content_settings/preprocessed/index.html" resource_path="index.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_MOJO_SHARED_CSS" file="${root_gen_dir}/chrome/browser/resources/content_settings/preprocessed/mojo_shared.css" resource_path="mojo_shared.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CONTENT_SETTINGS_STYLE_CSS" file="${root_gen_dir}/chrome/browser/resources/content_settings/preprocessed/style.css" resource_path="style.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CONTENT_SETTINGS_VALUE_DISPLAY_CSS" file="${root_gen_dir}/chrome/browser/resources/content_settings/preprocessed/value_display.css" resource_path="value_display.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_CONTENT_SETTINGS_CR_FRAME_LIST_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/cr_frame_list.js" resource_path="cr_frame_list.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_EXPANDABLE_JSON_VIEWER_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/expandable_json_viewer.js" resource_path="expandable_json_viewer.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_MOJO_TIMEDELTA_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/mojo_timedelta.js" resource_path="mojo_timedelta.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_MOJO_TIMESTAMP_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/mojo_timestamp.js" resource_path="mojo_timestamp.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_VALUE_DISPLAY_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/value_display.js" resource_path="value_display.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/app.html.js" resource_path="app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_APP_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_CONTENT_SETTING_PATTERN_SOURCE_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/content_setting_pattern_source.html.js" resource_path="content_setting_pattern_source.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_CONTENT_SETTING_PATTERN_SOURCE_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/content_setting_pattern_source.js" resource_path="content_setting_pattern_source.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_ROUTER_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/router.js" resource_path="router.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_CR_FRAME_LIST_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/cr_frame_list.html.js" resource_path="cr_frame_list.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_EXPANDABLE_JSON_VIEWER_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/expandable_json_viewer.html.js" resource_path="expandable_json_viewer.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_MOJO_TIMEDELTA_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/mojo_timedelta.html.js" resource_path="mojo_timedelta.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_MOJO_TIMESTAMP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/mojo_timestamp.html.js" resource_path="mojo_timestamp.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_VALUE_DISPLAY_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/value_display.html.js" resource_path="value_display.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_CONTENT_SETTINGS_INTERNALS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/content_settings_internals.mojom-webui.js" resource_path="content_settings_internals.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_CONTENT_SETTINGS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/content_settings.mojom-webui.js" resource_path="content_settings.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_CONTENT_SETTINGS_ENUMS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/content_settings_enums.mojom-webui.js" resource_path="content_settings_enums.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_CONTENT_SETTINGS_CONTENT_SETTINGS_TYPES_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/content_settings/minified/content_settings_types.mojom-webui.js" resource_path="content_settings_types.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

@@ -1,0 +1,43 @@
+import {html} from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+  return html`<!--_html_template_start_--><style include="cr-shared-style settings-shared">cr-view-manager [hidden-by-search],cr-view-manager[show-all] [slot=view][data-parent-view-id]{display:none}cr-view-manager [slot=view]:not(.closing){position:initial}</style>
+
+<cr-view-manager id="viewManager" class="cr-centered-card-container"
+  show-all$="[[shouldShowAll]]">
+
+  <settings-system-page
+    id="system"
+    slot="view"
+    in-search-mode="[[inSearchMode_]]">
+  </settings-system-page>
+
+  <!--  -->
+
+  <settings-memory-page slot="view" id="memory" in-search-mode="[[inSearchMode_]]">
+  </settings-memory-page>
+
+  <template is="dom-if" if="[[showBatterySettings_]]">
+    <settings-battery-page slot="view" id="battery"
+      hidden="[[!showBatterySettings_]]"
+      in-search-mode="[[inSearchMode_]]">
+    </settings-battery-page>
+  </template>
+
+  <template is="dom-if" if="[[showShortcutsPage_]]">
+    <settings-brave-shortcuts-page
+      id="shortcuts"
+      slot="view"
+      data-parent-view-id="system"
+      in-search-mode="[[inSearchMode_]]">
+    </settings-brave-shortcuts-page>
+  </template>
+
+  <template is="dom-if" if="[[showOriginOnboarding_]]">
+    <settings-brave-origin-onboarding
+      id="origin-onboarding"
+      slot="view">
+    </settings-brave-origin-onboarding>
+  </template>
+</cr-view-manager>
+<!--_html_template_end_-->`;
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "traits_headers": [
+      "chrome/browser/contextual_tasks/contextual_tasks_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      ":mojom_traits"
+    ],
+    "types": [
+      {
+        "cpp": "::contextual_tasks::ContextualTaskId",
+        "mojom": "contextual_tasks.mojom.ContextualTaskId"
+      },
+      {
+        "cpp": "::contextual_tasks::ContextualWindowId",
+        "mojom": "contextual_tasks.mojom.ContextualWindowId"
+      }
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "traits_headers": [
+      "chrome/browser/ui/webui/side_panel/customize_chrome/customize_chrome_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      ":mojom_traits"
+    ],
+    "types": [
+      {
+        "cpp": "::CustomizeChromeSection",
+        "mojom": "side_panel.mojom.CustomizeChromeSection"
+      }
+    ]
+  }
+]

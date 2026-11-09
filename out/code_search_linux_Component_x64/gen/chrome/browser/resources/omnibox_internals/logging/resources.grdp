@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_OMNIBOX_INTERNALS_LOGGING_LOGS_HTML" file="${root_gen_dir}/chrome/browser/resources/omnibox_internals/logging/preprocessed/logs.html" resource_path="logs.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_OMNIBOX_INTERNALS_LOGGING_LOGS_APP_JS" file="${root_gen_dir}/chrome/browser/resources/omnibox_internals/logging/minified/logs_app.js" resource_path="logs_app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_OMNIBOX_INTERNALS_LOGGING_LOGS_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/omnibox_internals/logging/minified/logs_app.html.js" resource_path="logs_app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_OMNIBOX_INTERNALS_LOGGING_LOGS_APP_HELPERS_JS" file="${root_gen_dir}/chrome/browser/resources/omnibox_internals/logging/minified/logs_app_helpers.js" resource_path="logs_app_helpers.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_OMNIBOX_INTERNALS_LOGGING_LOGS_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/browser/resources/omnibox_internals/logging/minified/logs_browser_proxy.js" resource_path="logs_browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_OMNIBOX_INTERNALS_LOGGING_LOGS_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/omnibox_internals/logging/minified/logs_app.css.js" resource_path="logs_app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_OMNIBOX_INTERNALS_LOGGING_LOGS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/omnibox_internals/logging/minified/logs.mojom-webui.js" resource_path="logs.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+</grit-part>

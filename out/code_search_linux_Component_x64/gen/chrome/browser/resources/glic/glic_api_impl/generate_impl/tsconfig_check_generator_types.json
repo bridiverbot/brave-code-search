@@ -1,0 +1,26 @@
+{
+  "extends": "../../../../../../../../../chrome/browser/resources/glic/glic_api_impl/generate_impl/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../../../../../../../../../chrome/browser/resources/glic/glic_api_impl/generate_impl",
+    "outDir": ".",
+    "paths": {
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "../../../../../../../../../chrome/browser/resources/glic/glic_api_impl/generate_impl/code_writer.ts",
+    "../../../../../../../../../chrome/browser/resources/glic/glic_api_impl/generate_impl/converter.ts",
+    "../../../../../../../../../chrome/browser/resources/glic/glic_api_impl/generate_impl/gen_enum_conversions.ts",
+    "../../../../../../../../../chrome/browser/resources/glic/glic_api_impl/generate_impl/gen_sources.ts",
+    "../../../../../../../../../chrome/browser/resources/glic/glic_api_impl/generate_impl/mojom_types.ts",
+    "../../../../../../../../../chrome/browser/resources/glic/glic_api_impl/generate_impl/ts_types.ts"
+  ]
+}

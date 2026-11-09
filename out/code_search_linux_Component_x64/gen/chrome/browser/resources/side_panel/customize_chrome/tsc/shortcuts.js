@@ -1,0 +1,213 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import 'chrome://resources/cr_elements/cr_checkbox/cr_checkbox.js';
+import 'chrome://resources/cr_elements/cr_collapse/cr_collapse.js';
+import 'chrome://resources/cr_elements/cr_toggle/cr_toggle.js';
+import 'chrome://resources/cr_elements/cr_radio_group/cr_radio_group.js';
+import 'chrome://resources/cr_elements/cr_radio_button/cr_radio_button.js';
+import './button_label.js';
+import '/strings.m.js';
+import { assert } from 'chrome://resources/js/assert.js';
+import { loadTimeData } from 'chrome://resources/js/load_time_data.js';
+import { CrLitElement } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { CustomizeChromeAction, recordCustomizeChromeAction } from './common.js';
+import { browserProxyFactory } from './customize_chrome.mojom-webui.js';
+import { getCss } from './shortcuts.css.js';
+import { getHtml } from './shortcuts.html.js';
+import { TileType } from './tile_type.mojom-webui.js';
+export class ShortcutsElement extends CrLitElement {
+    static get is() {
+        return 'customize-chrome-shortcuts';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            shortcutsType_: { type: Number },
+            initialized_: { type: Boolean },
+            radioSelection_: { type: String },
+            show_: { type: Boolean },
+            showPersonalShortcuts_: { type: Boolean },
+            showEnterpriseShortcuts_: { type: Boolean },
+            shortcutConfigs_: { type: Array },
+            disabledShortcuts_: { type: Array },
+        };
+    }
+    #shortcutsType__accessor_storage = undefined;
+    get shortcutsType_() { return this.#shortcutsType__accessor_storage; }
+    set shortcutsType_(value) { this.#shortcutsType__accessor_storage = value; }
+    #initialized__accessor_storage = false;
+    get initialized_() { return this.#initialized__accessor_storage; }
+    set initialized_(value) { this.#initialized__accessor_storage = value; }
+    #radioSelection__accessor_storage = undefined;
+    get radioSelection_() { return this.#radioSelection__accessor_storage; }
+    set radioSelection_(value) { this.#radioSelection__accessor_storage = value; }
+    #show__accessor_storage = false;
+    get show_() { return this.#show__accessor_storage; }
+    set show_(value) { this.#show__accessor_storage = value; }
+    #showPersonalShortcuts__accessor_storage = false;
+    get showPersonalShortcuts_() { return this.#showPersonalShortcuts__accessor_storage; }
+    set showPersonalShortcuts_(value) { this.#showPersonalShortcuts__accessor_storage = value; }
+    #showEnterpriseShortcuts__accessor_storage = false;
+    get showEnterpriseShortcuts_() { return this.#showEnterpriseShortcuts__accessor_storage; }
+    set showEnterpriseShortcuts_(value) { this.#showEnterpriseShortcuts__accessor_storage = value; }
+    #shortcutConfigs__accessor_storage = [];
+    get shortcutConfigs_() { return this.#shortcutConfigs__accessor_storage; }
+    set shortcutConfigs_(value) { this.#shortcutConfigs__accessor_storage = value; }
+    #disabledShortcuts__accessor_storage = [];
+    get disabledShortcuts_() { return this.#disabledShortcuts__accessor_storage; }
+    set disabledShortcuts_(value) { this.#disabledShortcuts__accessor_storage = value; }
+    setMostVisitedSettingsListenerId_ = null;
+    apiProxy_ = browserProxyFactory.getInstance();
+    connectedCallback() {
+        super.connectedCallback();
+        this.setMostVisitedSettingsListenerId_ =
+            this.apiProxy_.callbackRouter.setMostVisitedSettings.addListener((shortcutsTypes, shortcutsVisible, shortcutsPersonalVisible, disabledShortcuts) => {
+                // Only track personal shortcut types in `shortcutsType_`.
+                this.shortcutsType_ =
+                    shortcutsTypes.find(t => t !== TileType.kEnterpriseShortcuts);
+                this.show_ = shortcutsVisible;
+                this.disabledShortcuts_ = disabledShortcuts;
+                this.showPersonalShortcuts_ = shortcutsPersonalVisible;
+                this.showEnterpriseShortcuts_ =
+                    shortcutsTypes.includes(TileType.kEnterpriseShortcuts);
+                this.initialized_ = true;
+            });
+        this.apiProxy_.handler.updateMostVisitedSettings();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        assert(this.setMostVisitedSettingsListenerId_);
+        this.apiProxy_.callbackRouter.removeListener(this.setMostVisitedSettingsListenerId_);
+    }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        const changedPrivateProperties = changedProperties;
+        if (changedPrivateProperties.has('disabledShortcuts_')) {
+            this.shortcutConfigs_ = this.computeShortcutConfigs_();
+        }
+        if (changedPrivateProperties.has('shortcutsType_')) {
+            const config = this.shortcutConfigs_.find(config => config.type === this.shortcutsType_);
+            this.radioSelection_ = config ? config.buttonName : undefined;
+        }
+    }
+    computeShortcutConfigs_() {
+        return [
+            {
+                type: TileType.kEnterpriseShortcuts,
+                title: loadTimeData.getString('enterpriseShortcuts'),
+                description: loadTimeData.getString('enterpriseShortcutsCurated'),
+                buttonName: 'enterpriseShortcutsOption',
+                containerName: 'enterpriseShortcutsContainer',
+                disabled: this.disabledShortcuts_.includes(TileType.kEnterpriseShortcuts),
+            },
+            {
+                type: TileType.kCustomLinks,
+                title: loadTimeData.getString('myShortcuts'),
+                description: loadTimeData.getString('shortcutsCurated'),
+                buttonName: 'customLinksOption',
+                containerName: 'customLinksContainer',
+                disabled: this.disabledShortcuts_.includes(TileType.kCustomLinks),
+            },
+            {
+                type: TileType.kTopSites,
+                title: loadTimeData.getString('topSites'),
+                description: loadTimeData.getString('shortcutsSuggested'),
+                buttonName: 'topSitesOption',
+                containerName: 'topSitesContainer',
+                disabled: this.disabledShortcuts_.includes(TileType.kTopSites),
+            },
+        ];
+    }
+    setMostVisitedSettings_() {
+        const types = [];
+        if (this.showEnterpriseShortcuts_) {
+            types.push(TileType.kEnterpriseShortcuts);
+        }
+        if (this.shortcutsType_ !== undefined) {
+            types.push(this.shortcutsType_);
+        }
+        this.apiProxy_.handler.setMostVisitedSettings(types, 
+        /* shortcutsVisible= */ this.show_, 
+        /* shortcutsPersonalVisible= */ this.showPersonalShortcuts_);
+    }
+    setShow_(show) {
+        if (this.show_ === show) {
+            return;
+        }
+        recordCustomizeChromeAction(CustomizeChromeAction.SHOW_SHORTCUTS_TOGGLE_CLICKED);
+        this.show_ = show;
+        this.setMostVisitedSettings_();
+    }
+    onShowToggleChange_(e) {
+        this.setShow_(e.detail);
+    }
+    onShowToggleClick_() {
+        this.setShow_(!this.show_);
+    }
+    setShowPersonalShortcuts_(show) {
+        if (this.showPersonalShortcuts_ === show) {
+            return;
+        }
+        this.showPersonalShortcuts_ = show;
+        this.setMostVisitedSettings_();
+    }
+    onShowPersonalShortcutsChange_(e) {
+        this.setShowPersonalShortcuts_(e.detail);
+    }
+    onShowPersonalShortcutsClick_() {
+        this.setShowPersonalShortcuts_(!this.showPersonalShortcuts_);
+    }
+    setShowEnterpriseShortcuts_(show) {
+        if (this.showEnterpriseShortcuts_ === show) {
+            return;
+        }
+        this.showEnterpriseShortcuts_ = show;
+        this.setMostVisitedSettings_();
+    }
+    onShowEnterpriseShortcutsChange_(e) {
+        this.setShowEnterpriseShortcuts_(e.detail);
+    }
+    onShowEnterpriseShortcutsClick_() {
+        this.setShowEnterpriseShortcuts_(!this.showEnterpriseShortcuts_);
+    }
+    onRadioSelectionSelectedChanged_(e) {
+        if (e.detail.value === this.radioSelection_) {
+            return;
+        }
+        const config = this.shortcutConfigs_.find(config => config.buttonName === e.detail.value);
+        assert(config);
+        this.shortcutsType_ = config.type;
+        this.setMostVisitedSettings_();
+    }
+    onOptionClick_(e) {
+        const type = Number(e.currentTarget.dataset['type']);
+        if (this.shortcutsType_ === type) {
+            return;
+        }
+        recordCustomizeChromeAction(CustomizeChromeAction.SHOW_SHORTCUTS_TOGGLE_CLICKED);
+        this.shortcutsType_ = type;
+        this.setMostVisitedSettings_();
+    }
+    getRadioSelectionDisabled_() {
+        return !this.show_ ||
+            (this.showEnterprisePersonalMixedSidepanel_() &&
+                !this.showPersonalShortcuts_);
+    }
+    getRadioSelectionShortcutConfigs_() {
+        // Only show personal shortcut types in the radio selection.
+        return this.shortcutConfigs_.filter(item => item.type !== TileType.kEnterpriseShortcuts && !item.disabled);
+    }
+    getEnterpriseShortcutConfigs_() {
+        return this.shortcutConfigs_.filter(item => item.type === TileType.kEnterpriseShortcuts && !item.disabled);
+    }
+    showEnterprisePersonalMixedSidepanel_() {
+        return !this.disabledShortcuts_.includes(TileType.kEnterpriseShortcuts);
+    }
+}
+customElements.define(ShortcutsElement.is, ShortcutsElement);

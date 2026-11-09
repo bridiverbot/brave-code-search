@@ -1,0 +1,150 @@
+import { FittingType } from './constants.js';
+/**
+ * These values are persisted to logs. Entries should not be renumbered, removed
+ * or reused.
+ */
+export declare enum PostMessageDataType {
+    GET_SELECTED_TEXT = 0,
+    PRINT = 1,
+    SELECT_ALL = 2,
+    COUNT = 3
+}
+/**
+ * Records when the zoom mode is changed to fit a FittingType.
+ * @param fittingType the new FittingType.
+ */
+export declare function recordFitTo(fittingType: FittingType): void;
+/** Records the given action to chrome.metricsPrivate. */
+export declare function record(action: UserAction): void;
+/** Records the given enumeration to chrome.metricsPrivate. */
+export declare function recordEnumeration(enumKey: string, enumValue: number, enumSize: number): void;
+export declare function resetForTesting(): void;
+/**
+ * Keep in sync with the values for enum ChromePDFViewerActions in
+ * tools/metrics/histograms/metadata/pdf/enums.xml.
+ * These values are persisted to logs. Entries should not be renumbered, removed
+ * or reused.
+ *
+ * User Actions that can be recorded by calling record.
+ * The *_FIRST values are recorded automaticlly,
+ * eg. record(...ROTATE) will also record ROTATE_FIRST
+ * on the first instance.
+ */
+export declare enum UserAction {
+    DOCUMENT_OPENED = 0,
+    ROTATE_FIRST = 1,
+    ROTATE = 2,
+    FIT_TO_WIDTH_FIRST = 3,
+    FIT_TO_WIDTH = 4,
+    FIT_TO_PAGE_FIRST = 5,
+    FIT_TO_PAGE = 6,
+    FOLLOW_BOOKMARK_FIRST = 9,
+    FOLLOW_BOOKMARK = 10,
+    PAGE_SELECTOR_NAVIGATE_FIRST = 11,
+    PAGE_SELECTOR_NAVIGATE = 12,
+    SAVE_FIRST = 13,
+    SAVE = 14,
+    PRINT_FIRST = 17,
+    PRINT = 18,
+    ENTER_ANNOTATION_MODE_FIRST = 19,
+    ENTER_ANNOTATION_MODE = 20,
+    EXIT_ANNOTATION_MODE_FIRST = 21,
+    EXIT_ANNOTATION_MODE = 22,
+    ANNOTATE_STROKE_TOOL_PEN_FIRST = 23,
+    ANNOTATE_STROKE_TOOL_PEN = 24,
+    ANNOTATE_STROKE_TOOL_ERASER_FIRST = 25,
+    ANNOTATE_STROKE_TOOL_ERASER = 26,
+    ANNOTATE_STROKE_TOOL_HIGHLIGHTER_FIRST = 27,
+    ANNOTATE_STROKE_TOOL_HIGHLIGHTER = 28,
+    ANNOTATE_STROKE_DEVICE_TOUCH_FIRST = 29,
+    ANNOTATE_STROKE_DEVICE_TOUCH = 30,
+    ANNOTATE_STROKE_DEVICE_MOUSE_FIRST = 31,
+    ANNOTATE_STROKE_DEVICE_MOUSE = 32,
+    ANNOTATE_STROKE_DEVICE_PEN_FIRST = 33,
+    ANNOTATE_STROKE_DEVICE_PEN = 34,
+    TWO_UP_VIEW_ENABLE_FIRST = 35,
+    TWO_UP_VIEW_ENABLE = 36,
+    TWO_UP_VIEW_DISABLE_FIRST = 37,
+    TWO_UP_VIEW_DISABLE = 38,
+    ZOOM_IN_FIRST = 39,
+    ZOOM_IN = 40,
+    ZOOM_OUT_FIRST = 41,
+    ZOOM_OUT = 42,
+    ZOOM_CUSTOM_FIRST = 43,
+    ZOOM_CUSTOM = 44,
+    THUMBNAIL_NAVIGATE_FIRST = 45,
+    THUMBNAIL_NAVIGATE = 46,
+    SAVE_ORIGINAL_ONLY_FIRST = 47,
+    SAVE_ORIGINAL_ONLY = 48,
+    SAVE_ORIGINAL_FIRST = 49,
+    SAVE_ORIGINAL = 50,
+    SAVE_EDITED_FIRST = 51,
+    SAVE_EDITED = 52,
+    TOGGLE_SIDENAV_FIRST = 53,
+    TOGGLE_SIDENAV = 54,
+    SELECT_SIDENAV_THUMBNAILS_FIRST = 55,
+    SELECT_SIDENAV_THUMBNAILS = 56,
+    SELECT_SIDENAV_OUTLINE_FIRST = 57,
+    SELECT_SIDENAV_OUTLINE = 58,
+    TOGGLE_DISPLAY_ANNOTATIONS_FIRST = 59,
+    TOGGLE_DISPLAY_ANNOTATIONS = 60,
+    PRESENT_FIRST = 61,
+    PRESENT = 62,
+    PROPERTIES_FIRST = 63,
+    PROPERTIES = 64,
+    SELECT_SIDENAV_ATTACHMENT_FIRST = 65,
+    SELECT_SIDENAV_ATTACHMENT = 66,
+    CUT_FIRST = 67,
+    CUT = 68,
+    COPY_FIRST = 69,
+    COPY = 70,
+    PASTE_FIRST = 71,
+    PASTE = 72,
+    FIND_IN_PAGE_FIRST = 73,
+    FIND_IN_PAGE = 74,
+    COPY_SEARCHIFIED_FIRST = 75,
+    COPY_SEARCHIFIED = 76,
+    FIND_IN_PAGE_SEARCHIFIED_FIRST = 77,
+    FIND_IN_PAGE_SEARCHIFIED = 78,
+    ENTER_INK2_ANNOTATION_MODE_FIRST = 79,
+    ENTER_INK2_ANNOTATION_MODE = 80,
+    EXIT_INK2_ANNOTATION_MODE_FIRST = 81,
+    EXIT_INK2_ANNOTATION_MODE = 82,
+    SAVE_WITH_INK2_ANNOTATION_FIRST = 83,
+    SAVE_WITH_INK2_ANNOTATION = 84,
+    SELECT_INK2_BRUSH_ERASER_FIRST = 85,
+    SELECT_INK2_BRUSH_ERASER = 86,
+    SELECT_INK2_BRUSH_HIGHLIGHTER_FIRST = 87,
+    SELECT_INK2_BRUSH_HIGHLIGHTER = 88,
+    SELECT_INK2_BRUSH_PEN_FIRST = 89,
+    SELECT_INK2_BRUSH_PEN = 90,
+    UNDO_INK2_FIRST = 91,
+    UNDO_INK2 = 92,
+    REDO_INK2_FIRST = 93,
+    REDO_INK2 = 94,
+    OPEN_INK2_SIDE_PANEL_FIRST = 95,
+    OPEN_INK2_SIDE_PANEL = 96,
+    OPEN_INK2_BOTTOM_TOOLBAR_FIRST = 97,
+    OPEN_INK2_BOTTOM_TOOLBAR = 98,
+    SAVE_SEARCHIFIED_FIRST = 99,
+    SAVE_SEARCHIFIED = 100,
+    ENTER_INK2_TEXT_ANNOTATION_MODE_FIRST = 101,
+    ENTER_INK2_TEXT_ANNOTATION_MODE = 102,
+    EXIT_INK2_TEXT_ANNOTATION_MODE_FIRST = 103,
+    EXIT_INK2_TEXT_ANNOTATION_MODE = 104,
+    ADD_INK2_TEXT_ANNOTATION_FIRST = 105,
+    ADD_INK2_TEXT_ANNOTATION = 106,
+    ADD_INK2_TEXT_ANNOTATION_ABORTED_FIRST = 107,
+    ADD_INK2_TEXT_ANNOTATION_ABORTED = 108,
+    EDIT_INK2_TEXT_ANNOTATION_FIRST = 109,
+    EDIT_INK2_TEXT_ANNOTATION = 110,
+    EDIT_INK2_TEXT_ANNOTATION_ABORTED_FIRST = 111,
+    EDIT_INK2_TEXT_ANNOTATION_ABORTED = 112,
+    DELETE_INK2_TEXT_ANNOTATION_FIRST = 113,
+    DELETE_INK2_TEXT_ANNOTATION = 114,
+    ENTER_INK2_SIGNATURE_MODE_FIRST = 115,
+    ENTER_INK2_SIGNATURE_MODE = 116,
+    EXIT_INK2_SIGNATURE_MODE_FIRST = 117,
+    EXIT_INK2_SIGNATURE_MODE = 118,
+    NUMBER_OF_ACTIONS = 119
+}

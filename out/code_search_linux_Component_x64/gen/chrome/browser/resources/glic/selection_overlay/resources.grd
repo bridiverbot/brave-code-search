@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/glic_untrusted_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/glic_untrusted_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/glic_untrusted_resources_map.h"
+            type="resource_map_header" />
+    <output filename="glic_untrusted_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_GLIC_UNTRUSTED_ARROW_UPWARD_SVG" file="${root_src_dir}/chrome/browser/resources/glic/selection_overlay/arrow_upward.svg" resource_path="arrow_upward.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_GLIC_UNTRUSTED_EXPLAIN_SVG" file="${root_src_dir}/chrome/browser/resources/glic/selection_overlay/explain.svg" resource_path="explain.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_GLIC_UNTRUSTED_PROMPT_SUGGESTION_SVG" file="${root_src_dir}/chrome/browser/resources/glic/selection_overlay/prompt_suggestion.svg" resource_path="prompt_suggestion.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_GLIC_UNTRUSTED_SETTINGS_SVG" file="${root_src_dir}/chrome/browser/resources/glic/selection_overlay/settings.svg" resource_path="settings.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_GLIC_UNTRUSTED_SPARK_SVG" file="${root_src_dir}/chrome/browser/resources/glic/selection_overlay/spark.svg" resource_path="spark.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_GLIC_UNTRUSTED_SPARK_MONO_SVG" file="${root_src_dir}/chrome/browser/resources/glic/selection_overlay/spark_mono.svg" resource_path="spark_mono.svg" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_GLIC_UNTRUSTED_SELECTION_OVERLAY_HTML" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/preprocessed/selection_overlay.html" resource_path="selection_overlay.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/browser_proxy.js" resource_path="browser_proxy.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_EXPLAIN_FULFILLMENT_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/explain_fulfillment.js" resource_path="explain_fulfillment.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_GLIC_SELECTION_OVERLAY_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/glic_selection_overlay.js" resource_path="glic_selection_overlay.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_GLIC_SELECTION_OVERLAY_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/glic_selection_overlay.html.js" resource_path="glic_selection_overlay.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_INLINE_FULFILLMENT_HOST_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/inline_fulfillment_host.js" resource_path="inline_fulfillment_host.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_MARKDOWN_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/markdown.js" resource_path="markdown.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_SELECTION_OVERLAY_APP_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/selection_overlay_app.js" resource_path="selection_overlay_app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_SELECTION_OVERLAY_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/selection_overlay_app.html.js" resource_path="selection_overlay_app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_SELECTION_OVERLAY_BASE_HANDLER_IMPL_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/selection_overlay_base_handler_impl.js" resource_path="selection_overlay_base_handler_impl.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_GLIC_SELECTION_OVERLAY_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/glic_selection_overlay.css.js" resource_path="glic_selection_overlay.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_SELECTION_OVERLAY_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/selection_overlay_app.css.js" resource_path="selection_overlay_app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_EXPLAIN_FULFILLMENT_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/explain_fulfillment.mojom-webui.js" resource_path="explain_fulfillment.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_SELECTION_OVERLAY_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/selection_overlay.mojom-webui.js" resource_path="selection_overlay.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_UNTRUSTED_ACTION_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/glic/selection_overlay/minified/action.mojom-webui.js" resource_path="action.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

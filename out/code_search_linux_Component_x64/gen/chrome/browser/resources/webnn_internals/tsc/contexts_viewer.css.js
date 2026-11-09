@@ -1,0 +1,8 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss as getCrPageHostStyleLit } from '//resources/cr_elements/cr_page_host_style_lit.css.js';
+import { getCss as getCrSharedStyleLit } from '//resources/cr_elements/cr_shared_style_lit.css.js';
+import '//resources/cr_elements/cr_shared_vars.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[getCrPageHostStyleLit(), getCrSharedStyleLit()], css `.no-context{text-align:center;font-size:1.2rem;color:var(--cr-secondary-text-color)}.grid-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:20px}.grid-item{background-color:var(--cr-card-background-color);border-radius:var(--cr-card-border-radius);box-shadow:var(--cr-card-shadow);padding:15px;font-weight:bold;color:var(--cr-primary-text-color)}.ep-title{text-decoration:underline;margin-top:10px;margin-bottom:10px}.ep{margin-top:10px;border:solid 1px var(--cr-secondary-text-color);padding:10px}.ep-detail{font-weight:normal}.first-selected{border-color:var(--cr-fallback-color-primary)}`]);
+}

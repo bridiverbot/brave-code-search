@@ -1,0 +1,8 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../chrome/browser/pwc/pwc.mojom"
+  ]
+}

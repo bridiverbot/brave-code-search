@@ -1,0 +1,98 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import 'chrome://resources/cr_elements/cr_button/cr_button.js';
+import 'chrome://resources/cr_elements/cr_icon/cr_icon.js';
+import './icons.html.js';
+import { FocusOutlineManager } from 'chrome://resources/js/focus_outline_manager.js';
+import { loadTimeData } from 'chrome://resources/js/load_time_data.js';
+import { CrLitElement } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './customize_buttons.css.js';
+import { getHtml } from './customize_buttons.html.js';
+export class CustomizeButtonsElement extends CrLitElement {
+    static get is() {
+        return 'ntp-customize-buttons';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            infoShownToUser: {
+                reflect: true,
+                type: Boolean,
+            },
+            modulesShownToUser: {
+                reflect: true,
+                type: Boolean,
+            },
+            showBackgroundImage: {
+                reflect: true,
+                type: Boolean,
+            },
+            showCustomize: { type: Boolean },
+            showCustomizeChromeText: { type: Boolean },
+            showShadow: {
+                reflect: true,
+                type: Boolean,
+            },
+            showWallpaperSearch: {
+                reflect: true,
+                type: Boolean,
+            },
+            showWallpaperSearchButton: {
+                reflect: true,
+                type: Boolean,
+            },
+            wallpaperSearchButtonAnimationEnabled: {
+                reflect: true,
+                type: Boolean,
+            },
+            webuiRoundedIconsEnabled_: { type: Boolean },
+        };
+    }
+    #infoShownToUser_accessor_storage = false;
+    get infoShownToUser() { return this.#infoShownToUser_accessor_storage; }
+    set infoShownToUser(value) { this.#infoShownToUser_accessor_storage = value; }
+    #modulesShownToUser_accessor_storage = false;
+    get modulesShownToUser() { return this.#modulesShownToUser_accessor_storage; }
+    set modulesShownToUser(value) { this.#modulesShownToUser_accessor_storage = value; }
+    #showBackgroundImage_accessor_storage = false;
+    get showBackgroundImage() { return this.#showBackgroundImage_accessor_storage; }
+    set showBackgroundImage(value) { this.#showBackgroundImage_accessor_storage = value; }
+    #showCustomize_accessor_storage = false;
+    get showCustomize() { return this.#showCustomize_accessor_storage; }
+    set showCustomize(value) { this.#showCustomize_accessor_storage = value; }
+    #showCustomizeChromeText_accessor_storage = false;
+    get showCustomizeChromeText() { return this.#showCustomizeChromeText_accessor_storage; }
+    set showCustomizeChromeText(value) { this.#showCustomizeChromeText_accessor_storage = value; }
+    #showShadow_accessor_storage = false;
+    get showShadow() { return this.#showShadow_accessor_storage; }
+    set showShadow(value) { this.#showShadow_accessor_storage = value; }
+    #showWallpaperSearch_accessor_storage = false;
+    get showWallpaperSearch() { return this.#showWallpaperSearch_accessor_storage; }
+    set showWallpaperSearch(value) { this.#showWallpaperSearch_accessor_storage = value; }
+    #showWallpaperSearchButton_accessor_storage = false;
+    get showWallpaperSearchButton() { return this.#showWallpaperSearchButton_accessor_storage; }
+    set showWallpaperSearchButton(value) { this.#showWallpaperSearchButton_accessor_storage = value; }
+    #wallpaperSearchButtonAnimationEnabled_accessor_storage = false;
+    get wallpaperSearchButtonAnimationEnabled() { return this.#wallpaperSearchButtonAnimationEnabled_accessor_storage; }
+    set wallpaperSearchButtonAnimationEnabled(value) { this.#wallpaperSearchButtonAnimationEnabled_accessor_storage = value; }
+    #webuiRoundedIconsEnabled__accessor_storage = loadTimeData.getBoolean('webuiRoundedIconsEnabled');
+    get webuiRoundedIconsEnabled_() { return this.#webuiRoundedIconsEnabled__accessor_storage; }
+    set webuiRoundedIconsEnabled_(value) { this.#webuiRoundedIconsEnabled__accessor_storage = value; }
+    connectedCallback() {
+        super.connectedCallback();
+        FocusOutlineManager.forDocument(document);
+    }
+    onCustomizeClick_() {
+        this.fire('customize-click');
+    }
+    onWallpaperSearchClick_() {
+        this.fire('wallpaper-search-click');
+    }
+}
+customElements.define(CustomizeButtonsElement.is, CustomizeButtonsElement);

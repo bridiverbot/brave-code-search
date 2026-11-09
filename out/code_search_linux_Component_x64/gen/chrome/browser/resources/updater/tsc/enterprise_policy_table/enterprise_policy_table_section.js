@@ -1,0 +1,48 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_collapse/cr_collapse.js';
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import '//resources/cr_elements/cr_icon/cr_icon.js';
+import '//resources/cr_elements/icons.html.js';
+import './enterprise_policy_value.js';
+import '../icons.html.js';
+import { assert } from '//resources/js/assert.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './enterprise_policy_table_section.css.js';
+import { getHtml } from './enterprise_policy_table_section.html.js';
+export class EnterprisePolicyTableSectionElement extends CrLitElement {
+    static get is() {
+        return 'enterprise-policy-table-section';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            rowData: { type: Array },
+        };
+    }
+    #rowData_accessor_storage = [];
+    get rowData() { return this.#rowData_accessor_storage; }
+    set rowData(value) { this.#rowData_accessor_storage = value; }
+    canExpand(item) {
+        return Object.keys(item.policy.valuesBySource).length > 1;
+    }
+    onExpandButtonClick(e) {
+        const currentTarget = e.currentTarget;
+        const index = Number(currentTarget.dataset['index']);
+        assert(!Number.isNaN(index));
+        const data = this.rowData[index];
+        assert(data !== undefined);
+        data.isExpanded = !data.isExpanded;
+        this.requestUpdate();
+    }
+    prevailingValue(item) {
+        return item.policy.valuesBySource[item.policy.prevailingSource];
+    }
+}
+customElements.define(EnterprisePolicyTableSectionElement.is, EnterprisePolicyTableSectionElement);
