@@ -1,0 +1,314 @@
+// -*- Metal -*-
+//===-- metal_packed_numeric ----------------------------------------------===//
+// Copyright (c) 2025-2026 Apple Inc. All rights reserved
+//===----------------------------------------------------------------------===//
+
+#ifndef __METAL_PACKED_NUMERIC
+#define __METAL_PACKED_NUMERIC
+
+#if defined(__HAVE_PACKED_NUMERIC__)
+
+#pragma METAL internals : enable
+namespace metal
+{
+#if defined(__HAVE_METAL_FP4_E2M1_FORMAT_TYPE__)
+struct metal_fp4_e2m1_format
+{
+};
+#endif
+#if defined(__HAVE_METAL_FP8_E4M3_FORMAT_TYPE__)
+struct metal_fp8_e4m3_format
+{
+};
+#endif
+#if defined(__HAVE_METAL_FP8_E5M2_FORMAT_TYPE__)
+struct metal_fp8_e5m2_format
+{
+};
+#endif
+#if defined(__HAVE_METAL_FP8_UE8M0_FORMAT_TYPE__)
+struct metal_fp8_ue8m0_format
+{
+};
+#endif
+#if defined(__HAVE_INT2B_FORMAT_TYPE__)
+struct int2b_format
+{
+};
+#endif
+#if defined(__HAVE_INT2B_FORMAT_TYPE__)
+struct uint2b_format
+{
+};
+#endif
+#if defined(__HAVE_INT4B_FORMAT_TYPE__)
+struct int4b_format
+{
+};
+#endif
+#if defined(__HAVE_INT4B_FORMAT_TYPE__)
+struct uint4b_format
+{
+};
+#endif
+
+template <class Format>
+struct is_numeric_format : bool_constant<__is_metal_numeric_format(__type_traits_detail::remove_qualifiers_t<Format>)>
+{
+};
+template <class Format>
+constant constexpr bool is_numeric_format_v = is_numeric_format<Format>::value;
+
+#if defined(__HAVE_PACKED_NUMERIC_TYPE__)
+namespace __packed_numeric_detail
+{
+template <class Format, class Enable = void>
+struct _numeric_format_bits_impl;
+#if defined(__HAVE_METAL_FP4_E2M1_FORMAT_TYPE__)
+template <>
+struct _numeric_format_bits_impl<metal_fp4_e2m1_format> : integral_constant<int, 4>
+{
+};
+#endif
+#if defined(__HAVE_METAL_FP8_E4M3_FORMAT_TYPE__)
+template <>
+struct _numeric_format_bits_impl<metal_fp8_e4m3_format> : integral_constant<int, 8>
+{
+};
+#endif
+#if defined(__HAVE_METAL_FP8_E5M2_FORMAT_TYPE__)
+template <>
+struct _numeric_format_bits_impl<metal_fp8_e5m2_format> : integral_constant<int, 8>
+{
+};
+#endif
+#if defined(__HAVE_METAL_FP8_UE8M0_FORMAT_TYPE__)
+template <>
+struct _numeric_format_bits_impl<metal_fp8_ue8m0_format> : integral_constant<int, 8>
+{
+};
+#endif
+#if defined(__HAVE_INT2B_FORMAT_TYPE__)
+template <>
+struct _numeric_format_bits_impl<int2b_format> : integral_constant<int, 2>
+{
+};
+#endif
+#if defined(__HAVE_INT2B_FORMAT_TYPE__)
+template <>
+struct _numeric_format_bits_impl<uint2b_format> : integral_constant<int, 2>
+{
+};
+#endif
+#if defined(__HAVE_INT4B_FORMAT_TYPE__)
+template <>
+struct _numeric_format_bits_impl<int4b_format> : integral_constant<int, 4>
+{
+};
+#endif
+#if defined(__HAVE_INT4B_FORMAT_TYPE__)
+template <>
+struct _numeric_format_bits_impl<uint4b_format> : integral_constant<int, 4>
+{
+};
+#endif
+template <class Format>
+struct _numeric_format_bits : _numeric_format_bits_impl<__type_traits_detail::remove_qualifiers_t<Format>>
+{
+};
+template <class Format>
+constant constexpr int _numeric_format_bits_v = _numeric_format_bits<Format>::value;
+
+template <class Format, size_t N, class Enable = void>
+struct _valid_packed_numeric_type : false_type
+{
+};
+template <class Format, size_t N>
+struct _valid_packed_numeric_type<Format, N, enable_if_t<is_numeric_format_v<Format>>> : bool_constant<(N > 0 && N <= 32 && N * _numeric_format_bits_v<Format> % 8 == 0)>
+{
+};
+#if defined(__HAVE_INT8B_FORMAT_TYPE__)
+template <class Format, size_t N>
+struct _valid_packed_numeric_type<Format, N, enable_if_t<is_same_v<Format, char> || is_same_v<Format, signed char> || is_same_v<Format, uchar>>> : bool_constant<(N > 0 && N <= 32)>
+{
+};
+#endif
+template <class Format, size_t N>
+constant constexpr bool _valid_packed_numeric_type_v = _valid_packed_numeric_type<Format, N>::value;
+
+template <class Format, size_t N, class Enable = void>
+struct _packed_numeric_storage_type;
+template <class Format, size_t N>
+struct _packed_numeric_storage_type<Format, N, enable_if_t<is_numeric_format_v<Format>>>
+{
+  using type = packed_vec<uchar, N * _numeric_format_bits_v<Format> / 8>;
+};
+#if defined(__HAVE_INT8B_FORMAT_TYPE__)
+template <class Format, size_t N>
+struct _packed_numeric_storage_type<Format, N, enable_if_t<is_same_v<Format, char> || is_same_v<Format, signed char> || is_same_v<Format, uchar>>>
+{
+  using type = packed_vec<Format, N>;
+};
+#endif
+template <class Format, size_t N>
+using _packed_numeric_storage_type_t = typename _packed_numeric_storage_type<Format, N>::type;
+
+#if defined(__HAVE_PACKED_NUMERIC_TYPE_PACK_UNPACK__)
+template <class T>
+constant constexpr bool _valid_arithmetic_type_v =
+    is_same_v<T, half> || is_same_v<T, bfloat> || is_same_v<T, float>;
+template <class Format, size_t N>
+constant constexpr bool _valid_packed_numeric_pack_unpack_v =
+    (is_same_v<Format, metal_fp4_e2m1_format> && (N == 8 || N == 16)) ||
+    (is_same_v<Format, metal_fp8_e4m3_format> && (N == 4 || N == 8)) ||
+    (is_same_v<Format, metal_fp8_e5m2_format> && (N == 4 || N == 8)) ||
+    (is_same_v<Format, int4b_format> && (N == 8 || N == 16)) ||
+    (is_same_v<Format, uint4b_format> && (N == 8 || N == 16)) ||
+    (is_same_v<Format, char> && (N == 4 || N == 8)) ||
+    (is_same_v<Format, signed char> && (N == 4 || N == 8)) ||
+    (is_same_v<Format, uchar> && (N == 4 || N == 8));
+#endif
+} // namespace __packed_numeric_detail
+
+template <class Format, size_t N>
+struct packed_numeric_type
+{
+  static_assert(__packed_numeric_detail::_valid_packed_numeric_type_v<Format, N>, "packed_numeric_type: invalid format 'Format' and element count 'N'");
+
+  using storage_type = __packed_numeric_detail::_packed_numeric_storage_type_t<Format, N>;
+
+  METAL_FUNC packed_numeric_type() thread = default;
+  METAL_FUNC packed_numeric_type(const thread packed_numeric_type &other) thread = default;
+  METAL_FUNC explicit packed_numeric_type(storage_type storage) thread : storage(storage)
+  {
+  }
+
+  METAL_FUNC thread packed_numeric_type &operator=(const thread packed_numeric_type &other) thread = default;
+
+  METAL_FUNC storage_type as_storage_type() const thread
+  {
+    return storage;
+  }
+
+#if defined(__HAVE_PACKED_NUMERIC_TYPE_PACK_UNPACK__)
+  template <size_t K>
+  METAL_FUNC enable_if_t<__packed_numeric_detail::_valid_packed_numeric_pack_unpack_v<Format, K>, packed_numeric_type<Format, K>> extract(ushort start_pos) const thread
+  {
+    return packed_numeric_type<Format, K>(__metal_extract(storage, start_pos, typename packed_numeric_type<Format, K>::storage_type(), Format()));
+  }
+#endif
+private:
+  storage_type storage;
+};
+
+#if defined(__HAVE_METAL_FP4_E2M1_FORMAT_TYPE__)
+template <size_t N>
+using packed_metal_fp4_e2m1 = packed_numeric_type<metal_fp4_e2m1_format, N>;
+#endif
+#if defined(__HAVE_METAL_FP8_E4M3_FORMAT_TYPE__)
+template <size_t N>
+using packed_metal_fp8_e4m3 = packed_numeric_type<metal_fp8_e4m3_format, N>;
+#endif
+#if defined(__HAVE_METAL_FP8_E5M2_FORMAT_TYPE__)
+template <size_t N>
+using packed_metal_fp8_e5m2 = packed_numeric_type<metal_fp8_e5m2_format, N>;
+#endif
+#if defined(__HAVE_METAL_FP8_UE8M0_FORMAT_TYPE__)
+template <size_t N>
+using packed_metal_fp8_ue8m0 = packed_numeric_type<metal_fp8_ue8m0_format, N>;
+#endif
+#if defined(__HAVE_INT2B_FORMAT_TYPE__)
+template <size_t N>
+using packed_int2b = packed_numeric_type<int2b_format, N>;
+#endif
+#if defined(__HAVE_INT2B_FORMAT_TYPE__)
+template <size_t N>
+using packed_uint2b = packed_numeric_type<uint2b_format, N>;
+#endif
+#if defined(__HAVE_INT4B_FORMAT_TYPE__)
+template <size_t N>
+using packed_int4b = packed_numeric_type<int4b_format, N>;
+#endif
+#if defined(__HAVE_INT4B_FORMAT_TYPE__)
+template <size_t N>
+using packed_uint4b = packed_numeric_type<uint4b_format, N>;
+#endif
+#if defined(__HAVE_INT8B_FORMAT_TYPE__)
+template <size_t N>
+using packed_int8b = packed_numeric_type<char, N>;
+template <size_t N>
+using packed_uint8b = packed_numeric_type<uchar, N>;
+#endif
+#endif
+#if defined(__HAVE_PACKED_NUMERIC_TYPE_PACK_UNPACK__)
+enum class saturation_mode : char
+{
+  none,
+  saturate,
+  symmetric_saturate,
+};
+
+namespace __packed_numeric_detail
+{
+template <class Format, saturation_mode Sm>
+constant constexpr bool _valid_saturation_mode_v =
+    ((is_same_v<Format, metal_fp4_e2m1_format> ||
+      is_same_v<Format, metal_fp8_e4m3_format> ||
+      is_same_v<Format, uint4b_format> ||
+      is_same_v<Format, uchar>) &&
+     Sm == saturation_mode::saturate) ||
+    (is_same_v<Format, metal_fp8_e5m2_format> && (Sm == saturation_mode::none || Sm == saturation_mode::saturate)) ||
+    ((is_same_v<Format, int4b_format> ||
+      is_same_v<Format, char> ||
+      is_same_v<Format, signed char>) &&
+     (Sm == saturation_mode::saturate || Sm == saturation_mode::symmetric_saturate));
+template <class Format, saturation_mode Sm, class T, size_t N>
+constant constexpr bool _valid_pack_v =
+    _valid_arithmetic_type_v<T> &&
+    _valid_packed_numeric_pack_unpack_v<Format, N> &&
+    _valid_saturation_mode_v<Format, Sm>;
+template <class T, class Format, size_t N>
+constant constexpr bool _valid_unpack_v =
+    _valid_arithmetic_type_v<T> && _valid_packed_numeric_pack_unpack_v<Format, N>;
+template <class Format, class Enable = void>
+struct _default_rounding_mode : integral_constant<rounding_mode, rounding_mode::toward_zero>
+{
+};
+template <class Format>
+struct _default_rounding_mode<Format, enable_if_t<is_same_v<Format, metal_fp4_e2m1_format> ||
+                                                  is_same_v<Format, metal_fp8_e4m3_format> ||
+                                                  is_same_v<Format, metal_fp8_e5m2_format>>> : integral_constant<rounding_mode, rounding_mode::to_nearest_even>
+{
+};
+template <class Format>
+constant constexpr rounding_mode _default_rounding_mode_v = _default_rounding_mode<Format>::value;
+template <class Format, class Enable = void>
+struct _default_saturation_mode : integral_constant<saturation_mode, saturation_mode::saturate>
+{
+};
+template <class Format>
+struct _default_saturation_mode<Format, enable_if_t<is_same_v<Format, metal_fp8_e5m2_format>>> : integral_constant<saturation_mode, saturation_mode::none>
+{
+};
+template <class Format>
+constant constexpr saturation_mode _default_saturation_mode_v = _default_saturation_mode<Format>::value;
+} // namespace __packed_numeric_detail
+
+template <class Format, rounding_mode Rm = __packed_numeric_detail::_default_rounding_mode_v<Format>, saturation_mode Sm = __packed_numeric_detail::_default_saturation_mode_v<Format>, class T, size_t N>
+METAL_FUNC enable_if_t<__packed_numeric_detail::_valid_pack_v<Format, Sm, T, N>, packed_numeric_type<Format, N>> pack(vec<T, N> v)
+{
+  return packed_numeric_type<Format, N>(__metal_pack(v, char(Rm), char(Sm), typename packed_numeric_type<Format, N>::storage_type(), Format()));
+}
+
+template <class T, class Format, size_t N>
+METAL_FUNC enable_if_t<__packed_numeric_detail::_valid_unpack_v<T, Format, N>, vec<T, N>> unpack(packed_numeric_type<Format, N> v)
+{
+  return __metal_unpack(v.as_storage_type(), vec<T, N>(), Format());
+}
+#endif
+} // namespace metal
+#pragma METAL internals : disable
+
+#endif
+
+#endif // __METAL_PACKED_NUMERIC

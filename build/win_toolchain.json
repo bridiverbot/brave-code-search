@@ -1,0 +1,11 @@
+{
+  "path": "/workspace/src/third_party/depot_tools/win_toolchain/vs_files/3dce9a2ec1",
+  "version": "2026",
+  "win_sdk": "/workspace/src/third_party/depot_tools/win_toolchain/vs_files/3dce9a2ec1/Windows Kits/10",
+  "wdk": "/workspace/src/third_party/depot_tools/win_toolchain/vs_files/3dce9a2ec1/wdk",
+  "runtime_dirs": [
+    "/workspace/src/third_party/depot_tools/win_toolchain/vs_files/3dce9a2ec1/sys64",
+    "/workspace/src/third_party/depot_tools/win_toolchain/vs_files/3dce9a2ec1/sys32",
+    "/workspace/src/third_party/depot_tools/win_toolchain/vs_files/3dce9a2ec1/sysarm64"
+  ]
+}

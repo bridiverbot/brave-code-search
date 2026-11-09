@@ -1,0 +1,55 @@
+{
+  "Identifier": "com.apple.ggdsw.toolchain.XcodeDefault",
+  "Platforms": [
+    {
+      "Name": "iOS",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    },
+    {
+      "Name": "iOSSimulator",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    },
+    {
+      "Name": "AppleTVOS",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    },
+    {
+      "Name": "AppleTVOSSimulator",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    },
+    {
+      "Name": "WatchOS",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    },
+    {
+      "Name": "WatchOSSimulator",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    },
+    {
+      "Name": "XROS",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    },
+    {
+      "Name": "XROSSimulator",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    },
+    {
+      "Name": "OSX",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    },
+    {
+      "Name": "MacCatalyst",
+      "MinVersion": "0.0.0",
+      "MaxVersion": "255.255.255"
+    }
+  ]
+}

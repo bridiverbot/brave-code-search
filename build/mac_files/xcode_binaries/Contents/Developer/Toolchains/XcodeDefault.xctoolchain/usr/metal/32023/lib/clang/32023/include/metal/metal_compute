@@ -1,0 +1,208 @@
+// -*- Metal -*-
+//===-- metal_compute -----------------------------------------------------===//
+// Copyright (c) 2014-2018 Apple Inc. All rights reserved
+//===----------------------------------------------------------------------===//
+
+#ifndef __METAL_COMPUTE
+#define __METAL_COMPUTE
+
+namespace metal
+{
+// Metal 1.1 s5.8: Compute Functions.
+
+enum class mem_flags
+{
+  mem_none = __METAL_MEMORY_FLAGS_NONE__,
+  mem_device = __METAL_MEMORY_FLAGS_DEVICE__,
+  mem_threadgroup = __METAL_MEMORY_FLAGS_THREADGROUP__,
+#if defined(__HAVE_IMAGEBLOCKS__)
+  mem_threadgroup_imageblock = __METAL_MEMORY_FLAGS_THREADGROUP_IMAGEBLOCK__,
+#endif
+#if defined(__HAVE_TEXTURE_READWRITE__)
+  mem_texture = __METAL_MEMORY_FLAGS_TEXTURE__,
+#endif
+#if defined(__HAVE_MESH__)
+  mem_object_data = __METAL_MEMORY_FLAGS_OBJECT_DATA__,
+#endif
+  mem_device_and_threadgroup METAL_DEPRECATED("use mem_device or mem_threadgroup instead") = mem_device | mem_threadgroup
+};
+
+#if defined(__HAVE_MEMFLAG_OPERATORS__)
+METAL_FUNC constexpr mem_flags operator|(mem_flags x, mem_flags y)
+{
+  return static_cast<mem_flags>(static_cast<int>(x) | static_cast<int>(y));
+}
+
+METAL_FUNC constexpr mem_flags operator&(mem_flags x, mem_flags y)
+{
+  return static_cast<mem_flags>(static_cast<int>(x) & static_cast<int>(y));
+}
+
+METAL_FUNC constexpr mem_flags operator^(mem_flags x, mem_flags y)
+{
+  return static_cast<mem_flags>(static_cast<int>(x) ^ static_cast<int>(y));
+}
+
+METAL_FUNC constexpr mem_flags operator~(mem_flags x)
+{
+  return static_cast<mem_flags>(~static_cast<int>(x));
+}
+#endif
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wtautological-compare"
+template <>
+struct _constarg_traits<mem_flags>
+{
+  constexpr static METAL_INTERNAL bool check(mem_flags flags)
+  {
+    return flags == flags;
+  }
+};
+#pragma clang diagnostic pop
+
+#if defined(__HAVE_BARRIER_MEMORY_ORDER__)
+METAL_FUNC void threadgroup_barrier(mem_flags flags, memory_order order = memory_order_seq_cst,
+                                    thread_scope scope = thread_scope_threadgroup) METAL_CONST_ARG(order) METAL_CONST_ARG(scope)
+{
+  __metal_wg_barrier(int(flags), int(order), int(scope));
+}
+METAL_FUNC void threadgroup_barrier(mem_flags flags, thread_scope scope) METAL_CONST_ARG(scope)
+{
+  __metal_wg_barrier(int(flags), __METAL_MEMORY_ORDER_SEQ_CST__, int(scope));
+}
+#elif defined(__HAVE_BARRIER_MEMORY_SCOPE__)
+METAL_FUNC void threadgroup_barrier(mem_flags flags, thread_scope scope = thread_scope_threadgroup) METAL_CONST_ARG(scope)
+{
+  __metal_wg_barrier(int(flags), __METAL_MEMORY_ORDER_SEQ_CST__, int(scope));
+}
+#else
+METAL_FUNC void threadgroup_barrier(mem_flags flags)
+{
+  __metal_wg_barrier(int(flags), __METAL_MEMORY_ORDER_SEQ_CST__, __METAL_MEMORY_SCOPE_THREADGROUP__);
+}
+#endif
+
+
+#if defined(__HAVE_BARRIER_MEMORY_ORDER__)
+METAL_FUNC void simdgroup_barrier(mem_flags flags, memory_order order = memory_order_seq_cst,
+                                  thread_scope scope = thread_scope_simdgroup) METAL_CONST_ARG(order) METAL_CONST_ARG(scope)
+{
+  __metal_simdgroup_barrier(int(flags), int(order), int(scope));
+}
+
+METAL_FUNC void simdgroup_barrier(mem_flags flags, thread_scope scope) METAL_CONST_ARG(scope)
+{
+  __metal_simdgroup_barrier(int(flags), __METAL_MEMORY_ORDER_SEQ_CST__, int(scope));
+}
+#elif defined(__HAVE_BARRIER_MEMORY_SCOPE__)
+METAL_FUNC void simdgroup_barrier(mem_flags flags, thread_scope scope = thread_scope_simdgroup) METAL_CONST_ARG(scope)
+{
+  __metal_simdgroup_barrier(int(flags), __METAL_MEMORY_ORDER_SEQ_CST__, int(scope));
+}
+#elif defined(__HAVE_SIMDGROUP_BARRIER__)
+METAL_FUNC void simdgroup_barrier(mem_flags flags)
+{
+  __metal_simdgroup_barrier(int(flags), __METAL_MEMORY_ORDER_SEQ_CST__, __METAL_MEMORY_SCOPE_THREADGROUP__);
+}
+#endif
+
+#if defined(__HAVE_YIELD_SIMDGROUP__)
+METAL_FUNC void yield_simdgroup(uint t)
+{
+  __metal_yield_simdgroup(t);
+}
+#endif
+
+#if defined(__HAVE_CRITICAL_SECTION__)
+#if defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+template <typename P, typename B>
+METAL_FUNC enable_if_t<is_class_v<remove_reference_t<P>> && is_same_v<decltype(declval<thread P>()()), bool>
+                       && is_class_v<remove_reference_t<B>> && is_same_v<decltype(declval<thread B>()()), void>
+                       >
+critical_section(thread P &&predicate, thread B &&body)
+{
+  using PT = remove_reference_t<P>;
+  using BT = remove_reference_t<B>;
+  auto wrap_predicate = [](thread PT *p) { return (*p)(); };
+  auto wrap_body = [](thread BT *b) { return (*b)(); };
+  __metal_critical_section((thread PT *)&predicate, (bool (*)(thread PT *))wrap_predicate, (thread BT *)&body, (void (*)(thread BT *))wrap_body);
+}
+#endif
+#if defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+template <typename P, typename B>
+METAL_FUNC enable_if_t<is_class_v<remove_reference_t<P>> && is_same_v<decltype(declval<thread P>()()), bool>
+                       && is_class_v<remove_reference_t<B>> && is_same_v<decltype(declval<thread B>()()), void>
+                       >
+critical_section(thread P &&predicate, thread B &body)
+{
+  using PT = remove_reference_t<P>;
+  using BT = remove_reference_t<B>;
+  auto wrap_predicate = [](thread PT *p) { return (*p)(); };
+  auto wrap_body = [](thread BT *b) { return (*b)(); };
+  __metal_critical_section((thread PT *)&predicate, (bool (*)(thread PT *))wrap_predicate, (thread BT *)&body, (void (*)(thread BT *))wrap_body);
+}
+#endif
+#if defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+template <typename P, typename B>
+METAL_FUNC enable_if_t<is_class_v<remove_reference_t<P>> && is_same_v<decltype(declval<thread P>()()), bool>
+                       && is_class_v<remove_reference_t<B>> && is_same_v<decltype(declval<thread B>()()), void>
+                       >
+critical_section(thread P &predicate, thread B &&body)
+{
+  using PT = remove_reference_t<P>;
+  using BT = remove_reference_t<B>;
+  auto wrap_predicate = [](thread PT *p) { return (*p)(); };
+  auto wrap_body = [](thread BT *b) { return (*b)(); };
+  __metal_critical_section((thread PT *)&predicate, (bool (*)(thread PT *))wrap_predicate, (thread BT *)&body, (void (*)(thread BT *))wrap_body);
+}
+#endif
+#if defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+template <typename P, typename B>
+METAL_FUNC enable_if_t<is_class_v<remove_reference_t<P>> && is_same_v<decltype(declval<thread P>()()), bool>
+                       && is_class_v<remove_reference_t<B>> && is_same_v<decltype(declval<thread B>()()), void>
+                       >
+critical_section(thread P &predicate, thread B &body)
+{
+  using PT = remove_reference_t<P>;
+  using BT = remove_reference_t<B>;
+  auto wrap_predicate = [](thread PT *p) { return (*p)(); };
+  auto wrap_body = [](thread BT *b) { return (*b)(); };
+  __metal_critical_section((thread PT *)&predicate, (bool (*)(thread PT *))wrap_predicate, (thread BT *)&body, (void (*)(thread BT *))wrap_body);
+}
+#endif
+#if !defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+template <typename P, typename B>
+METAL_FUNC enable_if_t<is_class_v<remove_reference_t<P>> && is_same_v<decltype(declval<thread P>()()), bool>
+                       && is_class_v<remove_reference_t<B>> && is_same_v<decltype(declval<thread B>()()), void>
+                       && is_same_v<remove_reference_t<P>, remove_addrspace_t<remove_reference_t<P>>>
+                       && is_same_v<remove_reference_t<B>, remove_addrspace_t<remove_reference_t<B>>>
+                       >
+critical_section(thread P &&predicate, thread B &&body)
+{
+  using PT = remove_reference_t<P>;
+  using BT = remove_reference_t<B>;
+  auto wrap_predicate = [](thread PT *p) { return (*p)(); };
+  auto wrap_body = [](thread BT *b) { return (*b)(); };
+  __metal_critical_section((thread PT *)&predicate, (bool (*)(thread PT *))wrap_predicate, (thread BT *)&body, (void (*)(thread BT *))wrap_body);
+}
+#endif
+#endif
+
+#if defined(__HAVE_DRAW_INDIRECT__)
+struct MTLDispatchThreadgroupsIndirectArguments
+{
+  uint threadgroupsPerGrid[3];
+};
+#endif
+
+#if defined(__HAVE_COMPUTE_IMPROVED_INDIRECT__)
+struct MTLDispatchThreadsIndirectArguments
+{
+  uint threadsPerGrid[3];
+  uint threadsPerThreadgroup[3];
+};
+#endif
+} // namespace metal
+
+#endif // __METAL_COMPUTE

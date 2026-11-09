@@ -1,0 +1,31 @@
+// -*- Metal -*-
+//===-- metal_generic -----------------------------------------------------===//
+// Copyright (c) 2026 Apple Inc. All rights reserved
+//===----------------------------------------------------------------------===//
+#ifndef __METAL_GENERIC
+#define __METAL_GENERIC
+
+#if defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+#pragma METAL internals : enable
+namespace metal {
+namespace __generic_detail {
+using __is_addrspace_fn_arg_t = coherent(device) void;
+} // namespace __generic_detail
+
+METAL_FUNC bool is_thread_addrspace(const volatile __generic_detail::__is_addrspace_fn_arg_t *ptr)
+{
+  return __metal_is_thread_pointer(const_cast<void *>(ptr));
+}
+METAL_FUNC bool is_threadgroup_addrspace(const volatile __generic_detail::__is_addrspace_fn_arg_t *ptr)
+{
+  return __metal_is_threadgroup_pointer(const_cast<void *>(ptr));
+}
+METAL_FUNC bool is_device_addrspace(const volatile __generic_detail::__is_addrspace_fn_arg_t *ptr)
+{
+  return __metal_is_device_pointer(const_cast<void *>(ptr));
+}
+} // namespace metal
+#pragma METAL internals : disable
+#endif
+
+#endif // __METAL_GENERIC

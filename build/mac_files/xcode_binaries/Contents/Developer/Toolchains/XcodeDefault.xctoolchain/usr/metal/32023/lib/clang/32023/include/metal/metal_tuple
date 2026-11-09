@@ -1,0 +1,169 @@
+// -*- Metal -*-
+//===-- metal_tuple -------------------------------------------------------===//
+// Copyright (c) 2026 Apple Inc. All rights reserved
+//===----------------------------------------------------------------------===//
+
+#ifndef __METAL_TUPLE
+#define __METAL_TUPLE
+
+#if defined(__HAVE_TUPLE_HELPER_CLASSES__)
+
+#pragma METAL internals : enable
+
+namespace metal
+{
+
+namespace __tuple_details
+{
+template <class T, class...>
+using __enable_if_tuple_impl = T;
+template <class T>
+constexpr constant bool __is_const_volatile_v = is_const_v<T> || is_volatile_v<T>;
+template <class T>
+constexpr constant bool __is_const_volatile_coherent_v = is_const_v<T> || is_volatile_v<T> || is_device_coherent_v<T>
+    ;
+} // namespace __tuple_details
+
+template <class T>
+struct tuple_size;
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<const T, enable_if_t<!is_volatile_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<volatile T, enable_if_t<!is_const_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<const volatile T, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<coherent(device) T, enable_if_t<!__tuple_details::__is_const_volatile_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+#if defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<thread T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+#endif
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<device T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<constant T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<threadgroup T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+#if defined(__HAVE_IMAGEBLOCKS__)
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<threadgroup_imageblock T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+#endif
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<ray_data T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+template <class T>
+struct tuple_size<
+    __tuple_details::__enable_if_tuple_impl<object_data T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>, decltype(tuple_size<T>::value)>> : integral_constant<size_t, tuple_size<T>::value>
+{
+};
+template <class T>
+constant constexpr size_t tuple_size_v = tuple_size<T>::value;
+
+template <size_t I, class T>
+struct tuple_element;
+template <size_t I, class T>
+struct tuple_element<I, const T>
+{
+  using type = const typename tuple_element<I, T>::type;
+};
+template <size_t I, class T>
+struct tuple_element<I, volatile T> : tuple_element<I, T>
+{
+  using type = volatile typename tuple_element<I, T>::type;
+};
+template <size_t I, class T>
+struct tuple_element<I, const volatile T> : tuple_element<I, T>
+{
+  using type = const volatile typename tuple_element<I, T>::type;
+};
+template <size_t I, class T>
+struct tuple_element<I,
+                     __tuple_details::__enable_if_tuple_impl<coherent(device) T, enable_if_t<!__tuple_details::__is_const_volatile_v<T>>>>
+{
+  using type = coherent(device) typename tuple_element<I, T>::type;
+};
+#if defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+template <size_t I, class T>
+struct tuple_element<I,
+                     __tuple_details::__enable_if_tuple_impl<thread T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>>>
+{
+  using type = thread typename tuple_element<I, T>::type;
+};
+#endif
+template <size_t I, class T>
+struct tuple_element<I,
+                     __tuple_details::__enable_if_tuple_impl<device T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>>>
+{
+  using type = device typename tuple_element<I, T>::type;
+};
+template <size_t I, class T>
+struct tuple_element<I,
+                     __tuple_details::__enable_if_tuple_impl<constant T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>>>
+{
+  using type = constant typename tuple_element<I, T>::type;
+};
+template <size_t I, class T>
+struct tuple_element<I,
+                     __tuple_details::__enable_if_tuple_impl<threadgroup T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>>>
+{
+  using type = threadgroup typename tuple_element<I, T>::type;
+};
+#if defined(__HAVE_IMAGEBLOCKS__)
+template <size_t I, class T>
+struct tuple_element<I,
+                     __tuple_details::__enable_if_tuple_impl<threadgroup_imageblock T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>>>
+{
+  using type = threadgroup_imageblock typename tuple_element<I, T>::type;
+};
+#endif
+template <size_t I, class T>
+struct tuple_element<I,
+                     __tuple_details::__enable_if_tuple_impl<ray_data T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>>>
+{
+  using type = ray_data typename tuple_element<I, T>::type;
+};
+template <size_t I, class T>
+struct tuple_element<I,
+                     __tuple_details::__enable_if_tuple_impl<object_data T, enable_if_t<!__tuple_details::__is_const_volatile_coherent_v<T>>>>
+{
+  using type = object_data typename tuple_element<I, T>::type;
+};
+template <size_t I, class T>
+using tuple_element_t = typename tuple_element<I, T>::type;
+
+} // namespace metal
+
+#endif
+
+#pragma METAL internals : disable
+
+#endif // __METAL_TUPLE

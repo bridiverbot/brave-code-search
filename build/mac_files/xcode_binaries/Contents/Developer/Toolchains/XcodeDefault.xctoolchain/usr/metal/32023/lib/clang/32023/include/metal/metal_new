@@ -1,0 +1,106 @@
+// -*- Metal -*-
+//===-- metal_new ---------------------------------------------------------===//
+// Copyright (c) 2014-2025 Apple Inc. All rights reserved
+//===----------------------------------------------------------------------===//
+
+#ifndef __METAL_NEW
+#define __METAL_NEW
+
+#if defined(__HAVE_PLACEMENT_MEMORY_OPERATORS__)
+inline thread void *operator new(size_t size, thread void *ptr)
+{
+  return ptr;
+}
+inline thread void *operator new[](size_t size, thread void *ptr)
+{
+  return ptr;
+}
+inline device void *operator new(size_t size, device void *ptr)
+{
+  return ptr;
+}
+inline device void *operator new[](size_t size, device void *ptr)
+{
+  return ptr;
+}
+#if defined(__HAVE_COHERENT__)
+inline device coherent(device) void *operator new(size_t size, device coherent(device) void *ptr)
+{
+  return ptr;
+}
+inline device coherent(device) void *operator new[](size_t size, device coherent(device) void *ptr)
+{
+  return ptr;
+}
+#endif
+inline threadgroup void *operator new(size_t size, threadgroup void *ptr)
+{
+  return ptr;
+}
+inline threadgroup void *operator new[](size_t size, threadgroup void *ptr)
+{
+  return ptr;
+}
+#if defined(__HAVE_IMAGEBLOCKS__)
+inline threadgroup_imageblock void *operator new(size_t size, threadgroup_imageblock void *ptr)
+{
+  return ptr;
+}
+inline threadgroup_imageblock void *operator new[](size_t size, threadgroup_imageblock void *ptr)
+{
+  return ptr;
+}
+#endif
+#if defined(__HAVE_RAYTRACING__)
+inline ray_data void *operator new(size_t size, ray_data void *ptr)
+{
+  return ptr;
+}
+inline ray_data void *operator new[](size_t size, ray_data void *ptr)
+{
+  return ptr;
+}
+#endif
+#if defined(__HAVE_MESH__)
+inline object_data void *operator new(size_t size, object_data void *ptr)
+{
+  return ptr;
+}
+inline object_data void *operator new[](size_t size, object_data void *ptr)
+{
+  return ptr;
+}
+#endif
+#if defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+inline void *operator new(size_t size, void *ptr)
+{
+  return ptr;
+}
+inline void *operator new[](size_t size, void *ptr)
+{
+  return ptr;
+}
+#endif
+#if defined(__HAVE_GENERIC_ADDRESS_SPACE__)
+#if defined(__HAVE_COHERENT__)
+inline coherent(device) void *operator new(size_t size, coherent(device) void *ptr)
+{
+  return ptr;
+}
+inline coherent(device) void *operator new[](size_t size, coherent(device) void *ptr)
+{
+  return ptr;
+}
+#endif
+#endif
+inline constant void *operator new(size_t size, constant void *ptr)
+{
+  return ptr;
+}
+inline constant void *operator new[](size_t size, constant void *ptr)
+{
+  return ptr;
+}
+#endif
+
+#endif // __METAL_NEW
