@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "outDir": ".",
+    "rootDir": ".",
+    "skipLibCheck": true
+  },
+  "files": [
+    "lib/nostats-subset.d.ts",
+    "package/lib/index.d.ts",
+    "package/lib/subsets/nostats.d.ts"
+  ],
+  "references": [
+
+  ]
+}

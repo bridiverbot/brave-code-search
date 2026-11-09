@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+      <include name="IDR_LIT_V3_0_CODE_CACHE_LIT_ROLLUP_JS_CODE_CACHE" file="${root_gen_dir}/third_party/lit/v3_0/code_cache/lit.rollup.js.code_cache" resource_path="lit/v3_0/lit.rollup.js.code_cache" use_base_dir="false" type="BINDATA" />
+</grit-part>

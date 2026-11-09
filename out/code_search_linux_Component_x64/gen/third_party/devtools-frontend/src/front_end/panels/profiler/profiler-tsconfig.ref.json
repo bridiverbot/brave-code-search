@@ -1,0 +1,114 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/BottomUpProfileDataGrid.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/HeapDetachedElementsView.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/HeapProfileView.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/HeapProfilerPanel.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/HeapSnapshotDataGrids.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/HeapSnapshotGridNodes.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/HeapSnapshotView.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/HeapTimelineOverview.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/IsolateSelector.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/ModuleUIStrings.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/ProfileDataGrid.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/ProfileFlameChartDataProvider.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/ProfileHeader.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/ProfileLauncherView.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/ProfileSidebarTreeElement.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/ProfileTypeRegistry.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/ProfilesPanel.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/TopDownProfileDataGrid.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/profiler/WritableProfileHeader.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../core/common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/host/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/i18n/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../generated/generated-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/bindings/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/cpu_profile/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/heap_snapshot/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/network_time_calculator/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/workspace/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../elements/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/buttons/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/icon_button/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/kit/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/components/data_grid/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/components/object_ui/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/components/perf_ui/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/components/settings_ui/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/components/utils/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/theme_support/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/lit/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/visual_logging/bundle-tsconfig.ref.json"
+    }
+  ]
+}

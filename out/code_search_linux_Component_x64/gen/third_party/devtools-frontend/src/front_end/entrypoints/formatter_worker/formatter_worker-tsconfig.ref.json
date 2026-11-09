@@ -1,0 +1,54 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/AcornTokenizer.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/CSSFormatter.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/CSSRuleParser.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/ESTreeWalker.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/FormattedContentBuilder.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/FormatterWorker.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/HTMLFormatter.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/IdentityFormatter.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/JSONFormatter.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/JavaScriptFormatter.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/ScopeParser.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/entrypoints/formatter_worker/Substitute.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/estree/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../core/platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/root/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/text_utils/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../third_party/acorn/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../third_party/codemirror/codemirror-legacy-types-tsconfig.ref.json"
+    },
+    {
+      "path": "../formatter_actions/bundle-tsconfig.ref.json"
+    }
+  ]
+}
