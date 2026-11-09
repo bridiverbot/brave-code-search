@@ -1,0 +1,3 @@
+org.chromium.brave.browser.util.BraveDomainsUtils,../../brave/brave_domains/android/java/src/org/chromium/brave/browser/util/BraveDomainsUtils.java
+org.chromium.brave.browser.util.BraveDomainsUtilsJni,gen/brave/brave_domains/android/jni_headers.srcjar/org/chromium/brave/browser/util/BraveDomainsUtilsJni.java
+org.chromium.brave.browser.util.ServicesEnvironment,gen/brave/brave_domains/android/services_environment_java_enum.srcjar/org/chromium/brave/browser/util/ServicesEnvironment.java

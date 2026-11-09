@@ -1,0 +1,2 @@
+org.chromium.base.profiler.TestSupport,../../base/android/javatests/src/org/chromium/base/profiler/TestSupport.java
+org.chromium.base.profiler.TestSupportJni,gen/base/base_profiler_test_support_jni.srcjar/org/chromium/base/profiler/TestSupportJni.java

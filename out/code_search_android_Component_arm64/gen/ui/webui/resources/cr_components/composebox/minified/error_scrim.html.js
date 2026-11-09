@@ -1,0 +1,15 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{html}from"//resources/lit/v3_0/lit.rollup.js";export function getHtml(){return html`<!--_html_template_start_-->
+  ${this.errorMessage?html`
+    <div id="errorScrim">
+      <p id="errorMessage">${this.errorMessage}</p>
+      <cr-button id="dismissErrorButton"
+          @click="${this.onDismissErrorButtonClick_}">
+        <cr-icon icon="cr:close" slot="prefix-icon"></cr-icon>
+        <div>${this.i18n("dismissButton")}</div>
+      </cr-button>
+    </div>
+  `:""}
+<!--_html_template_end_-->`}

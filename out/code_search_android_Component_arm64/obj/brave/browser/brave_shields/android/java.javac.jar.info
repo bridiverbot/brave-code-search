@@ -1,0 +1,4 @@
+org.chromium.chrome.browser.brave_shields.BraveFirstPartyStorageCleanerUtils,../../brave/browser/brave_shields/android/java/src/org/chromium/chrome/browser/brave_shields/BraveFirstPartyStorageCleanerUtils.java
+org.chromium.chrome.browser.brave_shields.BraveFirstPartyStorageCleanerUtilsJni,gen/brave/browser/brave_shields/android/jni_headers.srcjar/org/chromium/chrome/browser/brave_shields/BraveFirstPartyStorageCleanerUtilsJni.java
+org.chromium.chrome.browser.brave_shields.FirstPartyStorageCleanerAnimationFragment,../../brave/browser/brave_shields/android/java/src/org/chromium/chrome/browser/brave_shields/FirstPartyStorageCleanerAnimationFragment.java
+org.chromium.chrome.browser.brave_shields.FirstPartyStorageCleanerInterface,../../brave/browser/brave_shields/android/java/src/org/chromium/chrome/browser/brave_shields/FirstPartyStorageCleanerInterface.java

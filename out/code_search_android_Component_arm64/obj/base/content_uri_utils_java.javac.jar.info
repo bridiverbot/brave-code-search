@@ -1,0 +1,3 @@
+org.chromium.base.ContentUriOwner,gen/base/content_uri_owner_enum_srcjar.srcjar/org/chromium/base/ContentUriOwner.java
+org.chromium.base.ContentUriUtils,../../base/android/java/src/org/chromium/base/ContentUriUtils.java
+org.chromium.base.ContentUriUtilsJni,gen/base/content_uri_utils_jni.srcjar/org/chromium/base/ContentUriUtilsJni.java

@@ -1,0 +1,11 @@
+org.chromium.base.metrics.CachingUmaRecorder,../../base/android/java/src/org/chromium/base/metrics/CachingUmaRecorder.java
+org.chromium.base.metrics.HistogramBucket,../../base/android/java/src/org/chromium/base/metrics/HistogramBucket.java
+org.chromium.base.metrics.JSONVerbosityLevel,gen/base/metrics_enum_srcjar.srcjar/org/chromium/base/metrics/JSONVerbosityLevel.java
+org.chromium.base.metrics.NativeUmaRecorder,../../base/android/java/src/org/chromium/base/metrics/NativeUmaRecorder.java
+org.chromium.base.metrics.NoopUmaRecorder,../../base/android/java/src/org/chromium/base/metrics/NoopUmaRecorder.java
+org.chromium.base.metrics.RecordHistogram,../../base/android/java/src/org/chromium/base/metrics/RecordHistogram.java
+org.chromium.base.metrics.RecordUserAction,../../base/android/java/src/org/chromium/base/metrics/RecordUserAction.java
+org.chromium.base.metrics.StatisticsRecorderAndroid,../../base/android/java/src/org/chromium/base/metrics/StatisticsRecorderAndroid.java
+org.chromium.base.metrics.TimingMetric,../../base/android/java/src/org/chromium/base/metrics/TimingMetric.java
+org.chromium.base.metrics.UmaRecorder,../../base/android/java/src/org/chromium/base/metrics/UmaRecorder.java
+org.chromium.base.metrics.UmaRecorderHolder,../../base/android/java/src/org/chromium/base/metrics/UmaRecorderHolder.java

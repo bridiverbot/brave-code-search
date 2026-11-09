@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.ui.messages.snackbar.BraveSnackbarManagerNewTabTakeoverTest,../../brave/android/junit/src/org/chromium/chrome/browser/ui/messages/snackbar/BraveSnackbarManagerNewTabTakeoverTest.java
+org.chromium.chrome.browser.ui.messages.snackbar.BraveSnackbarViewTest,../../brave/android/junit/src/org/chromium/chrome/browser/ui/messages/snackbar/BraveSnackbarViewTest.java

@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.hub.BraveHubManagerImplUnitTest,../../brave/android/junit/src/org/chromium/chrome/browser/hub/BraveHubManagerImplUnitTest.java
+org.chromium.chrome.browser.hub.BraveHubToolbarViewUnitTest,../../brave/android/junit/src/org/chromium/chrome/browser/hub/BraveHubToolbarViewUnitTest.java

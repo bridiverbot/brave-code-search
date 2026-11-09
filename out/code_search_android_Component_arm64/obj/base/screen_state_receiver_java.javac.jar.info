@@ -1,0 +1,2 @@
+org.chromium.base.ScreenStateReceiver,../../base/android/java/src/org/chromium/base/ScreenStateReceiver.java
+org.chromium.base.ScreenStateReceiverJni,gen/base/screen_state_receiver_jni.srcjar/org/chromium/base/ScreenStateReceiverJni.java

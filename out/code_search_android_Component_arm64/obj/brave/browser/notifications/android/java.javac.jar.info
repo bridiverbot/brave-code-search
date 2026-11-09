@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.notifications.BraveNotificationBuilder,../../brave/browser/notifications/android/java/src/org/chromium/chrome/browser/notifications/BraveNotificationBuilder.java
+org.chromium.chrome.browser.notifications.BraveNotificationManagerProxyImpl,../../brave/browser/notifications/android/java/src/org/chromium/chrome/browser/notifications/BraveNotificationManagerProxyImpl.java

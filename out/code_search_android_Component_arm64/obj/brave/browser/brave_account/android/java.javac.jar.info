@@ -1,0 +1,2 @@
+org.chromium.chrome.browser.brave_account.BraveAccountDialogMode,../../brave/browser/brave_account/android/java/src/org/chromium/chrome/browser/brave_account/BraveAccountDialogMode.java
+org.chromium.chrome.browser.brave_account.BraveAccountDialogModeJni,gen/brave/browser/brave_account/android/jni_headers.srcjar/org/chromium/chrome/browser/brave_account/BraveAccountDialogModeJni.java

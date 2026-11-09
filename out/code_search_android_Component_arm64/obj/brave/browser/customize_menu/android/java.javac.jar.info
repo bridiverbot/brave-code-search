@@ -1,0 +1,3 @@
+org.chromium.brave.browser.customize_menu.CustomizeBraveMenu,../../brave/browser/customize_menu/android/java/src/org/chromium/brave/browser/customize_menu/CustomizeBraveMenu.java
+org.chromium.brave.browser.customize_menu.MenuItemData,../../brave/browser/customize_menu/android/java/src/org/chromium/brave/browser/customize_menu/MenuItemData.java
+org.chromium.brave.browser.customize_menu.settings.BraveCustomizeMenuPreferenceFragment,../../brave/browser/customize_menu/android/java/src/org/chromium/brave/browser/customize_menu/settings/BraveCustomizeMenuPreferenceFragment.java

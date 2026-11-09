@@ -1,0 +1,13 @@
+org.chromium.base.FeatureList,../../base/android/java/src/org/chromium/base/FeatureList.java
+org.chromium.base.FeatureListJni,gen/base/features_jni.srcjar/org/chromium/base/FeatureListJni.java
+org.chromium.base.FeatureMap,../../base/android/java/src/org/chromium/base/FeatureMap.java
+org.chromium.base.FeatureMapJni,gen/base/features_jni.srcjar/org/chromium/base/FeatureMapJni.java
+org.chromium.base.FeatureOverrides,../../base/android/java/src/org/chromium/base/FeatureOverrides.java
+org.chromium.base.FeatureParam,../../base/android/java/src/org/chromium/base/FeatureParam.java
+org.chromium.base.Features,../../base/android/java/src/org/chromium/base/Features.java
+org.chromium.base.FeaturesJni,gen/base/features_jni.srcjar/org/chromium/base/FeaturesJni.java
+org.chromium.base.Flag,../../base/android/java/src/org/chromium/base/Flag.java
+org.chromium.base.MutableBooleanParamWithSafeDefault,../../base/android/java/src/org/chromium/base/MutableBooleanParamWithSafeDefault.java
+org.chromium.base.MutableFlagWithSafeDefault,../../base/android/java/src/org/chromium/base/MutableFlagWithSafeDefault.java
+org.chromium.base.MutableIntParamWithSafeDefault,../../base/android/java/src/org/chromium/base/MutableIntParamWithSafeDefault.java
+org.chromium.base.MutableParamWithSafeDefault,../../base/android/java/src/org/chromium/base/MutableParamWithSafeDefault.java

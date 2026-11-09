@@ -1,0 +1,5 @@
+org.chromium.chrome.browser.app.domain.DappsModelTest,../../brave/android/junit/src/org/chromium/chrome/browser/app/domain/DappsModelTest.java
+org.chromium.chrome.browser.crypto_wallet.ApproveTxBottomSheetDialogFragmentTest,../../brave/android/junit/src/org/chromium/chrome/browser/crypto_wallet/ApproveTxBottomSheetDialogFragmentTest.java
+org.chromium.chrome.browser.crypto_wallet.TwoLineItemBottomSheetFragmentTest,../../brave/android/junit/src/org/chromium/chrome/browser/crypto_wallet/TwoLineItemBottomSheetFragmentTest.java
+org.chromium.chrome.browser.crypto_wallet.WalletBottomSheetDialogFragmentTest,../../brave/android/junit/src/org/chromium/chrome/browser/crypto_wallet/WalletBottomSheetDialogFragmentTest.java
+org.chromium.chrome.browser.crypto_wallet.util.TransactionUtilsTest,../../brave/android/junit/src/org/chromium/chrome/browser/crypto_wallet/util/TransactionUtilsTest.java

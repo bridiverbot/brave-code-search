@@ -1,0 +1,3 @@
+org.chromium.base.ActivityLifecycleCallbacksAdapter,../../base/android/java/src/org/chromium/base/ActivityLifecycleCallbacksAdapter.java
+org.chromium.base.ActivityState,../../base/android/java/src/org/chromium/base/ActivityState.java
+org.chromium.base.ApplicationState,gen/base/application_status_enum_srcjar.srcjar/org/chromium/base/ApplicationState.java
