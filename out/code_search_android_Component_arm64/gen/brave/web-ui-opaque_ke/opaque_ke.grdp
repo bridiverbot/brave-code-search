@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit-part>
+  <include name="IDR_OPAQUE_KE__BRAVE_COMPONENTS_BRAVE_ACCOUNT_RESOURCES_OPAQUE_KE_BUNDLER_PKG_INDEX_BG_WASM_MODULE_WASM" file="${root_gen_dir}/brave/web-ui-opaque_ke/_brave_components_brave_account_resources_opaque_ke_bundler_pkg_index_bg_wasm.module.wasm" resource_path="brave/_brave_components_brave_account_resources_opaque_ke_bundler_pkg_index_bg_wasm.module.wasm" use_base_dir="false" type="BINDATA" />
+  <include name="IDR_OPAQUE_KE_OPAQUE_KE_BUNDLE_JS" file="${root_gen_dir}/brave/web-ui-opaque_ke/opaque_ke.bundle.js" resource_path="brave/opaque_ke.bundle.js" use_base_dir="false" type="BINDATA" />
+</grit-part>

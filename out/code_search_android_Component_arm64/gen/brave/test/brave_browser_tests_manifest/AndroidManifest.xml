@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Copyright 2021 The Brave Authors. All rights reserved.
+     Use of this source code is governed by a BSD-style license that can be
+     found in the LICENSE file.
+ -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.chromium.android_browsertests_apk">
+
+    <uses-feature android:glEsVersion="0x00020000" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+
+    <application android:name="org.chromium.android_browsertests_apk.ChromeBrowserTestsApplication"
+            android:label="ChromeBrowserTests"
+            android:requestLegacyExternalStorage="true">
+        <activity android:name="org.chromium.android_browsertests_apk.ChromeBrowserTestsActivity"
+                  android:launchMode="singleTask"
+                  android:theme="@style/Theme.Chromium.TabbedMode"
+                  android:configChanges="orientation|keyboardHidden|keyboard|screenSize"
+                  android:hardwareAccelerated="true"
+                  android:process=":test_process"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name="org.chromium.chrome.browser.media.MediaLauncherActivity"
+                  android:theme="@android:style/Theme.NoDisplay"
+                  android:excludeFromRecents="true"
+                  android:exported="true"
+                  android:enabled="false"><!-- This will be selectively enabled at runtime. -->
+          <intent-filter tools:ignore="AppLinkUrlError">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <!-- TODO(https://crbug.com/800875): Limit these to
+                 supported MIME types. -->
+            <data android:mimeType="image/*" />
+            <data android:mimeType="video/*" />
+            <data android:scheme="file" />
+            <data android:scheme="content" />
+          </intent-filter>
+        </activity>
+        <activity-alias android:name="org.chromium.chrome.browser.media.AudioLauncherActivity"
+                        android:targetActivity="org.chromium.chrome.browser.media.MediaLauncherActivity"
+                        android:theme="@android:style/Theme.NoDisplay"
+                        android:excludeFromRecents="true"
+                        android:exported="true"
+                        android:enabled="false"><!-- This will be selectively enabled at runtime. -->
+          <intent-filter tools:ignore="AppLinkUrlError">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <!-- TODO(https://crbug.com/800875): Limit these to supported MIME types. -->
+            <data android:mimeType="audio/*" />
+            <data android:scheme="file" />
+            <data android:scheme="content" />
+          </intent-filter>
+        </activity-alias>
+
+        <activity android:name="org.chromium.chrome.browser.incognito.IncognitoTabLauncher"
+                  android:theme="@android:style/Theme.NoDisplay"
+                  android:taskAffinity=""
+                  android:enabled="false"
+                  android:excludeFromRecents="true"
+                  android:exported="true">
+          <intent-filter>
+            <action android:name="org.chromium.chrome.browser.incognito.OPEN_PRIVATE_TAB" />
+            <category android:name="android.intent.category.DEFAULT" />
+          </intent-filter>
+        </activity>
+
+        <receiver android:name="org.chromium.chrome.browser.quickactionsearchwidget.QuickActionSearchWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="org.chromium.chrome.browser.quickactionsearchwidget.QuickActionSearchWidgetProvider$QuickActionSearchWidgetProviderSearch"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="org.chromium.chrome.browser.quickactionsearchwidget.QuickActionSearchWidgetProvider$QuickActionSearchWidgetProviderSmall"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="org.chromium.chrome.browser.quickactionsearchwidget.QuickActionSearchWidgetProvider$QuickActionSearchWidgetProviderMedium"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="org.chromium.chrome.browser.quickactionsearchwidget.QuickActionSearchWidgetProvider$QuickActionSearchWidgetProviderDino"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="org.chromium.components.background_task_scheduler.internal.BackgroundTaskJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            tools:node="remove"/>
+
+        <service android:name="org.chromium.chrome.browser.crash.ChromeMinidumpUploadJobService"
+                 android:permission="android.permission.BIND_JOB_SERVICE"
+                 android:exported="false"/>
+
+        <!-- The following service entries exist in order to allow us
+             to start more than one sandboxed process. -->
+
+        <!-- NOTE: If you change the values of "android:process" for any of the below services,
+             you also need to update kHelperProcessExecutableName in chrome_constants.cc. -->
+        <meta-data android:name="org.chromium.content.browser.NUM_SANDBOXED_SERVICES"
+                   android:value="40"/>
+
+        <service android:name="org.chromium.content.app.SandboxedProcessService0"
+                 android:process=":sandboxed_process0"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService1"
+                 android:process=":sandboxed_process1"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService2"
+                 android:process=":sandboxed_process2"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService3"
+                 android:process=":sandboxed_process3"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService4"
+                 android:process=":sandboxed_process4"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService5"
+                 android:process=":sandboxed_process5"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService6"
+                 android:process=":sandboxed_process6"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService7"
+                 android:process=":sandboxed_process7"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService8"
+                 android:process=":sandboxed_process8"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService9"
+                 android:process=":sandboxed_process9"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService10"
+                 android:process=":sandboxed_process10"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService11"
+                 android:process=":sandboxed_process11"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService12"
+                 android:process=":sandboxed_process12"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService13"
+                 android:process=":sandboxed_process13"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService14"
+                 android:process=":sandboxed_process14"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService15"
+                 android:process=":sandboxed_process15"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService16"
+                 android:process=":sandboxed_process16"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService17"
+                 android:process=":sandboxed_process17"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService18"
+                 android:process=":sandboxed_process18"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService19"
+                 android:process=":sandboxed_process19"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService20"
+                 android:process=":sandboxed_process20"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService21"
+                 android:process=":sandboxed_process21"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService22"
+                 android:process=":sandboxed_process22"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService23"
+                 android:process=":sandboxed_process23"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService24"
+                 android:process=":sandboxed_process24"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService25"
+                 android:process=":sandboxed_process25"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService26"
+                 android:process=":sandboxed_process26"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService27"
+                 android:process=":sandboxed_process27"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService28"
+                 android:process=":sandboxed_process28"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService29"
+                 android:process=":sandboxed_process29"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService30"
+                 android:process=":sandboxed_process30"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService31"
+                 android:process=":sandboxed_process31"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService32"
+                 android:process=":sandboxed_process32"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService33"
+                 android:process=":sandboxed_process33"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService34"
+                 android:process=":sandboxed_process34"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService35"
+                 android:process=":sandboxed_process35"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService36"
+                 android:process=":sandboxed_process36"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService37"
+                 android:process=":sandboxed_process37"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService38"
+                 android:process=":sandboxed_process38"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.SandboxedProcessService39"
+                 android:process=":sandboxed_process39"
+                 android:isolatedProcess="true"
+                 android:exported="false" />
+
+        <meta-data android:name="org.chromium.content.browser.NUM_PRIVILEGED_SERVICES"
+                   android:value="5"/>
+
+        <service android:name="org.chromium.content.app.PrivilegedProcessService0"
+                 android:process=":privileged_process0"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.PrivilegedProcessService1"
+                 android:process=":privileged_process1"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.PrivilegedProcessService2"
+                 android:process=":privileged_process2"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.PrivilegedProcessService3"
+                 android:process=":privileged_process3"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.content.app.PrivilegedProcessService4"
+                 android:process=":privileged_process4"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+
+        <!-- Disables at startup init of Emoji2. See http://crbug.com/1205141 -->
+        <provider
+            android:authorities="org.chromium.android_browsertests_apk.androidx-startup"
+            android:name="androidx.startup.InitializationProvider"
+            android:exported="false"
+            tools:node="remove" />
+<receiver android:name="org.chromium.chrome.browser.notifications.retention.RetentionNotificationPublisher"
+    android:exported="false">
+</receiver>
+
+<receiver android:name="org.chromium.chrome.browser.vpn.timer.TimerVpnActionReceiver"
+    android:exported="false">
+</receiver>
+
+<activity
+    android:name="org.chromium.chrome.browser.customtabs.BraveAccountCustomTabActivity"
+    android:configChanges="orientation|keyboardHidden|keyboard|screenSize|mcc|mnc|screenLayout|smallestScreenSize|uiMode|navigation"
+    android:theme="@style/BraveAccountTheme"
+    android:exported="false"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.customtabs.FullScreenCustomTabActivity"
+    android:configChanges="orientation|keyboardHidden|keyboard|screenSize|mcc|mnc|screenLayout|smallestScreenSize|uiMode|navigation"
+    android:theme="@style/BottomSheetActivityTheme"
+    android:exported="false"/>
+
+<!-- Onboarding notification -->
+<receiver android:name="org.chromium.chrome.browser.notifications.BraveOnboardingNotification"
+    android:exported="false">
+</receiver>
+<receiver android:name="org.chromium.chrome.browser.vpn.DisconnectVpnBroadcastReceiver"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="disconnect_vpn" />
+    </intent-filter>
+</receiver>
+
+<activity
+    android:name="org.chromium.chrome.browser.firstrun.WelcomeOnboardingActivity"
+    android:configChanges="uiMode"
+    android:theme="@style/Theme.Brave.WelcomeOnboarding"/>
+
+<activity android:name="org.chromium.chrome.browser.crypto_wallet.activities.BraveWalletActivity"
+    android:theme="@style/Theme.Chromium.Activity" />
+
+<activity android:name="org.chromium.chrome.browser.crypto_wallet.activities.AddAccountActivity"
+    android:theme="@style/Theme.Chromium.Activity"/>
+
+<activity android:name="org.chromium.chrome.browser.crypto_wallet.activities.NetworkSelectorActivity"
+    android:theme="@style/Theme.Chromium.Activity" />
+
+<activity android:name="org.chromium.chrome.browser.crypto_wallet.activities.AccountSelectorActivity"
+    android:theme="@style/Theme.Chromium.Activity" />
+
+<activity android:name="org.chromium.chrome.browser.crypto_wallet.activities.AdvanceTxSettingActivity"
+    android:theme="@style/Theme.Chromium.Activity" />
+
+<activity android:name="org.chromium.chrome.browser.crypto_wallet.activities.BraveWalletDAppsActivity"
+    android:theme="@style/Theme.Chromium.Activity.FakeTranslucent" />
+
+<activity
+    android:name="org.chromium.chrome.browser.vpn.split_tunnel.SplitTunnelActivity"
+    android:theme="@style/Theme.Chromium.Activity"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.vpn.activities.VpnPaywallActivity"
+    android:theme="@style/Theme.Chromium.Activity"
+    android:noHistory="true"
+    android:launchMode="singleTask" />
+
+<activity
+    android:name="org.chromium.chrome.browser.vpn.activities.BraveVpnProfileActivity"
+    android:theme="@style/Theme.Brave.VpnProfile"
+    android:noHistory="true"
+    android:launchMode="singleTask"
+    android:configChanges="orientation|keyboardHidden|screenSize"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.vpn.activities.VpnAlwaysOnActivity"
+    android:theme="@style/Theme.Chromium.Activity"
+    android:noHistory="true"
+    android:launchMode="singleTask"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.vpn.activities.VpnServerSelectionActivity"
+    android:theme="@style/Theme.Chromium.Activity"
+    android:configChanges="orientation|keyboardHidden|screenSize"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.vpn.activities.VpnServerActivity"
+    android:theme="@style/Theme.Chromium.Activity"
+    android:configChanges="orientation|keyboardHidden|screenSize"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.vpn.activities.BraveVpnParentActivity"
+    android:theme="@style/Theme.Chromium.Activity"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.vpn.activities.BraveVpnSupportActivity"
+    android:theme="@style/Theme.Chromium.Activity"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.playlist.PlaylistHostActivity"
+    android:theme="@style/Theme.Chromium.Activity.Fullscreen"
+    android:configChanges="orientation|keyboardHidden|screenSize"/>
+
+<activity android:name="org.chromium.chrome.browser.settings.BraveSettingsActivity"
+    android:theme="@style/Theme.Chromium.Settings"
+    android:configChanges="orientation|keyboardHidden|keyboard|screenSize|mcc|mnc|screenLayout|smallestScreenSize|uiMode"
+    android:label="@string/settings"
+    android:exported="false">
+</activity>
+
+<activity
+    android:name="org.chromium.chrome.browser.app.bookmarks.BraveBookmarkActivity"
+    android:theme="@style/Theme.Chromium.Activity.Fullscreen"
+    android:exported="false"
+    android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+    android:configChanges="orientation|keyboardHidden|keyboard|screenSize|mcc|mnc|screenLayout|smallestScreenSize"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.brave_leo.BraveLeoPlansActivity"
+    android:theme="@style/Theme.Chromium.Activity"
+    android:noHistory="true"
+    android:launchMode="singleTask"/>
+
+<activity
+    android:name="org.chromium.chrome.browser.brave_origin.BraveOriginPlansActivity"
+    android:theme="@style/Theme.Chromium.Activity"
+    android:noHistory="true"
+    android:launchMode="singleTask"/>
+
+<!-- Upgrade related -->
+<receiver android:name="org.chromium.chrome.browser.upgrade.BravePackageReplacedBroadcastReceiver"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+    </intent-filter>
+</receiver>
+
+<service
+    android:name="org.chromium.chrome.browser.autofill.BraveAutofillService"
+    android:label="@string/app_name"
+    android:permission="android.permission.BIND_AUTOFILL_SERVICE"
+    android:exported="true">
+    <meta-data
+        android:name="android.autofill"
+        android:resource="@xml/autofill_service_configuration" />
+    <intent-filter>
+        <action android:name="android.service.autofill.AutofillService" />
+    </intent-filter>
+</service>
+
+<service
+    android:name="org.chromium.chrome.browser.vpn.wireguard.WireguardService"
+    android:foregroundServiceType="dataSync"
+    android:exported="false">
+</service>
+
+<service
+    android:name="org.chromium.chrome.browser.playlist.hls_content.HlsService"
+    android:exported="false">
+</service>
+
+<service
+    android:name="com.wireguard.android.backend.GoBackend$VpnService"
+    android:permission="android.permission.BIND_VPN_SERVICE"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="android.net.VpnService" />
+    </intent-filter>
+</service>
+
+<activity
+    android:name="com.brave.playlist.activity.PlaylistMenuOnboardingActivity"
+    android:exported="false"
+    android:launchMode="singleTask"
+    android:theme="@style/Theme.Chromium.Activity.Fullscreen" />
+
+<service
+    android:name="com.brave.playlist.playback_service.VideoPlaybackService"
+    android:foregroundServiceType="mediaPlayback"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="androidx.media3.session.MediaSessionService"/>
+        <action android:name="android.media.browse.MediaBrowserService"/>
+    </intent-filter>
+</service>
+
+<service android:name="org.chromium.chrome.browser.media.ui.BraveMediaNotificationControllerServices$PlaybackListenerMicService"
+    android:foregroundServiceType="mediaPlayback|microphone" android:exported="false">
+    <intent-filter>
+        <action android:name="android.intent.action.MEDIA_BUTTON" />
+    </intent-filter>
+</service>
+
+<!-- This activity is used for search provider widget -->
+<activity android:name="org.chromium.chrome.browser.searchwidget.SearchWidgetProviderActivity"
+    android:theme="@style/Theme.Chromium.SearchActivity"
+    android:exported="true"/>    </application>
+
+    <instrumentation android:name="org.chromium.android_browsertests_apk.ChromeBrowserTestsInstrumentationTestRunner"
+            android:label="ChromeBrowserTests"
+            android:targetPackage="org.chromium.android_browsertests_apk"/>
+</manifest>

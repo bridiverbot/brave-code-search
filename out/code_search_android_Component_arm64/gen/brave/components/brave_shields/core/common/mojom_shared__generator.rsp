@@ -1,0 +1,4 @@
+../../brave/components/brave_shields/core/common/brave_shields.mojom
+../../brave/components/brave_shields/core/common/brave_shields_panel.mojom
+../../brave/components/brave_shields/core/common/filter_list.mojom
+../../brave/components/brave_shields/core/common/shields_settings.mojom

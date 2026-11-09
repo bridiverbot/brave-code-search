@@ -1,0 +1,10 @@
+{
+  "deps": [
+    "../../ntp_background_images/browser/mojom/mojom.build_metadata",
+    "../../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../../ui/gfx/geometry/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../brave/components/new_tab_takeover/mojom/new_tab_takeover.mojom"
+  ]
+}

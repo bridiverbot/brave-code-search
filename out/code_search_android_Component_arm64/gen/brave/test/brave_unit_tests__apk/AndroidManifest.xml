@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2014 The Chromium Authors
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+-->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.chromium.native_test"
+      android:versionCode="1"
+      android:versionName="1.0">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"
+            android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+            android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+            android:usesPermissionFlags="neverForLocation"/>
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.SET_TIME_ZONE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- Explicitly set the attribute requestLegacyExternalStorage to "true"
+         since it is "false" by default on apps targeting Android 10, and that
+         breaks test listing. See
+         https://developer.android.com/training/data-storage#scoped-storage and
+         https://developer.android.com/training/data-storage/compatibility. -->
+    <application android:label="NativeTests"
+            android:requestLegacyExternalStorage="true"
+            android:memtagMode="sync"
+            android:name="org.chromium.native_test.NativeTestApplication">
+        <activity android:name=".NativeUnitTestActivity"
+                android:label="NativeTest"
+                android:configChanges="orientation|keyboardHidden"
+                android:process=":test_process"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- If you change the number below, make sure to add/remove actual service classes
+             org/chromium/base/MultiprocessTestClientService*.java -->
+        <meta-data android:name="org.chromium.native_test.NUM_TEST_CLIENT_SERVICES"
+                   android:value="10"/>
+        <service android:name="org.chromium.base.MultiprocessTestClientService0"
+                 android:process=":test_client_process0"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.base.MultiprocessTestClientService1"
+                 android:process=":test_client_process1"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.base.MultiprocessTestClientService2"
+                 android:process=":test_client_process2"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.base.MultiprocessTestClientService3"
+                 android:process=":test_client_process3"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.base.MultiprocessTestClientService4"
+                 android:process=":test_client_process4"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.base.MultiprocessTestClientService5"
+                 android:process=":test_client_process5"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.base.MultiprocessTestClientService6"
+                 android:process=":test_client_process6"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.base.MultiprocessTestClientService7"
+                 android:process=":test_client_process7"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.base.MultiprocessTestClientService8"
+                 android:process=":test_client_process8"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.base.MultiprocessTestClientService9"
+                 android:process=":test_client_process9"
+                 android:isolatedProcess="false"
+                 android:exported="false" />
+        <service android:name="org.chromium.build.gtest_apk.ProcessKeepaliveService"
+                 android:process=":test_process"
+                 android:exported="false" />
+    </application>
+
+    <instrumentation android:name="org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner"
+            android:targetPackage="org.chromium.native_test"
+            android:label="Instrumentation entry point for org.chromium.native_test" />
+
+</manifest>

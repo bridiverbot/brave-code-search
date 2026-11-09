@@ -1,0 +1,1 @@
+{"decentralized_dns_interstitial.rollup.js": ["../../../../../../components/security_interstitials/core/common/resources/interstitial_common.js", "../../../../../../../../../brave/components/decentralized_dns/content/resources/decentralized_dns_interstitial.js"]}
