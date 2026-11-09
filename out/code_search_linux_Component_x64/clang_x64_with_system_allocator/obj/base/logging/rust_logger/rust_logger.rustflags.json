@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "clang_x64_with_system_allocator/gen/base/logging/rust_logger/rust_logger",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../base/logging/rust_logger/lib.rs",
+        "@clang_x64_with_system_allocator/obj/base/logging/rust_logger/rust_logger.rsp.rust"
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "clang_x64_with_system_allocator/gen/third_party/rust/serde_json_lenient/v0_2/wrapper/wrapper",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../third_party/rust/serde_json_lenient/v0_2/wrapper/lib.rs",
+        "@clang_x64_with_system_allocator/obj/third_party/rust/serde_json_lenient/v0_2/wrapper/wrapper.rsp.rust"
+    ]
+}

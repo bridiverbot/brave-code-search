@@ -1,0 +1,6 @@
+    IMPL_BCP47_SCRIPT("Cyrl")
+    IMPL_BCP47_SCRIPT("Guru")
+    IMPL_BCP47_SCRIPT("Hans")
+    IMPL_BCP47_SCRIPT("Hant")
+    IMPL_BCP47_SCRIPT("Latn")
+    IMPL_BCP47_SCRIPT("Mtei")
