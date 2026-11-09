@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[], css`:host{--check-animation-y-offset:0.55px;--check-icon-size:16.3px}:host-context([webui-rounded-icons]){--check-animation-y-offset:0.35px;--check-icon-size:21.5px}#container{align-items:center;display:flex;flex-direction:row;justify-content:center}.step{align-items:center;display:flex;height:40px;justify-content:center;width:40px}img{height:40px;width:40px}cr-icon{--iron-icon-height:var(--check-icon-size);--iron-icon-width:var(--check-icon-size);color:var(--color-feature-showcase-stepper-check)}.check-animation{height:24px;position:relative;top:var(--check-animation-y-offset);width:24px}.dot{background-color:var(--color-feature-showcase-stepper-dot);border-radius:50%;height:8px;width:8px}@media (forced-colors:active){.dot{background-color:CanvasText}}`]);
-}

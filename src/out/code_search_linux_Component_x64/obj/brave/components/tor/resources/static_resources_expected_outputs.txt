@@ -1,2 +1,0 @@
-gen/brave/components/tor/resources/grit/tor_resources.h
-gen/brave/components/tor/resources/tor_static.pak

@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.back_press.BackPressHelper,../../chrome/browser/back_press/android/java/src/org/chromium/chrome/browser/back_press/BackPressHelper.java
-org.chromium.chrome.browser.back_press.BackPressManager,../../chrome/browser/back_press/android/java/src/org/chromium/chrome/browser/back_press/BackPressManager.java
-org.chromium.chrome.browser.back_press.BackPressMetrics,../../chrome/browser/back_press/android/java/src/org/chromium/chrome/browser/back_press/BackPressMetrics.java
-org.chromium.chrome.browser.back_press.CloseListenerManager,../../chrome/browser/back_press/android/java/src/org/chromium/chrome/browser/back_press/CloseListenerManager.java
-org.chromium.chrome.browser.back_press.MinimizeAppAndCloseTabBackPressHandler,../../chrome/browser/back_press/android/java/src/org/chromium/chrome/browser/back_press/MinimizeAppAndCloseTabBackPressHandler.java

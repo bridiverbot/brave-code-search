@@ -1,5 +1,0 @@
-{
-  "gn_target": "//ui/gl:surface_jni_headers_java",
-  "supports_android": true,
-  "type": "group"
-}

@@ -1,4 +1,0 @@
-// Copyright 2024 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-export function getShaderLayerColorHexes(){return["#5B5E66","#8E9199","#A6C8FF","#EEF0F9","#A8ABB3"]}export function getShaderLayerColorRgbas(){return["rgba(91, 94, 102, 1)","rgba(142, 145, 153, 1)","rgba(166, 200, 255, 1)","rgba(238, 240, 249, 1)","rgba(168, 171, 179, 1)"]}export const GLIF_HEX_COLORS={blue:"#3186ff",red:"#ff4641",yellow:"#ffd314",green:"#34a853"};export function modifyRgbaTransparency(rgba,alpha){const colorsString=rgba.substring(5,rgba.length-1);const[red,green,blue]=colorsString.split(",");return`rgba(${red}, ${green}, ${blue}, ${alpha})`}

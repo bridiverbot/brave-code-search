@@ -1,8 +1,0 @@
-          cmd LC_ID_DYLIB
-      cmdsize 88
-         name @rpath/libcomponents_sqlite_vfs_mojom_mojom_traits.dylib (offset 24)
-   time stamp 0 Thu Jan  1 00:00:00 1970
-      current version 0.0.0
-compatibility version 0.0.0
-T __ZN4mojo12StructTraitsIN10sqlite_vfs5mojom30PendingReadOnlyFileSetDataViewENS1_14PendingFileSetEE4ReadES3_PS4_
-T __ZN4mojo12StructTraitsIN10sqlite_vfs5mojom31PendingReadWriteFileSetDataViewENS1_14PendingFileSetEE4ReadES3_PS4_

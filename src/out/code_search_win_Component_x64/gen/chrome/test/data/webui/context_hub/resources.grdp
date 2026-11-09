@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_CONTEXT_HUB_TAB_GROUPS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/context_hub/tsc/tab_groups_test.js" resource_path="context_hub/tab_groups_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_CONTEXT_HUB_TODO_ITEM_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/context_hub/tsc/todo_item_test.js" resource_path="context_hub/todo_item_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_CONTEXT_HUB_TOPICS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/context_hub/tsc/topics_test.js" resource_path="context_hub/topics_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

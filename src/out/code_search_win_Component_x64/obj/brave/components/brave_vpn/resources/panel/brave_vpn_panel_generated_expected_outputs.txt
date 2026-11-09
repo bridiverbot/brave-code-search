@@ -1,4 +1,0 @@
-gen/brave/components/brave_vpn/resources/panel/grit/brave_vpn_panel_generated.h
-gen/brave/components/brave_vpn/resources/panel/grit/brave_vpn_panel_generated_map.cc
-gen/brave/components/brave_vpn/resources/panel/grit/brave_vpn_panel_generated_map.h
-gen/brave/components/brave_vpn/resources/panel/brave_vpn_panel_generated.pak

@@ -1,4 +1,0 @@
-gen/chrome/grit/iwa_dev_resources.h
-gen/chrome/grit/iwa_dev_resources_map.cc
-gen/chrome/grit/iwa_dev_resources_map.h
-gen/chrome/iwa_dev_resources.pak

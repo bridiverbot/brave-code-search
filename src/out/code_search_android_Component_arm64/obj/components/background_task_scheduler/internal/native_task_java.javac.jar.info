@@ -1,2 +1,0 @@
-org.chromium.components.background_task_scheduler.internal.NativeTaskScheduler,../../components/background_task_scheduler/internal/android/java/src/org/chromium/components/background_task_scheduler/internal/NativeTaskScheduler.java
-org.chromium.components.background_task_scheduler.internal.TaskInfoBridge,../../components/background_task_scheduler/internal/android/java/src/org/chromium/components/background_task_scheduler/internal/TaskInfoBridge.java

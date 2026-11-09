@@ -1,8 +1,0 @@
-{
-    "rustenv": {},
-    "rustflags": [
-        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
-        "gen/components/web_package/rust/web_package_rust.h.impl.rs",
-        "@obj/components/web_package/rust/web_package_rust_bindings_crubit_impl.rsp.rust"
-    ]
-}

@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.collaboration.CollaborationServiceFactory,../../chrome/browser/collaboration/android/java/src/org/chromium/chrome/browser/collaboration/CollaborationServiceFactory.java
-org.chromium.chrome.browser.collaboration.CollaborationServiceFactoryJni,gen/chrome/browser/collaboration/jni_headers.srcjar/org/chromium/chrome/browser/collaboration/CollaborationServiceFactoryJni.java

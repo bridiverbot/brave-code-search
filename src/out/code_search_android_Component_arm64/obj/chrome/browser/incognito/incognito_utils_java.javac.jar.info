@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.incognito.IncognitoUtils,../../chrome/browser/incognito/android/java/src/org/chromium/chrome/browser/incognito/IncognitoUtils.java
-org.chromium.chrome.browser.incognito.IncognitoUtilsJni,gen/chrome/browser/incognito/jni_headers.srcjar/org/chromium/chrome/browser/incognito/IncognitoUtilsJni.java

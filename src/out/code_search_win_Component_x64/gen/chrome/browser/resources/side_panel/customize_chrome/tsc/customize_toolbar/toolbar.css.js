@@ -1,6 +1,0 @@
-import { css } from '//resources/lit/v3_0/lit.rollup.js';
-import { getCss as getToolbarChromium } from './toolbar-chromium.css.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[getToolbarChromium()], css `.sp-card{max-width:none}#pinningSelectionCard{max-width:none}#heading{height:60px}sp-heading h2[slot='heading']{--leo-icon-color:var(--leo-gradient-icons-active);display:flex;align-items:center;gap:var(--leo-spacing-m);flex-grow:1}.sp-card:not(:first-child){margin:0}.sp-cards-separator,hr.sp-hr{display:none}.intro-text{color:var(--leo-color-text-primary);font:var(--leo-font-default-semibold);text-align:unset;padding:0}#tipCardLabel{color:var(--leo-color-text-primary);font:var(--leo-font-small-regular)}.choose-icons-row{color:var(--leo-color-text-primary);font:var(--leo-font-default-regular);padding-block:0;height:44px}.choose-icons-row.category-title{color:var(--leo-color-text-interactive);font:var(--leo-font-small-semibold);display:flex;align-items:center;margin:0}.choose-icons-row:not(.category-title){border-bottom:1px solid var(--leo-color-divider-subtle)}#resetToDefaultButton{margin:0;padding:var(--leo-spacing-xl);width:calc(100% - 2 * var(--leo-spacing-xl));position:sticky;bottom:calc(-1 * var(--sp-body-padding));background-color:var(--leo-color-container-background)}`]);
-}

@@ -1,4 +1,0 @@
-drawable/device_lock_alert_illustration.xml	../../chrome/browser/ui/android/device_lock/java/res/drawable/device_lock_alert_illustration.xml
-drawable/missing_device_lock_illustration.xml	../../chrome/browser/ui/android/device_lock/java/res/drawable/missing_device_lock_illustration.xml
-layout/device_lock_view.xml	../../chrome/browser/ui/android/device_lock/java/res/layout/device_lock_view.xml
-layout/missing_device_lock_view.xml	../../chrome/browser/ui/android/device_lock/java/res/layout/missing_device_lock_view.xml

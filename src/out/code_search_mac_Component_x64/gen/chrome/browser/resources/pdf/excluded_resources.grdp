@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_PDF_BROWSER_API_JS" file="${root_gen_dir}/chrome/browser/resources/pdf/tsc/browser_api.js" resource_path="pdf/browser_api.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_PDF_MAIN_JS" file="${root_gen_dir}/chrome/browser/resources/pdf/tsc/main.js" resource_path="pdf/main.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_PDF_MAIN_PRINT_JS" file="${root_gen_dir}/chrome/browser/resources/pdf/tsc/main_print.js" resource_path="pdf/main_print.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_PDF_PDF_SCRIPTING_API_JS" file="${root_gen_dir}/chrome/browser/resources/pdf/tsc/pdf_scripting_api.js" resource_path="pdf/pdf_scripting_api.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

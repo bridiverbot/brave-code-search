@@ -1,3 +1,0 @@
-org.chromium.device.sensors.PlatformSensor,../../services/device/generic_sensor/android/java/src/org/chromium/device/sensors/PlatformSensor.java
-org.chromium.device.sensors.PlatformSensorJni,gen/services/device/generic_sensor/jni_headers.srcjar/org/chromium/device/sensors/PlatformSensorJni.java
-org.chromium.device.sensors.PlatformSensorProvider,../../services/device/generic_sensor/android/java/src/org/chromium/device/sensors/PlatformSensorProvider.java

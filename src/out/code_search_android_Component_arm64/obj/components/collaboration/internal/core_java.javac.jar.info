@@ -1,2 +1,0 @@
-org.chromium.components.collaboration.CollaborationServiceImpl,../../components/collaboration/internal/android/java/src/org/chromium/components/collaboration/CollaborationServiceImpl.java
-org.chromium.components.collaboration.CollaborationServiceImplJni,gen/components/collaboration/internal/core_jni_headers.srcjar/org/chromium/components/collaboration/CollaborationServiceImplJni.java

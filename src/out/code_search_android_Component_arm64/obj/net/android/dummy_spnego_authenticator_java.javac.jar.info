@@ -1,3 +1,0 @@
-org.chromium.net.test.DummySpnegoAuthenticator,../../net/test/android/javatests/src/org/chromium/net/test/DummySpnegoAuthenticator.java
-org.chromium.net.test.DummySpnegoAuthenticatorJni,gen/net/android/dummy_spnego_authenticator_jni.srcjar/org/chromium/net/test/DummySpnegoAuthenticatorJni.java
-org.chromium.net.test.DummySpnegoAuthenticatorService,../../net/test/android/javatests/src/org/chromium/net/test/DummySpnegoAuthenticatorService.java

@@ -1,8 +1,0 @@
-../../brave/browser/password_entry_edit/android/internal/java/src/org/chromium/chrome/browser/password_entry_edit/BlockedCredentialViewBinder.java
-../../brave/browser/password_entry_edit/android/internal/java/src/org/chromium/chrome/browser/password_entry_edit/CredentialEditBridge.java
-../../brave/browser/password_entry_edit/android/internal/java/src/org/chromium/chrome/browser/password_entry_edit/CredentialEditCoordinator.java
-../../brave/browser/password_entry_edit/android/internal/java/src/org/chromium/chrome/browser/password_entry_edit/CredentialEditMediator.java
-../../brave/browser/password_entry_edit/android/internal/java/src/org/chromium/chrome/browser/password_entry_edit/CredentialEditProperties.java
-../../brave/browser/password_entry_edit/android/internal/java/src/org/chromium/chrome/browser/password_entry_edit/CredentialEditUiFactory.java
-../../brave/browser/password_entry_edit/android/internal/java/src/org/chromium/chrome/browser/password_entry_edit/CredentialEditViewBinder.java
-../../brave/browser/password_entry_edit/android/internal/java/src/org/chromium/chrome/browser/password_entry_edit/FederatedCredentialViewBinder.java

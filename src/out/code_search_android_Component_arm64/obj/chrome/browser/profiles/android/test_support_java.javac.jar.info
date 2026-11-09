@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.profiles.TestProfile,../../chrome/browser/profiles/android/java/src/org/chromium/chrome/browser/profiles/TestProfile.java
-org.chromium.chrome.browser.profiles.TestProfileProvider,../../chrome/browser/profiles/android/java/src/org/chromium/chrome/browser/profiles/TestProfileProvider.java

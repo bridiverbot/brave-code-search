@@ -1,9 +1,0 @@
-org.chromium.base.FakeTimeTestRule,../../base/test/android/javatests/src/org/chromium/base/FakeTimeTestRule.java
-org.chromium.base.test.SetUpStatement,../../base/test/android/javatests/src/org/chromium/base/test/SetUpStatement.java
-org.chromium.base.test.SetUpTestRule,../../base/test/android/javatests/src/org/chromium/base/test/SetUpTestRule.java
-org.chromium.base.test.task.SchedulerTestHelpers,../../base/test/android/javatests/src/org/chromium/base/test/task/SchedulerTestHelpers.java
-org.chromium.base.test.task.ThreadPoolTestHelpers,../../base/test/android/javatests/src/org/chromium/base/test/task/ThreadPoolTestHelpers.java
-org.chromium.base.test.task.ThreadPoolTestHelpersJni,gen/base/base_java_test_support_uncommon_jni.srcjar/org/chromium/base/test/task/ThreadPoolTestHelpersJni.java
-org.chromium.base.test.util.CloseableOnMainThread,../../base/test/android/javatests/src/org/chromium/base/test/util/CloseableOnMainThread.java
-org.chromium.base.test.util.InstrumentationUtils,../../base/test/android/javatests/src/org/chromium/base/test/util/InstrumentationUtils.java
-org.chromium.base.test.util.Matchers,../../base/test/android/javatests/src/org/chromium/base/test/util/Matchers.java

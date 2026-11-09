@@ -1,1 +1,0 @@
-obj/chrome/browser/recent_tabs/internal/java_strings_grd.resources.zip

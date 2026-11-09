@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_MSAL_BROWSER_MSAL_BROWSER_MIN_JS" file="${root_src_dir}/third_party/node/node_modules/@azure/msal-browser/lib/msal-browser.min.js" resource_path="msal_browser/msal-browser.min.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

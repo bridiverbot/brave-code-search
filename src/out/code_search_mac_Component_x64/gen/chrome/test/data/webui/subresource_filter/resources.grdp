@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_SUBRESOURCE_FILTER_SUBRESOURCE_FILTER_INTERNALS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/subresource_filter/tsc/subresource_filter_internals_test.js" resource_path="subresource_filter/subresource_filter_internals_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

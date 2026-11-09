@@ -1,8 +1,0 @@
-import { css } from 'chrome://resources/lit/v3_0/lit.rollup.js';
-import { getCss as getCrSharedStyleLit } from 'chrome://resources/cr_elements/cr_shared_style_lit.css.js';
-import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
-import { getCss as getMdSelectLit } from 'chrome://resources/cr_elements/md_select_lit.css.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[getCrSharedStyleLit(), getMdSelectLit()], css `:host{height:100%}.shortcut-card{background-color:var(--cr-card-background-color);border-radius:var(--cr-card-border-radius);box-shadow:var(--cr-card-shadow);color:var(--cr-primary-text-color);margin:0 auto 16px auto;padding-bottom:8px;width:var(--cr-toolbar-field-width)}.shortcut-card:last-of-type{margin-bottom:64px}#container{box-sizing:border-box;height:100%;padding-top:24px}.command-entry{align-items:center;display:flex;min-height:var(--cr-section-min-height);padding-bottom:8px;padding-top:8px}.command-name{flex:1;margin-inline-end:var(--cr-section-padding);overflow-wrap:break-word}.shortcut-input-container,.shortcut-scope-container{display:flex;flex-direction:column}.shortcut-input-container{margin-inline-end:var(--cr-section-padding)}.shortcut-input-label,.shortcut-scope-label{color:var(--cr-secondary-text-color);font-size:var(--cr-form-field-label-font-size,12px);font-weight:500;line-height:var(--cr-form-field-label-line-height,1.25);margin-bottom:4px}.command-entry .md-select{line-height:22px}.card-title{align-items:center;border-bottom:var(--cr-separator-line);display:flex;margin-bottom:9px;padding:16px var(--cr-section-padding)}.icon{height:20px;margin-inline-end:20px;width:20px}.card-controls{margin-inline-end:20px;margin-inline-start:60px}`]);
-}

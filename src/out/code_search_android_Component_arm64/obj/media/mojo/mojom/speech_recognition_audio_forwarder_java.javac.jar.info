@@ -1,2 +1,0 @@
-org.chromium.media.mojom.SpeechRecognitionAudioForwarder,gen/media/mojo/mojom/speech_recognition_audio_forwarder_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionAudioForwarder.java
-org.chromium.media.mojom.SpeechRecognitionAudioForwarder_Internal,gen/media/mojo/mojom/speech_recognition_audio_forwarder_java_sources.srcjar/org/chromium/media/mojom/SpeechRecognitionAudioForwarder_Internal.java

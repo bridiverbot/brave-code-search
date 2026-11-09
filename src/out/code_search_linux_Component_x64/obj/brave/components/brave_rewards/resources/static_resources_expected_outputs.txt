@@ -1,2 +1,0 @@
-gen/brave/components/brave_rewards/resources/grit/brave_rewards_resources.h
-gen/brave/components/brave_rewards/resources/brave_rewards_static.pak

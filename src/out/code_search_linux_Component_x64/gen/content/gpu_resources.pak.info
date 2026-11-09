@@ -1,8 +1,0 @@
-IDR_GPU_GPU_INTERNALS_HTML,31840,gen/content/browser/resources/gpu/resources.grd
-IDR_GPU_INFO_VIEW_JS,31841,gen/content/browser/resources/gpu/resources.grd
-IDR_GPU_BROWSER_BRIDGE_JS,31842,gen/content/browser/resources/gpu/resources.grd
-IDR_GPU_GPU_INTERNALS_JS,31843,gen/content/browser/resources/gpu/resources.grd
-IDR_GPU_VULKAN_INFO_JS,31844,gen/content/browser/resources/gpu/resources.grd
-IDR_GPU_INFO_VIEW_HTML_JS,31845,gen/content/browser/resources/gpu/resources.grd
-IDR_GPU_VULKAN_INFO_MOJOM_WEBUI_JS,31846,gen/content/browser/resources/gpu/resources.grd
-IDR_GPU_VULKAN_TYPES_MOJOM_WEBUI_JS,31847,gen/content/browser/resources/gpu/resources.grd

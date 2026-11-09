@@ -1,5 +1,0 @@
-import { css } from '//resources/lit/v3_0/lit.rollup.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[], css `#lensIcon{--cr-icon-button-fill-color:var(--color-composebox-font-light);--cr-icon-button-hover-background-color:var(--color-composebox-voice-button-hover-background);--cr-icon-button-icon-size:20px;--cr-icon-button-size:36px}:host([has-virtual-focus]) #lensIcon,:host([has-virtual-focus]) #lensSearchPill{box-shadow:inset 0 0 0 2px var(--cr-focus-outline-color)}#lensSearchPill{background-color:var(--color-composebox-context-entrypoint-hover-background);border:none;border-radius:100px;color:var(--color-searchbox-results-foreground);display:block;flex-shrink:1;font-size:13px;height:var(--cr-icon-button-height,32px);line-height:20px;max-width:100%;min-width:0;overflow:hidden;padding:6px 12px;text-align:center;text-overflow:ellipsis;white-space:nowrap}#lensSearchPill:focus{outline-offset:-2px}#content,#content>div{display:block;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}`]);
-}

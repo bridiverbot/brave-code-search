@@ -1,9 +1,0 @@
-{
-  "gn_target": "//third_party/androidx:androidx_pdf_pdf_viewer_fragment_java",
-  "public_deps_configs": [
-    "gen/third_party/androidx/androidx_pdf_pdf_viewer_fragment_java__classes.params.json",
-    "gen/third_party/androidx/androidx_pdf_pdf_viewer_fragment_java__resources.params.json"
-  ],
-  "supports_android": true,
-  "type": "group"
-}

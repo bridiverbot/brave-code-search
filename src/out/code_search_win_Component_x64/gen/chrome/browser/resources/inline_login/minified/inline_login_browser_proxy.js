@@ -1,4 +1,0 @@
-// Copyright 2020 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-export class InlineLoginBrowserProxyImpl{initialize(){chrome.send("initialize")}authenticatorReady(){chrome.send("authenticatorReady")}switchToFullTab(url){chrome.send("switchToFullTab",[url])}completeLogin(credentials){chrome.send("completeLogin",[credentials])}lstFetchResults(arg){chrome.send("lstFetchResults",[arg])}recordAction(metricsAction){chrome.send("metricsHandler:recordAction",[metricsAction])}showIncognito(){chrome.send("showIncognito")}dialogClose(){chrome.send("dialogClose")}static getInstance(){return instance||(instance=new InlineLoginBrowserProxyImpl)}static setInstance(obj){instance=obj}}let instance=null;

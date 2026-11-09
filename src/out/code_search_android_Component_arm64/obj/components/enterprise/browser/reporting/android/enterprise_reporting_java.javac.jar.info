@@ -1,3 +1,0 @@
-org.chromium.components.enterprise.reporting.SignalsReportingBackgroundTask,../../components/enterprise/browser/reporting/android/java/src/org/chromium/components/enterprise/reporting/SignalsReportingBackgroundTask.java
-org.chromium.components.enterprise.reporting.SignalsReportingSchedulerBridge,../../components/enterprise/browser/reporting/android/java/src/org/chromium/components/enterprise/reporting/SignalsReportingSchedulerBridge.java
-org.chromium.components.enterprise.reporting.SignalsReportingSchedulerBridgeJni,gen/components/enterprise/browser/reporting/android/jni_headers.srcjar/org/chromium/components/enterprise/reporting/SignalsReportingSchedulerBridgeJni.java

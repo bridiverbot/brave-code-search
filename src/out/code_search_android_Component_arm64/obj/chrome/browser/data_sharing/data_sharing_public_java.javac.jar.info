@@ -1,7 +1,0 @@
-org.chromium.chrome.browser.data_sharing.DataSharingIntentUtils,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/DataSharingIntentUtils.java
-org.chromium.chrome.browser.data_sharing.DataSharingMetrics,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/DataSharingMetrics.java
-org.chromium.chrome.browser.data_sharing.DataSharingTabGroupUtils,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/DataSharingTabGroupUtils.java
-org.chromium.chrome.browser.data_sharing.DataSharingTabGroupsDelegate,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/DataSharingTabGroupsDelegate.java
-org.chromium.chrome.browser.data_sharing.DataSharingTabManager,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/DataSharingTabManager.java
-org.chromium.chrome.browser.data_sharing.RecentActivityActionHandlerImpl,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/RecentActivityActionHandlerImpl.java
-org.chromium.chrome.browser.data_sharing.TabGridDialogShareBottomSheetContent,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/TabGridDialogShareBottomSheetContent.java

@@ -1,5 +1,0 @@
-int id incognito_reauth_icon 0x7f010001
-int id incognito_reauth_menu_button 0x7f010001
-int id incognito_reauth_see_other_tabs_label 0x7f010001
-int id incognito_reauth_unlock_incognito_button 0x7f010001
-int layout incognito_reauth_view 0x7f010001

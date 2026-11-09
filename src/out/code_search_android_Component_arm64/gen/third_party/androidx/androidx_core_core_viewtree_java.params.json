@@ -1,9 +1,0 @@
-{
-  "gn_target": "//third_party/androidx:androidx_core_core_viewtree_java",
-  "public_deps_configs": [
-    "gen/third_party/androidx/androidx_core_core_viewtree_java__classes.params.json",
-    "gen/third_party/androidx/androidx_core_core_viewtree_java__resources.params.json"
-  ],
-  "supports_android": true,
-  "type": "group"
-}

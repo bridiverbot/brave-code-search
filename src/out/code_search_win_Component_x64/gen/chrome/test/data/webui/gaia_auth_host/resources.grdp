@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_GAIA_AUTH_HOST_PASSWORD_CHANGE_AUTHENTICATOR_TEST_JS" file="${root_src_dir}/chrome/test/data/webui/gaia_auth_host/password_change_authenticator_test.js" resource_path="gaia_auth_host/password_change_authenticator_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_GAIA_AUTH_HOST_SAML_USERNAME_AUTOFILL_TEST_JS" file="${root_src_dir}/chrome/test/data/webui/gaia_auth_host/saml_username_autofill_test.js" resource_path="gaia_auth_host/saml_username_autofill_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_GAIA_AUTH_HOST_SAML_TIMESTAMPS_TEST_JS" file="${root_src_dir}/chrome/test/data/webui/gaia_auth_host/saml_timestamps_test.js" resource_path="gaia_auth_host/saml_timestamps_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_GAIA_AUTH_HOST_SAML_PASSWORD_ATTRIBUTES_TEST_JS" file="${root_src_dir}/chrome/test/data/webui/gaia_auth_host/saml_password_attributes_test.js" resource_path="gaia_auth_host/saml_password_attributes_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_GAIA_AUTH_HOST_SAML_WITH_PASSWORD_ATTRIBUTES_XML" file="${root_src_dir}/chrome/test/data/webui/gaia_auth_host/saml_with_password_attributes.xml" resource_path="gaia_auth_host/saml_with_password_attributes.xml" use_base_dir="false" type="BINDATA" />
-</grit-part>

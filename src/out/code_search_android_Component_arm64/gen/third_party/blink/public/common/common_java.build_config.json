@@ -1,6 +1,0 @@
-{
-  "javac_full_classpath": [],
-  "sdk_jars": [
-    "../../third_party/android_sdk/public/platforms/android-37.2/android.jar"
-  ]
-}

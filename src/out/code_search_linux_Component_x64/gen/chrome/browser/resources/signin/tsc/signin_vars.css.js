@@ -1,4 +1,0 @@
-import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
-const sheet = new CSSStyleSheet();
-sheet.replaceSync(`html{--action-container-padding:16px;--signin-work-badge-background-color:rgb(248,249,250);--signin-work-badge-foreground-color:var(--google-grey-700)}@media (prefers-color-scheme:dark){html{--signin-work-badge-background-color:var(--google-grey-700);--signin-work-badge-foreground-color:white;--signin-dark-customized-background-color:rgba(41,42,45,1)}}`);
-document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];

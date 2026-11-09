@@ -1,7 +1,0 @@
-org.chromium.chrome.browser.contextual_tasks.ContextualTaskBottomSheetComponentProvider,../../chrome/browser/contextual_tasks/android/java/src/org/chromium/chrome/browser/contextual_tasks/ContextualTaskBottomSheetComponentProvider.java
-org.chromium.chrome.browser.contextual_tasks.ContextualTaskBottomSheetContent,../../chrome/browser/contextual_tasks/android/java/src/org/chromium/chrome/browser/contextual_tasks/ContextualTaskBottomSheetContent.java
-org.chromium.chrome.browser.contextual_tasks.ContextualTasksBridge,../../chrome/browser/contextual_tasks/android/java/src/org/chromium/chrome/browser/contextual_tasks/ContextualTasksBridge.java
-org.chromium.chrome.browser.contextual_tasks.ContextualTasksBridgeJni,gen/chrome/browser/contextual_tasks/jni_headers.srcjar/org/chromium/chrome/browser/contextual_tasks/ContextualTasksBridgeJni.java
-org.chromium.chrome.browser.contextual_tasks.ui.ContextualTasksControlCoordinator,../../chrome/browser/contextual_tasks/android/java/src/org/chromium/chrome/browser/contextual_tasks/ui/ContextualTasksControlCoordinator.java
-org.chromium.chrome.browser.contextual_tasks.ui.ContextualTasksControlCoordinatorJni,gen/chrome/browser/contextual_tasks/jni_headers.srcjar/org/chromium/chrome/browser/contextual_tasks/ui/ContextualTasksControlCoordinatorJni.java
-org.chromium.chrome.browser.contextual_tasks.ui.ContextualTasksControlMediator,../../chrome/browser/contextual_tasks/android/java/src/org/chromium/chrome/browser/contextual_tasks/ui/ContextualTasksControlMediator.java

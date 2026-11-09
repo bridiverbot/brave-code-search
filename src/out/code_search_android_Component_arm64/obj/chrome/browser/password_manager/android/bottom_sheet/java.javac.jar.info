@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.bottom_sheet.SimpleNoticeSheetCoordinator,../../chrome/browser/password_manager/android/bottom_sheet/java/src/org/chromium/chrome/browser/bottom_sheet/SimpleNoticeSheetCoordinator.java
-org.chromium.chrome.browser.bottom_sheet.SimpleNoticeSheetProperties,../../chrome/browser/password_manager/android/bottom_sheet/java/src/org/chromium/chrome/browser/bottom_sheet/SimpleNoticeSheetProperties.java
-org.chromium.chrome.browser.bottom_sheet.SimpleNoticeSheetView,../../chrome/browser/password_manager/android/bottom_sheet/java/src/org/chromium/chrome/browser/bottom_sheet/SimpleNoticeSheetView.java
-org.chromium.chrome.browser.bottom_sheet.SimpleNoticeSheetViewBinder,../../chrome/browser/password_manager/android/bottom_sheet/java/src/org/chromium/chrome/browser/bottom_sheet/SimpleNoticeSheetViewBinder.java

@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.theme.BraveAccentColorBridge,../../brave/browser/ui/android/theme/java/src/org/chromium/chrome/browser/theme/BraveAccentColorBridge.java
-org.chromium.chrome.browser.theme.BraveAccentColorBridgeJni,gen/brave/browser/ui/android/theme/jni_headers.srcjar/org/chromium/chrome/browser/theme/BraveAccentColorBridgeJni.java

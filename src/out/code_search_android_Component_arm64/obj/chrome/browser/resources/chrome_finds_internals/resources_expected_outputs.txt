@@ -1,4 +1,0 @@
-gen/chrome/grit/chrome_finds_internals_resources.h
-gen/chrome/grit/chrome_finds_internals_resources_map.cc
-gen/chrome/grit/chrome_finds_internals_resources_map.h
-gen/chrome/chrome_finds_internals_resources.pak

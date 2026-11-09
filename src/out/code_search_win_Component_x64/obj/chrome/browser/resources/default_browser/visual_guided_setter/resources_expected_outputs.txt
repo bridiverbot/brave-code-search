@@ -1,4 +1,0 @@
-gen/chrome/grit/visual_guided_setter_resources.h
-gen/chrome/grit/visual_guided_setter_resources_map.cc
-gen/chrome/grit/visual_guided_setter_resources_map.h
-gen/chrome/visual_guided_setter_resources.pak

@@ -1,9 +1,0 @@
-{
-  "deps": [
-    "../../../brave_ads/core/mojom/mojom.build_metadata",
-    "../../../../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../../brave/components/ntp_background_images/browser/mojom/ntp_background_images.mojom"
-  ]
-}

@@ -1,6 +1,0 @@
-org.json.JSON,../../third_party/android_build_tools/json/src/org/json/JSON.java
-org.json.JSONArray,../../third_party/android_build_tools/json/src/org/json/JSONArray.java
-org.json.JSONException,../../third_party/android_build_tools/json/src/org/json/JSONException.java
-org.json.JSONObject,../../third_party/android_build_tools/json/src/org/json/JSONObject.java
-org.json.JSONStringer,../../third_party/android_build_tools/json/src/org/json/JSONStringer.java
-org.json.JSONTokener,../../third_party/android_build_tools/json/src/org/json/JSONTokener.java

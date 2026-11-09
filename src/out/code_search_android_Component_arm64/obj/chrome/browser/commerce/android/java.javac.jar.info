@@ -1,9 +1,0 @@
-org.chromium.chrome.browser.commerce.CommerceBottomSheetContentController,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/CommerceBottomSheetContentController.java
-org.chromium.chrome.browser.commerce.CommerceBottomSheetContentProperties,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/CommerceBottomSheetContentProperties.java
-org.chromium.chrome.browser.commerce.CommerceBottomSheetContentProvider,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/CommerceBottomSheetContentProvider.java
-org.chromium.chrome.browser.commerce.PriceNotificationSettingsFragment,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/PriceNotificationSettingsFragment.java
-org.chromium.chrome.browser.commerce.PriceTrackingUtils,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/PriceTrackingUtils.java
-org.chromium.chrome.browser.commerce.PriceTrackingUtilsJni,gen/chrome/browser/commerce/android/shopping_service_jni.srcjar/org/chromium/chrome/browser/commerce/PriceTrackingUtilsJni.java
-org.chromium.chrome.browser.commerce.PriceUtils,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/PriceUtils.java
-org.chromium.chrome.browser.commerce.ShoppingServiceFactory,../../chrome/browser/commerce/android/java/src/org/chromium/chrome/browser/commerce/ShoppingServiceFactory.java
-org.chromium.chrome.browser.commerce.ShoppingServiceFactoryJni,gen/chrome/browser/commerce/android/shopping_service_jni.srcjar/org/chromium/chrome/browser/commerce/ShoppingServiceFactoryJni.java

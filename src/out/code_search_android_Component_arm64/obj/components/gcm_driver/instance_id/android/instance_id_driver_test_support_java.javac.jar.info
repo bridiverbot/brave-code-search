@@ -1,1 +1,0 @@
-org.chromium.components.gcm_driver.instance_id.FakeInstanceIDWithSubtype,../../components/gcm_driver/instance_id/android/javatests/src/org/chromium/components/gcm_driver/instance_id/FakeInstanceIDWithSubtype.java

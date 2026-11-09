@@ -1,2 +1,0 @@
-int drawable webrtc_audio 0x7f010001
-int drawable webrtc_video 0x7f010001

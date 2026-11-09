@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "mojom_integrity_metadata.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../services/network/public/mojom/unencoded_digest.mojom"
-  ]
-}

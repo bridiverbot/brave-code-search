@@ -1,2 +1,0 @@
-org.chromium.components.sensitive_content.SensitiveContentClient,../../components/sensitive_content/android/java/src/org/chromium/components/sensitive_content/SensitiveContentClient.java
-org.chromium.components.sensitive_content.SensitiveContentClientJni,gen/components/sensitive_content/jni_headers.srcjar/org/chromium/components/sensitive_content/SensitiveContentClientJni.java

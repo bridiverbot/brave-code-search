@@ -1,2 +1,0 @@
-org.chromium.components.crash.anr.AnrCollector,../../components/crash/android/java/src/org/chromium/components/crash/anr/AnrCollector.java
-org.chromium.components.crash.anr.AnrSkippedReason,gen/components/crash/android/anr_skipped_reason_enum.srcjar/org/chromium/components/crash/anr/AnrSkippedReason.java

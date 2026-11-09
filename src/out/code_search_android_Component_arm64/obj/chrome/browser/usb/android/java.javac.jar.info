@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.usb.UsbBridge,../../chrome/browser/usb/android/java/src/org/chromium/chrome/browser/usb/UsbBridge.java
-org.chromium.chrome.browser.usb.UsbBridgeJni,gen/chrome/browser/usb/android/jni_headers.srcjar/org/chromium/chrome/browser/usb/UsbBridgeJni.java
-org.chromium.chrome.browser.usb.UsbNotificationManager,../../chrome/browser/usb/android/java/src/org/chromium/chrome/browser/usb/UsbNotificationManager.java
-org.chromium.chrome.browser.usb.UsbNotificationManagerDelegate,../../chrome/browser/usb/android/java/src/org/chromium/chrome/browser/usb/UsbNotificationManagerDelegate.java

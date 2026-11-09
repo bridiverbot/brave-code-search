@@ -1,1 +1,0 @@
-{"base_dir": "gen/chrome/test/data/webui/app_settings/tsc", "files": ["app_management_test_support.js", "app_test.js", "file_handling_item_test.js", "permission_item_test.js", "supported_links_item_test.js", "test_app_management_browser_proxy.js", "uninstall_button_test.js", "window_mode_item_test.js"]}

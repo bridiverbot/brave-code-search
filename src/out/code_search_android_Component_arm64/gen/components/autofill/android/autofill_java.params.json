@@ -1,9 +1,0 @@
-{
-  "gn_target": "//components/autofill/android:autofill_java",
-  "public_deps_configs": [
-    "gen/components/autofill/android/main_autofill_java.params.json",
-    "gen/components/autofill/android/payments_autofill_java.params.json"
-  ],
-  "supports_android": true,
-  "type": "group"
-}

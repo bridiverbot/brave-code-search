@@ -1,9 +1,0 @@
-org.chromium.chrome.browser.theme.AdjustedTopUiThemeColorProvider,../../chrome/browser/ui/android/theme/java/src/org/chromium/chrome/browser/theme/AdjustedTopUiThemeColorProvider.java
-org.chromium.chrome.browser.theme.BottomUiThemeColorProvider,../../chrome/browser/ui/android/theme/java/src/org/chromium/chrome/browser/theme/BottomUiThemeColorProvider.java
-org.chromium.chrome.browser.theme.ThemeColorProvider,../../chrome/browser/ui/android/theme/java/src/org/chromium/chrome/browser/theme/ThemeColorProvider.java
-org.chromium.chrome.browser.theme.ThemeModuleUtils,../../chrome/browser/ui/android/theme/java/src/org/chromium/chrome/browser/theme/ThemeModuleUtils.java
-org.chromium.chrome.browser.theme.ThemeUtils,../../chrome/browser/ui/android/theme/java/src/org/chromium/chrome/browser/theme/ThemeUtils.java
-org.chromium.chrome.browser.theme.ToolbarThemeColorProvider,../../chrome/browser/ui/android/theme/java/src/org/chromium/chrome/browser/theme/ToolbarThemeColorProvider.java
-org.chromium.chrome.browser.theme.TopUiThemeColorProvider,../../chrome/browser/ui/android/theme/java/src/org/chromium/chrome/browser/theme/TopUiThemeColorProvider.java
-org.chromium.chrome.browser.ui.theme.BrandedColorScheme,../../chrome/browser/ui/android/theme/java/src/org/chromium/chrome/browser/ui/theme/BrandedColorScheme.java
-org.chromium.chrome.browser.ui.theme.ChromeSemanticColorUtils,../../chrome/browser/ui/android/theme/java/src/org/chromium/chrome/browser/ui/theme/ChromeSemanticColorUtils.java

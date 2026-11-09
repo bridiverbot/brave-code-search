@@ -1,4 +1,0 @@
-int drawable test_profile_picture 0x7f010001
-int id cancel_button 0x7f010001
-int id ok_button 0x7f010001
-int layout test_add_account_layout 0x7f010001

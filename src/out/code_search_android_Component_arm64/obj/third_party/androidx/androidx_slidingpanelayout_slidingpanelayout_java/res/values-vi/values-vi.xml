@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string msgid="6322493056848795789" name="draggable_divider_handler">"Trình xử lý đường phân chia kéo được"</string>
-    <string msgid="7959832333955573682" name="draggable_divider_handler_state_left_edge">"Đã mở rộng ngăn bên phải"</string>
-    <string msgid="1679161196839751773" name="draggable_divider_handler_state_right_edge">"Đã mở rộng ngăn bên trái"</string>
-</resources>

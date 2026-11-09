@@ -1,4 +1,0 @@
-gen/brave/components/brave_new_tab/resources/grit/brave_new_tab_generated.h
-gen/brave/components/brave_new_tab/resources/grit/brave_new_tab_generated_map.cc
-gen/brave/components/brave_new_tab/resources/grit/brave_new_tab_generated_map.h
-gen/brave/components/brave_new_tab/resources/brave_new_tab_generated.pak

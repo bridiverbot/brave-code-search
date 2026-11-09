@@ -1,2 +1,0 @@
-int dimen message_bubble_inset 0x7f010001
-int dimen message_shadow_top_margin 0x7f010001

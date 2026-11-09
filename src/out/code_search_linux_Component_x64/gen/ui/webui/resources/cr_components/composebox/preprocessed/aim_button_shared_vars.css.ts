@@ -1,6 +1,0 @@
-
-export {};
-
-const sheet = new CSSStyleSheet();
-sheet.replaceSync(`html{--aim-motion-duration-long:383ms;--aim-motion-duration-short:333ms;--aim-motion-easing:cubic-bezier(0.2,0,0,1)}`);
-document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];

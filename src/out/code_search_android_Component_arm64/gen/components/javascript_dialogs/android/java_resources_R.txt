@@ -1,3 +1,0 @@
-int id js_modal_dialog_prompt 0x7f010001
-int id suppress_js_modal_dialogs 0x7f010001
-int layout js_modal_dialog 0x7f010001

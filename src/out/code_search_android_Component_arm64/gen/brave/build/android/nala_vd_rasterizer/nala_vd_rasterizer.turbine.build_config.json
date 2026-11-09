@@ -1,9 +1,0 @@
-{
-  "interface_classpath": [
-    "obj/build/android/build_java.turbine.jar",
-    "obj/brave/build/android/nala_vd_rasterizer/brave_nala_sdk_common.ijar.jar"
-  ],
-  "processor_classes": [],
-  "processor_classpath": [],
-  "sdk_interface_jars": []
-}

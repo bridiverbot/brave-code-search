@@ -1,4 +1,0 @@
-// Copyright 2020 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";export const UserDisplayModeSpec={$:mojo.internal.Enum()};export var UserDisplayMode;(function(UserDisplayMode){UserDisplayMode[UserDisplayMode["MIN_VALUE"]=0]="MIN_VALUE";UserDisplayMode[UserDisplayMode["MAX_VALUE"]=2]="MAX_VALUE";UserDisplayMode[UserDisplayMode["kBrowser"]=0]="kBrowser";UserDisplayMode[UserDisplayMode["kStandalone"]=1]="kStandalone";UserDisplayMode[UserDisplayMode["kTabbed"]=2]="kTabbed"})(UserDisplayMode||(UserDisplayMode={}));

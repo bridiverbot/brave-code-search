@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.ui.favicon.FaviconHelper,../../chrome/browser/ui/android/favicon/java/src/org/chromium/chrome/browser/ui/favicon/FaviconHelper.java
-org.chromium.chrome.browser.ui.favicon.FaviconHelperJni,gen/chrome/browser/ui/android/favicon/jni_headers.srcjar/org/chromium/chrome/browser/ui/favicon/FaviconHelperJni.java
-org.chromium.chrome.browser.ui.favicon.FaviconUtils,../../chrome/browser/ui/android/favicon/java/src/org/chromium/chrome/browser/ui/favicon/FaviconUtils.java

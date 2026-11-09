@@ -1,3 +1,0 @@
-{
-  "org/chromium/chrome/browser/safe_browsing/SafeBrowsingSuspiciousSiteDialogBridge$NativeSuspiciousSiteDialogViewAndroid": "::safe_browsing::SuspiciousSiteDialogViewAndroid"
-}

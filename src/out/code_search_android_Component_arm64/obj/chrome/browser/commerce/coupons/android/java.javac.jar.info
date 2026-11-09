@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.commerce.coupons.DiscountsBottomSheetContentCoordinator,../../chrome/browser/commerce/coupons/android/java/src/org/chromium/chrome/browser/commerce/coupons/DiscountsBottomSheetContentCoordinator.java
-org.chromium.chrome.browser.commerce.coupons.DiscountsBottomSheetContentMediator,../../chrome/browser/commerce/coupons/android/java/src/org/chromium/chrome/browser/commerce/coupons/DiscountsBottomSheetContentMediator.java
-org.chromium.chrome.browser.commerce.coupons.DiscountsBottomSheetContentProperties,../../chrome/browser/commerce/coupons/android/java/src/org/chromium/chrome/browser/commerce/coupons/DiscountsBottomSheetContentProperties.java
-org.chromium.chrome.browser.commerce.coupons.DiscountsBottomSheetContentViewBinder,../../chrome/browser/commerce/coupons/android/java/src/org/chromium/chrome/browser/commerce/coupons/DiscountsBottomSheetContentViewBinder.java
-org.chromium.chrome.browser.commerce.coupons.DiscountsButtonController,../../chrome/browser/commerce/coupons/android/java/src/org/chromium/chrome/browser/commerce/coupons/DiscountsButtonController.java

@@ -1,4 +1,0 @@
-org.chromium.components.favicon.GoogleFaviconServerRequestStatus,gen/components/favicon_base/favicon_base_enums_java.srcjar/org/chromium/components/favicon/GoogleFaviconServerRequestStatus.java
-org.chromium.components.favicon.IconType,gen/components/favicon_base/favicon_base_enums_java.srcjar/org/chromium/components/favicon/IconType.java
-org.chromium.components.favicon.LargeIconBridge,../../components/favicon/android/java/src/org/chromium/components/favicon/LargeIconBridge.java
-org.chromium.components.favicon.LargeIconBridgeJni,gen/components/favicon/android/jni_headers.srcjar/org/chromium/components/favicon/LargeIconBridgeJni.java

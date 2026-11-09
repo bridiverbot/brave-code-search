@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.browsing_data.BrowsingDataType,gen/components/browsing_data/core/browsing_data_utils_javagen.srcjar/org/chromium/chrome/browser/browsing_data/BrowsingDataType.java
-org.chromium.chrome.browser.browsing_data.CookieOrCacheDeletionChoice,gen/components/browsing_data/core/cookie_or_cache_deletion_choice_javagen.srcjar/org/chromium/chrome/browser/browsing_data/CookieOrCacheDeletionChoice.java
-org.chromium.chrome.browser.browsing_data.TimePeriod,gen/components/browsing_data/core/browsing_data_utils_javagen.srcjar/org/chromium/chrome/browser/browsing_data/TimePeriod.java
-org.chromium.components.browsing_data.DeleteBrowsingDataAction,gen/components/browsing_data/core/browsing_data_utils_javagen.srcjar/org/chromium/components/browsing_data/DeleteBrowsingDataAction.java

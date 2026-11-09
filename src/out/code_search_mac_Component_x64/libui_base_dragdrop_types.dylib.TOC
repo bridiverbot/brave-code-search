@@ -1,9 +1,0 @@
-          cmd LC_ID_DYLIB
-      cmdsize 64
-         name @rpath/libui_base_dragdrop_types.dylib (offset 24)
-   time stamp 0 Thu Jan  1 00:00:00 1970
-      current version 0.0.0
-compatibility version 0.0.0
-T __ZN2ui22PreferredDragOperationEi
-T __ZN2ui13DragDropTypes30DragOperationToNSDragOperationEi
-T __ZN2ui13DragDropTypes30NSDragOperationToDragOperationEy

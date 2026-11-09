@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.ui.side_panel.dev.SidePanelDevFeatureFactory,../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/dev/SidePanelDevFeatureFactory.java
-org.chromium.chrome.browser.ui.side_panel.dev.SidePanelTabScopedDevFeatureImpl,../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/dev/SidePanelTabScopedDevFeatureImpl.java
-org.chromium.chrome.browser.ui.side_panel.dev.SidePanelTabScopedDevFeatureImplJni,gen/chrome/browser/ui/side_panel/internal/android/dev_jni_headers.srcjar/org/chromium/chrome/browser/ui/side_panel/dev/SidePanelTabScopedDevFeatureImplJni.java
-org.chromium.chrome.browser.ui.side_panel.dev.SidePanelWindowScopedDevFeatureImpl,../../chrome/browser/ui/side_panel/internal/android/java/src/org/chromium/chrome/browser/ui/side_panel/dev/SidePanelWindowScopedDevFeatureImpl.java
-org.chromium.chrome.browser.ui.side_panel.dev.SidePanelWindowScopedDevFeatureImplJni,gen/chrome/browser/ui/side_panel/internal/android/dev_jni_headers.srcjar/org/chromium/chrome/browser/ui/side_panel/dev/SidePanelWindowScopedDevFeatureImplJni.java

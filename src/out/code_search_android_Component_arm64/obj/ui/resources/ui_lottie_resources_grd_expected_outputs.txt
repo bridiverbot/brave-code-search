@@ -1,2 +1,0 @@
-gen/ui/resources/grit/ui_lottie_resources.h
-gen/ui/resources/ui_lottie_resources.pak

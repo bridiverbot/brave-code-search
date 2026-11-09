@@ -1,9 +1,0 @@
-{
-  "deps": [
-    "../../../../../media/mojo/mojom/remoting.build_metadata",
-    "../../../../../sandbox/policy/mojom/mojom.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../../chrome/services/redirection/public/mojom/redirection_service.mojom"
-  ]
-}

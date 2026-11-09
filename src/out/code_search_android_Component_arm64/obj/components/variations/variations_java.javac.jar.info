@@ -1,3 +1,0 @@
-org.chromium.components.variations.LoadSeedResult,gen/components/variations/variations_enum_srcjar.srcjar/org/chromium/components/variations/LoadSeedResult.java
-org.chromium.components.variations.SyntheticTrialAnnotationMode,gen/components/variations/variations_enum_srcjar.srcjar/org/chromium/components/variations/SyntheticTrialAnnotationMode.java
-org.chromium.components.variations.VariationsSwitches,gen/components/variations/java_switches_srcjar.srcjar/org/chromium/components/variations/VariationsSwitches.java

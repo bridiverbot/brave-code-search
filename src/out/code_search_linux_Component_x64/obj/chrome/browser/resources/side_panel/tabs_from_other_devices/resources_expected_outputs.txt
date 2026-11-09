@@ -1,4 +1,0 @@
-gen/chrome/grit/side_panel_tabs_from_other_devices_resources.h
-gen/chrome/grit/side_panel_tabs_from_other_devices_resources_map.cc
-gen/chrome/grit/side_panel_tabs_from_other_devices_resources_map.h
-gen/chrome/side_panel_tabs_from_other_devices_resources.pak

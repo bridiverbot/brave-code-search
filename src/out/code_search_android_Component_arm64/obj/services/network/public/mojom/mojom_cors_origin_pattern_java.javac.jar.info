@@ -1,5 +1,0 @@
-org.chromium.network.mojom.CorsDomainMatchMode,gen/services/network/public/mojom/mojom_cors_origin_pattern_java_sources.srcjar/org/chromium/network/mojom/CorsDomainMatchMode.java
-org.chromium.network.mojom.CorsOriginAccessMatchPriority,gen/services/network/public/mojom/mojom_cors_origin_pattern_java_sources.srcjar/org/chromium/network/mojom/CorsOriginAccessMatchPriority.java
-org.chromium.network.mojom.CorsOriginAccessPatterns,gen/services/network/public/mojom/mojom_cors_origin_pattern_java_sources.srcjar/org/chromium/network/mojom/CorsOriginAccessPatterns.java
-org.chromium.network.mojom.CorsOriginPattern,gen/services/network/public/mojom/mojom_cors_origin_pattern_java_sources.srcjar/org/chromium/network/mojom/CorsOriginPattern.java
-org.chromium.network.mojom.CorsPortMatchMode,gen/services/network/public/mojom/mojom_cors_origin_pattern_java_sources.srcjar/org/chromium/network/mojom/CorsPortMatchMode.java

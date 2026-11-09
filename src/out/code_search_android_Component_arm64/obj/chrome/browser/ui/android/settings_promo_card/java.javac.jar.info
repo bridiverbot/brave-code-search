@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.ui.settings_promo_card.DefaultBrowserPromoCard,../../chrome/browser/ui/android/settings_promo_card/java/src/org/chromium/chrome/browser/ui/settings_promo_card/DefaultBrowserPromoCard.java
-org.chromium.chrome.browser.ui.settings_promo_card.SettingsPromoCardPreference,../../chrome/browser/ui/android/settings_promo_card/java/src/org/chromium/chrome/browser/ui/settings_promo_card/SettingsPromoCardPreference.java
-org.chromium.chrome.browser.ui.settings_promo_card.SettingsPromoCardProvider,../../chrome/browser/ui/android/settings_promo_card/java/src/org/chromium/chrome/browser/ui/settings_promo_card/SettingsPromoCardProvider.java

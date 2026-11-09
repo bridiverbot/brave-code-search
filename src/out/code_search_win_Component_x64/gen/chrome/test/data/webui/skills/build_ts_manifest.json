@@ -1,1 +1,0 @@
-{"base_dir": "gen/chrome/test/data/webui/skills/tsc", "files": ["api_boot.js", "card_test.js", "carousel_test.js", "discover_skills_page_test.js", "skills_dialog_test.js", "skills_emoji_picker_test.js", "skills_test.js", "skills_webview_test.js", "test_skills_browser_proxy.js", "user_skills_page_test.js", "webview_bridge_test.js"]}

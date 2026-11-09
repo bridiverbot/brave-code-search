@@ -1,4 +1,0 @@
-// Copyright 2020 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";import{BigBufferSpec as mojoBase_mojom_BigBufferSpec}from"./big_buffer.mojom-webui.js";export const BigStringSpec={$:{}};mojo.internal.Struct(BigStringSpec.$,"BigString",[mojo.internal.StructField("data",0,0,mojoBase_mojom_BigBufferSpec.$,null,false,0,undefined,undefined)],[[0,24]]);

@@ -1,8 +1,0 @@
-org.chromium.chrome.browser.password_edit_dialog.NoFilterArrayAdapter,../../chrome/browser/password_edit_dialog/android/java/src/org/chromium/chrome/browser/password_edit_dialog/NoFilterArrayAdapter.java
-org.chromium.chrome.browser.password_edit_dialog.PasswordEditDialogBridge,../../chrome/browser/password_edit_dialog/android/java/src/org/chromium/chrome/browser/password_edit_dialog/PasswordEditDialogBridge.java
-org.chromium.chrome.browser.password_edit_dialog.PasswordEditDialogBridgeJni,gen/chrome/browser/password_edit_dialog/android/jni_headers.srcjar/org/chromium/chrome/browser/password_edit_dialog/PasswordEditDialogBridgeJni.java
-org.chromium.chrome.browser.password_edit_dialog.PasswordEditDialogCoordinator,../../chrome/browser/password_edit_dialog/android/java/src/org/chromium/chrome/browser/password_edit_dialog/PasswordEditDialogCoordinator.java
-org.chromium.chrome.browser.password_edit_dialog.PasswordEditDialogMediator,../../chrome/browser/password_edit_dialog/android/java/src/org/chromium/chrome/browser/password_edit_dialog/PasswordEditDialogMediator.java
-org.chromium.chrome.browser.password_edit_dialog.PasswordEditDialogProperties,../../chrome/browser/password_edit_dialog/android/java/src/org/chromium/chrome/browser/password_edit_dialog/PasswordEditDialogProperties.java
-org.chromium.chrome.browser.password_edit_dialog.PasswordEditDialogView,../../chrome/browser/password_edit_dialog/android/java/src/org/chromium/chrome/browser/password_edit_dialog/PasswordEditDialogView.java
-org.chromium.chrome.browser.password_edit_dialog.PasswordEditDialogViewBinder,../../chrome/browser/password_edit_dialog/android/java/src/org/chromium/chrome/browser/password_edit_dialog/PasswordEditDialogViewBinder.java

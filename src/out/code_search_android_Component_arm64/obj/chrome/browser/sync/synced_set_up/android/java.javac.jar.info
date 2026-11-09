@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.sync.synced_set_up.SyncedSetUpUtilsBridge,../../chrome/browser/sync/synced_set_up/android/java/src/org/chromium/chrome/browser/sync/synced_set_up/SyncedSetUpUtilsBridge.java
-org.chromium.chrome.browser.sync.synced_set_up.SyncedSetUpUtilsBridgeJni,gen/chrome/browser/sync/synced_set_up/android/jni_headers.srcjar/org/chromium/chrome/browser/sync/synced_set_up/SyncedSetUpUtilsBridgeJni.java

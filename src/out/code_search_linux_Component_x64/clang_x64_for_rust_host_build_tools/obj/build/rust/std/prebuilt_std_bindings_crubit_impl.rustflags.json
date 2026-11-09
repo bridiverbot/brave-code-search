@@ -1,8 +1,0 @@
-{
-    "rustenv": {},
-    "rustflags": [
-        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
-        "clang_x64_for_rust_host_build_tools/gen/third_party/crubit/support/rs_std/rs_std.h.impl.rs",
-        "@clang_x64_for_rust_host_build_tools/obj/build/rust/std/prebuilt_std_bindings_crubit_impl.rsp.rust"
-    ]
-}

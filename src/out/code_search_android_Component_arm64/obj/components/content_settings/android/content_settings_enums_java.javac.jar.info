@@ -1,6 +1,0 @@
-org.chromium.components.content_settings.ContentSetting,gen/components/content_settings/android/content_settings_enums_javagen.srcjar/org/chromium/components/content_settings/ContentSetting.java
-org.chromium.components.content_settings.ContentSettingSource,gen/components/content_settings/android/content_settings_enums_javagen.srcjar/org/chromium/components/content_settings/ContentSettingSource.java
-org.chromium.components.content_settings.ContentSettingsTypeSet,../../components/content_settings/android/java/src/org/chromium/components/content_settings/ContentSettingsTypeSet.java
-org.chromium.components.content_settings.CookieControlsEnforcement,gen/components/content_settings/android/content_settings_enums_javagen.srcjar/org/chromium/components/content_settings/CookieControlsEnforcement.java
-org.chromium.components.content_settings.CookieControlsMode,gen/components/content_settings/android/content_settings_enums_javagen.srcjar/org/chromium/components/content_settings/CookieControlsMode.java
-org.chromium.components.content_settings.CookieControlsState,gen/components/content_settings/android/content_settings_enums_javagen.srcjar/org/chromium/components/content_settings/CookieControlsState.java

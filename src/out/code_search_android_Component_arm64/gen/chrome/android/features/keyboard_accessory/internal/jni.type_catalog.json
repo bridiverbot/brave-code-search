@@ -1,3 +1,0 @@
-{
-  "org/chromium/chrome/browser/keyboard_accessory/AutofillKeyboardAccessoryViewBridge$NativeAutofillKeyboardAccessoryViewImpl": "::autofill::AutofillKeyboardAccessoryViewImpl"
-}

@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.share.link_to_text.LinkGenerationError,gen/components/shared_highlighting/core/common/shared_highlighting_android_enums.srcjar/org/chromium/chrome/browser/share/link_to_text/LinkGenerationError.java
-org.chromium.chrome.browser.share.link_to_text.LinkGenerationReadyStatus,gen/components/shared_highlighting/core/common/shared_highlighting_android_enums.srcjar/org/chromium/chrome/browser/share/link_to_text/LinkGenerationReadyStatus.java
-org.chromium.chrome.browser.share.link_to_text.LinkGenerationStatus,gen/components/shared_highlighting/core/common/shared_highlighting_android_enums.srcjar/org/chromium/chrome/browser/share/link_to_text/LinkGenerationStatus.java
-org.chromium.chrome.browser.share.link_to_text.LinkToTextReshareStatus,gen/components/shared_highlighting/core/common/shared_highlighting_android_enums.srcjar/org/chromium/chrome/browser/share/link_to_text/LinkToTextReshareStatus.java

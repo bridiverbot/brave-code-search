@@ -1,2 +1,0 @@
-gen/components/grit/brave_components_resources.h
-gen/components/brave_components_static.pak

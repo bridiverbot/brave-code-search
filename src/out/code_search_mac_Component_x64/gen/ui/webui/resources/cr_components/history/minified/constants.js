@@ -1,4 +1,0 @@
-// Copyright 2024 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-export var HistoryResultType;(function(HistoryResultType){HistoryResultType[HistoryResultType["TRADITIONAL"]=0]="TRADITIONAL";HistoryResultType[HistoryResultType["GROUPED"]=1]="GROUPED";HistoryResultType[HistoryResultType["EMBEDDINGS"]=2]="EMBEDDINGS";HistoryResultType[HistoryResultType["END"]=3]="END"})(HistoryResultType||(HistoryResultType={}));export var HistoryEmbeddingsUserActions;(function(HistoryEmbeddingsUserActions){HistoryEmbeddingsUserActions[HistoryEmbeddingsUserActions["NON_EMPTY_QUERY_HISTORY_SEARCH"]=0]="NON_EMPTY_QUERY_HISTORY_SEARCH";HistoryEmbeddingsUserActions[HistoryEmbeddingsUserActions["END"]=7]="END"})(HistoryEmbeddingsUserActions||(HistoryEmbeddingsUserActions={}));export const QUERY_RESULT_MINIMUM_AGE=2e3;

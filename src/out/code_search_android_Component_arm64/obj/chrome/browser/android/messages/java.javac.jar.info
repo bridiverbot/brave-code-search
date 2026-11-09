@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.messages.MessagesResourceMapperInitializer,../../chrome/browser/android/messages/java/src/org/chromium/chrome/browser/messages/MessagesResourceMapperInitializer.java
-org.chromium.chrome.browser.messages.MessagesResourceMapperInitializerJni,gen/chrome/browser/android/messages/jni_headers.srcjar/org/chromium/chrome/browser/messages/MessagesResourceMapperInitializerJni.java

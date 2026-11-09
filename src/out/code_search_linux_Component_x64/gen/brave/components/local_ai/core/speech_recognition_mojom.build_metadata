@@ -1,9 +1,0 @@
-{
-  "deps": [
-    "../../../../mojo/public/mojom/base/base.build_metadata",
-    "../../../../services/on_device_model/public/mojom/mojom.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../brave/components/local_ai/core/on_device_speech_recognition.mojom"
-  ]
-}

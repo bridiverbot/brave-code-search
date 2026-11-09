@@ -1,6 +1,0 @@
-drawable-night/touch_to_fill_default_header_image.xml	../../chrome/browser/touch_to_fill/common/android/java/res/drawable-night/touch_to_fill_default_header_image.xml
-drawable/touch_to_fill_bnpl_issuer_linked_background.xml	../../chrome/browser/touch_to_fill/common/android/java/res/drawable/touch_to_fill_bnpl_issuer_linked_background.xml
-drawable/touch_to_fill_default_header_image.xml	../../chrome/browser/touch_to_fill/common/android/java/res/drawable/touch_to_fill_default_header_image.xml
-layout/touch_to_fill_fill_button.xml	../../chrome/browser/touch_to_fill/common/android/java/res/layout/touch_to_fill_fill_button.xml
-layout/touch_to_fill_header_item.xml	../../chrome/browser/touch_to_fill/common/android/java/res/layout/touch_to_fill_header_item.xml
-layout/touch_to_fill_text_button.xml	../../chrome/browser/touch_to_fill/common/android/java/res/layout/touch_to_fill_text_button.xml

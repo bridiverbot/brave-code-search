@@ -1,8 +1,0 @@
-../../base/android/java/src/org/chromium/base/IntStringCallback.java
-../../base/android/java/src/org/chromium/base/JniCallbackImpl.java
-../../base/android/java/src/org/chromium/base/JniOnceCallback.java
-../../base/android/java/src/org/chromium/base/JniOnceCallback2.java
-../../base/android/java/src/org/chromium/base/JniOnceRunnable.java
-../../base/android/java/src/org/chromium/base/JniRepeatingCallback.java
-../../base/android/java/src/org/chromium/base/JniRepeatingCallback2.java
-../../base/android/java/src/org/chromium/base/JniRepeatingRunnable.java

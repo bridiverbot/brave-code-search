@@ -1,5 +1,0 @@
-{
-  "gn_target": "//chrome/android:delegate_public_impl_java",
-  "supports_android": true,
-  "type": "group"
-}

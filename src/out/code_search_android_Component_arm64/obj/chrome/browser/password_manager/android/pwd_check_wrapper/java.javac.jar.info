@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.pwd_check_wrapper.GmsCorePasswordCheckController,../../chrome/browser/password_manager/android/pwd_check_wrapper/java/src/org/chromium/chrome/browser/pwd_check_wrapper/GmsCorePasswordCheckController.java
-org.chromium.chrome.browser.pwd_check_wrapper.PasswordCheckController,../../chrome/browser/password_manager/android/pwd_check_wrapper/java/src/org/chromium/chrome/browser/pwd_check_wrapper/PasswordCheckController.java
-org.chromium.chrome.browser.pwd_check_wrapper.PasswordCheckControllerFactory,../../chrome/browser/password_manager/android/pwd_check_wrapper/java/src/org/chromium/chrome/browser/pwd_check_wrapper/PasswordCheckControllerFactory.java

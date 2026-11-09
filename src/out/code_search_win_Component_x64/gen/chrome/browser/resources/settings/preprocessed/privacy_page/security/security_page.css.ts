@@ -1,9 +1,0 @@
-import {css, CSSResultGroup} from 'chrome://resources/lit/v3_0/lit.rollup.js';
-import {getCss as getCrSharedStyleLit} from 'chrome://resources/cr_elements/cr_shared_style_lit.css.js';
-import {getCss as getSettingsSharedLit} from '../../settings_shared_lit.css.js';
-import {getCss as getSettingsColumnedSectionLit} from '../../settings_columned_section_lit.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[getCrSharedStyleLit(),getSettingsSharedLit(),getSettingsColumnedSectionLit()], css`:host-context([settings-refresh-2026]){#safeBrowsingSection{padding:0}}#safeBrowsingSection{padding:0 var(--cr-section-padding)}.bullet-line{align-items:center;display:flex;min-height:var(--cr-section-min-height)}.bullet-line>div{padding-inline-start:var(--cr-radio-button-size)}settings-collapse-radio-button:not(:first-of-type){--settings-collapse-separator-line:var(--cr-separator-line)}settings-collapse-radio-button[hidden]+settings-collapse-radio-button{--settings-collapse-separator-line:0}settings-collapse-radio-button .bullet-line:last-child{padding-bottom:12px}settings-toggle-button{padding-inline-end:0;padding-inline-start:0}settings-toggle-button:not([disabled]){pointer-events:all}#safeBrowsingEnhanced .bullet-line:last-of-type{padding-bottom:12px}#safeBrowsingEnhanced{--cr-radio-button-unchecked-ripple-color:var(--cr-radio-button-checked-ripple-color)}#secureConnectionsSection h2{padding:24px var(--cr-section-padding) 8px}#httpsOnlyModeToggle,#passwordsLeakToggle{padding:0 var(--cr-section-padding)}#httpsFirstModeToggle{margin-top:8px}#httpsFirstModeRadioGroup{width:100%}#httpsFirstModeRadioGroup .list-item{padding-inline-end:20px;padding-inline-start:20px}#learnMoreLabelContainer{padding-bottom:12px;pointer-events:auto}`]);
-}

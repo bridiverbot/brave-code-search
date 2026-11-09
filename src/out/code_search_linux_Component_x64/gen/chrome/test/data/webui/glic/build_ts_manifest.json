@@ -1,1 +1,0 @@
-{"base_dir": "gen/chrome/test/data/webui/glic/tsc", "files": ["unit_tests/glic_api_client_test.js", "unit_tests/observable_test.js", "unit_tests/mojo_logging_test.js", "unit_tests/overlay_test.js", "unit_tests/test_helpers.js", "unit_tests/webview_test.js"]}

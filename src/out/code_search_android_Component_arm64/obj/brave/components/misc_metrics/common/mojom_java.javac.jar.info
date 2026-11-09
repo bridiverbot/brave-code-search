@@ -1,5 +1,0 @@
-org.chromium.misc_metrics.mojom.MiscAndroidMetrics,gen/brave/components/misc_metrics/common/mojom_java_sources.srcjar/org/chromium/misc_metrics/mojom/MiscAndroidMetrics.java
-org.chromium.misc_metrics.mojom.MiscAndroidMetrics_Internal,gen/brave/components/misc_metrics/common/mojom_java_sources.srcjar/org/chromium/misc_metrics/mojom/MiscAndroidMetrics_Internal.java
-org.chromium.misc_metrics.mojom.OpeningScreenSwitchType,gen/brave/components/misc_metrics/common/mojom_java_sources.srcjar/org/chromium/misc_metrics/mojom/OpeningScreenSwitchType.java
-org.chromium.misc_metrics.mojom.Web3Metrics,gen/brave/components/misc_metrics/common/mojom_java_sources.srcjar/org/chromium/misc_metrics/mojom/Web3Metrics.java
-org.chromium.misc_metrics.mojom.Web3Metrics_Internal,gen/brave/components/misc_metrics/common/mojom_java_sources.srcjar/org/chromium/misc_metrics/mojom/Web3Metrics_Internal.java

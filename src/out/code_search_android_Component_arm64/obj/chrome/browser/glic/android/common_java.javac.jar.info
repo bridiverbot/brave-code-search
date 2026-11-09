@@ -1,6 +1,0 @@
-org.chromium.chrome.browser.glic.GlicNudgeActivity,gen/chrome/browser/glic/android/java_enums_srcjar.srcjar/org/chromium/chrome/browser/glic/GlicNudgeActivity.java
-org.chromium.chrome.browser.glic.toolbar_button.ActorTaskRowData,../../chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/toolbar_button/ActorTaskRowData.java
-org.chromium.chrome.browser.glic.toolbar_button.GlicButtonDelegate,../../chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/toolbar_button/GlicButtonDelegate.java
-org.chromium.chrome.browser.glic.toolbar_button.GlicButtonStateController,../../chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/toolbar_button/GlicButtonStateController.java
-org.chromium.chrome.browser.glic.toolbar_button.GlicSplitButtonDelegate,../../chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/toolbar_button/GlicSplitButtonDelegate.java
-org.chromium.chrome.browser.glic.toolbar_button.GlicSplitButtonDelegateBridge,../../chrome/browser/glic/android/java/src/org/chromium/chrome/browser/glic/toolbar_button/GlicSplitButtonDelegateBridge.java

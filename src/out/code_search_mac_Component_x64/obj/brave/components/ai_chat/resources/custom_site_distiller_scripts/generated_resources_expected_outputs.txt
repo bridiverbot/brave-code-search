@@ -1,4 +1,0 @@
-gen/brave/components/ai_chat/resources/custom_site_distiller_scripts/grit/custom_site_distiller_scripts_generated.h
-gen/brave/components/ai_chat/resources/custom_site_distiller_scripts/grit/custom_site_distiller_scripts_generated_map.cc
-gen/brave/components/ai_chat/resources/custom_site_distiller_scripts/grit/custom_site_distiller_scripts_generated_map.h
-gen/brave/components/ai_chat/resources/custom_site_distiller_scripts/custom_site_distiller_scripts_generated.pak
