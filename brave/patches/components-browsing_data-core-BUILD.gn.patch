@@ -1,0 +1,19 @@
+diff --git a/components/browsing_data/core/BUILD.gn b/components/browsing_data/core/BUILD.gn
+index b47729f093237d55e189751f60a4230298e31ecf..b5cfbca5aba70e963b7658cdb50de1b9b20c4b39 100644
+--- a/components/browsing_data/core/BUILD.gn
++++ b/components/browsing_data/core/BUILD.gn
+@@ -2,11 +2,14 @@
+ # Use of this source code is governed by a BSD-style license that can be
+ # found in the LICENSE file.
+ 
++import("//brave/components/browsing_data/core/sources.gni")
++
+ if (is_android) {
+   import("//build/config/android/rules.gni")
+ }
+ 
+ static_library("core") {
++  public_deps = brave_components_browsing_data_core_public_deps
+   sources = [
+     "browsing_data_policies_utils.cc",
+     "browsing_data_policies_utils.h",

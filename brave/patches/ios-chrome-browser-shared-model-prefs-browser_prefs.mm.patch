@@ -1,0 +1,36 @@
+diff --git a/ios/chrome/browser/shared/model/prefs/browser_prefs.mm b/ios/chrome/browser/shared/model/prefs/browser_prefs.mm
+index 42be5ffcaba30961a7b716d1c8458ec99a87e734..9d7e60c0b70aae90b8509d123f650cc9e551299d 100644
+--- a/ios/chrome/browser/shared/model/prefs/browser_prefs.mm
++++ b/ios/chrome/browser/shared/model/prefs/browser_prefs.mm
+@@ -512,6 +512,7 @@ void RegisterLocalStatePrefs(PrefRegistrySimple* registry) {
+   // Deprecated 08/2026.
+   registry->RegisterTimePref(kWaitingForMultiProfileForcedMigrationTimestamp,
+                              base::Time());
++  brave::RegisterLocalStatePrefs(registry);
+ }
+ 
+ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
+@@ -949,6 +950,7 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
+ 
+   // Deprecated 10/2026.
+   registry->RegisterIntegerPref(kCustomLinksAiModeTileIndex, 0);
++  brave::RegisterBrowserStatePrefs(registry);
+ }
+ 
+ // This method should be periodically pruned of year+ old migrations.
+@@ -980,6 +982,7 @@ void MigrateObsoleteLocalStatePrefs(PrefService* prefs) {
+ 
+   // Added 08/2026.
+   prefs->ClearPref(kWaitingForMultiProfileForcedMigrationTimestamp);
++  brave::MigrateObsoleteLocalStatePrefs(prefs);
+ }
+ 
+ // This method should be periodically pruned of year+ old migrations.
+@@ -1048,6 +1051,7 @@ void MigrateObsoleteProfilePrefs(PrefService* prefs) {
+                       prefs->GetInteger(kCustomLinksAiModeTileIndex));
+   }
+   prefs->ClearPref(kCustomLinksAiModeTileIndex);
++  brave::MigrateObsoleteProfilePrefs(prefs);
+ }
+ 
+ void MigrateObsoleteUserDefault() {

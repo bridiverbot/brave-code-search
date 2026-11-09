@@ -1,0 +1,20 @@
+diff --git a/tracing/tracing/metrics/system_health/loading_metric.html b/tracing/tracing/metrics/system_health/loading_metric.html
+index 4cce58fd6060579aef0aefb8b398beb2ab9221e7..2b5d3de527e9df853c2b876979175d506f25a4cf 100644
+--- a/tracing/tracing/metrics/system_health/loading_metric.html
++++ b/tracing/tracing/metrics/system_health/loading_metric.html
+@@ -203,6 +203,7 @@ tr.exportTo('tr.metrics.sh', function() {
+               snapshot.args.isLoadingMainFrame;
+       if (!isOutermostMainFrame) continue;
+       const url = snapshot.args.documentLoaderURL;
++      if (url.startsWith('chrome-extension://')) continue;  // Ignore extension background pages
+       if (tr.e.chrome.CHROME_INTERNAL_URLS.includes(url)) continue;
+       let navigationStartEvent;
+       if (targetEvent.args.data === undefined ||
+@@ -253,6 +254,7 @@ tr.exportTo('tr.metrics.sh', function() {
+   function collectTimeToEventInCpuTime(rendererHelper, timeToXEntries) {
+     const samples = [];
+     for (const { targetEvent, navigationStartEvent, url } of timeToXEntries) {
++      if (url.startsWith('chrome-extension://')) continue;  // Ignore extension background pages
+       const navStartToEventRange = tr.b.math.Range.fromExplicitRange(
+           navigationStartEvent.start, targetEvent.start);
+ 
