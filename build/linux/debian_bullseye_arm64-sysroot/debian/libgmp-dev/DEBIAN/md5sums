@@ -1,0 +1,12 @@
+8c0dc98eff27959e58847045d0a3e937  usr/include/aarch64-linux-gnu/gmp.h
+ea3d21de4bcf7c696799c5c55dd3655b  usr/include/gmpxx.h
+e0c07ba7b80c0c970e5a26e95a4d27b5  usr/lib/aarch64-linux-gnu/libgmp.a
+dec27f8ef198e8dcd878e2f91a89ce99  usr/lib/aarch64-linux-gnu/libgmpxx.a
+6a56f0f997d38377196d14f7d0e82331  usr/lib/aarch64-linux-gnu/pkgconfig/gmp.pc
+8a64a8148fb7a707cce642eb2af13906  usr/lib/aarch64-linux-gnu/pkgconfig/gmpxx.pc
+210b01072581180bd29487178b55348e  usr/share/doc/libgmp-dev/AUTHORS
+7e6b76c6d0f35538af8c39e98f98ea3e  usr/share/doc/libgmp-dev/NEWS.gz
+d421d0e5f524ef00d56b2278124ab3e9  usr/share/doc/libgmp-dev/README
+6bbdf2529833c91c23d24fb90e2731d3  usr/share/doc/libgmp-dev/changelog.Debian.gz
+03b728a270d58c61a72bdd6cc4da398d  usr/share/doc/libgmp-dev/changelog.gz
+a2e7dae6af89d823171690778148652b  usr/share/doc/libgmp-dev/copyright

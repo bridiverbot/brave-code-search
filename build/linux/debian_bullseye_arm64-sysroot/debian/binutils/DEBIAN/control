@@ -1,0 +1,16 @@
+Package: binutils
+Version: 2.35.2-2
+Architecture: arm64
+Maintainer: Matthias Klose <doko@debian.org>
+Installed-Size: 97
+Depends: binutils-common (= 2.35.2-2), libbinutils (= 2.35.2-2), binutils-aarch64-linux-gnu (= 2.35.2-2)
+Suggests: binutils-doc (>= 2.35.2-2)
+Conflicts: binutils-multiarch (<< 2.27-8), modutils (<< 2.4.19-1)
+Provides: binutils-gold, elf-binutils
+Section: devel
+Priority: optional
+Homepage: https://www.gnu.org/software/binutils/
+Description: GNU assembler, linker and binary utilities
+ The programs in this package are used to assemble, link and manipulate
+ binary and object files.  They may be used in conjunction with a compiler
+ and various libraries to build programs.

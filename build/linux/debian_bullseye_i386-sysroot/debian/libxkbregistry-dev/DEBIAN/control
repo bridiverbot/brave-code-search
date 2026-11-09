@@ -1,0 +1,23 @@
+Package: libxkbregistry-dev
+Source: libxkbcommon
+Version: 1.0.3-2
+Architecture: i386
+Maintainer: Debian X Strike Force <debian-x@lists.debian.org>
+Installed-Size: 44
+Depends: libxkbcommon-dev (= 1.0.3-2), libxkbregistry0 (= 1.0.3-2), libxml2-dev
+Section: libdevel
+Priority: optional
+Multi-Arch: same
+Homepage: http://www.xkbcommon.org/
+Description: library to query available RMLVO - development files
+ This package provides an add-on library called xkbregistry, which is used
+ to query the available RMLVO instead of parsing evdev.xml directly.
+ .
+ This package contains the development headers for the library found in
+ libxkbregistry0. Non-developers likely have little use for this package.
+ .
+ More information about X.Org can be found at:
+ <URL:http://www.X.org>
+ .
+ This module can be found at
+ https://github.com/xkbcommon/libxkbcommon.git
