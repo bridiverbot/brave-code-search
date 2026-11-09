@@ -1,0 +1,30 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/brave/browser/first_run/android/java.params.json",
+    "gen/brave/android/java/org/chromium/chrome/browser/day_zero/java.params.json",
+    "gen/chrome/android/junit/chrome_junit_tests_helper.params.json",
+    "gen/third_party/androidx/androidx_recyclerview_recyclerview_java.params.json",
+    "gen/third_party/androidx/androidx_viewpager2_viewpager2_java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//brave/browser/first_run/android:junit",
+  "interface_jar_path": "obj/brave/browser/first_run/android/junit.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.brave.browser.firstrun",
+  "processed_jar_path": "obj/brave/browser/first_run/android/junit.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/brave/browser/first_run/android/junit.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/brave/browser/first_run/android/junit.javac.jar"
+}

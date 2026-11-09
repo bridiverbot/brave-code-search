@@ -1,0 +1,37 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/brave/android/javatests/brave_test_java_helper.params.json",
+    "gen/brave/browser/download/android/java.params.json",
+    "gen/chrome/android/chrome_app_java_resources.params.json",
+    "gen/chrome/android/chrome_unit_test_util_java.params.json",
+    "gen/chrome/browser/download/android/file_provider_java.params.json",
+    "gen/chrome/browser/download/android/java.params.json",
+    "gen/components/browser_ui/modaldialog/android/java.params.json",
+    "gen/content/public/android/content_full_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_jvm_java.params.json",
+    "gen/third_party/hamcrest/hamcrest_core_java.params.json",
+    "gen/third_party/mockito/mockito_java.params.json",
+    "gen/ui/android/ui_no_recycler_view_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/brave/android/javatests/brave_test_java_org.chromium.chrome.browser.download.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//brave/android/javatests:brave_test_java_org.chromium.chrome.browser.download",
+  "interface_jar_path": "obj/brave/android/javatests/brave_test_java_org.chromium.chrome.browser.download.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome.test",
+  "processed_jar_path": "obj/brave/android/javatests/brave_test_java_org.chromium.chrome.browser.download.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/brave/android/javatests/brave_test_java_org.chromium.chrome.browser.download.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/brave/android/javatests/brave_test_java_org.chromium.chrome.browser.download.javac.jar"
+}

@@ -1,0 +1,7 @@
+int id body 0x7f010001
+int id body_container 0x7f010001
+int id icon_frame 0x7f010001
+int id title 0x7f010001
+int id work_profile_badge 0x7f010001
+int layout web_notification_big_brave_ads 0x7f010001
+int layout web_notification_brave_ads 0x7f010001

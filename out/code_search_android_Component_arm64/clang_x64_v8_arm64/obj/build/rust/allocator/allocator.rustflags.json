@@ -1,0 +1,11 @@
+{
+    "rustenv": {
+        "OUT_DIR": "clang_x64_v8_arm64/gen/build/rust/allocator/allocator",
+        "CLIPPY_CONF_DIR": "../../build/config"
+    },
+    "rustflags": [
+        "-Clinker=../../third_party/llvm-build/Release+Asserts/bin/clang++",
+        "../../build/rust/allocator/lib.rs",
+        "@clang_x64_v8_arm64/obj/build/rust/allocator/allocator.rsp.rust"
+    ]
+}

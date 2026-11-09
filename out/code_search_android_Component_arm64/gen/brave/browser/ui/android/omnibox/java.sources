@@ -1,0 +1,17 @@
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/BraveAutocompleteEditText.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/OmniboxPrefManager.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/status/BraveStatusView.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/BraveDropdownItemViewInfoListBuilder.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/BraveDropdownItemViewInfoListManager.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/BraveLeoAutocompleteDelegate.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/BraveOmniboxSuggestionUiType.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/BraveOmniboxViewHolderFactory.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/BraveOmniboxViewHolderFactoryDummySuper.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/BraveSuggestionHost.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/brave_leo/BraveLeoSuggestionProcessor.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/brave_leo/BraveLeoSuggestionViewBinder.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/brave_search/BraveSearchBannerProcessor.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/brave_search/BraveSearchBannerProperties.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/brave_search/BraveSearchBannerViewBinder.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/editurl/BraveEditUrlSuggestionProcessor.java
+../../brave/browser/ui/android/omnibox/java/src/org/chromium/chrome/browser/omnibox/suggestions/editurl/BraveEditUrlSuggestionProcessorBase.java

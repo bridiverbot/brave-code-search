@@ -1,0 +1,12 @@
+{
+  "javac_full_interface_classpath": [
+    "obj/third_party/androidx/androidx_annotation_annotation_jvm.ijar.jar",
+    "obj/third_party/androidx/androidx_annotation_annotation_experimental_java.ijar.jar",
+    "obj/third_party/android_deps/org_jetbrains_kotlin_kotlin_stdlib.ijar.jar",
+    "obj/third_party/android_deps/org_jetbrains_annotations.ijar.jar",
+    "obj/build/android/build_java.turbine.jar"
+  ],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

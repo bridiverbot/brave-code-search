@@ -1,0 +1,4 @@
+../../brave/android/junit/src/org/chromium/chrome/browser/shields/BraveUnifiedPanelFaviconPriorityTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/shields/BraveUnifiedPanelHandlerLifecycleTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/shields/BraveUnifiedPanelHandlerStatTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/shields/UrlSanitizerServiceFactoryUnitTest.java

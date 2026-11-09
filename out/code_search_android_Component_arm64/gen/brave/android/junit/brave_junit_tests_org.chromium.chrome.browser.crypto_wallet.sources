@@ -1,0 +1,5 @@
+../../brave/android/junit/src/org/chromium/chrome/browser/app/domain/DappsModelTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/crypto_wallet/ApproveTxBottomSheetDialogFragmentTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/crypto_wallet/TwoLineItemBottomSheetFragmentTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/crypto_wallet/WalletBottomSheetDialogFragmentTest.java
+../../brave/android/junit/src/org/chromium/chrome/browser/crypto_wallet/util/TransactionUtilsTest.java

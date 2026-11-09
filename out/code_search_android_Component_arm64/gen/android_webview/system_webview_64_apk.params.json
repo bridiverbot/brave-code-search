@@ -1,0 +1,56 @@
+{
+  "android_manifest": "gen/android_webview/system_webview_64_apk/AndroidManifest.xml",
+  "apk_path": "apks/SystemWebView64.apk",
+  "bundled_srcjars": [
+    "gen/android_webview/libwebviewchromium__jni_registration.srcjar",
+    "gen/android_webview/system_webview_64_apk__compile_resources.srcjar",
+    "gen/android_webview/system_webview_64_apk__native_libraries.srcjar",
+    "gen/android_webview/system_webview_64_apk__build_config_srcjar.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "create_locales_java_list": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/android_webview/nonembedded/devui_banner_resources.params.json",
+    "gen/android_webview/nonembedded/icon_resources.params.json",
+    "gen/android_webview/locale_pak_assets.params.json",
+    "gen/android_webview/pak_file_assets.params.json",
+    "gen/android_webview/android_webview_no_weblayer_java.params.json",
+    "gen/android_webview/nonembedded/devui_launcher_icon_resources.params.json",
+    "gen/third_party/icu/icu_assets.params.json",
+    "gen/android_webview/webview_primary_abi_assets.params.json",
+    "gen/third_party/android_sdk/public_framework_system_java.params.json"
+  ],
+  "dex_path": "obj/android_webview/system_webview_64_apk.dex.jar",
+  "enable_bytecode_checks": true,
+  "enable_lint": false,
+  "final_dex_path": "obj/android_webview/system_webview_64_apk/system_webview_64_apk.r8dex.jar",
+  "gn_target": "//android_webview:system_webview_64_apk__java",
+  "interface_jar_path": "obj/android_webview/system_webview_64_apk.turbine.jar",
+  "is_prebuilt": false,
+  "loadable_modules": [
+    "libcrashpad_handler_trampoline.so"
+  ],
+  "mergeable_android_manifests": [
+    "../../android_webview/AndroidManifest.xml"
+  ],
+  "merged_android_manifest": "gen/android_webview/system_webview_64_apk/AndroidManifest.merged.xml",
+  "processed_jar_path": "obj/android_webview/system_webview_64_apk.javac.jar",
+  "proguard_configs": [
+    "obj/android_webview/system_webview_64_apk/system_webview_64_apk.resources.proguard.txt",
+    "../../android_webview/nonembedded/java/proguard.flags"
+  ],
+  "proguard_enabled": true,
+  "proguard_mapping_path": "apks/SystemWebView64.apk.mapping",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "rtxt_path": "gen/android_webview/system_webview_64_apk__compile_resources_R.txt",
+  "shared_libraries_runtime_deps_file": "gen/android_webview/system_webview_64_apk.native_libs",
+  "suffix_apk_assets_used_by_config": "gen/android_webview/system_webview_64_apk.build_config.json",
+  "supports_android": true,
+  "type": "android_apk",
+  "unprocessed_jar_path": "obj/android_webview/system_webview_64_apk.javac.jar",
+  "version_code": "430100001",
+  "version_name": "1.101.0"
+}
