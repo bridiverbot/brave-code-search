@@ -1,0 +1,11 @@
+{
+  "deps": [
+    "../../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../../mojo/public/mojom/base/protobuf_support.build_metadata",
+    "../../../../services/on_device_model/public/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../components/optimization_guide/public/mojom/model_broker.mojom",
+    "../../../../../../../components/optimization_guide/public/mojom/model_broker_debug.mojom"
+  ]
+}
