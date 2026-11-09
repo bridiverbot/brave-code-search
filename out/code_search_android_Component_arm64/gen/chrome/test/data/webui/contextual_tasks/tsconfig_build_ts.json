@@ -1,0 +1,127 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/contextual_tasks/tsconfig_base.json",
+  "compilerOptions": {
+    "types": [
+      "dom-speech-recognition",
+      "mocha",
+      "trusted-types"
+    ],
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/cr_components/searchbox/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "chrome://resources/cr_components/searchbox/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/searchbox/*"
+      ],
+      "//resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "chrome://resources/cr_elements/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_elements/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "//resources/cr_components/composebox/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "chrome://resources/cr_components/composebox/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/composebox/*"
+      ],
+      "//resources/cr_components/search/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/search/*"
+      ],
+      "chrome://resources/cr_components/search/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/search/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://contextual-tasks/strings.m.js": [
+        "./../../../../../../../../tools/typescript/definitions/strings.d.ts"
+      ],
+      "chrome://contextual-tasks/*": [
+        "./../../../../browser/resources/contextual_tasks/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/app_test.ts",
+    "preprocessed/contextual_tasks_webview_browsertest.ts",
+    "preprocessed/post_message_handler_test.ts",
+    "preprocessed/profile_tooltip_test.ts",
+    "preprocessed/utils_test.ts",
+    "preprocessed/test_contextual_tasks_browser_proxy.ts",
+    "preprocessed/contextual_tasks_test_utils.ts",
+    "preprocessed/top_toolbar_test.ts",
+    "preprocessed/overflow_menu_test.ts",
+    "preprocessed/toolbar_test.ts",
+    "preprocessed/utils/clip_path_test.ts",
+    "preprocessed/window_manager_test.ts",
+    "preprocessed/onboarding_tooltip_test.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_event.d.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_histograms.d.ts",
+    "../../../../../../../../tools/typescript/definitions/web_request.d.ts",
+    "../../../../../../../../tools/typescript/definitions/webview_tag.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/contextual_tasks/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/searchbox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_elements/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/composebox/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/search/tsconfig_build_ts.json"
+    }
+  ]
+}

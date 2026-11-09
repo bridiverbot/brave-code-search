@@ -1,0 +1,15 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/chrome/browser/hub/java.turbine.jar",
+    "obj/base/supplier_java.turbine.jar",
+    "obj/chrome/browser/ui/android/actions/java.turbine.jar",
+    "obj/components/browser_ui/widget/android/java.turbine.jar",
+    "obj/chrome/browser/hub/factory_java.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "interface_classpath": [
+    "obj/third_party/flatbuffers/flatbuffers_java.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

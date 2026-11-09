@@ -1,0 +1,3 @@
+{
+  "org/chromium/chrome/browser/password_manager/settings/PasswordUiView$NativePasswordUiViewAndroid": "::PasswordUiViewAndroid"
+}

@@ -1,0 +1,3 @@
+int drawable chromelogo16 0x7f010001
+int drawable default_favicon 0x7f010001
+int drawable incognito_favicon 0x7f010001

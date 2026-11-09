@@ -1,0 +1,7 @@
+{
+  "dependency_rtxt_files": [
+    "gen/chrome/browser/loading_modal/android/java_resources_R.txt",
+    "gen/ui/android/ui_java_resources_R.txt",
+    "gen/ui/android/ui_strings_grd.R.txt"
+  ]
+}

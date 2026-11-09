@@ -1,0 +1,75 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/color_utils_test.ts",
+    "preprocessed/cr_router_test.ts",
+    "preprocessed/cr_test.ts",
+    "preprocessed/custom_element_test.ts",
+    "preprocessed/icon_test.ts",
+    "preprocessed/load_time_data_test.ts",
+    "preprocessed/long_test_name_test_suite_self_test.ts",
+    "preprocessed/metrics_reporter/metrics_reporter_test.ts",
+    "preprocessed/mojo_type_util_test.ts",
+    "preprocessed/parse_html_subset_test.ts",
+    "preprocessed/parse_html_subset_trusted_types_test.ts",
+    "preprocessed/promise_resolver_test.ts",
+    "preprocessed/static_types_test.ts",
+    "preprocessed/store_test.ts",
+    "preprocessed/test_suite_self_test.ts",
+    "preprocessed/tracked_element/tracked_element_test.ts",
+    "preprocessed/util_test.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_send.d.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_timeticks.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

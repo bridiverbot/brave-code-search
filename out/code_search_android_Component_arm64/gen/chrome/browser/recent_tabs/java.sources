@@ -1,0 +1,12 @@
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/ForeignSessionHelper.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/RecentlyClosedBridge.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/RecentlyClosedBulkEvent.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/RecentlyClosedEntry.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/RecentlyClosedGroup.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/RecentlyClosedTab.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/RecentlyClosedTabManager.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/RecentlyClosedWindow.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/RestoreTabsController.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/RestoreTabsControllerDelegate.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/SessionRecentlyClosedEntry.java
+../../chrome/browser/recent_tabs/android/java/src/org/chromium/chrome/browser/recent_tabs/TabGroupContainer.java

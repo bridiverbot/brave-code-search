@@ -1,0 +1,2 @@
+../../chrome/browser/ui/android/extensions/javatests/src/org/chromium/chrome/browser/ui/extensions/FakeExtensionUiBackend.java
+../../chrome/browser/ui/android/extensions/javatests/src/org/chromium/chrome/browser/ui/extensions/FakeExtensionUiBackendRule.java

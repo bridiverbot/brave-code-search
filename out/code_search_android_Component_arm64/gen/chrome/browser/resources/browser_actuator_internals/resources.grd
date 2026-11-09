@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/browser_actuator_internals_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/browser_actuator_internals_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/browser_actuator_internals_resources_map.h"
+            type="resource_map_header" />
+    <output filename="browser_actuator_internals_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <include name="IDR_BROWSER_ACTUATOR_INTERNALS_BROWSER_ACTUATOR_INTERNALS_HTML" file="${root_gen_dir}/chrome/browser/resources/browser_actuator_internals/preprocessed/browser_actuator_internals.html" resource_path="browser_actuator_internals.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BROWSER_ACTUATOR_INTERNALS_APP_HTML_JS" file="${root_gen_dir}/chrome/browser/resources/browser_actuator_internals/minified/app.html.js" resource_path="app.html.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BROWSER_ACTUATOR_INTERNALS_APP_JS" file="${root_gen_dir}/chrome/browser/resources/browser_actuator_internals/minified/app.js" resource_path="app.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BROWSER_ACTUATOR_INTERNALS_APP_CSS_JS" file="${root_gen_dir}/chrome/browser/resources/browser_actuator_internals/minified/app.css.js" resource_path="app.css.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_BROWSER_ACTUATOR_INTERNALS_BROWSER_ACTUATOR_INTERNALS_MOJOM_WEBUI_JS" file="${root_gen_dir}/chrome/browser/resources/browser_actuator_internals/minified/browser_actuator_internals.mojom-webui.js" resource_path="browser_actuator_internals.mojom-webui.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

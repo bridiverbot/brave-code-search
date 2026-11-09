@@ -1,0 +1,8 @@
+../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/LegacyTipsPromoHandler.java
+../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsOptInCoordinator.java
+../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoCoordinator.java
+../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoHandlerFactory.java
+../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoView.java
+../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoViewBinder.java
+../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsSchedulerBridge.java
+../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsUtils.java

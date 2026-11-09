@@ -1,0 +1,9 @@
+{
+  "gn_target": "//chrome/browser/ui/android/toolbar:java",
+  "public_deps_configs": [
+    "gen/chrome/browser/ui/android/toolbar/core_java.params.json",
+    "gen/components/messages/android/java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

@@ -1,0 +1,32 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/chrome/browser/optimization_guide/android/java.turbine.jar",
+    "obj/base/base_java_test_support.turbine.jar",
+    "obj/chrome/browser/flags/java.turbine.jar",
+    "obj/chrome/browser/profiles/android/java.turbine.jar",
+    "obj/components/optimization_guide/proto/optimization_guide_proto_java.turbine.jar",
+    "obj/third_party/jni_zero/jni_zero_java.turbine.jar",
+    "obj/third_party/junit/junit.turbine.jar",
+    "obj/base/base_cached_flags_java.turbine.jar",
+    "obj/base/base_java_url_utils_for_test.turbine.jar",
+    "obj/base/tasks_java.turbine.jar",
+    "obj/base/tasks_jni_java.javac.jar",
+    "obj/base/tasks_minimal_jni_java.javac.jar",
+    "obj/components/cached_flags/java.turbine.jar",
+    "obj/content/public/android/content_full_java.turbine.jar",
+    "obj/content/public/android/content_main_dex_java.turbine.jar",
+    "obj/ui/base/mojom/ui_base_types_java.turbine.jar",
+    "obj/third_party/android_deps/com_google_protobuf_protobuf_javalite.ijar.jar",
+    "obj/third_party/jni_zero/gendeps_java.turbine.jar",
+    "obj/third_party/mockito/mockito_modified_files_java.turbine.jar",
+    "obj/third_party/android_deps/org_mockito_mockito_android.ijar.jar",
+    "obj/third_party/android_deps/org_mockito_mockito_core.ijar.jar",
+    "obj/url/url_java.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

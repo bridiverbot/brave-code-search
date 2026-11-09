@@ -1,0 +1,10 @@
+{
+  "gn_target": "//components/background_task_scheduler:background_task_scheduler_java",
+  "public_deps_configs": [
+    "gen/components/background_task_scheduler/factory_java.params.json",
+    "gen/components/background_task_scheduler/public_java.params.json",
+    "gen/components/background_task_scheduler/internal/native_task_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

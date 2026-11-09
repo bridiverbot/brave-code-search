@@ -1,0 +1,7 @@
+int dimen side_ui_resize_handle_bar_corner_radius 0x7f010001
+int dimen side_ui_resize_handle_bar_height 0x7f010001
+int dimen side_ui_resize_handle_bar_width 0x7f010001
+int dimen side_ui_resize_handle_width 0x7f010001
+int drawable side_ui_resize_handle_bar 0x7f010001
+int id side_ui_resize_handle_bar 0x7f010001
+int layout side_ui_resize_handle 0x7f010001

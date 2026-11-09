@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/glic_resources.h" type="rc_header">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="grit/glic_resources_map.cc"
+            type="resource_file_map_source" />
+    <output filename="grit/glic_resources_map.h"
+            type="resource_map_header" />
+    <output filename="glic_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes>
+      <part file="glic_api_injection.grdp" />
+      <part file="internals_resources.grdp" />
+      <include name="IDR_GLIC_GLIC_CSS" file="${root_gen_dir}/chrome/browser/resources/glic/preprocessed/glic.css" resource_path="glic.css" use_base_dir="false" type="BINDATA" />
+      <include name="IDR_GLIC_GLIC_HTML" file="${root_gen_dir}/chrome/browser/resources/glic/preprocessed/glic.html" resource_path="glic.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_GLIC_OVERLAY_HTML" file="${root_gen_dir}/chrome/browser/resources/glic/preprocessed/glic_overlay.html" resource_path="glic_overlay.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_INTERNALS_GLIC_INTERNALS_HTML" file="${root_gen_dir}/chrome/browser/resources/glic/preprocessed/internals/glic_internals.html" resource_path="internals/glic_internals.html" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_GLIC_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/glic/minified/glic.rollup.js" resource_path="glic.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_GLIC_OVERLAY_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/glic/minified/glic_overlay.rollup.js" resource_path="glic_overlay.js" use_base_dir="false" type="chrome_html" />
+      <include name="IDR_GLIC_SHARED_ROLLUP_JS" file="${root_gen_dir}/chrome/browser/resources/glic/minified/shared.rollup.js" resource_path="shared.rollup.js" use_base_dir="false" type="chrome_html" />
+    </includes>
+  </release>
+</grit>

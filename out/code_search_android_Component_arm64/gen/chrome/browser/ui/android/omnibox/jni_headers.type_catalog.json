@@ -1,0 +1,5 @@
+{
+  "org/chromium/chrome/browser/omnibox/OmniboxPrerender$NativeOmniboxPrerender": "::OmniboxPrerender",
+  "org/chromium/chrome/browser/omnibox/fusebox/ComposeboxQueryControllerBridge$NativeComposeboxQueryControllerBridge": "::ComposeboxQueryControllerBridge",
+  "org/chromium/chrome/browser/omnibox/suggestions/SuggestionsOmtInputAnchor$NativeOmtInputReceiverState": "::omnibox::OmtInputReceiverState"
+}

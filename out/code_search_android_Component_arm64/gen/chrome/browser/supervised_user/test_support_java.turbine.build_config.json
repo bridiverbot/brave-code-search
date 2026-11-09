@@ -1,0 +1,17 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/chrome/android/chrome_java.turbine.jar",
+    "obj/chrome/browser/profiles/android/java.turbine.jar",
+    "obj/components/browser_ui/bottomsheet/android/test/java.turbine.jar",
+    "obj/content/public/test/android/content_java_test_support.turbine.jar",
+    "obj/third_party/jni_zero/jni_zero_java.turbine.jar",
+    "obj/chrome/browser/notifications/java.turbine.jar",
+    "obj/third_party/jni_zero/gendeps_java.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

@@ -1,0 +1,4 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{PageCallbackRouter,PageHandlerFactory,PageHandlerRemote}from"./actor_internals.mojom-webui.js";export class BrowserProxy{callbackRouter;handler;constructor(){this.callbackRouter=new PageCallbackRouter;this.handler=new PageHandlerRemote;PageHandlerFactory.getRemote().createPageHandler(this.callbackRouter.$.bindNewPipeAndPassRemote(),this.handler.$.bindNewPipeAndPassReceiver())}static getInstance(){return instance||(instance=new BrowserProxy)}static setInstance(proxy){instance=proxy}}let instance=null;

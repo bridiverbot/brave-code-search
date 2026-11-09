@@ -1,0 +1,1 @@
+int drawable lens_icon 0x7f010001

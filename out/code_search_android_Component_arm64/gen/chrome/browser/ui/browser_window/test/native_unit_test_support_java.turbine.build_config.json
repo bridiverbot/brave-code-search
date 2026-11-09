@@ -1,0 +1,26 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/chrome/browser/ui/browser_window/test/junit_test_support.turbine.jar",
+    "obj/base/tasks_java.turbine.jar",
+    "obj/chrome/browser/android/lifecycle/java.turbine.jar",
+    "obj/chrome/browser/profiles/android/java.turbine.jar",
+    "obj/chrome/browser/tabmodel/java.turbine.jar",
+    "obj/chrome/browser/ui/android/multiwindow/java.turbine.jar",
+    "obj/chrome/browser/ui/browser_window/internal/java.turbine.jar",
+    "obj/chrome/browser/ui/browser_window/public/android/java.turbine.jar",
+    "obj/third_party/jni_zero/jni_zero_java.turbine.jar",
+    "obj/ui/android/ui_no_recycler_view_java.turbine.jar",
+    "obj/base/tasks_jni_java.javac.jar",
+    "obj/base/tasks_minimal_jni_java.javac.jar",
+    "obj/third_party/jni_zero/gendeps_java.turbine.jar",
+    "obj/third_party/mockito/mockito_modified_files_java.turbine.jar",
+    "obj/third_party/android_deps/org_mockito_mockito_android.ijar.jar",
+    "obj/third_party/android_deps/org_mockito_mockito_core.ijar.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}
