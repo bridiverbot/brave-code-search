@@ -1,5 +1,0 @@
-layout/blocked_credential_view.xml	../../brave/browser/password_entry_edit/android/java/res/layout/blocked_credential_view.xml
-layout/credential_edit_view.xml	../../brave/browser/password_entry_edit/android/java/res/layout/credential_edit_view.xml
-layout/federated_credential_view.xml	../../brave/browser/password_entry_edit/android/java/res/layout/federated_credential_view.xml
-layout/site_or_app.xml	../../brave/browser/password_entry_edit/android/java/res/layout/site_or_app.xml
-menu/credential_edit_action_bar_menu.xml	../../brave/browser/password_entry_edit/android/java/res/menu/credential_edit_action_bar_menu.xml

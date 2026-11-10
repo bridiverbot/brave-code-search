@@ -1,7 +1,0 @@
-{
-    "rustenv": {},
-    "rustflags": [
-        "gen/third_party/rust/qr_code/v2/qr_code.h.impl.rs",
-        "@obj/third_party/rust/qr_code/v2/cpp_api_from_rust_crubit_impl.rsp.rust"
-    ]
-}

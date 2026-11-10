@@ -1,9 +1,0 @@
-{
-  "javac_full_classpath": [
-    "../../third_party/hamcrest/cipd/lib/hamcrest-library.jar",
-    "../../third_party/hamcrest/cipd/lib/hamcrest-core.jar"
-  ],
-  "sdk_jars": [
-    "../../third_party/android_sdk/public/platforms/android-37.2/android.jar"
-  ]
-}

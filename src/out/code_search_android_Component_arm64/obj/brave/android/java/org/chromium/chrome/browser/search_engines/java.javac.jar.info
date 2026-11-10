@@ -1,8 +1,0 @@
-org.chromium.chrome.browser.search_engines.settings.BraveBaseSearchEngineAdapter,../../brave/android/java/org/chromium/chrome/browser/search_engines/settings/BraveBaseSearchEngineAdapter.java
-org.chromium.chrome.browser.search_engines.settings.BravePrivateSearchEnginePreference,../../brave/android/java/org/chromium/chrome/browser/search_engines/settings/BravePrivateSearchEnginePreference.java
-org.chromium.chrome.browser.search_engines.settings.BraveSearchEngineAdapter,../../brave/android/java/org/chromium/chrome/browser/search_engines/settings/BraveSearchEngineAdapter.java
-org.chromium.chrome.browser.search_engines.settings.BraveSearchEngineAdapterDummySuper,../../brave/android/java/org/chromium/chrome/browser/search_engines/settings/BraveSearchEngineAdapterDummySuper.java
-org.chromium.chrome.browser.search_engines.settings.BraveSearchEnginePrefHelper,../../brave/android/java/org/chromium/chrome/browser/search_engines/settings/BraveSearchEnginePrefHelper.java
-org.chromium.chrome.browser.search_engines.settings.BraveSearchEnginePrefHelperJni,gen/brave/android/java/org/chromium/chrome/browser/search_engines/jni_headers.srcjar/org/chromium/chrome/browser/search_engines/settings/BraveSearchEnginePrefHelperJni.java
-org.chromium.chrome.browser.search_engines.settings.BraveSearchEnginePreference,../../brave/android/java/org/chromium/chrome/browser/search_engines/settings/BraveSearchEnginePreference.java
-org.chromium.chrome.browser.search_engines.settings.BraveStandardSearchEnginePreference,../../brave/android/java/org/chromium/chrome/browser/search_engines/settings/BraveStandardSearchEnginePreference.java

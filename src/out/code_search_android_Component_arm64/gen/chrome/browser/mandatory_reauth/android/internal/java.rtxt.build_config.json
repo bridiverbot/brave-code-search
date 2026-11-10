@@ -1,6 +1,0 @@
-{
-  "dependency_rtxt_files": [
-    "gen/chrome/browser/mandatory_reauth/android/internal/java_resources_R.txt",
-    "gen/components/strings/components_strings_grd.R.txt"
-  ]
-}

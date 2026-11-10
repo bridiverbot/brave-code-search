@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_BRAVE_EXTRAS_BRAVE_TAB_ORGANIZER_ILLUSTRATION_SVG" file="${root_src_dir}/brave/browser/resources/tab_search/brave/tab_organizer_illustration.svg" resource_path="brave/tab_organizer_illustration.svg" use_base_dir="false" type="BINDATA" />
-</grit-part>

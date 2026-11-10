@@ -1,8 +1,0 @@
-color/pdf_edit_button_tint.xml	../../chrome/browser/ui/android/pdf/java/res/color/pdf_edit_button_tint.xml
-drawable/ic_fit_page_height_24dp.xml	../../chrome/browser/ui/android/pdf/java/res/drawable/ic_fit_page_height_24dp.xml
-drawable/ic_fit_page_width_24dp.xml	../../chrome/browser/ui/android/pdf/java/res/drawable/ic_fit_page_width_24dp.xml
-drawable/pdf_edit_button_background.xml	../../chrome/browser/ui/android/pdf/java/res/drawable/pdf_edit_button_background.xml
-drawable/toolbar_no_divider.xml	../../chrome/browser/ui/android/pdf/java/res/drawable/toolbar_no_divider.xml
-layout/pdf_page.xml	../../chrome/browser/ui/android/pdf/java/res/layout/pdf_page.xml
-layout/pdf_properties_dialog.xml	../../chrome/browser/ui/android/pdf/java/res/layout/pdf_properties_dialog.xml
-layout/pdf_toolbar.xml	../../chrome/browser/ui/android/pdf/java/res/layout/pdf_toolbar.xml

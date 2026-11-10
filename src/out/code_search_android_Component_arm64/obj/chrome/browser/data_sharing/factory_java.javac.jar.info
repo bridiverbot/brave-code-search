@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.data_sharing.DataSharingServiceFactory,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/DataSharingServiceFactory.java
-org.chromium.chrome.browser.data_sharing.DataSharingServiceFactoryBridge,../../chrome/browser/data_sharing/android/java/src/org/chromium/chrome/browser/data_sharing/DataSharingServiceFactoryBridge.java
-org.chromium.chrome.browser.data_sharing.DataSharingServiceFactoryJni,gen/chrome/browser/data_sharing/jni_headers.srcjar/org/chromium/chrome/browser/data_sharing/DataSharingServiceFactoryJni.java

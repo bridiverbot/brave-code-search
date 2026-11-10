@@ -1,4 +1,0 @@
-gen/chrome/grit/skills_resources.h
-gen/chrome/grit/skills_resources_map.cc
-gen/chrome/grit/skills_resources_map.h
-gen/chrome/skills_resources.pak

@@ -1,4 +1,0 @@
-gen/chrome/grit/feature_showcase_resources.h
-gen/chrome/grit/feature_showcase_resources_map.cc
-gen/chrome/grit/feature_showcase_resources_map.h
-gen/chrome/feature_showcase_resources.pak

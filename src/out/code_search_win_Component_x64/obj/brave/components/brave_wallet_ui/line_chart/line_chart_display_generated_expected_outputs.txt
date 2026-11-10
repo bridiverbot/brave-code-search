@@ -1,4 +1,0 @@
-gen/brave/components/line_chart_display/resources/grit/line_chart_display_generated.h
-gen/brave/components/line_chart_display/resources/grit/line_chart_display_generated_map.cc
-gen/brave/components/line_chart_display/resources/grit/line_chart_display_generated_map.h
-gen/brave/components/line_chart_display/resources/line_chart_display_generated.pak

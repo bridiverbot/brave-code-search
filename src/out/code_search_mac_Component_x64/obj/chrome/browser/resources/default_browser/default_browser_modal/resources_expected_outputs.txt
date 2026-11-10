@@ -1,4 +1,0 @@
-gen/chrome/grit/default_browser_modal_resources.h
-gen/chrome/grit/default_browser_modal_resources_map.cc
-gen/chrome/grit/default_browser_modal_resources_map.h
-gen/chrome/default_browser_modal_resources.pak

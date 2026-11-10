@@ -1,9 +1,0 @@
-org.jni_zero.CheckDiscard,../../third_party/jni_zero/java/src/org/jni_zero/CheckDiscard.java
-org.jni_zero.JniPtr,../../third_party/jni_zero/java/src/org/jni_zero/JniPtr.java
-org.jni_zero.JniPtrInner,../../third_party/jni_zero/java/src/org/jni_zero/JniPtrInner.java
-org.jni_zero.JniStaticTestMocker,../../third_party/jni_zero/java/src/org/jni_zero/JniStaticTestMocker.java
-org.jni_zero.JniTestInstanceHolder,../../third_party/jni_zero/java/src/org/jni_zero/JniTestInstanceHolder.java
-org.jni_zero.JniTypeToken,../../third_party/jni_zero/java/src/org/jni_zero/JniTypeToken.java
-org.jni_zero.JniZeroInternal,../../third_party/jni_zero/java/src/org/jni_zero/JniZeroInternal.java
-org.jni_zero.internal.NullUnmarked,../../third_party/jni_zero/java/src/org/jni_zero/internal/NullUnmarked.java
-org.jni_zero.internal.Nullable,../../third_party/jni_zero/java/src/org/jni_zero/internal/Nullable.java

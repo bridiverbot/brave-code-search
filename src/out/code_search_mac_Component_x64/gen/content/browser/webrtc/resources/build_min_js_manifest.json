@@ -1,1 +1,0 @@
-{"base_dir": "gen/content/browser/webrtc/resources/minified", "files": ["candidate_grid.js", "data_series.js", "dump_creator.js", "peer_connection_update_table.js", "sdp_utils.js", "stats_graph_helper.js", "stats_helper.js", "stats_rates_calculator.js", "stats_table.js", "tab_view.js", "timeline_graph_view.js", "user_media_table.js", "webrtc_internals.js"]}

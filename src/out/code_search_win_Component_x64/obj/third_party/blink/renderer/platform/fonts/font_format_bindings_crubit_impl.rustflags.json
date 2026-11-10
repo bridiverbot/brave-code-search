@@ -1,7 +1,0 @@
-{
-    "rustenv": {},
-    "rustflags": [
-        "gen/third_party/blink/renderer/platform/fonts/font_format.h.impl.rs",
-        "@obj/third_party/blink/renderer/platform/fonts/font_format_bindings_crubit_impl.rsp.rust"
-    ]
-}

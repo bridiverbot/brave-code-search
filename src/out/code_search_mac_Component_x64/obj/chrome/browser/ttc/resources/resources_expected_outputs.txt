@@ -1,4 +1,0 @@
-gen/chrome/grit/ai_overlay_dialog_untrusted_resources.h
-gen/chrome/grit/ai_overlay_dialog_untrusted_resources_map.cc
-gen/chrome/grit/ai_overlay_dialog_untrusted_resources_map.h
-gen/chrome/ai_overlay_dialog_untrusted_resources.pak

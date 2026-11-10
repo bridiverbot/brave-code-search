@@ -1,8 +1,0 @@
-  0x000000000000000e (SONAME)       Library soname: [libimmediate_crash_test_helper.so]
-__gmon_start__ w
-_ITM_deregisterTMCloneTable w
-_ITM_registerTMCloneTable w
-abort@GLIBC_2.2.5 U
-__cxa_finalize@GLIBC_2.2.5 w
-TestFunction1 T
-TestFunction2 T

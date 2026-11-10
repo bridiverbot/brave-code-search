@@ -1,9 +1,0 @@
-          cmd LC_ID_DYLIB
-      cmdsize 80
-         name @rpath/libmojo_base_protobuf_support_traits.dylib (offset 24)
-   time stamp 0 Thu Jan  1 00:00:00 1970
-      current version 0.0.0
-compatibility version 0.0.0
-T __ZN4mojo12StructTraitsIN9mojo_base5mojom20ProtoWrapperDataViewENS1_12ProtoWrapperEE10proto_nameERKS4_
-T __ZN4mojo12StructTraitsIN9mojo_base5mojom20ProtoWrapperDataViewENS1_12ProtoWrapperEE8smuggledERS4_
-T __ZN4mojo12StructTraitsIN9mojo_base5mojom20ProtoWrapperDataViewENS1_12ProtoWrapperEE4ReadES3_PS4_

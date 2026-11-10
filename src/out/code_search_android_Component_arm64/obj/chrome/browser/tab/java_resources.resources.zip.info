@@ -1,8 +1,0 @@
-drawable-hdpi/sad_tab	../../chrome/browser/tab/java/res/drawable-hdpi/sad_tab.png
-drawable-xhdpi/sad_tab	../../chrome/browser/tab/java/res/drawable-xhdpi/sad_tab.png
-drawable-xxhdpi/sad_tab	../../chrome/browser/tab/java/res/drawable-xxhdpi/sad_tab.png
-drawable-xxxhdpi/sad_tab	../../chrome/browser/tab/java/res/drawable-xxxhdpi/sad_tab.png
-drawable/link_status_bar_background.xml	../../chrome/browser/tab/java/res/drawable/link_status_bar_background.xml
-drawable/sad_tab	../../chrome/browser/tab/java/res/drawable-mdpi/sad_tab.png
-layout/link_hover_status_bar.xml	../../chrome/browser/tab/java/res/layout/link_hover_status_bar.xml
-layout/sad_tab.xml	../../chrome/browser/tab/java/res/layout/sad_tab.xml

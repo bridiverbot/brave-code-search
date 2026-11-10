@@ -1,9 +1,0 @@
-diff --git a/build/android/pylib/gtest/gtest_test_instance.py b/build/android/pylib/gtest/gtest_test_instance.py
-index 3089d5ccb1b520196f92f51e8ccfab26434128c8..04eefa3fc6f0580b5fad59b8c30abdf9aaa48ac3 100644
---- a/build/android/pylib/gtest/gtest_test_instance.py
-+++ b/build/android/pylib/gtest/gtest_test_instance.py
-@@ -820,3 +820,4 @@ class GtestTestInstance(test_instance.TestInstance):
-         if self._deobfuscator:
-             self._deobfuscator.Close()
-             self._deobfuscator = None
-+from brave_chromium_utils import inline_chromium_src_override; inline_chromium_src_override(globals(), locals())

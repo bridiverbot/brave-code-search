@@ -1,5 +1,0 @@
-{
-  "gn_target": "//third_party/openxr:openxr_manifest_java",
-  "supports_android": true,
-  "type": "group"
-}

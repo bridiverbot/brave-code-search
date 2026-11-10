@@ -1,6 +1,0 @@
-gen/chrome/grit/webui_theme_resources.h
-gen/chrome/grit/webui_theme_resources_map.cc
-gen/chrome/grit/webui_theme_resources_map.h
-gen/chrome/webui_theme_resources_100_percent.pak
-gen/chrome/webui_theme_resources_200_percent.pak
-gen/chrome/webui_theme_resources_300_percent.pak

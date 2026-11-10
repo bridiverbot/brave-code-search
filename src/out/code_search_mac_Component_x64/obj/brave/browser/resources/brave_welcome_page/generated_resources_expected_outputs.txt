@@ -1,4 +1,0 @@
-gen/brave/browser/resources/brave_welcome_page/grit/brave_welcome_page_generated.h
-gen/brave/browser/resources/brave_welcome_page/grit/brave_welcome_page_generated_map.cc
-gen/brave/browser/resources/brave_welcome_page/grit/brave_welcome_page_generated_map.h
-gen/brave/browser/resources/brave_welcome_page/brave_welcome_page_generated.pak

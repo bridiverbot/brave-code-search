@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "../../../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../chrome/browser/browser_actuator/internals/browser_actuator_internals.mojom"
-  ]
-}

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_MEDIA_INTERNALS_INTEGRATION_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/media_internals/tsc/integration_test.js" resource_path="media_internals/integration_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_MEDIA_INTERNALS_MANAGER_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/media_internals/tsc/manager_test.js" resource_path="media_internals/manager_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_MEDIA_INTERNALS_PLAYER_INFO_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/media_internals/tsc/player_info_test.js" resource_path="media_internals/player_info_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

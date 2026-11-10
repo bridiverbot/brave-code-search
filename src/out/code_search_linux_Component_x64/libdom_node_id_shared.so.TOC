@@ -1,9 +1,0 @@
-  0x000000000000000e (SONAME)       Library soname: [libdom_node_id_shared.so]
-__gmon_start__ w
-_ITM_deregisterTMCloneTable w
-_ITM_registerTMCloneTable w
-_ZN4mojo8internal52ValidateUnversionedStructHeaderAndSizeAndClaimMemoryEPKvmPNS0_17ValidationContextE U
-__cxa_finalize@GLIBC_2.2.5 w
-_ZN5blink5mojom8internal14DOMNodeId_Data8ValidateEPKvPN4mojo8internal17ValidationContextE T
-_ZN5blink5mojom8internal14DOMNodeId_DataC1Ev T
-_ZN5blink5mojom8internal14DOMNodeId_DataC2Ev T

@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.ui.web_content_hairline.WebContentHairlineContainer,../../chrome/browser/ui/web_content_hairline/internal/android/java/src/org/chromium/chrome/browser/ui/web_content_hairline/WebContentHairlineContainer.java
-org.chromium.chrome.browser.ui.web_content_hairline.WebContentHairlineCoordinatorFactory,../../chrome/browser/ui/web_content_hairline/internal/android/java/src/org/chromium/chrome/browser/ui/web_content_hairline/WebContentHairlineCoordinatorFactory.java
-org.chromium.chrome.browser.ui.web_content_hairline.WebContentHairlineCoordinatorImpl,../../chrome/browser/ui/web_content_hairline/internal/android/java/src/org/chromium/chrome/browser/ui/web_content_hairline/WebContentHairlineCoordinatorImpl.java

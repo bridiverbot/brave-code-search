@@ -1,2 +1,0 @@
-org.chromium.components.dom_distiller.content.DistillablePageUtils,../../components/dom_distiller/content/browser/android/java/src/org/chromium/components/dom_distiller/content/DistillablePageUtils.java
-org.chromium.components.dom_distiller.content.DistillablePageUtilsJni,gen/components/dom_distiller/content/browser/android/jni_headers.srcjar/org/chromium/components/dom_distiller/content/DistillablePageUtilsJni.java

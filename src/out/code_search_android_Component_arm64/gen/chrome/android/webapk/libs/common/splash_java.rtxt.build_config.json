@@ -1,6 +1,0 @@
-{
-  "dependency_rtxt_files": [
-    "gen/chrome/android/webapk/libs/common/splash_resources_R.txt",
-    "gen/components/webapk/android/libs/common/splash_resources_R.txt"
-  ]
-}

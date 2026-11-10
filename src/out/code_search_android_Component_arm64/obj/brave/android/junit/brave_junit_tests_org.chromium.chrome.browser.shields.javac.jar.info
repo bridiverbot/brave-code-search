@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.shields.BraveUnifiedPanelFaviconPriorityTest,../../brave/android/junit/src/org/chromium/chrome/browser/shields/BraveUnifiedPanelFaviconPriorityTest.java
-org.chromium.chrome.browser.shields.BraveUnifiedPanelHandlerLifecycleTest,../../brave/android/junit/src/org/chromium/chrome/browser/shields/BraveUnifiedPanelHandlerLifecycleTest.java
-org.chromium.chrome.browser.shields.BraveUnifiedPanelHandlerStatTest,../../brave/android/junit/src/org/chromium/chrome/browser/shields/BraveUnifiedPanelHandlerStatTest.java
-org.chromium.chrome.browser.shields.UrlSanitizerServiceFactoryUnitTest,../../brave/android/junit/src/org/chromium/chrome/browser/shields/UrlSanitizerServiceFactoryUnitTest.java

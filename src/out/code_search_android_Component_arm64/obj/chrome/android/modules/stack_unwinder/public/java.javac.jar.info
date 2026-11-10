@@ -1,2 +1,0 @@
-org.chromium.chrome.modules.stack_unwinder.StackUnwinderModule,gen/chrome/android/modules/stack_unwinder/public/module_interface.srcjar/org/chromium/chrome/modules/stack_unwinder/StackUnwinderModule.java
-org.chromium.chrome.modules.stack_unwinder.StackUnwinderModuleContents,../../chrome/android/modules/stack_unwinder/public/java/src/org/chromium/chrome/modules/stack_unwinder/StackUnwinderModuleContents.java

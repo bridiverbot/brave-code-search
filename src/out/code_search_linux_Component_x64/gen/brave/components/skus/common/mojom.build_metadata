@@ -1,9 +1,0 @@
-{
-  "deps": [
-    "../../../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../brave/components/skus/common/skus_internals.mojom",
-    "../../../../../../../brave/components/skus/common/skus_sdk.mojom"
-  ]
-}

@@ -1,7 +1,0 @@
-org.chromium.chrome.browser.sync.SyncSettingsUtils,../../chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/SyncSettingsUtils.java
-org.chromium.chrome.browser.sync.ui.BatchUploadDialogCoordinator,../../chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/ui/BatchUploadDialogCoordinator.java
-org.chromium.chrome.browser.sync.ui.IdentityErrorCardViewBinder,../../chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/ui/IdentityErrorCardViewBinder.java
-org.chromium.chrome.browser.sync.ui.batch_upload_card.BatchUploadCardBinder,../../chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/ui/batch_upload_card/BatchUploadCardBinder.java
-org.chromium.chrome.browser.sync.ui.batch_upload_card.BatchUploadCardCoordinator,../../chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/ui/batch_upload_card/BatchUploadCardCoordinator.java
-org.chromium.chrome.browser.sync.ui.batch_upload_card.BatchUploadCardMediator,../../chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/ui/batch_upload_card/BatchUploadCardMediator.java
-org.chromium.chrome.browser.sync.ui.batch_upload_card.BatchUploadCardProperties,../../chrome/browser/sync/android/java/src/org/chromium/chrome/browser/sync/ui/batch_upload_card/BatchUploadCardProperties.java

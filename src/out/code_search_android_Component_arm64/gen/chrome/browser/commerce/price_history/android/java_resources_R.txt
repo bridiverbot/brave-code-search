@@ -1,5 +1,0 @@
-int id open_jackpot_url_button 0x7f010001
-int id price_history_description 0x7f010001
-int id price_history_layout 0x7f010001
-int id price_history_title 0x7f010001
-int layout price_history_layout_v2 0x7f010001

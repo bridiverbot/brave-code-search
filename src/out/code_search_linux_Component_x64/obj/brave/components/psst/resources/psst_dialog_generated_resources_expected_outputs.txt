@@ -1,4 +1,0 @@
-gen/brave/components/psst/resources/grit/brave_psst_dialog_generated.h
-gen/brave/components/psst/resources/grit/brave_psst_dialog_generated_map.cc
-gen/brave/components/psst/resources/grit/brave_psst_dialog_generated_map.h
-gen/brave/components/psst/resources/brave_psst_dialog_generated.pak

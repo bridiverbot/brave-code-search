@@ -1,7 +1,0 @@
-org.chromium.components.gcm_driver.GCMDriver,../../components/gcm_driver/android/java/src/org/chromium/components/gcm_driver/GCMDriver.java
-org.chromium.components.gcm_driver.GCMDriverJni,gen/components/gcm_driver/android/jni_headers.srcjar/org/chromium/components/gcm_driver/GCMDriverJni.java
-org.chromium.components.gcm_driver.GCMMessage,../../components/gcm_driver/android/java/src/org/chromium/components/gcm_driver/GCMMessage.java
-org.chromium.components.gcm_driver.GoogleCloudMessagingSubscriber,../../components/gcm_driver/android/java/src/org/chromium/components/gcm_driver/GoogleCloudMessagingSubscriber.java
-org.chromium.components.gcm_driver.GoogleCloudMessagingV2,../../components/gcm_driver/android/java/src/org/chromium/components/gcm_driver/GoogleCloudMessagingV2.java
-org.chromium.components.gcm_driver.LazySubscriptionsManager,../../components/gcm_driver/android/java/src/org/chromium/components/gcm_driver/LazySubscriptionsManager.java
-org.chromium.components.gcm_driver.SubscriptionFlagManager,../../components/gcm_driver/android/java/src/org/chromium/components/gcm_driver/SubscriptionFlagManager.java

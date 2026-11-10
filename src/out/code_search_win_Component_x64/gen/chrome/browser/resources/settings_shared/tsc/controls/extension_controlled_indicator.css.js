@@ -1,6 +1,0 @@
-import { css } from 'chrome://resources/lit/v3_0/lit.rollup.js';
-import '//resources/cr_elements/cr_shared_vars.css.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[], css `:host{align-items:center;display:flex;margin-inline-start:36px;min-height:var(--cr-section-min-height)}img{margin-inline-end:16px}#disable{margin-inline-start:8px}:host>span{flex:1;margin-inline-end:8px}`]);
-}

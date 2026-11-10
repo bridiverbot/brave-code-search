@@ -1,4 +1,0 @@
-gen/brave/grit/brave_education_resources.h
-gen/brave/grit/brave_education_resources_map.cc
-gen/brave/grit/brave_education_resources_map.h
-gen/brave/brave_education_resources.pak

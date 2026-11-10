@@ -1,6 +1,0 @@
-  0x000000000000000e (SONAME)       Library soname: [libdevice_gamepad_public_cpp_shared_with_blink.so]
-__gmon_start__ w
-_ITM_deregisterTMCloneTable w
-_ITM_registerTMCloneTable w
-__cxa_finalize@GLIBC_2.2.5 w
-_ZN6device8Gamepads15kItemsLengthCapE V

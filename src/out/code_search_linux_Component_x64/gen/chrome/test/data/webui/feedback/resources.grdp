@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_FEEDBACK_AUTOFILL_METADATA_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/feedback/tsc/autofill_metadata_test.js" resource_path="feedback/autofill_metadata_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_FEEDBACK_FEEDBACK_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/feedback/tsc/feedback_test.js" resource_path="feedback/feedback_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_FEEDBACK_REPORT_UNSAFE_SITE_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/feedback/tsc/report_unsafe_site_test.js" resource_path="feedback/report_unsafe_site_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_FEEDBACK_SYSTEM_INFO_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/feedback/tsc/system_info_test.js" resource_path="feedback/system_info_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_FEEDBACK_TEST_FEEDBACK_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/feedback/tsc/test_feedback_browser_proxy.js" resource_path="feedback/test_feedback_browser_proxy.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

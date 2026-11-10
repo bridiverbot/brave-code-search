@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_INLINE_LOGIN_INLINE_LOGIN_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/inline_login/tsc/inline_login_test.js" resource_path="inline_login/inline_login_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_INLINE_LOGIN_INLINE_LOGIN_TEST_UTIL_JS" file="${root_gen_dir}/chrome/test/data/webui/inline_login/tsc/inline_login_test_util.js" resource_path="inline_login/inline_login_test_util.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

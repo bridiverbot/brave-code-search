@@ -1,3 +1,0 @@
-org.chromium.components.segmentation_platform.SegmentationPlatformServiceImpl,../../components/segmentation_platform/internal/android/java/src/org/chromium/components/segmentation_platform/SegmentationPlatformServiceImpl.java
-org.chromium.components.segmentation_platform.SegmentationPlatformServiceImplJni,gen/components/segmentation_platform/internal/jni_headers.srcjar/org/chromium/components/segmentation_platform/SegmentationPlatformServiceImplJni.java
-org.chromium.components.segmentation_platform.execution.processing.CustomDeviceUtils,../../components/segmentation_platform/internal/android/java/src/org/chromium/components/segmentation_platform/execution/processing/CustomDeviceUtils.java

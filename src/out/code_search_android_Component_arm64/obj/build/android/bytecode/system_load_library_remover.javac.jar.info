@@ -1,2 +1,0 @@
-org.chromium.bytecode.ByteCodeRewriter,../../build/android/bytecode/java/org/chromium/bytecode/ByteCodeRewriter.java
-org.chromium.bytecode.SystemLoadLibraryRemover,../../build/android/bytecode/java/org/chromium/bytecode/SystemLoadLibraryRemover.java

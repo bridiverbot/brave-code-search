@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_APP_HOME_APP_LIST_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/app_home/tsc/app_list_test.js" resource_path="app_home/app_list_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_APP_HOME_TEST_APP_HOME_PAGE_HANDLER_JS" file="${root_gen_dir}/chrome/test/data/webui/app_home/tsc/test_app_home_page_handler.js" resource_path="app_home/test_app_home_page_handler.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

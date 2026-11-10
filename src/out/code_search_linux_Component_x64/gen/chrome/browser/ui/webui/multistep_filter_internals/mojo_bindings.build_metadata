@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "../../../../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../../chrome/browser/ui/webui/multistep_filter_internals/multistep_filter_internals.mojom"
-  ]
-}

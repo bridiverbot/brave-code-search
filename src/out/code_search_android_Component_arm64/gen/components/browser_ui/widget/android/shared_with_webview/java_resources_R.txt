@@ -1,2 +1,0 @@
-int dimen chip_icon_size 0x7f010001
-int dimen keyboard_accessory_bar_item_icon_width 0x7f010001

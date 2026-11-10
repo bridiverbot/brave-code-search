@@ -1,4 +1,0 @@
-org.chromium.components.input.InputFeatureMap,../../components/input/android/java/src/org/chromium/components/input/InputFeatureMap.java
-org.chromium.components.input.InputFeatureMapJni,gen/components/input/android/jni_headers.srcjar/org/chromium/components/input/InputFeatureMapJni.java
-org.chromium.components.input.InputUtils,../../components/input/android/java/src/org/chromium/components/input/InputUtils.java
-org.chromium.components.input.InputUtilsJni,gen/components/input/android/jni_headers.srcjar/org/chromium/components/input/InputUtilsJni.java

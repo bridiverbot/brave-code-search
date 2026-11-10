@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.contextual_tasks.ContextualTasksUtils,../../chrome/browser/contextual_tasks/android/java/src/org/chromium/chrome/browser/contextual_tasks/ContextualTasksUtils.java
-org.chromium.chrome.browser.contextual_tasks.ContextualTasksUtilsJni,gen/chrome/browser/contextual_tasks/utils_jni_headers.srcjar/org/chromium/chrome/browser/contextual_tasks/ContextualTasksUtilsJni.java

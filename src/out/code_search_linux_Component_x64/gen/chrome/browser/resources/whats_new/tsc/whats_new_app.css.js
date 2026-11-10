@@ -1,5 +1,0 @@
-import { css } from '//resources/lit/v3_0/lit.rollup.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[], css `#content{border:none;height:100%;width:100%}#staging-indicator{background-color:white;border:2px solid black;border-radius:5px;bottom:8px;font-family:'Google Sans';opacity:0.3;padding:2px 4px;position:absolute;right:24px}`]);
-}

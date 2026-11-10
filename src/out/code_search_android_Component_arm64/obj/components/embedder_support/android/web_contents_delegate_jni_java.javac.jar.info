@@ -1,3 +1,0 @@
-org.chromium.components.embedder_support.delegate.EyeDropperBridgeJni,gen/components/embedder_support/android/web_contents_delegate_jni.srcjar/org/chromium/components/embedder_support/delegate/EyeDropperBridgeJni.java
-org.chromium.components.embedder_support.delegate.HtmlColorPickerBridgeJni,gen/components/embedder_support/android/web_contents_delegate_jni.srcjar/org/chromium/components/embedder_support/delegate/HtmlColorPickerBridgeJni.java
-org.chromium.components.embedder_support.delegate.WebContentsDelegateAndroidJni,gen/components/embedder_support/android/web_contents_delegate_jni.srcjar/org/chromium/components/embedder_support/delegate/WebContentsDelegateAndroidJni.java

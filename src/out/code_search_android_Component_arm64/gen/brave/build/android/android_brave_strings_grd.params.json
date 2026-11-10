@@ -1,7 +1,0 @@
-{
-  "gn_target": "//brave/build/android:android_brave_strings_grd",
-  "resources_zip": "obj/brave/build/android/android_brave_strings_grd.compiled.resources.zip",
-  "rtxt_path": "gen/brave/build/android/android_brave_strings_grd.R.txt",
-  "type": "android_resources",
-  "uncompiled_resources_zip": "obj/brave/build/android/android_brave_strings_grd.resources.zip"
-}

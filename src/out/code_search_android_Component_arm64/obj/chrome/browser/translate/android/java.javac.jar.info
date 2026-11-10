@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.translate.AutoTranslateSnackbarController,../../chrome/browser/translate/android/java/src/org/chromium/chrome/browser/translate/AutoTranslateSnackbarController.java
-org.chromium.chrome.browser.translate.AutoTranslateSnackbarControllerJni,gen/chrome/browser/translate/android/jni_headers.srcjar/org/chromium/chrome/browser/translate/AutoTranslateSnackbarControllerJni.java
-org.chromium.chrome.browser.translate.TranslateUtils,../../chrome/browser/translate/android/java/src/org/chromium/chrome/browser/translate/TranslateUtils.java

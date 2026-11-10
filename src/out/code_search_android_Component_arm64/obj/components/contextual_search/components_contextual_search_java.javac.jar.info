@@ -1,4 +1,0 @@
-org.chromium.components.contextual_search.ContextUploadErrorType,gen/components/contextual_search/java_enum_srcjar.srcjar/org/chromium/components/contextual_search/ContextUploadErrorType.java
-org.chromium.components.contextual_search.ContextUploadStatus,gen/components/contextual_search/java_enum_srcjar.srcjar/org/chromium/components/contextual_search/ContextUploadStatus.java
-org.chromium.components.contextual_search.DisclaimerStatus,gen/components/contextual_search/java_enum_srcjar.srcjar/org/chromium/components/contextual_search/DisclaimerStatus.java
-org.chromium.components.contextual_search.InputState,../../components/contextual_search/android/java/src/org/chromium/components/contextual_search/InputState.java

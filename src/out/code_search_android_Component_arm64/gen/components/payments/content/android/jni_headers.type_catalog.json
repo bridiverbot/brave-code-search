@@ -1,4 +1,0 @@
-{
-  "org/chromium/components/payments/PaymentManifestDownloader$NativePaymentManifestDownloaderAndroid": "::payments::PaymentManifestDownloaderAndroid",
-  "org/chromium/components/payments/PaymentManifestParser$NativePaymentManifestParserAndroid": "::payments::PaymentManifestParserAndroid"
-}

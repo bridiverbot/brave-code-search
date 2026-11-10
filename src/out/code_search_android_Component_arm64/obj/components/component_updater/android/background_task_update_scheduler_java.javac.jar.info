@@ -1,3 +1,0 @@
-org.chromium.components.component_updater.UpdateScheduler,../../components/component_updater/android/java/src/org/chromium/components/component_updater/UpdateScheduler.java
-org.chromium.components.component_updater.UpdateSchedulerJni,gen/components/component_updater/android/background_task_update_scheduler_jni_headers.srcjar/org/chromium/components/component_updater/UpdateSchedulerJni.java
-org.chromium.components.component_updater.UpdateTask,../../components/component_updater/android/java/src/org/chromium/components/component_updater/UpdateTask.java

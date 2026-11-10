@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[], css`:host{--child-max-height:500px;--child-max-width:500px;--content-gap:24px;--content-width:calc(2 * var(--child-max-width) + var(--content-gap));--color-button-background-prominent:var(--color-sys-primary);--color-button-foreground-prominent:var(--color-sys-on-primary);--color-button-foreground:var(--color-sys-primary);--color-button-border:var(--color-sys-tonal-outline)}#viewManager{height:100vh;width:100vw}@media screen and ((max-width:870px) or (max-height:680px)){.animation{display:none}}#rightAnimation{position:fixed;top:50%;right:0;height:40%;width:auto;aspect-ratio:608/716;z-index:-1;transform:translate(max(0px,calc(35% - (50vw - var(--content-width)/2) / 2)),-50%)}#bottomAnimation{aspect-ratio:816/584;bottom:-5px;left:75%;position:fixed;width:25%;z-index:-1;transform:translate(-50%,max(0px,calc(40% - (50vh - var(--child-max-height)/2) / 2)))}:host-context([dir='rtl']) #rightAnimation{left:0;right:auto;transform:scaleX(-1) translate(max(0px,calc(35% - (50vw - var(--content-width)/2) / 2)),-50%)}:host-context([dir='rtl']) #bottomAnimation{left:auto;right:75%;transform:scaleX(-1) translate(-50%,max(0px,calc(40% - (50vh - var(--child-max-height)/2) / 2)))}`]);
-}

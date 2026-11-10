@@ -1,6 +1,0 @@
-org.chromium.components.omnibox.AutocompleteSchemeClassifier,../../components/omnibox/browser/android/java/src/org/chromium/components/omnibox/AutocompleteSchemeClassifier.java
-org.chromium.components.omnibox.OmniboxUrlEmphasizer,../../components/omnibox/browser/android/java/src/org/chromium/components/omnibox/OmniboxUrlEmphasizer.java
-org.chromium.components.omnibox.OmniboxUrlEmphasizerJni,gen/components/omnibox/browser/scheme_classifier_jni.srcjar/org/chromium/components/omnibox/OmniboxUrlEmphasizerJni.java
-org.chromium.components.omnibox.OmniboxWordBoundary,../../components/omnibox/browser/android/java/src/org/chromium/components/omnibox/OmniboxWordBoundary.java
-org.chromium.components.omnibox.OmniboxWordBoundaryJni,gen/components/omnibox/browser/scheme_classifier_jni.srcjar/org/chromium/components/omnibox/OmniboxWordBoundaryJni.java
-org.chromium.components.omnibox.SecurityStatusIcon,../../components/omnibox/browser/android/java/src/org/chromium/components/omnibox/SecurityStatusIcon.java

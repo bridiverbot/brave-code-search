@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.autofill.AutofillTestHelper,../../chrome/browser/autofill/test/android/java/src/org/chromium/chrome/browser/autofill/AutofillTestHelper.java
-org.chromium.chrome.browser.autofill.AutofillTestHelperJni,gen/chrome/browser/autofill/test/jni_headers.srcjar/org/chromium/chrome/browser/autofill/AutofillTestHelperJni.java

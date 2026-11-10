@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.page_content_annotations.PageContentExtractionServiceFactory,../../chrome/browser/page_content_annotations/android/java/src/org/chromium/chrome/browser/page_content_annotations/PageContentExtractionServiceFactory.java
-org.chromium.chrome.browser.page_content_annotations.PageContentExtractionServiceFactoryJni,gen/chrome/browser/page_content_annotations/factory_jni_headers.srcjar/org/chromium/chrome/browser/page_content_annotations/PageContentExtractionServiceFactoryJni.java

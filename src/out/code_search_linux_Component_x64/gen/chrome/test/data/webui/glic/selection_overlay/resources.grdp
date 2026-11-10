@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_GLIC_SELECTION_OVERLAY_EXPLAIN_FULFILLMENT_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/glic/selection_overlay/tsc/explain_fulfillment_test.js" resource_path="glic/selection_overlay/explain_fulfillment_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_GLIC_SELECTION_OVERLAY_INLINE_FULFILLMENT_HOST_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/glic/selection_overlay/tsc/inline_fulfillment_host_test.js" resource_path="glic/selection_overlay/inline_fulfillment_host_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_GLIC_SELECTION_OVERLAY_MARKDOWN_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/glic/selection_overlay/tsc/markdown_test.js" resource_path="glic/selection_overlay/markdown_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

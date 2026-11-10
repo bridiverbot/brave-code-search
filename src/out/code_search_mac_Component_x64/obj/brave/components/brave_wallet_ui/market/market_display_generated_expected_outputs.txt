@@ -1,4 +1,0 @@
-gen/brave/components/market_display/resources/grit/market_display_generated.h
-gen/brave/components/market_display/resources/grit/market_display_generated_map.cc
-gen/brave/components/market_display/resources/grit/market_display_generated_map.h
-gen/brave/components/market_display/resources/market_display_generated.pak

@@ -1,1 +1,0 @@
-import{css}from"//resources/lit/v3_0/lit.rollup.js";let instance=null;export function getCss(){return instance||(instance=[...[],css`:host{background-color:var(--md-background-color);color:var(--cr-primary-text-color);display:flex;flex-direction:row;height:100vh;width:100vw}.empty-message{margin:auto;text-align:center}log-details{flex:1;overflow-y:auto}`])}

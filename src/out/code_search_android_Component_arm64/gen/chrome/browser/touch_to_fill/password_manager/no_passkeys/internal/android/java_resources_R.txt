@@ -1,5 +1,0 @@
-int id no_passkeys_ok_button 0x7f010001
-int id no_passkeys_sheet_header_image 0x7f010001
-int id no_passkeys_sheet_subtitle 0x7f010001
-int id no_passkeys_use_another_device_button 0x7f010001
-int layout no_passkeys_bottom_sheet 0x7f010001

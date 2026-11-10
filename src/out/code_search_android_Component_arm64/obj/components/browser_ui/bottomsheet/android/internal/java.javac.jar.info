@@ -1,9 +1,0 @@
-org.chromium.components.browser_ui.bottomsheet.BottomSheetControllerFactory,../../components/browser_ui/bottomsheet/android/internal/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetControllerFactory.java
-org.chromium.components.browser_ui.bottomsheet.BottomSheetControllerImpl,../../components/browser_ui/bottomsheet/android/internal/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetControllerImpl.java
-org.chromium.components.browser_ui.bottomsheet.BottomSheetCoordinator,../../components/browser_ui/bottomsheet/android/internal/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetCoordinator.java
-org.chromium.components.browser_ui.bottomsheet.BottomSheetMediator,../../components/browser_ui/bottomsheet/android/internal/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetMediator.java
-org.chromium.components.browser_ui.bottomsheet.BottomSheetProperties,../../components/browser_ui/bottomsheet/android/internal/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetProperties.java
-org.chromium.components.browser_ui.bottomsheet.BottomSheetSwipeDetector,../../components/browser_ui/bottomsheet/android/internal/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetSwipeDetector.java
-org.chromium.components.browser_ui.bottomsheet.BottomSheetView,../../components/browser_ui/bottomsheet/android/internal/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetView.java
-org.chromium.components.browser_ui.bottomsheet.BottomSheetViewBinder,../../components/browser_ui/bottomsheet/android/internal/java/src/org/chromium/components/browser_ui/bottomsheet/BottomSheetViewBinder.java
-org.chromium.components.browser_ui.bottomsheet.TouchRestrictingFrameLayout,../../components/browser_ui/bottomsheet/android/internal/java/src/org/chromium/components/browser_ui/bottomsheet/TouchRestrictingFrameLayout.java

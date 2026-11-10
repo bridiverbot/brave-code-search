@@ -1,7 +1,0 @@
-{
-    "rustenv": {},
-    "rustflags": [
-        "gen/build/rust/tests/test_cpp_api_from_rust/rust_lib.h.impl.rs",
-        "@obj/build/rust/tests/test_cpp_api_from_rust/rust_lib_bindings_crubit_impl.rsp.rust"
-    ]
-}

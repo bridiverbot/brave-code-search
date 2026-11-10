@@ -1,4 +1,0 @@
-{
-  "org/chromium/ui/ModalDialogWrapper$NativeModalDialogWrapper": "::ui::ModalDialogWrapper",
-  "org/chromium/ui/base/AcceleratorManager$NativeAcceleratorManagerAndroid": "::ui::AcceleratorManagerAndroid"
-}

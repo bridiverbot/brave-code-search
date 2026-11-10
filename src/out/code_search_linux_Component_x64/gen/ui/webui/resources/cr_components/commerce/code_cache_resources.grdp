@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_CR_COMPONENTS_COMMERCE_CODE_CACHE_SHOPPING_SERVICE_BROWSER_PROXY_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/commerce/code_cache/shopping_service_browser_proxy.js.code_cache" resource_path="cr_components/commerce/shopping_service_browser_proxy.js.code_cache" use_base_dir="false" type="BINDATA" />
-      <include name="IDR_CR_COMPONENTS_COMMERCE_CODE_CACHE_PRICE_TRACKING_MOJOM_WEBUI_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/commerce/code_cache/price_tracking.mojom-webui.js.code_cache" resource_path="cr_components/commerce/price_tracking.mojom-webui.js.code_cache" use_base_dir="false" type="BINDATA" />
-      <include name="IDR_CR_COMPONENTS_COMMERCE_CODE_CACHE_SHARED_MOJOM_WEBUI_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/commerce/code_cache/shared.mojom-webui.js.code_cache" resource_path="cr_components/commerce/shared.mojom-webui.js.code_cache" use_base_dir="false" type="BINDATA" />
-      <include name="IDR_CR_COMPONENTS_COMMERCE_CODE_CACHE_SHOPPING_SERVICE_MOJOM_WEBUI_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/commerce/code_cache/shopping_service.mojom-webui.js.code_cache" resource_path="cr_components/commerce/shopping_service.mojom-webui.js.code_cache" use_base_dir="false" type="BINDATA" />
-</grit-part>

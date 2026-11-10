@@ -1,8 +1,0 @@
-org.chromium.base.BaseFeatureMapJni,gen/base/base_jni.srcjar/org/chromium/base/BaseFeatureMapJni.java
-org.chromium.base.CpuFeaturesJni,gen/base/base_jni.srcjar/org/chromium/base/CpuFeaturesJni.java
-org.chromium.base.FieldTrialListJni,gen/base/base_jni.srcjar/org/chromium/base/FieldTrialListJni.java
-org.chromium.base.ImportantFileWriterAndroidJni,gen/base/base_jni.srcjar/org/chromium/base/ImportantFileWriterAndroidJni.java
-org.chromium.base.InputHintCheckerJni,gen/base/base_jni.srcjar/org/chromium/base/InputHintCheckerJni.java
-org.chromium.base.JavaHandlerThreadJni,gen/base/base_jni.srcjar/org/chromium/base/JavaHandlerThreadJni.java
-org.chromium.base.PathServiceJni,gen/base/base_jni.srcjar/org/chromium/base/PathServiceJni.java
-org.chromium.base.PowerMonitorJni,gen/base/base_jni.srcjar/org/chromium/base/PowerMonitorJni.java

@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.shields.UrlSanitizerServiceFactory,../../brave/android/java/org/chromium/chrome/browser/shields/UrlSanitizerServiceFactory.java
-org.chromium.chrome.browser.shields.UrlSanitizerServiceFactoryJni,gen/brave/browser/url_sanitizer/android/jni_headers.srcjar/org/chromium/chrome/browser/shields/UrlSanitizerServiceFactoryJni.java

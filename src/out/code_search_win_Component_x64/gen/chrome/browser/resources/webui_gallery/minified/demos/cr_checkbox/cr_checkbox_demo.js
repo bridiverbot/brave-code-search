@@ -1,4 +1,0 @@
-// Copyright 2023 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-import"//resources/cr_elements/cr_checkbox/cr_checkbox.js";import{CrLitElement}from"//resources/lit/v3_0/lit.rollup.js";import{getCss}from"../demo.css.js";import{getHtml}from"./cr_checkbox_demo.html.js";export class CrCheckboxDemoElement extends CrLitElement{static get is(){return"cr-checkbox-demo"}static get styles(){return getCss()}render(){return getHtml.bind(this)()}static get properties(){return{myValue_:{type:Boolean}}}#myValue__accessor_storage=false;get myValue_(){return this.#myValue__accessor_storage}set myValue_(value){this.#myValue__accessor_storage=value}onCheckedChanged_(e){this.myValue_=e.detail.value}}export const tagName=CrCheckboxDemoElement.is;customElements.define(CrCheckboxDemoElement.is,CrCheckboxDemoElement);

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string msgid="6322493056848795789" name="draggable_divider_handler">"Divisor arrastável"</string>
-    <string msgid="7959832333955573682" name="draggable_divider_handler_state_left_edge">"Painel direito aberto"</string>
-    <string msgid="1679161196839751773" name="draggable_divider_handler_state_right_edge">"Painel esquerdo aberto"</string>
-</resources>

@@ -1,7 +1,0 @@
-mipmap-hdpi/app_icon	../../net/android/unittest_support/res/mipmap-hdpi/app_icon.png
-mipmap-mdpi/app_icon	../../net/android/unittest_support/res/mipmap-mdpi/app_icon.png
-mipmap-xhdpi/app_icon	../../net/android/unittest_support/res/mipmap-xhdpi/app_icon.png
-mipmap-xxhdpi/app_icon	../../net/android/unittest_support/res/mipmap-xxhdpi/app_icon.png
-mipmap-xxxhdpi/app_icon	../../net/android/unittest_support/res/mipmap-xxxhdpi/app_icon.png
-xml/dummy_spnego_account_preferences.xml	../../net/android/unittest_support/res/xml/dummy_spnego_account_preferences.xml
-xml/dummy_spnego_authenticator.xml	../../net/android/unittest_support/res/xml/dummy_spnego_authenticator.xml

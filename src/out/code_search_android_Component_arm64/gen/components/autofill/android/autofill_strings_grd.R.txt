@@ -1,2 +1,0 @@
-int string autofill_long_press_passkey_option 0x7f010001
-int string autofill_popup_content_description 0x7f010001

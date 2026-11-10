@@ -1,8 +1,0 @@
-../../chrome/browser/ui/android/logo/java/src/org/chromium/chrome/browser/logo/DoodleCache.java
-../../chrome/browser/ui/android/logo/java/src/org/chromium/chrome/browser/logo/LogoBridge.java
-../../chrome/browser/ui/android/logo/java/src/org/chromium/chrome/browser/logo/LogoContainerView.java
-../../chrome/browser/ui/android/logo/java/src/org/chromium/chrome/browser/logo/LogoContainerViewBinder.java
-../../chrome/browser/ui/android/logo/java/src/org/chromium/chrome/browser/logo/LogoCoordinator.java
-../../chrome/browser/ui/android/logo/java/src/org/chromium/chrome/browser/logo/LogoMediator.java
-../../chrome/browser/ui/android/logo/java/src/org/chromium/chrome/browser/logo/LogoProperties.java
-../../chrome/browser/ui/android/logo/java/src/org/chromium/chrome/browser/logo/LogoView.java

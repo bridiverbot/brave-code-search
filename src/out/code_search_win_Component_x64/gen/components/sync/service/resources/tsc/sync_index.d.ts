@@ -1,9 +1,0 @@
-import 'chrome://resources/cr_elements/cr_tab_box/cr_tab_box.js';
-import './about.js';
-import './data.js';
-import './sync_node_browser.js';
-import './user_events.js';
-import './traffic_log.js';
-import './search.js';
-import '/strings.m.js';
-import './invalidations.js';

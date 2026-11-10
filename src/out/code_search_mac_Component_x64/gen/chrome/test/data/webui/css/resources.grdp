@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_CSS_COLOR_PROVIDER_CSS_COLORS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/css/tsc/color_provider_css_colors_test.js" resource_path="css/color_provider_css_colors_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_CSS_TEXT_DEFAULTS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/css/tsc/text_defaults_test.js" resource_path="css/text_defaults_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

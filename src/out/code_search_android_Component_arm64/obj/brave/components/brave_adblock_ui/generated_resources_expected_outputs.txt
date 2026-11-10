@@ -1,4 +1,0 @@
-gen/brave/components/brave_adblock/resources/grit/brave_adblock_generated.h
-gen/brave/components/brave_adblock/resources/grit/brave_adblock_generated_map.cc
-gen/brave/components/brave_adblock/resources/grit/brave_adblock_generated_map.h
-gen/brave/components/brave_adblock/resources/brave_adblock_generated.pak

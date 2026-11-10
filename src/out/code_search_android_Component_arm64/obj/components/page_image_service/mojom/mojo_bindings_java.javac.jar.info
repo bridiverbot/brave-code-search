@@ -1,5 +1,0 @@
-org.chromium.page_image_service.mojom.ClientId,gen/components/page_image_service/mojom/mojo_bindings_java_sources.srcjar/org/chromium/page_image_service/mojom/ClientId.java
-org.chromium.page_image_service.mojom.ImageResult,gen/components/page_image_service/mojom/mojo_bindings_java_sources.srcjar/org/chromium/page_image_service/mojom/ImageResult.java
-org.chromium.page_image_service.mojom.Options,gen/components/page_image_service/mojom/mojo_bindings_java_sources.srcjar/org/chromium/page_image_service/mojom/Options.java
-org.chromium.page_image_service.mojom.PageImageServiceHandler,gen/components/page_image_service/mojom/mojo_bindings_java_sources.srcjar/org/chromium/page_image_service/mojom/PageImageServiceHandler.java
-org.chromium.page_image_service.mojom.PageImageServiceHandler_Internal,gen/components/page_image_service/mojom/mojo_bindings_java_sources.srcjar/org/chromium/page_image_service/mojom/PageImageServiceHandler_Internal.java

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_NOTEBOOKS_INTERNALS_NOTEBOOKS_INTERNALS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/notebooks_internals/tsc/notebooks_internals_test.js" resource_path="notebooks_internals/notebooks_internals_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_NOTEBOOKS_INTERNALS_TEST_NOTEBOOKS_INTERNALS_PAGE_HANDLER_JS" file="${root_gen_dir}/chrome/test/data/webui/notebooks_internals/tsc/test_notebooks_internals_page_handler.js" resource_path="notebooks_internals/test_notebooks_internals_page_handler.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

@@ -1,5 +1,0 @@
-org.chromium.payments.mojom.BillingResponseCode,gen/components/digital_goods/mojom/mojom_java_sources.srcjar/org/chromium/payments/mojom/BillingResponseCode.java
-org.chromium.payments.mojom.CreateDigitalGoodsResponseCode,gen/components/digital_goods/mojom/mojom_java_sources.srcjar/org/chromium/payments/mojom/CreateDigitalGoodsResponseCode.java
-org.chromium.payments.mojom.ItemDetails,gen/components/digital_goods/mojom/mojom_java_sources.srcjar/org/chromium/payments/mojom/ItemDetails.java
-org.chromium.payments.mojom.ItemType,gen/components/digital_goods/mojom/mojom_java_sources.srcjar/org/chromium/payments/mojom/ItemType.java
-org.chromium.payments.mojom.PurchaseReference,gen/components/digital_goods/mojom/mojom_java_sources.srcjar/org/chromium/payments/mojom/PurchaseReference.java

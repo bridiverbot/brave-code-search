@@ -1,8 +1,0 @@
-{
-  "processed_classpath": [
-    "obj/brave/build/android/bytecode/java_bytecode_rewriter.javac.jar",
-    "../../third_party/android_deps/cipd/libs/org_ow2_asm_asm_tree/asm-tree.jar",
-    "../../third_party/android_deps/cipd/libs/org_ow2_asm_asm/asm.jar",
-    "obj/build/android/build_java.javac.jar"
-  ]
-}

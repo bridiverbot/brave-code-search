@@ -1,4 +1,0 @@
-gen/brave/components/playlist/content/browser/resources/grit/playlist_generated.h
-gen/brave/components/playlist/content/browser/resources/grit/playlist_generated_map.cc
-gen/brave/components/playlist/content/browser/resources/grit/playlist_generated_map.h
-gen/brave/components/playlist/content/browser/resources/playlist_generated.pak

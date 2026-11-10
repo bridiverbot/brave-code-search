@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.policy.PolicyServiceFactory,../../chrome/browser/policy/android/java/src/org/chromium/chrome/browser/policy/PolicyServiceFactory.java
-org.chromium.chrome.browser.policy.PolicyServiceFactoryJni,gen/chrome/browser/policy/android/jni_headers.srcjar/org/chromium/chrome/browser/policy/PolicyServiceFactoryJni.java

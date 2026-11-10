@@ -1,8 +1,0 @@
-{
-  "gn_target": "//android_webview/nonembedded:devui_launcher_icon_resources",
-  "mergeable_android_manifests": [
-    "../../android_webview/nonembedded/java/DeveloperUiLauncherManifest.xml"
-  ],
-  "supports_android": true,
-  "type": "group"
-}

@@ -1,2 +1,0 @@
-org.chromium.base.library_loader.LibraryLoaderJni,gen/base/library_loader_jni.srcjar/org/chromium/base/library_loader/LibraryLoaderJni.java
-org.chromium.base.library_loader.LibraryPrefetcherJni,gen/base/library_loader_jni.srcjar/org/chromium/base/library_loader/LibraryPrefetcherJni.java

@@ -1,5 +1,0 @@
-import { css } from '//resources/lit/v3_0/lit.rollup.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[], css `:host{--expand-ease-in-duration:200ms;--expand-ease-out-duration:700ms;--expand-duration:calc(var(--expand-ease-in-duration) + var(--expand-ease-out-duration))}.eclipse-svg-wrapper{height:55px;inset:0;position:absolute;z-index:0}.eclipse-svg{opacity:0;position:absolute;inset:0;pointer-events:none;overflow:visible}:host([is-expanding_]) .eclipse-svg{animation:open-eclipse 175ms 125ms var(--standard-curve) forwards}:host(:not([is-expanding_])) .eclipse-svg{animation:close-eclipse 200ms var(--standard-curve) forwards}@keyframes open-eclipse{0%{display:none}20%{opacity:.1}100%{display:block;opacity:1}}@keyframes close-eclipse{0%{display:block;opacity:1}20%{opacity:.1}100%{display:none;opacity:0}}.eclipse-solid-fill{background-color:transparent;fill:transparent}.blurred-rects-outer{translate:50% 150%}.blurred-rects{transform-box:fill-box;transform-origin:center;rotate:80deg;animation:rotate-glow-rects 5s var(--expand-duration) linear infinite}@keyframes rotate-glow-rects{from{rotate:80deg}to{rotate:495deg}}`]);
-}

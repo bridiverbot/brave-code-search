@@ -1,8 +1,0 @@
-drawable/rounded_corner_bottom_left.xml	../../chrome/browser/ui/web_content_hairline/internal/android/java/res/drawable/rounded_corner_bottom_left.xml
-drawable/rounded_corner_bottom_left_incognito.xml	../../chrome/browser/ui/web_content_hairline/internal/android/java/res/drawable/rounded_corner_bottom_left_incognito.xml
-drawable/rounded_corner_left.xml	../../chrome/browser/ui/web_content_hairline/internal/android/java/res/drawable/rounded_corner_left.xml
-drawable/rounded_corner_left_incognito.xml	../../chrome/browser/ui/web_content_hairline/internal/android/java/res/drawable/rounded_corner_left_incognito.xml
-drawable/rounded_corner_right.xml	../../chrome/browser/ui/web_content_hairline/internal/android/java/res/drawable/rounded_corner_right.xml
-drawable/rounded_corner_right_incognito.xml	../../chrome/browser/ui/web_content_hairline/internal/android/java/res/drawable/rounded_corner_right_incognito.xml
-drawable/vertical_hairline.xml	../../chrome/browser/ui/web_content_hairline/internal/android/java/res/drawable/vertical_hairline.xml
-layout/web_content_hairline_container.xml	../../chrome/browser/ui/web_content_hairline/internal/android/java/res/layout/web_content_hairline_container.xml

@@ -1,6 +1,0 @@
-org.chromium.components.javascript_dialogs.JavascriptAppModalDialog,../../components/javascript_dialogs/android/java/src/org/chromium/components/javascript_dialogs/JavascriptAppModalDialog.java
-org.chromium.components.javascript_dialogs.JavascriptAppModalDialogJni,gen/components/javascript_dialogs/android/jni_headers.srcjar/org/chromium/components/javascript_dialogs/JavascriptAppModalDialogJni.java
-org.chromium.components.javascript_dialogs.JavascriptDialogCustomView,../../components/javascript_dialogs/android/java/src/org/chromium/components/javascript_dialogs/JavascriptDialogCustomView.java
-org.chromium.components.javascript_dialogs.JavascriptModalDialog,../../components/javascript_dialogs/android/java/src/org/chromium/components/javascript_dialogs/JavascriptModalDialog.java
-org.chromium.components.javascript_dialogs.JavascriptTabModalDialog,../../components/javascript_dialogs/android/java/src/org/chromium/components/javascript_dialogs/JavascriptTabModalDialog.java
-org.chromium.components.javascript_dialogs.JavascriptTabModalDialogJni,gen/components/javascript_dialogs/android/jni_headers.srcjar/org/chromium/components/javascript_dialogs/JavascriptTabModalDialogJni.java

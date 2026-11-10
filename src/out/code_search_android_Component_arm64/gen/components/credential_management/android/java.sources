@@ -1,5 +1,0 @@
-../../components/credential_management/android/java/src/org/chromium/components/credential_management/CredentialManagerAndroidGetResult.java
-../../components/credential_management/android/java/src/org/chromium/components/credential_management/CredentialManagerStoreResult.java
-../../components/credential_management/android/java/src/org/chromium/components/credential_management/PasswordCredentialResponse.java
-../../components/credential_management/android/java/src/org/chromium/components/credential_management/ThirdPartyCredentialManagerBridge.java
-../../components/credential_management/android/java/src/org/chromium/components/credential_management/ThirdPartyCredentialManagerMetricsRecorder.java

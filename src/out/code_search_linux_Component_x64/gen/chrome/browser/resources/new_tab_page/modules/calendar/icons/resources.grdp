@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_FEED_ATTACHMENT_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/modules/calendar/icons/attachment.svg" resource_path="modules/calendar/icons/attachment.svg" use_base_dir="false" type="BINDATA" />
-      <include name="IDR_FEED_LOCATION_SVG" file="${root_src_dir}/chrome/browser/resources/new_tab_page/modules/calendar/icons/location.svg" resource_path="modules/calendar/icons/location.svg" use_base_dir="false" type="BINDATA" />
-</grit-part>

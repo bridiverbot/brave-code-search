@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_SUPPORT_TOOL_SUPPORT_TOOL_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/support_tool/tsc/support_tool_test.js" resource_path="support_tool/support_tool_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

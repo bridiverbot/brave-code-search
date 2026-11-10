@@ -1,1 +1,0 @@
-int dimen iph_text_bubble_menu_anchor_y_inset 0x7f010001

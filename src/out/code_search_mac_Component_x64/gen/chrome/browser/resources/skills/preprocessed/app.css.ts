@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-import {getCss as getCrSharedStyleLit} from '//resources/cr_elements/cr_shared_style_lit.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[getCrSharedStyleLit()], css`:host{display:flex;flex-direction:column;height:100%;overflow:hidden;--sidebar-width:250px;--cr-toolbar-field-width:680px;--cr-toolbar-search-field-input-text-color:var(--color-sys-on-surface-subtle);--cr-toolbar-search-field-prompt-color:var(--color-sys-on-surface-subtle)}:host-context(html:not([webui-refresh-2026])){--cr-toolbar-search-field-background:var(--color-sys-surface4)}#content{display:flex;flex:1;overflow:auto;position:relative;scrollbar-gutter:stable}#left{flex:0 0 var(--sidebar-width);height:100%;position:sticky;top:0}#sidebar{max-height:100%;width:100%;overscroll-behavior:contain;padding-top:8px}cr-page-selector{flex:1;min-width:0;display:flex;flex-direction:column;max-width:calc(3 * var(--skills-card-width) + 2 * var(--skills-card-gap) + 2 * var(--page-padding));margin-inline-start:max(16px,calc(50vw - var(--cr-toolbar-field-width) / 2 - var(--sidebar-width) - var(--page-padding)));margin-inline-end:20px;padding-top:16px}.name{font-weight:500;font-size:14px;line-height:20px;letter-spacing:0}`]);
-}

@@ -1,6 +1,0 @@
-drawable/ic_person_manage_24dp.xml	../../chrome/browser/data_sharing/android/java/res/drawable/ic_person_manage_24dp.xml
-drawable/round_image_filled.xml	../../chrome/browser/data_sharing/android/java/res/drawable/round_image_filled.xml
-layout/recent_activity_bottom_sheet.xml	../../chrome/browser/data_sharing/android/java/res/layout/recent_activity_bottom_sheet.xml
-layout/recent_activity_log_item.xml	../../chrome/browser/data_sharing/android/java/res/layout/recent_activity_log_item.xml
-layout/shared_image_tiles.xml	../../chrome/browser/data_sharing/android/java/res/layout/shared_image_tiles.xml
-layout/shared_image_tiles_icon.xml	../../chrome/browser/data_sharing/android/java/res/layout/shared_image_tiles_icon.xml
