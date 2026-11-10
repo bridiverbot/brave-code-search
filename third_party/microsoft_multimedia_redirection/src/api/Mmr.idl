@@ -1,0 +1,498 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+import "unknwn.idl";
+import "wtypes.idl";
+
+// Cipher mode constants for MMR_ENCRYPTION_SCHEME.cipherMode.
+// Values match openscreen EncryptionScheme::CipherMode.
+typedef enum MMR_CIPHER_MODE
+{
+    MMR_CIPHER_MODE_UNENCRYPTED = 0,
+    MMR_CIPHER_MODE_AES_CTR = 1,
+    MMR_CIPHER_MODE_AES_CBC = 2,
+} MMR_CIPHER_MODE;
+
+typedef struct MMR_ENCRYPTION_SCHEME
+{
+    UINT32 cipherMode;
+    UINT32 encryptBlocks;
+    UINT32 skipBlocks;
+} MMR_ENCRYPTION_SCHEME;
+
+typedef struct MMR_SIZE
+{
+    UINT32 width;
+    UINT32 height;
+} MMR_SIZE;
+
+typedef struct MMR_RECT
+{
+    INT32 x;
+    INT32 y;
+    INT32 width;
+    INT32 height;
+} MMR_RECT;
+
+// Audio codec constants for MMR_AUDIO_DECODER_CONFIG.codec.
+// Values match openscreen AudioDecoderConfig::Codec.
+typedef enum MMR_AUDIO_CODEC
+{
+    MMR_AUDIO_CODEC_UNKNOWN = 0,
+    MMR_AUDIO_CODEC_AAC = 1,
+    MMR_AUDIO_CODEC_MP3 = 2,
+    MMR_AUDIO_CODEC_PCM = 3,
+    MMR_AUDIO_CODEC_VORBIS = 4,
+    MMR_AUDIO_CODEC_FLAC = 5,
+    MMR_AUDIO_CODEC_AMR_NB = 6,
+    MMR_AUDIO_CODEC_AMR_WB = 7,
+    MMR_AUDIO_CODEC_PCM_MULAW = 8,
+    MMR_AUDIO_CODEC_GSM_MS = 9,
+    MMR_AUDIO_CODEC_PCM_S16BE = 10,
+    MMR_AUDIO_CODEC_PCM_S24BE = 11,
+    MMR_AUDIO_CODEC_OPUS = 12,
+    MMR_AUDIO_CODEC_EAC3 = 13,
+    MMR_AUDIO_CODEC_PCM_ALAW = 14,
+    MMR_AUDIO_CODEC_ALAC = 15,
+    MMR_AUDIO_CODEC_AC3 = 16,
+    MMR_AUDIO_CODEC_MPEG_H_AUDIO = 17,
+} MMR_AUDIO_CODEC;
+
+// Sample format constants for MMR_AUDIO_DECODER_CONFIG.sampleFormat.
+// Values match openscreen AudioDecoderConfig::SampleFormat.
+typedef enum MMR_AUDIO_SAMPLE_FORMAT
+{
+    MMR_AUDIO_SAMPLE_FORMAT_UNKNOWN = 0,
+    MMR_AUDIO_SAMPLE_FORMAT_U8 = 1,
+    MMR_AUDIO_SAMPLE_FORMAT_S16 = 2,
+    MMR_AUDIO_SAMPLE_FORMAT_S32 = 3,
+    MMR_AUDIO_SAMPLE_FORMAT_F32 = 4,
+    MMR_AUDIO_SAMPLE_FORMAT_PLANAR_S16 = 5,
+    MMR_AUDIO_SAMPLE_FORMAT_PLANAR_F32 = 6,
+    MMR_AUDIO_SAMPLE_FORMAT_PLANAR_S32 = 7,
+    MMR_AUDIO_SAMPLE_FORMAT_S24 = 8,
+    MMR_AUDIO_SAMPLE_FORMAT_AC3 = 9,
+    MMR_AUDIO_SAMPLE_FORMAT_EAC3 = 10,
+    MMR_AUDIO_SAMPLE_FORMAT_MPEG_H_AUDIO = 11,
+} MMR_AUDIO_SAMPLE_FORMAT;
+
+// Channel layout constants for MMR_AUDIO_DECODER_CONFIG.channelLayout.
+// Values match openscreen AudioDecoderConfig::ChannelLayout.
+typedef enum MMR_AUDIO_CHANNEL_LAYOUT
+{
+    MMR_AUDIO_CHANNEL_LAYOUT_NONE = 0,
+    MMR_AUDIO_CHANNEL_LAYOUT_UNSUPPORTED = 1,
+    MMR_AUDIO_CHANNEL_LAYOUT_MONO = 2,
+    MMR_AUDIO_CHANNEL_LAYOUT_STEREO = 3,
+    MMR_AUDIO_CHANNEL_LAYOUT_2_1 = 4,
+    MMR_AUDIO_CHANNEL_LAYOUT_SURROUND = 5,
+    MMR_AUDIO_CHANNEL_LAYOUT_4_0 = 6,
+    MMR_AUDIO_CHANNEL_LAYOUT_2_2 = 7,
+    MMR_AUDIO_CHANNEL_LAYOUT_QUAD = 8,
+    MMR_AUDIO_CHANNEL_LAYOUT_5_0 = 9,
+    MMR_AUDIO_CHANNEL_LAYOUT_5_1 = 10,
+    MMR_AUDIO_CHANNEL_LAYOUT_5_0_BACK = 11,
+    MMR_AUDIO_CHANNEL_LAYOUT_5_1_BACK = 12,
+    MMR_AUDIO_CHANNEL_LAYOUT_7_0 = 13,
+    MMR_AUDIO_CHANNEL_LAYOUT_7_1 = 14,
+    MMR_AUDIO_CHANNEL_LAYOUT_7_1_WIDE = 15,
+    MMR_AUDIO_CHANNEL_LAYOUT_STEREO_DOWNMIX = 16,
+    MMR_AUDIO_CHANNEL_LAYOUT_2POINT1 = 17,
+    MMR_AUDIO_CHANNEL_LAYOUT_3_1 = 18,
+    MMR_AUDIO_CHANNEL_LAYOUT_4_1 = 19,
+    MMR_AUDIO_CHANNEL_LAYOUT_6_0 = 20,
+    MMR_AUDIO_CHANNEL_LAYOUT_6_0_FRONT = 21,
+    MMR_AUDIO_CHANNEL_LAYOUT_HEXAGONAL = 22,
+    MMR_AUDIO_CHANNEL_LAYOUT_6_1 = 23,
+    MMR_AUDIO_CHANNEL_LAYOUT_6_1_BACK = 24,
+    MMR_AUDIO_CHANNEL_LAYOUT_6_1_FRONT = 25,
+    MMR_AUDIO_CHANNEL_LAYOUT_7_0_FRONT = 26,
+    MMR_AUDIO_CHANNEL_LAYOUT_7_1_WIDE_BACK = 27,
+    MMR_AUDIO_CHANNEL_LAYOUT_OCTAGONAL = 28,
+    MMR_AUDIO_CHANNEL_LAYOUT_DISCRETE = 29,
+    MMR_AUDIO_CHANNEL_LAYOUT_STEREO_AND_KEYBOARD_MIC = 30,
+    MMR_AUDIO_CHANNEL_LAYOUT_4_1_QUAD_SIDE = 31,
+    MMR_AUDIO_CHANNEL_LAYOUT_BITSTREAM = 32,
+} MMR_AUDIO_CHANNEL_LAYOUT;
+
+typedef struct MMR_AUDIO_DECODER_CONFIG
+{
+    MMR_AUDIO_CODEC codec;
+    MMR_AUDIO_SAMPLE_FORMAT sampleFormat;
+    MMR_AUDIO_CHANNEL_LAYOUT channelLayout;
+    INT32 samplesPerSecond;
+    // Duration of media time to buffer before starting playback
+    // in microseconds
+    LONGLONG seekPrerollUsec;
+    // Number of frames that should be discarded from the start
+    // of the audio stream
+    INT32 codecDelay;
+    MMR_ENCRYPTION_SCHEME encryptionScheme;
+} MMR_AUDIO_DECODER_CONFIG;
+
+// Video codec constants for MMR_VIDEO_DECODER_CONFIG.codec.
+// Values match openscreen VideoDecoderConfig::Codec.
+typedef enum MMR_VIDEO_CODEC
+{
+    MMR_VIDEO_CODEC_UNKNOWN = 0,
+    MMR_VIDEO_CODEC_H264 = 1,
+    MMR_VIDEO_CODEC_VC1 = 2,
+    MMR_VIDEO_CODEC_MPEG2 = 3,
+    MMR_VIDEO_CODEC_MPEG4 = 4,
+    MMR_VIDEO_CODEC_THEORA = 5,
+    MMR_VIDEO_CODEC_VP8 = 6,
+    MMR_VIDEO_CODEC_VP9 = 7,
+    MMR_VIDEO_CODEC_HEVC = 8,
+    MMR_VIDEO_CODEC_DOLBY_VISION = 9,
+    MMR_VIDEO_CODEC_AV1 = 10,
+} MMR_VIDEO_CODEC;
+
+// Video codec profile constants for MMR_VIDEO_DECODER_CONFIG.profile.
+// Values match openscreen VideoDecoderConfig::Profile.
+typedef enum MMR_VIDEO_CODEC_PROFILE
+{
+    MMR_VIDEO_CODEC_PROFILE_UNKNOWN = -1,
+    MMR_VIDEO_CODEC_PROFILE_H264_BASELINE = 0,
+    MMR_VIDEO_CODEC_PROFILE_H264_MAIN = 1,
+    MMR_VIDEO_CODEC_PROFILE_H264_EXTENDED = 2,
+    MMR_VIDEO_CODEC_PROFILE_H264_HIGH = 3,
+    MMR_VIDEO_CODEC_PROFILE_H264_HIGH10 = 4,
+    MMR_VIDEO_CODEC_PROFILE_H264_HIGH422 = 5,
+    MMR_VIDEO_CODEC_PROFILE_H264_HIGH444_PREDICTIVE = 6,
+    MMR_VIDEO_CODEC_PROFILE_H264_SCALABLE_BASELINE = 7,
+    MMR_VIDEO_CODEC_PROFILE_H264_SCALABLE_HIGH = 8,
+    MMR_VIDEO_CODEC_PROFILE_H264_STEREO_HIGH = 9,
+    MMR_VIDEO_CODEC_PROFILE_H264_MULTIVIEW_HIGH = 10,
+    MMR_VIDEO_CODEC_PROFILE_VP8_ANY = 11,
+    MMR_VIDEO_CODEC_PROFILE_VP9_PROFILE0 = 12,
+    MMR_VIDEO_CODEC_PROFILE_VP9_PROFILE1 = 13,
+    MMR_VIDEO_CODEC_PROFILE_VP9_PROFILE2 = 14,
+    MMR_VIDEO_CODEC_PROFILE_VP9_PROFILE3 = 15,
+    MMR_VIDEO_CODEC_PROFILE_HEVC_MAIN = 16,
+    MMR_VIDEO_CODEC_PROFILE_HEVC_MAIN10 = 17,
+    MMR_VIDEO_CODEC_PROFILE_HEVC_MAIN_STILL_PICTURE = 18,
+    MMR_VIDEO_CODEC_PROFILE_DOLBY_VISION_PROFILE0 = 19,
+    MMR_VIDEO_CODEC_PROFILE_DOLBY_VISION_PROFILE4 = 20,
+    MMR_VIDEO_CODEC_PROFILE_DOLBY_VISION_PROFILE5 = 21,
+    MMR_VIDEO_CODEC_PROFILE_DOLBY_VISION_PROFILE7 = 22,
+    MMR_VIDEO_CODEC_PROFILE_THEORA_ANY = 23,
+    MMR_VIDEO_CODEC_PROFILE_AV1_MAIN = 24,
+    MMR_VIDEO_CODEC_PROFILE_AV1_HIGH = 25,
+    MMR_VIDEO_CODEC_PROFILE_AV1_PRO = 26,
+    MMR_VIDEO_CODEC_PROFILE_DOLBY_VISION_PROFILE8 = 27,
+    MMR_VIDEO_CODEC_PROFILE_DOLBY_VISION_PROFILE9 = 28,
+} MMR_VIDEO_CODEC_PROFILE;
+
+// Pixel format constants for MMR_VIDEO_DECODER_CONFIG.format.
+// Values match openscreen VideoDecoderConfig::Format.
+typedef enum MMR_VIDEO_PIXEL_FORMAT
+{
+    MMR_VIDEO_PIXEL_FORMAT_UNKNOWN = 0,
+    MMR_VIDEO_PIXEL_FORMAT_I420 = 1,
+    MMR_VIDEO_PIXEL_FORMAT_YV12 = 2,
+    MMR_VIDEO_PIXEL_FORMAT_I422 = 3,
+    MMR_VIDEO_PIXEL_FORMAT_I420A = 4,
+    MMR_VIDEO_PIXEL_FORMAT_I444 = 5,
+    MMR_VIDEO_PIXEL_FORMAT_NV12 = 6,
+    MMR_VIDEO_PIXEL_FORMAT_NV21 = 7,
+    MMR_VIDEO_PIXEL_FORMAT_UYVY = 8,
+    MMR_VIDEO_PIXEL_FORMAT_YUY2 = 9,
+    MMR_VIDEO_PIXEL_FORMAT_ARGB = 10,
+    MMR_VIDEO_PIXEL_FORMAT_XRGB = 11,
+    MMR_VIDEO_PIXEL_FORMAT_RGB24 = 12,
+    MMR_VIDEO_PIXEL_FORMAT_RGB32 = 13,
+    MMR_VIDEO_PIXEL_FORMAT_MJPEG = 14,
+    MMR_VIDEO_PIXEL_FORMAT_YUV420P9 = 16,
+    MMR_VIDEO_PIXEL_FORMAT_YUV420P10 = 17,
+    MMR_VIDEO_PIXEL_FORMAT_YUV422P9 = 18,
+    MMR_VIDEO_PIXEL_FORMAT_YUV422P10 = 19,
+    MMR_VIDEO_PIXEL_FORMAT_YUV444P9 = 20,
+    MMR_VIDEO_PIXEL_FORMAT_YUV444P10 = 21,
+    MMR_VIDEO_PIXEL_FORMAT_YUV420P12 = 22,
+    MMR_VIDEO_PIXEL_FORMAT_YUV422P12 = 23,
+    MMR_VIDEO_PIXEL_FORMAT_YUV444P12 = 24,
+    MMR_VIDEO_PIXEL_FORMAT_Y16 = 26,
+    MMR_VIDEO_PIXEL_FORMAT_ABGR = 27,
+    MMR_VIDEO_PIXEL_FORMAT_XBGR = 28,
+    MMR_VIDEO_PIXEL_FORMAT_P016LE = 29,
+    MMR_VIDEO_PIXEL_FORMAT_XR30 = 30,
+    MMR_VIDEO_PIXEL_FORMAT_XB30 = 31,
+} MMR_VIDEO_PIXEL_FORMAT;
+
+// Color space constants for MMR_VIDEO_DECODER_CONFIG.colorSpace.
+// Values match openscreen VideoDecoderConfig::ColorSpace.
+typedef enum MMR_VIDEO_COLOR_SPACE
+{
+    MMR_VIDEO_COLOR_SPACE_UNSPECIFIED = 0,
+    MMR_VIDEO_COLOR_SPACE_JPEG = 1,
+    MMR_VIDEO_COLOR_SPACE_HD_REC709 = 2,
+    MMR_VIDEO_COLOR_SPACE_SD_REC601 = 3,
+} MMR_VIDEO_COLOR_SPACE;
+
+typedef struct MMR_VIDEO_DECODER_CONFIG
+{
+    MMR_VIDEO_CODEC codec;
+    MMR_VIDEO_CODEC_PROFILE profile;
+    MMR_VIDEO_PIXEL_FORMAT format;
+    MMR_VIDEO_COLOR_SPACE colorSpace;
+    MMR_SIZE codedSize;
+    MMR_RECT visibleRect;
+    MMR_SIZE naturalSize;
+    MMR_ENCRYPTION_SCHEME encryptionScheme;
+} MMR_VIDEO_DECODER_CONFIG;
+
+typedef struct MMR_STREAM_STATS
+{
+    // Bytes waiting to be sent to the client
+    UINT64 bytesBuffered;
+    // Bytes already sent to the client
+    UINT64 bytesSent;
+    // Count of buffers waiting to be sent to the client
+    UINT64 buffersBuffered;
+    // Count of buffers already sent to the client
+    UINT64 buffersSent;
+} MMR_STREAM_STATS;
+
+typedef struct MMR_EXTENDED_STATS
+{
+    UINT32 framesRendered;
+    UINT32 framesDropped;
+    UINT32 framesCorrupted;
+    float framesPerSecond;
+    double playbackJitter;
+    double totalFrameDelay;
+} MMR_EXTENDED_STATS;
+
+[
+    object,
+    uuid(1af14559-6770-4446-978f-022921af5360),
+    pointer_default(unique)
+]
+interface IMMRStream : IUnknown
+{
+    // Queues one encoded media buffer for delivery to the remote client.
+    // data: Encoded audio or video bytes.
+    // dataSize: Number of bytes in data.
+    // timestamp: Intended presentation time, in 100-nanosecond units.
+    // duration: Intended playback duration, in 100-nanosecond units.
+    // isKeyFrame: TRUE if this buffer is independently decodable
+    //   (for example, a key frame, IDR frame, or clean point).
+    HRESULT AppendBuffer(
+        [in, size_is(dataSize)] BYTE* data,
+        [in] UINT32 dataSize,
+        [in] LONGLONG timestamp,
+        [in] LONGLONG duration,
+        [in] BOOL isKeyFrame);
+    // Signals end of stream to the remote client.  No additional buffers
+    // should be appended after this call until the play position is changed.
+    // The "ended" event is raised when the client has finished playing all
+    // queued buffers on all streams.
+    HRESULT EndOfStream();
+    // Sets the destination rectangle for video rendering.
+    // parent: Parent window that owns the video region. If NULL,
+    //   the desktop window is used.
+    // x, y: Upper-left corner of the video region, in client coordinates.
+    // width, height: Size of the video region, in pixels.
+    HRESULT SetVideoRect(HWND parent, UINT32 x, UINT32 y, UINT32 width, UINT32 height);
+    // Retrieves stream buffering and transfer statistics.
+    // stats: Receives current stream statistics.
+    HRESULT GetStats([out] MMR_STREAM_STATS* stats);
+};
+
+[
+    object,
+    uuid(13c7bbd1-6ef4-40a4-81c2-99fa0e8cf028),
+    pointer_default(unique)
+]
+interface IMMREventHandler : IUnknown
+{
+    // Callback when remoting has been initialized.
+    // succeeded: TRUE if remoting was successfully initialized and the client is ready to receive buffers;
+    //  FALSE if remoting initialization failed and the caller should fall back to local playback.
+    HRESULT OnRemotingInitialized(BOOL succeeded);
+    // Callback when buffering state changes on the remote client.
+    // buffering: TRUE if the client is buffering and cannot play immediately; FALSE if the client is ready to play.
+    HRESULT OnBufferingStateChanged(BOOL buffering);
+    // Callback when the remote client hits an error.  The caller should fall back to local playback if this is received.
+    // errorMessage: Error message describing the failure.
+    // errorCode: If appliciable, error code returned by the failing API.  May be 0/S_OK if no error code was 
+    //  associated with the error.
+    HRESULT OnError(LPCWSTR errorMessage, HRESULT errorCode);
+    // Callback when the remote client's playback time has progressed.
+    // currentTime: Current playback position on the client, in 100-nanosecond units.
+    HRESULT OnTimeUpdate(LONGLONG currentTime);
+    // Callback when the remote client has completed playback by reaching end of stream on all streams.
+    HRESULT OnEnded();
+    // Callback when the remote client has completed a seek operation.
+    HRESULT OnSeeked();
+};
+
+[
+    object,
+    uuid(506ae701-fe5d-41b3-8b9c-d1d6374b38d8),
+    pointer_default(unique)
+]
+interface IMMRResponseHandler : IUnknown
+{
+    // Callback for raw openscreen protocol messages from the remote client.
+    // message: Pointer to the raw message payload.
+    // messageSize: Number of bytes in message.
+    HRESULT OnResponse([in, size_is(messageSize)] BYTE* message, UINT32 messageSize);
+};
+
+[
+    object,
+    uuid(75d41cbb-a826-45f0-8152-90d0e617cca5),
+    pointer_default(unique)
+]
+interface IMMRSessionOpenscreen : IUnknown
+{
+    // Creates a stream bound to a caller-provided openscreen stream ID.
+    // Use this when the application manages openscreen messaging directly.
+    // streamId: Stream identifier to associate with the stream.
+    // stream: Receives the created stream interface.
+    HRESULT CreateStream(UINT32 streamId, [out] IMMRStream** stream);
+    // Registers the handler for raw openscreen responses.
+    // handler: Callback interface that receives raw responses.
+    HRESULT SetResponseHandler([in, optional] IMMRResponseHandler* handler);
+    // Sends a raw openscreen message to the remote client.
+    // message: Pointer to the raw openscreen payload.
+    // messageSize: Number of bytes in message.
+    HRESULT SendRawOpenscreenMessage([in, size_is(messageSize)] BYTE* message, UINT32 messageSize);
+};
+
+[
+    object,
+    uuid(5B9C4B5E-8A4F-4A6C-9D9A-5C7B3D2E8A11),
+    pointer_default(unique)
+]
+interface IMMRSession : IUnknown
+{
+    // Returns the number of codec MIME entries available through GetSupportedCodec.
+    // supportedCodecCount: Receives the number of supported codec entries.
+    HRESULT GetSupportedCodecCount([out] UINT32* supportedCodecCount);
+    // Returns a client-supported MIME type entry, including codec details.
+    // index: Zero-based index in the supported codec list.
+    // mimeType: Receives a CoTaskMem-allocated string. Caller must free with CoTaskMemFree.
+    HRESULT GetSupportedCodec(UINT32 index, [out] LPWSTR* mimeType);
+    // Creates an audio stream with the specified decoder configuration.
+    // config: Audio decoder configuration for the stream.
+    // extraData: Optional codec-specific initialization data (may be NULL).
+    //   extraData may be required for the client codec to decode the stream.
+    // extraDataSize: Number of bytes in extraData.
+    // stream: Receives the created stream interface.
+    HRESULT CreateAudioStream(
+        [in] MMR_AUDIO_DECODER_CONFIG config,
+        [in, size_is(extraDataSize)] BYTE* extraData,
+        UINT32 extraDataSize,
+        [out] IMMRStream** stream);
+    // Creates a video stream with the specified decoder configuration.
+    // config: Video decoder configuration for the stream.
+    // extraData: Optional codec-specific initialization data (may be NULL).
+    //   extraData may be required for the client codec to decode the stream.
+    // extraDataSize: Number of bytes in extraData.
+    // stream: Receives the created stream interface.
+    HRESULT CreateVideoStream(
+        [in] MMR_VIDEO_DECODER_CONFIG config,
+        [in, size_is(extraDataSize)] BYTE* extraData,
+        UINT32 extraDataSize,
+        [out] IMMRStream** stream);
+    // Starts remoting for this session after stream creation is complete.
+    // No additional streams can be created after this call succeeds.
+    HRESULT BeginRemoting();
+    // Registers the event handler for media events from this session.
+    // handler: Callback interface that receives session events.
+    HRESULT SetEventHandler([in, optional] IMMREventHandler* handler);
+    // Starts or resumes playback on the remote client.
+    HRESULT Play();
+    // Pauses playback on the remote client.
+    HRESULT Pause();
+    // Requests a seek to a new playback position on the remote client.
+    // The event handler receives "seeked" after the client confirms the position.
+    // timestamp: Target playback position, in 100-nanosecond units.
+    HRESULT SetCurrentTime(LONGLONG timestamp);
+    // Sets the current playback rate for the session.
+    // rate: Playback rate multiplier (for example, 1.0 = normal speed).
+    // Takes effect immediately if playback is active.
+    HRESULT SetPlaybackRate(double rate);
+    // Enables or disables loop playback mode.
+    // loop: TRUE to restart from the beginning at end of content;
+    //   FALSE to stop at end and emit the "ended" event.
+    HRESULT SetLoop(BOOL loop);
+    // Sets session volume on the remote client.
+    // volume: Attenuation level where 0.0 is silent and 1.0 is full volume.
+    HRESULT SetVolume(double volume);
+    // Retrieve the most recent extended pipeline statistics reported by the
+    // remote sink. Returns zeroed stats if no stats have been received yet.
+    HRESULT GetExtendedStats([out] MMR_EXTENDED_STATS* stats);
+    // Gets the image that should take the place of the video stream while
+    // it is being remoted.  This image should be in screen pixels, rather than
+    // logical pixels, as scaling the image may prevent the client from being
+    // able to render any overlay correctly.
+    // imageData: Buffer that is at least stride * height * 4 bytes in size.  The image is returned in BGRA format.
+    // width: Width of the image in screen pixels.
+    // height: Height of the image in screen pixels.
+    // stride: Number of bytes in a row of the image.  This may be greater than width if the image is padded.
+    HRESULT GetVideoReplacementImage([in, size_is(stride * height)] BYTE* imageData, UINT32 width, UINT32 height, UINT32 stride);
+};
+
+[
+    object,
+    uuid(8B1E7C5A-7E6C-4A27-9B3A-0F6C4D2C9A75),
+    pointer_default(unique)
+]
+interface IMMRClient : IUnknown
+{
+    // Callback indicating a new session was created successfully.
+    // session: Newly created session interface, ready for stream setup.
+    HRESULT OnSessionCreated([in] IMMRSession* session);
+    // Callback indicating session creation failed.
+    // errorCode: Failure HRESULT for the create-session request.
+    HRESULT OnSessionCreationFailed([in] HRESULT errorCode);
+    // Callback indicating the remote client disconnected.
+    // Existing session interfaces are no longer valid and must be recreated
+    // after reconnection.
+    HRESULT OnRemoteClientDisconnected();
+    // Callback indicating the remote client is connected and ready for new sessions.
+    HRESULT OnRemoteClientConnected();
+    // Callback indicating an error has occurred while processing messages
+    // in the background.  The redirector and all of its sessions should be
+    // considered invalid.  A new redirector and new sessions should be
+    // created.
+    HRESULT OnAsyncError(HRESULT errorCode);
+};
+
+[
+    object,
+    uuid(9A2C3E74-1F5D-4E5E-8A3B-7C1D4F8B2C90),
+    pointer_default(unique)
+]
+interface IMultimediaRedirector : IUnknown
+{
+    // Asynchronously creates a multimedia redirection session with a remote client.
+    // Success is reported through the IMMRClient provided when this redirector
+    // was created by IMultimediaRedirectorFactory.
+    // Failure is reported through IMMRClient::OnSessionCreationFailed.
+    HRESULT BeginCreateRemoteSession();
+
+    // Starts client-side diagnostic log capture.
+    // Captured logs are written to the same location as server logs.
+    // Use only for diagnostics because capture can impact performance.
+    HRESULT BeginCaptureClientLogs();
+    // Stops client-side diagnostic log capture started by BeginCaptureClientLogs.
+    HRESULT EndCaptureClientLogs();
+};
+
+[
+    object,
+    uuid(3E7A73B2-4BD0-4E66-BDBB-91EB5E84F4CF),
+    pointer_default(unique)
+]
+interface IMultimediaRedirectorFactory : IUnknown
+{
+    // Creates a redirector bound to the provided callback interface.
+    HRESULT CreateMultimediaRedirector(
+        [in] IMMRClient* client,
+        [out] IMultimediaRedirector** redirector);
+};
+
+cpp_quote("DEFINE_GUID(CLSID_MultimediaRedirectorFactory, 0xcdbeb1db, 0xc3ad, 0x4918, 0xae, 0xd8, 0xbb, 0xd4, 0x7f, 0x75, 0x59, 0x10);")

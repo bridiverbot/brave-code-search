@@ -1,0 +1,812 @@
+/*
+ * Copyright 2026 The Google AI Edge Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef THIRD_PARTY_ODML_LITERT_TENSOR_RUNNERS_LITERT_LITERT_DYNAMIC_RUNNER_H_
+#define THIRD_PARTY_ODML_LITERT_TENSOR_RUNNERS_LITERT_LITERT_DYNAMIC_RUNNER_H_
+
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "absl/algorithm/container.h"  // from @com_google_absl
+#include "absl/container/flat_hash_map.h"  // from @com_google_absl
+#include "absl/status/status.h"  // from @com_google_absl
+#include "absl/status/statusor.h"  // from @com_google_absl
+#include "absl/strings/string_view.h"  // from @com_google_absl
+#include "absl/types/span.h"  // from @com_google_absl
+#include "litert/c/litert_custom_tensor_buffer.h"
+#include "litert/cc/litert_buffer_ref.h"
+#include "litert/cc/litert_compiled_model.h"
+#include "litert/cc/litert_element_type.h"
+#include "litert/cc/litert_environment.h"
+#include "litert/cc/litert_expected.h"
+#include "litert/cc/litert_layout.h"
+#include "litert/cc/litert_macros.h"
+#include "litert/cc/litert_model_types.h"
+#include "litert/cc/litert_options.h"
+#include "litert/cc/litert_ranked_tensor_type.h"
+#include "litert/cc/litert_tensor_buffer.h"
+#include "litert/cc/options/litert_gpu_options.h"
+#include "tensor/buffer.h"
+#include "tensor/datatypes.h"
+#include "tensor/runners/litert/feedback_loop_config.h"
+#include "tensor/runners/litert/litert_buffer.h"
+#include "tensor/tensor.h"
+
+namespace litert {
+namespace tensor {
+
+enum class ResizeMode {
+  kStrict,
+  kNonStrict,
+};
+
+class LitertDynamicRunner {
+ public:
+  using ResizeMode = ::litert::tensor::ResizeMode;
+
+  static absl::StatusOr<LitertDynamicRunner> Create(
+      Environment& env, const std::string& model_path, Options& options) {
+    LITERT_ASSIGN_OR_RETURN(CompiledModel compiled_model,
+                            CompiledModel::Create(env, model_path, options));
+    LitertDynamicRunner runner(std::move(compiled_model));
+    LITERT_RETURN_IF_ERROR(runner.InitializeBuffers());
+    return runner;
+  }
+
+  static absl::StatusOr<LitertDynamicRunner> Create(
+      Environment& env, absl::Span<const uint8_t> model_buffer,
+      Options& options) {
+    BufferRef<uint8_t> buf_ref(model_buffer.data(), model_buffer.size());
+    LITERT_ASSIGN_OR_RETURN(CompiledModel compiled_model,
+                            CompiledModel::Create(env, buf_ref, options));
+    LitertDynamicRunner runner(std::move(compiled_model));
+    LITERT_RETURN_IF_ERROR(runner.InitializeBuffers());
+    return runner;
+  }
+
+  static absl::StatusOr<LitertDynamicRunner> Create(
+      Environment& env, const std::string& model_path, Options& options,
+      const std::vector<FeedbackLoopConfig>& feedback_loops) {
+    Expected<GpuOptions&> gpu_options_or = options.GetGpuOptions();
+    if (gpu_options_or.HasValue()) {
+      LITERT_RETURN_IF_ERROR(gpu_options_or->EnableExternalTensorsMode(true));
+      for (const FeedbackLoopConfig& loop : feedback_loops) {
+        LITERT_RETURN_IF_ERROR(
+            gpu_options_or->AddExternalTensorPattern(loop.input_name.c_str()));
+        LITERT_RETURN_IF_ERROR(
+            gpu_options_or->AddExternalTensorPattern(loop.output_name.c_str()));
+      }
+    }
+
+    LITERT_ASSIGN_OR_RETURN(CompiledModel compiled_model,
+                            CompiledModel::Create(env, model_path, options));
+    LitertDynamicRunner runner(std::move(compiled_model));
+    LITERT_RETURN_IF_ERROR(runner.InitializeBuffers());
+
+    for (const FeedbackLoopConfig& loop : feedback_loops) {
+      LITERT_RETURN_IF_ERROR(
+          runner.RegisterFeedbackLoop(loop.input_name, loop.output_name));
+    }
+
+    return runner;
+  }
+
+  static absl::StatusOr<LitertDynamicRunner> Create(
+      Environment& env, absl::Span<const uint8_t> model_buffer,
+      Options& options, const std::vector<FeedbackLoopConfig>& feedback_loops) {
+    Expected<GpuOptions&> gpu_options_or = options.GetGpuOptions();
+    if (gpu_options_or.HasValue()) {
+      LITERT_RETURN_IF_ERROR(gpu_options_or->EnableExternalTensorsMode(true));
+      for (const FeedbackLoopConfig& loop : feedback_loops) {
+        LITERT_RETURN_IF_ERROR(
+            gpu_options_or->AddExternalTensorPattern(loop.input_name.c_str()));
+        LITERT_RETURN_IF_ERROR(
+            gpu_options_or->AddExternalTensorPattern(loop.output_name.c_str()));
+      }
+    }
+
+    BufferRef<uint8_t> buf_ref(model_buffer.data(), model_buffer.size());
+    LITERT_ASSIGN_OR_RETURN(CompiledModel compiled_model,
+                            CompiledModel::Create(env, buf_ref, options));
+    LitertDynamicRunner runner(std::move(compiled_model));
+    LITERT_RETURN_IF_ERROR(runner.InitializeBuffers());
+
+    for (const FeedbackLoopConfig& loop : feedback_loops) {
+      LITERT_RETURN_IF_ERROR(
+          runner.RegisterFeedbackLoop(loop.input_name, loop.output_name));
+    }
+
+    return runner;
+  }
+
+  // Helper to initialize buffers for all signatures
+  absl::Status InitializeBuffers() {
+    LITERT_ASSIGN_OR_RETURN(std::vector<absl::string_view> keys,
+                            compiled_model_.GetSignatureKeys());
+    if (keys.empty()) {
+      return absl::InternalError("No signatures found");
+    }
+    default_signature_name_ = std::string(keys[0]);
+
+    for (absl::string_view key : keys) {
+      std::string key_str(key);
+      LITERT_ASSIGN_OR_RETURN(std::vector<TensorBuffer> in_buffers,
+                              compiled_model_.CreateInputBuffers(key_str));
+      signature_input_buffers_[key_str] = std::move(in_buffers);
+
+      LITERT_ASSIGN_OR_RETURN(std::vector<TensorBuffer> out_buffers,
+                              compiled_model_.CreateOutputBuffers(key_str));
+      signature_output_buffers_[key_str] = std::move(out_buffers);
+      SignatureMetadata metadata;
+      LITERT_ASSIGN_OR_RETURN(std::vector<absl::string_view> input_names,
+                              compiled_model_.GetSignatureInputNames(key_str));
+      LITERT_ASSIGN_OR_RETURN(std::vector<absl::string_view> output_names,
+                              compiled_model_.GetSignatureOutputNames(key_str));
+      metadata.inputs.reserve(input_names.size());
+      for (absl::string_view name : input_names) {
+        metadata.input_indices.emplace(std::string(name),
+                                       metadata.inputs.size());
+        metadata.inputs.emplace_back(name);
+      }
+      metadata.outputs.reserve(output_names.size());
+      for (absl::string_view name : output_names) {
+        metadata.output_indices.emplace(std::string(name),
+                                        metadata.outputs.size());
+        metadata.outputs.emplace_back(name);
+      }
+      signature_metadata_[key_str] = std::move(metadata);
+    }
+    return absl::OkStatus();
+  }
+
+  // Resizes one input without allocating intermediate shapes. Bind all resized
+  // inputs before Run(), which refreshes output shapes once for the signature.
+  // Non-strict mode also permits reshaping models without shape signatures.
+  // Feedback loops require fixed shapes and cannot be resized.
+  absl::Status ResizeInput(const std::string& signature_name, size_t index,
+                           absl::Span<const int> dimensions,
+                           ResizeMode mode = ResizeMode::kStrict) {
+    LITERT_ASSIGN_OR_RETURN(size_t sig_idx,
+                            compiled_model_.GetSignatureIndex(signature_name));
+    LITERT_ASSIGN_OR_RETURN(
+        Layout layout, compiled_model_.GetInputTensorLayout(sig_idx, index));
+    if (absl::c_equal(dimensions, layout.Dimensions())) {
+      return absl::OkStatus();
+    }
+    if (!feedback_loops_[signature_name].empty()) {
+      return absl::FailedPreconditionError(
+          "Resizing a signature with feedback loops is not supported");
+    }
+    if (mode == ResizeMode::kStrict) {
+      LITERT_RETURN_IF_ERROR(
+          compiled_model_.ResizeInputTensor(sig_idx, index, dimensions));
+    } else {
+      LITERT_RETURN_IF_ERROR(compiled_model_.ResizeInputTensorNonStrict(
+          sig_idx, index, dimensions));
+    }
+    resized_inputs_[signature_name].resize(
+        signature_input_buffers_.at(signature_name).size(), false);
+    resized_inputs_[signature_name][index] = true;
+    resized_outputs_[signature_name] = true;
+    return absl::OkStatus();
+  }
+
+  absl::Status ResizeInput(const std::string& signature_name,
+                           const std::string& name,
+                           absl::Span<const int> dimensions,
+                           ResizeMode mode = ResizeMode::kStrict) {
+    LITERT_ASSIGN_OR_RETURN(size_t index, GetInputIndex(signature_name, name));
+    return ResizeInput(signature_name, index, dimensions, mode);
+  }
+
+  absl::Status ResizeInput(const std::string& name,
+                           absl::Span<const int> dimensions,
+                           ResizeMode mode = ResizeMode::kStrict) {
+    return ResizeInput(default_signature_name_, name, dimensions, mode);
+  }
+
+  // Retains a TensorBuffer without copying its contents. Its type and layout
+  // must match the current input. For borrowed host memory, the caller retains
+  // ownership and must keep the allocation alive through the last invocation
+  // using it, including the alignment and padding required by the backend.
+  absl::Status SetInputBuffer(const std::string& signature_name, size_t index,
+                              TensorBuffer buffer) {
+    auto it = signature_input_buffers_.find(signature_name);
+    if (it == signature_input_buffers_.end() || index >= it->second.size()) {
+      return absl::NotFoundError("Input index or signature not found");
+    }
+    LITERT_ASSIGN_OR_RETURN(size_t sig_idx,
+                            compiled_model_.GetSignatureIndex(signature_name));
+    LITERT_ASSIGN_OR_RETURN(RankedTensorType type,
+                            compiled_model_.GetInputTensorType(sig_idx, index));
+    LITERT_ASSIGN_OR_RETURN(
+        Layout layout, compiled_model_.GetInputTensorLayout(sig_idx, index));
+    LITERT_ASSIGN_OR_RETURN(RankedTensorType actual, buffer.TensorType());
+    if (actual != RankedTensorType(type.ElementType(), std::move(layout))) {
+      return absl::InvalidArgumentError("Input buffer type or shape mismatch");
+    }
+    it->second[index] = std::move(buffer);
+    std::vector<bool>& resized = resized_inputs_[signature_name];
+    if (!resized.empty()) {
+      resized[index] = false;
+    }
+    return absl::OkStatus();
+  }
+
+  absl::Status SetInputBuffer(const std::string& signature_name,
+                              const std::string& name, TensorBuffer buffer) {
+    LITERT_ASSIGN_OR_RETURN(size_t index, GetInputIndex(signature_name, name));
+    return SetInputBuffer(signature_name, index, std::move(buffer));
+  }
+
+  absl::Status SetInputBuffer(const std::string& name, TensorBuffer buffer) {
+    return SetInputBuffer(default_signature_name_, name, std::move(buffer));
+  }
+
+  absl::Status RegisterFeedbackLoop(const std::string& input_name,
+                                    const std::string& output_name) {
+    return RegisterFeedbackLoop(default_signature_name_, input_name,
+                                output_name);
+  }
+
+  absl::Status RegisterFeedbackLoop(const std::string& signature_name,
+                                    const std::string& input_name,
+                                    const std::string& output_name) {
+    LITERT_ASSIGN_OR_RETURN(size_t input_idx,
+                            GetInputIndex(signature_name, input_name));
+    LITERT_ASSIGN_OR_RETURN(size_t output_idx,
+                            GetOutputIndex(signature_name, output_name));
+
+    FeedbackLoop loop;
+    loop.input_index = input_idx;
+    loop.output_index = output_idx;
+    feedback_loops_[signature_name].push_back(loop);
+    first_run_[signature_name] = true;
+    swapped_[signature_name] = false;
+    return absl::OkStatus();
+  }
+
+  absl::Status Reset() { return Reset(default_signature_name_); }
+
+  absl::Status Reset(const std::string& signature_name) {
+    auto first_run_it = first_run_.find(signature_name);
+    if (first_run_it != first_run_.end()) {
+      first_run_it->second = true;
+    }
+    bool& signature_swapped = swapped_[signature_name];
+    if (signature_swapped) {
+      std::vector<TensorBuffer>& input_buffers =
+          signature_input_buffers_[signature_name];
+      std::vector<TensorBuffer>& output_buffers =
+          signature_output_buffers_[signature_name];
+      auto loops_it = feedback_loops_.find(signature_name);
+      if (loops_it != feedback_loops_.end()) {
+        for (const FeedbackLoop& loop : loops_it->second) {
+          std::swap(input_buffers[loop.input_index],
+                    output_buffers[loop.output_index]);
+        }
+      }
+      signature_swapped = false;
+    }
+    return absl::OkStatus();
+  }
+
+  // Query input buffer index by name in a signature once at startup
+  absl::StatusOr<size_t> GetInputIndex(const std::string& signature_name,
+                                       const std::string& name) const {
+    auto signature = signature_metadata_.find(signature_name);
+    if (signature == signature_metadata_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+    const absl::flat_hash_map<std::string, size_t>& indices =
+        signature->second.input_indices;
+    auto found = indices.find(name);
+    if (found == indices.end()) {
+      return absl::NotFoundError("Input tensor name not found in signature");
+    }
+    return found->second;
+  }
+
+  // Query output buffer index by name in a signature once at startup
+  absl::StatusOr<size_t> GetOutputIndex(const std::string& signature_name,
+                                        const std::string& name) const {
+    auto signature = signature_metadata_.find(signature_name);
+    if (signature == signature_metadata_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+    const absl::flat_hash_map<std::string, size_t>& indices =
+        signature->second.output_indices;
+    auto found = indices.find(name);
+    if (found == indices.end()) {
+      return absl::NotFoundError("Output tensor name not found in signature");
+    }
+    return found->second;
+  }
+
+  // Non-signature overloads (default to first signature)
+  absl::Status SetInput(const std::string& name, const TensorHandle& tensor) {
+    return SetInput(default_signature_name_, name, tensor);
+  }
+
+  absl::Status SetInput(size_t index, const TensorHandle& tensor) {
+    return SetInput(default_signature_name_, index, tensor);
+  }
+
+  absl::Status SetInput(const std::string& name,
+                        absl::Span<const uint8_t> data) {
+    return SetInput(default_signature_name_, name, data);
+  }
+
+  absl::Status SetInput(size_t index, absl::Span<const uint8_t> data) {
+    return SetInput(default_signature_name_, index, data);
+  }
+
+  absl::Status Run() { return Run(default_signature_name_); }
+
+  absl::StatusOr<TensorHandle> GetOutput(const std::string& name) {
+    return GetOutput(default_signature_name_, name);
+  }
+
+  absl::StatusOr<TensorHandle> GetOutput(size_t index) {
+    return GetOutput(default_signature_name_, index);
+  }
+
+  absl::StatusOr<TensorHandle> GetInput(const std::string& name) {
+    return GetInput(default_signature_name_, name);
+  }
+
+  absl::StatusOr<TensorHandle> GetInput(size_t index) {
+    return GetInput(default_signature_name_, index);
+  }
+
+  // Set input by signature and name
+  absl::Status SetInput(const std::string& signature_name,
+                        const std::string& name, const TensorHandle& tensor) {
+    LITERT_ASSIGN_OR_RETURN(size_t index, GetInputIndex(signature_name, name));
+    return SetInput(signature_name, index, tensor);
+  }
+
+  // Set input by signature and index
+  absl::Status SetInput(const std::string& signature_name, size_t index,
+                        const TensorHandle& tensor) {
+    auto in_it = signature_input_buffers_.find(signature_name);
+    if (in_it == signature_input_buffers_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+    std::vector<TensorBuffer>& input_buffers = in_it->second;
+
+    if (index >= input_buffers.size()) {
+      return absl::NotFoundError("Index out of bounds");
+    }
+
+    LITERT_ASSIGN_OR_RETURN(Buffer & buffer, tensor.GetBuffer());
+    absl::StatusOr<LitertBuffer&> litert_buffer_or = buffer.As<LitertBuffer>();
+    if (litert_buffer_or.ok()) {
+      LITERT_ASSIGN_OR_RETURN(TensorBuffer duplicate,
+                              litert_buffer_or->tensor_buffer().Duplicate());
+      return SetInputBuffer(signature_name, index, std::move(duplicate));
+    } else {
+      LITERT_RETURN_IF_ERROR(EnsureInputBuffer(signature_name, index));
+      LockedBufferSpan<const uint8_t> locked_span =
+          buffer.Lock().As<const uint8_t>();
+      LITERT_RETURN_IF_ERROR(
+          input_buffers[index].Write(absl::Span<const uint8_t>(locked_span)));
+      std::vector<bool>& resized = resized_inputs_[signature_name];
+      if (!resized.empty()) {
+        resized[index] = false;
+      }
+    }
+    return absl::OkStatus();
+  }
+
+  // Set input by signature and name with binary data
+  absl::Status SetInput(const std::string& signature_name,
+                        const std::string& name,
+                        absl::Span<const uint8_t> data) {
+    LITERT_ASSIGN_OR_RETURN(size_t index, GetInputIndex(signature_name, name));
+    return SetInput(signature_name, index, data);
+  }
+
+  // Set input by signature and index with binary data
+  absl::Status SetInput(const std::string& signature_name, size_t index,
+                        absl::Span<const uint8_t> data) {
+    auto in_it = signature_input_buffers_.find(signature_name);
+    if (in_it == signature_input_buffers_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+    std::vector<TensorBuffer>& input_buffers = in_it->second;
+
+    if (index >= input_buffers.size()) {
+      return absl::NotFoundError("Index out of bounds");
+    }
+    LITERT_RETURN_IF_ERROR(EnsureInputBuffer(signature_name, index));
+    Expected<void> res = input_buffers[index].Write(data);
+    if (!res.HasValue()) {
+      return absl::InternalError("Failed to write input buffer");
+    }
+    std::vector<bool>& resized = resized_inputs_[signature_name];
+    if (!resized.empty()) {
+      resized[index] = false;
+    }
+    return absl::OkStatus();
+  }
+
+  // Set output buffer by signature and index
+  absl::Status SetOutputBuffer(const std::string& signature_name, size_t index,
+                               litert::TensorBuffer buffer) {
+    auto out_it = signature_output_buffers_.find(signature_name);
+    if (out_it == signature_output_buffers_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+    std::vector<TensorBuffer>& output_buffers = out_it->second;
+    if (index >= output_buffers.size()) {
+      return absl::NotFoundError("Index out of bounds");
+    }
+    output_buffers[index] = std::move(buffer);
+    std::vector<bool>& external = external_outputs_[signature_name];
+    external.resize(output_buffers.size(), false);
+    external[index] = true;
+    return absl::OkStatus();
+  }
+
+  // Set output buffer by signature and name
+  absl::Status SetOutputBuffer(const std::string& signature_name,
+                               const std::string& name,
+                               litert::TensorBuffer buffer) {
+    LITERT_ASSIGN_OR_RETURN(size_t index, GetOutputIndex(signature_name, name));
+    return SetOutputBuffer(signature_name, index, std::move(buffer));
+  }
+
+  absl::Status SetOutputBuffer(const std::string& name,
+                               litert::TensorBuffer buffer) {
+    return SetOutputBuffer(default_signature_name_, name, std::move(buffer));
+  }
+
+  absl::Status SetOutputBuffer(size_t index, litert::TensorBuffer buffer) {
+    return SetOutputBuffer(default_signature_name_, index, std::move(buffer));
+  }
+
+  absl::Status SetOutput(const std::string& name, const TensorHandle& tensor) {
+    LITERT_ASSIGN_OR_RETURN(Buffer & buffer, tensor.GetBuffer());
+    absl::StatusOr<LitertBuffer&> litert_buffer_or = buffer.As<LitertBuffer>();
+    if (!litert_buffer_or.ok()) {
+      return absl::InvalidArgumentError("Tensor must be a LitertBuffer");
+    }
+    LITERT_ASSIGN_OR_RETURN(TensorBuffer dup,
+                            litert_buffer_or->tensor_buffer().Duplicate());
+    return SetOutputBuffer(name, std::move(dup));
+  }
+
+  // Run by signature
+  absl::Status Run(const std::string& signature_name) {
+    auto in_it = signature_input_buffers_.find(signature_name);
+    auto out_it = signature_output_buffers_.find(signature_name);
+    if (in_it == signature_input_buffers_.end() ||
+        out_it == signature_output_buffers_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+
+    Expected<size_t> sig_index_or =
+        compiled_model_.GetSignatureIndex(signature_name);
+    if (!sig_index_or.HasValue()) {
+      return absl::NotFoundError("Signature index not found in model");
+    }
+
+    std::vector<TensorBuffer>& input_buffers = in_it->second;
+    std::vector<TensorBuffer>& output_buffers = out_it->second;
+
+    const std::vector<bool>& resized = resized_inputs_[signature_name];
+    if (absl::c_linear_search(resized, true)) {
+      return absl::FailedPreconditionError("Bind resized inputs before Run");
+    }
+    LITERT_RETURN_IF_ERROR(RefreshOutputBuffers(signature_name));
+
+    auto first_run_it = first_run_.find(signature_name);
+    bool is_first_run =
+        first_run_it == first_run_.end() ? true : first_run_it->second;
+
+    if (!is_first_run) {
+      auto loops_it = feedback_loops_.find(signature_name);
+      if (loops_it != feedback_loops_.end()) {
+        for (const FeedbackLoop& loop : loops_it->second) {
+          std::swap(input_buffers[loop.input_index],
+                    output_buffers[loop.output_index]);
+        }
+      }
+      swapped_[signature_name] = !swapped_[signature_name];
+    }
+    if (first_run_it != first_run_.end()) {
+      first_run_it->second = false;
+    }
+
+    Expected<void> status = compiled_model_.Run(sig_index_or.Value(),
+                                                input_buffers, output_buffers);
+    if (!status.HasValue()) {
+      return absl::InternalError(status.Error().Message());
+    }
+    return absl::OkStatus();
+  }
+
+  // Get output by signature and name
+  absl::StatusOr<TensorHandle> GetOutput(const std::string& signature_name,
+                                         const std::string& name) {
+    LITERT_ASSIGN_OR_RETURN(size_t index, GetOutputIndex(signature_name, name));
+    return GetOutput(signature_name, index);
+  }
+
+  // Get output by signature and index
+  absl::StatusOr<TensorHandle> GetOutput(const std::string& signature_name,
+                                         size_t index) {
+    auto out_it = signature_output_buffers_.find(signature_name);
+    if (out_it == signature_output_buffers_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+    std::vector<TensorBuffer>& output_buffers = out_it->second;
+
+    if (index >= output_buffers.size()) {
+      return absl::NotFoundError("Index out of bounds");
+    }
+
+    const std::string& name =
+        signature_metadata_.at(signature_name).outputs[index];
+
+    LITERT_ASSIGN_OR_RETURN(RankedTensorType ranked_tensor_type,
+                            output_buffers[index].TensorType());
+
+    Expected<TensorBuffer> dup_or = output_buffers[index].Duplicate();
+    if (!dup_or.HasValue()) {
+      return absl::InternalError("Failed to duplicate TensorBuffer");
+    }
+
+    std::shared_ptr<LitertBuffer> litert_buffer =
+        std::make_shared<LitertBuffer>(std::move(*dup_or));
+
+    Type type = Type::kUnknown;
+    switch (ranked_tensor_type.ElementType()) {
+      case ElementType::Float32:
+        type = Type::kFP32;
+        break;
+      case ElementType::Int32:
+        type = Type::kI32;
+        break;
+      case ElementType::Int8:
+        type = Type::kI8;
+        break;
+      case ElementType::Bool:
+        type = Type::kBOOL;
+        break;
+      default:
+        break;
+    }
+
+    Shape shape;
+    for (int dim : ranked_tensor_type.Layout().Dimensions()) {
+      shape.push_back(dim);
+    }
+
+    TensorInit init;
+    init.name = name;
+    init.type = type;
+    init.shape = std::move(shape);
+    init.buffer = litert_buffer;
+
+    return TensorHandle(init);
+  }
+
+  // Get input by signature and name
+  absl::StatusOr<TensorHandle> GetInput(const std::string& signature_name,
+                                        const std::string& name) {
+    LITERT_ASSIGN_OR_RETURN(size_t index, GetInputIndex(signature_name, name));
+    return GetInput(signature_name, index);
+  }
+
+  // Get input by signature and index
+  absl::StatusOr<TensorHandle> GetInput(const std::string& signature_name,
+                                        size_t index) {
+    auto in_it = signature_input_buffers_.find(signature_name);
+    if (in_it == signature_input_buffers_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+    std::vector<TensorBuffer>& input_buffers = in_it->second;
+
+    if (index >= input_buffers.size()) {
+      return absl::NotFoundError("Index out of bounds");
+    }
+
+    const std::string& name =
+        signature_metadata_.at(signature_name).inputs[index];
+
+    LITERT_RETURN_IF_ERROR(EnsureInputBuffer(signature_name, index));
+    LITERT_ASSIGN_OR_RETURN(RankedTensorType ranked_tensor_type,
+                            input_buffers[index].TensorType());
+
+    Expected<TensorBuffer> dup_or = input_buffers[index].Duplicate();
+    if (!dup_or.HasValue()) {
+      return absl::InternalError("Failed to duplicate TensorBuffer");
+    }
+
+    std::shared_ptr<LitertBuffer> litert_buffer =
+        std::make_shared<LitertBuffer>(std::move(*dup_or));
+
+    Type type = Type::kUnknown;
+    switch (ranked_tensor_type.ElementType()) {
+      case ElementType::Float32:
+        type = Type::kFP32;
+        break;
+      case ElementType::Int32:
+        type = Type::kI32;
+        break;
+      case ElementType::Int8:
+        type = Type::kI8;
+        break;
+      case ElementType::Bool:
+        type = Type::kBOOL;
+        break;
+      default:
+        break;
+    }
+
+    Shape shape;
+    for (int dim : ranked_tensor_type.Layout().Dimensions()) {
+      shape.push_back(dim);
+    }
+
+    TensorInit init;
+    init.name = name;
+    init.type = type;
+    init.shape = std::move(shape);
+    init.buffer = litert_buffer;
+
+    return TensorHandle(init);
+  }
+
+  absl::StatusOr<uintptr_t> GetOutputWebGpuBuffer(
+      const std::string& signature_name, const std::string& name) {
+    auto out_it = signature_output_buffers_.find(signature_name);
+    if (out_it == signature_output_buffers_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+    std::vector<TensorBuffer>& output_buffers = out_it->second;
+
+    LITERT_ASSIGN_OR_RETURN(SimpleSignature signature,
+                            compiled_model_.FindSignature(signature_name));
+    for (size_t i = 0; i < signature.OutputNames().size(); ++i) {
+      if (signature.OutputNames()[i] == name) {
+        Expected<HwMemoryHandle> handle_or =
+            output_buffers[i].GetWebGpuBuffer();
+        if (handle_or.HasValue()) {
+          return reinterpret_cast<uintptr_t>(*handle_or);
+        }
+        return absl::NotFoundError("Buffer is not a WebGPU buffer");
+      }
+    }
+    return absl::NotFoundError("Output tensor not found");
+  }
+
+  absl::StatusOr<uintptr_t> GetInputWebGpuBuffer(
+      const std::string& signature_name, const std::string& name) {
+    auto in_it = signature_input_buffers_.find(signature_name);
+    if (in_it == signature_input_buffers_.end()) {
+      return absl::NotFoundError("Signature not found");
+    }
+    std::vector<TensorBuffer>& input_buffers = in_it->second;
+
+    LITERT_ASSIGN_OR_RETURN(SimpleSignature signature,
+                            compiled_model_.FindSignature(signature_name));
+    for (size_t i = 0; i < signature.InputNames().size(); ++i) {
+      if (signature.InputNames()[i] == name) {
+        Expected<HwMemoryHandle> handle_or = input_buffers[i].GetWebGpuBuffer();
+        if (handle_or.HasValue()) {
+          return reinterpret_cast<uintptr_t>(*handle_or);
+        }
+        return absl::NotFoundError("Buffer is not a WebGPU buffer");
+      }
+    }
+    return absl::NotFoundError("Input tensor not found");
+  }
+
+ private:
+  absl::Status EnsureInputBuffer(const std::string& signature_name,
+                                 size_t index) {
+    const std::vector<bool>& resized = resized_inputs_[signature_name];
+    if (resized.empty() || !resized[index]) {
+      return absl::OkStatus();
+    }
+    LITERT_ASSIGN_OR_RETURN(size_t sig_idx,
+                            compiled_model_.GetSignatureIndex(signature_name));
+    LITERT_ASSIGN_OR_RETURN(
+        Layout layout, compiled_model_.GetInputTensorLayout(sig_idx, index));
+    TensorBuffer& current_buffer =
+        signature_input_buffers_.at(signature_name)[index];
+    LITERT_ASSIGN_OR_RETURN(RankedTensorType type, current_buffer.TensorType());
+    if (type.Layout() == layout) {
+      return absl::OkStatus();
+    }
+    const std::string& name =
+        signature_metadata_.at(signature_name).inputs[index];
+    LITERT_ASSIGN_OR_RETURN(
+        TensorBuffer buffer,
+        compiled_model_.CreateInputBuffer(signature_name, name));
+    current_buffer = std::move(buffer);
+    return absl::OkStatus();
+  }
+
+  absl::Status RefreshOutputBuffers(const std::string& signature_name) {
+    bool& is_resized = resized_outputs_[signature_name];
+    if (!is_resized) {
+      return absl::OkStatus();
+    }
+    LITERT_ASSIGN_OR_RETURN(size_t sig_idx,
+                            compiled_model_.GetSignatureIndex(signature_name));
+    LITERT_ASSIGN_OR_RETURN(std::vector<Layout> layouts,
+                            compiled_model_.GetOutputTensorLayouts(sig_idx));
+    const std::vector<std::string>& names =
+        signature_metadata_.at(signature_name).outputs;
+    std::vector<TensorBuffer>& buffers =
+        signature_output_buffers_.at(signature_name);
+    const std::vector<bool>& external = external_outputs_[signature_name];
+    for (size_t i = 0; i < buffers.size(); ++i) {
+      LITERT_ASSIGN_OR_RETURN(RankedTensorType type, buffers[i].TensorType());
+      if (type.Layout() == layouts[i]) {
+        continue;
+      }
+      if (!external.empty() && external[i]) {
+        return absl::FailedPreconditionError(
+            "Rebind external output buffer after its shape changes");
+      }
+      LITERT_ASSIGN_OR_RETURN(buffers[i], compiled_model_.CreateOutputBuffer(
+                                              signature_name, names[i]));
+    }
+    is_resized = false;
+    return absl::OkStatus();
+  }
+
+  struct SignatureMetadata {
+    std::vector<std::string> inputs, outputs;
+    absl::flat_hash_map<std::string, size_t> input_indices, output_indices;
+  };
+
+  struct FeedbackLoop {
+    size_t input_index;
+    size_t output_index;
+  };
+
+  explicit LitertDynamicRunner(CompiledModel compiled_model)
+      : compiled_model_(std::move(compiled_model)) {}
+  CompiledModel compiled_model_;
+  // Cache names only; shape/type queries continue to use current buffers.
+  absl::flat_hash_map<std::string, SignatureMetadata> signature_metadata_;
+  std::string default_signature_name_;
+  absl::flat_hash_map<std::string, std::vector<TensorBuffer>>
+      signature_input_buffers_;
+  absl::flat_hash_map<std::string, std::vector<TensorBuffer>>
+      signature_output_buffers_;
+  absl::flat_hash_map<std::string, std::vector<FeedbackLoop>> feedback_loops_;
+  absl::flat_hash_map<std::string, std::vector<bool>> resized_inputs_;
+  absl::flat_hash_map<std::string, bool> resized_outputs_;
+  absl::flat_hash_map<std::string, std::vector<bool>> external_outputs_;
+  absl::flat_hash_map<std::string, bool> first_run_;
+  absl::flat_hash_map<std::string, bool> swapped_;
+};
+
+}  // namespace tensor
+}  // namespace litert
+
+#endif  // THIRD_PARTY_ODML_LITERT_TENSOR_RUNNERS_LITERT_LITERT_DYNAMIC_RUNNER_H_
