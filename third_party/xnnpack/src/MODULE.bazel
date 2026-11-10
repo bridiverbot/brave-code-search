@@ -1,0 +1,131 @@
+# Copyright 2025 Google LLC
+#
+# Copyright 2026 Arm Limited and/or its affiliates <open-source-office@arm.com>
+#
+# This source code is licensed under the BSD-style license found in the
+# LICENSE file in the root directory of this source tree.
+#
+# Description:
+#   XNNPACK - optimized floating-point neural network operators library
+
+## MODULE.bazel
+module(
+    name = "xnnpack",
+)
+
+# Bazel rule definitions
+bazel_dep(name = "rules_cc", version = "0.2.22")
+bazel_dep(name = "rules_license", version = "1.0.0")
+bazel_dep(name = "rules_python", version = "1.7.0")
+bazel_dep(name = "rules_shell", version = "0.8.0")
+
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "pip",
+    python_version = "3.11",
+    requirements_lock = "//:requirements_lock.txt",
+)
+use_repo(pip, "pip")
+
+# Bazel Skylib.
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
+
+# Bazel Platforms
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "abseil-cpp", version = "20260107.1")
+
+# TODO: some (most? all?) of the http_archive() calls below could become bazel_dep() calls,
+# but it would require verifying that the semver provided by the Bazel registry matches the hash
+# that we expect in CMake; it's not clear that it is a big win to do so given the modest
+# complexity of our deps, so I'm leaving it like this for now to ensure that the Bazel and CMake
+# builds are using identical dependencies.
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# LINT.IfChange(googletest)
+# Google Test framework, used by most unit-tests.
+
+# Note: some `bazel_dep`s also have a dependency on an older googletest that
+# isn't compatible with bazel 9. The version specified in this dep is not
+# important as we override it with a specific archive just below.
+bazel_dep(name = "googletest", version = "1.17.0.bcr.2", repo_name = "com_google_googletest")
+archive_override(
+    module_name = "googletest",
+    sha256 = "6e8db0498a4fdcaa0b03bc4d554d7af8d0a84f49e8d8ba3e5509a6419fa066a5",
+    strip_prefix = "googletest-8eff9e336692fc95961e096564f1044c600b881d",
+    urls = ["https://github.com/google/googletest/archive/8eff9e336692fc95961e096564f1044c600b881d.zip"],
+)
+# LINT.ThenChange(cmake/DownloadGoogleTest.cmake)
+
+# LINT.IfChange(benchmark)
+# Google Benchmark library, used in micro-benchmarks.
+http_archive(
+    name = "com_google_benchmark",
+    sha256 = "3f676d4adb76e2eb0d84f997d8223705d2c6868eac35c0c65f76e5332a84e838",
+    strip_prefix = "benchmark-7da00e8f6763d6e8c284d172c9cfcc5ae0ce9b7a",
+    urls = ["https://github.com/google/benchmark/archive/7da00e8f6763d6e8c284d172c9cfcc5ae0ce9b7a.zip"],
+)
+
+# LINT.ThenChange(cmake/DownloadGoogleBenchmark.cmake)
+# FXdiv library, used for repeated integer division by the same factor
+http_archive(
+    name = "FXdiv",
+    sha256 = "ab7dfb08829bee33dca38405d647868fb214ac685e379ec7ef2bebcd234cd44d",
+    strip_prefix = "FXdiv-b408327ac2a15ec3e43352421954f5b1967701d1",
+    urls = ["https://github.com/Maratyszcza/FXdiv/archive/b408327ac2a15ec3e43352421954f5b1967701d1.zip"],
+)
+
+# LINT.IfChange(pthreadpool)
+# pthreadpool library, used for parallelization
+http_archive(
+    name = "pthreadpool",
+    sha256 = "9b9fb1179b71021c0c048504eab636424c58e9c8374404754ece6d7cd90f26d4",
+    strip_prefix = "pthreadpool-15a6644ba1c45f1acc16ac1e883efc3e56c6bed2",
+    urls = ["https://github.com/google/pthreadpool/archive/15a6644ba1c45f1acc16ac1e883efc3e56c6bed2.zip"],
+)
+# LINT.ThenChange(cmake/DownloadPThreadPool.cmake)
+
+# LINT.IfChange(cpuinfo)
+# cpuinfo library, used for detecting processor characteristics
+http_archive(
+    name = "cpuinfo",
+    patch_args = ["-p1"],
+    patches = ["//:cpuinfo_windows_arm64_msvc.patch"],
+    sha256 = "b93044263ee072e9be3577bda52f48d5a4dd9fcb80091529471c8d2bfe59219d",
+    strip_prefix = "cpuinfo-66ee79c038d70dad9f08705b2c9b3e58f6d8f512",
+    urls = [
+        "https://github.com/pytorch/cpuinfo/archive/66ee79c038d70dad9f08705b2c9b3e58f6d8f512.zip",
+    ],
+)
+# LINT.ThenChange(cmake/DownloadCpuinfo.cmake)
+
+# LINT.IfChange(kleidiai)
+# KleidiAI library, used for ARM microkernels.
+http_archive(
+    name = "KleidiAI",
+    sha256 = "c89b7c1dbcef363458ec5f46b8e7edd757bbebf8e7b27e9c9f2dc6a857d7a89f",
+    strip_prefix = "kleidiai-c80157210987eedaab2509638ef5e15950c53a8c",
+    urls = [
+        "https://gitlab.arm.com/kleidi/kleidiai/-/archive/c80157210987eedaab2509638ef5e15950c53a8c/kleidiai-c80157210987eedaab2509638ef5e15950c53a8c.zip",
+    ],
+)
+# LINT.ThenChange(cmake/DownloadKleidiAI.cmake)
+
+# Ruy library, used to benchmark against
+http_archive(
+    name = "ruy",
+    sha256 = "fe8345f521bb378745ebdd0f8c5937414849936851d2ec2609774eb2d7098e54",
+    strip_prefix = "ruy-9f53ba413e6fc879236dcaa3e008915973d67a4f",
+    urls = [
+        "https://github.com/google/ruy/archive/9f53ba413e6fc879236dcaa3e008915973d67a4f.zip",
+    ],
+)
+
+http_archive(
+    name = "slinky",
+    sha256 = "e1380282d065ef40350f79876e50a6c682ccca1c8756204f119c8d1d17512a4b",
+    strip_prefix = "slinky-a34d74bd9a3c6c0a4f5dec6a7430273ec9bb7f66",
+    urls = [
+        "https://github.com/dsharlet/slinky/archive/a34d74bd9a3c6c0a4f5dec6a7430273ec9bb7f66.zip",
+    ],
+)
