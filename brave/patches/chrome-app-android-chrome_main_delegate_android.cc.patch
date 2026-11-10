@@ -1,0 +1,18 @@
+diff --git a/chrome/app/android/chrome_main_delegate_android.cc b/chrome/app/android/chrome_main_delegate_android.cc
+index 8d3548d5d2ca7bb48aa2e4cbc72501b7b674acb7..f53c3880b770dd768da17d9b077ee4b3f5455284 100644
+--- a/chrome/app/android/chrome_main_delegate_android.cc
++++ b/chrome/app/android/chrome_main_delegate_android.cc
+@@ -51,11 +51,11 @@ std::optional<int> ChromeMainDelegateAndroid::BasicStartupComplete() {
+   base::android::PreFreezeBackgroundMemoryTrimmer::SetDelegate(
+       std::make_unique<ChromePreFreezeDelegate>());
+ 
+-  return ChromeMainDelegate::BasicStartupComplete();
++  return BraveMainDelegate::BasicStartupComplete();
+ }
+ 
+ void ChromeMainDelegateAndroid::PreSandboxStartup() {
+-  ChromeMainDelegate::PreSandboxStartup();
++  BraveMainDelegate::PreSandboxStartup();
+ 
+   // PoissonAllocationSampler's TLS slots need to be set up before
+   // MainThreadStackSamplingProfiler, which can allocate TLS slots of its own.

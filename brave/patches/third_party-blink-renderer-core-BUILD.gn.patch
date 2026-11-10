@@ -1,0 +1,36 @@
+diff --git a/third_party/blink/renderer/core/BUILD.gn b/third_party/blink/renderer/core/BUILD.gn
+index a96e9c9df209abba41bccf9d348eee89058b5f83..070f12c529b4ff895c38b989e59862a14d43de26 100644
+--- a/third_party/blink/renderer/core/BUILD.gn
++++ b/third_party/blink/renderer/core/BUILD.gn
+@@ -264,6 +264,7 @@ component("core") {
+     "core_initializer.cc",
+     "core_initializer.h",
+   ]
++  sources += brave_blink_renderer_core_sources
+ 
+   sources += blink_core_sources_bindings
+ 
+@@ -395,6 +396,7 @@ component("core") {
+     "//url",
+     "//v8",
+   ]
++  public_deps += brave_blink_renderer_core_public_deps
+ 
+   if (is_mac) {
+     public_deps += [ "//ui/gfx" ]
+@@ -447,6 +449,7 @@ component("core") {
+     "//ui/gfx/geometry:geometry_skia",
+     "//ui/strings",
+   ]
++  deps += brave_blink_renderer_core_deps
+ 
+   if (is_mac) {
+     deps += [ "//ui/base/mojom" ]
+@@ -479,6 +482,7 @@ component("core") {
+       "Carbon.framework",
+     ]
+   }
++  visibility += brave_blink_renderer_core_visibility
+ }
+ 
+ # Isolate loader/resource/font_resource.{h,cc} from component("core") because
