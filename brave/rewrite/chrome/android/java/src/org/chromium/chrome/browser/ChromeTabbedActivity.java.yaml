@@ -1,0 +1,47 @@
+# Copyright (c) 2026 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at https://mozilla.org/MPL/2.0/.
+
+substitutions:
+  - description: |-
+      Only remove a window with zero tabs when Brave allows it
+    regex:
+      re_pattern: |-
+        ( +)private void (closeIfNoTabsAndHomepageEnabled)(\(\n +boolean isPendingClosure, boolean shouldRemoveWindowWithZeroTabs\) \{)
+      replace: |-
+        \1private void \2\3
+        \1    if (getTabModelSelector().getTotalTabCount() == 0) {
+        \1        shouldRemoveWindowWithZeroTabs = shouldRemoveWindowWithZeroTabs && org.chromium.chrome.browser.partnercustomizations.CloseBraveManager.shouldCloseAppWithZeroTabs();
+        \1    }
+        \1    \2_ChromiumImpl(isPendingClosure, shouldRemoveWindowWithZeroTabs);
+        \1}
+
+        \1private void \2_ChromiumImpl\3
+  - description: |-
+      Notify Brave once tab state has been initialized
+    regex:
+      re_pattern: |-
+        ( +)public void (onTabStateInitialized)(\(\) \{)
+      replace: |-
+        \1public void \2\3
+        \1    \2_ChromiumImpl();
+        \1    onTabStateInitializedHandler();
+        \1}
+
+        \1private void \2_ChromiumImpl\3
+  - description: |-
+      Keep the Private tab cipher key when the activity is recreated.
+
+      The key that encrypts Private tab state is only created the first time a
+      Private tab's state is saved. A Private New Tab page is never saved, so
+      when it is the only Private tab, no key exists. Without a key, Chromium
+      cannot restore Private tabs after the activity is recreated, and the
+      Private New Tab page is lost. Create the key before the instance state is
+      saved so the Private tabs can be restored.
+    add_after_line:
+      line: 'super.onSaveInstanceState(outState);'
+      code: |2-
+                    if (mIsRecreating) {
+                        CipherLazyHolder.sCipherInstance.getCipher(javax.crypto.Cipher.ENCRYPT_MODE);
+                    }

@@ -1,0 +1,12 @@
+diff --git a/chrome/renderer/chrome_content_renderer_client.h b/chrome/renderer/chrome_content_renderer_client.h
+index a4f16a95cf41e3a669ed2e8c167893e13a470daf..c01e2c17eaf8badfbcce0ce11a009f5222f4e56f 100644
+--- a/chrome/renderer/chrome_content_renderer_client.h
++++ b/chrome/renderer/chrome_content_renderer_client.h
+@@ -244,6 +244,7 @@ class ChromeContentRendererClient
+ #endif
+ 
+  private:
++  friend class BraveContentRendererClient;
+   FRIEND_TEST_ALL_PREFIXES(ChromeContentRendererClientTest, NaClRestriction);
+   FRIEND_TEST_ALL_PREFIXES(ChromeContentRendererClientTest,
+                            ShouldSuppressErrorPage);

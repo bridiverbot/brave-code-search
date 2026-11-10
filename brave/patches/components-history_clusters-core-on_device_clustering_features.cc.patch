@@ -1,0 +1,26 @@
+diff --git a/components/history_clusters/core/on_device_clustering_features.cc b/components/history_clusters/core/on_device_clustering_features.cc
+index d5dd9d118c99fba6d0db76f84c870460bfced0ba..67e45dc723e9c447c07f292676e45f7386390e1e 100644
+--- a/components/history_clusters/core/on_device_clustering_features.cc
++++ b/components/history_clusters/core/on_device_clustering_features.cc
+@@ -14,17 +14,17 @@
+ namespace history_clusters {
+ namespace features {
+ 
+-BASE_FEATURE(kOnDeviceClustering,
++BASE_OVERRIDDEN_FEATURE(kOnDeviceClustering,
+              "HistoryClustersOnDeviceClustering",
+-             base::FEATURE_ENABLED_BY_DEFAULT);
++             base::FEATURE_DISABLED_BY_DEFAULT);
+ 
+ BASE_FEATURE(kOnDeviceClusteringBlocklists,
+              "JourneysOnDeviceClusteringBlocklist",
+              base::FEATURE_ENABLED_BY_DEFAULT);
+ 
+-BASE_FEATURE(kOnDeviceClusteringKeywordFiltering,
++BASE_OVERRIDDEN_FEATURE(kOnDeviceClusteringKeywordFiltering,
+              "JourneysKeywordFiltering",
+-             base::FEATURE_ENABLED_BY_DEFAULT);
++             base::FEATURE_DISABLED_BY_DEFAULT);
+ 
+ }  // namespace features
+ }  // namespace history_clusters

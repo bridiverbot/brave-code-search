@@ -1,0 +1,14 @@
+diff --git a/chrome/browser/prefs/chrome_pref_service_factory.cc b/chrome/browser/prefs/chrome_pref_service_factory.cc
+index 2e18bfab6cc09b2f3ab2a26ac23b26f0a577560d..a3cb25017148b90bd1a843f0ec5101762b05838c 100644
+--- a/chrome/browser/prefs/chrome_pref_service_factory.cc
++++ b/chrome/browser/prefs/chrome_pref_service_factory.cc
+@@ -190,6 +190,9 @@ const auto kTrackedPrefs = std::to_array<prefs::TrackedPreferenceMetadata>({
+ 
+     // See note at top, new items added here also need to be added to
+     // histograms.xml's TrackedPreference enum.
++    {90, brave_shields::prefs::kAdBlockDeveloperMode,
++     EnforcementLevel::ENFORCE_ON_LOAD, PrefTrackingStrategy::ATOMIC,
++     ValueType::IMPERSONAL},
+ });
+ 
+ // One more than the last tracked preferences ID above.
