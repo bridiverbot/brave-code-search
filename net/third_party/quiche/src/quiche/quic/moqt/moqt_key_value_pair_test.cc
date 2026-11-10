@@ -1,0 +1,322 @@
+// Copyright (c) 2026 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#include "quiche/quic/moqt/moqt_key_value_pair.h"
+
+#include <cstdint>
+#include <optional>
+
+#include "absl/status/status.h"
+#include "absl/strings/string_view.h"
+#include "quiche/quic/core/quic_time.h"
+#include "quiche/quic/moqt/moqt_names.h"
+#include "quiche/quic/moqt/moqt_priority.h"
+#include "quiche/quic/moqt/moqt_types.h"
+#include "quiche/quic/platform/api/quic_test.h"
+#include "quiche/common/test_tools/quiche_test_utils.h"
+
+namespace moqt::test {
+
+class LocationTest : public quic::test::QuicTest {};
+
+TEST_F(LocationTest, LocationTests) {
+  Location location;
+  EXPECT_EQ(location, Location(0, 0));
+  EXPECT_EQ(location.Next(), Location(0, 1));
+  EXPECT_LT(Location(4, 20), Location(5, 0));
+  EXPECT_LT(Location(4, 0), Location(4, 1));
+}
+
+class AuthTokenTest : public quic::test::QuicTest {};
+
+TEST_F(AuthTokenTest, Delete) {
+  AuthToken token(1, AuthTokenAliasType::kDelete);
+  EXPECT_EQ(token.alias_type, AuthTokenAliasType::kDelete);
+  EXPECT_EQ(token.alias, 1);
+  EXPECT_FALSE(token.type.has_value());
+  EXPECT_FALSE(token.value.has_value());
+}
+
+TEST_F(AuthTokenTest, Register) {
+  AuthToken token(1, AuthTokenType::kOutOfBand, "token");
+  EXPECT_EQ(token.alias_type, AuthTokenAliasType::kRegister);
+  EXPECT_EQ(token.alias, 1);
+  EXPECT_EQ(token.type, AuthTokenType::kOutOfBand);
+  EXPECT_EQ(token.value, "token");
+}
+
+TEST_F(AuthTokenTest, UseAlias) {
+  AuthToken token(1, AuthTokenAliasType::kUseAlias);
+  EXPECT_EQ(token.alias_type, AuthTokenAliasType::kUseAlias);
+  EXPECT_EQ(token.alias, 1);
+  EXPECT_FALSE(token.type.has_value());
+  EXPECT_FALSE(token.value.has_value());
+}
+
+TEST_F(AuthTokenTest, UseValue) {
+  AuthToken token(AuthTokenType::kOutOfBand, "token");
+  EXPECT_EQ(token.alias_type, AuthTokenAliasType::kUseValue);
+  EXPECT_EQ(token.type, AuthTokenType::kOutOfBand);
+  EXPECT_EQ(token.value, "token");
+}
+
+class SubscriptionFilterTest : public quic::test::QuicTest {};
+
+TEST_F(SubscriptionFilterTest, NextGroupStart) {
+  SubscriptionFilter filter(MoqtFilterType::kNextGroupStart);
+  EXPECT_EQ(filter.type(), (MoqtFilterType::kNextGroupStart));
+  EXPECT_FALSE(filter.WindowKnown());
+  filter.OnLargestObject(Location(3, 6));
+  EXPECT_TRUE(filter.WindowKnown());
+  EXPECT_EQ(filter.type(), (MoqtFilterType::kNextGroupStart));
+  EXPECT_TRUE(filter.InWindow(Location(4, 0)));
+  EXPECT_FALSE(filter.InWindow(Location(3, 7)));
+  EXPECT_TRUE(filter.InWindow(4));
+  EXPECT_FALSE(filter.InWindow(3));
+}
+
+TEST_F(SubscriptionFilterTest, LargestObject) {
+  SubscriptionFilter filter(MoqtFilterType::kLargestObject);
+  EXPECT_EQ(filter.type(), (MoqtFilterType::kLargestObject));
+  EXPECT_FALSE(filter.WindowKnown());
+  filter.OnLargestObject(Location(3, 6));
+  EXPECT_EQ(filter.type(), (MoqtFilterType::kLargestObject));
+  EXPECT_TRUE(filter.WindowKnown());
+  EXPECT_TRUE(filter.InWindow(Location(4, 0)));
+  EXPECT_TRUE(filter.InWindow(Location(3, 7)));
+  EXPECT_FALSE(filter.InWindow(Location(3, 6)));
+  EXPECT_TRUE(filter.InWindow(4));
+  EXPECT_TRUE(filter.InWindow(3));
+  EXPECT_FALSE(filter.InWindow(2));
+}
+
+TEST_F(SubscriptionFilterTest, LargestObjectNoObjectsYet) {
+  SubscriptionFilter filter(MoqtFilterType::kLargestObject);
+  EXPECT_EQ(filter.type(), (MoqtFilterType::kLargestObject));
+  EXPECT_FALSE(filter.WindowKnown());
+  filter.OnLargestObject(std::nullopt);
+  EXPECT_EQ(filter.type(), (MoqtFilterType::kLargestObject));
+  EXPECT_TRUE(filter.WindowKnown());
+  EXPECT_TRUE(filter.InWindow(Location(0, 0)));
+  EXPECT_TRUE(filter.InWindow(0));
+}
+
+TEST_F(SubscriptionFilterTest, AbsoluteStart) {
+  SubscriptionFilter filter(Location(3, 6));
+  EXPECT_EQ(filter.type(), (MoqtFilterType::kAbsoluteStart));
+  EXPECT_TRUE(filter.WindowKnown());
+  EXPECT_TRUE(filter.InWindow(Location(4, 0)));
+  EXPECT_TRUE(filter.InWindow(Location(3, 6)));
+  EXPECT_FALSE(filter.InWindow(Location(3, 5)));
+  EXPECT_TRUE(filter.InWindow(4));
+  EXPECT_TRUE(filter.InWindow(3));
+  EXPECT_FALSE(filter.InWindow(2));
+}
+
+TEST_F(SubscriptionFilterTest, AbsoluteRange) {
+  SubscriptionFilter filter(Location(3, 6), 5);
+  EXPECT_EQ(filter.type(), (MoqtFilterType::kAbsoluteRange));
+  EXPECT_TRUE(filter.WindowKnown());
+  EXPECT_EQ(filter.start(), Location(3, 6));
+  EXPECT_EQ(filter.end_group(), 5);
+  EXPECT_TRUE(filter.InWindow(Location(4, 0)));
+  EXPECT_TRUE(filter.InWindow(Location(3, 6)));
+  EXPECT_TRUE(filter.InWindow(Location(5, kMaxObjectId)));
+  EXPECT_FALSE(filter.InWindow(Location(3, 5)));
+  EXPECT_FALSE(filter.InWindow(Location(6, 0)));
+  EXPECT_TRUE(filter.InWindow(5));
+  EXPECT_TRUE(filter.InWindow(3));
+  EXPECT_FALSE(filter.InWindow(2));
+  EXPECT_FALSE(filter.InWindow(6));
+}
+
+class MessageParametersTest : public quic::test::QuicTest {};
+
+TEST_F(MessageParametersTest, Update) {
+  MessageParameters p1;
+  p1.object_delivery_timeout = quic::QuicTimeDelta::FromMilliseconds(10);
+  p1.expires = quic::QuicTimeDelta::FromMilliseconds(100);
+  p1.set_forward(false);
+  p1.subscriber_priority = 100;
+  p1.new_group_request = 1;
+  p1.track_namespace_prefix = TrackNamespace({"foo"});
+  MessageParameters p2;
+  p2.object_delivery_timeout = quic::QuicTimeDelta::FromMilliseconds(20);
+  p2.authorization_tokens.push_back(
+      AuthToken(AuthTokenType::kOutOfBand, "token"));
+  p2.set_forward(true);
+  p2.group_order = MoqtGroupOrder::kDescending;
+  p2.track_namespace_prefix = TrackNamespace({"bar"});
+  p1.Update(p2);
+  EXPECT_EQ(p1.object_delivery_timeout,
+            quic::QuicTimeDelta::FromMilliseconds(20));
+  EXPECT_EQ(p1.expires, quic::QuicTimeDelta::FromMilliseconds(100));
+  ASSERT_EQ(p1.authorization_tokens.size(), 1);
+  EXPECT_EQ(p1.authorization_tokens[0],
+            AuthToken(AuthTokenType::kOutOfBand, "token"));
+  EXPECT_TRUE(p1.forward());
+  EXPECT_EQ(p1.subscriber_priority, 100);
+  EXPECT_EQ(p1.group_order, std::nullopt);
+  EXPECT_EQ(p1.new_group_request, 1);
+  EXPECT_EQ(p1.track_namespace_prefix, TrackNamespace({"bar"}));
+}
+
+class TrackPropertiesTest : public quic::test::QuicTest {};
+
+TEST_F(TrackPropertiesTest, DefaultConstructor) {
+  TrackProperties properties;
+  EXPECT_TRUE(properties.Validate());
+  EXPECT_EQ(properties.object_delivery_timeout(), kDefaultDeliveryTimeout);
+  EXPECT_EQ(properties.max_cache_duration(), kDefaultMaxCacheDuration);
+  EXPECT_EQ(properties.default_publisher_priority(), kDefaultPublisherPriority);
+  EXPECT_EQ(properties.default_publisher_group_order(), kDefaultGroupOrder);
+  EXPECT_EQ(properties.dynamic_groups(), kDefaultDynamicGroups);
+  EXPECT_TRUE(properties.immutable_properties().empty());
+}
+
+TEST_F(TrackPropertiesTest, AllProperties) {
+  TrackProperties properties(quic::QuicTimeDelta::FromMilliseconds(1),
+                             quic::QuicTimeDelta::FromMilliseconds(2),
+                             quic::QuicTimeDelta::FromMilliseconds(3),
+                             MoqtPriority(10), MoqtGroupOrder::kDescending,
+                             true, "properties");
+  EXPECT_TRUE(properties.Validate());
+  EXPECT_EQ(properties.object_delivery_timeout(),
+            quic::QuicTimeDelta::FromMilliseconds(1));
+  EXPECT_EQ(properties.max_cache_duration(),
+            quic::QuicTimeDelta::FromMilliseconds(2));
+  EXPECT_EQ(properties.subgroup_delivery_timeout(),
+            quic::QuicTimeDelta::FromMilliseconds(3));
+  EXPECT_EQ(properties.default_publisher_priority(), MoqtPriority(10));
+  EXPECT_EQ(properties.default_publisher_group_order(),
+            MoqtGroupOrder::kDescending);
+  EXPECT_TRUE(properties.dynamic_groups());
+  EXPECT_EQ(properties.immutable_properties(), "properties");
+}
+
+TEST_F(TrackPropertiesTest, ExplicitDefaults) {
+  TrackProperties properties(kDefaultDeliveryTimeout, kDefaultMaxCacheDuration,
+                             kDefaultDeliveryTimeout, kDefaultPublisherPriority,
+                             kDefaultGroupOrder, kDefaultDynamicGroups, "");
+  EXPECT_TRUE(properties.Validate());
+  EXPECT_EQ(properties.size(), 0);
+  EXPECT_EQ(properties.object_delivery_timeout(), kDefaultDeliveryTimeout);
+  EXPECT_EQ(properties.max_cache_duration(), kDefaultMaxCacheDuration);
+  EXPECT_EQ(properties.subgroup_delivery_timeout(), kDefaultDeliveryTimeout);
+  EXPECT_EQ(properties.default_publisher_priority(), kDefaultPublisherPriority);
+  EXPECT_EQ(properties.default_publisher_group_order(), kDefaultGroupOrder);
+  EXPECT_EQ(properties.dynamic_groups(), kDefaultDynamicGroups);
+  EXPECT_TRUE(properties.immutable_properties().empty());
+}
+
+TEST_F(TrackPropertiesTest, Validate) {
+  TrackProperties properties;
+  // Unknown property.
+  properties.insert(0x42, 15ULL);
+  properties.insert(0x42, 25ULL);
+  EXPECT_TRUE(properties.Validate());
+
+  properties.insert(static_cast<uint64_t>(PropertyType::kObjectDeliveryTimeout),
+                    5ULL);
+  properties.insert(static_cast<uint64_t>(PropertyType::kObjectDeliveryTimeout),
+                    6ULL);
+  EXPECT_FALSE(properties.Validate());
+
+  properties.clear();
+  properties.insert(static_cast<uint64_t>(PropertyType::kMaxCacheDuration),
+                    5ULL);
+  properties.insert(static_cast<uint64_t>(PropertyType::kMaxCacheDuration),
+                    6ULL);
+  EXPECT_FALSE(properties.Validate());
+
+  properties.clear();
+  properties.insert(
+      static_cast<uint64_t>(PropertyType::kSubgroupDeliveryTimeout), 5ULL);
+  properties.insert(
+      static_cast<uint64_t>(PropertyType::kSubgroupDeliveryTimeout), 6ULL);
+  EXPECT_FALSE(properties.Validate());
+
+  properties.clear();
+  properties.insert(
+      static_cast<uint64_t>(PropertyType::kDefaultPublisherPriority), 256ULL);
+  EXPECT_FALSE(properties.Validate());
+  properties.clear();
+  properties.insert(
+      static_cast<uint64_t>(PropertyType::kDefaultPublisherPriority), 0ULL);
+  properties.insert(
+      static_cast<uint64_t>(PropertyType::kDefaultPublisherPriority), 1ULL);
+  EXPECT_FALSE(properties.Validate());
+
+  properties.clear();
+  properties.insert(
+      static_cast<uint64_t>(PropertyType::kDefaultPublisherGroupOrder), 0ULL);
+  EXPECT_FALSE(properties.Validate());
+  properties.clear();
+  properties.insert(
+      static_cast<uint64_t>(PropertyType::kDefaultPublisherGroupOrder), 3ULL);
+  EXPECT_FALSE(properties.Validate());
+  properties.clear();
+  properties.insert(static_cast<uint64_t>(PropertyType::kDynamicGroups), 2ULL);
+  properties.insert(static_cast<uint64_t>(PropertyType::kDynamicGroups), 1ULL);
+  EXPECT_FALSE(properties.Validate());
+
+  properties.clear();
+  properties.insert(static_cast<uint64_t>(PropertyType::kDynamicGroups), 2ULL);
+  EXPECT_FALSE(properties.Validate());
+  properties.clear();
+  properties.insert(static_cast<uint64_t>(PropertyType::kDynamicGroups), 0ULL);
+  properties.insert(static_cast<uint64_t>(PropertyType::kDynamicGroups), 1ULL);
+  EXPECT_FALSE(properties.Validate());
+
+  properties.clear();
+  properties.insert(static_cast<uint64_t>(PropertyType::kImmutableProperties),
+                    "foo");
+  properties.insert(static_cast<uint64_t>(PropertyType::kImmutableProperties),
+                    "bar");
+  EXPECT_FALSE(properties.Validate());
+}
+
+TEST_F(TrackPropertiesTest, CheckForUnknownMandatoryProperty) {
+  TrackProperties properties;
+  QUICHE_EXPECT_OK(properties.CheckForUnknownMandatoryProperty());
+
+  // Non-mandatory property types (< 0x4000).
+  properties.insert(static_cast<uint64_t>(PropertyType::kObjectDeliveryTimeout),
+                    5ULL);
+  properties.insert(0x3FFE, 1ULL);
+  properties.insert(0x3FFF, "odd_optional");
+  QUICHE_EXPECT_OK(properties.CheckForUnknownMandatoryProperty());
+
+  // Non-mandatory property types (> 0x7FFF).
+  properties.insert(0x8000, 2ULL);
+  properties.insert(0x8001, "above_range");
+  properties.insert(0x10000, 3ULL);
+  QUICHE_EXPECT_OK(properties.CheckForUnknownMandatoryProperty());
+
+  // Min boundary: 0x4000.
+  TrackProperties min_mandatory;
+  min_mandatory.insert(kMinMandatoryTrackProperty, 0ULL);
+  EXPECT_TRUE(
+      IsFailedPrecondition(min_mandatory.CheckForUnknownMandatoryProperty()));
+  EXPECT_EQ(min_mandatory.CheckForUnknownMandatoryProperty().message(),
+            "Unknown mandatory property: 0x4000");
+
+  // Max boundary: 0x7FFF.
+  TrackProperties max_mandatory;
+  max_mandatory.insert(kMaxMandatoryTrackProperty, "mandatory_string");
+  EXPECT_TRUE(
+      IsFailedPrecondition(max_mandatory.CheckForUnknownMandatoryProperty()));
+  EXPECT_EQ(max_mandatory.CheckForUnknownMandatoryProperty().message(),
+            "Unknown mandatory property: 0x7fff");
+
+  // In between.
+  TrackProperties mid_mandatory;
+  mid_mandatory.insert(0x5000, 42ULL);
+  EXPECT_TRUE(
+      IsFailedPrecondition(mid_mandatory.CheckForUnknownMandatoryProperty()));
+  EXPECT_EQ(mid_mandatory.CheckForUnknownMandatoryProperty().message(),
+            "Unknown mandatory property: 0x5000");
+}
+
+}  // namespace moqt::test
