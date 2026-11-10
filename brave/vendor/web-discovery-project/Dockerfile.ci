@@ -1,0 +1,39 @@
+FROM node:24-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+ENV PATH="/usr/local/ssl/bin:$PATH"
+
+RUN mkdir /app
+RUN chown node:node -R /app
+
+# Prevent errors when running xvfb as node user
+RUN mkdir /tmp/.X11-unix \
+ && chmod 1777 /tmp/.X11-unix \
+ && chown root /tmp/.X11-unix
+
+# Expose port for VNC
+EXPOSE 5900
+
+# Install Brave (pinned version for reproducible CI)
+RUN apt-get update --no-install-recommends \
+ && apt-get install -y curl libnss3 openbox xvfb x11vnc libgbm1 libasound2 fonts-liberation xdg-utils menu libvulkan1 libu2f-udev \
+ && curl -fLo /tmp/brave-keyring.deb 'https://brave-browser-apt-release.s3.brave.com/pool/main/b/brave-keyring/brave-keyring_1.13-1.deb' \
+ && dpkg --install /tmp/brave-keyring.deb \
+ && curl -fLo /tmp/brave.deb 'https://github.com/brave/brave-browser/releases/download/v1.86.148/brave-browser_1.86.148_amd64.deb' \
+ && apt-get install -y /tmp/brave.deb \
+ && rm -f /tmp/brave.deb /tmp/brave-keyring.deb
+
+# Must be installed as root, before dropping to the node user
+RUN npm install -g pnpm@11.25.0
+
+USER node
+
+COPY --chown=node:node package.json pnpm-lock.yaml pnpm-workspace.yaml /app/
+COPY --chown=node:node patches/ /app/patches/
+# Every workspace member's manifest is needed to install from the lockfile
+COPY --chown=node:node modules/parser/package.json /app/modules/parser/
+
+WORKDIR /app/
+
+RUN pnpm install --frozen-lockfile && pnpm dlx update-browserslist-db@latest

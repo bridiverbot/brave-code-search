@@ -1,0 +1,17 @@
+name: Integration tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - run: ./run_tests_in_docker.sh "configs/ci/integration-tests.js -l brave-web-ext --grep UtilityRegression -i --brave /opt/brave.com/brave/brave-browser"
