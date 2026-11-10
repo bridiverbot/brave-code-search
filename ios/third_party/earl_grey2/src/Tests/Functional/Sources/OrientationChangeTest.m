@@ -1,0 +1,168 @@
+//
+// Copyright 2017 Google Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#import <UIKit/UIKit.h>
+#import <objc/runtime.h>
+#import "EarlGrey.h"
+#import "GREYHostApplicationDistantObject+RemoteTest.h"
+#import "BaseIntegrationTest.h"
+
+@interface OrientationChangeTest : BaseIntegrationTest
+- (void)testFaceUpAndDownOrientationChangeWithiOS16 API_AVAILABLE(ios(16));
+@end
+
+@implementation OrientationChangeTest
+
+- (void)setUp {
+  [super setUp];
+  [self openTestViewNamed:@"Rotated Views"];
+}
+
+- (void)tearDown {
+  [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationPortrait error:nil];
+  [self tapBackButton];
+  [super tearDown];
+}
+
+- (void)testBasicOrientationChange {
+  // Test rotating to landscape.
+  [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationLandscapeLeft error:nil];
+  UIDeviceOrientation orientation = [GREY_REMOTE_CLASS_IN_APP(UIDevice) currentDevice].orientation;
+  XCTAssertEqual(orientation, UIDeviceOrientationLandscapeLeft,
+                 @"Device orientation should now be left landscape");
+  [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationLandscapeRight error:nil];
+  orientation = [GREY_REMOTE_CLASS_IN_APP(UIDevice) currentDevice].orientation;
+  XCTAssertEqual(orientation, UIDeviceOrientationLandscapeRight,
+                 @"Interface orientation should now be right landscape");
+
+  // Test rotating to portrait.
+  [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationPortrait error:nil];
+  orientation = [GREY_REMOTE_CLASS_IN_APP(UIDevice) currentDevice].orientation;
+  XCTAssertEqual(orientation, UIDeviceOrientationPortrait,
+                 @"Interface orientation should now be portrait");
+}
+
+- (void)testInteractingWithElementsAfterRotation {
+  NSArray<NSString *> *buttonNames =
+      @[ @"Top Left", @"Top Right", @"Bottom Right", @"Bottom Left", @"Center" ];
+  NSArray<NSNumber *> *orientations = @[
+    @(UIDeviceOrientationLandscapeLeft), @(UIDeviceOrientationLandscapeRight),
+    @(UIDeviceOrientationPortrait)
+  ];
+
+  for (NSUInteger i = 0; i < [orientations count]; i++) {
+    UIDeviceOrientation orientation = [orientations[i] integerValue];
+    [EarlGrey rotateDeviceToOrientation:orientation error:nil];
+    UIDeviceOrientation deviceOrientation =
+        [[GREY_REMOTE_CLASS_IN_APP(UIDevice) currentDevice] orientation];
+    GREYAssertEqual(deviceOrientation, orientation, @"Device orientation should match");
+    // Tap clear, check if label was reset
+    [[EarlGrey selectElementWithMatcher:GREYButtonTitle(@"Clear")] performAction:GREYTap()];
+    [[EarlGrey selectElementWithMatcher:GREYText(@"Last tapped: None")]
+        assertWithMatcher:GREYSufficientlyVisible()];
+    // Each of the buttons, when tapped, execute an action that changes the |lastTapped| UILabel
+    // to contain their locations. We tap each button then check if the label actually changed.
+    for (NSString *buttonName in buttonNames) {
+      [[EarlGrey selectElementWithMatcher:GREYButtonTitle(buttonName)] performAction:GREYTap()];
+      NSString *tappedString = [NSString stringWithFormat:@"Last tapped: %@", buttonName];
+      [[EarlGrey selectElementWithMatcher:GREYText(tappedString)]
+          assertWithMatcher:GREYSufficientlyVisible()];
+    }
+  }
+}
+
+- (void)testFaceUpAndDownOrientationChangeWithiOS16 {
+  NSArray<NSNumber *> *orientations = @[
+    @(UIDeviceOrientationPortraitUpsideDown),
+    @(UIDeviceOrientationFaceUp),
+    @(UIDeviceOrientationFaceDown),
+  ];
+
+  for (NSUInteger i = 0; i < [orientations count]; i++) {
+    NSError *error;
+    UIDeviceOrientation orientation = [orientations[i] integerValue];
+    [EarlGrey rotateDeviceToOrientation:orientation error:&error];
+    if (error) {
+      NSString *errorDescription = [error localizedDescription];
+      if (i == 0) {
+        XCTAssertTrue([errorDescription containsString:@"portraitUpsideDown"]);
+      } else {
+        XCTAssertTrue(
+            [errorDescription containsString:@"orientation is not supported by the rotation API"]);
+      }
+    }
+  }
+}
+
+- (void)testOrientationChangeWithInvalidOrientation {
+  UIInterfaceOrientation orientation =
+      [[GREYHostApplicationDistantObject sharedInstance] appOrientation];
+  XCTAssertEqual(orientation, UIInterfaceOrientationPortrait,
+                 @"Invalid orientation doesn't change the actual orientation of the app");
+  NSError *error;
+  BOOL orientationChange = [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationFaceDown
+                                                         error:&error];
+  XCTAssertNotNil(error);
+  XCTAssertFalse(orientationChange);
+  orientation = [[GREYHostApplicationDistantObject sharedInstance] appOrientation];
+  XCTAssertEqual(orientation, UIInterfaceOrientationPortrait,
+                 @"Invalid orientation doesn't change the actual orientation of the app");
+}
+
+/**
+ * Ensures that the UIDeviceOrientationDidChangeNotification is seen in both the app and test
+ * processes.
+ */
+- (void)testOrientationChangeNotificationIsObservedInBothProcesses {
+  GREYHostApplicationDistantObject *distantObject =
+      [GREYHostApplicationDistantObject sharedInstance];
+  __block BOOL orientationChanged = NO;
+  // Add Observers
+  [distantObject addObserverForOrientationChanged];
+  [[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification
+                                                    object:nil
+                                                     queue:nil
+                                                usingBlock:^(NSNotification *_Nonnull note) {
+                                                  orientationChanged = YES;
+                                                }];
+  // Confirm initial state of BOOLs.
+  XCTAssertFalse([distantObject didOrientationChange],
+                 @"App's orientation change BOOL should be set to NO when initialized.");
+  XCTAssertFalse(orientationChanged,
+                 @"Tests's orientation change BOOL should be set to NO when initialized.");
+  // Perform rotation.
+  [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationLandscapeLeft error:nil];
+  // Confirm state of BOOLs after rotation.
+  XCTAssertTrue([distantObject didOrientationChange],
+                @"App's orientation change BOOL should be set to YES on a change.");
+  XCTAssertTrue(orientationChanged,
+                @"Test's orientation change BOOL should be set to YES on a change.");
+}
+
+/** Verifies all the canonical rotation API's. */
+- (void)testOrientationChangeDueToRotation {
+  [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationLandscapeLeft error:nil];
+  [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationLandscapeRight error:nil];
+  [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationPortrait error:nil];
+
+  UIWindow *mainWindow = [GREY_REMOTE_CLASS_IN_APP(GREYUILibUtils) window];
+  BOOL hasNotch = mainWindow.safeAreaInsets.bottom > 0;
+  if (!hasNotch) {
+    [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationPortraitUpsideDown error:nil];
+  }
+}
+
+@end

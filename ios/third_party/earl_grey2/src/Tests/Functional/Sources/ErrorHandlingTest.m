@@ -1,0 +1,363 @@
+//
+// Copyright 2019 Google Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#import "BaseIntegrationTest.h"
+
+#import "EarlGrey.h"
+#import "GREYHostApplicationDistantObject+ErrorHandlingTest.h"
+#import "FailureHandler.h"
+#import "GREYThoroughVisibilityChecker.h"
+
+@interface ErrorHandlingTest : BaseIntegrationTest
+@end
+
+@implementation ErrorHandlingTest
+
+- (void)tearDown {
+  // Make sure to reset the images so it doesn't affect the screenshot checks on the preceding test
+  // methods. This is necessary for some of the tests because it's try catching exception.
+  [GREY_REMOTE_CLASS_IN_APP(GREYThoroughVisibilityChecker) resetVisibilityImages];
+  [super tearDown];
+}
+
+/**
+ * Checks the error information for a timeout when a search action fails.
+ */
+- (void)testDescriptionForSearchActionTimeout {
+  [self openTestViewNamed:@"Scroll Views"];
+  id<GREYMatcher> matcher =
+      grey_allOf(GREYAccessibilityLabel(@"Label 2"), GREYSufficientlyVisible(), nil);
+  GREYExecuteBlockWithConfigurationOverride(kGREYConfigKeyInteractionTimeoutDuration, @(1), ^{
+    NSError *error;
+    [[[EarlGrey selectElementWithMatcher:matcher]
+           usingSearchAction:GREYScrollInDirection(kGREYDirectionDown, 50)
+        onElementWithMatcher:GREYAccessibilityLabel(@"Upper Scroll View")]
+        assertWithMatcher:GREYSufficientlyVisible()
+                    error:&error];
+    XCTAssertNotNil(error);
+    NSString *timeoutText = @"Interaction timed out after 1 seconds while searching for element.";
+    XCTAssertTrue(
+        [error.description containsString:timeoutText],
+        @"Error's description: %@ for a search action timing out did not contain timeout info: %@.",
+        error.description, timeoutText);
+    XCTAssertFalse([error.description containsString:@"Stack Trace:"]);
+  });
+}
+
+/**
+ * Check that the correct error description is printed when an error is returned from a custom
+ * action.
+ */
+- (void)testCustomNSErrorInAction {
+  id<GREYAction> failingAction = [[GREYHostApplicationDistantObject sharedInstance] failingAction];
+  NSError *error;
+  [[EarlGrey selectElementWithMatcher:GREYKeyWindow()] performAction:failingAction error:&error];
+  NSString *errorDescription = @"The operation couldn’t be completed. (Generic Error error 1.)";
+  XCTAssertTrue([error.description containsString:errorDescription]);
+}
+
+/**
+ * Check that the correct error description is printed when an error is returned from a custom
+ * assertion.
+ */
+- (void)testCustomNSErrorInAssertion {
+  id<GREYAssertion> failingAssertion =
+      [[GREYHostApplicationDistantObject sharedInstance] failingAssertion];
+  NSError *error;
+  [[EarlGrey selectElementWithMatcher:GREYKeyWindow()] assert:failingAssertion error:&error];
+  NSString *errorDescription = @"The operation couldn’t be completed. (Generic Error error 1.)";
+  XCTAssertTrue([error.description containsString:errorDescription]);
+}
+
+/**
+ * Ensures that on failures in a search action with an EarlGrey assertion, the API, matcher and
+ * failure are printed.
+ **/
+- (void)testDescriptionForSearchActionWithAssertion {
+  [self openTestViewNamed:@"Scroll Views"];
+  id<GREYMatcher> matcher =
+      grey_allOf(GREYAccessibilityLabel(@"Label 2"), GREYSufficientlyVisible(), nil);
+  NSError *error;
+  [[[EarlGrey selectElementWithMatcher:matcher]
+         usingSearchAction:GREYScrollInDirection(kGREYDirectionDown, 50)
+      onElementWithMatcher:GREYAccessibilityLabel(@"Invalid Scroll View")]
+      assertWithMatcher:GREYSufficientlyVisible()
+                  error:&error];
+  NSString *searchAPIDescription = @"Search Action:";
+  NSString *searchAPIMatcherDescription = @"Search Matcher:";
+  NSString *searchActionDescription = @"Search action failed. Look at the underlying error.";
+  NSString *elementMatcherDescription = @"Element Matcher:\n(((respondsToSelector";
+  XCTAssertTrue([error.description containsString:searchAPIDescription],
+                @"Search API Prefix and Action info: %@ not present in Error Description: %@",
+                searchAPIDescription, error.description);
+  XCTAssertTrue([error.description containsString:searchAPIMatcherDescription],
+                @"Search API Matcher info: %@ not present in Error Description: %@",
+                searchAPIMatcherDescription, error.description);
+  XCTAssertTrue([error.description containsString:searchActionDescription],
+                @"Search Action Failure Description: %@ not present in Error Description: %@",
+                searchActionDescription, error.description);
+  XCTAssertTrue([error.description containsString:elementMatcherDescription],
+                @"Element Matcher Info: %@ not present in Error Description: %@",
+                elementMatcherDescription, error.description);
+
+  [[[EarlGrey selectElementWithMatcher:matcher]
+         usingSearchAction:GREYScrollInDirection(kGREYDirectionDown, 50)
+      onElementWithMatcher:GREYKindOfClass([UIView class])]
+      assertWithMatcher:GREYSufficientlyVisible()
+                  error:&error];
+  XCTAssertTrue([error.description containsString:searchAPIDescription],
+                @"Search API Prefix and Action info: %@ not present in Error Description: %@",
+                searchAPIDescription, error.description);
+  XCTAssertTrue([error.description containsString:searchAPIMatcherDescription],
+                @"Search API Matcher info: %@ not present in Error Description: %@",
+                searchAPIMatcherDescription, error.description);
+  XCTAssertTrue([error.description containsString:searchActionDescription],
+                @"Search Action Failure Description: %@ not present in Error Description: %@",
+                searchActionDescription, error.description);
+  XCTAssertTrue([error.description containsString:elementMatcherDescription],
+                @"Element Matcher Info: %@ not present in Error Description: %@",
+                elementMatcherDescription, error.description);
+}
+
+/**
+ * Ensures that on failures in a search action with an EarlGrey action, the API, matcher and
+ * failure are printed.
+ **/
+- (void)testDescriptionForSearchActionWithAction {
+  [self openTestViewNamed:@"Scroll Views"];
+  id<GREYMatcher> matcher =
+      grey_allOf(GREYAccessibilityLabel(@"Label 2"), GREYSufficientlyVisible(), nil);
+  NSError *error;
+  [[[EarlGrey selectElementWithMatcher:matcher]
+         usingSearchAction:GREYScrollInDirection(kGREYDirectionDown, 50)
+      onElementWithMatcher:GREYAccessibilityLabel(@"Invalid Scroll View")] performAction:GREYTap()
+                                                                                   error:&error];
+  NSString *searchAPIDescription = @"Search Action:";
+  NSString *searchAPIMatcherDescription = @"Search Matcher:";
+  NSString *searchActionDescription = @"Search action failed. Look at the underlying error.";
+  NSString *elementMatcherDescription = @"Element Matcher:\n(((respondsToSelector";
+  XCTAssertTrue([error.description containsString:searchAPIDescription],
+                @"Search API Prefix and Action info: %@ not present in Error Description: %@",
+                searchAPIDescription, error.description);
+  XCTAssertTrue([error.description containsString:searchAPIMatcherDescription],
+                @"Search API Matcher info: %@ not present in Error Description: %@",
+                searchAPIMatcherDescription, error.description);
+  XCTAssertTrue([error.description containsString:searchActionDescription],
+                @"Search Action Failure Description: %@ not present in Error Description: %@",
+                searchActionDescription, error.description);
+  XCTAssertTrue([error.description containsString:elementMatcherDescription],
+                @"Element Matcher Info: %@ not present in Error Description: %@",
+                elementMatcherDescription, error.description);
+
+  [[[EarlGrey selectElementWithMatcher:matcher]
+         usingSearchAction:GREYScrollInDirection(kGREYDirectionDown, 50)
+      onElementWithMatcher:GREYKindOfClass([UIView class])] performAction:GREYTap() error:&error];
+  searchActionDescription = @"Search action failed. Look at the underlying error.";
+  XCTAssertTrue([error.description containsString:searchAPIDescription],
+                @"Search API Prefix and Action info: %@ not present in Error Description: %@",
+                searchAPIDescription, error.description);
+  XCTAssertTrue([error.description containsString:searchAPIMatcherDescription],
+                @"Search API info: %@ not present in Error Description: %@",
+                searchAPIMatcherDescription, error.description);
+  XCTAssertTrue([error.description containsString:searchActionDescription],
+                @"Search Action Failure Description: %@ not present in Error Description: %@",
+                searchActionDescription, error.description);
+  XCTAssertTrue([error.description containsString:elementMatcherDescription],
+                @"Element Matcher Info: %@ not present in Error Description: %@",
+                elementMatcherDescription, error.description);
+}
+
+- (void)testRotationDescriptionGlossary {
+  [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationLandscapeLeft error:nil];
+  [self openTestViewNamed:@"Basic Views"];
+  GREYExecuteBlockWithConfigurationOverride(kGREYConfigKeyInteractionTimeoutDuration, @(0.0), ^{
+    [[GREYHostApplicationDistantObject sharedInstance] induceNonTactileActionTimeoutInTheApp];
+    NSError *error;
+    [EarlGrey rotateDeviceToOrientation:UIDeviceOrientationPortrait error:&error];
+
+    NSString *idlingResourceString = @"The following idling resources are busy.";
+    XCTAssertTrue([error.description containsString:idlingResourceString]);
+    XCTAssertFalse([error.description containsString:@"Stack Trace:"]);
+    XCTAssertFalse([error.userInfo[kErrorFailureReasonKey] containsString:@"idlingResourceString"]);
+  });
+  // Ensure that the application has idled.
+  GREYWaitForAppToIdle(@"Wait for app to idle");
+}
+
+/** Checks the description for an error from a keyboard dismissal. */
+- (void)testKeyboardDismissalError {
+  NSError *error;
+  XCTAssertFalse([EarlGrey dismissKeyboardWithError:&error]);
+  CFTimeInterval timeout = GREY_CONFIG_DOUBLE(kGREYConfigKeyInteractionTimeoutDuration);
+  NSString *keyboardErrorString = [NSString
+      stringWithFormat:@"Failed to dismiss keyboard: The keyboard is not showing after waiting for "
+                       @"%g seconds, so it cannot be dismissed.",
+                       timeout];
+  XCTAssertTrue([error.description containsString:keyboardErrorString]);
+}
+
+/**
+ * Verifies the printed information for a GREYError found for an assertion failure.
+ */
+- (void)testAssertionFailureDescription {
+  GREYError *error;
+  NSString *assertionFailureString = @"Element does not meet assertion criteria:\nisNil\n\n"
+                                     @"Element:";
+  [[EarlGrey selectElementWithMatcher:GREYKeyWindow()] assertWithMatcher:GREYNil() error:&error];
+  XCTAssertTrue([error.description containsString:assertionFailureString]);
+}
+
+- (void)testActionErrorContainsHierarchyForFailures {
+  NSError *error;
+  [[EarlGrey selectElementWithMatcher:GREYKeyWindow()]
+      performAction:GREYScrollInDirection(kGREYDirectionUp, 10)
+              error:&error];
+  XCTAssertTrue([error.description containsString:@"|--<"]);
+  XCTAssertFalse([error.description containsString:@"Stack Trace:"]);
+}
+
+- (void)testAssertionErrorContainsHierarchyForFailures {
+  NSError *error;
+  [[EarlGrey selectElementWithMatcher:GREYKeyWindow()] assertWithMatcher:GREYNil() error:&error];
+  XCTAssertTrue([error.description containsString:@"|--<"]);
+  XCTAssertFalse([error.description containsString:@"Stack Trace:"]);
+}
+
+- (void)testMatcherErrorContainsHierarchyForFailures {
+  NSError *error;
+  [[EarlGrey selectElementWithMatcher:grey_accessibilityID(@"Invalid ID")] performAction:GREYTap()
+                                                                                   error:&error];
+  XCTAssertTrue([error.description containsString:@"|--<"]);
+  error = nil;
+  [[EarlGrey selectElementWithMatcher:grey_accessibilityID(@"Invalid ID")]
+      assertWithMatcher:GREYNotNil()
+                  error:&error];
+  XCTAssertTrue([error.description containsString:@"|--<"]);
+}
+
+- (void)testIdlingResourceContainsOnlyOneHierarchyInstance {
+  [self openTestViewNamed:@"Animations"];
+  [[EarlGrey selectElementWithMatcher:GREYAccessibilityLabel(@"AnimationControl")]
+      performAction:GREYTap()];
+  GREYExecuteBlockWithConfigurationOverride(kGREYConfigKeyInteractionTimeoutDuration, @(1), ^{
+    NSError *error;
+    [[EarlGrey selectElementWithMatcher:GREYAccessibilityLabel(@"AnimationStatus")]
+        assertWithMatcher:GREYText(@"Paused")
+                    error:&error];
+    XCTAssertEqual([self grey_hierarchyOccurrencesInErrorDescription:error.description],
+                   (NSUInteger)1);
+  });
+}
+
+- (void)testSimpleErrorDoesNotContainHierarchy {
+  NSError *error = GREYErrorMake(kGREYGenericErrorDomain, kGREYGenericErrorCode, @"Generic Error");
+  XCTAssertFalse([error.description containsString:@""]);
+}
+
+- (void)testNestedErrorCreatedWithASimpleErrorDoesNotContainHierarchy {
+  NSError *error = [[GREYHostApplicationDistantObject sharedInstance] simpleNestedError];
+
+  XCTAssertFalse([error.description containsString:@""]);
+}
+
+- (void)testErrorPopulatedInTheAppContainsOneHierarchy {
+  NSError *error = [[GREYHostApplicationDistantObject sharedInstance] errorPopulatedInTheApp];
+  XCTAssertEqual([self grey_hierarchyOccurrencesInErrorDescription:error.description],
+                 (NSUInteger)1);
+}
+
+- (void)testErrorCreatedInTheAppContainsOneHierarchy {
+  NSError *error = [[GREYHostApplicationDistantObject sharedInstance] errorPopulatedInTheApp];
+  XCTAssertEqual([self grey_hierarchyOccurrencesInErrorDescription:error.description],
+                 (NSUInteger)1);
+}
+
+- (void)testNestedErrorInsideAnErrorWithHierarchyContainsOneHierarchy {
+  NSError *error =
+      [[GREYHostApplicationDistantObject sharedInstance] nestedErrorWithHierarchyCreatedInTheApp];
+  XCTAssertEqual([self grey_hierarchyOccurrencesInErrorDescription:error.description],
+                 (NSUInteger)1);
+}
+
+- (void)testFormattingOfErrorCreatedInTheApp {
+  NSError *error = [[GREYHostApplicationDistantObject sharedInstance] errorCreatedInTheApp];
+  XCTAssertNoThrow(((GREYError *)error).nestedError,
+                   @"Failing on an error from the app did not throw an exception");
+}
+
+/**
+ * Checks if an exception thrown by EarlGrey for a matching failure contains the right screenshots,
+ * hierarchy and element matcher information.
+ */
+- (void)testExceptionDetailsForAMatcherFailure {
+  [NSThread mainThread].threadDictionary[GREYFailureHandlerKey] = [[FailureHandler alloc] init];
+  @try {
+    [[EarlGrey selectElementWithMatcher:grey_accessibilityID(@"foo")] performAction:GREYTap()];
+    GREYFail(@"Should throw an exception before this point.");
+  } @catch (NSException *exception) {
+    NSDictionary<NSString *, id> *userInfo = exception.userInfo;
+    NSDictionary<NSString *, UIImage *> *screenshots = userInfo[kErrorDetailAppScreenshotsKey];
+    XCTAssertEqual(screenshots.count, 2);
+    XCTAssertNotNil(screenshots[kGREYAppScreenshotAtFailure]);
+    XCTAssertNotNil(screenshots[kGREYTestScreenshotAtFailure]);
+    XCTAssertNotNil(userInfo[kErrorDetailAppUIHierarchyKey]);
+    XCTAssertNotNil(userInfo[kErrorDetailElementMatcherKey]);
+  }
+}
+
+/**
+ * Checks if a visibility related exception thrown by EarlGrey contains the right screenshots.
+ */
+- (void)testExceptionDetails {
+  [NSThread mainThread].threadDictionary[GREYFailureHandlerKey] = [[FailureHandler alloc] init];
+  [self openTestViewNamed:@"Visibility Tests"];
+  @try {
+    [[EarlGrey selectElementWithMatcher:grey_accessibilityID(@"orangeView")]
+        assertWithMatcher:GREYSufficientlyVisible()];
+    GREYFail(@"Should throw an exception before this point.");
+  } @catch (NSException *exception) {
+    NSDictionary<NSString *, id> *userInfo = exception.userInfo;
+    NSDictionary<NSString *, UIImage *> *screenshots = userInfo[kErrorDetailAppScreenshotsKey];
+    XCTAssertEqual(screenshots.count, 5);
+    XCTAssertNotNil(screenshots[kGREYAppScreenshotAtFailure]);
+    XCTAssertNotNil(screenshots[kGREYTestScreenshotAtFailure]);
+    XCTAssertNotNil(screenshots[kGREYScreenshotBeforeImage]);
+    XCTAssertNotNil(screenshots[kGREYScreenshotExpectedAfterImage]);
+    XCTAssertNotNil(screenshots[kGREYScreenshotActualAfterImage]);
+    XCTAssertNotNil(userInfo[kErrorDetailAppUIHierarchyKey]);
+    XCTAssertNotNil(userInfo[kErrorDetailElementMatcherKey]);
+  }
+}
+
+#pragma mark - Private
+
+/**
+ * @c returns A NSUInteger for the number of times the UI hierarchy is present in the provided
+ *            error description.
+ *
+ * @param description An NSString specifying an NSError's description.
+ */
+- (NSUInteger)grey_hierarchyOccurrencesInErrorDescription:(NSString *)description {
+  NSRegularExpression *regex =
+      [NSRegularExpression regularExpressionWithPattern:@"<UIWindow"
+                                                options:NSRegularExpressionCaseInsensitive
+                                                  error:nil];
+  return [regex numberOfMatchesInString:description
+                                options:0
+                                  range:NSMakeRange(0, [description length])];
+}
+
+@end
