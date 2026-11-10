@@ -1,0 +1,72 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import './composebox_tab_favicon.js';
+import './icons.html.js';
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_icon/cr_icon.js';
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import { getInstance as getA11yAnnouncer } from '//resources/cr_elements/cr_a11y_announcer/cr_a11y_announcer.js';
+import { I18nMixinLit } from '//resources/cr_elements/i18n_mixin_lit.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './composebox_lens_search.css.js';
+import { getHtml } from './composebox_lens_search.html.js';
+export class ComposeboxLensSearchElement extends I18nMixinLit(CrLitElement) {
+    static get is() {
+        return 'cr-composebox-lens-search';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            isIcon: {
+                type: Boolean,
+                attribute: 'is-icon',
+                reflect: true,
+            },
+            hasVirtualFocus: {
+                type: Boolean,
+                reflect: true,
+            },
+        };
+    }
+    #isIcon_accessor_storage = false;
+    get isIcon() { return this.#isIcon_accessor_storage; }
+    set isIcon(value) { this.#isIcon_accessor_storage = value; }
+    #hasVirtualFocus_accessor_storage = false;
+    get hasVirtualFocus() { return this.#hasVirtualFocus_accessor_storage; }
+    set hasVirtualFocus(value) { this.#hasVirtualFocus_accessor_storage = value; }
+    // Whether gaining virtual focus announces the hint. Hosts that narrate
+    // virtual focus themselves set this to false, so the two don't compete.
+    announcesVirtualFocus = true;
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('hasVirtualFocus') && this.hasVirtualFocus &&
+            this.announcesVirtualFocus) {
+            const message = this.getA11yLabel();
+            if (message) {
+                getA11yAnnouncer(this).announce(message);
+            }
+        }
+    }
+    /** Returns the label screen readers narrate for this element. */
+    getA11yLabel() {
+        return this.i18n('lensSearchHint');
+    }
+    /**
+     * Returns the icon button, or null outside icon mode. Unlike the host's, its
+     * bounds exclude the leading margin, so it suits anchoring a help bubble.
+     */
+    getIconButtonElement() {
+        return this.shadowRoot.querySelector('#lensIcon');
+    }
+    onLensSearchClick_(e) {
+        e.stopPropagation();
+        this.fire('lens-search-click');
+    }
+}
+customElements.define(ComposeboxLensSearchElement.is, ComposeboxLensSearchElement);
