@@ -1,0 +1,7 @@
+[
+  "//brave/components/common/",
+  "//brave/browser/resources/brave_new_tab_page_refresh/",
+  "//brave/components/ai_chat/resources/",
+  "//brave/components/brave_news/browser/resources/",
+  "//brave/components/brave_rewards/resources/"
+]

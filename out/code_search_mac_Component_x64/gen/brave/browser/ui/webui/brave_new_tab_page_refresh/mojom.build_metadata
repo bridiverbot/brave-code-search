@@ -1,0 +1,9 @@
+{
+  "deps": [
+    "../../../../components/brave_ads/core/mojom/mojom.build_metadata",
+    "../../../../components/brave_vpn/common/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../brave/browser/ui/webui/brave_new_tab_page_refresh/brave_new_tab_page.mojom"
+  ]
+}

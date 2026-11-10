@@ -1,0 +1,3 @@
+../../ui/webui/resources/cr_components/history/foreign_sessions.mojom
+../../ui/webui/resources/cr_components/history/history.mojom
+../../ui/webui/resources/cr_components/history/history_cross_device_signin_promo.mojom
