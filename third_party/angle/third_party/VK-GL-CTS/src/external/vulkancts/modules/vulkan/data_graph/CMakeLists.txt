@@ -1,0 +1,28 @@
+# DataGraph tests
+
+include_directories(
+	..
+	../util
+	./tosa
+	)
+
+set(DEQP_VK_DATA_GRAPH_SRCS
+	tosa/vktDataGraphTosaSpirv.cpp
+	vktDataGraphBasicTests.cpp
+	vktDataGraphExternalMemoryTests.cpp
+	vktDataGraphImageAliasingTests.cpp
+	vktDataGraphDescriptorBufferTests.cpp
+	vktDataGraphPipelineCacheTests.cpp
+	vktDataGraphPropertiesTests.cpp
+	vktDataGraphSpecializationConstantsTests.cpp
+	vktDataGraphTestProvider.cpp
+	vktDataGraphTests.cpp
+	vktDataGraphTestUtil.cpp
+	vktDataGraphUpdateAfterBindTests.cpp
+	)
+
+PCH(DEQP_VK_DATA_GRAPH_SRCS ../pch.cpp)
+
+add_library(deqp-vk-data-graph STATIC ${DEQP_VK_DATA_GRAPH_SRCS})
+target_include_directories(deqp-vk-data-graph BEFORE PUBLIC)
+target_link_libraries(deqp-vk-data-graph PUBLIC tcutil vkutil)
