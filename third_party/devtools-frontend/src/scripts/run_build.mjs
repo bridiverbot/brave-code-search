@@ -1,0 +1,123 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import fs from 'node:fs';
+import path from 'node:path';
+import ora from 'ora';
+import yargs from 'yargs';
+import {hideBin} from 'yargs/helpers';
+
+import {build, prepareBuild} from './devtools_build.mjs';
+import {ENV, getEnvString} from './env-utils.mjs';
+
+const argv = yargs(hideBin(process.argv))
+                 .option('target', {
+                   alias: 't',
+                   type: 'string',
+                   default: getEnvString(ENV.TARGET, 'Default'),
+                   description: 'Specify the target build subdirectory under //out',
+                 })
+                 .option('build-target', {
+                   alias: 'b',
+                   type: 'array',
+                   string: true,
+                   default: [],
+                   description: 'Specify the ninja build target(s)',
+                 })
+                 .option('skip-initial-build', {
+                   type: 'boolean',
+                   default: false,
+                   description: 'Skip the initial build (use with --watch)',
+                   implies: 'watch',
+                 })
+                 .option('watch', {
+                   alias: 'w',
+                   type: 'boolean',
+                   default: false,
+                   description: 'Monitor for changes and automatically rebuild',
+                 })
+                 .usage('scripts/tools/dt.py build [options]')
+                 .help('help')
+                 .version(false)
+                 .parseSync();
+
+const {target, watch, skipInitialBuild, buildTarget: buildTargets} = argv;
+const timeFormatter = new Intl.NumberFormat('en-US', {
+  style: 'unit',
+  unit: 'second',
+  unitDisplay: 'narrow',
+  maximumFractionDigits: 2,
+});
+
+// Prepare the build target if not initialized.
+const spinner = ora('Preparing…').start();
+try {
+  await prepareBuild(target);
+  spinner.clear();
+} catch (error) {
+  spinner.fail(error.message);
+  process.exit(1);
+}
+
+// Perform an initial build (unless we should skip).
+if (!skipInitialBuild) {
+  spinner.start('Building…');
+  try {
+    const {time} = await build(target, {buildTargets});
+    spinner.succeed(`Build ready (${timeFormatter.format(time)})`);
+  } catch (error) {
+    spinner.fail(error.message);
+    process.exit(1);
+  }
+}
+
+spinner.stop();
+
+if (watch) {
+  /**
+   * @type {ReturnType<typeof setTimeout>}
+   */
+  let timeoutId;
+  let buildPromise = Promise.resolve();
+  let abortController = new AbortController();
+
+  function watchCallback(eventType, filename) {
+    if (eventType !== 'change' && eventType !== 'rename') {
+      return;
+    }
+    if (!/(BUILD\.gn|\.(css|js|mjs|ts|json|svg|png|html|gni|gn))$/i.test(filename)) {
+      return;
+    }
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(watchRebuild, 250);
+  }
+
+  function watchRebuild() {
+    // Abort any currently running build.
+    abortController.abort();
+    abortController = new AbortController();
+    const {signal} = abortController;
+
+    buildPromise = buildPromise.then(async () => {
+      try {
+        spinner.start('Rebuilding...');
+        const {time} = await build(target, {signal, buildTargets});
+        spinner.succeed(`Rebuild successfully (${timeFormatter.format(time)})`);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          spinner.fail(error.message);
+        }
+      }
+    });
+  }
+
+  const WATCHLIST = ['front_end', 'test'];
+  for (const dirname of WATCHLIST) {
+    fs.watch(dirname, {recursive: true}, (eventType, filename) => {
+      if (filename) {
+        watchCallback(eventType, path.join(dirname, filename));
+      }
+    });
+  }
+}

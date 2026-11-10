@@ -1,0 +1,49 @@
+# Copyright 2026 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../../scripts/build/ninja/script_test.gni")
+import("../../scripts/build/ninja/vars.gni")
+import("../../scripts/build/typescript/typescript.gni")
+
+# API tests import `describe`, `it` and `setup` from mocha-interface.ts and
+# therefore depend on this target. It also acts as an architectural bridge:
+# core/ and models/ cannot depend directly on Foundation due to GN visibility
+# restrictions, but test/api/* is explicitly allowlisted by Foundation.
+node_ts_library("api") {
+  sources = [
+    "TargetUniverse.ts",
+    "api-state-provider.ts",
+    "mocha-interface.ts",
+    "mocha_hooks.ts",
+    "run-mocha.ts",
+  ]
+
+  ts_deps = [
+    "../../front_end/core/common:bundle",
+    "../../front_end/core/host:bundle",
+    "../../front_end/core/protocol_client:puppeteer_devtools_connection",
+    "../../front_end/core/root:bundle",
+    "../../front_end/core/sdk:bundle",
+    "../../front_end/foundation:bundle",
+    "../../front_end/testing",
+    "../conductor:implementation",
+    "../e2e/conductor:implementation",
+    "../e2e/shared",
+    "../shared",
+  ]
+}
+
+node_script_test("run_devtools_api_tests") {
+  script = "$target_gen_dir/run-mocha.js"
+
+  if (!build_with_chromium) {
+    data = [ devtools_location_prepend + "third_party/chrome/" ]
+  }
+
+  data_deps = [
+    ":api",
+    "../../front_end:api_test_inputs",
+    "../../front_end:api_tests",
+  ]
+}

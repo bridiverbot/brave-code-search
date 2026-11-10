@@ -1,0 +1,36 @@
+# Copyright 2024 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../../../../scripts/build/ninja/component_doc.gni")
+import("../../../../scripts/build/ninja/devtools_entrypoint.gni")
+import("../../../../scripts/build/ninja/devtools_module.gni")
+import("../../../../scripts/build/ninja/generate_css.gni")
+import("../visibility.gni")
+
+generate_css("css_files") {
+  sources = [ "spinner.css" ]
+}
+
+devtools_ui_module("spinner") {
+  sources = [ "Spinner.ts" ]
+
+  ts_deps = [ "../../lit:bundle" ]
+  deps = [ ":css_files" ]
+}
+
+devtools_entrypoint("bundle") {
+  entrypoint = "spinners.ts"
+
+  ts_deps = [ ":spinner" ]
+
+  visibility = default_components_visibility
+}
+
+component_doc("docs") {
+  sources = [ "Spinners.docs.ts" ]
+  ts_deps = [
+    ":bundle",
+    "../../lit:bundle",
+  ]
+}
