@@ -1,0 +1,411 @@
+// Copyright (c) Qualcomm Innovation Center, Inc. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+#include "litert/vendors/qualcomm/core/backends/dsp_backend.h"
+
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <utility>
+#include <vector>
+
+#include "DSP/QnnDspBackend.h"  // from @qairt
+#include "DSP/QnnDspDevice.h"  // from @qairt
+#include "DSP/QnnDspGraph.h"  // from @qairt
+#include "DSP/QnnDspPerfInfrastructure.h"  // from @qairt
+#include "DSP/QnnDspProperty.h"  // from @qairt
+#include "QnnBackend.h"  // from @qairt
+#include "QnnCommon.h"  // from @qairt
+#include "QnnDevice.h"  // from @qairt
+#include "QnnInterface.h"  // from @qairt
+#include "QnnProperty.h"  // from @qairt
+#include "absl/strings/string_view.h"  // from @com_google_absl
+#include "absl/types/span.h"  // from @com_google_absl
+#include "litert/vendors/qualcomm/core/backends/backend_utils.h"
+#include "litert/vendors/qualcomm/core/backends/graph_config_builder.h"
+#include "litert/vendors/qualcomm/core/backends/qnn_backend.h"
+#include "litert/vendors/qualcomm/core/common.h"
+#include "litert/vendors/qualcomm/core/schema/soc_table.h"
+#include "litert/vendors/qualcomm/core/utils/log.h"
+
+namespace qnn {
+
+// DSP PERF CONTROL /////////////////////////////////////////////////////////
+class DspBackend::DspPerfControl {
+ public:
+  explicit DspPerfControl(const QNN_INTERFACE_VER_TYPE* api) : api_(api) {}
+
+  ~DspPerfControl() {
+    DownVote();
+    if (dsp_perf_infra_) {
+      dsp_perf_infra_->destroyPowerConfigId(power_config_id_);
+    }
+  }
+
+  bool Init(DspPerformanceMode performance_mode) {
+    Qnn_ErrorHandle_t error = QNN_SUCCESS;
+
+    // Acquire infra & power-config id once, then reuse across mode changes.
+    if (dsp_perf_infra_ == nullptr) {
+      if (error = api_->deviceGetInfrastructure(&dsp_perf_infra_);
+          error != QNN_SUCCESS) {
+        QNN_LOG_ERROR(
+            "DSP backend unable to create device infrastructure. Error %d",
+            QNN_GET_ERROR_CODE(error));
+        return false;
+      }
+    }
+
+    if (power_config_id_ == 0) {
+      if (error = dsp_perf_infra_->createPowerConfigId(&power_config_id_);
+          error != QNN_SUCCESS) {
+        QNN_LOG_ERROR("DSP backend unable to create power config. Error %d",
+                      QNN_GET_ERROR_CODE(error));
+        return false;
+      }
+    }
+
+    // Rebuild the power configurations for the requested mode. Both are needed:
+    // 1. UpVote config: for entering performance mode.
+    // 2. DownVote config: for resetting/cleanup.
+    InitUpVotePowerConfigs(performance_mode);
+    InitDownVotePowerConfigs();
+    current_mode_ = performance_mode;
+
+    return true;
+  }
+
+  void UpVote() {
+    if (dsp_perf_infra_) {
+      dsp_perf_infra_->setPowerConfig(power_config_id_,
+                                      up_vote_power_configs_ptr_.data());
+    }
+  }
+
+  void DownVote() {
+    if (dsp_perf_infra_) {
+      dsp_perf_infra_->setPowerConfig(power_config_id_,
+                                      down_vote_power_configs_ptr_.data());
+    }
+  }
+
+  void ScheduleUpVote() {
+    EnsureVotingThread();
+    voting_thread_->Enqueue(VotingThread::VoteType::kUpVote);
+  }
+
+  // Debounce the downvote only for burst/sustained modes to avoid thrashing
+  // the high-perf vote between back-to-back inferences.
+  void ScheduleDownVote() {
+    EnsureVotingThread();
+    const bool debounce =
+        current_mode_ == DspPerformanceMode::kBurst ||
+        current_mode_ == DspPerformanceMode::kSustainedHighPerformance;
+    voting_thread_->Enqueue(VotingThread::VoteType::kDownVote, debounce);
+  }
+
+  bool SetPerfModeAndApplyIfManual(const Options& options) {
+    const auto new_mode = options.GetDspPerformanceMode();
+    const bool mode_changed = new_mode != current_mode_;
+    if (!mode_changed) {
+      QNN_LOG_DEBUG("SetPerfModeAndApplyIfManual: Perf mode doesn't change.");
+      return true;
+    }
+    if (new_mode == DspPerformanceMode::kDefault) {
+      if (dsp_perf_infra_ != nullptr) {
+        if (options.GetDspPerfCtrlMode() == DspPerfCtrlMode::kManual) {
+          DownVote();
+        } else {
+          ScheduleDownVote();
+        }
+      }
+      current_mode_ = DspPerformanceMode::kDefault;
+      return true;
+    }
+    QNN_LOG_DEBUG("SetPerfModeAndApplyIfManual: Init new mode.");
+    if (!Init(new_mode)) return false;
+    if (options.GetDspPerfCtrlMode() == DspPerfCtrlMode::kManual) {
+      QNN_LOG_DEBUG("SetPerfModeAndApplyIfManual: Work for kManual.");
+      UpVote();
+    } else {
+      QNN_LOG_DEBUG("SetPerfModeAndApplyIfManual: Ignore due to kAuto.");
+    }
+    return true;
+  }
+
+ private:
+  void EnsureVotingThread() {
+    if (!voting_thread_) {
+      voting_thread_ =
+          std::make_unique<VotingThread>([this](VotingThread::VoteType v) {
+            v == VotingThread::VoteType::kUpVote ? UpVote() : DownVote();
+          });
+    }
+  }
+
+  static constexpr size_t kNumPowerConfigs = 6;
+  void SetPowerConfigs(std::array<QnnDspPerfInfrastructure_PowerConfig_t,
+                                  kNumPowerConfigs>& power_configs,
+                       uint32_t sleep_latency,
+                       QnnDspPerfInfrastructure_VoltageCorner_t voltage_min,
+                       QnnDspPerfInfrastructure_VoltageCorner_t voltage_target,
+                       QnnDspPerfInfrastructure_VoltageCorner_t voltage_max,
+                       QnnDspPerfInfrastructure_DcvsEnable_t dcvs_enable,
+                       QnnDspPerfInfrastructure_PowerMode_t power_mode) {
+    constexpr size_t kSleepLatency = 0;
+    constexpr size_t kDcvsVcornerMin = 1;
+    constexpr size_t kDcvsVcornerTarget = 2;
+    constexpr size_t kDcvsVcornerMax = 3;
+    constexpr size_t kDcvsEnable = 4;
+    constexpr size_t kDcvsPowerMode = 5;
+
+    power_configs[kSleepLatency].config =
+        QNN_DSP_PERF_INFRASTRUCTURE_POWER_CONFIGOPTION_SLEEP_LATENCY;
+    power_configs[kSleepLatency].sleepLatencyConfig = sleep_latency;
+
+    power_configs[kDcvsVcornerMin].config =
+        QNN_DSP_PERF_INFRASTRUCTURE_POWER_CONFIGOPTION_DCVS_VOLTAGE_CORNER;
+    power_configs[kDcvsVcornerMin].dcvsVoltageCornerMinConfig = voltage_min;
+
+    power_configs[kDcvsVcornerTarget].config =
+        QNN_DSP_PERF_INFRASTRUCTURE_POWER_CONFIGOPTION_DCVS_VOLTAGE_CORNER;
+    power_configs[kDcvsVcornerTarget].dcvsVoltageCornerTargetConfig =
+        voltage_target;
+
+    power_configs[kDcvsVcornerMax].config =
+        QNN_DSP_PERF_INFRASTRUCTURE_POWER_CONFIGOPTION_DCVS_VOLTAGE_CORNER;
+    power_configs[kDcvsVcornerMax].dcvsVoltageCornerMaxConfig = voltage_max;
+
+    power_configs[kDcvsEnable].config =
+        QNN_DSP_PERF_INFRASTRUCTURE_POWER_CONFIGOPTION_DCVS_ENABLE;
+    power_configs[kDcvsEnable].dcvsEnableConfig = dcvs_enable;
+
+    power_configs[kDcvsPowerMode].config =
+        QNN_DSP_PERF_INFRASTRUCTURE_POWER_CONFIGOPTION_DCVS_POWER_MODE;
+    power_configs[kDcvsPowerMode].dcvsPowerModeConfig = power_mode;
+  }
+
+  void InitUpVotePowerConfigs(DspPerformanceMode perf_mode) {
+    switch (perf_mode) {
+      case DspPerformanceMode::kBurst:
+        SetPowerConfigs(up_vote_power_configs_, PowerConfig::kSleepMinLatency,
+                        DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER,
+                        DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER,
+                        DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER,
+                        PowerConfig::kDcvsDisable,
+                        QNN_DSP_PERF_INFRASTRUCTURE_POWERMODE_PERFORMANCE_MODE);
+        break;
+      case DspPerformanceMode::kSustainedHighPerformance:
+      case DspPerformanceMode::kHighPerformance:
+        SetPowerConfigs(up_vote_power_configs_, PowerConfig::kSleepLowLatency,
+                        DCVS_VOLTAGE_VCORNER_TURBO, DCVS_VOLTAGE_VCORNER_TURBO,
+                        DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER,
+                        PowerConfig::kDcvsDisable,
+                        QNN_DSP_PERF_INFRASTRUCTURE_POWERMODE_PERFORMANCE_MODE);
+        break;
+      case DspPerformanceMode::kPowerSaver:
+        SetPowerConfigs(up_vote_power_configs_,
+                        PowerConfig::kSleepMediumLatency,
+                        DCVS_VOLTAGE_VCORNER_SVS, DCVS_VOLTAGE_VCORNER_SVS,
+                        DCVS_VOLTAGE_VCORNER_SVS, PowerConfig::kDcvsDisable,
+                        QNN_DSP_PERF_INFRASTRUCTURE_POWERMODE_PERFORMANCE_MODE);
+        break;
+      case DspPerformanceMode::kLowPowerSaver:
+        SetPowerConfigs(up_vote_power_configs_,
+                        PowerConfig::kSleepMediumLatency,
+                        DCVS_VOLTAGE_VCORNER_SVS2, DCVS_VOLTAGE_VCORNER_SVS2,
+                        DCVS_VOLTAGE_VCORNER_SVS2, PowerConfig::kDcvsDisable,
+                        QNN_DSP_PERF_INFRASTRUCTURE_POWERMODE_PERFORMANCE_MODE);
+        break;
+      case DspPerformanceMode::kHighPowerSaver:
+        SetPowerConfigs(
+            up_vote_power_configs_, PowerConfig::kSleepMediumLatency,
+            DCVS_VOLTAGE_VCORNER_SVS_PLUS, DCVS_VOLTAGE_VCORNER_SVS_PLUS,
+            DCVS_VOLTAGE_VCORNER_SVS_PLUS, PowerConfig::kDcvsDisable,
+            QNN_DSP_PERF_INFRASTRUCTURE_POWERMODE_PERFORMANCE_MODE);
+        break;
+      case DspPerformanceMode::kLowBalanced:
+        SetPowerConfigs(up_vote_power_configs_,
+                        PowerConfig::kSleepMediumLatency,
+                        DCVS_VOLTAGE_VCORNER_NOM, DCVS_VOLTAGE_VCORNER_NOM,
+                        DCVS_VOLTAGE_VCORNER_NOM, PowerConfig::kDcvsDisable,
+                        QNN_DSP_PERF_INFRASTRUCTURE_POWERMODE_PERFORMANCE_MODE);
+        break;
+      case DspPerformanceMode::kBalanced:
+        SetPowerConfigs(
+            up_vote_power_configs_, PowerConfig::kSleepMediumLatency,
+            DCVS_VOLTAGE_VCORNER_NOM_PLUS, DCVS_VOLTAGE_VCORNER_NOM_PLUS,
+            DCVS_VOLTAGE_VCORNER_NOM_PLUS, PowerConfig::kDcvsDisable,
+            QNN_DSP_PERF_INFRASTRUCTURE_POWERMODE_PERFORMANCE_MODE);
+        break;
+      default:
+        QNN_LOG_INFO("Unknown perf mode %d, use default.", perf_mode);
+        break;
+    }
+    SetNullTermPtrArray(absl::MakeConstSpan(up_vote_power_configs_),
+                        up_vote_power_configs_ptr_);
+  }
+
+  void InitDownVotePowerConfigs() {
+    SetPowerConfigs(down_vote_power_configs_, PowerConfig::kSleepHighLatency,
+                    DCVS_VOLTAGE_VCORNER_SVS2, DCVS_VOLTAGE_VCORNER_SVS,
+                    DCVS_VOLTAGE_VCORNER_SVS, PowerConfig::kDcvsEnable,
+                    QNN_DSP_PERF_INFRASTRUCTURE_POWERMODE_POWER_SAVER_MODE);
+    SetNullTermPtrArray(absl::MakeConstSpan(down_vote_power_configs_),
+                        down_vote_power_configs_ptr_);
+  }
+
+  const QNN_INTERFACE_VER_TYPE* api_{nullptr};
+  std::uint32_t power_config_id_{0};
+  QnnDevice_Infrastructure_t dsp_perf_infra_{nullptr};
+  DspPerformanceMode current_mode_{DspPerformanceMode::kDefault};
+  std::unique_ptr<VotingThread> voting_thread_;
+  std::array<QnnDspPerfInfrastructure_PowerConfig_t, kNumPowerConfigs>
+      up_vote_power_configs_;
+  std::array<QnnDspPerfInfrastructure_PowerConfig_t, kNumPowerConfigs>
+      down_vote_power_configs_;
+  std::array<const QnnDspPerfInfrastructure_PowerConfig_t*,
+             kNumPowerConfigs + 1>
+      up_vote_power_configs_ptr_;
+  std::array<const QnnDspPerfInfrastructure_PowerConfig_t*,
+             kNumPowerConfigs + 1>
+      down_vote_power_configs_ptr_;
+};
+
+// DSP BACKEND /////////////////////////////////////////////////////////
+DspBackend::DspBackend(const QNN_INTERFACE_VER_TYPE* qnn_api)
+    : QnnBackend(qnn_api) {}
+
+DspBackend::~DspBackend() = default;
+
+GraphConfigBuilder DspBackend::BuildGraphConfigs(
+    const Options& options, absl::string_view /*qnn_graph_name*/) {
+  GraphConfigBuilder config_builder;
+
+  QnnDspGraph_CustomConfig_t encoding_config = QNN_DSP_GRAPH_CUSTOM_CONFIG_INIT;
+  encoding_config.option = QNN_DSP_GRAPH_CONFIG_OPTION_ENCODING;
+  encoding_config.encoding =
+      options.GetDspEncoding() == DspEncoding::kDynamic
+          ? QNN_DSP_GRAPH_ENCODING_DYNAMIC
+          : QNN_DSP_GRAPH_ENCODING_STATIC;
+  config_builder.AddCustomConfig(encoding_config);
+
+  return config_builder;
+}
+
+std::vector<const QnnBackend_Config_t*> DspBackend::CreateBackendConfigs(
+    const Options& options) {
+  bool use_signed_pd = false;
+  switch (options.GetDspPdSession()) {
+    case DspPdSession::kUnsigned:
+      break;
+    case DspPdSession::kSigned:
+      use_signed_pd = true;
+      break;
+    case DspPdSession::kAdaptive: {
+      const bool unsigned_pd_supported =
+          QnnApi()->propertyHasCapability != nullptr &&
+          QnnApi()->propertyHasCapability(
+              QNN_PROPERTY_CUSTOM_DSP_UNSIGNED_PD_SUPPORT) ==
+              QNN_PROPERTY_SUPPORTED;
+      use_signed_pd = !unsigned_pd_supported;
+      QNN_LOG_INFO("DSP adaptive PD selected %s PD.",
+                   use_signed_pd ? "signed" : "unsigned");
+      break;
+    }
+  }
+
+  if (use_signed_pd) {
+    auto& signed_pd_custom_config = AllocateDspBackendCustomConfig();
+    signed_pd_custom_config.option =
+        QNN_DSP_BACKEND_CONFIG_OPTION_USE_SIGNED_PROCESS_DOMAIN;
+    signed_pd_custom_config.useSignedProcessDomain = true;
+    auto& signed_pd_backend_config = AllocateBackendConfig();
+    signed_pd_backend_config.option = QNN_BACKEND_CONFIG_OPTION_CUSTOM;
+    signed_pd_backend_config.customConfig = &signed_pd_custom_config;
+    return {&signed_pd_backend_config, nullptr};
+  }
+  return {};
+}
+
+bool DspBackend::Init(const Options& options, std::optional<SocInfo> soc_info) {
+  // Log Handle
+  auto local_log_handle = CreateLogHandle(options.GetLogLevel());
+  if (!local_log_handle && options.GetLogLevel() != LogLevel::kOff) {
+    QNN_LOG_ERROR("Failed to create log handle.");
+    return false;
+  }
+
+  // Backend Handle
+  std::vector<const QnnBackend_Config_t*> backend_configs =
+      CreateBackendConfigs(options);
+  auto local_backend_handle = CreateBackendHandle(
+      local_log_handle.get(), absl::MakeSpan(backend_configs));
+  if (!local_backend_handle) {
+    QNN_LOG_ERROR("Failed to create backend handle.");
+    return false;
+  }
+
+  if (soc_info) {
+    soc_info_ = *soc_info;
+  }
+
+  // DSP Performance Settings
+  DspPerformanceMode performance_mode = options.GetDspPerformanceMode();
+  if (performance_mode != DspPerformanceMode::kDefault) {
+    dsp_perf_control_ = std::make_unique<DspPerfControl>(QnnApi());
+    if (!dsp_perf_control_->Init(performance_mode)) {
+      QNN_LOG_ERROR("Failed to initialize DSP performance Control.");
+      return false;
+    }
+    // Manual mode upvotes at init. Auto defers the upvote to Execute().
+    if (options.GetDspPerfCtrlMode() == DspPerfCtrlMode::kManual) {
+      dsp_perf_control_->UpVote();
+    }
+  }
+
+  // Follow RAII pattern to manage handles.
+  log_handle_ = std::move(local_log_handle);
+  backend_handle_ = std::move(local_backend_handle);
+
+  return true;
+}
+
+bool DspBackend::SetPerformanceMode(const Options& options) {
+  const auto perf_mode = options.GetDspPerformanceMode();
+  if (perf_mode != DspPerformanceMode::kDefault) {
+    if (!dsp_perf_control_) {
+      dsp_perf_control_ = std::make_unique<DspPerfControl>(QnnApi());
+    }
+  }
+  if (dsp_perf_control_ &&
+      !dsp_perf_control_->SetPerfModeAndApplyIfManual(options)) {
+    QNN_LOG_ERROR("Failed to set DSP performance mode in SetPerformanceMode");
+    return false;
+  }
+  return true;
+}
+
+void DspBackend::ScheduleUpVote() {
+  if (dsp_perf_control_) {
+    dsp_perf_control_->ScheduleUpVote();
+  } else {
+    QNN_LOG_WARNING(
+        "ScheduleUpVote called but DSP performance control is not "
+        "initialized.");
+  }
+}
+
+void DspBackend::ScheduleDownVote() {
+  if (dsp_perf_control_) {
+    dsp_perf_control_->ScheduleDownVote();
+  } else {
+    QNN_LOG_WARNING(
+        "ScheduleDownVote called but DSP performance control is not "
+        "initialized.");
+  }
+}
+
+}  // namespace qnn

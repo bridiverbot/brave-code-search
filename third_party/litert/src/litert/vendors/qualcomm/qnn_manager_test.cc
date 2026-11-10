@@ -1,0 +1,313 @@
+// Copyright 2024 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+
+#include "litert/vendors/qualcomm/qnn_manager.h"
+
+#include <cstdlib>
+#include <optional>
+#include <string>
+
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include "litert/c/litert_common.h"
+#include "litert/cc/options/litert_qualcomm_options.h"
+#include "litert/vendors/qualcomm/common.h"
+#include "litert/vendors/qualcomm/core/common.h"
+#include "litert/vendors/qualcomm/core/utils/test_utils.h"
+#include "litert/vendors/qualcomm/tools/dump.h"
+
+namespace {
+
+using ::litert::qnn::QnnManager;
+using ::litert::qnn::internal::Dump;
+using ::qnn::SdkVersion;
+using ::testing::HasSubstr;
+
+// NOTE: This tests that all of the dynamic loading works properly and
+// the QNN SDK instance can be properly initialized and destroyed.
+auto CreateQnnManager(const ::qnn::Options& options) {
+  return QnnManager::Create(options);
+}
+
+// Helper to get options based on target
+std::optional<::qnn::Options> GetOptionsForTarget() {
+  auto options = ::qnn::Options();
+  if (::qnn::IsTestHtpBackend()) {
+    options.SetBackendType(::qnn::BackendType::kHtpBackend);
+    return options;
+  }
+  if (::qnn::IsTestDspBackend()) {
+    options.SetBackendType(::qnn::BackendType::kDspBackend);
+    return options;
+  }
+  if (::qnn::IsTestGpuBackend()) {
+    options.SetBackendType(::qnn::BackendType::kGpuBackend);
+    return options;
+  }
+  if (::qnn::IsTestLpaiBackend()) {
+    options.SetBackendType(::qnn::BackendType::kLpaiBackend);
+    return options;
+  }
+  return std::nullopt;
+}
+
+TEST(QnnManagerTest, SetupQnnManager) {
+  auto options = GetOptionsForTarget();
+  if (!options) {
+    GTEST_SKIP() << "Skipping test because targeted backend is not supported";
+  }
+
+  auto qnn = CreateQnnManager(*options);
+  ASSERT_TRUE(qnn);
+}
+
+TEST(QnnManagerTest, Dump) {
+  auto options = GetOptionsForTarget();
+  if (!options) {
+    GTEST_SKIP() << "Skipping test because targeted backend is not supported";
+  }
+
+  auto qnn = CreateQnnManager(*options);
+  ASSERT_TRUE(qnn);
+
+  auto dump = Dump(**qnn);
+
+  EXPECT_THAT(dump, HasSubstr("< QnnInterface_t >"));
+  EXPECT_THAT(dump, HasSubstr("< QnnSystemInterface_t >"));
+}
+
+TEST(QnnManagerTest, GetOptions) {
+  auto options = GetOptionsForTarget();
+  if (!options) {
+    GTEST_SKIP() << "Skipping test because targeted backend is not supported";
+  }
+
+  auto qnn = CreateQnnManager(*options);
+  ASSERT_TRUE(qnn);
+
+  const auto& options_ref = (*qnn)->GetOptions();
+  EXPECT_EQ(options->GetLogLevel(), options_ref.GetLogLevel());
+  EXPECT_EQ(options->GetProfiling(), options_ref.GetProfiling());
+  EXPECT_EQ(options->GetEnableWeightSharing(),
+            options_ref.GetEnableWeightSharing());
+  EXPECT_EQ(options->GetHtpPerformanceMode(),
+            options_ref.GetHtpPerformanceMode());
+  EXPECT_EQ(options->GetDspPerformanceMode(),
+            options_ref.GetDspPerformanceMode());
+  EXPECT_EQ(options->GetDumpTensorIds(), options_ref.GetDumpTensorIds());
+  EXPECT_EQ(options->GetIrJsonDir(), options_ref.GetIrJsonDir());
+  EXPECT_EQ(options->GetDlcDir(), options_ref.GetDlcDir());
+}
+
+TEST(QnnManagerTest, GetSdkVersion) {
+  auto options = GetOptionsForTarget();
+  if (!options) {
+    GTEST_SKIP() << "Skipping test because targeted backend is not supported";
+  }
+
+  auto qnn = CreateQnnManager(*options);
+  ASSERT_TRUE(qnn);
+  const auto sdk_version = qnn.Value().get()->GetSdkVersion();
+  static constexpr SdkVersion kInitSdkVersion{0, 0, 0};
+  EXPECT_NE(sdk_version, kInitSdkVersion);
+}
+
+TEST(QnnManagerTest, AdspLibraryPathNoDuplicate) {
+  static constexpr char kAdsp[] = "ADSP_LIBRARY_PATH";
+  const char* original_adsp_ptr = getenv(kAdsp);
+  std::optional<std::string> original_adsp;
+  if (original_adsp_ptr) {
+    original_adsp = original_adsp_ptr;
+  }
+
+  // Set a known value
+  setenv(kAdsp, "/my/path", /*overwrite=*/1);
+
+  auto options = ::qnn::Options();
+
+  // This will fail to load libraries but should update env var.
+  auto qnn = QnnManager::Create(options, "/my/path");
+
+  // Verify that it didn't duplicate
+  const char* new_adsp = getenv(kAdsp);
+  EXPECT_STREQ(new_adsp, "/my/path");
+
+  // Now try to add a new one
+  auto qnn2 = QnnManager::Create(options, "/another/path");
+  new_adsp = getenv(kAdsp);
+  EXPECT_STREQ(new_adsp, "/another/path;/my/path");
+
+  // Restore original value
+  if (original_adsp) {
+    setenv(kAdsp, original_adsp->c_str(), /*overwrite=*/1);
+  } else {
+    unsetenv(kAdsp);
+  }
+}
+
+TEST(InitQnnOptionsDlbcTest, HtpDlbcWeightsAlonePropagates) {
+  ::qnn::Options qnn_options;
+  qnn_options.SetEnableWeightSharing(false);
+  qnn_options.SetHtpDlbcWeights(true);
+  EXPECT_TRUE(qnn_options.GetHtpDlbcWeights());
+}
+
+TEST(InitQnnOptionsDlbcTest, WeightSharingAloneLeavesHtpDlbcDefault) {
+  ::qnn::Options qnn_options;
+  qnn_options.SetEnableWeightSharing(true);
+  EXPECT_TRUE(qnn_options.GetEnableWeightSharing());
+  EXPECT_FALSE(qnn_options.GetHtpDlbcWeights());
+}
+
+TEST(InitQnnOptionsDlbcTest,
+     WeightSharingDoesNotChangeDlbcOptionsRegardlessOfOrder) {
+  ::qnn::Options dlbc_first;
+  dlbc_first.SetHtpDlbc(true);
+  dlbc_first.SetHtpDlbcWeights(true);
+  dlbc_first.SetEnableWeightSharing(true);
+  EXPECT_TRUE(dlbc_first.GetHtpDlbc());
+  EXPECT_TRUE(dlbc_first.GetHtpDlbcWeights());
+
+  ::qnn::Options weight_sharing_first;
+  weight_sharing_first.SetEnableWeightSharing(true);
+  weight_sharing_first.SetHtpDlbc(true);
+  weight_sharing_first.SetHtpDlbcWeights(true);
+  EXPECT_TRUE(weight_sharing_first.GetHtpDlbc());
+  EXPECT_TRUE(weight_sharing_first.GetHtpDlbcWeights());
+}
+
+TEST(InitQnnOptionsDlbcTest, PublicHtpDlbcPropagates) {
+  auto qualcomm_options = litert::qualcomm::QualcommOptions::Create();
+  ASSERT_TRUE(qualcomm_options.HasValue());
+  qualcomm_options->SetHtpDlbc(true);
+
+  ::qnn::Options qnn_options;
+  EXPECT_EQ(InitQnnOptions(qnn_options, qualcomm_options.Value()),
+            kLiteRtStatusOk);
+
+  EXPECT_TRUE(qnn_options.GetHtpDlbc());
+}
+
+TEST(InitQnnOptionsDlbcTest, PublicHtpDlbcWeightsPropagates) {
+  auto qualcomm_options = litert::qualcomm::QualcommOptions::Create();
+  ASSERT_TRUE(qualcomm_options.HasValue());
+  qualcomm_options->SetHtpDlbcWeights(true);
+
+  ::qnn::Options qnn_options;
+  EXPECT_EQ(InitQnnOptions(qnn_options, qualcomm_options.Value()),
+            kLiteRtStatusOk);
+
+  EXPECT_TRUE(qnn_options.GetHtpDlbcWeights());
+}
+
+TEST(InitQnnOptionsDlbcTest, PublicWeightSharingPreservesHtpDlbcWeights) {
+  auto qualcomm_options = litert::qualcomm::QualcommOptions::Create();
+  ASSERT_TRUE(qualcomm_options.HasValue());
+  qualcomm_options->SetEnableWeightSharing(true);
+  qualcomm_options->SetHtpDlbcWeights(true);
+
+  ::qnn::Options qnn_options;
+  EXPECT_EQ(InitQnnOptions(qnn_options, qualcomm_options.Value()),
+            kLiteRtStatusOk);
+
+  EXPECT_TRUE(qnn_options.GetEnableWeightSharing());
+  EXPECT_TRUE(qnn_options.GetHtpDlbcWeights());
+}
+
+TEST(InitQnnOptionsDlbcTest, PublicWeightSharingPreservesHtpDlbc) {
+  auto qualcomm_options = litert::qualcomm::QualcommOptions::Create();
+  ASSERT_TRUE(qualcomm_options.HasValue());
+  qualcomm_options->SetEnableWeightSharing(true);
+  qualcomm_options->SetHtpDlbc(true);
+
+  ::qnn::Options qnn_options;
+  EXPECT_EQ(InitQnnOptions(qnn_options, qualcomm_options.Value()),
+            kLiteRtStatusOk);
+
+  EXPECT_TRUE(qnn_options.GetEnableWeightSharing());
+  EXPECT_TRUE(qnn_options.GetHtpDlbc());
+}
+
+TEST(InitQnnOptionsTest, PropagatesQnnLibDirAndDspSkelDir) {
+  auto qualcomm_options = litert::qualcomm::QualcommOptions::Create();
+  ASSERT_TRUE(qualcomm_options.HasValue());
+  qualcomm_options->SetQnnLibDir("/custom/qnn/lib/dir");
+  qualcomm_options->SetDspSkelDir("/custom/dsp/skel/dir");
+
+  ::qnn::Options qnn_options;
+  EXPECT_EQ(InitQnnOptions(qnn_options, qualcomm_options.Value()),
+            kLiteRtStatusOk);
+
+  EXPECT_EQ(qnn_options.GetQnnLibDir(), "/custom/qnn/lib/dir");
+  EXPECT_EQ(qnn_options.GetDspSkelDir(), "/custom/dsp/skel/dir");
+}
+
+TEST(InitQnnOptionsTest, PropagatesWeightSharingChannelTileSize) {
+  auto qualcomm_options = litert::qualcomm::QualcommOptions::Create();
+  ASSERT_TRUE(qualcomm_options.HasValue());
+  qualcomm_options->SetHtpWeightSharingChannelTileSize(64);
+
+  ::qnn::Options qnn_options;
+  EXPECT_EQ(InitQnnOptions(qnn_options, qualcomm_options.Value()),
+            kLiteRtStatusOk);
+
+  EXPECT_EQ(qnn_options.GetHtpWeightSharingChannelTileSize(), 64);
+}
+
+TEST(QnnManagerTest, AdspLibraryPathPrecedence) {
+  static constexpr char kAdsp[] = "ADSP_LIBRARY_PATH";
+  const char* original_adsp_ptr = getenv(kAdsp);
+  std::optional<std::string> original_adsp;
+  if (original_adsp_ptr) {
+    original_adsp = original_adsp_ptr;
+  }
+
+  // 1. When only shared_library_dir is passed, it sets ADSP_LIBRARY_PATH
+  unsetenv(kAdsp);
+  ::qnn::Options options1;
+  QnnManager::Create(options1, "/plugin/lib/dir");
+  EXPECT_STREQ(getenv(kAdsp), "/plugin/lib/dir");
+
+  // 2. When qnn_lib_dir is set, it overrides shared_library_dir for
+  // ADSP_LIBRARY_PATH
+  unsetenv(kAdsp);
+  ::qnn::Options options2;
+  options2.SetQnnLibDir("/qnn/host/lib");
+  QnnManager::Create(options2, "/plugin/lib/dir");
+  EXPECT_STREQ(getenv(kAdsp), "/qnn/host/lib");
+
+  // 3. When dsp_skel_dir is set, it overrides both qnn_lib_dir and
+  // shared_library_dir
+  unsetenv(kAdsp);
+  ::qnn::Options options3;
+  options3.SetQnnLibDir("/qnn/host/lib");
+  options3.SetDspSkelDir("/qnn/dsp/skel");
+  QnnManager::Create(options3, "/plugin/lib/dir");
+  EXPECT_STREQ(getenv(kAdsp), "/qnn/dsp/skel");
+
+  // 4. Non-destructive prepend when ADSP_LIBRARY_PATH already has paths
+  setenv(kAdsp, "/system/vendor/dsp", /*overwrite=*/1);
+  ::qnn::Options options4;
+  options4.SetDspSkelDir("/qnn/dsp/skel");
+  QnnManager::Create(options4);
+  EXPECT_STREQ(getenv(kAdsp), "/qnn/dsp/skel;/system/vendor/dsp");
+
+  // Restore original value
+  if (original_adsp) {
+    setenv(kAdsp, original_adsp->c_str(), /*overwrite=*/1);
+  } else {
+    unsetenv(kAdsp);
+  }
+}
+
+}  // namespace

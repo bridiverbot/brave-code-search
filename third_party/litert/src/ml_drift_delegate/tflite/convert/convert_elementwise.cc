@@ -1,0 +1,610 @@
+// Copyright 2025 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "ml_drift_delegate/tflite/convert/convert_elementwise.h"
+
+#include <algorithm>
+#include <cstdint>
+#include <utility>
+#include <vector>
+
+#include "absl/container/flat_hash_map.h"  // from @com_google_absl
+#include "absl/log/absl_log.h"  // from @com_google_absl
+#include "ml_drift/common/data_type.h"  // from @ml_drift
+#include "ml_drift/common/ir_model.h"  // from @ml_drift
+#include "ml_drift/common/operations.h"  // from @ml_drift
+#include "ml_drift/common/shape.h"  // from @ml_drift
+#include "ml_drift/common/task/tensor_desc.h"  // from @ml_drift
+#include "ml_drift/common/tensor.h"  // from @ml_drift
+#include "ml_drift_delegate/tflite/convert/convert_aux.h"
+#include "ml_drift_delegate/tflite/ir_model_builder_helper.h"
+#include "tflite/builtin_ops.h"
+#include "tflite/c/builtin_op_data.h"
+#include "tflite/c/common.h"
+#include "tflite/kernels/kernel_util.h"
+namespace litert::ml_drift::ir {
+namespace {
+bool IsUnaryOp(const ::ml_drift::OperationType op_type) {
+  switch (op_type) {
+    case ::ml_drift::OperationType::kAbs:
+    case ::ml_drift::OperationType::kCast:
+    case ::ml_drift::OperationType::kCeil:
+    case ::ml_drift::OperationType::kCopy:
+    case ::ml_drift::OperationType::kCos:
+    case ::ml_drift::OperationType::kElu:
+    case ::ml_drift::OperationType::kExp:
+    case ::ml_drift::OperationType::kFloor:
+    case ::ml_drift::OperationType::kGelu:
+    case ::ml_drift::OperationType::kHardSwish:
+    case ::ml_drift::OperationType::kLog:
+    case ::ml_drift::OperationType::kLogicalNot:
+    case ::ml_drift::OperationType::kNeg:
+    case ::ml_drift::OperationType::kRound:
+    case ::ml_drift::OperationType::kRsqrt:
+    case ::ml_drift::OperationType::kSigmoid:
+    case ::ml_drift::OperationType::kSign:
+    case ::ml_drift::OperationType::kSin:
+    case ::ml_drift::OperationType::kSqrt:
+    case ::ml_drift::OperationType::kSquare:
+    case ::ml_drift::OperationType::kTanh:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool IsBinaryOp(const ::ml_drift::OperationType op_type) {
+  switch (op_type) {
+    case ::ml_drift::OperationType::kAdd:
+    case ::ml_drift::OperationType::kAtan2:
+    case ::ml_drift::OperationType::kDiv:
+    case ::ml_drift::OperationType::kEqual:
+    case ::ml_drift::OperationType::kFloorDiv:
+    case ::ml_drift::OperationType::kFloorMod:
+    case ::ml_drift::OperationType::kGreater:
+    case ::ml_drift::OperationType::kGreaterEqual:
+    case ::ml_drift::OperationType::kLess:
+    case ::ml_drift::OperationType::kLessEqual:
+    case ::ml_drift::OperationType::kLogicalAnd:
+    case ::ml_drift::OperationType::kLogicalOr:
+    case ::ml_drift::OperationType::kLogicalXor:
+    case ::ml_drift::OperationType::kMaximum:
+    case ::ml_drift::OperationType::kMinimum:
+    case ::ml_drift::OperationType::kMul:
+    case ::ml_drift::OperationType::kNotEqual:
+    case ::ml_drift::OperationType::kPow:
+    case ::ml_drift::OperationType::kRemainder:
+    case ::ml_drift::OperationType::kShiftLeft:
+    case ::ml_drift::OperationType::kShiftRight:
+    case ::ml_drift::OperationType::kSquaredDiff:
+    case ::ml_drift::OperationType::kSub:
+      return true;
+    default:
+      return false;
+  }
+}
+static ::ml_drift::BHWDC ExtractTensorShapeFromVector(
+    const std::vector<int32_t>& dims) {
+  const int size = dims.size();
+  if (size == 0) {
+    return ::ml_drift::BHWDC(1, 1, 1, 1, 1);
+  } else if (size == 1) {
+    return ::ml_drift::BHWDC(dims[0], 1, 1, 1, 1);
+  } else if (size == 2) {
+    return ::ml_drift::BHWDC(dims[0], 1, 1, 1, dims[1]);
+  } else if (size == 3) {
+    return ::ml_drift::BHWDC(dims[0], 1, dims[1], 1, dims[2]);
+  } else if (size == 4) {
+    return ::ml_drift::BHWDC(dims[0], dims[1], dims[2], 1, dims[3]);
+  } else {
+    return ::ml_drift::BHWDC(dims[0], dims[1], dims[2], dims[3], dims[4]);
+  }
+}
+
+// Extracts shape from TfLiteTensor and expands it with 1s on the left to match
+// target_rank.
+static ::ml_drift::BHWDC ExtractTensorShapeWithTfLiteBroadcast(
+    const TfLiteTensor* tflite_tensor, int target_rank) {
+  const TfLiteIntArray* dims = tflite_tensor->dims;
+  if (dims->size >= target_rank) {
+    return ExtractTensorShape(dims);
+  }
+  std::vector<int32_t> shape(target_rank, 1);
+  const int offset = target_rank - dims->size;
+  for (int i = 0; i < dims->size; ++i) {
+    shape[offset + i] = dims->data[i];
+  }
+  return ExtractTensorShapeFromVector(shape);
+}
+
+// Swap the inputs for MUL and ADD operations.
+void SwapInputs(::ml_drift::OperationType operation_type,
+                const TfLiteTensor* input0, const TfLiteTensor* input1,
+                int* input_tensor0, int* input_tensor1) {
+  if (operation_type != ::ml_drift::OperationType::kMul &&
+      operation_type != ::ml_drift::OperationType::kAdd) {
+    return;
+  }
+
+  // The "larger" input tensor must be bound to 1st input and the
+  // "smaller" input tensor must be bound to 2nd input.
+  const int target_rank = std::max(input0->dims->size, input1->dims->size);
+  const ::ml_drift::BHWDC shape0 =
+      ExtractTensorShapeWithTfLiteBroadcast(input0, target_rank);
+  const ::ml_drift::BHWDC shape1 =
+      ExtractTensorShapeWithTfLiteBroadcast(input1, target_rank);
+  if (shape0.b <= shape1.b && shape0.d <= shape1.d && shape0.h <= shape1.h &&
+      shape0.w <= shape1.w && shape0.c == shape1.c) {
+    *input_tensor0 = 1;
+    *input_tensor1 = 0;
+  }
+}
+
+// Check if broadcast is needed.
+bool IsBroadcastNeeded(const TfLiteContext& context,
+                       const TfLiteNode& tflite_node,
+                       const ::ml_drift::OperationType op_type) {
+  if (!IsBinaryOp(op_type)) return false;
+  const TfLiteTensor* input0 = context.tensors + tflite_node.inputs->data[0];
+  const TfLiteTensor* input1 = context.tensors + tflite_node.inputs->data[1];
+  if (::tflite::IsConstantTensor(input0) ^ ::tflite::IsConstantTensor(input1)) {
+    return false;
+  }
+  if (input0 == input1) return false;
+
+  // Check if the inputs are broadcastable and dimensions are
+  // synchronized. If true, add reshapes nodes for the inputs and then
+  // create the node. e.g. [1, 128, 512] + [128, 512] => [1, 1, 128, 512]
+  // + [1, 1, 128, 512]
+  if (!IsBroadcastable(input0->dims, input1->dims) ||
+      input0->dims->size == input1->dims->size) {
+    return false;
+  }
+  return true;
+}
+void ElementwiseFusedActivation(
+    ::ml_drift::ir::IrModel& ir_model, const TfLiteNode& tflite_node,
+    ::ml_drift::ir::IrOp* op,
+    absl::flat_hash_map<int, ::ml_drift::ir::IrTensorId>& tensor_map,
+    int output_id) {
+  ::ml_drift::OperationType op_type =
+      ::ml_drift::OperationTypeFromString(op->name);
+  TfLiteFusedActivation activation = kTfLiteActNone;
+  switch (op_type) {
+    case ::ml_drift::OperationType::kAdd:
+      if (const auto* params =
+              static_cast<const TfLiteAddParams*>(tflite_node.builtin_data)) {
+        activation = params->activation;
+      }
+      break;
+    case ::ml_drift::OperationType::kDiv:
+      if (const auto* params =
+              static_cast<const TfLiteDivParams*>(tflite_node.builtin_data)) {
+        activation = params->activation;
+      }
+      break;
+    case ::ml_drift::OperationType::kMul:
+      if (const auto* params =
+              static_cast<const TfLiteMulParams*>(tflite_node.builtin_data)) {
+        activation = params->activation;
+      }
+      break;
+    case ::ml_drift::OperationType::kSub:
+      if (const auto* params =
+              static_cast<const TfLiteSubParams*>(tflite_node.builtin_data)) {
+        activation = params->activation;
+      }
+      break;
+    default:
+      break;
+  }
+  HandleFusedActivation(activation, ir_model, op, tensor_map, output_id);
+}
+
+// Should only be called if IsBroadcastNeeded returns true.
+// Inserts additional reshapes for broadcast.
+void AddOpWithBroadcastReshape(
+    const TfLiteContext& context, const TfLiteNode& tflite_node,
+    absl::flat_hash_map<int, ::ml_drift::ir::IrTensorId>& tensor_map,
+    const ::ml_drift::OperationType operation_type,
+    ::ml_drift::ir::IrModel& ir_model) {
+  const TfLiteTensor* input0 = context.tensors + tflite_node.inputs->data[0];
+  const TfLiteTensor* input1 = context.tensors + tflite_node.inputs->data[1];
+
+  int input_tensor0 = 0;
+  int input_tensor1 = 1;
+  SwapInputs(operation_type, input0, input1, &input_tensor0, &input_tensor1);
+
+  const TfLiteTensor* in0 =
+      context.tensors + tflite_node.inputs->data[input_tensor0];
+  const TfLiteTensor* in1 =
+      context.tensors + tflite_node.inputs->data[input_tensor1];
+  ::ml_drift::ir::IrTensorId input_id0 =
+      tensor_map[tflite_node.inputs->data[input_tensor0]];
+  ::ml_drift::ir::IrTensorId input_id1 =
+      tensor_map[tflite_node.inputs->data[input_tensor1]];
+
+  const int target_rank = std::max(in0->dims->size, in1->dims->size);
+  ::ml_drift::BHWDC input0_shape =
+      ExtractTensorShapeWithTfLiteBroadcast(in0, target_rank);
+  ::ml_drift::BHWDC input1_shape =
+      ExtractTensorShapeWithTfLiteBroadcast(in1, target_rank);
+
+  // Add reshape node for input0
+  ::ml_drift::ir::IrOp* reshape_node0 = ir_model.add_op();
+  reshape_node0->name = ToString(::ml_drift::OperationType::kReshape);
+  ::ml_drift::Reshape3DAttributes reshape_attr;
+  reshape_attr.new_shape = input0_shape;
+  reshape_node0->attr = std::move(reshape_attr);
+  ir_model.AddConsumer(input_id0, reshape_node0->id);
+  ::ml_drift::ir::IrTensor* reshape_output_tensor = ir_model.add_tensor(
+      ir_model.tensor(input_id0)->desc.GetDataType(), input0_shape);
+  ir_model.SetProducer(reshape_output_tensor->id, reshape_node0->id);
+
+  // Add reshape node for input1
+  ::ml_drift::ir::IrOp* reshape_node1 = ir_model.add_op();
+  reshape_node1->name = ToString(::ml_drift::OperationType::kReshape);
+  ::ml_drift::Reshape3DAttributes reshape_attr1;
+  reshape_attr1.new_shape = input1_shape;
+  reshape_node1->attr = std::move(reshape_attr1);
+  ir_model.AddConsumer(input_id1, reshape_node1->id);
+  ::ml_drift::ir::IrTensor* reshape_output_tensor1 = ir_model.add_tensor(
+      ir_model.tensor(input_id1)->desc.GetDataType(), input1_shape);
+  ir_model.SetProducer(reshape_output_tensor1->id, reshape_node1->id);
+
+  // Link the reshape node to the original node
+  ::ml_drift::ir::IrOp* op = ir_model.add_op();
+  op->name = ToString(operation_type);
+  ::ml_drift::ElementwiseAttributes attr;
+  op->attr = std::move(attr);
+  ir_model.AddConsumer(reshape_output_tensor->id, op->id);
+  ir_model.AddConsumer(reshape_output_tensor1->id, op->id);
+
+  // Create output value for the node.
+  // Set the output shape to the tflite output tensor shape.
+  const TfLiteTensor* output_tensor =
+      context.tensors + tflite_node.outputs->data[0];
+  const ::ml_drift::ir::IrTensorId output_id =
+      tensor_map[tflite_node.outputs->data[0]];
+  ::ml_drift::TensorDescriptor output_desc = ir_model.tensor(output_id)->desc;
+  ::ml_drift::BHWDC tflite_style_output_shape =
+      ExtractTensorShapeWithTfLiteBroadcast(output_tensor, target_rank);
+  ::ml_drift::ir::IrTensor* output =
+      ir_model.add_tensor(output_desc.GetDataType(), tflite_style_output_shape);
+
+  // Add activation
+  const int output_tflite_id = tflite_node.outputs->data[0];
+  const ::ml_drift::ir::IrTensorId final_output_id =
+      tensor_map[output_tflite_id];
+  tensor_map[output_tflite_id] = output->id;
+  ElementwiseFusedActivation(ir_model, tflite_node, op, tensor_map,
+                             output_tflite_id);
+  tensor_map[output_tflite_id] = final_output_id;
+
+  // Reshape the output to the ml_drift output tensor shape.
+  ::ml_drift::ir::IrOp* reshape = ir_model.add_op();
+  reshape->name = ToString(::ml_drift::OperationType::kReshape);
+  ir_model.AddConsumer(output->id, reshape->id);
+  ir_model.SetProducer(output_id, reshape->id);
+  ::ml_drift::Reshape3DAttributes output_reshape_attr;
+  output_reshape_attr.new_shape = output_desc.GetBHWDCShape();
+  reshape->attr = std::move(output_reshape_attr);
+}
+
+// Specialization of TfLiteTensorToTensor<Tensor<Scalar, DataType::FLOAT32>>.
+static ::ml_drift::Tensor<::ml_drift::Scalar, ::ml_drift::DataType::kFloat32>
+ConvertToScalarFloat32Tensor(const TfLiteTensor* tfl_tensor) {
+  ::ml_drift::Tensor<::ml_drift::Scalar, ::ml_drift::DataType::kFloat32>
+      mld_tensor;
+  mld_tensor.data.resize(1);
+  CopyFloat32Data(tfl_tensor, &mld_tensor.data[0]);
+  mld_tensor.shape.v = 1;
+  return mld_tensor;
+}
+
+// Specialization of TfLiteTensorToTensor<Tensor<Scalar, DataType::INT32>>.
+static ::ml_drift::Tensor<::ml_drift::Scalar, ::ml_drift::DataType::kInt32>
+ConvertToScalarInt32Tensor(const TfLiteTensor* tfl_tensor) {
+  const TfLiteType dtype = tfl_tensor->type;
+  ::ml_drift::Tensor<::ml_drift::Scalar, ::ml_drift::DataType::kInt32>
+      mld_tensor;
+  mld_tensor.data.push_back(dtype == kTfLiteFloat32  ? tfl_tensor->data.f[0]
+                            : dtype == kTfLiteBool   ? tfl_tensor->data.b[0]
+                            : dtype == kTfLiteInt8   ? tfl_tensor->data.int8[0]
+                            : dtype == kTfLiteUInt8  ? tfl_tensor->data.uint8[0]
+                            : dtype == kTfLiteInt16  ? tfl_tensor->data.i16[0]
+                            : dtype == kTfLiteUInt16 ? tfl_tensor->data.ui16[0]
+                                                     : tfl_tensor->data.i32[0]);
+  mld_tensor.shape.v = 1;
+  return mld_tensor;
+}
+
+// Specialization of TfLIteTensorToTensor<Tensor<Linear, DataType::FLOAT32>>.
+static ::ml_drift::Tensor<::ml_drift::Linear, ::ml_drift::DataType::kFloat32>
+ConvertToLinearFloat32Tensor(const TfLiteTensor* tfl_tensor) {
+  ::ml_drift::Tensor<::ml_drift::Linear, ::ml_drift::DataType::kFloat32>
+      mld_tensor;
+  const int n = tflite::NumElements(tfl_tensor);
+  mld_tensor.data.resize(n);
+  CopyFloat32Data(tfl_tensor, &mld_tensor.data[0]);
+  mld_tensor.shape.v = n;
+  return mld_tensor;
+}
+
+// Specialization of TfLIteTensorToTensor<Tensor<::ml_drift::BHWC,
+// DataType::FLOAT32>>.
+static ::ml_drift::Tensor<::ml_drift::BHWC, ::ml_drift::DataType::kFloat32>
+ConvertToBhwcFloat32Tensor(const TfLiteTensor* tfl_tensor) {
+  ::ml_drift::Tensor<::ml_drift::BHWC, ::ml_drift::DataType::kFloat32>
+      mld_tensor;
+  mld_tensor.data.resize(tflite::NumElements(tfl_tensor));
+  CopyFloat32Data(tfl_tensor, &mld_tensor.data[0]);
+  const TfLiteIntArray* dims = tfl_tensor->dims;
+  std::vector<int32_t> shape(dims->data, dims->data + dims->size);
+  mld_tensor.shape = GetRightAlignedBHWC(shape, 1);
+  return mld_tensor;
+}
+
+static ::ml_drift::Tensor<::ml_drift::BHWDC, ::ml_drift::DataType::kFloat32>
+ConvertToBhwdcFloat32Tensor(const TfLiteTensor* tfl_tensor) {
+  ::ml_drift::Tensor<::ml_drift::BHWDC, ::ml_drift::DataType::kFloat32>
+      mld_tensor;
+  mld_tensor.data.resize(tflite::NumElements(tfl_tensor));
+  CopyFloat32Data(tfl_tensor, &mld_tensor.data[0]);
+  const TfLiteIntArray* dims = tfl_tensor->dims;
+  std::vector<int32_t> shape(dims->data, dims->data + dims->size);
+  mld_tensor.shape = GetRightAlignedBHWDC(shape, 1);
+  return mld_tensor;
+}
+
+void ParseInputsWithConstTensor(
+    const TfLiteNode& tflite_node, ::ml_drift::ir::IrOp* op,
+    const TfLiteContext& context, ::ml_drift::ir::IrModel& ir_model,
+    absl::flat_hash_map<int, ::ml_drift::ir::IrTensorId>& tensor_map,
+    ::ml_drift::TensorOrScalar* tensor_or_scalar) {
+  // Determine runtime/constant tensors.
+  const TfLiteTensor* input0 = context.tensors + tflite_node.inputs->data[0];
+  const TfLiteTensor* input1 = context.tensors + tflite_node.inputs->data[1];
+  const bool constant_tensor0 = tflite::IsConstantTensor(input0);
+
+  // Create aliases for constant and runtime tensors.
+  int runtime_tensor_index;
+  int constant_tensor_index;
+  const TfLiteTensor* constant_tensor;
+  if (constant_tensor0) {
+    runtime_tensor_index = 1;
+    constant_tensor_index = 0;
+    constant_tensor = input0;
+  } else {
+    runtime_tensor_index = 0;
+    constant_tensor_index = 1;
+    constant_tensor = input1;
+  }
+
+  ir_model.AddConsumer(
+      tensor_map[tflite_node.inputs->data[runtime_tensor_index]], op->id);
+  const TfLiteIntArray* constant_dims = constant_tensor->dims;
+  const bool convertible_to_f32 =
+      constant_tensor->type == kTfLiteFloat32 ||
+      constant_tensor->type == kTfLiteFloat16 ||
+      (constant_tensor->quantization.type ==
+           TfLiteQuantizationType::kTfLiteAffineQuantization &&
+       (constant_tensor->type == kTfLiteInt8 ||
+        constant_tensor->type == kTfLiteUInt8 ||
+        constant_tensor->type == kTfLiteInt4 ||
+        constant_tensor->type == kTfLiteInt2));
+  if (constant_dims->size < 1 || tflite::NumElements(constant_dims) == 1) {
+    if (convertible_to_f32) {
+      const ::ml_drift::Tensor<::ml_drift::Scalar,
+                               ::ml_drift::DataType::kFloat32>
+          t = ConvertToScalarFloat32Tensor(constant_tensor);
+      *tensor_or_scalar = t.data[0];
+      return;
+    }
+    if (constant_tensor->type == kTfLiteInt32) {
+      const ::ml_drift::Tensor<::ml_drift::Scalar, ::ml_drift::DataType::kInt32>
+          t = ConvertToScalarInt32Tensor(constant_tensor);
+      *tensor_or_scalar = t.data[0];
+      return;
+    }
+  }
+  if (!convertible_to_f32) {
+    ::ml_drift::ir::IrTensor* const_ir_tensor = AddConstInput(
+        context, tflite_node.inputs->data[constant_tensor_index], ir_model,
+        /*layout=*/{});
+    ir_model.AddConsumer(const_ir_tensor->id, op->id);
+    return;
+  }
+  if (IsLinearConvertible(constant_dims)) {
+    ::ml_drift::Tensor<::ml_drift::Linear, ::ml_drift::DataType::kFloat32>
+        tensor = ConvertToLinearFloat32Tensor(constant_tensor);
+    *tensor_or_scalar = std::move(tensor);
+    return;
+  }
+  if (constant_dims->size <= 5) {
+    const TfLiteTensor* output_tensor =
+        context.tensors + tflite_node.outputs->data[0];
+    if (output_tensor->dims->size == 5) {
+      ::ml_drift::Tensor<::ml_drift::BHWDC, ::ml_drift::DataType::kFloat32>
+          tensor = ConvertToBhwdcFloat32Tensor(constant_tensor);
+      *tensor_or_scalar = std::move(tensor);
+    } else {
+      ::ml_drift::Tensor<::ml_drift::BHWC, ::ml_drift::DataType::kFloat32>
+          tensor = ConvertToBhwcFloat32Tensor(constant_tensor);
+      *tensor_or_scalar = std::move(tensor);
+    }
+  }
+}
+}  // namespace
+
+::ml_drift::OperationType GetElementwiseOperationType(int32_t builtin_code) {
+  switch (builtin_code) {
+    case kTfLiteBuiltinAbs:
+      return ::ml_drift::OperationType::kAbs;
+    case kTfLiteBuiltinAtan2:
+      return ::ml_drift::OperationType::kAtan2;
+    case kTfLiteBuiltinCast:
+      return ::ml_drift::OperationType::kCast;
+    case kTfLiteBuiltinCeil:
+      return ::ml_drift::OperationType::kCeil;
+    case kTfLiteBuiltinCos:
+      return ::ml_drift::OperationType::kCos;
+    case kTfLiteBuiltinElu:
+      return ::ml_drift::OperationType::kElu;
+    case kTfLiteBuiltinExp:
+      return ::ml_drift::OperationType::kExp;
+    case kTfLiteBuiltinFloor:
+      return ::ml_drift::OperationType::kFloor;
+    case kTfLiteBuiltinGelu:
+      return ::ml_drift::OperationType::kGelu;
+    case kTfLiteBuiltinHardSwish:
+      return ::ml_drift::OperationType::kHardSwish;
+    case kTfLiteBuiltinLog:
+      return ::ml_drift::OperationType::kLog;
+    case kTfLiteBuiltinLogistic:
+      return ::ml_drift::OperationType::kSigmoid;
+    case kTfLiteBuiltinNeg:
+      return ::ml_drift::OperationType::kNeg;
+    case kTfLiteBuiltinRound:
+      return ::ml_drift::OperationType::kRound;
+    case kTfLiteBuiltinRsqrt:
+      return ::ml_drift::OperationType::kRsqrt;
+    case kTfLiteBuiltinSign:
+      return ::ml_drift::OperationType::kSign;
+    case kTfLiteBuiltinSin:
+      return ::ml_drift::OperationType::kSin;
+    case kTfLiteBuiltinSqrt:
+      return ::ml_drift::OperationType::kSqrt;
+    case kTfLiteBuiltinSquare:
+      return ::ml_drift::OperationType::kSquare;
+    case kTfLiteBuiltinTanh:
+      return ::ml_drift::OperationType::kTanh;
+    case kTfLiteBuiltinLogicalNot:
+      return ::ml_drift::OperationType::kLogicalNot;
+    case kTfLiteBuiltinAdd:
+      return ::ml_drift::OperationType::kAdd;
+    case kTfLiteBuiltinSub:
+      return ::ml_drift::OperationType::kSub;
+    case kTfLiteBuiltinMul:
+      return ::ml_drift::OperationType::kMul;
+    case kTfLiteBuiltinDiv:
+      return ::ml_drift::OperationType::kDiv;
+    case kTfLiteBuiltinMaximum:
+      return ::ml_drift::OperationType::kMaximum;
+    case kTfLiteBuiltinMinimum:
+      return ::ml_drift::OperationType::kMinimum;
+    case kTfLiteBuiltinPow:
+      return ::ml_drift::OperationType::kPow;
+    case kTfLiteBuiltinEqual:
+      return ::ml_drift::OperationType::kEqual;
+    case kTfLiteBuiltinNotEqual:
+      return ::ml_drift::OperationType::kNotEqual;
+    case kTfLiteBuiltinGreater:
+      return ::ml_drift::OperationType::kGreater;
+    case kTfLiteBuiltinGreaterEqual:
+      return ::ml_drift::OperationType::kGreaterEqual;
+    case kTfLiteBuiltinLess:
+      return ::ml_drift::OperationType::kLess;
+    case kTfLiteBuiltinLessEqual:
+      return ::ml_drift::OperationType::kLessEqual;
+    case kTfLiteBuiltinLogicalAnd:
+      return ::ml_drift::OperationType::kLogicalAnd;
+    case kTfLiteBuiltinLogicalOr:
+      return ::ml_drift::OperationType::kLogicalOr;
+    case kTfLiteBuiltinBitwiseXor:
+      return ::ml_drift::OperationType::kLogicalXor;
+    case kTfLiteBuiltinFloorDiv:
+      return ::ml_drift::OperationType::kFloorDiv;
+    case kTfLiteBuiltinFloorMod:
+      return ::ml_drift::OperationType::kFloorMod;
+    case kTfLiteBuiltinStablehloRemainder:
+      return ::ml_drift::OperationType::kRemainder;
+    case kTfLiteBuiltinRightShift:
+      return ::ml_drift::OperationType::kShiftRight;
+    case kTfLiteBuiltinStablehloShiftLeft:
+      return ::ml_drift::OperationType::kShiftLeft;
+    case kTfLiteBuiltinSquaredDifference:
+      return ::ml_drift::OperationType::kSquaredDiff;
+    default:
+      ABSL_LOG(FATAL) << "Unsupported elementwise builtin_code "
+                      << builtin_code;
+      return ::ml_drift::OperationType::kUnknown;
+  }
+}
+
+void ConvertElementwise(
+    const TfLiteContext& context, const TfLiteNode& tflite_node,
+    const TfLiteRegistration& registration,
+    absl::flat_hash_map<int, ::ml_drift::ir::IrTensorId>& tensor_map,
+    ::ml_drift::ir::IrModel& ir_model) {
+  ::ml_drift::OperationType op_type =
+      GetElementwiseOperationType(registration.builtin_code);
+  if (IsBroadcastNeeded(context, tflite_node, op_type)) {
+    AddOpWithBroadcastReshape(context, tflite_node, tensor_map, op_type,
+                              ir_model);
+    return;
+  }
+  ::ml_drift::ir::IrOp* op = ir_model.add_op();
+  op->name = ToString(op_type);
+
+  if (IsUnaryOp(op_type)) {
+    if (op_type == ::ml_drift::OperationType::kGelu &&
+        tflite_node.builtin_data) {
+      auto tflite_options =
+          reinterpret_cast<const TfLiteGeluParams*>(tflite_node.builtin_data);
+      if (tflite_options->approximate) {
+        op->name = ToString(::ml_drift::OperationType::kGeluTanhApprox);
+      }
+    }
+    ir_model.AddConsumer(tensor_map[tflite_node.inputs->data[0]], op->id);
+  } else if (IsBinaryOp(op_type)) {
+    const TfLiteTensor* input0 = context.tensors + tflite_node.inputs->data[0];
+    const TfLiteTensor* input1 = context.tensors + tflite_node.inputs->data[1];
+    if (!::tflite::IsConstantTensor(input0) &&
+        !::tflite::IsConstantTensor(input1)) {  // both runtime inputs
+      if (input0 == input1) {
+        if (op_type == ::ml_drift::OperationType::kMul) {
+          // replace MUL(A, A) with SQUARE(A)
+          op->name = ToString(::ml_drift::OperationType::kSquare);
+          ir_model.AddConsumer(tensor_map[tflite_node.inputs->data[0]], op->id);
+        } else if (op_type == ::ml_drift::OperationType::kAdd) {
+          // replace ADD(A, A) with MUL(A, 2.0)
+          op->name = ToString(::ml_drift::OperationType::kMul);
+          ::ml_drift::ElementwiseAttributes attr;
+          attr.param = 2.0f;
+          op->attr = std::move(attr);
+          ir_model.AddConsumer(tensor_map[tflite_node.inputs->data[0]], op->id);
+        }
+      } else {
+        int input_tensor0 = 0;
+        int input_tensor1 = 1;
+        SwapInputs(op_type, input0, input1, &input_tensor0, &input_tensor1);
+        ir_model.AddConsumer(
+            tensor_map[tflite_node.inputs->data[input_tensor0]], op->id);
+        ir_model.AddConsumer(
+            tensor_map[tflite_node.inputs->data[input_tensor1]], op->id);
+      }
+    } else {  // binary with one constant input
+      ::ml_drift::ElementwiseAttributes attr;
+      ParseInputsWithConstTensor(tflite_node, op, context, ir_model, tensor_map,
+                                 &attr.param);
+      attr.runtime_tensor_is_second = tflite::IsConstantTensor(input0);
+      op->attr = std::move(attr);
+    }
+  }
+  ElementwiseFusedActivation(ir_model, tflite_node, op, tensor_map,
+                             tflite_node.outputs->data[0]);
+}
+
+}  // namespace litert::ml_drift::ir

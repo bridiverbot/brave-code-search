@@ -1,0 +1,417 @@
+// Copyright 2026 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "ml_drift_delegate/delegate/composite/short_conv_step_kernel.h"
+
+#include <algorithm>
+#include <any>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "absl/log/absl_log.h"  // from @com_google_absl
+#include "absl/status/status.h"  // from @com_google_absl
+#include "absl/status/status_macros.h"  // from @com_google_absl
+#include "absl/strings/str_cat.h"  // from @com_google_absl
+#include "absl/strings/string_view.h"  // from @com_google_absl
+#include "absl/strings/substitute.h"  // from @com_google_absl
+#include "ml_drift/common/data_type.h"  // from @ml_drift
+#include "ml_drift/common/gpu_model_builder.h"  // from @ml_drift
+#include "ml_drift/common/ir_model.h"  // from @ml_drift
+#include "ml_drift/common/model.h"  // from @ml_drift
+#include "ml_drift/common/shape.h"  // from @ml_drift
+#include "ml_drift/common/task/gpu_operation.h"  // from @ml_drift
+#include "ml_drift/common/task/tensor_desc.h"  // from @ml_drift
+#include "ml_drift/common/tensor_handle.h"  // from @ml_drift
+#include "ml_drift/common/types.h"  // from @ml_drift
+#include "ml_drift_delegate/delegate/composite/short_conv_step_parser.h"
+
+namespace litert::ml_drift {
+
+namespace {
+
+class FusedShortConvStepOp : public ::ml_drift::GPUOperation {
+ public:
+  FusedShortConvStepOp() = default;
+  // One work item per (token, channel slice) of the output.
+  ::ml_drift::int3 GetGridSize() const override {
+    return ::ml_drift::int3(dst_[0]->Width(), dst_[0]->Height(),
+                            dst_[0]->Slices());
+  }
+
+  // Move only
+  FusedShortConvStepOp(FusedShortConvStepOp&&) = default;
+  FusedShortConvStepOp& operator=(FusedShortConvStepOp&&) = default;
+  FusedShortConvStepOp(const FusedShortConvStepOp&) = delete;
+  FusedShortConvStepOp& operator=(const FusedShortConvStepOp&) = delete;
+};
+
+// Vector component that holds conv tap (or channel lane) `k`.
+absl::string_view Component(int k) {
+  static constexpr absl::string_view kComponents[] = {"x", "y", "z", "w"};
+  return kComponents[k];
+}
+
+// Shader expression of B * x at token `token` in the slice `S`.
+std::string BxExpr(absl::string_view token) {
+  return absl::Substitute(
+      "(ucl::Convert<float4>(args.in_proj.Read($0, 0, S)) * "
+      "ucl::Convert<float4>(args.in_proj.Read($0, 0, S + 2 * "
+      "args.num_slices)))",
+      token);
+}
+
+}  // namespace
+
+std::unique_ptr<::ml_drift::GPUOperation> CreateFusedShortConvStep(
+    const ::ml_drift::TensorDescriptor& in_proj_desc,
+    const ::ml_drift::TensorDescriptor& conv_weight_desc,
+    const ::ml_drift::TensorDescriptor* conv_bias_desc,
+    const ::ml_drift::TensorDescriptor& dst_desc,
+    const ::ml_drift::TensorDescriptor& state_in_out_desc, int num_slices,
+    int hidden_size, int conv_L_cache,
+    const ::ml_drift::TensorDescriptor* num_valid_tokens_desc) {
+  const int clamped_L_cache = std::clamp(conv_L_cache, 2, 4);
+  const int num_state_taps = clamped_L_cache - 1;
+  const int seq_len = dst_desc.GetBHWCShape().w;
+  // Tokens [0, num_head_tokens) convolve windows that reach into conv_state.
+  const int num_head_tokens = std::min(seq_len, num_state_taps);
+
+  FusedShortConvStepOp custom_op;
+  custom_op.args_.AddInt("num_slices", num_slices);
+  custom_op.args_.AddInt("hidden_size", hidden_size);
+  custom_op.args_.AddInt("conv_L_cache", clamped_L_cache);
+  custom_op.args_.AddInt("has_bias", conv_bias_desc != nullptr ? 1 : 0);
+
+  custom_op.AddSrcTensor("in_proj", in_proj_desc);
+  custom_op.AddSrcTensor("conv_weight", conv_weight_desc);
+  if (conv_bias_desc != nullptr) {
+    custom_op.AddSrcTensor("conv_bias", *conv_bias_desc);
+  }
+  if (num_valid_tokens_desc != nullptr) {
+    custom_op.AddSrcTensor("num_valid_tokens", *num_valid_tokens_desc);
+  }
+  custom_op.AddDstTensor("out", dst_desc);
+  custom_op.AddDstTensor("state_in_out", state_in_out_desc);
+
+  auto w_shape = conv_weight_desc.GetBHWCShape();
+  std::string weight_read_expr;
+  if (w_shape.b == hidden_size) {
+    weight_read_expr = "args.conv_weight.Read(0, 0, 0, $0)";
+  } else if (w_shape.w == hidden_size) {
+    weight_read_expr = "args.conv_weight.Read($0, 0, 0)";
+  } else {
+    weight_read_expr = "args.conv_weight.Read(0, 0, 0, $0)";
+  }
+
+  auto state_shape = state_in_out_desc.GetBHWCShape();
+  std::string state_read_expr;
+  std::string state_write_expr;
+  if (state_shape.w == hidden_size) {
+    state_read_expr = "args.state_in_out.Read($0, 0, 0)";
+    state_write_expr =
+        "args.state_in_out.Write(ucl::Convert<args.state_in_out::type>($0), "
+        "$1, 0, 0)";
+  } else {
+    state_read_expr = "args.state_in_out.Read(0, 0, 0, $0)";
+    state_write_expr =
+        "args.state_in_out.Write(ucl::Convert<args.state_in_out::type>($0), "
+        "0, 0, 0, $1)";
+  }
+
+  std::string bias_expr = "ucl::Init<float4>(0.0f, 0.0f, 0.0f, 0.0f)";
+  if (conv_bias_desc != nullptr) {
+    const ::ml_drift::BHWC bias_shape = conv_bias_desc->GetBHWCShape();
+    if (bias_shape.b == hidden_size && bias_shape.c != hidden_size) {
+      bias_expr = "ucl::Init<float4>(";
+      for (int i = 0; i < 4; ++i) {
+        absl::StrAppend(&bias_expr, i > 0 ? ", " : "",
+                        "ucl::Convert<float4>(args.conv_bias.Read(0, 0, 0, 4 * "
+                        "S + ",
+                        i, ")).x");
+      }
+      bias_expr += ')';
+    } else {
+      bias_expr = "ucl::Convert<float4>(args.conv_bias.Read(0, 0, S))";
+    }
+  }
+
+  ABSL_LOG(INFO) << "ShortConvStep: hidden_size=" << hidden_size
+                 << ", seq_len=" << seq_len << ", num_slices=" << num_slices
+                 << ", conv_L_cache=" << clamped_L_cache
+                 << ", has_bias=" << (conv_bias_desc != nullptr)
+                 << ", has_num_valid_tokens="
+                 << (num_valid_tokens_desc != nullptr);
+
+  // With L = conv_L_cache and padded = concat(conv_state, B * x) along the
+  // sequence, padded[p] is conv_state tap p for p < L - 1 and B * x of token
+  // p - (L - 1) otherwise. Token t convolves the window padded[t : t + L].
+  std::string c = "MAIN_FUNCTION($0) {\n";
+  c += "  args.in_proj.SetBatchRef(0);\n";
+  c += "  args.conv_weight.SetBatchRef(0);\n";
+  if (conv_bias_desc != nullptr) {
+    c += "  args.conv_bias.SetBatchRef(0);\n";
+  }
+  if (num_valid_tokens_desc != nullptr) {
+    c += "  args.num_valid_tokens.SetBatchRef(0);\n";
+  }
+  c += "  args.out.SetBatchRef(0);\n";
+  c += "  args.state_in_out.SetBatchRef(0);\n";
+  c += R"(
+  int X = ucl::GetGlobalId<0>();
+  int Y = ucl::GetGlobalId<1>();
+  int S = ucl::GetGlobalId<2>();
+  if (X >= args.out.Width() || Y >= args.out.Height() ||
+      S >= args.out.Slices()) {
+    return;
+  }
+)";
+  // Work item 0 computes the tokens whose window reaches into conv_state
+  // (tokens [0, num_head_tokens)) and then writes next_state. Keeping every
+  // conv_state read and next_state write in one work item keeps the kernel
+  // correct when the runtime binds the same buffer to conv_state and
+  // next_state, as LiteRT-LM does for in-place state updates.
+  if (num_head_tokens > 1) {
+    absl::StrAppend(&c, "  if (X > 0 && X < ", num_head_tokens,
+                    ") {\n    return;\n  }\n");
+  }
+
+  // Weight w<i>.<k> is tap k of channel i of the slice, and wt<k> holds tap k
+  // of the 4 channels.
+  for (int i = 0; i < 4; ++i) {
+    absl::StrAppend(
+        &c, "  float4 w", i, " = ucl::Convert<float4>(",
+        absl::Substitute(weight_read_expr, absl::StrCat("4 * S + ", i)),
+        ");\n");
+  }
+  for (int k = 0; k < clamped_L_cache; ++k) {
+    const absl::string_view tap = Component(k);
+    absl::StrAppend(&c, "  float4 wt", k, " = ucl::Init<float4>(w0.", tap,
+                    ", w1.", tap, ", w2.", tap, ", w3.", tap, ");\n");
+  }
+  absl::StrAppend(&c, "  float4 bias = ", bias_expr, ";\n");
+
+  // Tokens [L - 1, seq_len): the whole window comes from in_proj.
+  if (seq_len > num_state_taps) {
+    absl::StrAppend(&c, "  if (X >= ", num_state_taps, ") {\n");
+    c += "    float4 acc = bias;\n";
+    for (int k = 0; k < clamped_L_cache; ++k) {
+      const int offset = num_state_taps - k;
+      const std::string token =
+          offset == 0 ? "X" : absl::StrCat("X - ", offset);
+      absl::StrAppend(&c, "    acc += wt", k, " * ", BxExpr(token), ";\n");
+    }
+    c += "    args.out.Write(ucl::Convert<args.out::type>(ucl::Convert<float4>("
+         "args.in_proj.Read(X, 0, S + args.num_slices)) * acc), X, 0, S);\n";
+    c += "    return;\n  }\n";
+  }
+
+  // Work item 0. State s<i>.<j> is tap j of channel i of the slice, st<j> holds
+  // tap j of the 4 channels, and bx<t> holds B * x of token t.
+  for (int i = 0; i < 4; ++i) {
+    absl::StrAppend(
+        &c, "  float4 s", i, " = ucl::Convert<float4>(",
+        absl::Substitute(state_read_expr, absl::StrCat("4 * S + ", i)), ");\n");
+  }
+  for (int j = 0; j < num_state_taps; ++j) {
+    const absl::string_view tap = Component(j);
+    absl::StrAppend(&c, "  float4 st", j, " = ucl::Init<float4>(s0.", tap,
+                    ", s1.", tap, ", s2.", tap, ", s3.", tap, ");\n");
+  }
+  for (int t = 0; t < num_head_tokens; ++t) {
+    absl::StrAppend(&c, "  float4 bx", t, " = ", BxExpr(absl::StrCat(t)),
+                    ";\n");
+  }
+  // Shader expression of padded[p] for a p known at code generation.
+  auto padded = [&](int p) -> std::string {
+    if (p < num_state_taps) {
+      return absl::StrCat("st", p);
+    }
+    const int token = p - num_state_taps;
+    return token < num_head_tokens ? absl::StrCat("bx", token)
+                                   : BxExpr(absl::StrCat(token));
+  };
+  for (int t = 0; t < num_head_tokens; ++t) {
+    absl::StrAppend(&c, "  float4 acc", t, " = bias;\n");
+    for (int k = 0; k < clamped_L_cache; ++k) {
+      absl::StrAppend(&c, "  acc", t, " += wt", k, " * ", padded(t + k), ";\n");
+    }
+    absl::StrAppend(&c,
+                    "  args.out.Write(ucl::Convert<args.out::type>("
+                    "ucl::Convert<float4>(args.in_proj.Read(",
+                    t, ", 0, S + args.num_slices)) * acc", t, "), ", t,
+                    ", 0, S);\n");
+  }
+
+  // next_state tap j = padded[n + j] with n = num_valid_tokens clamped to
+  // [0, seq_len], or n = seq_len when num_valid_tokens is omitted.
+  if (num_valid_tokens_desc == nullptr) {
+    for (int j = 0; j < num_state_taps; ++j) {
+      absl::StrAppend(&c, "  float4 ns", j, " = ", padded(seq_len + j), ";\n");
+    }
+  } else {
+    c += absl::Substitute(
+        R"(  int n = ucl::Convert<int4>(args.num_valid_tokens.Read(0, 0, 0)).x;
+  if (n < 0) {
+    n = 0;
+  }
+  if (n > $0) {
+    n = $0;
+  }
+)",
+        seq_len);
+    for (int j = 0; j < num_state_taps; ++j) {
+      absl::StrAppend(&c, "  int p", j, " = n + ", j, ";\n");
+      absl::StrAppend(&c, "  float4 ns", j, ";\n");
+      // p<j> >= j, so conv_state taps below j are never selected.
+      for (int i = j; i < num_state_taps; ++i) {
+        absl::StrAppend(&c, i == j ? "  if (p" : "  } else if (p", j, " == ", i,
+                        ") {\n    ns", j, " = st", i, ";\n");
+      }
+      absl::StrAppend(&c, "  } else {\n    ns", j, " = ",
+                      BxExpr(absl::StrCat("p", j, " - ", num_state_taps)),
+                      ";\n  }\n");
+    }
+  }
+  for (int i = 0; i < 4; ++i) {
+    std::string taps;
+    for (int j = 0; j < 4; ++j) {
+      absl::StrAppend(&taps, j > 0 ? ", " : "",
+                      j < num_state_taps
+                          ? absl::StrCat("ns", j, ".", Component(i))
+                          : std::string("0.0f"));
+    }
+    absl::StrAppend(
+        &c, "  ",
+        absl::Substitute(state_write_expr,
+                         absl::StrCat("ucl::Init<float4>(", taps, ")"),
+                         absl::StrCat("4 * S + ", i)),
+        ";\n");
+  }
+  c += "}\n";
+
+  custom_op.code_ = std::move(c);
+  return std::make_unique<FusedShortConvStepOp>(std::move(custom_op));
+}
+
+namespace {
+
+absl::Status BuildShortConvStepGpuGraph(
+    const std::vector<uint32_t>& input_ids,
+    const std::vector<uint32_t>& output_ids,
+    const ShortConvStepAttributes& attr,
+    ::ml_drift::GpuModelBuilder* model_builder) {
+  if (input_ids.size() < 2 || input_ids.size() > 4) {
+    return absl::InvalidArgumentError("ShortConvStep expects 2 to 4 inputs.");
+  }
+  if (output_ids.size() != 2) {
+    return absl::InvalidArgumentError("ShortConvStep expects 2 outputs.");
+  }
+  if (attr.conv_L_cache < 2 || attr.conv_L_cache > 4) {
+    return absl::InvalidArgumentError(
+        absl::StrCat("ShortConvStep supports conv_L_cache in [2, 4], but got ",
+                     attr.conv_L_cache));
+  }
+
+  ABSL_ASSIGN_OR_RETURN(auto in_proj, model_builder->GetTensor(input_ids[0]));
+  ABSL_ASSIGN_OR_RETURN(auto conv_weight,
+                        model_builder->GetTensor(input_ids[1]));
+
+  std::optional<::ml_drift::TensorHandle> conv_bias;
+  const ::ml_drift::TensorDescriptor* conv_bias_desc = nullptr;
+  std::optional<::ml_drift::TensorHandle> num_valid_tokens;
+  const ::ml_drift::TensorDescriptor* num_valid_tokens_desc = nullptr;
+  for (size_t i = 2; i < input_ids.size(); ++i) {
+    ABSL_ASSIGN_OR_RETURN(auto extra_input,
+                          model_builder->GetTensor(input_ids[i]));
+    if (extra_input.tensor_desc.GetDataType() == ::ml_drift::DataType::kInt32) {
+      num_valid_tokens = std::move(extra_input);
+      num_valid_tokens_desc = &num_valid_tokens->tensor_desc;
+    } else {
+      conv_bias = std::move(extra_input);
+      conv_bias_desc = &conv_bias->tensor_desc;
+    }
+  }
+
+  auto in_proj_shape = in_proj.tensor_desc.GetBHWCShape();
+  int hidden_size = in_proj_shape.c / 3;
+  int num_slices = (hidden_size + 3) / 4;
+
+  auto dst_desc = in_proj.tensor_desc;
+  dst_desc.SetBHWCShape(::ml_drift::BHWC(1, 1, in_proj_shape.w, hidden_size));
+  auto dst = model_builder->AddTensor(dst_desc);
+
+  ABSL_ASSIGN_OR_RETURN(auto state_in_out_ref,
+                        model_builder->GetTensor(output_ids[1]));
+  auto state_in_out_desc = state_in_out_ref.tensor_desc;
+  auto state_in_out = model_builder->AddTensor(state_in_out_desc);
+
+  auto op = CreateFusedShortConvStep(
+      in_proj.tensor_desc, conv_weight.tensor_desc, conv_bias_desc, dst_desc,
+      state_in_out_desc, num_slices, hidden_size, attr.conv_L_cache,
+      num_valid_tokens_desc);
+
+  std::vector<::ml_drift::TensorHandle> src_tensors = {in_proj, conv_weight};
+  if (conv_bias.has_value()) {
+    src_tensors.push_back(*conv_bias);
+  }
+  if (num_valid_tokens.has_value()) {
+    src_tensors.push_back(*num_valid_tokens);
+  }
+  std::vector<::ml_drift::TensorHandle> dst_tensors = {dst, state_in_out};
+  model_builder->AddGpuOperation(src_tensors, dst_tensors, std::move(op),
+                                 "short_conv_step");
+
+  ABSL_RETURN_IF_ERROR(model_builder->UpdateOutputTensor(dst, output_ids[0]));
+  return model_builder->UpdateOutputTensor(state_in_out, output_ids[1]);
+}
+
+}  // namespace
+
+absl::Status CreateShortConvStepFromNode(
+    const std::vector<::ml_drift::Value*>& inputs,
+    const std::vector<::ml_drift::Value*>& outputs,
+    const ::ml_drift::Node& node, ::ml_drift::GpuModelBuilder* model_builder) {
+  const ShortConvStepAttributes& attr =
+      std::any_cast<const ShortConvStepAttributes&>(node.operation.attributes);
+  std::vector<uint32_t> input_ids;
+  input_ids.reserve(inputs.size());
+  for (const auto* input : inputs) input_ids.push_back(input->id);
+  std::vector<uint32_t> output_ids;
+  output_ids.reserve(outputs.size());
+  for (const auto* output : outputs) output_ids.push_back(output->id);
+  return BuildShortConvStepGpuGraph(input_ids, output_ids, attr, model_builder);
+}
+
+absl::Status CreateShortConvStepFromIrOp(
+    const std::vector<const ::ml_drift::ir::IrTensor*>& inputs,
+    const std::vector<const ::ml_drift::ir::IrTensor*>& outputs,
+    const ::ml_drift::ir::IrOp& node,
+    ::ml_drift::GpuModelBuilder* model_builder) {
+  const ShortConvStepAttributes& attr =
+      std::any_cast<const ShortConvStepAttributes&>(node.attr);
+  std::vector<uint32_t> input_ids;
+  input_ids.reserve(inputs.size());
+  for (const auto* input : inputs) input_ids.push_back(input->id);
+  std::vector<uint32_t> output_ids;
+  output_ids.reserve(outputs.size());
+  for (const auto* output : outputs) output_ids.push_back(output->id);
+  return BuildShortConvStepGpuGraph(input_ids, output_ids, attr, model_builder);
+}
+
+}  // namespace litert::ml_drift
