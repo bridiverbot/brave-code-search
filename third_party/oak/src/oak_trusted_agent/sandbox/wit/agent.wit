@@ -1,0 +1,63 @@
+//
+// Copyright 2026 The Project Oak Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+package oak:agent@0.1.0;
+
+interface tools {
+    record tool-description {
+        name: string,
+        description: string,
+        input-schema: string,
+    }
+
+    list-tools: func() -> list<tool-description>;
+    call-tool: func(name: string, arguments: string) -> result<string, string>;
+}
+
+interface model {
+    enum model-provider {
+        ollama,
+        gemini,
+    }
+
+    record model-info {
+        name: string,
+        provider: model-provider,
+    }
+
+    get-model-info: func() -> model-info;
+
+    // Sends a request to the model configured by the host.
+    //
+    // `request` is a JSON-encoded Gemini `GenerateContent`-style request
+    // (`contents`, `model` set to `model-info.name`, and optionally
+    // `systemInstruction` and `tools`). On success, the result is a
+    // JSON-encoded `GenerateContent`-style response (`candidates`, and
+    // optionally `promptFeedback`), regardless of the model provider. On
+    // failure, the error is a human-readable message.
+    call-model: func(request: string) -> result<string, string>;
+}
+
+interface agent {
+    run: func(user-message: string) -> result<string, string>;
+}
+
+world oak-agent {
+    import tools;
+    import model;
+
+    export agent;
+}

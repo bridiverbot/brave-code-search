@@ -1,0 +1,282 @@
+#
+# Copyright 2026 The Project Oak Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_test")
+load("//oak_benchmarks/linux_vm:defs.bzl", "vm_disk_image")
+
+package(
+    default_visibility = ["//:default_visibility"],
+    licenses = ["notice"],
+)
+
+rust_library(
+    name = "message_stream",
+    srcs = ["message_stream.rs"],
+    deps = [
+        "//oak_channel",
+        "//oak_proto_rust",
+        "//oak_session",
+        "@oak_crates_index//:anyhow",
+        "@oak_crates_index//:prost",
+    ],
+)
+
+rust_library(
+    name = "message_stream_client",
+    srcs = ["message_stream.rs"],
+    crate_features = ["std"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        "//oak_channel:oak_channel_client",
+        "//oak_proto_rust",
+        "//oak_session",
+        "@oak_crates_index//:anyhow",
+        "@oak_crates_index//:prost",
+    ],
+)
+
+rust_test(
+    name = "message_stream_test",
+    crate = ":message_stream_client",
+    # `rust_test` does not inherit `crate_features` from the crate it wraps,
+    # and the tests exercise `BufferedStream`, which is behind `std`.
+    crate_features = ["std"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = ["@oak_crates_index//:googletest"],
+)
+
+rust_library(
+    name = "linux_server",
+    srcs = ["linux_server.rs"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":message_stream_client",
+        "//oak_file_utils",
+        "@oak_crates_index//:rustls",
+        "@oak_crates_index//:rustls-pemfile",
+        "@oak_crates_index//:rustls-pki-types",
+    ],
+)
+
+rust_test(
+    name = "linux_server_test",
+    crate = ":linux_server",
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = ["@oak_crates_index//:googletest"],
+)
+
+# Real (software-rooted) DICE evidence for the attested Noise leg, plus the
+# client config that verifies it.
+rust_library(
+    name = "crypto_channel_attestation",
+    srcs = ["attestation.rs"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        "//oak_attestation_verification",
+        "//oak_dice",
+        "//oak_proto_rust",
+        "//oak_sdk/common:oak_sdk_common",
+        "//oak_sdk/standalone:oak_sdk_standalone",
+        "//oak_session",
+        "//oak_time:oak_time_std",
+        "@oak_crates_index//:anyhow",
+        "@oak_crates_index//:p256",
+    ],
+)
+
+rust_test(
+    name = "crypto_channel_attestation_test",
+    crate = ":crypto_channel_attestation",
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = ["@oak_crates_index//:googletest"],
+)
+
+rust_binary(
+    name = "benchmark",
+    srcs = [
+        "benchmark.rs",
+    ],
+    crate_root = "benchmark.rs",
+    data = [
+        ":generate_certs",
+        ":rk_app",
+        "//enclave_apps/oak_orchestrator",
+        "//oak_restricted_kernel_wrapper:oak_restricted_kernel_wrapper_virtio_console_channel_bin",
+        "//stage0_bin",
+    ],
+    env = {
+        "RUST_LOG": "debug",
+        "RUST_BACKTRACE": "1",
+        # Stop the message-exchange results depending on which benchmarks ran
+        # before them.
+        #
+        # glibc's mmap threshold is adaptive: it ratchets upward each time an
+        # mmap'd block is freed, and setting it also freezes the *trim*
+        # threshold. Left alone, whether a given payload size is served from a
+        # retained heap or from memory handed back to the kernel and re-faulted
+        # depends on the process's allocation history. Measured effect on the
+        # same unattested Noise code at a 1 MB payload: 1.27 ms when it ran
+        # after a filter excluded the smaller sizes, 2.97 ms when it ran first
+        # in the full sweep. Payloads up to 16380 bytes are unaffected; 65532
+        # and above are not.
+        #
+        # Both tunables are pinned above any allocation this benchmark makes,
+        # which reproduces the steady state that the adaptive default converges
+        # to -- a warmed-up server does not return its buffers to the kernel
+        # between requests -- and makes it independent of ordering. Verified:
+        # with both pinned, every payload matches the default's converged value
+        # to within 3%, while pinning only the mmap threshold inflates the
+        # plaintext 1 MB point by 5.7x.
+        #
+        # <https://www.gnu.org/software/libc/manual/html_node/Memory-Allocation-Tunables.html>
+        "MALLOC_MMAP_THRESHOLD_": "1073741824",
+        "MALLOC_TRIM_THRESHOLD_": "1073741824",
+    },
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":crypto_channel_attestation",
+        ":linux_server",
+        ":message_stream_client",
+        ":rk_launcher",
+        "//oak_channel:oak_channel_client",
+        "//oak_file_utils",
+        "//oak_launcher_utils",
+        "//oak_proto_rust",
+        "//oak_session",
+        "@oak_crates_index//:criterion",
+        "@oak_crates_index//:futures",
+        "@oak_crates_index//:openssl",
+        "@oak_crates_index//:rustls",
+        "@oak_crates_index//:rustls-pemfile",
+        "@oak_crates_index//:rustls-pki-types",
+        "@oak_crates_index//:tokio",
+        "@oak_crates_index//:which",
+    ],
+)
+
+rust_binary(
+    name = "crypto_channel_server",
+    srcs = [
+        "linux_main.rs",
+    ],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":linux_server",
+        ":message_stream_client",
+        "//oak_file_utils",
+        "@oak_crates_index//:clap",
+        "@oak_crates_index//:rustls",
+        "@oak_crates_index//:rustls-pemfile",
+        "@oak_crates_index//:rustls-pki-types",
+    ],
+)
+
+rust_library(
+    name = "rk_launcher",
+    srcs = ["rk_launcher.rs"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":message_stream_client",
+        "//oak_channel:oak_channel_client",
+        "//oak_file_utils",
+        "//oak_launcher_utils",
+        "@oak_crates_index//:clap",
+        "@oak_crates_index//:which",
+    ],
+)
+
+rust_binary(
+    name = "cert_gen",
+    srcs = ["cert_gen.rs"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        "@oak_crates_index//:openssl",
+    ],
+)
+
+genrule(
+    name = "generate_certs",
+    outs = ["certs.pem"],
+    cmd = "$(location :cert_gen) $@",
+    tools = [":cert_gen"],
+)
+
+rust_binary(
+    name = "rk_app",
+    srcs = ["rk_app.rs"],
+    platform = "//:x86_64-unknown-none",
+    rustc_flags = [
+        "--codegen=link-arg=-Wl,-zmax-page-size=0x200000",
+    ],
+    target_compatible_with = ["@platforms//cpu:x86_64"],
+    deps = [
+        ":message_stream",
+        "//oak_channel",
+        "//oak_restricted_kernel_sdk",
+        "@oak_crates_index//:log",
+    ],
+)
+
+vm_disk_image(
+    name = "crypto_channel_vm",
+    binary = ":crypto_channel_server",
+    command = "/opt/app/crypto_channel_server --host 0.0.0.0 --plaintext-port 5000 --noise-port 5001 --tls-port 5002",
+    data = [":generate_certs"],
+    # The guest end of run_vm.sh --net=tap. Unused under user networking.
+    extra_ip = "198.18.0.2/30",
+)
+
+# Backs the README's "What the `Setup` comparison does not show" section.
+rust_binary(
+    name = "p256_cost",
+    srcs = ["p256_cost.rs"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        "//oak_crypto",
+        "@oak_crates_index//:criterion",
+        "@oak_crates_index//:p256",
+        "@oak_crates_index//:rand_core",
+    ],
+)
+
+# Produces the measured per-segment handshake breakdown behind Figure F10.
+#
+# Deliberately not a criterion benchmark. Criterion reports one number per
+# benchmark function and amortises it over an iteration count it chooses; what
+# this needs is every segment of every establishment kept separately, so the
+# raw CSV can be re-aggregated. The `Setup` groups in `:benchmark` remain the
+# authority on the totals, and this binary's own totals are the cross-check.
+rust_binary(
+    name = "handshake_segments",
+    srcs = ["handshake_segments.rs"],
+    data = [":generate_certs"],
+    # Same allocator pinning as `:benchmark`, and for the same reason -- see the
+    # comment on that target. This binary is cross-checked against the `Setup`
+    # groups there, so it must not be measuring a different heap regime.
+    env = {
+        "MALLOC_MMAP_THRESHOLD_": "1073741824",
+        "MALLOC_TRIM_THRESHOLD_": "1073741824",
+    },
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":crypto_channel_attestation",
+        ":linux_server",
+        ":message_stream_client",
+        "@oak_crates_index//:clap",
+        "@oak_crates_index//:rustls",
+        "@oak_crates_index//:rustls-pki-types",
+    ],
+)

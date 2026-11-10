@@ -1,0 +1,51 @@
+# Build Outputs & Directories
+/out*/
+LASTCHANGE
+LASTCHANGE.committime
+build/
+build/mac_files/
+gclient_args.gni
+target/
+
+# Tools & Dependencies
+*sysroot
+buildtools/
+clang-format
+/infra/recipes/.recipe_deps/
+/third_party/cpython3/host
+/third_party/cpython3/linux-amd64
+third_party/rust-toolchain/
+third_party/rust/
+tools/clang/
+tools/protoc_wrapper/
+tools/rust/
+yajsv
+yajsv.exe
+
+# Certificates & Keys
+osp/impl/quic/certificates/agent_certificate.crt
+osp/impl/quic/certificates/private_key.key
+
+# Generated, Temp, and Trace Files
+*.pftrace
+*.profdata
+*.profraw
+*.pyc
+__pycache__/
+generated_root_cast_receiver*
+
+# IDEs & Editors
+.vs/
+.vscode/
+
+# AI Assistants & Agents
+*copilot*
+.aider*
+.claude/
+.cline/
+.cline_history/
+.cursor/
+.cursorrules
+.gemini/
+GEMINI.md
+claude.json
