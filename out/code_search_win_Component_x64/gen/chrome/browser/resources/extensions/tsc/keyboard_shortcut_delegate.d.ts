@@ -1,0 +1,20 @@
+export interface KeyboardShortcutDelegate {
+    /**
+     * Called when shortcut capturing changes in order to suspend or re-enable
+     * global shortcut handling. This is important so that the shortcuts aren't
+     * processed normally as the user types them.
+     * TODO(devlin): From very brief experimentation, it looks like preventing
+     * the default handling on the event also does this. Investigate more in the
+     * future.
+     */
+    setShortcutHandlingSuspended(isCapturing: boolean): void;
+    /**
+     * Updates an extension command's keybinding.
+     */
+    updateExtensionCommandKeybinding(extensionId: string, commandName: string, keybinding: string): void;
+    /**
+     * Updates an extension command's scope.
+     */
+    updateExtensionCommandScope(extensionId: string, commandName: string, scope: chrome.developerPrivate.CommandScope): void;
+}
+export declare function createDummyKeyboardShortcutDelegate(): KeyboardShortcutDelegate;

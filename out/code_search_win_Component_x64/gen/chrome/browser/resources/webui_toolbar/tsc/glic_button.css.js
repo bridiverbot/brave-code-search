@@ -1,0 +1,7 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss as getCrHiddenStyleLit } from '//resources/cr_elements/cr_hidden_style_lit.css.js';
+import '/shared/webui_toolbar_shared_vars.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[getCrHiddenStyleLit()], css `:host{display:flex;align-self:center}#button{--toolbar-chip-bg-color:var(--color-toolbar-glic-button-background-default);--toolbar-chip-padding-start:8px;--toolbar-chip-padding-end:5px;--toolbar-chip-font-family:var(--glic-button-font-family,var(--toolbar-button-font-family));--toolbar-chip-font-size:var(--glic-button-font-size,13px);--toolbar-chip-font-weight:var(--glic-button-font-weight,500)}#button[match-toolbar-style]{--toolbar-chip-bg-color:var(--color-toolbar)}#button[custom-theme-fallback]{--toolbar-chip-bg-color:var(--color-avatar-button-highlight-default);--toolbar-chip-fg-color:var(--color-avatar-button-highlight-default-foreground)}:host(.anchor-highlight) #button{--toolbar-chip-highlight-opacity:1}#icon{--icon-size:var(--toolbar-button-icon-size);display:inline-block;height:var(--icon-size);width:var(--icon-size)}#text{display:inline-block;line-height:var(--glic-button-line-height,16px);margin-inline-start:5px;max-width:max-content;overflow-x:clip;overflow-y:visible;text-box:trim-both cap alphabetic;text-overflow:ellipsis;white-space:nowrap}:host([collapsed]) #text{display:none}`]);
+}

@@ -1,0 +1,38 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import 'chrome://resources/cr_elements/icons.html.js';
+import 'chrome://resources/cr_elements/cr_icon/cr_icon.js';
+import { CrLitElement } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { BrowserProxyImpl } from './browser_proxy.js';
+import { getCss } from './data_export_done.css.js';
+import { getHtml } from './data_export_done.html.js';
+import { SupportToolPageMixinLit } from './support_tool_page_mixin_lit.js';
+const DataExportDoneElementBase = SupportToolPageMixinLit(CrLitElement);
+export class DataExportDoneElement extends DataExportDoneElementBase {
+    static get is() {
+        return 'data-export-done';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            path_: { type: String },
+        };
+    }
+    #path__accessor_storage = '';
+    get path_() { return this.#path__accessor_storage; }
+    set path_(value) { this.#path__accessor_storage = value; }
+    browserProxy_ = BrowserProxyImpl.getInstance();
+    onFilePathClick_() {
+        this.browserProxy_.showExportedDataInFolder();
+    }
+    setPath(path) {
+        this.path_ = path;
+    }
+}
+customElements.define(DataExportDoneElement.is, DataExportDoneElement);

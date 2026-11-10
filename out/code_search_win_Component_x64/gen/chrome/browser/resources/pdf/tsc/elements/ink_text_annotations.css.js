@@ -1,0 +1,6 @@
+import { css } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import './shared_vars.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[], css `:host{display:block;left:0;overflow:hidden;pointer-events:none;position:absolute;top:0;z-index:1}#container{display:block;height:100%;overflow:hidden;position:relative;width:100%;z-index:0}.placeholder{position:absolute;border:var(--viewer-text-annotation-border-width) solid transparent;box-sizing:border-box;outline:none;--offset-x:var(--viewer-text-annotation-offset-x);--offset-y:var(--viewer-text-annotation-offset-y);--padding-x:var(--viewer-text-annotation-padding-x);--padding-y:var(--viewer-text-annotation-padding-y);left:calc(var(--left,0px) - var(--offset-x));top:calc(var(--top,0px) - var(--offset-y));width:calc(var(--width,0px) + var(--padding-x));height:calc(var(--height,0px) + var(--padding-y))}.placeholder[data-rotations='1'],.placeholder[data-rotations='3']{--offset-x:var(--viewer-text-annotation-offset-x-rotated);--offset-y:var(--viewer-text-annotation-offset-y-rotated);--padding-x:var(--viewer-text-annotation-padding-x-rotated);--padding-y:var(--viewer-text-annotation-padding-y-rotated)}.placeholder:focus-visible{border-color:var(--viewer-text-annotation-active-color)}ink-text-box{pointer-events:auto}`]);
+}

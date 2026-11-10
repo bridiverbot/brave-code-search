@@ -1,0 +1,377 @@
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * @fileoverview The 'certificate-manager' component is a newer way for
+ * showing and managing TLS certificates. This is tied to the Chrome Root Store
+ * and Chrome Cert Management Enterprise policies launch.
+ */
+import '/strings.m.js';
+import './certificate_list.js';
+import './certificate_confirmation_dialog.js';
+import './certificate_info_dialog.js';
+import './certificate_password_dialog.js';
+import './certificate_subpage.js';
+import './certificate_manager_icons.html.js';
+import './crs_section.js';
+import './local_certs_section.js';
+// 
+import '//resources/cr_elements/cr_icon/cr_icon.js';
+import '//resources/cr_elements/cr_toast/cr_toast.js';
+import '//resources/cr_elements/cr_toolbar/cr_toolbar.js';
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_link_row/cr_link_row.js';
+import '//resources/cr_elements/icons.html.js';
+import '//resources/cr_elements/cr_page_selector/cr_page_selector.js';
+import '//resources/cr_elements/cr_menu_selector/cr_menu_selector.js';
+import { ColorChangeUpdater, COLORS_CSS_SELECTOR } from '//resources/cr_components/color_change_listener/colors_css_updater.js';
+import { assert, assertNotReached } from '//resources/js/assert.js';
+import { focusWithoutInk } from '//resources/js/focus_without_ink.js';
+import { loadTimeData } from '//resources/js/load_time_data.js';
+import { PluralStringProxyImpl } from '//resources/js/plural_string_proxy.js';
+import { PromiseResolver } from '//resources/js/promise_resolver.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './certificate_manager.css.js';
+import { getHtml } from './certificate_manager.html.js';
+import { CertificateSource } from './certificate_manager.mojom-webui.js';
+import { CertificatesBrowserProxy } from './certificates_browser_proxy.js';
+import { Page, RouteObserverMixin, Router } from './navigation.js';
+const CertificateManagerElementBase = RouteObserverMixin(CrLitElement);
+export class CertificateManagerElement extends CertificateManagerElementBase {
+    static get is() {
+        return 'certificate-manager';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            selectedPage_: { type: String },
+            clientPlatformSubpageLists_: { type: Array },
+            enterpriseSubpageLists_: { type: Array },
+            // 
+            platformSubpageLists_: { type: Array },
+            // 
+            userSubpageLists_: { type: Array },
+            toastMessage_: { type: String },
+            showInfoDialog_: { type: Boolean },
+            infoDialogTitle_: { type: String },
+            infoDialogMessage_: { type: String },
+            showPasswordDialog_: { type: Boolean },
+            confirmationDialogTitle_: { type: String },
+            confirmationDialogMessage_: { type: String },
+            showConfirmationDialog_: { type: Boolean },
+            showSearch_: { type: Boolean },
+            numPlatformClientCertsString_: { type: String },
+            webuiRoundedIconsEnabled_: { type: Boolean },
+        };
+    }
+    #selectedPage__accessor_storage = Page.LOCAL_CERTS;
+    get selectedPage_() { return this.#selectedPage__accessor_storage; }
+    set selectedPage_(value) { this.#selectedPage__accessor_storage = value; }
+    #userSubpageLists__accessor_storage = [
+        {
+            headerText: loadTimeData.getString('certificateManagerV2TrustedCertsList'),
+            certSource: CertificateSource.kUserTrustedCerts,
+            showImport: loadTimeData.getBoolean('userCertsImportAllowed'),
+            certMetadataEditable: loadTimeData.getBoolean('userCertsImportAllowed'),
+        },
+        {
+            headerText: loadTimeData.getString('certificateManagerV2IntermediateCertsList'),
+            certSource: CertificateSource.kUserIntermediateCerts,
+            showImport: loadTimeData.getBoolean('userCertsImportAllowed'),
+            certMetadataEditable: loadTimeData.getBoolean('userCertsImportAllowed'),
+        },
+        {
+            headerText: loadTimeData.getString('certificateManagerV2DistrustedCertsList'),
+            certSource: CertificateSource.kUserDistrustedCerts,
+            showImport: loadTimeData.getBoolean('userCertsImportAllowed'),
+            certMetadataEditable: loadTimeData.getBoolean('userCertsImportAllowed'),
+        },
+    ];
+    get userSubpageLists_() { return this.#userSubpageLists__accessor_storage; }
+    set userSubpageLists_(value) { this.#userSubpageLists__accessor_storage = value; }
+    #toastMessage__accessor_storage = '';
+    get toastMessage_() { return this.#toastMessage__accessor_storage; }
+    set toastMessage_(value) { this.#toastMessage__accessor_storage = value; }
+    #showInfoDialog__accessor_storage = false;
+    get showInfoDialog_() { return this.#showInfoDialog__accessor_storage; }
+    set showInfoDialog_(value) { this.#showInfoDialog__accessor_storage = value; }
+    #infoDialogTitle__accessor_storage = '';
+    get infoDialogTitle_() { return this.#infoDialogTitle__accessor_storage; }
+    set infoDialogTitle_(value) { this.#infoDialogTitle__accessor_storage = value; }
+    #infoDialogMessage__accessor_storage = '';
+    get infoDialogMessage_() { return this.#infoDialogMessage__accessor_storage; }
+    set infoDialogMessage_(value) { this.#infoDialogMessage__accessor_storage = value; }
+    #showPasswordDialog__accessor_storage = false;
+    get showPasswordDialog_() { return this.#showPasswordDialog__accessor_storage; }
+    set showPasswordDialog_(value) { this.#showPasswordDialog__accessor_storage = value; }
+    #showConfirmationDialog__accessor_storage = false;
+    get showConfirmationDialog_() { return this.#showConfirmationDialog__accessor_storage; }
+    set showConfirmationDialog_(value) { this.#showConfirmationDialog__accessor_storage = value; }
+    #showSearch__accessor_storage = false;
+    get showSearch_() { return this.#showSearch__accessor_storage; }
+    set showSearch_(value) { this.#showSearch__accessor_storage = value; }
+    #confirmationDialogTitle__accessor_storage = '';
+    get confirmationDialogTitle_() { return this.#confirmationDialogTitle__accessor_storage; }
+    set confirmationDialogTitle_(value) { this.#confirmationDialogTitle__accessor_storage = value; }
+    #confirmationDialogMessage__accessor_storage = '';
+    get confirmationDialogMessage_() { return this.#confirmationDialogMessage__accessor_storage; }
+    set confirmationDialogMessage_(value) { this.#confirmationDialogMessage__accessor_storage = value; }
+    #clientPlatformSubpageLists__accessor_storage = [
+        {
+            headerText: loadTimeData.getString('certificateManagerV2ClientCertsFromPlatform'),
+            certSource: CertificateSource.kPlatformClientCert,
+            hideExport: true,
+            // 
+            // 
+            // 
+            hideHeader: true,
+            // 
+        },
+    ];
+    get clientPlatformSubpageLists_() { return this.#clientPlatformSubpageLists__accessor_storage; }
+    set clientPlatformSubpageLists_(value) { this.#clientPlatformSubpageLists__accessor_storage = value; }
+    #enterpriseSubpageLists__accessor_storage = [
+        {
+            headerText: loadTimeData.getString('certificateManagerV2TrustedCertsList'),
+            certSource: CertificateSource.kEnterpriseTrustedCerts,
+        },
+        {
+            headerText: loadTimeData.getString('certificateManagerV2IntermediateCertsList'),
+            certSource: CertificateSource.kEnterpriseIntermediateCerts,
+            hideIfEmpty: true,
+        },
+        {
+            headerText: loadTimeData.getString('certificateManagerV2DistrustedCertsList'),
+            certSource: CertificateSource.kEnterpriseDistrustedCerts,
+            hideIfEmpty: true,
+        },
+    ];
+    get enterpriseSubpageLists_() { return this.#enterpriseSubpageLists__accessor_storage; }
+    set enterpriseSubpageLists_(value) { this.#enterpriseSubpageLists__accessor_storage = value; }
+    #platformSubpageLists__accessor_storage = [
+        {
+            headerText: loadTimeData.getString('certificateManagerV2TrustedCertsList'),
+            certSource: CertificateSource.kPlatformUserTrustedCerts,
+        },
+        {
+            headerText: loadTimeData.getString('certificateManagerV2IntermediateCertsList'),
+            certSource: CertificateSource.kPlatformUserIntermediateCerts,
+            hideIfEmpty: true,
+        },
+        {
+            headerText: loadTimeData.getString('certificateManagerV2DistrustedCertsList'),
+            certSource: CertificateSource.kPlatformUserDistrustedCerts,
+            hideIfEmpty: true,
+        },
+    ];
+    // 
+    get platformSubpageLists_() { return this.#platformSubpageLists__accessor_storage; }
+    set platformSubpageLists_(value) { this.#platformSubpageLists__accessor_storage = value; }
+    #numPlatformClientCertsString__accessor_storage = '';
+    // 
+    get numPlatformClientCertsString_() { return this.#numPlatformClientCertsString__accessor_storage; }
+    set numPlatformClientCertsString_(value) { this.#numPlatformClientCertsString__accessor_storage = value; }
+    #webuiRoundedIconsEnabled__accessor_storage = loadTimeData.getBoolean('webuiRoundedIconsEnabled');
+    get webuiRoundedIconsEnabled_() { return this.#webuiRoundedIconsEnabled__accessor_storage; }
+    set webuiRoundedIconsEnabled_(value) { this.#webuiRoundedIconsEnabled__accessor_storage = value; }
+    passwordEntryResolver_ = null;
+    confirmationDialogResolver_ = null;
+    connectedCallback() {
+        super.connectedCallback();
+        const enableWebuiRefresh2026 = loadTimeData.getString('webuiRefresh2026') !== '';
+        if (enableWebuiRefresh2026) {
+            this.addThemedColors_();
+            ColorChangeUpdater.forDocument().start();
+        }
+    }
+    firstUpdated() {
+        const proxy = CertificatesBrowserProxy.getInstance();
+        proxy.callbackRouter.askForImportPassword.addListener(this.onAskForImportPassword_.bind(this));
+        proxy.callbackRouter.askForConfirmation.addListener(this.onAskForConfirmation_.bind(this));
+        proxy.callbackRouter.triggerReload.addListener(this.onTriggerReload_.bind(this));
+        this.getClientCertCount_();
+    }
+    onTriggerReload_(certSources) {
+        if (certSources.includes(CertificateSource.kPlatformClientCert)) {
+            this.getClientCertCount_();
+        }
+    }
+    getClientCertCount_() {
+        CertificatesBrowserProxy.getInstance()
+            .handler.getCertificates(CertificateSource.kPlatformClientCert)
+            .then((results) => {
+            PluralStringProxyImpl.getInstance()
+                .getPluralString('certificateManagerV2NumCerts', results.certs.length)
+                .then(label => {
+                this.numPlatformClientCertsString_ = label;
+            });
+        });
+    }
+    onAskForImportPassword_() {
+        this.showPasswordDialog_ = true;
+        assert(this.passwordEntryResolver_ === null);
+        this.passwordEntryResolver_ = new PromiseResolver();
+        return this.passwordEntryResolver_.promise;
+    }
+    onPasswordDialogClose_() {
+        const passwordDialog = this.shadowRoot.querySelector('#passwordDialog');
+        assert(passwordDialog);
+        assert(this.passwordEntryResolver_);
+        this.passwordEntryResolver_.resolve({ password: passwordDialog.value() });
+        this.passwordEntryResolver_ = null;
+        this.showPasswordDialog_ = false;
+    }
+    onAskForConfirmation_(title, message) {
+        this.confirmationDialogTitle_ = title;
+        this.confirmationDialogMessage_ = message;
+        this.showConfirmationDialog_ = true;
+        assert(this.confirmationDialogResolver_ === null);
+        this.confirmationDialogResolver_ =
+            new PromiseResolver();
+        return this.confirmationDialogResolver_.promise;
+    }
+    onConfirmationDialogClose_() {
+        const confirmationDialog = this.shadowRoot.querySelector('#confirmationDialog');
+        assert(confirmationDialog);
+        assert(this.confirmationDialogResolver_);
+        this.confirmationDialogResolver_.resolve({ confirmed: confirmationDialog.wasConfirmed() });
+        this.confirmationDialogResolver_ = null;
+        this.showConfirmationDialog_ = false;
+    }
+    onHashCopied_() {
+        this.toastMessage_ =
+            loadTimeData.getString('certificateManagerV2HashCopiedToast');
+        this.$.toast.show();
+    }
+    // Prevent clicks on sidebar items from navigating and therefore reloading
+    // the page.
+    onMenuItemClick_(e) {
+        e.preventDefault();
+    }
+    async currentRouteChanged(route, oldRoute) {
+        this.selectedPage_ = route.page;
+        await this.updateComplete;
+        this.$.scrollableShadow.classList.toggle('force-on', route.isSubpage());
+        if (route.isSubpage()) {
+            switch (route.page) {
+                case Page.ADMIN_CERTS:
+                    this.$.adminCertsSection.setInitialFocus();
+                    break;
+                // 
+                case Page.PLATFORM_CERTS:
+                    this.$.platformCertsSection.setInitialFocus();
+                    break;
+                // 
+                case Page.PLATFORM_CLIENT_CERTS:
+                    this.$.platformClientCertsSection.setInitialFocus();
+                    break;
+                case Page.USER_CERTS:
+                    this.$.userCertsSection.setInitialFocus();
+                    break;
+                default:
+                    assertNotReached();
+            }
+        }
+        else if (oldRoute.isSubpage()) {
+            // If we're navigating back from a subpage, we may need to fiddle
+            // with the focus element if we're going back to its parent page.
+            switch (oldRoute.page) {
+                case Page.ADMIN_CERTS:
+                    if (route.page === Page.LOCAL_CERTS) {
+                        this.$.localCertSection.setFocusToLinkRow(oldRoute.page);
+                    }
+                    break;
+                // 
+                case Page.PLATFORM_CERTS:
+                    if (route.page === Page.LOCAL_CERTS) {
+                        this.$.localCertSection.setFocusToLinkRow(oldRoute.page);
+                    }
+                    break;
+                // 
+                case Page.PLATFORM_CLIENT_CERTS:
+                    if (route.page === Page.CLIENT_CERTS) {
+                        focusWithoutInk(this.$.viewOsImportedClientCerts);
+                    }
+                    break;
+                case Page.USER_CERTS:
+                    if (route.page === Page.LOCAL_CERTS) {
+                        this.$.localCertSection.setFocusToLinkRow(oldRoute.page);
+                    }
+                    break;
+                default:
+                    assertNotReached();
+            }
+        }
+    }
+    onMenuIronActivate_(e) {
+        const page = e.detail.item.getAttribute('href');
+        assert(page, 'Page is not available');
+        Router.getInstance().navigateTo(page.substring(1));
+    }
+    getSelectedTopLevelHref_() {
+        switch (this.selectedPage_) {
+            // 
+            case Page.PLATFORM_CERTS:
+            // 
+            case Page.ADMIN_CERTS:
+            case Page.USER_CERTS:
+                return this.generateHrefForPage_(Page.LOCAL_CERTS);
+            case Page.PLATFORM_CLIENT_CERTS:
+                return this.generateHrefForPage_(Page.CLIENT_CERTS);
+            default:
+                return this.generateHrefForPage_(this.selectedPage_);
+        }
+    }
+    generateHrefForPage_(p) {
+        return '/' + p;
+    }
+    onClientPlatformCertsLinkRowClick_(e) {
+        e.preventDefault();
+        Router.getInstance().navigateTo(Page.PLATFORM_CLIENT_CERTS);
+    }
+    onImportResult_(e) {
+        const result = e.detail;
+        if (result === null) {
+            return;
+        }
+        if (result.error !== undefined) {
+            this.infoDialogTitle_ =
+                loadTimeData.getString('certificateManagerV2ImportErrorTitle');
+            this.infoDialogMessage_ = result.error;
+            this.showInfoDialog_ = true;
+        }
+    }
+    onDeleteResult_(e) {
+        const result = e.detail;
+        if (result === null) {
+            return;
+        }
+        if (result.error !== undefined) {
+            this.infoDialogTitle_ =
+                loadTimeData.getString('certificateManagerV2DeleteErrorTitle');
+            this.infoDialogMessage_ = result.error;
+            this.showInfoDialog_ = true;
+        }
+    }
+    onInfoDialogClose_() {
+        this.showInfoDialog_ = false;
+    }
+    // 
+    onManageCertsExternalClick_() {
+        const proxy = CertificatesBrowserProxy.getInstance();
+        proxy.handler.showNativeManageCertificates();
+    }
+    // 
+    addThemedColors_() {
+        assert(document.body.querySelector(COLORS_CSS_SELECTOR) === null);
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'chrome://theme/colors.css?sets=ui,chrome';
+        document.body.appendChild(link);
+    }
+}

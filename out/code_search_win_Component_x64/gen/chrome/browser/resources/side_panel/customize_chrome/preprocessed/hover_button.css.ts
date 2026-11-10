@@ -1,0 +1,9 @@
+import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
+import {getCss as getCrIconsLit} from 'chrome://resources/cr_elements/cr_icons_lit.css.js';
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[getCrIconsLit()], css`#hoverButton{background:transparent;border:none;box-sizing:border-box;color:var(--cr-primary-text-color);cursor:pointer;display:flex;font:inherit;justify-content:space-between;line-height:16px;margin-top:8px;padding:8px var(--sp-card-inline-padding);text-align:start;width:100%}#hoverButton:hover{background-color:var(--cr-hover-background-color)}#hoverButton:focus{background-color:var(--cr-menu-background-focus-color);outline:none}#icon{--cr-icon-color:var(--cr-primary-text-color);--cr-icon-size:20px;height:20px;margin:0;width:20px}customize-chrome-button-label{align-self:center}@media (forced-colors:active){:host-context(.focus-outline-visible) #hoverButton:focus{outline:var(--cr-focus-outline-hcm)}}
+`]);
+}

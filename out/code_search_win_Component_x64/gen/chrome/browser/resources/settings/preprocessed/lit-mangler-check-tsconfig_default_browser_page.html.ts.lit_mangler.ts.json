@@ -1,0 +1,22 @@
+{
+  "extends": "/workspace/src/brave/build/tsconfig.json",
+  "include": [
+    "/workspace/src/brave/tools/chromium_src/lit_mangler/lit_mangler.ts",
+    "/workspace/src/brave/chromium_src/chrome/browser/resources/settings/default_browser_page/default_browser_page.html.ts.lit_mangler.ts"
+  ],
+  "compilerOptions": {
+    "baseUrl": "/workspace/src/brave/",
+    "paths": {
+      "lit_mangler": [
+        "./tools/chromium_src/lit_mangler/lit_mangler.ts"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "typeRoots": [
+      "/workspace/src/brave/node_modules/@types"
+    ]
+  }
+}

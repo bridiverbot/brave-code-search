@@ -1,0 +1,9 @@
+import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
+import {getCss as getDemo} from '../demo.css.js';
+import {getCss as getCrHiddenStyleLit} from '//resources/cr_elements/cr_hidden_style_lit.css.js';
+import {getCss as getCrIconsLit} from '//resources/cr_elements/cr_icons_lit.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[getCrHiddenStyleLit(),getCrIconsLit(),getDemo()], css`cr-input,cr-textarea{max-width:400px;width:100%}.no-error{--cr-input-error-display:none}.domain-name{padding-inline-end:8px}label{flex:1;white-space:nowrap}`]);
+}

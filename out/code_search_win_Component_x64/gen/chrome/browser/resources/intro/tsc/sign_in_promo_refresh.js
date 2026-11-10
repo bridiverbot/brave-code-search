@@ -1,0 +1,169 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import 'chrome://resources/cr_elements/cr_button/cr_button.js';
+import 'chrome://resources/cr_elements/cr_icon/cr_icon.js';
+import 'chrome://resources/cr_components/cr_lottie/cr_lottie.js';
+import 'chrome://resources/cr_elements/icons.html.js';
+import '/strings.m.js';
+import { I18nMixinLit } from 'chrome://resources/cr_elements/i18n_mixin_lit.js';
+import { loadTimeData } from 'chrome://resources/js/load_time_data.js';
+import { CrLitElement } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { IntroBrowserProxyImpl as IntroMojoBrowserProxyImpl } from './intro_browser_proxy.js';
+import { SignInPromoBrowserProxyImpl } from './sign_in_promo_browser_proxy.js';
+import { getCss } from './sign_in_promo_refresh.css.js';
+import { getHtml } from './sign_in_promo_refresh.html.js';
+const SignInPromoRefreshElementBase = I18nMixinLit(CrLitElement);
+export class SignInPromoRefreshElement extends SignInPromoRefreshElementBase {
+    static get is() {
+        return 'sign-in-promo-refresh';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            /**
+             * The list of benefits the user will get when signed in to Chrome
+             */
+            benefitCards_: { type: Array },
+            managedDeviceDisclaimer_: { type: String },
+            isDeviceManaged_: { type: Boolean },
+            anyButtonClicked_: { type: Boolean },
+            shouldDisableAnimations_: { type: Boolean },
+            // Exposed to CSS as 'is-pre-first-run-desktop-refresh-enabled_'.
+            isPreFirstRunDesktopRefreshEnabled_: { type: Boolean, reflect: true },
+            isDarkMode_: { type: Boolean },
+        };
+    }
+    #benefitCards__accessor_storage;
+    get benefitCards_() { return this.#benefitCards__accessor_storage; }
+    set benefitCards_(value) { this.#benefitCards__accessor_storage = value; }
+    #managedDeviceDisclaimer__accessor_storage = '';
+    get managedDeviceDisclaimer_() { return this.#managedDeviceDisclaimer__accessor_storage; }
+    set managedDeviceDisclaimer_(value) { this.#managedDeviceDisclaimer__accessor_storage = value; }
+    #isDeviceManaged__accessor_storage = loadTimeData.getBoolean('isDeviceManaged');
+    get isDeviceManaged_() { return this.#isDeviceManaged__accessor_storage; }
+    set isDeviceManaged_(value) { this.#isDeviceManaged__accessor_storage = value; }
+    #isPreFirstRunDesktopRefreshEnabled__accessor_storage = loadTimeData.getBoolean('isPreFirstRunDesktopRefreshEnabled');
+    get isPreFirstRunDesktopRefreshEnabled_() { return this.#isPreFirstRunDesktopRefreshEnabled__accessor_storage; }
+    set isPreFirstRunDesktopRefreshEnabled_(value) { this.#isPreFirstRunDesktopRefreshEnabled__accessor_storage = value; }
+    #shouldDisableAnimations__accessor_storage = loadTimeData.getBoolean('disableAnimations') ||
+        !loadTimeData.getBoolean('isFirstRunDesktopRevampEnabled');
+    // Animations are disabled if the feature is disabled (there is no mechanism
+    // to stop animations) or if we are using "disable animations" test flag.
+    get shouldDisableAnimations_() { return this.#shouldDisableAnimations__accessor_storage; }
+    set shouldDisableAnimations_(value) { this.#shouldDisableAnimations__accessor_storage = value; }
+    #isDarkMode__accessor_storage;
+    get isDarkMode_() { return this.#isDarkMode__accessor_storage; }
+    set isDarkMode_(value) { this.#isDarkMode__accessor_storage = value; }
+    #anyButtonClicked__accessor_storage = false;
+    get anyButtonClicked_() { return this.#anyButtonClicked__accessor_storage; }
+    set anyButtonClicked_(value) { this.#anyButtonClicked__accessor_storage = value; }
+    introBrowserProxy_ = IntroMojoBrowserProxyImpl.getInstance();
+    browserProxy_ = SignInPromoBrowserProxyImpl.getInstance();
+    darkModeListener_;
+    matchMedia_;
+    signInPromoListenerIds_ = [];
+    introListenerIds_ = [];
+    constructor() {
+        super();
+        this.matchMedia_ =
+            this.browserProxy_.matchMedia('(prefers-color-scheme: dark)');
+        this.isDarkMode_ = this.matchMedia_.matches;
+        this.darkModeListener_ = (e) => {
+            this.isDarkMode_ = e.matches;
+        };
+        this.benefitCards_ = [
+            {
+                title: this.i18n('devicesCardTitle'),
+                description: this.i18n('devicesCardDescription'),
+                iconId: 'devices',
+            },
+            {
+                title: this.i18n('securityCardTitle'),
+                description: this.i18n('securityCardDescription'),
+                iconId: 'security',
+            },
+            {
+                title: this.i18n('backupCardTitle'),
+                description: this.i18n('backupCardDescription'),
+                iconId: 'cloud-upload',
+            },
+        ];
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        if (this.isDeviceManaged_) {
+            this.browserProxy_.handler.getManagedDeviceDisclaimer().then((res) => {
+                this.onManagedDeviceDisclaimerUpdated_(res.disclaimer);
+            });
+        }
+        this.signInPromoListenerIds_.push(this.browserProxy_.callbackRouter.onResetButtons.addListener(() => {
+            this.resetButtons_();
+        }));
+        this.matchMedia_.addEventListener('change', this.darkModeListener_);
+        this.introListenerIds_.push(this.introBrowserProxy_.callbackRouter.toggleAnimations.addListener((active) => this.toggleAnimations_(active)));
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.matchMedia_.removeEventListener('change', this.darkModeListener_);
+        this.signInPromoListenerIds_.forEach(id => this.browserProxy_.callbackRouter.removeListener(id));
+        this.signInPromoListenerIds_ = [];
+        this.introListenerIds_.forEach(id => this.introBrowserProxy_.callbackRouter.removeListener(id));
+        this.introListenerIds_ = [];
+    }
+    resetButtons_() {
+        this.anyButtonClicked_ = false;
+    }
+    onManagedDeviceDisclaimerUpdated_(disclaimer) {
+        this.managedDeviceDisclaimer_ = disclaimer;
+    }
+    /**
+     * Disable buttons if the device is managed until the management
+     * disclaimer is loaded or if a button was clicked.
+     */
+    shouldDisableButtons_() {
+        return (this.isDeviceManaged_ &&
+            this.managedDeviceDisclaimer_.length === 0) ||
+            this.anyButtonClicked_;
+    }
+    onAcceptSignInButtonClick_() {
+        this.anyButtonClicked_ = true;
+        this.browserProxy_.handler.continueWithAccount();
+    }
+    onDeclineSignInButtonClick_() {
+        this.anyButtonClicked_ = true;
+        this.browserProxy_.handler.continueWithoutAccount();
+    }
+    /**
+     * To keep the layout stable during animations, for managed devices it is
+     * invisible while we're fetching the text to display.
+     */
+    getDisclaimerVisibilityClass_() {
+        return this.managedDeviceDisclaimer_.length === 0 ? 'temporarily-hidden' :
+            'fast-fade-in';
+    }
+    getAnimationUrl_(position) {
+        // If animations are disabled entirely (e.g. via revamp disabled or
+        // testing), we load static JSON files for the light theme that start from
+        // frame 180 (resting state) instead of frame 0. We don't need separate
+        // files for the dark theme because the dark JSON files starting from frame
+        // 0 are acceptable from UX point of view.
+        const staticSuffix = !this.isDarkMode_ && this.shouldDisableAnimations_ ? '_static' : '';
+        const theme = this.isDarkMode_ ? 'dark' : 'light';
+        return `chrome://intro/animations/signin_benefits_${theme}_${position}${staticSuffix}.json`;
+    }
+    toggleAnimations_(active) {
+        if (this.shouldDisableAnimations_) {
+            return;
+        }
+        this.$.leftAnimation.setPlay(active);
+        this.$.rightAnimation.setPlay(active);
+        this.$.bottomAnimation.setPlay(active);
+    }
+}
+customElements.define(SignInPromoRefreshElement.is, SignInPromoRefreshElement);

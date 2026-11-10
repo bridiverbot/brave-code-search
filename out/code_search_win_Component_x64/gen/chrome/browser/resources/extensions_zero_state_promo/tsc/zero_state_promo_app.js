@@ -1,0 +1,78 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import './icons.html.js';
+import 'chrome://resources/cr_elements/cr_button/cr_button.js';
+import 'chrome://resources/cr_elements/cr_chip/cr_chip.js';
+import 'chrome://resources/cr_elements/cr_icon/cr_icon.js';
+import 'chrome://resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import 'chrome://resources/js/action_link.js';
+import '/strings.m.js';
+import { CustomHelpBubbleUserAction } from 'chrome://resources/cr_components/help_bubble/custom_help_bubble.mojom-webui.js';
+import { CustomHelpBubbleProxyImpl } from 'chrome://resources/cr_components/help_bubble/custom_help_bubble_proxy.js';
+import { loadTimeData } from 'chrome://resources/js/load_time_data.js';
+import { CrLitElement } from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import { browserProxyFactory, WebStoreLinkClicked } from './zero_state_promo.mojom-webui.js';
+import { getCss } from './zero_state_promo_app.css.js';
+import { getHtml } from './zero_state_promo_app.html.js';
+export class ZeroStatePromoAppElement extends CrLitElement {
+    static get is() {
+        return 'extensions-zero-state-promo-app';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            showPlainLinksUi_: { type: Boolean },
+            showChipsV1_: { type: Boolean },
+            showChipsV2_: { type: Boolean },
+            showChipsV3_: { type: Boolean },
+            webuiRoundedIconsEnabled_: { type: Boolean },
+        };
+    }
+    apiProxy_ = browserProxyFactory.getInstance();
+    customHelpBubbleHandler_ = CustomHelpBubbleProxyImpl.getInstance().getHandler();
+    #showPlainLinksUi__accessor_storage = loadTimeData.getBoolean('showPlainLinksUi');
+    get showPlainLinksUi_() { return this.#showPlainLinksUi__accessor_storage; }
+    set showPlainLinksUi_(value) { this.#showPlainLinksUi__accessor_storage = value; }
+    #showChipsV1__accessor_storage = loadTimeData.getBoolean('showChipsUiV1');
+    get showChipsV1_() { return this.#showChipsV1__accessor_storage; }
+    set showChipsV1_(value) { this.#showChipsV1__accessor_storage = value; }
+    #showChipsV2__accessor_storage = loadTimeData.getBoolean('showChipsUiV2');
+    get showChipsV2_() { return this.#showChipsV2__accessor_storage; }
+    set showChipsV2_(value) { this.#showChipsV2__accessor_storage = value; }
+    #showChipsV3__accessor_storage = loadTimeData.getBoolean('showChipsUiV3');
+    get showChipsV3_() { return this.#showChipsV3__accessor_storage; }
+    set showChipsV3_(value) { this.#showChipsV3__accessor_storage = value; }
+    #webuiRoundedIconsEnabled__accessor_storage = loadTimeData.getBoolean('webuiRoundedIconsEnabled');
+    get webuiRoundedIconsEnabled_() { return this.#webuiRoundedIconsEnabled__accessor_storage; }
+    set webuiRoundedIconsEnabled_(value) { this.#webuiRoundedIconsEnabled__accessor_storage = value; }
+    onChromeWebStoreButtonClick_() {
+        this.apiProxy_.handler.launchWebStoreLink(WebStoreLinkClicked.kDiscoverExtension);
+        this.customHelpBubbleHandler_.notifyUserAction(CustomHelpBubbleUserAction.kAction);
+    }
+    onCouponsButtonClick_() {
+        this.apiProxy_.handler.launchWebStoreLink(WebStoreLinkClicked.kCoupon);
+        this.customHelpBubbleHandler_.notifyUserAction(CustomHelpBubbleUserAction.kAction);
+    }
+    onWritingButtonClick_() {
+        this.apiProxy_.handler.launchWebStoreLink(WebStoreLinkClicked.kWriting);
+        this.customHelpBubbleHandler_.notifyUserAction(CustomHelpBubbleUserAction.kAction);
+    }
+    onProductivityButtonClick_() {
+        this.apiProxy_.handler.launchWebStoreLink(WebStoreLinkClicked.kProductivity);
+        this.customHelpBubbleHandler_.notifyUserAction(CustomHelpBubbleUserAction.kAction);
+    }
+    onAiButtonClick_() {
+        this.apiProxy_.handler.launchWebStoreLink(WebStoreLinkClicked.kAi);
+        this.customHelpBubbleHandler_.notifyUserAction(CustomHelpBubbleUserAction.kAction);
+    }
+    onDismissButtonClick_() {
+        this.customHelpBubbleHandler_.notifyUserAction(CustomHelpBubbleUserAction.kDismiss);
+    }
+}
+customElements.define(ZeroStatePromoAppElement.is, ZeroStatePromoAppElement);

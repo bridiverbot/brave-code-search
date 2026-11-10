@@ -1,0 +1,72 @@
+import { html } from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+    return html `<!--_html_template_start_--><style include="cr-hidden-style settings-shared site-settings-shared"></style>
+
+
+<settings-subpage page-title="$i18n{siteSettingsProtectedContent}"
+    search-label="$i18n{siteSettingsAllSitesSearch}"
+    search-icon="settings20:filter-list"
+    search-term="{{searchTerm}}" route-path$="[[routePath]]">
+
+  <div class="radio-group">
+    <div id="description" class="secondary">
+      $i18n{siteSettingsProtectedContentDescription}
+    </div>
+    <h2>$i18n{siteSettingsDefaultBehavior}</h2>
+    <div class="secondary radio-sub-heading">
+      $i18n{siteSettingsDefaultBehaviorDescription}
+    </div>
+    <settings-radio-group
+        pref-key="webkit.webprefs.encrypted_media_enabled"
+        selectable-elements="settings-collapse-radio-button">
+      <settings-collapse-radio-button no-collapse
+          id="allowedButton"
+          pref-key="webkit.webprefs.encrypted_media_enabled"
+          label="$i18n{siteSettingsProtectedContentAllowed}"
+
+          sub-label="$i18n{siteSettingsProtectedContentAllowedSubLabel}"
+
+          name="true"
+          disabled$="[[isGuest_]]"
+          icon="privacy:sync-saved-locally">
+      </settings-collapse-radio-button>
+      <settings-collapse-radio-button no-collapse
+          id="blockedButton"
+          pref-key="webkit.webprefs.encrypted_media_enabled"
+          label="$i18n{siteSettingsProtectedContentBlocked}"
+          sub-label="$i18n{siteSettingsProtectedContentBlockedSubLabel}"
+          name="false"
+          disabled$="[[isGuest_]]"
+          icon="privacy:sync-saved-locally-off">
+      </settings-collapse-radio-button>
+    </settings-radio-group>
+  </div>
+
+  <settings-category-default-radio-group
+      header="$i18n{siteSettingsProtectedContentIdentifiers}"
+      description="$i18n{siteSettingsProtectedContentIdentifiersExplanation}"
+      category="[[contentSettingsTypesEnum_.PROTECTED_CONTENT]]"
+      block-option-label=
+        "$i18n{siteSettingsProtectedContentIdentifiersBlocked}"
+      block-option-sub-label=
+        "$i18n{siteSettingsProtectedContentIdentifiersBlockedSubLabel}"
+      block-option-icon="privacy:sync-saved-locally-off"
+      allow-option-label=
+        "$i18n{siteSettingsProtectedContentIdentifiersAllowed}"
+
+      allow-option-icon="privacy:sync-saved-locally"
+      disabled$="[[isGuest_]]">
+  </settings-category-default-radio-group>
+  <category-setting-exceptions
+      description="$i18n{siteSettingsCustomizedBehaviorsDescriptionShort}"
+      category="[[contentSettingsTypesEnum_.PROTECTED_CONTENT]]"
+      allow-header=
+        "$i18n{siteSettingsProtectedContentIdentifiersAllowedExceptions}"
+      block-header=
+        "$i18n{siteSettingsProtectedContentIdentifiersBlockedExceptions}"
+      search-filter="[[searchTerm]]">
+  </category-setting-exceptions>
+
+</settings-subpage>
+<!--_html_template_end_-->`;
+}

@@ -1,0 +1,6 @@
+import { css } from '//resources/lit/v3_0/lit.rollup.js';
+import '//resources/cr_elements/cr_shared_vars.css.js';
+let instance = null;
+export function getCss() {
+    return instance || (instance = [...[], css `:host{--topic-hero-pattern-fill:rgba(255,255,255,0.48);--topic-hero-surface:var(--cr-fallback-color-surface1,#fff);background-color:var(--topic-hero-background-color,var(--google-blue-100));display:block;height:320px;inset-block-start:0;inset-inline:0;overflow:hidden;pointer-events:none;position:absolute}.pattern{inset:0;opacity:0.95;position:absolute}.pattern-shape{fill:var(--topic-hero-pattern-fill)}.pattern-icon{fill:var(--cr-primary-text-color);user-select:none}.gradient-overlay{background:linear-gradient(to bottom,transparent 0%,color-mix(in srgb,var(--topic-hero-surface) 12%,transparent) 12%,color-mix(in srgb,var(--topic-hero-surface) 22%,transparent) 30%,color-mix(in srgb,var(--topic-hero-surface) 52%,transparent) 50%,color-mix(in srgb,var(--topic-hero-surface) 82%,transparent) 70%,color-mix(in srgb,var(--topic-hero-surface) 96%,transparent) 90%,var(--topic-hero-surface) 100%);inset:0;position:absolute}@media (prefers-color-scheme:dark){:host{--topic-hero-pattern-fill:rgba(255,255,255,0.24)}}`]);
+}

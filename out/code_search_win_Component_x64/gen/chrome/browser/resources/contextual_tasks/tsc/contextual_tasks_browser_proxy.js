@@ -1,0 +1,40 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { ExtensionPageCallbackRouter, ExtensionPageHandlerFactory, ExtensionPageHandlerRemote, PageCallbackRouter, PageHandlerFactory, PageHandlerRemote } from './contextual_tasks.mojom-webui.js';
+let instance = null;
+export class BrowserProxyImpl {
+    callbackRouter;
+    handler;
+    constructor() {
+        this.callbackRouter = new PageCallbackRouter();
+        this.handler = new PageHandlerRemote();
+        const factory = PageHandlerFactory.getRemote();
+        factory.createPageHandler(this.callbackRouter.$.bindNewPipeAndPassRemote(), this.handler.$.bindNewPipeAndPassReceiver());
+    }
+    static getInstance() {
+        return instance || (instance = new BrowserProxyImpl());
+    }
+    static setInstance(proxy) {
+        instance = proxy;
+    }
+}
+export class ExtensionBrowserProxyImpl {
+    callbackRouter;
+    handler;
+    constructor() {
+        this.callbackRouter = new ExtensionPageCallbackRouter();
+        this.handler = new ExtensionPageHandlerRemote();
+        const factory = ExtensionPageHandlerFactory.getRemote();
+        factory.createExtensionPageHandler(this.callbackRouter.$.bindNewPipeAndPassRemote(), this.handler
+            .$.bindNewPipeAndPassReceiver());
+    }
+    static getInstance() {
+        return window.__extensionBrowserProxyInstance ||
+            (window.__extensionBrowserProxyInstance =
+                new ExtensionBrowserProxyImpl());
+    }
+    static setInstance(proxy) {
+        window.__extensionBrowserProxyInstance = proxy;
+    }
+}

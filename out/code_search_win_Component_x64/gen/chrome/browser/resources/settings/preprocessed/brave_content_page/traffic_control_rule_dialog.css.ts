@@ -1,0 +1,8 @@
+import {css, CSSResultGroup} from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import {getCss as getCrSharedStyleLit} from '//resources/cr_elements/cr_shared_style_lit.css.js';
+import '//resources/cr_elements/cr_shared_vars.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[getCrSharedStyleLit()], css`.flex{flex:1}.error-message{color:var(--leo-color-schemes-error)}cr-dialog [slot='title']{color:var(--leo-color-text-primary);font:var(--leo-font-heading-h3)}.edit-subsection-label{color:var(--leo-color-text-primary);font:var(--leo-font-default-semibold)}.field-description{color:var(--leo-color-text-secondary);font:var(--leo-font-default-regular)}.editing-rule{display:flex;flex-direction:column;gap:var(--leo-spacing-xl)}.field-section.enabled-row{display:flex;align-items:center;justify-content:space-between;gap:var(--leo-spacing-xl)}.field-section cr-textarea{--cr-input-background-color:transparent;--cr-input-border-bottom:none;--cr-input-border-radius:var(--leo-radius-m);--cr-input-underline-display:none;--cr-textarea-autogrow-max-height:calc(1lh * 6);border:1px solid var(--leo-color-divider-subtle);border-radius:var(--leo-radius-m);box-sizing:border-box;display:block;margin-block-start:var(--leo-spacing-m);width:100%}.field-section settings-dropdown-menu{--md-select-width:100%;display:block;margin-block:var(--leo-spacing-m);width:100%}.field-hint{color:var(--leo-color-text-secondary);font:var(--leo-font-small-regular)}.field-hint .filter-example{font:var(--leo-font-monospace-small);color:var(--leo-color-text-primary)}`]);
+}
