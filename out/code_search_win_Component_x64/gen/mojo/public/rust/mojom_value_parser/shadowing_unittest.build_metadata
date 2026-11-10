@@ -1,0 +1,10 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../../mojo/public/rust/mojom_value_parser/test_util/shadowing_unittest.test-mojom",
+    "../../../../../../../mojo/public/rust/mojom_value_parser/test_util/shadowing_unittest_enum.test-mojom",
+    "../../../../../../../mojo/public/rust/mojom_value_parser/test_util/shadowing_unittest_union.test-mojom"
+  ]
+}

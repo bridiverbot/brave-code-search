@@ -1,0 +1,13 @@
+{
+  "deps": [
+    "../../../../gamepad/public/mojom/mojom.build_metadata",
+    "../vr_service.build_metadata",
+    "../../../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../../../skia/public/mojom/mojom.build_metadata",
+    "../../../../../ui/gfx/geometry/mojom/mojom.build_metadata",
+    "../../../../../ui/gfx/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../device/vr/public/mojom/test/xr_test_hook.test-mojom"
+  ]
+}
