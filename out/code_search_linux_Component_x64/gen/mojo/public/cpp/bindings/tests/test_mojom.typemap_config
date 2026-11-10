@@ -1,0 +1,40 @@
+[
+  {
+    "traits_headers": [
+      "mojo/public/cpp/bindings/tests/default_construct_unittest_mojom_traits.h"
+    ],
+    "types": [
+      {
+        "cpp": "::mojo::test::default_construct::TestStruct",
+        "default_constructible": false,
+        "mojom": "mojo.test.default_construct.mojom.TestStruct"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "mojo/public/cpp/bindings/tests/fixed_array_size_unittest_mojom_traits.h"
+    ],
+    "types": [
+      {
+        "cpp": "::mojo::test::fixed_array_size_unittest::TypemappedStruct3",
+        "mojom": "mojo.test.fixed_array_size_unittest.mojom.Struct3"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "mojo/public/cpp/bindings/tests/result_response_unittest_mojom_traits.h"
+    ],
+    "types": [
+      {
+        "cpp": "::mojo::test::MappedResultValue",
+        "mojom": "mojo.test.mojom.ResultValue"
+      },
+      {
+        "cpp": "::mojo::test::MappedResultError",
+        "mojom": "mojo.test.mojom.ResultError"
+      }
+    ]
+  }
+]

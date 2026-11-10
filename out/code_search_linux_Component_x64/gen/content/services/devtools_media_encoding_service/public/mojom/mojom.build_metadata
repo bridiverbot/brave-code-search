@@ -1,0 +1,9 @@
+{
+  "deps": [
+    "../../../../../media/mojo/mojom/mojom.build_metadata",
+    "../../../../../sandbox/policy/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../content/services/devtools_media_encoding_service/public/mojom/devtools_media_encoding_service.mojom"
+  ]
+}

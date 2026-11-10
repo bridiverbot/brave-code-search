@@ -1,0 +1,8 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../../../mojo/public/rust/bindings/test/test_util/bindings_unittests.test-mojom"
+  ]
+}

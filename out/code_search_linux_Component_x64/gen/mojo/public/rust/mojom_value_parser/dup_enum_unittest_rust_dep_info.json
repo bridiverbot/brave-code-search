@@ -1,0 +1,8 @@
+[
+  {
+    "mojom_sources": [
+      "mojo/public/rust/mojom_value_parser/test_util/dup_enum_unittest.test-mojom"
+    ],
+    "target_name": "//mojo/public/rust/mojom_value_parser:dup_enum_unittest_rust"
+  }
+]

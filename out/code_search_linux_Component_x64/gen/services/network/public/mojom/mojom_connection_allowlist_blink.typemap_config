@@ -1,0 +1,20 @@
+[
+  {
+    "traits_headers": [
+      "services/network/public/cpp/connection_allowlist_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:connection_allowlist"
+    ],
+    "types": [
+      {
+        "cpp": "::network::ConnectionAllowlist",
+        "mojom": "network.mojom.ConnectionAllowlist"
+      },
+      {
+        "cpp": "::network::ConnectionAllowlists",
+        "mojom": "network.mojom.ConnectionAllowlists"
+      }
+    ]
+  }
+]

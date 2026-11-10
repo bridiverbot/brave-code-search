@@ -1,0 +1,8 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../../../mojo/public/rust/mojom_value_parser/test_util/parser_unittests.test-mojom"
+  ]
+}

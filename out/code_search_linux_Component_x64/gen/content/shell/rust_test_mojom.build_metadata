@@ -1,0 +1,8 @@
+{
+  "deps": [
+
+  ],
+  "sources": [
+    "../../../../../content/shell/common/rust_test.test-mojom"
+  ]
+}

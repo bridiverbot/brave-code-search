@@ -1,0 +1,4 @@
+// Copyright 2023 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{XRDeviceId}from"./xr_device.mojom-webui.js";export function deviceIdToString(deviceId){switch(deviceId){case XRDeviceId.WEB_TEST_DEVICE_ID:return"Web Test Device";case XRDeviceId.FAKE_DEVICE_ID:return"Fake Device";case XRDeviceId.ORIENTATION_DEVICE_ID:return"Orientation Device";case XRDeviceId.OPENXR_DEVICE_ID:return"OpenXR Device";default:return""}}

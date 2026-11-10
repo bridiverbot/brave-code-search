@@ -1,0 +1,253 @@
+[
+  {
+    "traits_headers": [
+      "services/network/public/cpp/cert_verify_result_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::CertVerifyResult",
+        "mojom": "network.mojom.CertVerifyResult"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/hash_value_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::SHA256HashValue",
+        "mojom": "network.mojom.SHA256HashValue"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/net_ipc_param_traits.h",
+      "services/network/public/cpp/network_param_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::HttpVersion",
+        "mojom": "network.mojom.HttpVersion"
+      },
+      {
+        "cpp": "::net::ProxyServer",
+        "mojom": "network.mojom.ProxyServer"
+      },
+      {
+        "cpp": "::net::ProxyServer::Scheme",
+        "mojom": "network.mojom.ProxyScheme"
+      },
+      {
+        "cpp": "::net::ResolveErrorInfo",
+        "mojom": "network.mojom.ResolveErrorInfo"
+      },
+      {
+        "cpp": "::scoped_refptr\u003C::net::SSLCertRequestInfo>",
+        "mojom": "network.mojom.SSLCertRequestInfo",
+        "nullable_is_same_type": true
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/ssl_info_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::SSLInfo",
+        "mojom": "network.mojom.SSLInfo"
+      },
+      {
+        "cpp": "::net::SSLInfo::HandshakeType",
+        "mojom": "network.mojom.SSLInfoHandshakeType"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/auth_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::AuthChallengeInfo",
+        "mojom": "network.mojom.AuthChallengeInfo"
+      },
+      {
+        "cpp": "::net::AuthCredentials",
+        "mojom": "network.mojom.AuthCredentials"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/ct_policy_status_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::ct::CTPolicyCompliance",
+        "mojom": "network.mojom.CTPolicyCompliance"
+      },
+      {
+        "cpp": "::net::ct::CTRequirementsStatus",
+        "mojom": "network.mojom.CTRequirementsStatus"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/network_param_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::HostPortPair",
+        "mojom": "network.mojom.HostPortPair"
+      },
+      {
+        "cpp": "::net::NetLogSource",
+        "mojom": "network.mojom.NetLogSource"
+      },
+      {
+        "cpp": "::net::ProxyChain",
+        "mojom": "network.mojom.ProxyChain"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/http_response_headers_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::scoped_refptr\u003C::net::HttpResponseHeaders>",
+        "mojom": "network.mojom.HttpResponseHeaders",
+        "nullable_is_same_type": true
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/ocsp_verify_result_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::bssl::OCSPVerifyResult::ResponseStatus",
+        "mojom": "network.mojom.OCSPVerifyResultResponseStatus"
+      },
+      {
+        "cpp": "::bssl::OCSPRevocationStatus",
+        "mojom": "network.mojom.OCSPRevocationStatus"
+      },
+      {
+        "cpp": "::bssl::OCSPVerifyResult",
+        "mojom": "network.mojom.OCSPVerifyResult"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/signed_certificate_timestamp_and_status_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::SignedCertificateTimestampAndStatus",
+        "mojom": "network.mojom.SignedCertificateTimestampAndStatus"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/signed_certificate_timestamp_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::ct::DigitallySigned",
+        "mojom": "network.mojom.DigitallySigned"
+      },
+      {
+        "cpp": "::net::ct::DigitallySigned::HashAlgorithm",
+        "mojom": "network.mojom.HashAlgorithm"
+      },
+      {
+        "cpp": "::net::ct::SignedCertificateTimestamp::Version",
+        "mojom": "network.mojom.SCTVersion"
+      },
+      {
+        "cpp": "::net::ct::SignedCertificateTimestamp::Origin",
+        "mojom": "network.mojom.SCTOrigin"
+      },
+      {
+        "cpp": "::net::ct::DigitallySigned::SignatureAlgorithm",
+        "mojom": "network.mojom.SignatureAlgorithm"
+      },
+      {
+        "cpp": "::scoped_refptr\u003C::net::ct::SignedCertificateTimestamp>",
+        "mojom": "network.mojom.SignedCertificateTimestamp",
+        "nullable_is_same_type": true
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/sct_status_flags_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::net::ct::SCTVerifyStatus",
+        "mojom": "network.mojom.SCTVerifyStatus"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "services/network/public/cpp/x509_certificate_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//services/network/public/cpp:network_param_mojom_support"
+    ],
+    "types": [
+      {
+        "cpp": "::scoped_refptr\u003C::net::X509Certificate>",
+        "mojom": "network.mojom.X509Certificate",
+        "nullable_is_same_type": true
+      }
+    ]
+  }
+]
