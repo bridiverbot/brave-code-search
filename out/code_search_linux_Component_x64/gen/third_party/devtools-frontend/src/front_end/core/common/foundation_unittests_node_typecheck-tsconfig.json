@@ -1,0 +1,92 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "composite": false,
+    "declaration": false,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": false,
+    "inlineSources": true,
+    "lib": [
+      "ES2023",
+      "ES2024.Promise",
+      "ESNext.Iterator",
+      "ESNext.Collection",
+      "ESNext.Array"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "outDir": ".",
+    "preserveConstEnums": true,
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2023",
+    "typeRoots": [
+      "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types",
+      "../../../../../../../../../third_party/devtools-frontend/src/node_modules"
+    ],
+    "types": [
+      "node",
+      "undici-types"
+    ],
+    "useUnknownInCatchVariables": false
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Base64.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/CharacterIdMap.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Color.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/ColorConverter.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/ColorUtils.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Console.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Debouncer.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/EventTarget.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Gzip.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Lazy.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/MapWithDefault.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Mutex.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Object.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/ParsedURL.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Progress.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/ResolverBase.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/ResourceType.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Revealer.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/SegmentedRange.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/SettingRegistration.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Settings.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/SimpleHistoryManager.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Srcset.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/StringOutputStream.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/TextDictionary.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Throttler.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/Trie.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/common/VersionController.test.ts"
+  ],
+  "references": [
+    {
+      "path": "bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../root/bundle-tsconfig.ref.json"
+    }
+  ]
+}

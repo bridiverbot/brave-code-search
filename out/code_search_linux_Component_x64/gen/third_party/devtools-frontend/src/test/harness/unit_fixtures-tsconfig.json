@@ -1,0 +1,74 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "composite": false,
+    "declaration": false,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": false,
+    "inlineSources": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2023",
+      "ES2024.Promise",
+      "ESNext.Iterator",
+      "ESNext.Collection",
+      "ESNext.Array"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "outDir": ".",
+    "preserveConstEnums": true,
+    "rootDir": "../../../../../../../../third_party/devtools-frontend/src/test/harness",
+    "rootDirs": [
+      "../../../../../../../../third_party/devtools-frontend/src/",
+      "../../"
+    ],
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "esnext",
+    "typeRoots": [
+      "../../../../../../../../third_party/devtools-frontend/src/node_modules/@types",
+      "../../../../../../../../third_party/devtools-frontend/src/node_modules"
+    ],
+    "types": [
+
+    ],
+    "useUnknownInCatchVariables": false
+  },
+  "files": [
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/after_each_hook_fail.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/before_each_hook_fail.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/duplicate.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/errors.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/get_test_id.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/global_after_hook_fail.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/global_before_hook_fail.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/hooks.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/multi_logs.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/screenshot_diff.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/screenshot_retry.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/sinon_restore.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/snapshot.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/unit.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/harness/unit/unit_2.test.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../front_end/testing/testing-tsconfig.ref.json"
+    }
+  ]
+}

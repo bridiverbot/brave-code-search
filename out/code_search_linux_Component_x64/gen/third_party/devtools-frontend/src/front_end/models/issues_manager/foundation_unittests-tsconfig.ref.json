@@ -1,0 +1,57 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/ConnectionAllowlistIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/DOMIssuesManager.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/DeprecationIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/ElementAccessibilityIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/FederatedAuthRequestIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/FederatedAuthUserInfoRequestIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/GenericIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/Issue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/IssueAggregator.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/IssueResolver.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/IssuesManager.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/LazyLoadImageIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/MarkdownIssueDescription.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/PermissionElementIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/PropertyRuleIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/RelatedIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/SRIMessageSignatureIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/SelectivePermissionsInterventionIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/SharedDictionaryIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/StylesheetLoadingIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/UnencodedDigestIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/issues_manager/WebInstallIssue.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../generated/generated-tsconfig.ref.json"
+    },
+    {
+      "path": "../../testing/testing-tsconfig.ref.json"
+    }
+  ]
+}
