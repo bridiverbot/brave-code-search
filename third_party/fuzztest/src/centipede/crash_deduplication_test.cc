@@ -1,0 +1,1690 @@
+// Copyright 2025 The Centipede Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "./centipede/crash_deduplication.h"
+
+#include <chrono>  // NOLINT
+#include <cstdlib>
+#include <filesystem>  // NOLINT
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
+
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+#include "absl/container/flat_hash_map.h"
+#include "absl/log/log_entry.h"
+#include "absl/log/log_sink.h"
+#include "absl/log/log_sink_registry.h"
+#include "absl/status/status.h"
+#include "absl/strings/str_format.h"
+#include "absl/strings/str_join.h"
+#include "absl/time/clock.h"
+#include "absl/time/clock_interface.h"
+#include "absl/time/simulated_clock.h"
+#include "absl/time/time.h"
+#include "absl/types/span.h"
+#include "./centipede/centipede_callbacks.h"
+#include "./centipede/crash_deduplication_test_util.h"
+#include "./centipede/crash_summary.h"
+#include "./centipede/environment.h"
+#include "./centipede/runner_result.h"
+#include "./centipede/stop.h"
+#include "./centipede/util.h"
+#include "./centipede/workdir.h"
+#include "./common/defs.h"
+#include "./common/temp_dir.h"
+
+namespace fuzztest::internal {
+namespace {
+
+using ::testing::AllOf;
+using ::testing::AnyOf;
+using ::testing::ContainsRegex;
+using ::testing::ElementsAre;
+using ::testing::EndsWith;
+using ::testing::FieldsAre;
+using ::testing::HasSubstr;
+using ::testing::IsEmpty;
+using ::testing::MatchesRegex;
+using ::testing::Pair;
+using ::testing::UnorderedElementsAre;
+
+class LogCapture : public absl::LogSink {
+ public:
+  LogCapture() { absl::AddLogSink(this); }
+  ~LogCapture() override { absl::RemoveLogSink(this); }
+
+  void Send(const absl::LogEntry& entry) override {
+    captured_log_.emplace_back(entry.text_message());
+  }
+
+  std::string FullLog() const { return absl::StrJoin(captured_log_, "\n"); }
+
+ private:
+  std::vector<std::string> captured_log_;
+};
+
+std::string SetContentsAndGetPath(const std::filesystem::path& dir,
+                                  std::string_view file_name,
+                                  std::string_view contents) {
+  const std::string file_path = dir / file_name;
+  WriteToLocalFile(file_path, contents);
+  return file_path;
+}
+
+TEST(GetCrashesFromWorkdirTest, ReturnsOneCrashPerCrashSignature) {
+  TempDir test_dir;
+  const std::string workdir_path = test_dir.path();
+  WorkDir workdir{workdir_path, "binary_name", "binary_hash",
+                  /*my_shard_index=*/0};
+
+  const std::filesystem::path crashes0 =
+      workdir.CrashReproducerDirPaths().Shard(0);
+  const std::filesystem::path crash_metadata0 =
+      workdir.CrashMetadataDirPaths().Shard(0);
+  const std::filesystem::path crashes1 =
+      workdir.CrashReproducerDirPaths().Shard(1);
+  const std::filesystem::path crash_metadata1 =
+      workdir.CrashMetadataDirPaths().Shard(1);
+  std::filesystem::create_directories(crashes0);
+  std::filesystem::create_directories(crash_metadata0);
+  std::filesystem::create_directories(crashes1);
+  std::filesystem::create_directories(crash_metadata1);
+
+  auto input1_path = SetContentsAndGetPath(crashes0, "isig1", "input1");
+  SetContentsAndGetPath(crash_metadata0, "isig1.sig", "csig1");
+  SetContentsAndGetPath(crash_metadata0, "isig1.desc", "desc1");
+
+  auto input2_path = SetContentsAndGetPath(crashes1, "isig2", "input2");
+  SetContentsAndGetPath(crash_metadata1, "isig2.sig", "csig2");
+  SetContentsAndGetPath(crash_metadata1, "isig2.desc", "desc2");
+
+  auto input3_path = SetContentsAndGetPath(crashes1, "isig3", "input3");
+  SetContentsAndGetPath(crash_metadata1, "isig3.sig", "csig1");
+  SetContentsAndGetPath(crash_metadata1, "isig3.desc", "desc1");
+
+  // `isig4` lacks `.sig` and `.desc` files and should be ignored.
+  SetContentsAndGetPath(crashes1, "isig4", "input4");
+
+  // `isig5` has empty crash signature and should be ignored.
+  auto input5_path = SetContentsAndGetPath(crashes1, "isig5", "input5");
+  SetContentsAndGetPath(crash_metadata1, "isig5.sig", "");
+  SetContentsAndGetPath(crash_metadata1, "isig5.desc", "desc5");
+
+  // `isig6` has empty crash description and should be ignored.
+  auto input6_path = SetContentsAndGetPath(crashes1, "isig6", "input6");
+  SetContentsAndGetPath(crash_metadata1, "isig6.sig", "csig6");
+  SetContentsAndGetPath(crash_metadata1, "isig6.desc", "");
+
+  const auto crashes = GetCrashesFromWorkdir(workdir, /*total_shards=*/2);
+  EXPECT_THAT(
+      crashes,
+      UnorderedElementsAre(
+          Pair("csig1", AnyOf(FieldsAre("isig1", "desc1", input1_path),
+                              FieldsAre("isig3", "desc1", input3_path))),
+          Pair("csig2", FieldsAre("isig2", "desc2", input2_path))));
+}
+
+TEST(GetCrashesFromWorkdirTest, FailsOnEmptyCrashSignatureIfEnvVarSet) {
+  TempDir test_dir;
+  const std::string workdir_path = test_dir.path();
+  WorkDir workdir{workdir_path, "binary_name", "binary_hash",
+                  /*my_shard_index=*/0};
+
+  const std::filesystem::path crashes =
+      workdir.CrashReproducerDirPaths().Shard(0);
+  const std::filesystem::path crash_metadata =
+      workdir.CrashMetadataDirPaths().Shard(0);
+  std::filesystem::create_directories(crashes);
+  std::filesystem::create_directories(crash_metadata);
+
+  auto input_path = SetContentsAndGetPath(crashes, "isig", "input");
+  SetContentsAndGetPath(crash_metadata, "isig.sig", "");
+  SetContentsAndGetPath(crash_metadata, "isig.desc", "desc");
+
+  setenv("FUZZTEST_FAIL_ON_EMPTY_CRASH_METADATA", "1", /*overwrite=*/1);
+  EXPECT_DEATH(GetCrashesFromWorkdir(workdir, /*total_shards=*/1),
+               "Empty crash signature");
+  unsetenv("FUZZTEST_FAIL_ON_EMPTY_CRASH_METADATA");
+}
+
+TEST(GetCrashesFromWorkdirTest, FailsOnEmptyCrashDescriptionIfEnvVarSet) {
+  TempDir test_dir;
+  const std::string workdir_path = test_dir.path();
+  WorkDir workdir{workdir_path, "binary_name", "binary_hash",
+                  /*my_shard_index=*/0};
+
+  const std::filesystem::path crashes =
+      workdir.CrashReproducerDirPaths().Shard(0);
+  const std::filesystem::path crash_metadata =
+      workdir.CrashMetadataDirPaths().Shard(0);
+  std::filesystem::create_directories(crashes);
+  std::filesystem::create_directories(crash_metadata);
+
+  auto input_path = SetContentsAndGetPath(crashes, "isig", "input");
+  SetContentsAndGetPath(crash_metadata, "isig.sig", "csig");
+  SetContentsAndGetPath(crash_metadata, "isig.desc", "");
+
+  setenv("FUZZTEST_FAIL_ON_EMPTY_CRASH_METADATA", "1", /*overwrite=*/1);
+  EXPECT_DEATH(GetCrashesFromWorkdir(workdir, /*total_shards=*/1),
+               "Empty crash description");
+  unsetenv("FUZZTEST_FAIL_ON_EMPTY_CRASH_METADATA");
+}
+
+struct FileAndContents {
+  std::string basename;
+  std::string contents;
+
+  template <typename Sink>
+  friend void AbslStringify(Sink& sink, const FileAndContents& f) {
+    absl::Format(&sink, "%s: %s", f.basename, f.contents);
+  }
+};
+
+std::vector<FileAndContents> ReadFiles(const std::filesystem::path& dir) {
+  std::vector<FileAndContents> files;
+  for (const auto& f : std::filesystem::directory_iterator(dir)) {
+    std::string contents;
+    ReadFromLocalFile(f.path().c_str(), contents);
+    files.push_back(FileAndContents{std::filesystem::path(f).filename(),
+                                    std::move(contents)});
+  }
+  return files;
+}
+
+class OrganizeCrashingInputsTest : public ::testing::Test {
+ protected:
+  OrganizeCrashingInputsTest()
+      : crashing_dir_(test_dir_.path() / "crashing"),
+        regression_dir_(test_dir_.path() / "regression"),
+        incubating_dir_(test_dir_.path() / "incubating"),
+        new_crashes_dir_(test_dir_.path() / "new_crashes") {
+    std::filesystem::create_directories(crashing_dir_);
+    std::filesystem::create_directories(regression_dir_);
+    std::filesystem::create_directories(incubating_dir_);
+    std::filesystem::create_directories(new_crashes_dir_);
+  }
+
+  const std::filesystem::path& crashing_dir() const { return crashing_dir_; }
+  const std::filesystem::path& regression_dir() const {
+    return regression_dir_;
+  }
+  const std::filesystem::path& incubating_dir() const {
+    return incubating_dir_;
+  }
+  const std::filesystem::path& new_crashes_dir() const {
+    return new_crashes_dir_;
+  }
+  const Environment& env() const { return env_; }
+  CrashSummary& crash_summary() { return crash_summary_; }
+  StopCondition& stop_condition() { return stop_condition_; }
+
+  absl::Status OrganizeCrashingInputs(
+      const std::filesystem::path& regression_dir,
+      const std::filesystem::path& crashing_dir, const Environment& env,
+      CentipedeCallbacksFactory& callbacks_factory,
+      const absl::flat_hash_map<std::string, CrashDetails>&
+          new_crashes_by_signature,
+      CrashSummary& crash_summary,
+      absl::Duration regression_ttl = absl::Hours(24 * 7),
+      absl::Clock& clock = absl::Clock::GetRealClock()) {
+    return ::fuzztest::internal::OrganizeCrashingInputs(
+        regression_dir, crashing_dir, incubating_dir_, env, callbacks_factory,
+        new_crashes_by_signature, crash_summary, stop_condition_,
+        regression_ttl, clock);
+  }
+
+ private:
+  TempDir test_dir_;
+  std::filesystem::path crashing_dir_;
+  std::filesystem::path regression_dir_;
+  std::filesystem::path incubating_dir_;
+  std::filesystem::path new_crashes_dir_;
+  Environment env_;
+  CrashSummary crash_summary_{"binary_id", "fuzz_test"};
+  StopCondition stop_condition_;
+};
+
+TEST_F(OrganizeCrashingInputsTest, CreatesDirectoriesIfMissing) {
+  TempDir test_dir;
+  const std::filesystem::path crashing_dir = test_dir.path() / "crashing";
+  const std::filesystem::path regression_dir = test_dir.path() / "regression";
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir, crashing_dir, env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  const std::filesystem::directory_entry crashing_dir_entry{crashing_dir};
+  const std::filesystem::directory_entry regression_dir_entry{regression_dir};
+  EXPECT_TRUE(
+      crashing_dir_entry.exists() && crashing_dir_entry.is_directory() &&
+      regression_dir_entry.exists() && regression_dir_entry.is_directory());
+}
+
+TEST_F(OrganizeCrashingInputsTest, DeletesOldStyleCrashes) {
+  SetContentsAndGetPath(crashing_dir(), "isig", "input");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input", {"csig", "desc"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest, KeepsNewStyleCrashFileIfSignatureUnchanged) {
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input", {"csig", "desc"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug-csig-isig", "input")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(incubating_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, AllOf(HasSubstr("Total crashes: 1"),
+                                  HasSubstr("Crash ID   : bug-csig-isig"),
+                                  HasSubstr("Category   : desc"),
+                                  HasSubstr("Signature  : csig"),
+                                  HasSubstr("Description: desc")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, AddsNewCrashIfCrashSignatureChanges) {
+  SetContentsAndGetPath(crashing_dir(), "bug-csig_old-isig", "input");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input", {"csig_new", "desc"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(
+                  FieldsAre("bug-csig_old-isig", "input"),
+                  FieldsAre(MatchesRegex("[a-f0-9]+-csig_new-isig"), "input")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(incubating_dir()), IsEmpty());
+  EXPECT_THAT(
+      crash_report,
+      AllOf(HasSubstr("Total crashes: 1"),
+            ContainsRegex("Crash ID   : [a-f0-9]+-csig_new-isig"),
+            HasSubstr("Category   : desc"), HasSubstr("Signature  : csig_new"),
+            HasSubstr("Description: desc")));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       UpdatesModificationTimeForReproducibleCrashes) {
+  const auto reproducible_input_path =
+      SetContentsAndGetPath(crashing_dir(), "bug1-csig1-isig1", "repro1");
+  const auto irreproducible_input_path =
+      SetContentsAndGetPath(crashing_dir(), "bug2-csig2-isig2", "irrepro2");
+  const auto reproducible_mtime_before =
+      std::filesystem::last_write_time(reproducible_input_path);
+  const auto irreproducible_mtime_before =
+      std::filesystem::last_write_time(irreproducible_input_path);
+
+  absl::SleepFor(absl::Seconds(1));
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"repro1", {"csig1", "desc1"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_GT(std::filesystem::last_write_time(reproducible_input_path),
+            reproducible_mtime_before);
+  EXPECT_EQ(std::filesystem::last_write_time(irreproducible_input_path),
+            irreproducible_mtime_before);
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       KeepsOldFilesWhenDeduplicatingToSameSignature) {
+  SetContentsAndGetPath(crashing_dir(), "bug1-csig1-isig1", "input1");
+  SetContentsAndGetPath(crashing_dir(), "bug2-csig2-isig2", "input2");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input1", {"csig", "desc"}},
+                                       {"input2", {"csig", "desc"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(
+      ReadFiles(crashing_dir()),
+      AnyOf(UnorderedElementsAre(
+                FieldsAre("bug1-csig1-isig1", "input1"),
+                FieldsAre("bug2-csig2-isig2", "input2"),
+                FieldsAre(MatchesRegex("[a-f0-9]+-csig-isig1"), "input1")),
+            UnorderedElementsAre(
+                FieldsAre("bug1-csig1-isig1", "input1"),
+                FieldsAre("bug2-csig2-isig2", "input2"),
+                FieldsAre(MatchesRegex("[a-f0-9]+-csig-isig2"), "input2"))));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(
+      crash_report,
+      AllOf(HasSubstr("Total crashes: 1"), HasSubstr("Category   : desc"),
+            HasSubstr("Signature  : csig"), HasSubstr("Description: desc")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, KeepsFlakyCrashAndUpdatesModificationTime) {
+  const auto input_path =
+      SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  const auto mtime_before = std::filesystem::last_write_time(input_path);
+
+  absl::SleepFor(absl::Seconds(1));
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto new_input_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig", "input");
+  new_crashes_by_signature["csig"] = {"isig", "desc", new_input_path};
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug-csig-isig", "input")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, AllOf(HasSubstr("Total crashes: 1"),
+                                  HasSubstr("Crash ID   : bug-csig-isig"),
+                                  HasSubstr("Category   : desc"),
+                                  HasSubstr("Signature  : csig"),
+                                  HasSubstr("Description: desc")));
+  EXPECT_GT(std::filesystem::last_write_time(input_path), mtime_before);
+}
+
+TEST_F(OrganizeCrashingInputsTest, KeepsIrreproducibleCrashIfTtlNotExpired) {
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug-csig-isig", "input")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(incubating_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       MovesIrreproducibleCrashToRegressionIfTtlExpired) {
+  absl::SimulatedClock clock(absl::Now());
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  clock.AdvanceTime(absl::Hours(25));
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary(),
+                                     /*regression_ttl=*/absl::Hours(24), clock)
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(regression_dir()),
+              UnorderedElementsAre(FieldsAre("isig", "input")));
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest, KeepsSetupFailureCrashIfTtlNotExpired) {
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  FakeCentipedeCallbacks callbacks(
+      env(), /*crashing_inputs=*/{
+          {"input", {"csig", "SETUP FAILURE: desc"}},
+      });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug-csig-isig", "input")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       MovesSetupFailureCrashToRegressionIfTtlExpired) {
+  absl::SimulatedClock clock(absl::Now());
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  clock.AdvanceTime(absl::Hours(25));
+
+  FakeCentipedeCallbacks callbacks(
+      env(), /*crashing_inputs=*/{
+          {"input", {"csig", "SETUP FAILURE: desc"}},
+      });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary(),
+                                     /*regression_ttl=*/absl::Hours(24), clock)
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(regression_dir()),
+              UnorderedElementsAre(FieldsAre("isig", "input")));
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       DeletesIrreproducibleCrashWithMalformedFileName) {
+  SetContentsAndGetPath(crashing_dir(), "invalid-name", "input");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       ReplacesIrreproducibleCrashWithNewCrashOfSameSignature) {
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig1", "input1");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto input2_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig2", "input2");
+  new_crashes_by_signature["csig"] = {"isig2", "desc2", input2_path};
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug-csig-isig2", "input2")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(incubating_dir()),
+              UnorderedElementsAre(FieldsAre("isig1", "input1")));
+  EXPECT_THAT(crash_report, AllOf(HasSubstr("Total crashes: 1"),
+                                  HasSubstr("Crash ID   : bug-csig-isig2"),
+                                  HasSubstr("Category   : desc2"),
+                                  HasSubstr("Signature  : csig"),
+                                  HasSubstr("Description: desc2")));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       ReplacesIrreproducibleCrashIfReproducedByAnotherOldInput) {
+  SetContentsAndGetPath(crashing_dir(), "bug1-csig-isig1", "input1");
+  SetContentsAndGetPath(crashing_dir(), "bug2-csig-isig2", "input2");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input1", {"csig", "desc1"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug1-csig-isig1", "input1"),
+                                   FieldsAre("bug2-csig-isig1", "input1")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, AllOf(HasSubstr("Total crashes: 2"),
+                                  HasSubstr("Crash ID   : bug1-csig-isig1"),
+                                  HasSubstr("Crash ID   : bug2-csig-isig1"),
+                                  HasSubstr("Category   : desc1"),
+                                  HasSubstr("Signature  : csig"),
+                                  HasSubstr("Description: desc1")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, StoresNewCrashWithUniqueCrashSignature) {
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto input_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig", "input");
+  new_crashes_by_signature["csig"] = {"isig", "desc", input_path};
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre(EndsWith("-csig-isig"), "input")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report,
+              AllOf(HasSubstr("Total crashes: 1"),   //
+                    HasSubstr("-csig-isig"),         //
+                    HasSubstr("Category   : desc"),  //
+                    HasSubstr("Signature  : csig"),  //
+                    HasSubstr("Description: desc")));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       DoesNotStoreNewCrashIfSignatureAlreadyReproduced) {
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig1", "input1");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input1", {"csig", "desc1"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto input2_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig2", "input2");
+  new_crashes_by_signature["csig"] = {"isig2", "desc2", input2_path};
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug-csig-isig1", "input1")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, AllOf(HasSubstr("Total crashes: 1"),
+                                  HasSubstr("Crash ID   : bug-csig-isig1"),
+                                  HasSubstr("Category   : desc1"),
+                                  HasSubstr("Signature  : csig"),
+                                  HasSubstr("Description: desc1")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, DoesNotProcessInputsInRegressionDir) {
+  SetContentsAndGetPath(regression_dir(), "isig", "input");
+  FakeCentipedeCallbacks callbacks(
+      env(), /*crashing_inputs=*/{{"input", {"csig", "desc"}}});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(regression_dir()),
+              UnorderedElementsAre(FieldsAre("isig", "input")));
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest, AddsNewCrashesUpToFileLimit) {
+  SetContentsAndGetPath(crashing_dir(), "bug1-csig1-isig1", "repro1");
+  SetContentsAndGetPath(crashing_dir(), "bug2-csig2-isig2", "repro2");
+  SetContentsAndGetPath(crashing_dir(), "bug3-csig3-isig3", "repro3");
+  SetContentsAndGetPath(crashing_dir(), "bug4-csig4-isig4", "repro4");
+  SetContentsAndGetPath(crashing_dir(), "bug5-csig5-isig5", "repro5");
+  SetContentsAndGetPath(crashing_dir(), "bug6-csig6-isig6", "irrepro6");
+  SetContentsAndGetPath(crashing_dir(), "bug7-csig7-isig7", "irrepro7");
+  SetContentsAndGetPath(crashing_dir(), "bug8-csig8-isig8", "irrepro8");
+  SetContentsAndGetPath(crashing_dir(), "bug9-csig9-isig9", "irrepro9");
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto new10_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig10", "new10");
+  new_crashes_by_signature["csig10"] = {"isig10", "desc10", new10_path};
+  const auto new11_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig11", "new11");
+  new_crashes_by_signature["csig11"] = {"isig11", "desc11", new11_path};
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"repro1", {"csig1", "desc1"}},
+                                       {"repro2", {"csig2", "desc2"}},
+                                       {"repro3", {"csig3", "desc3"}},
+                                       {"repro4", {"csig4", "desc4"}},
+                                       {"repro5", {"csig5", "desc5"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(
+                  FieldsAre("bug1-csig1-isig1", "repro1"),
+                  FieldsAre("bug2-csig2-isig2", "repro2"),
+                  FieldsAre("bug3-csig3-isig3", "repro3"),
+                  FieldsAre("bug4-csig4-isig4", "repro4"),
+                  FieldsAre("bug5-csig5-isig5", "repro5"),
+                  FieldsAre("bug6-csig6-isig6", "irrepro6"),
+                  FieldsAre("bug7-csig7-isig7", "irrepro7"),
+                  FieldsAre("bug8-csig8-isig8", "irrepro8"),
+                  FieldsAre("bug9-csig9-isig9", "irrepro9"),
+                  AnyOf(FieldsAre(HasSubstr("-csig10-isig10"), "new10"),
+                        FieldsAre(HasSubstr("-csig11-isig11"), "new11"))));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 6"));
+}
+
+TEST_F(OrganizeCrashingInputsTest, ReplacesIrreproducibleCrashAtFileLimit) {
+  SetContentsAndGetPath(crashing_dir(), "bug1-csig1-isig1", "repro1");
+  SetContentsAndGetPath(crashing_dir(), "bug2-csig2-isig2", "repro2");
+  SetContentsAndGetPath(crashing_dir(), "bug3-csig3-isig3", "repro3");
+  SetContentsAndGetPath(crashing_dir(), "bug4-csig4-isig4", "repro4");
+  SetContentsAndGetPath(crashing_dir(), "bug5-csig5-isig5", "repro5");
+  SetContentsAndGetPath(crashing_dir(), "bug6-csig6-isig6", "repro6");
+  SetContentsAndGetPath(crashing_dir(), "bug7-csig7-isig7", "repro7");
+  SetContentsAndGetPath(crashing_dir(), "bug8-csig8-isig8", "repro8");
+  SetContentsAndGetPath(crashing_dir(), "bug9-csig9-isig9", "repro9");
+  SetContentsAndGetPath(crashing_dir(), "bug10-csig10-isig10", "irrepro10");
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto new11_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig11", "new11");
+  new_crashes_by_signature["csig10"] = {"isig11", "desc11", new11_path};
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"repro1", {"csig1", "desc1"}},
+                                       {"repro2", {"csig2", "desc2"}},
+                                       {"repro3", {"csig3", "desc3"}},
+                                       {"repro4", {"csig4", "desc4"}},
+                                       {"repro5", {"csig5", "desc5"}},
+                                       {"repro6", {"csig6", "desc6"}},
+                                       {"repro7", {"csig7", "desc7"}},
+                                       {"repro8", {"csig8", "desc8"}},
+                                       {"repro9", {"csig9", "desc9"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug1-csig1-isig1", "repro1"),
+                                   FieldsAre("bug2-csig2-isig2", "repro2"),
+                                   FieldsAre("bug3-csig3-isig3", "repro3"),
+                                   FieldsAre("bug4-csig4-isig4", "repro4"),
+                                   FieldsAre("bug5-csig5-isig5", "repro5"),
+                                   FieldsAre("bug6-csig6-isig6", "repro6"),
+                                   FieldsAre("bug7-csig7-isig7", "repro7"),
+                                   FieldsAre("bug8-csig8-isig8", "repro8"),
+                                   FieldsAre("bug9-csig9-isig9", "repro9"),
+                                   FieldsAre("bug10-csig10-isig11", "new11")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, AllOf(HasSubstr("Total crashes: 10"),
+                                  HasSubstr("Crash ID   : bug10-csig10-isig11"),
+                                  HasSubstr("Category   : desc11"),
+                                  HasSubstr("Signature  : csig10"),
+                                  HasSubstr("Description: desc11")));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       MovesReproducingIncubatingCrashToCrashingDir) {
+  SetContentsAndGetPath(incubating_dir(), "isig1", "input1");
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input1", {"csig", "desc"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(incubating_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(
+                  FieldsAre(MatchesRegex("[a-f0-9]+-csig-isig1"), "input1")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(
+      crash_report,
+      AllOf(HasSubstr("Total crashes: 1"),
+            ContainsRegex("Crash ID   : [a-f0-9]+-csig-isig1"),
+            HasSubstr("Category   : desc"), HasSubstr("Signature  : csig"),
+            HasSubstr("Description: desc")));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       KeepsIrreproducibleIncubatingCrashIfTtlNotExpired) {
+  SetContentsAndGetPath(incubating_dir(), "isig1", "input1");
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary(),
+                                     /*regression_ttl=*/absl::Hours(24))
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(incubating_dir()),
+              UnorderedElementsAre(FieldsAre("isig1", "input1")));
+  EXPECT_THAT(ReadFiles(crashing_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest, MovesExpiredIncubatingCrashToRegressionDir) {
+  absl::SimulatedClock clock(absl::Now());
+  SetContentsAndGetPath(incubating_dir(), "isig1", "input1");
+  clock.AdvanceTime(absl::Hours(25));
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary(),
+                                     /*regression_ttl=*/absl::Hours(24), clock)
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(ReadFiles(incubating_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(crashing_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(regression_dir()),
+              UnorderedElementsAre(FieldsAre("isig1", "input1")));
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       ReplacesCrashInputIfSignatureChangesButNewCrashWithOldSignatureExists) {
+  SetContentsAndGetPath(crashing_dir(), "bug1-csig_old-isig1", "input1");
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input1", {"csig_new", "desc_new"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto input2_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig2", "input2");
+  new_crashes_by_signature["csig_old"] = {"isig2", "desc_old", input2_path};
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+
+  EXPECT_THAT(
+      ReadFiles(crashing_dir()),
+      UnorderedElementsAre(
+          FieldsAre("bug1-csig_old-isig2", "input2"),
+          FieldsAre(MatchesRegex("[a-f0-9]+-csig_new-isig1"), "input1")));
+  EXPECT_THAT(ReadFiles(regression_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(incubating_dir()), IsEmpty());
+  EXPECT_THAT(crash_report,
+              AllOf(HasSubstr("Total crashes: 2"),
+                    HasSubstr("Crash ID   : bug1-csig_old-isig2"),
+                    ContainsRegex("Crash ID   : [a-f0-9]+-csig_new-isig1"),
+                    HasSubstr("Signature  : csig_old"),
+                    HasSubstr("Signature  : csig_new")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, ReplacesInputWithWinnerAlreadyOnDisk) {
+  // Setup two existing crashes for the same bug/signature.
+  SetContentsAndGetPath(crashing_dir(), "bug1-sig1-isig1", "input1");
+  SetContentsAndGetPath(crashing_dir(), "bug1-sig1-isig2", "input2");
+
+  // input1 reproduces with sig1 (winner).
+  // input2 does not reproduce.
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input1", {"sig1", "desc1"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  // This should not fail with "filesystem::copy() failed" (self-copy).
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  // bug1-sig1-isig1 should be kept.
+  // bug1-sig1-isig2 should be demoted to incubating.
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug1-sig1-isig1", "input1")));
+  EXPECT_THAT(ReadFiles(incubating_dir()),
+              UnorderedElementsAre(FieldsAre("isig2", "input2")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, LogsActionDeleteForMalformedCrash) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(crashing_dir(), "isig", "input");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input", {"csig", "desc"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(
+      log_capture.FullLog(),
+      AllOf(HasSubstr("Action: Delete for existing crash"),
+            HasSubstr("Reason: Crash was malformed (empty signature)")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, LogsActionTouchForReproducingCrash) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input", {"csig", "desc"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(
+      log_capture.FullLog(),
+      AllOf(
+          HasSubstr("Action: Touch for existing crash"),
+          HasSubstr("Reason: Crash reproduced with the same signature: csig")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, LogsActionKeepForIrreproducibleCrash) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(
+      log_capture.FullLog(),
+      AllOf(HasSubstr("Action: Keep for existing crash"),
+            HasSubstr("Reason: Crash did not reproduce during replay, and no "
+                      "active input reproduces signature 'csig'; keeping on "
+                      "disk subject to TTL")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, LogsActionTouchForFlakyCrash) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto new_input_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig", "input");
+  new_crashes_by_signature["csig"] = {"isig", "desc", new_input_path};
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(
+      log_capture.FullLog(),
+      AllOf(HasSubstr("Action: Touch for existing crash"),
+            HasSubstr("Reason: Crash did not reproduce during replay, but "
+                      "active input for signature 'csig' is identical, "
+                      "indicating a flaky crash")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, LogsActionIncubateAndReplaceInput) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig1", "input1");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto new_input_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig2", "input2");
+  new_crashes_by_signature["csig"] = {"isig2", "desc", new_input_path};
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(
+      log_capture.FullLog(),
+      AllOf(HasSubstr("Action: IncubateAndReplaceInput for existing crash"),
+            HasSubstr("Reason: Crash did not reproduce during replay; moving "
+                      "old input to incubating and replacing with new input "
+                      "for signature 'csig'")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, LogsActionReplaceInput) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig1", "input1");
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input1", {"csig_diff", "desc"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto new_input_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig2", "input2");
+  new_crashes_by_signature["csig"] = {"isig2", "desc", new_input_path};
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(
+      log_capture.FullLog(),
+      AllOf(HasSubstr("Action: ReplaceInput for existing crash"),
+            HasSubstr("Reason: Crash reproduced with a different signature "
+                      "('csig_diff' != 'csig'); replacing with new input for "
+                      "signature 'csig'")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, LogsActionStoreNewCrash) {
+  LogCapture log_capture;
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  const auto new_input_path =
+      SetContentsAndGetPath(new_crashes_dir(), "isig", "input");
+  new_crashes_by_signature["csig"] = {"isig", "desc", new_input_path};
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(log_capture.FullLog(),
+              AllOf(HasSubstr("Action: StoreNewCrash for signature 'csig'"),
+                    HasSubstr("Reason: New crash signature discovered")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, LogsActionCleanUpIncubating) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(incubating_dir(), "isig1", "input1");
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{
+                                       {"input1", {"csig", "desc"}},
+                                   });
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(
+      log_capture.FullLog(),
+      AllOf(HasSubstr("Action: CleanUpIncubating for"),
+            HasSubstr("Reason: Input reproduced with signature 'csig' and "
+                      "graduated from incubation")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, LogsActionMoveToRegression) {
+  LogCapture log_capture;
+  absl::SimulatedClock clock(absl::Now());
+  SetContentsAndGetPath(crashing_dir(), "bug-csig-isig", "input");
+  clock.AdvanceTime(absl::Hours(25));
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary(),
+                                     /*regression_ttl=*/absl::Hours(24), clock)
+                  .ok());
+
+  EXPECT_THAT(log_capture.FullLog(),
+              AllOf(HasSubstr("Action: MoveToRegression for"),
+                    HasSubstr("Reason: Crash expired (not reproduced for")));
+}
+
+class FlakyCrashCallbacks : public CentipedeCallbacks {
+ public:
+  FlakyCrashCallbacks(const Environment& env, int crash_on_attempt)
+      : CentipedeCallbacks(env, internal_stop_condition_),
+        crash_on_attempt_(crash_on_attempt) {}
+
+  bool Execute(std::string_view binary, absl::Span<const ByteSpan> inputs,
+               BatchResult& batch_result) override {
+    ++execute_calls_;
+    batch_result.ClearAndResize(inputs.size());
+    for (size_t i = 0; i < inputs.size(); ++i) {
+      ++execution_count_;
+      if (execution_count_ == crash_on_attempt_) {
+        batch_result.num_outputs_read() = i;
+        batch_result.exit_code() = EXIT_FAILURE;
+        batch_result.failure_signature() = "csig";
+        batch_result.failure_description() = "flaky crash";
+        return false;
+      }
+    }
+    batch_result.num_outputs_read() = inputs.size();
+    return true;
+  }
+
+  int execute_calls() const { return execute_calls_; }
+  int execution_count() const { return execution_count_; }
+
+ private:
+  int crash_on_attempt_;
+  int execute_calls_ = 0;
+  int execution_count_ = 0;
+  StopCondition internal_stop_condition_;
+};
+
+TEST_F(OrganizeCrashingInputsTest, ReplaysCrashMultipleTimesUntilSuccess) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(incubating_dir(), "isig1", "input1");
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 3;
+
+  FlakyCrashCallbacks callbacks(test_env, /*crash_on_attempt=*/2);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_EQ(callbacks.execute_calls(), 1);
+  EXPECT_EQ(callbacks.execution_count(), 2);
+  EXPECT_THAT(log_capture.FullLog(),
+              AllOf(HasSubstr("Crash reproduced on attempt 2 of 3 for "),
+                    HasSubstr("Action: CleanUpIncubating for"),
+                    HasSubstr("Reason: Input reproduced with signature 'csig' "
+                              "and graduated from incubation")));
+}
+
+TEST_F(OrganizeCrashingInputsTest, ReplaysCrashUpToMaxAttemptsOnFailure) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(incubating_dir(), "isig1", "input1");
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 3;
+
+  FlakyCrashCallbacks callbacks(test_env, /*crash_on_attempt=*/5);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_EQ(callbacks.execute_calls(), 1);
+  EXPECT_EQ(callbacks.execution_count(), 3);
+  EXPECT_THAT(log_capture.FullLog(),
+              HasSubstr("Crash failed to reproduce after 3 attempts for "));
+}
+
+class RecordingCrashCallbacks : public CentipedeCallbacks {
+ public:
+  // What `Execute` does once the stop condition is triggered.
+  enum class OnStop {
+    // Keep executing the remaining inputs in the batch.
+    kContinue,
+    // Simulate an in-flight termination that is reported as a failure.
+    kFail,
+    // Simulate the runner exiting cleanly before finishing the batch.
+    kSucceedEarly,
+  };
+
+  RecordingCrashCallbacks(
+      const Environment& env, StopCondition& stop_condition,
+      absl::flat_hash_map<std::string, int> crash_on_input_attempt,
+      int stop_after_total_executions = -1, OnStop on_stop = OnStop::kContinue)
+      : CentipedeCallbacks(env, stop_condition),
+        crash_on_input_attempt_(std::move(crash_on_input_attempt)),
+        stop_after_total_executions_(stop_after_total_executions),
+        on_stop_(on_stop) {}
+
+  bool Execute(std::string_view binary, absl::Span<const ByteSpan> inputs,
+               BatchResult& batch_result) override {
+    batch_sizes_.push_back(inputs.size());
+    batch_result.ClearAndResize(inputs.size());
+    for (size_t i = 0; i < inputs.size(); ++i) {
+      std::string input_str(AsStringView(inputs[i]));
+      executed_inputs_.push_back(input_str);
+      const int attempt = ++attempts_by_input_[input_str];
+      if (stop_after_total_executions_ > 0 &&
+          static_cast<int>(executed_inputs_.size()) >=
+              stop_after_total_executions_) {
+        stop_condition_.SetStopTime(absl::InfinitePast());
+        if (on_stop_ == OnStop::kFail) {
+          batch_result.num_outputs_read() = i;
+          batch_result.exit_code() = EXIT_FAILURE;
+          batch_result.failure_signature() = "stop-failure-sig";
+          batch_result.failure_description() = "stop-failure-desc";
+          return false;
+        }
+        if (on_stop_ == OnStop::kSucceedEarly) {
+          batch_result.num_outputs_read() = i + 1;
+          return true;
+        }
+      }
+      auto it = crash_on_input_attempt_.find(input_str);
+      if (it != crash_on_input_attempt_.end() && attempt == it->second) {
+        batch_result.num_outputs_read() = i;
+        batch_result.exit_code() = EXIT_FAILURE;
+        batch_result.failure_signature() = "csig_" + input_str;
+        batch_result.failure_description() = "desc_" + input_str;
+        return false;
+      }
+    }
+    batch_result.num_outputs_read() = inputs.size();
+    return true;
+  }
+
+  const std::vector<std::string>& executed_inputs() const {
+    return executed_inputs_;
+  }
+  const std::vector<size_t>& batch_sizes() const { return batch_sizes_; }
+
+ private:
+  absl::flat_hash_map<std::string, int> crash_on_input_attempt_;
+  int stop_after_total_executions_;
+  OnStop on_stop_ = OnStop::kContinue;
+  absl::flat_hash_map<std::string, int> attempts_by_input_;
+  std::vector<std::string> executed_inputs_;
+  std::vector<size_t> batch_sizes_;
+};
+
+TEST_F(OrganizeCrashingInputsTest, ReplaysEachCrashInBatchOfMaxAttempts) {
+  const std::filesystem::path path1 =
+      SetContentsAndGetPath(crashing_dir(), "bug1-csig_input1-isig1", "input1");
+  const std::filesystem::path path2 =
+      SetContentsAndGetPath(crashing_dir(), "bug2-csig_input2-isig2", "input2");
+
+  const auto now = std::filesystem::file_time_type::clock::now();
+  std::filesystem::last_write_time(path1, now - std::chrono::hours(2));
+  std::filesystem::last_write_time(path2, now - std::chrono::hours(1));
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 3;
+
+  // input2 reproduces on its 2nd attempt; input1 never reproduces.
+  RecordingCrashCallbacks callbacks(test_env, stop_condition(),
+                                    /*crash_on_input_attempt=*/{{"input2", 2}});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(callbacks.batch_sizes(), ElementsAre(3, 3));
+  EXPECT_THAT(callbacks.executed_inputs(),
+              ElementsAre("input1", "input1", "input1", "input2", "input2"));
+}
+
+class BatchTimeoutCallbacks : public CentipedeCallbacks {
+ public:
+  explicit BatchTimeoutCallbacks(const Environment& env)
+      : CentipedeCallbacks(env, internal_stop_condition_) {}
+
+  bool Execute(std::string_view binary, absl::Span<const ByteSpan> inputs,
+               BatchResult& batch_result) override {
+    batch_result.ClearAndResize(inputs.size());
+    batch_result.exit_code() = EXIT_FAILURE;
+    batch_result.failure_description() =
+        std::string(kExecutionFailurePerBatchTimeout);
+    return false;
+  }
+
+ private:
+  StopCondition internal_stop_condition_;
+};
+
+TEST_F(OrganizeCrashingInputsTest, IgnoresPerBatchTimeoutDuringReplay) {
+  SetContentsAndGetPath(incubating_dir(), "isig_inc", "input_inc");
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 3;
+
+  BatchTimeoutCallbacks callbacks(test_env);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  // A per-batch timeout must not graduate an incubating crash or be recorded in
+  // the crash summary.
+  EXPECT_THAT(ReadFiles(crashing_dir()), IsEmpty());
+  EXPECT_THAT(ReadFiles(incubating_dir()),
+              UnorderedElementsAre(FieldsAre("isig_inc", "input_inc")));
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest, StopsReplayingWhenStopConditionIsTriggered) {
+  const std::filesystem::path path1 =
+      SetContentsAndGetPath(crashing_dir(), "bug1-csig_input1-isig1", "input1");
+  const std::filesystem::path path2 =
+      SetContentsAndGetPath(crashing_dir(), "bug2-csig_input2-isig2", "input2");
+  const std::filesystem::path path3 =
+      SetContentsAndGetPath(crashing_dir(), "bug3-csig_input3-isig3", "input3");
+
+  const auto now = std::filesystem::file_time_type::clock::now();
+  std::filesystem::last_write_time(path2, now - std::chrono::hours(3));
+  std::filesystem::last_write_time(path1, now - std::chrono::hours(2));
+  std::filesystem::last_write_time(path3, now - std::chrono::hours(1));
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 5;
+
+  // Ordered by mtime: input2 (reproduces on attempt 1 -> 1 execution), then
+  // input1 (5 attempts without crashing -> 5 executions, triggering
+  // stop_condition at 6 total executions), so input3 is never attempted.
+  RecordingCrashCallbacks callbacks(test_env, stop_condition(),
+                                    /*crash_on_input_attempt=*/{{"input2", 1}},
+                                    /*stop_after_total_executions=*/6);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  EXPECT_THAT(callbacks.batch_sizes(), ElementsAre(5, 5));
+  EXPECT_EQ(callbacks.executed_inputs().size(), 6);
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+  EXPECT_THAT(crash_report,
+              AllOf(HasSubstr("Total crashes: 1"),
+                    HasSubstr("Crash ID   : bug2-csig_input2-isig2")));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       StopTriggeredDuringExecutionDoesNotReplaceOrDeleteExistingCrash) {
+  const std::filesystem::path existing_path =
+      SetContentsAndGetPath(crashing_dir(), "bug1-csig_input1-isig1", "input1");
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 3;
+
+  // Trigger stop on the first execution and simulate in-flight deadline
+  // termination.
+  RecordingCrashCallbacks callbacks(
+      test_env, stop_condition(),
+      /*crash_on_input_attempt=*/{},
+      /*stop_after_total_executions=*/1,
+      /*on_stop=*/RecordingCrashCallbacks::OnStop::kFail);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  new_crashes_by_signature["csig_input1"] = CrashDetails{
+      /*input_signature=*/"isig_new",
+      /*description=*/"new_desc",
+      /*input_path=*/
+      SetContentsAndGetPath(new_crashes_dir(), "isig_new", "new"),
+  };
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+
+  // Existing crash must NOT be replaced or deleted despite the in-flight
+  // failure and the presence of a new active crash for csig_input1.
+  EXPECT_TRUE(std::filesystem::exists(existing_path));
+  std::string contents;
+  ReadFromLocalFile(existing_path.c_str(), contents);
+  EXPECT_EQ(contents, "input1");
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       StopTriggeredDuringExecutionDoesNotGraduateIncubatingCrash) {
+  const std::filesystem::path incubating_path =
+      SetContentsAndGetPath(incubating_dir(), "isig_inc", "input_inc");
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 3;
+
+  // Trigger stop on the first execution and simulate in-flight deadline
+  // termination.
+  RecordingCrashCallbacks callbacks(
+      test_env, stop_condition(),
+      /*crash_on_input_attempt=*/{},
+      /*stop_after_total_executions=*/1,
+      /*on_stop=*/RecordingCrashCallbacks::OnStop::kFail);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  // Incubating crash must NOT graduate to crashing_dir() and must remain in
+  // incubating_dir().
+  EXPECT_TRUE(std::filesystem::exists(incubating_path));
+  EXPECT_THAT(ReadFiles(crashing_dir()), IsEmpty());
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       StopTriggeredMidBatchWithSuccessDoesNotReplaceOrDeleteExistingCrash) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(crashing_dir(), "bug1-csig_input1-isig1", "input1");
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 3;
+
+  // Trigger stop on the first execution and simulate the runner exiting
+  // cleanly after 1 of 3 attempts.
+  RecordingCrashCallbacks callbacks(
+      test_env, stop_condition(),
+      /*crash_on_input_attempt=*/{},
+      /*stop_after_total_executions=*/1,
+      /*on_stop=*/RecordingCrashCallbacks::OnStop::kSucceedEarly);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  new_crashes_by_signature["csig_input1"] = CrashDetails{
+      /*input_signature=*/"isig_new",
+      /*description=*/"new_desc",
+      /*input_path=*/
+      SetContentsAndGetPath(new_crashes_dir(), "isig_new", "new"),
+  };
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+
+  ASSERT_THAT(callbacks.executed_inputs(), ElementsAre("input1"));
+  // Not all attempts ran, so the crash must be treated as unattempted: it is
+  // neither moved to incubating nor replaced by the new crash.
+  EXPECT_THAT(
+      ReadFiles(crashing_dir()),
+      UnorderedElementsAre(FieldsAre("bug1-csig_input1-isig1", "input1")));
+  EXPECT_THAT(ReadFiles(incubating_dir()), IsEmpty());
+  EXPECT_THAT(
+      log_capture.FullLog(),
+      AllOf(HasSubstr("Crash replay incomplete after 1 of 3 attempts (replay "
+                      "was stopped)"),
+            HasSubstr("Crash replay completed for 0 of 1 crashes")));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       PerBatchTimeoutDoesNotReplaceOrDeleteExistingCrash) {
+  LogCapture log_capture;
+  SetContentsAndGetPath(crashing_dir(), "bug1-csig1-isig1", "input1");
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 3;
+
+  BatchTimeoutCallbacks callbacks(test_env);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  new_crashes_by_signature["csig1"] = CrashDetails{
+      /*input_signature=*/"isig_new",
+      /*description=*/"new_desc",
+      /*input_path=*/
+      SetContentsAndGetPath(new_crashes_dir(), "isig_new", "new"),
+  };
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+
+  // A per-batch timeout means not all attempts ran, so the crash must be
+  // treated as unattempted: it is neither moved to incubating nor replaced.
+  EXPECT_THAT(ReadFiles(crashing_dir()),
+              UnorderedElementsAre(FieldsAre("bug1-csig1-isig1", "input1")));
+  EXPECT_THAT(ReadFiles(incubating_dir()), IsEmpty());
+  EXPECT_THAT(
+      log_capture.FullLog(),
+      AllOf(
+          HasSubstr("Crash replay incomplete after 0 of 3 attempts (per-batch "
+                    "timeout exceeded)"),
+          HasSubstr("Crash replay completed for 0 of 1 crashes")));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       UnattemptedExistingCrashIsKeptOnDiskAndNotReplaced) {
+  SetContentsAndGetPath(crashing_dir(), "bug1-csig_input1-isig1", "input1");
+  SetContentsAndGetPath(crashing_dir(), "bug2-csig_input2-isig2", "input2");
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 1;
+
+  // Trigger stop after the first execution so the second crash is never
+  // attempted.
+  RecordingCrashCallbacks callbacks(test_env, stop_condition(),
+                                    /*crash_on_input_attempt=*/{},
+                                    /*stop_after_total_executions=*/1);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  new_crashes_by_signature["csig_input1"] = CrashDetails{
+      /*input_signature=*/"isig_new1",
+      /*description=*/"new_desc1",
+      /*input_path=*/
+      SetContentsAndGetPath(new_crashes_dir(), "isig_new1", "new1"),
+  };
+  new_crashes_by_signature["csig_input2"] = CrashDetails{
+      /*input_signature=*/"isig_new2",
+      /*description=*/"new_desc2",
+      /*input_path=*/
+      SetContentsAndGetPath(new_crashes_dir(), "isig_new2", "new2"),
+  };
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+
+  // Exactly one input ("input1", which was created first and sorts first by
+  // (mtime, path)) was executed before the stop condition halted replay.
+  ASSERT_THAT(callbacks.executed_inputs(), ElementsAre("input1"));
+
+  // The attempted crash (bug1) failed to reproduce, so it moved to incubating
+  // and was replaced by its new candidate. The unattempted crash (bug2) must
+  // remain in crashing_dir() with its original input and not be replaced.
+  EXPECT_THAT(
+      ReadFiles(crashing_dir()),
+      UnorderedElementsAre(FieldsAre("bug1-csig_input1-isig_new1", "new1"),
+                           FieldsAre("bug2-csig_input2-isig2", "input2")));
+  EXPECT_THAT(ReadFiles(incubating_dir()),
+              UnorderedElementsAre(FieldsAre("isig1", "input1")));
+
+  // Both crashes should be reported: the replaced crash and the touched
+  // unattempted crash.
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 2"));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       UnattemptedExistingCrashIsTouchedAndReportedIfSignatureInNewCrashes) {
+  const std::filesystem::path existing_path =
+      SetContentsAndGetPath(crashing_dir(), "bug1-csig1-isig1", "input1");
+
+  // Pre-trigger the stop condition so no crashes are attempted.
+  stop_condition().SetStopTime(absl::InfinitePast());
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  absl::flat_hash_map<std::string, CrashDetails> new_crashes_by_signature;
+  new_crashes_by_signature["csig1"] = CrashDetails{
+      /*input_signature=*/"isig_new",
+      /*description=*/"new_desc",
+      /*input_path=*/
+      SetContentsAndGetPath(new_crashes_dir(), "isig_new", "new"),
+  };
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, new_crashes_by_signature,
+                                     crash_summary())
+                  .ok());
+
+  // Existing crash file must be kept with its original input (not replaced).
+  EXPECT_TRUE(std::filesystem::exists(existing_path));
+  std::string contents;
+  ReadFromLocalFile(existing_path.c_str(), contents);
+  EXPECT_EQ(contents, "input1");
+
+  // Since signature was found in new_crashes, it should be touched and
+  // reported.
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+  EXPECT_THAT(crash_report, AllOf(HasSubstr("Total crashes: 1"),
+                                  HasSubstr("Crash ID   : bug1-csig1-isig1"),
+                                  HasSubstr("Category   : new_desc"),
+                                  HasSubstr("Signature  : csig1"),
+                                  HasSubstr("Description: new_desc")));
+}
+
+TEST_F(OrganizeCrashingInputsTest,
+       UnattemptedExistingCrashIsKeptAndNotReportedIfSignatureNotInNewCrashes) {
+  const std::filesystem::path existing_path =
+      SetContentsAndGetPath(crashing_dir(), "bug1-csig1-isig1", "input1");
+
+  // Pre-trigger the stop condition so no crashes are attempted.
+  stop_condition().SetStopTime(absl::InfinitePast());
+
+  FakeCentipedeCallbacks callbacks(env(), /*crashing_inputs=*/{});
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), env(),
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  // Existing crash file must be kept with its original input.
+  EXPECT_TRUE(std::filesystem::exists(existing_path));
+  std::string contents;
+  ReadFromLocalFile(existing_path.c_str(), contents);
+  EXPECT_EQ(contents, "input1");
+
+  // Since signature was not in new_crashes, it is kept on disk but not
+  // reported.
+  std::string crash_report;
+  crash_summary().Report(&crash_report);
+  EXPECT_THAT(crash_report, HasSubstr("Total crashes: 0"));
+}
+
+TEST_F(OrganizeCrashingInputsTest, ReplaysExistingCrashesOldestMTimeFirst) {
+  // Create crash A with a newer mtime (1 hour ago) and crash B with an older
+  // mtime (2 hours ago). Notice that "bugA" alphabetically precedes "bugB",
+  // so alphabetical/directory listing order would replay A first without
+  // mtime sorting.
+  const std::filesystem::path crash_a =
+      SetContentsAndGetPath(crashing_dir(), "bugA-csigA-isigA", "inputA");
+  const std::filesystem::path crash_b =
+      SetContentsAndGetPath(crashing_dir(), "bugB-csigB-isigB", "inputB");
+
+  const auto now = std::filesystem::file_time_type::clock::now();
+  std::filesystem::last_write_time(crash_a, now - std::chrono::hours(1));
+  std::filesystem::last_write_time(crash_b, now - std::chrono::hours(2));
+
+  Environment test_env = env();
+  test_env.replay_crash_attempts = 1;
+
+  // Stop after 1 execution so only the highest priority crash is replayed.
+  RecordingCrashCallbacks callbacks(test_env, stop_condition(),
+                                    /*crash_on_input_attempt=*/{},
+                                    /*stop_after_total_executions=*/1);
+  NonOwningCallbacksFactory factory(callbacks);
+
+  ASSERT_TRUE(OrganizeCrashingInputs(regression_dir(), crashing_dir(), test_env,
+                                     factory, /*new_crashes_by_signature=*/{},
+                                     crash_summary())
+                  .ok());
+
+  // Crash B (older mtime) must be replayed before Crash A (newer mtime).
+  EXPECT_THAT(callbacks.executed_inputs(), ElementsAre("inputB"));
+}
+
+}  // namespace
+}  // namespace fuzztest::internal
