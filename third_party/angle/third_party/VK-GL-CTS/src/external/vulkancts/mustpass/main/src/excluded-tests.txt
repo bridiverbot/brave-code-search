@@ -1,0 +1,10 @@
+# Tests permanently or structurally excluded from mustpass for reasons other
+# than a broken test - e.g. performance-only tests that can't produce a hard
+# pass/fail, or tests that need a manual/non-automatable step. Not expected
+# to be re-enabled by a code fix; see test-issues.txt for those.
+
+# Issue 4090 (performance tests use quality-warning thresholds, not hard pass/fail, so they don't belong in mustpass)
+dEQP-VK.shader_object.performance.*
+
+# Issue 6296 (requires manually rotating the physical screen, not automatable in CI)
+dEQP-VK.wsi.android.pre_transform.*

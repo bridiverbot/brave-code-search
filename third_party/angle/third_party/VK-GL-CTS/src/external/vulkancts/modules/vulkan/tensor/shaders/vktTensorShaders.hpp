@@ -1,0 +1,87 @@
+#ifndef _VKTTENSORSHADERS_HPP
+#define _VKTTENSORSHADERS_HPP
+/*------------------------------------------------------------------------
+ * Vulkan Conformance Tests
+ * ------------------------
+ *
+ * Copyright (c) 2025-2026 ARM Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+/*!
+ * \file
+ * \brief Tensor Shader Utility Classes
+ */
+/*--------------------------------------------------------------------*/
+
+#include "../vktTensorTestsUtil.hpp"
+#include "../vktTestCase.hpp"
+#include "vktTensorShaderUtil.hpp"
+
+#include <array>
+
+namespace vkt
+{
+namespace tensor
+{
+
+inline constexpr uint32_t dispatchWorkgroupCountLimit = 65535;
+
+// Tensor Read/Write
+std::string genShaderTensorAccess(size_t rank, VkFormat tensorFormat, AccessVariant variant);
+inline constexpr uint32_t shaderTensorAccessWorkgroupSize = 128;
+
+// Tensor Descriptor Buffer Write
+std::string genShaderTensorDescriptorBufferAccess(size_t rank, VkFormat tensorFormat, const size_t descriptorCount);
+
+// Tensor Descriptor Buffer Rotate
+std::string genShaderTensorDescriptorBufferRotate(const size_t descriptorCount, const size_t shiftIndex);
+
+// Tensor Descriptors Array Write
+std::string genShaderTensorDescriptorsArrayAccess(size_t rank, VkFormat tensorFormat, const size_t descriptorCount);
+
+// Query Dimensions
+std::string genShaderQueryDimensions(size_t rank, VkFormat tensorFormat);
+
+// Image Read/Write
+std::string genShaderImageAccess(const TensorDimensions &shape, VkFormat bufferFormat, VkFormat imageFormat,
+                                 ImageAliasingVariant variant);
+inline constexpr uint32_t shaderImageAccessWorkgroupSize = 128;
+
+// Array Read/Write
+std::string genShaderArrayAccess(size_t rank, AccessVariant variant, VkFormat format, const int array_size);
+
+// Booleans
+std::string genShaderBooleanOp(size_t rank, BooleanOperator op, const bool test_value);
+inline constexpr uint32_t shaderBooleanOpAccessWorkgroupSize = 128;
+
+// Tensor OoB index Read/Write
+std::string genShaderTensorOoBAccess(size_t rank, VkFormat tensorFormat, AccessVariant variant);
+inline constexpr uint32_t shaderTensorOoBAccessWorkgroupSize = 128;
+struct ShaderTensorOoBAccessLineAccess
+{
+    int32_t offsetFromEndOfLine;
+    uint32_t outOfBoundsValue;
+};
+inline constexpr std::array<ShaderTensorOoBAccessLineAccess, 4> shaderTensorOoBAccessLineAccesses{
+    {{-1, 24}, {0, 42}, {13, 0}, {65537, 84}}};
+
+// nullDescriptor tensor Read/Write
+std::string genShaderTensorNullDescriptorAccess(const size_t rank, const VkFormat tensorFormat,
+                                                const AccessVariant variant);
+inline constexpr uint32_t shaderTensorNullDescriptorAccessWorkgroupSize = 128;
+
+} // namespace tensor
+} // namespace vkt
+#endif // _VKTTENSORSHADERS_HPP

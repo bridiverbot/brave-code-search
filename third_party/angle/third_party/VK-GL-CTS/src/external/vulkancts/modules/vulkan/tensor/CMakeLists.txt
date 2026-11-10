@@ -1,0 +1,42 @@
+# Tensor tests
+
+include_directories(
+	..
+	../util
+	)
+
+set(DEQP_VK_TENSOR_SRCS
+	vktTensorTests.cpp
+	vktTensorTestsUtil.cpp
+	vktTensorArrayAccess.cpp
+	vktTensorCreateRequirements.cpp
+	vktTensorDescriptorsArray.cpp
+	vktTensorDescriptorBuffer.cpp
+	vktTensorDimensionQuery.cpp
+	vktTensorCopies.cpp
+	vktTensorGraphicsPipeline.cpp
+	vktTensorBasicShaderAccess.cpp
+	vktTensorImageAliasing.cpp
+	vktTensorBool.cpp
+	vktTensorRequired.cpp
+	vktTensorRequiredFormats.cpp
+	vktTensorRobustness.cpp
+	vktTensorUpdateAfterBind.cpp
+	vktTensorFrameBoundary.cpp
+	shaders/vktTensorImageAccessShaders.cpp
+	shaders/vktTensorQueryDimensionsShaders.cpp
+	shaders/vktTensorAccessShaders.cpp
+	shaders/vktTensorArrayAccessShaders.cpp
+	shaders/vktTensorDescriptorBufferShader.cpp
+	shaders/vktTensorDescriptorBufferRotateShader.cpp
+	shaders/vktTensorDescriptorsArrayShader.cpp
+	shaders/vktTensorShaderUtil.cpp
+	shaders/vktTensorBooleanShader.cpp
+	shaders/vktTensorRobustnessShaders.cpp
+	)
+
+PCH(DEQP_VK_TENSOR_SRCS ../pch.cpp)
+
+add_library(deqp-vk-tensor STATIC ${DEQP_VK_TENSOR_SRCS})
+target_include_directories(deqp-vk-tensor BEFORE PUBLIC)
+target_link_libraries(deqp-vk-tensor PUBLIC tcutil vkutil)
