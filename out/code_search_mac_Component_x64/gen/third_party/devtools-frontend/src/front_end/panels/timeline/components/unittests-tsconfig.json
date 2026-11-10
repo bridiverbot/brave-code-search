@@ -1,0 +1,125 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "composite": false,
+    "declaration": false,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": false,
+    "inlineSources": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2023",
+      "ES2024.Promise",
+      "ESNext.Iterator",
+      "ESNext.Collection",
+      "ESNext.Array"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "outDir": ".",
+    "preserveConstEnums": true,
+    "rootDir": "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components",
+    "rootDirs": [
+      "../../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../../"
+    ],
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "esnext",
+    "typeRoots": [
+      "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types",
+      "../../../../../../../../../../third_party/devtools-frontend/src/node_modules"
+    ],
+    "types": [
+
+    ],
+    "useUnknownInCatchVariables": false
+  },
+  "files": [
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/BreadcrumbsUI.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/CWVMetrics.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/ExportTraceOptions.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/FieldSettingsDialog.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/IgnoreListSetting.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/InteractionBreakdown.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/Invalidations.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/LayoutShiftDetails.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/LiveMetricsView.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/MetricCard.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/NetworkRequestDetails.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/NetworkRequestTooltip.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/OriginMap.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/RelatedInsightChips.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/Sidebar.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/SidebarAnnotationsTab.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/SidebarInsightsTab.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/SidebarSingleInsightSet.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/TimelineRangeSummaryView.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/TimelineSummary.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/components/Utils.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../core/common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../core/platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../generated/generated-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../models/crux-manager/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../models/emulation/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../models/live-metrics/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../models/trace/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../models/workspace/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../ui/components/render_coordinator/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../ui/legacy/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../ui/legacy/components/utils/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "insights/bundle-tsconfig.ref.json"
+    }
+  ]
+}

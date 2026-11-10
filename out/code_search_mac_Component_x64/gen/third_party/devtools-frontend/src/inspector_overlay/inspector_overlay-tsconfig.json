@@ -1,0 +1,76 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "composite": false,
+    "declaration": false,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": false,
+    "inlineSources": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2023",
+      "ES2024.Promise",
+      "ESNext.Iterator",
+      "ESNext.Collection",
+      "ESNext.Array"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "outDir": ".",
+    "preserveConstEnums": true,
+    "rootDir": "../../../../../../../third_party/devtools-frontend/src/inspector_overlay",
+    "rootDirs": [
+      "../../../../../../../third_party/devtools-frontend/src/",
+      "../"
+    ],
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2023",
+    "typeRoots": [
+
+    ],
+    "types": [
+
+    ],
+    "useUnknownInCatchVariables": false
+  },
+  "files": [
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/common.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/css_grid_label_helpers.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/drag_resize_handler.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/highlight_anchor.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/highlight_common.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/highlight_container_query.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/highlight_flex_common.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/highlight_grid_common.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/highlight_isolated_element.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/highlight_scroll_snap.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/main.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/tool_highlight.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/tool_paused.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/tool_persistent.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/tool_screenshot.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/tool_source_order.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/tool_viewport_size.ts",
+    "../../../../../../../third_party/devtools-frontend/src/inspector_overlay/tool_window_controls.ts",
+    "../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../front_end/core/common/ColorUtils-tsconfig.ref.json"
+    }
+  ]
+}

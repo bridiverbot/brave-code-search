@@ -1,0 +1,98 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "composite": false,
+    "declaration": false,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": false,
+    "inlineSources": true,
+    "lib": [
+      "ES2023",
+      "ES2024.Promise",
+      "ESNext.Iterator",
+      "ESNext.Collection",
+      "ESNext.Array"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "outDir": ".",
+    "preserveConstEnums": true,
+    "rootDir": "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers",
+    "rootDirs": [
+      "../../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../../"
+    ],
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2023",
+    "typeRoots": [
+      "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types",
+      "../../../../../../../../../../third_party/devtools-frontend/src/node_modules"
+    ],
+    "types": [
+      "node",
+      "undici-types"
+    ],
+    "useUnknownInCatchVariables": false
+  },
+  "files": [
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/AnimationFramesHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/AnimationHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/AsyncJSCallsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/DOMStatsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/ExtensionTraceDataHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/FlowsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/FramesHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/GPUHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/ImagePaintingHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/InitiatorsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/InvalidationsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/LargestImagePaintHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/LargestTextPaintHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/LayerTreeHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/LayoutShiftsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/MemoryHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/MetaHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/NetworkRequestsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/PageFramesHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/PageLoadMetricsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/RendererHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/SamplesHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/ScreenshotsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/ScriptsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/SelectorStatsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/Threads.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/UserInteractionsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/UserTimingsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/WarningsHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/WorkersHandler.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/handlers/helpers.test.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../generated/generated-tsconfig.ref.json"
+    },
+    {
+      "path": "../bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../../cpu_profile/bundle-tsconfig.ref.json"
+    }
+  ]
+}

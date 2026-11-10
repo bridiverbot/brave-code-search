@@ -1,0 +1,229 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "composite": false,
+    "declaration": false,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": false,
+    "inlineSources": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2023",
+      "ES2024.Promise",
+      "ESNext.Iterator",
+      "ESNext.Collection",
+      "ESNext.Array"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "outDir": ".",
+    "preserveConstEnums": true,
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "esnext",
+    "typeRoots": [
+
+    ],
+    "types": [
+
+    ],
+    "useUnknownInCatchVariables": false
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/AccessibilityTreeUtils.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/AccessibilityTreeView.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/AdoptedStyleSheetTreeElement.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/CSSRuleValidator.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/CSSRuleValidatorHelper.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/CSSSpecificityBreakdown.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/CSSValueTraceView.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/ClassesPaneWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/ColorSwatchPopoverIcon.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/ComputedStyleWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/DOMPath.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/DOMTreeContextMenu.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/DOMTreeElementWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/DOMTreeWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/ElementIssueUtils.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/ElementStatePaneWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/ElementsPanel.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/ElementsSidebarPane.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/EventListenersWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/ImagePreviewPopover.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/InspectElementModeController.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/LayersWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/LayoutPane.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/MarkerDecorator.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/MetricsSidebarPane.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/PlatformFontsWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/PropertiesWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/PropertyNameCategories.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/PropertyRenderer.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/StandaloneStylesContainer.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/StyleEditorWidget.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/StylePropertiesSection.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/StylePropertyHighlighter.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/StylePropertyTreeElement.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/StylePropertyUtils.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/StylesAiCodeCompletionProvider.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/StylesContainer.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/StylesSidebarPane.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/elements/WebCustomData.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../core/common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/host/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/i18n/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/root/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/text_utils/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../generated/generated-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/ai-utils/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/ai_code_completion/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/badges/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/bindings/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/change_tracker/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/computed_style/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/elements/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/issues_manager/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/workspace/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../emulation/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../event_listeners/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../media/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../utils/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../third_party/codemirror.next/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/adorners/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/buttons/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/code_highlighter/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/highlighting/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/issue_counter/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/node_text/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/text_editor/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/tooltips/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/tree_outline/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/helpers/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/i18n/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/kit/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/components/color_picker/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/components/inline_editor/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/components/object_ui/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/components/utils/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/lit/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/settings/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/visual_logging/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "components/bundle-tsconfig.ref.json"
+    }
+  ]
+}

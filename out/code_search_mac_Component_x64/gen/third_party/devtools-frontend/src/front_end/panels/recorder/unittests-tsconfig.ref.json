@@ -1,0 +1,67 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/CreateRecordingView.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/RecorderPanel.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/RecordingListView.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/RecordingView.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/ReplaySection.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/StepEditor.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/StepView.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/recorder/injected.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/host/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/menus/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/suggestion_input/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "converters/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "extensions/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "injected/injected-tsconfig.ref.json"
+    },
+    {
+      "path": "models/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "recorder-actions/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "testing/testing-tsconfig.ref.json"
+    }
+  ]
+}
