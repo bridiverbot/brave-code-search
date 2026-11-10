@@ -1,0 +1,5 @@
+thestig@chromium.org
+tsepez@chromium.org
+
+# Autorollers need to own DEPS
+per-file DEPS=*

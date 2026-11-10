@@ -1,0 +1,895 @@
+/*
+ * Copyright (C) 2023 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "src/trace_processor/perfetto_sql/parser/perfetto_sql_parser.h"
+
+#include <cstdint>
+#include <optional>
+#include <string>
+#include <utility>
+#include <variant>
+#include <vector>
+
+#include "perfetto/base/logging.h"
+#include "perfetto/ext/base/flat_hash_map.h"
+#include "perfetto/ext/base/status_macros.h"
+#include "perfetto/ext/base/status_or.h"
+#include "src/trace_processor/containers/string_pool.h"
+#include "src/trace_processor/perfetto_sql/parser/function_util.h"
+#include "src/trace_processor/perfetto_sql/parser/perfetto_sql_test_utils.h"
+#include "src/trace_processor/perfetto_sql/pipeline/logical_plan.h"
+#include "src/trace_processor/perfetto_sql/pipeline/pipeline_sql.h"
+#include "src/trace_processor/perfetto_sql/pipeline/plan_key.h"
+#include "src/trace_processor/perfetto_sql/pipeline/test_catalog.h"
+#include "src/trace_processor/sqlite/sql_source.h"
+#include "src/trace_processor/sqlite/sqlite_connection.h"
+#include "src/trace_processor/util/sql_argument.h"
+#include "test/gtest_and_gmock.h"
+
+namespace perfetto::trace_processor {
+
+using Result = PerfettoSqlParser::Statement;
+using Statement = PerfettoSqlParser::Statement;
+using SqliteSql = PerfettoSqlParser::SqliteSql;
+using CreateFn = PerfettoSqlParser::CreateFunction;
+using CreateTable = PerfettoSqlParser::CreateTable;
+using CreateView = PerfettoSqlParser::CreateView;
+using CreateMacro = PerfettoSqlParser::CreateMacro;
+using CreateIndex = PerfettoSqlParser::CreateIndex;
+using Pipeline = PerfettoSqlParser::Pipeline;
+using testing::HasSubstr;
+
+namespace {
+
+class PerfettoSqlParserTest : public ::testing::Test {
+ protected:
+  PerfettoSqlParserTest()
+      : connection_(SqliteConnection::CreateConnectionToNewDatabase()),
+        catalog_(&pool_, connection_.get()) {
+    catalog_.AddTable("slice", {"id", "parent_id", "dur", "self", "depth"},
+                      {{0, std::nullopt, 10, 10, 0}, {1, 0, 5, 5, 1}});
+    catalog_.AddTable("spans", {"ts", "dur", "cpu", "utid"},
+                      {{0, 10, 0, 1}, {5, 10, 1, 2}});
+    for (const char* sql :
+         {"CREATE TABLE tree(id INTEGER, parent_id INTEGER, self INTEGER)",
+          "CREATE TABLE sql_spans(ts INTEGER, dur INTEGER, cpu INTEGER, "
+          "utid INTEGER)"}) {
+      auto stmt =
+          connection_->PrepareStatement(SqlSource::FromExecuteQuery(sql));
+      while (stmt.Step()) {
+      }
+      PERFETTO_CHECK(stmt.status().ok());
+    }
+  }
+
+  base::StatusOr<std::vector<PerfettoSqlParser::Statement>> Parse(
+      SqlSource sql) {
+    PerfettoSqlParser parser(macros_, catalog_,
+                             /*pipelines_allowed=*/true);
+    parser.Reset(std::move(sql));
+    std::vector<PerfettoSqlParser::Statement> results;
+    while (parser.Next()) {
+      results.push_back(parser.statement());
+    }
+    if (!parser.status().ok()) {
+      return parser.status();
+    }
+    return results;
+  }
+
+  // Registers a user-defined macro visible to `Parse()`, as if it had been
+  // declared via `CREATE PERFETTO MACRO`.  `param_names` are bare names
+  // (no `$` prefix); inside `body`, placeholders are written as `$name`.
+  void RegisterMacro(const std::string& name,
+                     std::vector<std::string> param_names,
+                     const std::string& body) {
+    macros_.Insert(name, PerfettoSqlParser::Macro{
+                             /*replace=*/false,
+                             name,
+                             std::move(param_names),
+                             SqlSource::FromTraceProcessorImplementation(body),
+                         });
+  }
+
+  // Parses `sql` as a single statement and returns its `statement_sql()`.
+  // The caller is responsible for asserting `sql` is syntactically well-formed
+  // and produces exactly one statement; failures abort the test.
+  SqlSource ParseOne(SqlSource sql) {
+    PerfettoSqlParser parser(macros_, catalog_,
+                             /*pipelines_allowed=*/false);
+    parser.Reset(std::move(sql));
+    PERFETTO_CHECK(parser.Next());
+    PERFETTO_CHECK(parser.status().ok());
+    SqlSource out = parser.statement_sql();
+    PERFETTO_CHECK(!parser.Next());
+    return out;
+  }
+
+  // Parses a single pipeline statement and returns its plan as text.
+  base::StatusOr<std::string> ParsePipeline(const std::string& sql) {
+    ASSIGN_OR_RETURN(auto parsed, Parse(SqlSource::FromExecuteQuery(sql)));
+    PERFETTO_CHECK(parsed.size() == 1);
+    const auto* pipeline = std::get_if<Pipeline>(&parsed[0]);
+    PERFETTO_CHECK(pipeline);
+    return pipeline::LogicalPlanToString(pipeline->plan);
+  }
+
+  base::FlatHashMap<std::string, PerfettoSqlParser::Macro> macros_;
+  StringPool pool_;
+  std::unique_ptr<SqliteConnection> connection_;
+  pipeline::TestCatalog catalog_;
+};
+
+TEST_F(PerfettoSqlParserTest, ExplainKeepsPrefix) {
+  SqlSource res =
+      SqlSource::FromExecuteQuery("EXPLAIN QUERY PLAN SELECT * FROM slice;");
+  PerfettoSqlParser parser(macros_, catalog_,
+                           /*pipelines_allowed=*/false);
+  parser.Reset(res);
+  ASSERT_TRUE(parser.Next());
+  ASSERT_EQ(parser.statement(), Statement{SqliteSql{}});
+  ASSERT_EQ(parser.statement_sql().sql(),
+            FindSubstr(res, "EXPLAIN QUERY PLAN SELECT * FROM slice").sql());
+
+  SqlSource bytecode = SqlSource::FromExecuteQuery("EXPLAIN SELECT 1");
+  ASSERT_EQ(ParseOne(bytecode).sql(),
+            FindSubstr(bytecode, "EXPLAIN SELECT 1").sql());
+}
+
+TEST_F(PerfettoSqlParserTest, ExplainWithMacro) {
+  RegisterMacro("foo", {}, "SELECT 1");
+  SqlSource res = SqlSource::FromExecuteQuery("EXPLAIN QUERY PLAN foo!();");
+  ASSERT_EQ(ParseOne(res).sql(), "EXPLAIN QUERY PLAN SELECT 1");
+}
+
+TEST_F(PerfettoSqlParserTest, MultipleStmts) {
+  // Empty statements are skipped.
+  auto res = SqlSource::FromExecuteQuery(
+      " ; SELECT * FROM slice; ; SELECT * FROM s; ;");
+  PerfettoSqlParser parser(macros_, catalog_,
+                           /*pipelines_allowed=*/false);
+  parser.Reset(res);
+  ASSERT_TRUE(parser.Next());
+  ASSERT_EQ(parser.statement(), Statement{SqliteSql{}});
+  ASSERT_EQ(parser.statement_sql().sql(),
+            FindSubstr(res, "SELECT * FROM slice").sql());
+  ASSERT_TRUE(parser.Next());
+  ASSERT_EQ(parser.statement(), Statement{SqliteSql{}});
+  ASSERT_EQ(parser.statement_sql().sql(), "SELECT * FROM s");
+  ASSERT_FALSE(parser.Next());
+  ASSERT_TRUE(parser.status().ok());
+}
+
+TEST_F(PerfettoSqlParserTest, CreatePerfettoFunctionScalar) {
+  auto res = SqlSource::FromExecuteQuery(
+      "create perfetto function foo() returns INT as select 1");
+  ASSERT_THAT(*Parse(res), testing::ElementsAre(CreateFn{
+                               false,
+                               FunctionPrototype{"foo", {}},
+                               CreateFn::Returns{
+                                   false,
+                                   sql_argument::Type::kLong,
+                                   {},
+                               },
+                               FindSubstr(res, "select 1"),
+                               "",
+                               std::nullopt,
+                           }));
+
+  res = SqlSource::FromExecuteQuery(
+      "create perfetto function bar(x INT, y LONG) returns STRING as "
+      "select 'foo'");
+  ASSERT_THAT(*Parse(res), testing::ElementsAre(CreateFn{
+                               false,
+                               FunctionPrototype{
+                                   "bar",
+                                   {
+                                       {"$x", sql_argument::Type::kLong},
+                                       {"$y", sql_argument::Type::kLong},
+                                   },
+                               },
+                               CreateFn::Returns{
+                                   false,
+                                   sql_argument::Type::kString,
+                                   {},
+                               },
+                               FindSubstr(res, "select 'foo'"),
+                               "",
+                               std::nullopt,
+                           }));
+
+  res = SqlSource::FromExecuteQuery(
+      "CREATE perfetto FuNcTiOn bar(x INT, y LONG) returnS STRING As "
+      "select 'foo'");
+  ASSERT_THAT(*Parse(res), testing::ElementsAre(CreateFn{
+                               false,
+                               FunctionPrototype{
+                                   "bar",
+                                   {
+                                       {"$x", sql_argument::Type::kLong},
+                                       {"$y", sql_argument::Type::kLong},
+                                   },
+                               },
+                               CreateFn::Returns{
+                                   false,
+                                   sql_argument::Type::kString,
+                                   {},
+                               },
+                               FindSubstr(res, "select 'foo'"),
+                               "",
+                               std::nullopt,
+                           }));
+}
+
+TEST_F(PerfettoSqlParserTest, CreatePerfettoFunctionVariadicWithOtherArgs) {
+  // Variadic argument can follow non-variadic arguments
+  auto res = SqlSource::FromExecuteQuery(
+      "create perfetto function foo(x INT, args ANY...) returns INT delegates "
+      "to my_intrinsic");
+  auto parsed = Parse(res);
+  ASSERT_TRUE(parsed.status().ok()) << parsed.status().message();
+  ASSERT_EQ(parsed->size(), 1u);
+  auto& stmt = (*parsed)[0];
+  ASSERT_TRUE(std::holds_alternative<CreateFn>(stmt));
+  auto& create_fn = std::get<CreateFn>(stmt);
+  ASSERT_EQ(create_fn.prototype.arguments.size(), 2u);
+  EXPECT_EQ(create_fn.prototype.arguments[0].name().ToStdString(), "x");
+  EXPECT_FALSE(create_fn.prototype.arguments[0].is_variadic());
+  EXPECT_EQ(create_fn.prototype.arguments[1].name().ToStdString(), "args");
+  EXPECT_TRUE(create_fn.prototype.arguments[1].is_variadic());
+}
+
+TEST_F(PerfettoSqlParserTest,
+       CreatePerfettoFunctionVariadicInSqlFunctionError) {
+  // Variadic arguments should NOT work in SQL functions (with AS body)
+  auto res = SqlSource::FromExecuteQuery(
+      "create perfetto function foo(args ANY...) returns INT as select 1");
+  auto parsed = Parse(res);
+  ASSERT_FALSE(parsed.status().ok());
+  EXPECT_THAT(parsed.status().message(),
+              testing::HasSubstr("Variadic arguments are only allowed in "
+                                 "delegate functions"));
+}
+
+TEST_F(PerfettoSqlParserTest, CreatePerfettoFunctionVariadicNotLastError) {
+  // Variadic argument must be the last argument
+  auto res = SqlSource::FromExecuteQuery(
+      "create perfetto function foo(args ANY..., x INT) returns INT delegates "
+      "to my_intrinsic");
+  auto parsed = Parse(res);
+  ASSERT_FALSE(parsed.status().ok());
+  EXPECT_THAT(parsed.status().message(),
+              testing::HasSubstr("Variadic argument must be the last"));
+}
+
+TEST_F(PerfettoSqlParserTest, CreatePerfettoMacro) {
+  auto res = SqlSource::FromExecuteQuery(
+      "create perfetto macro foo(a1 Expr, b1 TableOrSubquery,c3_d "
+      "TableOrSubquery2 ) returns TableOrSubquery3 as random sql snippet");
+  PerfettoSqlParser parser(macros_, catalog_,
+                           /*pipelines_allowed=*/false);
+  parser.Reset(res);
+  ASSERT_TRUE(parser.Next());
+  ASSERT_EQ(
+      parser.statement(),
+      Statement(CreateMacro{
+          false,
+          FindSubstr(res, "foo"),
+          {
+              {FindSubstr(res, "a1"), FindSubstr(res, "Expr")},
+              {FindSubstr(res, "b1"), FindSubstr(res, "TableOrSubquery")},
+              {FindSubstr(res, "c3_d"), FindSubstr(res, "TableOrSubquery2")},
+          },
+          FindSubstr(res, "TableOrSubquery3"),
+          FindSubstr(res, "random sql snippet")}));
+  ASSERT_FALSE(parser.Next());
+}
+
+TEST_F(PerfettoSqlParserTest, CreatePerfettoTableWithSchema) {
+  auto res = SqlSource::FromExecuteQuery(
+      "CREATE PERFETTO TABLE foo(bar INT) AS SELECT 42 AS bar");
+  PerfettoSqlParser parser(macros_, catalog_,
+                           /*pipelines_allowed=*/false);
+  parser.Reset(res);
+  ASSERT_TRUE(parser.Next());
+  ASSERT_EQ(parser.statement(), Statement(CreateTable{
+                                    false,
+                                    "foo",
+                                    {{"$bar", sql_argument::Type::kLong}},
+                                    FindSubstr(res, "SELECT 42 AS bar"),
+                                }));
+  ASSERT_FALSE(parser.Next());
+}
+
+TEST_F(PerfettoSqlParserTest, Pipeline) {
+  auto res = SqlSource::FromExecuteQuery(
+      "FROM slice |> TREE ACCUMULATE UP SUM(dur) AS total; SELECT 1");
+  PerfettoSqlParser parser(macros_, catalog_,
+                           /*pipelines_allowed=*/true);
+  parser.Reset(res);
+  ASSERT_TRUE(parser.Next());
+  const auto* pipeline = std::get_if<Pipeline>(&parser.statement());
+  ASSERT_NE(pipeline, nullptr);
+  EXPECT_EQ(
+      parser.statement_sql(),
+      FindSubstr(res, "FROM slice |> TREE ACCUMULATE UP SUM(dur) AS total"));
+  ASSERT_TRUE(parser.Next());
+  ASSERT_EQ(parser.statement(), Statement(SqliteSql{}));
+  ASSERT_FALSE(parser.Next());
+  ASSERT_TRUE(parser.status().ok());
+}
+
+TEST_F(PerfettoSqlParserTest, PipelineExpandsMacros) {
+  RegisterMacro("stacks", {}, "(SELECT * FROM tree)");
+  auto res = SqlSource::FromExecuteQuery(
+      "FROM stacks!() |> TREE ACCUMULATE UP SUM(self) AS total");
+  PerfettoSqlParser parser(macros_, catalog_,
+                           /*pipelines_allowed=*/true);
+  parser.Reset(res);
+  ASSERT_TRUE(parser.Next()) << parser.status().message();
+  const auto* pipeline = std::get_if<Pipeline>(&parser.statement());
+  ASSERT_NE(pipeline, nullptr);
+  EXPECT_EQ(parser.statement_sql().sql(),
+            "FROM (SELECT * FROM tree) |> TREE ACCUMULATE UP SUM(self) AS "
+            "total");
+}
+
+// `|>` must be `|` immediately followed by `>`.
+TEST_F(PerfettoSqlParserTest, PipelineSyntaxErrors) {
+  EXPECT_THAT(ParsePipeline("FROM slice | > TREE ACCUMULATE UP SUM(a) AS b")
+                  .status()
+                  .message(),
+              HasSubstr("syntax error"));
+  EXPECT_THAT(ParsePipeline("FROM a JOIN b ON a.x = b.y |> TREE ACCUMULATE "
+                            "UP SUM(a) AS b")
+                  .status()
+                  .message(),
+              HasSubstr("syntax error near 'JOIN'"));
+}
+
+TEST_F(PerfettoSqlParserTest, PipelineCompileErrors) {
+  EXPECT_THAT(ParsePipeline("FROM nope").status().message(),
+              HasSubstr("'nope' is not known"));
+  EXPECT_THAT(ParsePipeline("FROM (SELECT id, self FROM tree) |> TREE "
+                            "ACCUMULATE UP SUM(self) AS total")
+                  .status()
+                  .message(),
+              HasSubstr("TREE ACCUMULATE: no such column: 'parent_id'"));
+  EXPECT_THAT(ParsePipeline("FROM slice |> TREE ACCUMULATE UP SUM(*) AS n")
+                  .status()
+                  .message(),
+              HasSubstr("expected a column name, not *"));
+  EXPECT_THAT(ParsePipeline("FROM slice |> TREE ACCUMULATE UP self AS n")
+                  .status()
+                  .message(),
+              HasSubstr("expected an aggregate like SUM(column)"));
+  EXPECT_THAT(
+      ParsePipeline("FROM slice |> TREE ACCUMULATE UP SUM(self + 1) AS n")
+          .status()
+          .message(),
+      HasSubstr("an expression other than a column is not supported yet"));
+}
+
+TEST_F(PerfettoSqlParserTest, PipelineQualifiedColumns) {
+  // A qualifier picks the source's column over a later one of the same name.
+  auto plan = ParsePipeline(
+      "FROM slice |> TREE ACCUMULATE UP SUM(self) AS SELF "
+      "|> TREE ACCUMULATE UP SUM(Slice.self) AS total");
+  ASSERT_TRUE(plan.ok()) << plan.status().message();
+
+  // An alias renames the qualifier without taking the table off the direct
+  // dataframe read.
+  plan =
+      ParsePipeline("FROM slice AS s |> TREE ACCUMULATE UP SUM(s.self) AS n");
+  ASSERT_TRUE(plan.ok()) << plan.status().message();
+  EXPECT_THAT(ParsePipeline(
+                  "FROM slice AS s |> TREE ACCUMULATE UP SUM(slice.self) AS n")
+                  .status()
+                  .message(),
+              HasSubstr("no such column: 'slice.self'"));
+
+  EXPECT_TRUE(
+      ParsePipeline("FROM tree AS t |> TREE ACCUMULATE UP SUM(t.self) AS n")
+          .ok());
+  EXPECT_THAT(
+      ParsePipeline("FROM tree AS t |> TREE ACCUMULATE UP SUM(tree.self) AS n")
+          .status()
+          .message(),
+      HasSubstr("no such column: 'tree.self'"));
+  EXPECT_THAT(ParsePipeline("FROM (SELECT * FROM tree) |> TREE ACCUMULATE UP "
+                            "SUM(tree.self) AS n")
+                  .status()
+                  .message(),
+              HasSubstr("no such column: 'tree.self'"));
+  EXPECT_THAT(ParsePipeline(
+                  "FROM slice |> TREE ACCUMULATE UP SUM(main.slice.self) AS n")
+                  .status()
+                  .message(),
+              HasSubstr("a schema-qualified column is not supported yet"));
+}
+
+TEST_F(PerfettoSqlParserTest, PipelineDuplicateNamesAreAmbiguousOnReference) {
+  EXPECT_TRUE(
+      ParsePipeline("FROM slice |> TREE ACCUMULATE UP SUM(self) AS SELF").ok());
+  EXPECT_TRUE(ParsePipeline("FROM slice |> TREE ACCUMULATE UP SUM(self) AS a, "
+                            "SUM(self) AS A")
+                  .ok());
+  EXPECT_THAT(
+      ParsePipeline("FROM slice |> TREE ACCUMULATE UP SUM(self) AS SELF "
+                    "|> TREE ACCUMULATE UP SUM(self) AS total")
+          .status()
+          .message(),
+      HasSubstr("column 'self' is ambiguous: it could be `slice.self` or "
+                "`TREE ACCUMULATE SUM(self) AS SELF`"));
+  EXPECT_THAT(
+      ParsePipeline("FROM slice |> TREE ACCUMULATE UP SUM(self) AS a, "
+                    "SUM(self) AS A |> TREE ACCUMULATE UP SUM(a) AS total")
+          .status()
+          .message(),
+      HasSubstr("column 'a' is ambiguous: it could be "
+                "`TREE ACCUMULATE SUM(self) AS a` or "
+                "`TREE ACCUMULATE SUM(self) AS A`"));
+}
+
+TEST_F(PerfettoSqlParserTest, PipelineErrorsCarryATraceback) {
+  auto plan = ParsePipeline("FROM slice |> TREE ACCUMULATE SIDEWAYS SUM(a)");
+  ASSERT_FALSE(plan.ok());
+  EXPECT_THAT(plan.status().message(), HasSubstr("^"));
+
+  plan = ParsePipeline("FROM slice\n|> TREE ACCUMULATE UP SUM(nope) AS t");
+  ASSERT_FALSE(plan.ok());
+  EXPECT_THAT(plan.status().message(), HasSubstr("| nope\n"));
+  EXPECT_THAT(plan.status().message(), HasSubstr("^"));
+}
+
+TEST_F(PerfettoSqlParserTest, PipelineAggregatesReadOnlyTheirInput) {
+  EXPECT_THAT(ParsePipeline("FROM slice |> TREE ACCUMULATE UP SUM(self) AS a, "
+                            "SUM(a) AS b")
+                  .status()
+                  .message(),
+              HasSubstr("no such column: 'a'"));
+  EXPECT_TRUE(ParsePipeline("FROM slice |> TREE ACCUMULATE UP SUM(self) AS a "
+                            "|> TREE ACCUMULATE UP SUM(a) AS b")
+                  .ok());
+}
+
+TEST_F(PerfettoSqlParserTest, PipelinePushesPruningIntoSql) {
+  // The dataframe built for each SQL source holds only the columns used.
+  PerfettoSqlParser parser(macros_, catalog_, /*pipelines_allowed=*/true);
+  parser.Reset(SqlSource::FromExecuteQuery(
+      "INTERVAL INTERSECTION OF (sql_spans AS a, (SELECT * FROM sql_spans) AS "
+      "b) |> SELECT ts, dur, b.utid"));
+  ASSERT_TRUE(parser.Next()) << parser.status().message();
+  auto sql = pipeline::SelectPipelineSql(
+      std::get<Pipeline>(parser.statement()).plan, pipeline::PlanKey(0, 0));
+  ASSERT_TRUE(sql.ok()) << sql.status().message();
+  EXPECT_THAT(
+      *sql,
+      HasSubstr(
+          R"((SELECT __intrinsic_dataframe_agg('ts,dur', "ts", "dur") FROM sql_spans AS a))"));
+  EXPECT_THAT(
+      *sql,
+      HasSubstr(
+          R"((SELECT __intrinsic_dataframe_agg('ts,dur,utid', "ts", "dur", "utid") FROM (SELECT * FROM sql_spans) AS b))"));
+}
+
+// The relational operators which reshape a pipeline's row: EXTEND, DROP,
+// RENAME, SET, AS and the forms of SELECT. The expected results were checked
+// against GoogleSQL's analyzer tests (googlesql/analyzer/testdata/
+// pipe_{select,extend,drop,rename,set,as}.test) and BigQuery.
+//
+// A case expects either the plan's output, whose column ids show which value
+// each name refers to, or a substring of the error.
+struct SelectLikeCase {
+  const char* sql;
+  const char* expected;
+};
+
+class PerfettoSqlParserSelectLikeTest : public PerfettoSqlParserTest {
+ protected:
+  // The plan's output line, or the error.
+  std::string Outcome(const std::string& sql) {
+    auto plan = ParsePipeline(sql);
+    if (!plan.ok()) {
+      return "ERROR: " + plan.status().message();
+    }
+    return plan->substr(plan->find("Output("));
+  }
+
+  void Check(const std::vector<SelectLikeCase>& cases) {
+    for (const SelectLikeCase& c : cases) {
+      EXPECT_THAT(Outcome(c.sql), HasSubstr(c.expected)) << c.sql;
+    }
+  }
+};
+
+// x is #0 and y is #1.
+#define T "FROM (SELECT 1 AS x, 'a' AS y) AS t "
+// Two columns called x, #0 and #1, with y, #1, between them. SQLite would
+// rename a second x in a subquery, so the duplicate is made here instead.
+#define D T "|> EXTEND y AS x "
+// An alias with the same name as a column.
+#define K "FROM (SELECT 1 AS key, 2 AS v) AS key "
+
+TEST_F(PerfettoSqlParserSelectLikeTest, Drop) {
+  Check({
+      {T "|> DROP x", "Output(#1 AS y)"},
+      {T "|> DROP X", "Output(#1 AS y)"},
+      {D "|> DROP x", "Output(#1 AS y)"},
+      // An alias still reaches a dropped column.
+      {T "|> DROP x |> SELECT t.x, y", "Output(#0 AS x, #1 AS y)"},
+      {T "|> DROP x |> SELECT t.*", "Output(#0 AS x, #1 AS y)"},
+      {T "|> DROP x |> SELECT *", "Output(#1 AS y)"},
+      {T "|> DROP x |> SELECT x", "no such column: 'x'"},
+      {T "|> DROP t", "expected a column, but 't' is a table alias"},
+      {T "|> DROP z", "no such column: 'z'"},
+      {T "|> DROP x, x", "expected 'x' to be listed only once"},
+      {T "|> DROP x, y", "expected a column to be left after DROP"},
+      // Dropping a column hides an alias of the same name.
+      {K "|> DROP key |> SELECT key.v", "no such column: 'key.v'"},
+      {T "|> DROP t.x", "ERROR"},
+  });
+}
+
+TEST_F(PerfettoSqlParserSelectLikeTest, Rename) {
+  Check({
+      {T "|> RENAME x AS z", "Output(#0 AS z, #1 AS y)"},
+      // An alias is always written with AS.
+      {T "|> RENAME x z", "syntax error"},
+      // Renames happen at once, so columns can swap names.
+      {T "|> RENAME x AS y, y AS x", "Output(#0 AS y, #1 AS x)"},
+      // An alias still reaches a column under its old name.
+      {T "|> RENAME x AS z |> SELECT z, t.x", "Output(#0 AS z, #0 AS x)"},
+      {T "|> RENAME x AS z |> SELECT t.*", "Output(#0 AS x, #1 AS y)"},
+      {T "|> RENAME x AS z |> SELECT t.z", "no such column: 't.z'"},
+      {T "|> RENAME x AS z |> SELECT x", "no such column: 'x'"},
+      // Renaming onto an existing name leaves two columns of that name.
+      {T "|> RENAME x AS y", "Output(#0 AS y, #1 AS y)"},
+      {T "|> RENAME x AS y |> SELECT y", "column 'y' is ambiguous"},
+      {D "|> RENAME x AS z", "column 'x' is ambiguous"},
+      {T "|> RENAME t AS z", "expected a column, but 't' is a table alias"},
+      {T "|> RENAME z AS w", "no such column: 'z'"},
+      {T "|> RENAME x AS a, x AS b", "expected 'x' to be listed only once"},
+      {T "|> RENAME t.x AS z", "ERROR"},
+  });
+}
+
+TEST_F(PerfettoSqlParserSelectLikeTest, Set) {
+  Check({
+      {T "|> SET x = y", "Output(#1 AS x, #1 AS y)"},
+      {T "|> SET x = t.y", "Output(#1 AS x, #1 AS y)"},
+      // Every value is read from the row before the stage.
+      {T "|> SET x = y, y = x", "Output(#1 AS x, #0 AS y)"},
+      // An alias still reaches the old value.
+      {T "|> SET x = y |> SELECT x, t.x", "Output(#1 AS x, #0 AS x)"},
+      {T "|> SET x = y |> SELECT t.*", "Output(#0 AS x, #1 AS y)"},
+      {D "|> SET x = y", "column 'x' is ambiguous"},
+      {T "|> SET t = x", "expected a column, but 't' is a table alias"},
+      {T "|> SET z = x", "no such column: 'z'"},
+      {T "|> SET x = y, x = y", "expected 'x' to be listed only once"},
+      // Setting a column hides an alias of the same name.
+      {K "|> SET key = v |> SELECT key.v", "no such column: 'key.v'"},
+      {T "|> SET t.x = y", "ERROR"},
+  });
+}
+
+TEST_F(PerfettoSqlParserSelectLikeTest, Extend) {
+  Check({
+      {T "|> EXTEND x AS z", "Output(#0 AS x, #1 AS y, #0 AS z)"},
+      {T "|> EXTEND x z", "syntax error"},
+      {T "|> EXTEND t.y AS z", "Output(#0 AS x, #1 AS y, #1 AS z)"},
+      // Without a new name, the column is repeated under its own.
+      {T "|> EXTEND x", "Output(#0 AS x, #1 AS y, #0 AS x)"},
+      {T "|> EXTEND x |> SELECT x", "column 'x' is ambiguous"},
+      {T "|> AS u |> EXTEND u.*", "Output(#0 AS x, #1 AS y, #0 AS x, #1 AS y)"},
+      // A new column is not under an existing alias.
+      {T "|> EXTEND x AS z |> SELECT t.*", "Output(#0 AS x, #1 AS y)"},
+      {T "|> EXTEND x AS z |> SELECT t.z", "no such column: 't.z'"},
+      // Items see the row before the stage, not each other.
+      {T "|> EXTEND x AS a, a AS b", "no such column: 'a'"},
+      {T "|> EXTEND *", "expected a table alias before the star"},
+  });
+}
+
+TEST_F(PerfettoSqlParserSelectLikeTest, As) {
+  Check({
+      {T "|> AS u |> SELECT u.x, x", "Output(#0 AS x, #0 AS x)"},
+      {T "|> AS u |> SELECT t.x", "no such column: 't.x'"},
+      // The new alias covers the row as it is now.
+      {T "|> EXTEND x AS z |> AS u |> SELECT u.*",
+       "Output(#0 AS x, #1 AS y, #0 AS z)"},
+      {T "|> DROP x |> AS u |> SELECT u.*", "Output(#1 AS y)"},
+      {T "|> DROP x |> AS u |> SELECT u.x", "no such column: 'u.x'"},
+      {D "|> AS u |> SELECT u.x", "column 'u.x' is ambiguous"},
+  });
+}
+
+TEST_F(PerfettoSqlParserSelectLikeTest, SelectStar) {
+  Check({
+      {T "|> SELECT *", "Output(#0 AS x, #1 AS y)"},
+      {T "|> SELECT *, *", "Output(#0 AS x, #1 AS y, #0 AS x, #1 AS y)"},
+      {T "|> SELECT *, x AS z", "Output(#0 AS x, #1 AS y, #0 AS z)"},
+      {T "|> SELECT x z", "syntax error"},
+      {T "|> SELECT * EXCEPT (x)", "Output(#1 AS y)"},
+      {T "|> SELECT t.* EXCEPT (x)", "Output(#1 AS y)"},
+      // EXCEPT drops every column of the name.
+      {D "|> SELECT * EXCEPT (x)", "Output(#1 AS y)"},
+      // REPLACE keeps the column's place and name.
+      {T "|> SELECT * REPLACE (y AS x)", "Output(#1 AS x, #1 AS y)"},
+      {T "|> SELECT * REPLACE (t.y AS x)", "Output(#1 AS x, #1 AS y)"},
+      {T "|> SELECT * EXCEPT (y) REPLACE (y AS x)", "Output(#1 AS x)"},
+      {T "|> SELECT * EXCEPT (z)", "no such column: 'z'"},
+      {T "|> SELECT * EXCEPT (x, x)", "expected 'x' to be listed only once"},
+      {T "|> SELECT * EXCEPT (x, y)",
+       "expected a column to be left after EXCEPT"},
+      {T "|> SELECT * REPLACE (y AS z)", "no such column: 'z'"},
+      {T "|> SELECT * REPLACE (y AS x, y AS x)",
+       "expected 'x' to be listed only once"},
+      {D "|> SELECT * REPLACE (y AS x)", "column 'x' is ambiguous"},
+      {T "|> SELECT q.*", "no such table alias: 'q'"},
+      // What a SELECT leaves is a new table: no alias reaches into it.
+      {T "|> SELECT x, y |> SELECT t.x", "no such column: 't.x'"},
+      {T "|> SELECT x, y AS x", "Output(#0 AS x, #1 AS x)"},
+      {T "|> SELECT x, y AS x |> SELECT x", "column 'x' is ambiguous"},
+      {T "|> SELECT * REPLACE (y x)", "ERROR"},
+      {T "|> SELECT * EXCEPT (t.x)", "ERROR"},
+      {T "|> SELECT * REPLACE (x AS x) EXCEPT (y)", "ERROR"},
+  });
+}
+
+// An intersection carries every operand's columns: a star lists them all,
+// while the stages taking bare names only see the columns a bare name finds.
+// A quoted name means exactly what it spells: it can be empty, and a doubled
+// quote inside it is one quote.
+TEST_F(PerfettoSqlParserSelectLikeTest, QuotedNames) {
+  Check({
+      {T "|> SELECT x AS \"\"", "Output(#0 AS )"},
+      {T "|> RENAME x AS \"\"", "Output(#0 AS , #1 AS y)"},
+      {T "|> SELECT x AS \"a\"\"b\"", "Output(#0 AS a\"b)"},
+      {T "|> SELECT x AS `a``b`", "Output(#0 AS a`b)"},
+      {T "|> SELECT x AS [a\"b]", "Output(#0 AS a\"b)"},
+      // The unescaped name is the one later stages see.
+      {T "|> RENAME x AS \"a\"\"b\" |> SELECT `a\"b`", "Output(#0 AS a\"b)"},
+  });
+}
+
+// Crossing from SQL into a pipeline needs proper names, as creating a PERFETTO
+// TABLE does: every column of a source needs a valid column name, whether or
+// not the pipeline goes on to use it.
+TEST_F(PerfettoSqlParserSelectLikeTest, SourceNames) {
+  const char* kInvalid = "expected every column to have a valid name, but ";
+  Check({
+      {"FROM (SELECT 1 AS x, count(*) AS n FROM tree) AS t |> SELECT *",
+       "Output(#0 AS x, #1 AS n)"},
+      // An expression is only named by its alias.
+      {"FROM (SELECT 1 AS x, 1 + 1 FROM tree) AS t |> SELECT x",
+       "expected every column to have a name, but column 2 has none: give it "
+       "one with AS"},
+      {"FROM (SELECT 1 AS \"my col\") AS t", kInvalid},
+      {"FROM (SELECT 1 AS \"1x\") AS t", kInvalid},
+      // Without an earlier x, x:1 is simply not a valid name.
+      {"FROM (SELECT 1 AS \"x:1\") AS t", kInvalid},
+      {"INTERVAL INTERSECTION OF ((SELECT 0 AS ts, 10 AS dur, 1 + 1) AS a, "
+       "(SELECT 5 AS ts, 10 AS dur) AS b)",
+       "expected every column to have a name, but column 3 has none"},
+      // Names are compared case-insensitively, as in SQL.
+      {"FROM (SELECT 1 AS x, 2 AS x) AS t",
+       "expected distinct column names, but there are two named 'x'"},
+      {"FROM (SELECT 1 AS x, 2 AS X) AS t",
+       "expected distinct column names, but there are two named 'x'"},
+      {"INTERVAL INTERSECTION OF ("
+       "(SELECT 0 AS ts, 10 AS dur, 1 AS x, 2 AS x) AS a, "
+       "(SELECT 5 AS ts, 10 AS dur) AS b)",
+       "expected distinct column names"},
+      {"INTERVAL INTERSECTION OF ("
+       "(SELECT 0 AS ts, 10 AS dur) AS a, "
+       "(SELECT 5 AS ts, 10 AS dur) AS a)",
+       "expected a different alias for each relation"},
+  });
+}
+
+#undef T
+#undef D
+#undef K
+
+// One parser serves sources which differ in whether they may use a pipeline,
+// so the permission has to follow the source rather than the parser.
+TEST_F(PerfettoSqlParserTest, PipelinePermissionChangesWithTheSource) {
+  PerfettoSqlParser parser(macros_, catalog_,
+                           /*pipelines_allowed=*/false);
+  parser.Reset(SqlSource::FromExecuteQuery("FROM slice"));
+  ASSERT_FALSE(parser.Next());
+  EXPECT_THAT(parser.status().message(),
+              HasSubstr("Pipelines are not enabled"));
+
+  parser.SetPipelinesAllowed(true);
+  parser.Reset(SqlSource::FromExecuteQuery("FROM slice"));
+  ASSERT_TRUE(parser.Next()) << parser.status().message();
+
+  parser.SetPipelinesAllowed(false);
+  parser.Reset(SqlSource::FromExecuteQuery("FROM slice"));
+  ASSERT_FALSE(parser.Next());
+}
+
+// The new keywords are not reserved and `|` `>` in an expression is still
+// bitwise OR then a comparison.
+TEST_F(PerfettoSqlParserTest, PipelineSyntaxDoesNotLeakIntoSql) {
+  ASSERT_EQ(*Parse(SqlSource::FromExecuteQuery(
+                "SELECT tree, accumulate, up, down FROM t")),
+            std::vector<Statement>{Statement(SqliteSql{})});
+  ASSERT_EQ(*Parse(SqlSource::FromExecuteQuery(
+                "SELECT * FROM a JOIN b ON a.x | b.y > 3")),
+            std::vector<Statement>{Statement(SqliteSql{})});
+  ASSERT_EQ(*Parse(SqlSource::FromExecuteQuery(
+                "SELECT (interval / 1e9), (interval) FROM t")),
+            std::vector<Statement>{Statement(SqliteSql{})});
+  ASSERT_EQ(*Parse(SqlSource::FromExecuteQuery(
+                "SELECT (graph), nodes, edges, bfs, dfs, dominator FROM t")),
+            std::vector<Statement>{Statement(SqliteSql{})});
+}
+
+TEST_F(PerfettoSqlParserTest, PipelineOnlyAsAStatementTableBodyOrSource) {
+  for (const char* sql : {
+           "SELECT * FROM (FROM slice)",
+           "SELECT * FROM t WHERE id IN (FROM slice |> DISTINCT)",
+           "SELECT (FROM slice)",
+           "WITH x AS (FROM slice) SELECT * FROM x",
+           "CREATE PERFETTO VIEW v AS FROM slice",
+           "CREATE TABLE t AS FROM slice",
+           "INSERT INTO t FROM slice",
+           "FROM (SELECT * FROM (FROM slice)) |> DISTINCT",
+       }) {
+    EXPECT_THAT(Parse(SqlSource::FromExecuteQuery(sql)).status().message(),
+                HasSubstr("A pipeline can only be a whole statement"))
+        << sql;
+  }
+  auto parsed = Parse(SqlSource::FromExecuteQuery(
+      "CREATE PERFETTO TABLE t AS FROM slice |> DISTINCT"));
+  ASSERT_TRUE(parsed.ok()) << parsed.status().message();
+  ASSERT_EQ(parsed->size(), 1u);
+  const auto* table = std::get_if<CreateTable>(&(*parsed)[0]);
+  ASSERT_NE(table, nullptr);
+  EXPECT_TRUE(std::holds_alternative<pipeline::LogicalPlan>(table->body));
+}
+
+TEST_F(PerfettoSqlParserTest, Subpipelines) {
+  for (const char* sql : {
+           "FROM (FROM slice |> DISTINCT) |> DISTINCT",
+           "CREATE PERFETTO TABLE t AS FROM (FROM slice) AS s |> DISTINCT",
+           "FROM (FROM (FROM slice)) |> DISTINCT",
+       }) {
+    auto parsed = Parse(SqlSource::FromExecuteQuery(sql));
+    EXPECT_TRUE(parsed.ok()) << sql << ": " << parsed.status().message();
+  }
+}
+
+TEST_F(PerfettoSqlParserTest, CreatePerfettoViewWithSchema) {
+  auto res = SqlSource::FromExecuteQuery(
+      "CREATE PERFETTO VIEW foo(foo STRING, bar INT) AS SELECT 'a' as foo, 42 "
+      "AS bar");
+  PerfettoSqlParser parser(macros_, catalog_,
+                           /*pipelines_allowed=*/false);
+  parser.Reset(res);
+  ASSERT_TRUE(parser.Next());
+  ASSERT_EQ(parser.statement(),
+            Statement(CreateView{
+                false,
+                "foo",
+                {
+                    {"$foo", sql_argument::Type::kString},
+                    {"$bar", sql_argument::Type::kLong},
+                },
+                SqlSource::FromExecuteQuery("SELECT 'a' as foo, 42 AS bar"),
+                SqlSource::FromExecuteQuery(
+                    "CREATE VIEW foo AS SELECT 'a' as foo, 42 AS bar"),
+            }));
+  ASSERT_FALSE(parser.Next());
+}
+
+TEST_F(PerfettoSqlParserTest, ParseComplexArgumentType) {
+  auto res = SqlSource::FromExecuteQuery(
+      "CREATE PERFETTO VIEW foo(foo JOINID(foo.bar), bar LONG) AS SELECT "
+      "'a' as foo, 42 "
+      "AS bar");
+  PerfettoSqlParser parser(macros_, catalog_,
+                           /*pipelines_allowed=*/false);
+  parser.Reset(res);
+  ASSERT_TRUE(parser.Next());
+  ASSERT_EQ(parser.statement(),
+            Statement(CreateView{
+                false,
+                "foo",
+                {
+                    {"$foo", sql_argument::Type::kLong},
+                    {"$bar", sql_argument::Type::kLong},
+                },
+                SqlSource::FromExecuteQuery("SELECT 'a' as foo, 42 AS bar"),
+                SqlSource::FromExecuteQuery(
+                    "CREATE VIEW foo AS SELECT 'a' as foo, 42 AS bar"),
+            }));
+  ASSERT_FALSE(parser.Next());
+}
+
+// ---------------------------------------------------------------------------
+// Macro expansion tests.
+//
+// The rest of the suite never invokes a macro (`macros_` stays empty), so the
+// MacroRewriteBuilder code paths (`BuildForRewrite`, `BuildForUserMacro`,
+// `BuildForArg`, `AuthoredSourceOf`, intrinsic dispatch) go uncovered there.
+// These tests register macros directly and assert on the rewritten
+// `statement_sql()`.  The `original_sql()` side asserts that the rewrite tree
+// preserves the authored form of the statement (what `AsTraceback` would walk).
+// ---------------------------------------------------------------------------
+
+TEST_F(PerfettoSqlParserTest, ExpandsMacroInsideArg) {
+  // `my_wrap` receives a macro call `my_double!(5)` as its arg — exercises
+  // the BuildForArg path: a child whose call-site lives inside a $param
+  // substitution of the parent.
+  RegisterMacro("my_double", {"x"}, "($x * 2)");
+  RegisterMacro("my_wrap", {"y"}, "SELECT $y");
+  SqlSource out =
+      ParseOne(SqlSource::FromExecuteQuery("my_wrap!(my_double!(5))"));
+  EXPECT_EQ(out.sql(), "SELECT (5 * 2)");
+}
+
+TEST_F(PerfettoSqlParserTest, ExpandsParamChainThroughMultipleMacros) {
+  // `$a` in `my_ident` is substituted with `$b` from `my_wrap`, which is
+  // itself substituted with `7` from the authored call site.  When we build
+  // a SqlSource for the final `7`, AuthoredSourceOf must drill through the
+  // chain my_ident ← my_wrap ← source.
+  RegisterMacro("my_ident", {"a"}, "$a");
+  RegisterMacro("my_wrap", {"b"}, "SELECT my_ident!($b)");
+  SqlSource out = ParseOne(SqlSource::FromExecuteQuery("my_wrap!(7)"));
+  EXPECT_EQ(out.sql(), "SELECT 7");
+  // AsTraceback should reach all the way back to the authored "7" position
+  // in the original source, not name an intermediate macro expansion buffer.
+  std::string tb = out.AsTraceback(static_cast<uint32_t>(out.sql().find('7')));
+  EXPECT_THAT(tb, testing::HasSubstr("my_wrap!(7)"));
+}
+
+TEST_F(PerfettoSqlParserTest, ExpandsMacroWithSubsumedParamSegment) {
+  // `my_wrap`'s body calls `my_parens!($x)` — the `$x` $param segment's
+  // body range is *inside* the literal `my_parens!(...)` body-call range.
+  // The subsumption filter in BuildForUserMacro must drop the segment to
+  // keep the Rewriter's invariant (no overlapping rewrites) satisfied.
+  RegisterMacro("my_parens", {"y"}, "($y)");
+  RegisterMacro("my_wrap", {"x"}, "SELECT my_parens!($x)");
+  SqlSource out = ParseOne(SqlSource::FromExecuteQuery("my_wrap!(42)"));
+  EXPECT_EQ(out.sql(), "SELECT (42)");
+}
+
+TEST_F(PerfettoSqlParserTest, ExpandsStringifyIntrinsic) {
+  SqlSource out = ParseOne(
+      SqlSource::FromExecuteQuery("SELECT __intrinsic_stringify!(foo bar)"));
+  EXPECT_EQ(out.sql(), "SELECT 'foo bar'");
+}
+
+TEST_F(PerfettoSqlParserTest, ExpandsTokenApplyIntrinsic) {
+  // token_apply!(m, (a, b, c)) -> m!(a), m!(b), m!(c)
+  RegisterMacro("wrap", {"x"}, "WRAP($x)");
+  SqlSource out = ParseOne(SqlSource::FromExecuteQuery(
+      "SELECT __intrinsic_token_apply!(wrap, (1, 2, 3))"));
+  EXPECT_EQ(out.sql(), "SELECT WRAP(1), WRAP(2), WRAP(3)");
+}
+
+TEST_F(PerfettoSqlParserTest, WrongMacroArgCountSurfacesError) {
+  RegisterMacro("binary", {"a", "b"}, "$a + $b");
+  auto parsed = Parse(SqlSource::FromExecuteQuery("binary!(1)"));
+  ASSERT_FALSE(parsed.status().ok());
+}
+
+}  // namespace
+}  // namespace perfetto::trace_processor

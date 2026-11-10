@@ -1,0 +1,541 @@
+// Copyright 2021 The PDFium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#include "core/fxge/cfx_path.h"
+
+#include "core/fxcrt/fx_coordinates.h"
+#include "testing/gtest/include/gtest/gtest.h"
+
+TEST(CFXPath, BasicTest) {
+  CFX_Path path;
+  path.AppendRect(/*left=*/1, /*bottom=*/2, /*right=*/3, /*top=*/5);
+  EXPECT_EQ(5u, path.GetPoints().size());
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(1, 2, 3, 5), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(1, 2, 3, 5), path.GetBoundingBox());
+
+  const CFX_Matrix kScaleMatrix(1, 0, 0, 2, 60, 70);
+  EXPECT_EQ(CFX_FloatRect(61, 74, 63, 80), path.GetRect(&kScaleMatrix));
+  EXPECT_EQ(CFX_FloatRect(1, 2, 3, 5), path.GetBoundingBox());
+
+  path.Clear();
+  EXPECT_EQ(0u, path.GetPoints().size());
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(), path.GetBoundingBox());
+
+  // 4 points without a closed path does not make a rect.
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({1, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_EQ(4u, path.GetPoints().size());
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 1, 1), path.GetBoundingBox());
+
+  // 4 points with a closed path makes a rect.
+  path.ClosePath();
+  EXPECT_EQ(4u, path.GetPoints().size());
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 1, 1), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(0, 0, 1, 1), path.GetBoundingBox());
+
+  path.Transform(kScaleMatrix);
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(60, 70, 61, 72), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(60, 70, 61, 72), path.GetBoundingBox());
+
+  path.Clear();
+  path.AppendFloatRect({1, 2, 3, 5});
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(1, 2, 3, 5), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(1, 2, 3, 5), path.GetBoundingBox());
+}
+
+TEST(CFXPath, ShearTransform) {
+  CFX_Path path;
+  path.AppendRect(/*left=*/1, /*bottom=*/2, /*right=*/3, /*top=*/5);
+
+  const CFX_Matrix kShearMatrix(1, 2, 0, 1, 0, 0);
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(&kShearMatrix).has_value());
+  EXPECT_EQ(CFX_FloatRect(1, 2, 3, 5), path.GetBoundingBox());
+
+  path.Transform(kShearMatrix);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(1, 4, 3, 11), path.GetBoundingBox());
+
+  const CFX_Matrix shear_inverse_matrix = kShearMatrix.GetInverse();
+  EXPECT_EQ(CFX_FloatRect(1, 2, 3, 5), path.GetRect(&shear_inverse_matrix));
+  EXPECT_EQ(CFX_FloatRect(1, 4, 3, 11), path.GetBoundingBox());
+
+  path.Transform(shear_inverse_matrix);
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(1, 2, 3, 5), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(1, 2, 3, 5), path.GetBoundingBox());
+}
+
+TEST(CFXPath, Hexagon) {
+  CFX_Path path;
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({3, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 2}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({1, 2}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(6u, path.GetPoints().size());
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(5));
+  EXPECT_FALSE(path.IsClosingFigure(5));
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 3, 2), path.GetBoundingBox());
+
+  path.ClosePath();
+  ASSERT_EQ(6u, path.GetPoints().size());
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(5));
+  EXPECT_TRUE(path.IsClosingFigure(5));
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+
+  // Calling ClosePath() repeatedly makes no difference.
+  path.ClosePath();
+  ASSERT_EQ(6u, path.GetPoints().size());
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(5));
+  EXPECT_TRUE(path.IsClosingFigure(5));
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+
+  // A hexagon with the same start/end point is still not a rectangle.
+  path.Clear();
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({3, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 2}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({1, 2}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 3, 2), path.GetBoundingBox());
+}
+
+TEST(CFXPath, ClosePath) {
+  // The path starts out open.
+  CFX_Path path;
+  path.AppendLine({0, 0}, {0, 1});
+  path.AppendLine({0, 1}, {1, 1});
+  path.AppendLine({1, 1}, {1, 0});
+  ASSERT_EQ(4u, path.GetPoints().size());
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(3));
+  EXPECT_FALSE(path.IsClosingFigure(3));
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+
+  const CFX_Matrix kIdentityMatrix;
+  ASSERT_TRUE(kIdentityMatrix.IsIdentity());
+  EXPECT_FALSE(path.GetRect(&kIdentityMatrix).has_value());
+
+  path.ClosePath();
+  ASSERT_EQ(4u, path.GetPoints().size());
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(3));
+  EXPECT_TRUE(path.IsClosingFigure(3));
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 1, 1), path.GetRect(nullptr));
+
+  // Calling ClosePath() repeatedly makes no difference.
+  path.ClosePath();
+  ASSERT_EQ(4u, path.GetPoints().size());
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(3));
+  EXPECT_TRUE(path.IsClosingFigure(3));
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 1, 1), path.GetRect(nullptr));
+
+  path.AppendPointAndClose({0, 0}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(5u, path.GetPoints().size());
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(3));
+  EXPECT_TRUE(path.IsClosingFigure(3));
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(4));
+  EXPECT_TRUE(path.IsClosingFigure(4));
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 1, 1), path.GetRect(nullptr));
+}
+
+TEST(CFXPath, FivePointRect) {
+  CFX_Path path;
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(5u, path.GetPoints().size());
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(4));
+  EXPECT_FALSE(path.IsClosingFigure(4));
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+
+  path.ClosePath();
+  ASSERT_EQ(5u, path.GetPoints().size());
+  EXPECT_EQ(CFX_Path::Point::Type::kLine, path.GetType(4));
+  EXPECT_TRUE(path.IsClosingFigure(4));
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+
+  // 4-point rect with a duplicate point.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(5u, path.GetPoints().size());
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+
+  path.ClosePath();
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+
+  // 4-point rect with a collinear point on an edge.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 1}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(5u, path.GetPoints().size());
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+
+  // 4-point rect with a collinear point on the closing edge.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 0.1f}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(5u, path.GetPoints().size());
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetBoundingBox());
+}
+
+TEST(CFXPath, SixPlusPointRect) {
+  CFX_Path path;
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetBoundingBox());
+
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetBoundingBox());
+
+  // 4-point rect with duplicate points that does not repeat the start point at
+  // the end.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 1}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(6u, path.GetPoints().size());
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetBoundingBox());
+}
+
+TEST(CFXPath, GetRectOppositeCorner) {
+  CFX_Path path;
+  path.AppendRect(/*left=*/1, /*bottom=*/2, /*right=*/3, /*top=*/5);
+  EXPECT_EQ(CFX_PointF(3, 5), path.GetRectOppositeCorner());
+
+  // A duplicate point makes GetPoints()[2] a point on the first edge.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(CFX_PointF(2, 0), path.GetPoints()[2].point_);
+  EXPECT_EQ(CFX_PointF(2, 1), path.GetRectOppositeCorner());
+
+  // So does an extra point in the middle of the first edge.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 0}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(CFX_PointF(2, 0), path.GetPoints()[2].point_);
+  EXPECT_EQ(CFX_PointF(2, 1), path.GetRectOppositeCorner());
+
+  // Same as above, but closed without repeating the first point.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 1}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(CFX_PointF(2, 0), path.GetPoints()[2].point_);
+  EXPECT_EQ(CFX_PointF(2, 1), path.GetRectOppositeCorner());
+
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({3, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 1}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.GetRectOppositeCorner().has_value());
+}
+
+TEST(CFXPath, SixPlusPointRectWithCollinearPoints) {
+  // A rectangle with an extra point in the middle of its bottom edge, closed
+  // with "h". This is how some PDF generators emit rectangular clip paths.
+  CFX_Path path;
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 1}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(6u, path.GetPoints().size());
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+
+  constexpr CFX_Matrix kScaleMatrix(1, 0, 0, 2, 60, 70);
+  EXPECT_EQ(CFX_FloatRect(60, 70, 62, 72), path.GetRect(&kScaleMatrix));
+
+  // An extra point on a vertical edge.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0.5f}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+
+  // Extra points on two edges.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({1, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 0}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(7u, path.GetPoints().size());
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(60, 70, 62, 72), path.GetRect(&kScaleMatrix));
+
+  // Same as above, but closed without repeating the first point.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({1, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({1, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 1}, CFX_Path::Point::Type::kLine);
+  ASSERT_EQ(6u, path.GetPoints().size());
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(60, 70, 62, 72), path.GetRect(&kScaleMatrix));
+
+  // A point that goes past the corner and back is not in between its
+  // neighbors, so the path is not a rectangle.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({3, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+
+  // Collinear points on a diagonal line are not dropped.
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({1, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 2}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 3}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 3}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+}
+
+TEST(CFXPath, NotRect) {
+  CFX_Path path;
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0.1f}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetBoundingBox());
+
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({3, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 1}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 3, 1), path.GetBoundingBox());
+
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 1}, CFX_Path::Point::Type::kMove);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetBoundingBox());
+
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({3, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({0, 1}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 3, 1), path.GetBoundingBox());
+
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetBoundingBox());
+
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetBoundingBox());
+
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPointAndClose({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 1), path.GetBoundingBox());
+
+  path.Clear();
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({2, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({2, 2}, CFX_Path::Point::Type::kLine);
+  EXPECT_FALSE(path.IsRect());
+  EXPECT_FALSE(path.GetRect(nullptr).has_value());
+  const CFX_Matrix kScaleMatrix(1, 0, 0, 2, 60, 70);
+  EXPECT_FALSE(path.GetRect(&kScaleMatrix).has_value());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 2, 2), path.GetBoundingBox());
+}
+
+TEST(CFXPath, EmptyRect) {
+  // Document existing behavior where an empty rect is still considered a rect.
+  CFX_Path path;
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kMove);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+  path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+  EXPECT_TRUE(path.IsRect());
+  EXPECT_EQ(CFX_FloatRect(0, 0, 0, 1), path.GetRect(nullptr));
+  EXPECT_EQ(CFX_FloatRect(0, 0, 0, 1), path.GetBoundingBox());
+}
+
+TEST(CFXPath, Append) {
+  CFX_Path path;
+  path.AppendPoint({5, 6}, CFX_Path::Point::Type::kMove);
+  ASSERT_EQ(1u, path.GetPoints().size());
+  EXPECT_EQ(CFX_PointF(5, 6), path.GetPoint(0));
+
+  CFX_Path empty_path;
+  path.Append(empty_path, nullptr);
+  ASSERT_EQ(1u, path.GetPoints().size());
+  EXPECT_EQ(CFX_PointF(5, 6), path.GetPoint(0));
+
+  path.Append(path, nullptr);
+  ASSERT_EQ(2u, path.GetPoints().size());
+  EXPECT_EQ(CFX_PointF(5, 6), path.GetPoint(0));
+  EXPECT_EQ(CFX_PointF(5, 6), path.GetPoint(1));
+
+  const CFX_Matrix kScaleMatrix(1, 0, 0, 2, 60, 70);
+  path.Append(path, &kScaleMatrix);
+  ASSERT_EQ(4u, path.GetPoints().size());
+  EXPECT_EQ(CFX_PointF(5, 6), path.GetPoint(0));
+  EXPECT_EQ(CFX_PointF(5, 6), path.GetPoint(1));
+  EXPECT_EQ(CFX_PointF(65, 82), path.GetPoint(2));
+  EXPECT_EQ(CFX_PointF(65, 82), path.GetPoint(3));
+}
+
+TEST(CFXPath, GetBoundingBoxForStrokePath) {
+  static constexpr float kLineWidth = 1.0f;
+  static constexpr float kMiterLimit = 1.0f;
+
+  {
+    // Test the case that the first/last point is "move" and it closes the
+    // paths.
+    CFX_Path path;
+    path.AppendPoint({2, 0}, CFX_Path::Point::Type::kMove);
+    path.ClosePath();
+    EXPECT_EQ(CFX_FloatRect(2, 0, 2, 0),
+              path.GetBoundingBoxForStrokePath(kLineWidth, kMiterLimit));
+  }
+
+  {
+    // Test on a regular rect path.
+    CFX_Path path;
+    path.AppendPoint({2, 0}, CFX_Path::Point::Type::kMove);
+    path.AppendPoint({2, 1}, CFX_Path::Point::Type::kLine);
+    path.AppendPoint({0, 1}, CFX_Path::Point::Type::kLine);
+    path.AppendPoint({0, 0}, CFX_Path::Point::Type::kLine);
+    path.ClosePath();
+    EXPECT_EQ(CFX_FloatRect(-1, -1, 3, 2),
+              path.GetBoundingBoxForStrokePath(kLineWidth, kMiterLimit));
+
+    // If the final point is "move" and the path remains open, it should not
+    // affect the bounding rect.
+    path.AppendPoint({20, 20}, CFX_Path::Point::Type::kMove);
+    EXPECT_EQ(CFX_FloatRect(-1, -1, 3, 2),
+              path.GetBoundingBoxForStrokePath(kLineWidth, kMiterLimit));
+  }
+}
