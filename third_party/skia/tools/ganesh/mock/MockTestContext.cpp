@@ -1,0 +1,63 @@
+
+/*
+ * Copyright 2017 Google LLC
+ *
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+#include "include/core/SkContext.h"
+#include "tools/ganesh/mock/MockTestContext.h"
+
+#include "include/gpu/ganesh/GrContextOptions.h"
+#include "include/gpu/ganesh/GrDirectContext.h"
+#include "src/core/SkContextPriv.h"
+#include "src/gpu/ganesh/SkGaneshGPUContextAdapter.h"
+
+namespace {
+
+class MockTestContext : public sk_gpu_test::TestContext {
+public:
+    MockTestContext() {}
+    ~MockTestContext() override {}
+
+    GrBackendApi backend() override { return GrBackendApi::kMock; }
+
+    void testAbandon() override {}
+
+    sk_sp<GrDirectContext> makeContext(const GrContextOptions& options) override {
+        return GrDirectContext::MakeMock(nullptr, options);
+    }
+
+protected:
+    void teardown() override {}
+    void onPlatformMakeNotCurrent() const override {}
+    void onPlatformMakeCurrent() const override {}
+    std::function<void()> onPlatformGetAutoContextRestore() const override { return nullptr; }
+
+private:
+    using INHERITED = sk_gpu_test::TestContext;
+};
+
+} // anonymous namespace
+
+namespace sk_gpu_test {
+
+TestContext* CreateMockTestContext(TestContext*) { return new MockTestContext(); }
+
+}  // namespace sk_gpu_test
+
+namespace SkContexts {
+
+std::unique_ptr<SkContext> MakeGanesh(const SkContextOptions& contextOptions,
+                                      const GrContextOptions& grOptions,
+                                      sk_gpu_test::TestContext*) {
+    auto direct = GrDirectContext::MakeMock(nullptr, grOptions);
+    if (!direct) {
+        return nullptr;
+    }
+    return SkContextCtorAccessor::MakeContext(
+            contextOptions, std::make_unique<SkGaneshGPUContextAdapter>(std::move(direct)));
+}
+
+}  // namespace SkContexts

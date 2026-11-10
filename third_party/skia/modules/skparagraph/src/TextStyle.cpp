@@ -1,0 +1,220 @@
+// Copyright 2019 Google LLC
+#include "include/core/SkColor.h"
+#include "include/core/SkFontStyle.h"
+#include "modules/skparagraph/include/TextStyle.h"
+
+namespace skia {
+namespace textlayout {
+
+namespace {
+// Everything the shaper reads to build and measure a run's font; styles equal here can share
+// one shaping call (features and spacing are applied per style range on top of it)
+bool shapeWithSameFont(const TextStyle& a, const TextStyle& b) {
+    return a.getFontStyle() == b.getFontStyle() &&
+           a.getFontFamilies() == b.getFontFamilies() &&
+           a.getFontArguments() == b.getFontArguments() &&
+           nearlyEqual(a.getFontSize(), b.getFontSize()) &&
+           // The shaper sees only the effective height, which is zero without the override
+           nearlyEqual(a.getHeight(), b.getHeight()) &&
+           a.getHalfLeading() == b.getHalfLeading() &&
+           nearlyEqual(a.getBaselineShift(), b.getBaselineShift()) &&
+           a.getFontEdging() == b.getFontEdging() &&
+           a.getFontHinting() == b.getFontHinting() &&
+           a.getSubpixel() == b.getSubpixel() &&
+           a.getLocale() == b.getLocale();
+}
+}  // namespace
+
+const std::vector<SkString>* TextStyle::kDefaultFontFamilies =
+        new std::vector<SkString>{SkString(DEFAULT_FONT_FAMILY)};
+
+TextStyle TextStyle::cloneForPlaceholder() {
+    TextStyle result;
+    result.fColor = fColor;
+    result.fFontSize = fFontSize;
+    result.fFontFamilies = fFontFamilies;
+    result.fDecoration = fDecoration;
+    result.fHasBackground = fHasBackground;
+    result.fHasForeground = fHasForeground;
+    result.fBackground = fBackground;
+    result.fForeground = fForeground;
+    result.fHeightOverride = fHeightOverride;
+    result.fIsPlaceholder = true;
+    result.fFontFeatures = fFontFeatures;
+    result.fHalfLeading = fHalfLeading;
+    result.fBaselineShift = fBaselineShift;
+    result.fFontArguments = fFontArguments;
+    return result;
+}
+
+bool TextStyle::equals(const TextStyle& other) const {
+
+    if (fIsPlaceholder || other.fIsPlaceholder) {
+        return false;
+    }
+
+    if (fColor != other.fColor) {
+        return false;
+    }
+    if (!(fDecoration == other.fDecoration)) {
+        return false;
+    }
+    if (!(fFontStyle == other.fFontStyle)) {
+        return false;
+    }
+    if (fFontFamilies != other.fFontFamilies) {
+        return false;
+    }
+    if (fLetterSpacing != other.fLetterSpacing) {
+        return false;
+    }
+    if (fWordSpacing != other.fWordSpacing) {
+        return false;
+    }
+    if (fHeight != other.fHeight) {
+        return false;
+    }
+    if (fHeightOverride != other.fHeightOverride) {
+        return false;
+    }
+    if (fHalfLeading != other.fHalfLeading) {
+        return false;
+    }
+    if (fBaselineShift != other.fBaselineShift) {
+        return false;
+    }
+    if (fFontSize != other.fFontSize) {
+        return false;
+    }
+    if (fLocale != other.fLocale) {
+        return false;
+    }
+    if (fHasForeground != other.fHasForeground || fForeground != other.fForeground) {
+        return false;
+    }
+    if (fHasBackground != other.fHasBackground || fBackground != other.fBackground) {
+        return false;
+    }
+    if (fTextShadows.size() != other.fTextShadows.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < fTextShadows.size(); ++i) {
+        if (fTextShadows[i] != other.fTextShadows[i]) {
+            return false;
+        }
+    }
+    if (fFontFeatures.size() != other.fFontFeatures.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < fFontFeatures.size(); ++i) {
+        if (!(fFontFeatures[i] == other.fFontFeatures[i])) {
+            return false;
+        }
+    }
+    if (fFontArguments != other.fFontArguments) {
+        return false;
+    }
+
+    return true;
+}
+
+bool TextStyle::equalsByFonts(const TextStyle& that) const {
+    // ParagraphCache reuses shaped runs on equality, so every field the shaper reads belongs here
+    return !fIsPlaceholder && !that.fIsPlaceholder &&
+           shapeWithSameFont(*this, that) &&
+           fFontFeatures == that.fFontFeatures &&
+           nearlyEqual(fLetterSpacing, that.fLetterSpacing) &&
+           nearlyEqual(fWordSpacing, that.fWordSpacing);
+}
+
+bool TextStyle::matchOneAttribute(StyleType styleType, const TextStyle& other) const {
+    switch (styleType) {
+        case kForeground:
+            return (!fHasForeground && !other.fHasForeground && fColor == other.fColor) ||
+                   ( fHasForeground &&  other.fHasForeground && fForeground == other.fForeground);
+
+        case kBackground:
+            return (!fHasBackground && !other.fHasBackground) ||
+                   ( fHasBackground &&  other.fHasBackground && fBackground == other.fBackground);
+
+        case kShadow:
+            if (fTextShadows.size() != other.fTextShadows.size()) {
+                return false;
+            }
+
+            for (int32_t i = 0; i < SkToInt(fTextShadows.size()); ++i) {
+                if (fTextShadows[i] != other.fTextShadows[i]) {
+                    return false;
+                }
+            }
+            return true;
+
+        case kDecorations:
+            return this->fDecoration == other.fDecoration;
+
+        case kLetterSpacing:
+            return fLetterSpacing == other.fLetterSpacing;
+
+        case kWordSpacing:
+            return fWordSpacing == other.fWordSpacing;
+
+        case kAllAttributes:
+            return this->equals(other);
+
+        case kFont:
+            // TODO: should not we take typefaces in account?
+            return shapeWithSameFont(*this, other);
+        default:
+            SkASSERT(false);
+            return false;
+    }
+}
+
+void TextStyle::getFontMetrics(SkFontMetrics* metrics) const {
+    SkFont font(fTypeface, fFontSize);
+    font.setEdging(fEdging);
+    font.setSubpixel(fSubpixel);
+    font.setHinting(fHinting);
+    font.getMetrics(metrics);
+    metrics->fAscent -= metrics->fLeading / 2;
+    metrics->fDescent += metrics->fLeading / 2;
+    // Must stay in sync with Run::calculateMetrics() so callers see the metrics layout uses
+    if (fHeightOverride) {
+        const auto lineHeight = fHeight * fFontSize;
+        const auto intrinsicHeight = metrics->fDescent - metrics->fAscent;
+        // Half-leading keeps the font's ascent and descent and splits the extra height evenly
+        if (fHalfLeading) {
+            const auto extraLeading = (lineHeight - intrinsicHeight) / 2;
+            metrics->fAscent -= extraLeading;
+            metrics->fDescent += extraLeading;
+        } else {
+            const auto multiplier = lineHeight / intrinsicHeight;
+            metrics->fAscent *= multiplier;
+            metrics->fDescent *= multiplier;
+        }
+    }
+    // If we shift the baseline we need to make sure the shifted text fits the line
+    metrics->fAscent += fBaselineShift;
+    metrics->fDescent += fBaselineShift;
+}
+
+void TextStyle::setFontArguments(const std::optional<SkFontArguments>& args) {
+    if (!args) {
+        fFontArguments.reset();
+        return;
+    }
+
+    fFontArguments.emplace(*args);
+}
+
+bool PlaceholderStyle::equals(const PlaceholderStyle& other) const {
+    return nearlyEqual(fWidth, other.fWidth) &&
+           nearlyEqual(fHeight, other.fHeight) &&
+           fAlignment == other.fAlignment &&
+           fBaseline == other.fBaseline &&
+           (fAlignment != PlaceholderAlignment::kBaseline ||
+            nearlyEqual(fBaselineOffset, other.fBaselineOffset));
+}
+
+}  // namespace textlayout
+}  // namespace skia

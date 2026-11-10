@@ -1,0 +1,135 @@
+load("//bazel:flags.bzl", "selects")
+
+package(
+    default_applicable_licenses = ["//:license"],
+)
+
+licenses(["notice"])
+
+# @platforms is found at https://github.com/bazelbuild/platforms
+
+config_setting(
+    name = "linux_x64",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+)
+
+# Apple devices with intel processors released before the shift to the M1 chip
+# will use this config setting.
+config_setting(
+    name = "mac_x64",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:macos",
+    ],
+)
+
+# M1 Macs (and later) will use this setting.
+config_setting(
+    name = "mac_arm64",
+    constraint_values = [
+        "@platforms//cpu:arm64",
+        "@platforms//os:macos",
+    ],
+)
+
+config_setting(
+    name = "windows_x64",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+)
+
+config_setting(
+    name = "linux_arm64",
+    constraint_values = [
+        "@platforms//cpu:arm64",
+        "@platforms//os:linux",
+    ],
+)
+
+config_setting(
+    name = "debug_build",
+    values = {"compilation_mode": "dbg"},
+)
+
+config_setting(
+    name = "fast_build",
+    values = {"compilation_mode": "fastbuild"},
+)
+
+config_setting(
+    name = "release_build",
+    values = {"compilation_mode": "opt"},
+)
+
+constraint_value(
+    name = "fuchsia",
+    constraint_setting = "@platforms//os:os",
+)
+
+config_setting(
+    name = "fuchsia_arm64",
+    constraint_values = [
+        "@platforms//cpu:arm64",
+        ":fuchsia",
+    ],
+)
+
+config_setting(
+    name = "cpu_wasm",
+    constraint_values = [
+        "@platforms//cpu:wasm32",
+    ],
+)
+
+selects.config_setting_group(
+    name = "release_build_mac",
+    match_all = [
+        "@platforms//os:macos",
+        ":release_build",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+selects.config_setting_group(
+    name = "release_build_linux",
+    match_all = [
+        "@platforms//os:linux",
+        ":release_build",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+selects.config_setting_group(
+    name = "fast_build_mac",
+    match_all = [
+        "@platforms//os:macos",
+        ":fast_build",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+selects.config_setting_group(
+    name = "fast_build_linux",
+    match_all = [
+        "@platforms//os:linux",
+        ":fast_build",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+# Skia's hermetic Windows toolchain. Its Clang (23) supports --warning-suppression-mappings, so
+# //include/config/copts.bzl enforces -Wunsafe-buffer-usage with it.
+# TODO(b/532990050): Add other platforms once their hermetic Clang supports it (20+).
+config_setting(
+    name = "hermetic_windows",
+    constraint_values = [
+        "@platforms//os:windows",
+        "//bazel/platform:use_hermetic_toolchain",
+    ],
+    visibility = ["//:__subpackages__"],
+)
