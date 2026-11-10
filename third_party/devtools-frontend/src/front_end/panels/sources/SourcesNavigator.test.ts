@@ -1,0 +1,1013 @@
+// Copyright 2023 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import {assert} from 'chai';
+import {afterEach, beforeEach, describe, it} from 'mocha';
+import sinon from 'sinon';
+
+import * as Common from '../../core/common/common.js';
+import * as Platform from '../../core/platform/platform.js';
+import * as SDK from '../../core/sdk/sdk.js';
+import * as TextUtils from '../../core/text_utils/text_utils.js';
+import * as Protocol from '../../generated/protocol.js';
+import type * as Bindings from '../../models/bindings/bindings.js';
+import * as Breakpoints from '../../models/breakpoints/breakpoints.js';
+import * as Persistence from '../../models/persistence/persistence.js';
+import * as Workspace from '../../models/workspace/workspace.js';
+import {assertScreenshot, raf, renderElementIntoDOM, setTestUniverseForWidgets} from '../../testing/DOMHelpers.js';
+import {deinitializeGlobalVars} from '../../testing/EnvironmentHelpers.js';
+import {setupLocaleHooks} from '../../testing/LocaleHelpers.js';
+import {dispatchEvent} from '../../testing/MockConnection.js';
+import {MockDebuggerBackend} from '../../testing/MockScopeChain.js';
+import {setupRuntimeHooks} from '../../testing/RuntimeHelpers.js';
+import {
+  createContentProviderUISourceCodes,
+  createFileSystemUISourceCode,
+} from '../../testing/UISourceCodeHelpers.js';
+import * as UI from '../../ui/legacy/legacy.js';
+
+import * as Sources from './sources.js';
+
+const {urlString} = Platform.DevToolsPath;
+
+describe('NetworkNavigatorView', () => {
+  setupRuntimeHooks();
+  setupLocaleHooks();
+  let workspace: Workspace.Workspace.WorkspaceImpl;
+  let backend: MockDebuggerBackend;
+
+  beforeEach(async () => {
+    backend = new MockDebuggerBackend();
+    workspace = backend.universe.workspace;
+    const targetManager = backend.universe.targetManager;
+    const debuggerWorkspaceBinding = backend.universe.debuggerWorkspaceBinding;
+
+    const actionRegistryInstance = UI.ActionRegistry.ActionRegistry.instance({forceNew: true});
+
+    sinon.stub(Workspace.Workspace.WorkspaceImpl, 'instance').returns(workspace);
+    sinon.stub(SDK.TargetManager.TargetManager, 'instance').returns(targetManager);
+    sinon.stub(Workspace.IgnoreListManager.IgnoreListManager, 'instance').returns(backend.universe.ignoreListManager);
+    sinon.stub(Common.Settings.Settings, 'instance').returns(backend.universe.settings);
+
+    const breakpointManager = Breakpoints.BreakpointManager.BreakpointManager.instance({
+      forceNew: true,
+      targetManager,
+      workspace,
+      debuggerWorkspaceBinding,
+      settings: backend.universe.settings,
+    });
+    Persistence.Persistence.PersistenceImpl.instance({forceNew: true, workspace, breakpointManager});
+    Persistence.NetworkPersistenceManager.NetworkPersistenceManager.instance({forceNew: true, workspace});
+    UI.ShortcutRegistry.ShortcutRegistry.instance({forceNew: true, actionRegistry: actionRegistryInstance});
+    setTestUniverseForWidgets(backend.universe);
+  });
+
+  async function createNetworkNavigatorView(): Promise<Sources.NavigatorView.NavigatorView> {
+    const networkNavigatorView = Sources.SourcesNavigator.NetworkNavigatorView.instance({forceNew: true});
+    renderElementIntoDOM(networkNavigatorView);
+    await networkNavigatorView.updateComplete;
+    const navigatorView =
+        networkNavigatorView.children().find(child => child instanceof Sources.NavigatorView.NavigatorView);
+    assert.exists(navigatorView);
+    return navigatorView;
+  }
+
+  afterEach(async () => {
+    await deinitializeGlobalVars();
+  });
+
+  describe('reveals main target', () => {
+    let tabTarget: SDK.Target.Target;
+    let target: SDK.Target.Target;
+    let project: Bindings.ContentProviderBasedProject.ContentProviderBasedProject;
+
+    beforeEach(async () => {
+      tabTarget = backend.createTarget({type: SDK.Target.Type.TAB});
+      backend.createTarget({parentTarget: tabTarget, subtype: 'prerender'});
+      target = backend.createTarget({parentTarget: tabTarget});
+      ({project} = createContentProviderUISourceCodes({
+         items: [
+           {url: urlString`http://example.com/`, mimeType: 'text/html'},
+           {url: urlString`http://example.com/favicon.ico`, mimeType: 'image/x-icon'},
+           {url: urlString`http://example.com/gtm.js`, mimeType: 'application/javascript'},
+         ],
+         projectType: Workspace.Workspace.projectTypes.Network,
+         target,
+       }));
+    });
+
+    afterEach(() => {
+      Workspace.Workspace.WorkspaceImpl.instance().removeProject(project);
+    });
+
+    it('shows folder with scripts requests', async () => {
+      const {project} = createContentProviderUISourceCodes({
+        items: [
+          {
+            url: urlString`http://example.com/script.js`,
+            mimeType: 'application/javascript',
+            resourceType: Common.ResourceType.resourceTypes.Script,
+          },
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      const folder = rootElement.firstChild();
+      const file = folder?.firstChild();
+
+      assert.strictEqual(folder?.title, 'example.com');
+      assert.strictEqual(file?.title, 'script.js');
+
+      project.removeProject();
+    });
+
+    it('does not show Fetch and XHR requests', async () => {
+      const {project} = createContentProviderUISourceCodes({
+        items: [
+          {
+            url: urlString`http://example.com/list-xhr.json`,
+            mimeType: 'application/json',
+            resourceType: Common.ResourceType.resourceTypes.XHR,
+          },
+          {
+            url: urlString`http://example.com/list-fetch.json`,
+            mimeType: 'application/json',
+            resourceType: Common.ResourceType.resourceTypes.Fetch,
+          },
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      assert.lengthOf(rootElement.children(), 0);
+
+      project.removeProject();
+    });
+
+    it('reveals main frame target on navigation', async () => {
+      const navigatorView = await createNetworkNavigatorView();
+
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      assert.strictEqual(rootElement.childCount(), 1);
+      assert.strictEqual(rootElement.firstChild()?.childCount(), 3);
+      assert.isFalse(rootElement.firstChild()?.expanded);
+      assert.isTrue(rootElement.firstChild()?.selected);
+
+      target.setInspectedURL(urlString`http://example.com/`);
+
+      assert.isTrue(navigatorView.scriptsTree.firstChild()?.expanded);
+      assert.isTrue(navigatorView.scriptsTree.firstChild()?.firstChild()?.selected);
+    });
+
+    it('reveals main frame target when added', async () => {
+      target.setInspectedURL(urlString`http://example.com/`);
+      const navigatorView = await createNetworkNavigatorView();
+
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      assert.strictEqual(rootElement.childCount(), 1);
+      assert.strictEqual(rootElement.firstChild()?.childCount(), 3);
+      assert.isTrue(navigatorView.scriptsTree.firstChild()?.expanded);
+      assert.isTrue(navigatorView.scriptsTree.firstChild()?.firstChild()?.selected);
+    });
+
+    it('does not add inline style stylesheets without sourceURL as standalone items in NetworkNavigatorView',
+       async () => {
+         void backend.universe.cssWorkspaceBinding;
+
+         const frameId = 'main-frame-id' as Protocol.Page.FrameId;
+         dispatchEvent(target, 'CSS.styleSheetAdded', {
+           header: {
+             styleSheetId: 'inline-sheet' as Protocol.DOM.StyleSheetId,
+             frameId,
+             sourceURL: 'http://example.com/',
+             origin: Protocol.CSS.StyleSheetOrigin.Regular,
+             title: '',
+             disabled: false,
+             isInline: true,
+             isMutable: false,
+             isConstructed: false,
+             startLine: 4,
+             startColumn: 8,
+             length: 25,
+             endLine: 4,
+             endColumn: 33,
+             hasSourceURL: false,
+           },
+         });
+         dispatchEvent(target, 'CSS.styleSheetAdded', {
+           header: {
+             styleSheetId: 'external-sheet' as Protocol.DOM.StyleSheetId,
+             frameId,
+             sourceURL: 'http://example.com/external.css',
+             origin: Protocol.CSS.StyleSheetOrigin.Regular,
+             title: '',
+             disabled: false,
+             isInline: false,
+             isMutable: false,
+             isConstructed: false,
+             startLine: 0,
+             startColumn: 0,
+             length: 40,
+             endLine: 2,
+             endColumn: 0,
+             hasSourceURL: false,
+           },
+         });
+
+         const navigatorView = await createNetworkNavigatorView();
+         const rootElement = navigatorView.scriptsTree.rootElement();
+         const exampleComNode = rootElement.firstChild();
+         assert.exists(exampleComNode);
+
+         const childTitles = exampleComNode.children().map(child => child.title);
+         assert.include(childTitles, 'external.css');
+         assert.lengthOf(childTitles.filter(title => title === '(index)'), 1);
+         assert.deepEqual(childTitles, ['(index)', 'gtm.js', 'external.css', 'favicon.ico']);
+       });
+  });
+
+  it('updates in scope change', async () => {
+    const target = backend.createTarget();
+    const {project} = createContentProviderUISourceCodes({
+      items: [
+        {url: urlString`http://example.com/`, mimeType: 'text/html'},
+        {url: urlString`http://example.com/favicon.ico`, mimeType: 'image/x-icon'},
+        {url: urlString`http://example.com/gtm.js`, mimeType: 'application/javascript'},
+      ],
+      projectId: 'project',
+      projectType: Workspace.Workspace.projectTypes.Network,
+      target,
+    });
+    const anotherTarget = backend.createTarget();
+    const {project: anotherProject} = createContentProviderUISourceCodes({
+      items: [
+        {url: urlString`http://example.org/`, mimeType: 'text/html'},
+        {url: urlString`http://example.org/background.bmp`, mimeType: 'image/x-icon'},
+      ],
+      projectId: 'anotherProject',
+      projectType: Workspace.Workspace.projectTypes.Network,
+      target: anotherTarget,
+    });
+
+    SDK.TargetManager.TargetManager.instance().setScopeTarget(target);
+    const navigatorView = await createNetworkNavigatorView();
+
+    let rootElement = navigatorView.scriptsTree.rootElement();
+    assert.strictEqual(rootElement.childCount(), 1);
+    assert.strictEqual(rootElement.firstChild()?.childCount(), 3);
+    assert.deepEqual(rootElement.firstChild()?.children().map(i => i.title), ['(index)', 'gtm.js', 'favicon.ico']);
+
+    SDK.TargetManager.TargetManager.instance().setScopeTarget(anotherTarget);
+
+    rootElement = navigatorView.scriptsTree.rootElement();
+    assert.strictEqual(rootElement.childCount(), 1);
+    assert.strictEqual(rootElement.firstChild()?.childCount(), 2);
+    assert.deepEqual(rootElement.firstChild()?.children().map(i => i.title), ['(index)', 'background.bmp']);
+
+    project.removeProject();
+    anotherProject.removeProject();
+    anotherTarget.dispose('test');
+    target.dispose('test');
+  });
+
+  describe('removing source codes selection throttling', () => {
+    let target: SDK.Target.Target;
+
+    beforeEach(() => {
+      target = backend.createTarget();
+    });
+
+    it('selects just once when removing multiple sibling source codes', async () => {
+      const {project} = createContentProviderUISourceCodes({
+        items: [
+          {url: urlString`http://example.com/a.js`, mimeType: 'application/javascript'},
+          {url: urlString`http://example.com/b.js`, mimeType: 'application/javascript'},
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+      const {project: otherProject} = createContentProviderUISourceCodes({
+        items: [
+          {url: urlString`http://example.com/c.js`, mimeType: 'application/javascript'},
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        projectId: 'other',
+        target,
+      });
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      const exampleComNode = rootElement.firstChild();
+      assert.exists(exampleComNode);
+      const nodeA = exampleComNode.childAt(0);
+      const nodeB = exampleComNode.childAt(1);
+      const nodeC = exampleComNode.childAt(2);
+      assert.exists(nodeA);
+      assert.exists(nodeB);
+      assert.exists(nodeC);
+
+      // Select the 'http://example.com/a.js' node. Remove the project with a.js and b.js and verify
+      // that the selection is moved from 'a.js' to 'c.js', without temporarily selecting 'b.js'.
+      nodeA.select();
+
+      const nodeBSelectSpy = sinon.spy(nodeB, 'select');
+      const nodeCSelectSpy = sinon.spy(nodeC, 'select');
+
+      project.removeProject();
+
+      sinon.assert.notCalled(nodeBSelectSpy);
+      sinon.assert.called(nodeCSelectSpy);
+
+      otherProject.removeProject();
+    });
+
+    it('selects parent after removing all children', async () => {
+      const {project} = createContentProviderUISourceCodes({
+        items: [
+          {url: urlString`http://example.com/a.js`, mimeType: 'application/javascript'},
+          {url: urlString`http://example.com/b.js`, mimeType: 'application/javascript'},
+          {url: urlString`http://example.com/c.js`, mimeType: 'application/javascript'},
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      const nodeExampleCom = rootElement.firstChild();
+      assert.exists(nodeExampleCom);
+      const nodeA = nodeExampleCom.childAt(0);
+      const nodeB = nodeExampleCom.childAt(1);
+      const nodeC = nodeExampleCom.childAt(2);
+      assert.exists(nodeA);
+      assert.exists(nodeB);
+      assert.exists(nodeC);
+
+      // Select the 'http://example.com/a.js' node. Remove all the source codenodes and check the selection
+      // is not propagated forward to the siblings as we remove them. Instead, the selection will be moved
+      // directly to the parent.
+      nodeA.select();
+
+      const nodeBSelectSpy = sinon.spy(nodeB, 'select');
+      const nodeCSelectSpy = sinon.spy(nodeC, 'select');
+      const nodeExampleComSelectSpy = sinon.spy(nodeExampleCom, 'select');
+
+      project.removeProject();
+
+      sinon.assert.notCalled(nodeBSelectSpy);
+      sinon.assert.notCalled(nodeCSelectSpy);
+      sinon.assert.called(nodeExampleComSelectSpy);
+
+      // Note that the last asserion is slightly misleading since the empty example.com node is removed.
+      // Let us make that clear here.
+      assert.strictEqual(rootElement.childCount(), 0);
+    });
+
+    it('selects sibling after removing folder children', async () => {
+      const {project} = createContentProviderUISourceCodes({
+        items: [
+          {url: urlString`http://example.com/d/a.js`, mimeType: 'application/javascript'},
+          {url: urlString`http://example.com/d/b.js`, mimeType: 'application/javascript'},
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+      const {project: otherProject} = createContentProviderUISourceCodes({
+        items: [
+          {url: urlString`http://example.com/c.js`, mimeType: 'application/javascript'},
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        projectId: 'other',
+        target,
+      });
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      const exampleComNode = rootElement.firstChild();
+      assert.exists(exampleComNode);
+      const nodeD = exampleComNode.childAt(0);
+      assert.exists(nodeD);
+      await nodeD.expand();
+      const nodeA = nodeD.childAt(0);
+      const nodeB = nodeD.childAt(1);
+      const nodeC = exampleComNode.childAt(1);
+      assert.exists(nodeA);
+      assert.exists(nodeB);
+      assert.exists(nodeC);
+
+      // Select the 'http://example.com/a.js' node.
+      nodeA.select();
+
+      const nodeBSelectSpy = sinon.spy(nodeB, 'select');
+      const nodeCSelectSpy = sinon.spy(nodeC, 'select');
+
+      // Remove the project with the a.js and b.js nodes.
+      project.removeProject();
+
+      // Let us check that we do not push the selection forward over node 'b.js'.
+      // Instead, the selection will be pushed to 'c.js' (with an intermediate step at 'd').
+      // (Ideally, it would move directly from 'a.js' to 'c.js', but we are currently only
+      // optimizing away the moves to siblings.)
+      sinon.assert.notCalled(nodeBSelectSpy);
+      sinon.assert.called(nodeCSelectSpy);
+
+      // Also note that the folder 'd' is removed. Let us make that explicit.
+      assert.strictEqual(exampleComNode.childCount(), 1);
+      assert.strictEqual(exampleComNode.childAt(0), nodeC);
+
+      otherProject.removeProject();
+    });
+
+    it('selects sibling after removing individual folder children', async () => {
+      const {project} = createContentProviderUISourceCodes({
+        items: [
+          {url: urlString`http://example.com/d/a.js`, mimeType: 'application/javascript'},
+          {url: urlString`http://example.com/e/b.js`, mimeType: 'application/javascript'},
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+      const {project: otherProject} = createContentProviderUISourceCodes({
+        items: [
+          {url: urlString`http://example.com/c.js`, mimeType: 'application/javascript'},
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        projectId: 'other',
+        target,
+      });
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      const exampleComNode = rootElement.firstChild();
+      assert.exists(exampleComNode);
+      const nodeD = exampleComNode.childAt(0);
+      const nodeE = exampleComNode.childAt(1);
+      const nodeC = exampleComNode.childAt(2);
+      assert.exists(nodeD);
+      assert.exists(nodeE);
+      await nodeD.expand();
+      await nodeE.expand();
+      const nodeA = nodeD.childAt(0);
+      const nodeB = nodeE.childAt(0);
+      assert.exists(nodeA);
+      assert.exists(nodeB);
+      assert.exists(nodeC);
+
+      // Select the 'http://example.com/a.js' node.
+      nodeA.select();
+
+      const nodeESelectSpy = sinon.spy(nodeE, 'select');
+      const nodeBSelectSpy = sinon.spy(nodeB, 'select');
+      const nodeCSelectSpy = sinon.spy(nodeC, 'select');
+
+      // Remove a.js and b.js nodes. This will remove their nodes, including the containing folders.
+      // The selection will be moved from 'a.js' to its parent (folder 'd') and when that gets removed,
+      // it should move to 'c' rather being pushed forward to 'e'.
+      project.removeProject();
+
+      sinon.assert.notCalled(nodeESelectSpy);
+      sinon.assert.notCalled(nodeBSelectSpy);
+      sinon.assert.called(nodeCSelectSpy);
+
+      // Also note that nodeD and nodeE are removed. Let us make that explicit.
+      assert.strictEqual(exampleComNode.childCount(), 1);
+      assert.strictEqual(exampleComNode.childAt(0), nodeC);
+
+      otherProject.removeProject();
+    });
+
+    it('selects just once when excution-context-destroyed event removes sibling source codes', async () => {
+      dispatchEvent(target, 'Runtime.executionContextCreated', {
+        context: {
+          id: 2 as Protocol.Runtime.ExecutionContextId,
+          origin: 'http://example.com',
+          name: 'c2',
+          uniqueId: 'c2',
+          auxData: {
+            frameId: 'f2',
+          },
+        },
+      });
+
+      await backend.addScript(
+          target, {content: '42', url: 'http://example.com/a.js', executionContextId: 2, hasSourceURL: false}, null);
+      await backend.addScript(
+          target, {content: '42', url: 'http://example.com/b.js', executionContextId: 2, hasSourceURL: false}, null);
+      await backend.addScript(target, {content: '42', url: 'http://example.com/c.js', hasSourceURL: false}, null);
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      const exampleComNode = rootElement.firstChild();
+      assert.exists(exampleComNode);
+      const nodeA = exampleComNode.childAt(0);
+      const nodeB = exampleComNode.childAt(1);
+      const nodeC = exampleComNode.childAt(2);
+      assert.exists(nodeA);
+      assert.exists(nodeB);
+      assert.exists(nodeC);
+
+      // Select the 'http://example.com/a.js' node. Remove the project with a.js and b.js and verify
+      // that the selection is moved from 'a.js' to 'c.js', without temporarily selecting 'b.js'.
+      nodeA.select();
+
+      const nodeBSelectSpy = sinon.spy(nodeB, 'select');
+      const nodeCSelectSpy = sinon.spy(nodeC, 'select');
+
+      dispatchEvent(target, 'Runtime.executionContextDestroyed',
+                    {executionContextId: 2 as Protocol.Runtime.ExecutionContextId, executionContextUniqueId: 'c2'});
+
+      sinon.assert.notCalled(nodeBSelectSpy);
+      sinon.assert.called(nodeCSelectSpy);
+
+      // Sanity check - we should have only one source now.
+      assert.strictEqual(exampleComNode.childCount(), 1);
+    });
+  });
+
+  describe('with ignore listing', () => {
+    let target: SDK.Target.Target;
+    let resolveFn: (() => void)|null = null;
+
+    beforeEach(() => {
+      backend.cdpConnection.setSuccessHandler('Debugger.setBlackboxPatterns', () => ({}));
+      backend.cdpConnection.setSuccessHandler('Debugger.setBlackboxExecutionContexts', () => ({}));
+      target = backend.createTarget();
+      Workspace.IgnoreListManager.IgnoreListManager.instance().addChangeListener(() => {
+        if (resolveFn) {
+          resolveFn();
+          resolveFn = null;
+        }
+      });
+    });
+
+    const updatePatternSetting = async (settingValue: Common.Settings.RegExpSettingItem[]) => {
+      const setting =
+          Common.Settings.Settings.instance().resolve(
+              Workspace.IgnoreListManager.skipStackFramesPatternSettingDescriptor) as Common.Settings.RegExpSetting;
+      const promise = new Promise<void>(resolve => {
+        resolveFn = resolve;
+      });
+      setting.setAsArray(settingValue);
+      void await promise;
+    };
+    const enableIgnoreListing = () => updatePatternSetting([{pattern: '-hidden', disabled: false}]);
+    const disableIgnoreListing = () => updatePatternSetting([]);
+
+    it('shows folder with only ignore listed content as ignore listed', async () => {
+      await enableIgnoreListing();
+      const {project} = createContentProviderUISourceCodes({
+        items: [
+          {
+            url: urlString`http://example.com/ignored/a/a-hidden.js`,
+            mimeType: 'application/javascript',
+          },
+          {
+            url: urlString`http://example.com/ignored/b/b-hidden.js`,
+            mimeType: 'application/javascript',
+          },
+          {
+            url: urlString`http://example.com/mixed/a/a-hidden.js`,
+            mimeType: 'application/javascript',
+          },
+          {
+            url: urlString`http://example.com/mixed/b/b.js`,
+            mimeType: 'application/javascript',
+          },
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      const nodeExampleCom = rootElement.firstChild();
+      const ignoredFolder = nodeExampleCom!.childAt(0);
+      const mixedFolder = nodeExampleCom!.childAt(1);
+
+      assert.strictEqual(mixedFolder!.tooltip, 'mixed');
+      assert.strictEqual(ignoredFolder!.tooltip, 'ignored (ignore listed)');
+
+      await disableIgnoreListing();
+      project.removeProject();
+    });
+
+    it('updates folders when ignore listing rules change', async () => {
+      const {project} = createContentProviderUISourceCodes({
+        items: [
+          {
+            url: urlString`http://example.com/ignored/a/a-hidden.js`,
+            mimeType: 'application/javascript',
+          },
+          {
+            url: urlString`http://example.com/ignored/b/b-hidden.js`,
+            mimeType: 'application/javascript',
+          },
+          {
+            url: urlString`http://example.com/mixed/a/a-hidden.js`,
+            mimeType: 'application/javascript',
+          },
+          {
+            url: urlString`http://example.com/mixed/b/b.js`,
+            mimeType: 'application/javascript',
+          },
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      const nodeExampleCom = rootElement.firstChild();
+      const ignoredFolder = nodeExampleCom!.childAt(0);
+      const mixedFolder = nodeExampleCom!.childAt(1);
+
+      assert.strictEqual(mixedFolder!.tooltip, 'mixed');
+      assert.strictEqual(ignoredFolder!.tooltip, 'ignored');
+
+      await enableIgnoreListing();
+
+      assert.strictEqual(mixedFolder!.tooltip, 'mixed');
+      assert.strictEqual(ignoredFolder!.tooltip, 'ignored (ignore listed)');
+
+      await disableIgnoreListing();
+
+      assert.strictEqual(mixedFolder!.tooltip, 'mixed');
+      assert.strictEqual(ignoredFolder!.tooltip, 'ignored');
+
+      project.removeProject();
+    });
+
+    it('updates folders when files are added or removed', async () => {
+      await enableIgnoreListing();
+      const {project} = createContentProviderUISourceCodes({
+        items: [
+          {
+            url: urlString`http://example.com/ignored/a/a-hidden.js`,
+            mimeType: 'application/javascript',
+          },
+          {
+            url: urlString`http://example.com/ignored/b/b-hidden.js`,
+            mimeType: 'application/javascript',
+          },
+          {
+            url: urlString`http://example.com/mixed/a/a-hidden.js`,
+            mimeType: 'application/javascript',
+          },
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+
+      const navigatorView = await createNetworkNavigatorView();
+      const rootElement = navigatorView.scriptsTree.rootElement();
+      const nodeExampleCom = rootElement.firstChild();
+      const ignoredFolder = nodeExampleCom!.childAt(0);
+      const mixedFolder = nodeExampleCom!.childAt(1);
+
+      assert.strictEqual(mixedFolder!.tooltip, 'mixed/a (ignore listed)');
+      assert.strictEqual(ignoredFolder!.tooltip, 'ignored (ignore listed)');
+
+      const {project: otherProject} = createContentProviderUISourceCodes({
+        items: [
+          {
+            url: urlString`http://example.com/mixed/b/b.js`,
+            mimeType: 'application/javascript',
+          },
+        ],
+        projectType: Workspace.Workspace.projectTypes.Network,
+        target,
+      });
+
+      assert.strictEqual(mixedFolder!.tooltip, 'mixed');
+      assert.strictEqual(ignoredFolder!.tooltip, 'ignored (ignore listed)');
+
+      otherProject.removeProject();
+
+      assert.strictEqual(mixedFolder!.tooltip, 'mixed (ignore listed)');
+      assert.strictEqual(ignoredFolder!.tooltip, 'ignored (ignore listed)');
+
+      await disableIgnoreListing();
+      project.removeProject();
+    });
+  });
+});
+
+describe('FilesNavigatorView', () => {
+  setupRuntimeHooks();
+  setupLocaleHooks();
+
+  let workspace: Workspace.Workspace.WorkspaceImpl;
+  let backend: MockDebuggerBackend;
+
+  beforeEach(() => {
+    backend = new MockDebuggerBackend();
+    workspace = backend.universe.workspace;
+    const targetManager = backend.universe.targetManager;
+
+    sinon.stub(Workspace.Workspace.WorkspaceImpl, 'instance').returns(workspace);
+    sinon.stub(SDK.TargetManager.TargetManager, 'instance').returns(targetManager);
+    sinon.stub(Workspace.IgnoreListManager.IgnoreListManager, 'instance').returns(backend.universe.ignoreListManager);
+    sinon.stub(Common.Settings.Settings, 'instance').returns(backend.universe.settings);
+
+    const debuggerWorkspaceBinding = backend.universe.debuggerWorkspaceBinding;
+    const breakpointManager = Breakpoints.BreakpointManager.BreakpointManager.instance({
+      forceNew: true,
+      targetManager,
+      workspace,
+      debuggerWorkspaceBinding,
+      settings: backend.universe.settings,
+    });
+    Persistence.Persistence.PersistenceImpl.instance({forceNew: true, workspace, breakpointManager});
+    Persistence.NetworkPersistenceManager.NetworkPersistenceManager.instance({forceNew: true, workspace});
+
+    UI.ActionRegistration.maybeRemoveActionExtension('sources.add-folder-to-workspace');
+    UI.ActionRegistration.registerActionExtension({
+      actionId: 'sources.add-folder-to-workspace',
+      iconClass: UI.ActionRegistration.IconClass.PLUS,
+      title: () => 'Add folder to workspace' as Platform.UIString.LocalizedString,
+      category: UI.ActionRegistration.ActionCategory.SOURCES,
+    });
+    const actionRegistryInstance = UI.ActionRegistry.ActionRegistry.instance({forceNew: true});
+    UI.ShortcutRegistry.ShortcutRegistry.instance({forceNew: true, actionRegistry: actionRegistryInstance});
+
+    sinon.stub(Persistence.AutomaticFileSystemManager.AutomaticFileSystemManager, 'instance')
+        .returns(backend.universe.automaticFileSystemManager);
+
+    setTestUniverseForWidgets(backend.universe);
+  });
+
+  async function createFilesNavigatorView(): Promise<Sources.NavigatorView.NavigatorView> {
+    const filesNavigatorView = new Sources.SourcesNavigator.FilesNavigatorView();
+    renderElementIntoDOM(filesNavigatorView, {includeCommonStyles: true});
+    await filesNavigatorView.updateComplete;
+    const navigatorView =
+        filesNavigatorView.children().find(child => child instanceof Sources.NavigatorView.NavigatorView);
+    assert.exists(navigatorView);
+    await navigatorView.updateComplete;
+    await raf();
+    return navigatorView;
+  }
+  afterEach(async () => {
+    await deinitializeGlobalVars();
+  });
+
+  it('renders the empty state with placeholder and automatic file system nudge', async () => {
+    sinon.stub(backend.universe.automaticFileSystemManager, 'availability').get(() => 'available');
+    await createFilesNavigatorView();
+
+    await assertScreenshot('sources/files-navigator-empty.png');
+  });
+
+  it('shows context menu on placeholder', async () => {
+    const navigatorView = new Sources.SourcesNavigator.FilesNavigatorView();
+    const contextMenuSpy = sinon.spy(navigatorView, 'handleContextMenu');
+    renderElementIntoDOM(navigatorView);
+    await navigatorView.updateComplete;
+
+    const placeholderContainer = navigatorView.contentElement.querySelector('devtools-widget');
+    assert.exists(placeholderContainer);
+
+    const event = new MouseEvent('contextmenu', {bubbles: true});
+    placeholderContainer.dispatchEvent(event);
+
+    sinon.assert.calledOnce(contextMenuSpy);
+  });
+
+  it('shows unique names for file system UISourceCodes', async () => {
+    const {project: project1} = createFileSystemUISourceCode({
+      url: urlString`file:///home/workspace/good/foo/bar/1.js`,
+      mimeType: 'application/javascript',
+      fileSystemPath: 'file:///home/workspace/good/foo/bar',
+      universe: backend.universe,
+    });
+    const {project: project2} = createFileSystemUISourceCode({
+      url: urlString`file:///home/workspace/bad/foo/bar/2.js`,
+      mimeType: 'application/javascript',
+      fileSystemPath: 'file:///home/workspace/bad/foo/bar',
+      universe: backend.universe,
+    });
+    const {project: project3} = createFileSystemUISourceCode({
+      url: urlString`file:///home/workspace/ugly/bar/3.js`,
+      mimeType: 'application/javascript',
+      fileSystemPath: 'file:///home/workspace/ugly/bar',
+      universe: backend.universe,
+    });
+
+    const navigatorView = await createFilesNavigatorView();
+
+    await assertScreenshot('sources/files-navigator-populated.png');
+
+    const rootElement = navigatorView.scriptsTree.rootElement();
+    const children = rootElement.children();
+    assert.lengthOf(children, 3);
+    const expectedTitles = ['bad/foo/bar', 'good/foo/bar', 'ugly/bar'];
+    assert.deepEqual(children.map((c: UI.TreeOutline.TreeElement) => c.title).sort(), expectedTitles);
+
+    const badProjectNode = children.find((c: UI.TreeOutline.TreeElement) => c.title === 'bad/foo/bar');
+    assert.strictEqual(badProjectNode?.childCount(), 1);
+    assert.strictEqual(badProjectNode?.childAt(0)?.title, '2.js');
+
+    const goodProjectNode = children.find((c: UI.TreeOutline.TreeElement) => c.title === 'good/foo/bar');
+    assert.strictEqual(goodProjectNode?.childCount(), 1);
+    assert.strictEqual(goodProjectNode?.childAt(0)?.title, '1.js');
+
+    const uglyProjectNode = children.find((c: UI.TreeOutline.TreeElement) => c.title === 'ugly/bar');
+    assert.strictEqual(uglyProjectNode?.childCount(), 1);
+    assert.strictEqual(uglyProjectNode?.childAt(0)?.title, '3.js');
+
+    project1.removeProject();
+    project2.removeProject();
+    project3.removeProject();
+  });
+
+  it('supports making a copy of a file', async () => {
+    const {uiSourceCode: originalUISourceCode, project} = createFileSystemUISourceCode({
+      url: urlString`file:///home/workspace/script.js`,
+      mimeType: 'application/javascript',
+      content: 'testme',
+      fileSystemPath: 'file:///home/workspace',
+      universe: backend.universe,
+    });
+
+    const navigatorView = await createFilesNavigatorView();
+
+    // Stub createFile on the platform file system to simulate successful creation.
+    const createFileStub = sinon.stub(project.fileSystem(), 'createFile');
+    createFileStub.callsFake((path, name) => {
+      const newFileName = name || 'NewFile';
+      const relativePath = path ? path + '/' + newFileName : newFileName;
+      return Promise.resolve(relativePath as Platform.DevToolsPath.EncodedPathString);
+    });
+
+    // Stub rename to avoid UI prompts.
+    sinon.stub(navigatorView, 'rename');
+
+    await navigatorView.create(project, '' as Platform.DevToolsPath.EncodedPathString, originalUISourceCode);
+
+    // Verify that the new file was created in the project.
+    const newFileUrl = urlString`file:///home/workspace/NewFile`;
+    const newUISourceCode = project.uiSourceCodeForURL(newFileUrl);
+    assert.exists(newUISourceCode);
+
+    // Verify content was copied.
+    const contentData = await newUISourceCode.requestContentData();
+    if (TextUtils.ContentData.ContentData.isError(contentData)) {
+      throw new Error('Content data is an error: ' + contentData.error);
+    }
+    assert.strictEqual(contentData.text, 'testme');
+
+    project.removeProject();
+  });
+});
+
+describe('OverridesNavigatorView', () => {
+  setupRuntimeHooks();
+  setupLocaleHooks();
+
+  let workspace: Workspace.Workspace.WorkspaceImpl;
+  let backend: MockDebuggerBackend;
+
+  beforeEach(() => {
+    backend = new MockDebuggerBackend();
+    workspace = backend.universe.workspace;
+    const targetManager = backend.universe.targetManager;
+
+    sinon.stub(Workspace.Workspace.WorkspaceImpl, 'instance').returns(workspace);
+    sinon.stub(SDK.TargetManager.TargetManager, 'instance').returns(targetManager);
+    sinon.stub(Workspace.IgnoreListManager.IgnoreListManager, 'instance').returns(backend.universe.ignoreListManager);
+    sinon.stub(Common.Settings.Settings, 'instance').returns(backend.universe.settings);
+
+    const debuggerWorkspaceBinding = backend.universe.debuggerWorkspaceBinding;
+    const breakpointManager = Breakpoints.BreakpointManager.BreakpointManager.instance({
+      forceNew: true,
+      targetManager,
+      workspace,
+      debuggerWorkspaceBinding,
+      settings: backend.universe.settings,
+    });
+    Persistence.Persistence.PersistenceImpl.instance({forceNew: true, workspace, breakpointManager});
+    Persistence.NetworkPersistenceManager.NetworkPersistenceManager.instance({forceNew: true, workspace});
+
+    setTestUniverseForWidgets(backend.universe);
+  });
+
+  async function createOverridesNavigatorView(): Promise<Sources.NavigatorView.NavigatorView> {
+    const overridesNavigatorView = Sources.SourcesNavigator.OverridesNavigatorView.instance({forceNew: true});
+    renderElementIntoDOM(overridesNavigatorView, {includeCommonStyles: true});
+    await overridesNavigatorView.updateComplete;
+    const navigatorView =
+        overridesNavigatorView.children().find(child => child instanceof Sources.NavigatorView.NavigatorView);
+    assert.exists(navigatorView);
+    await navigatorView.updateComplete;
+    await raf();
+    return navigatorView;
+  }
+
+  afterEach(async () => {
+    await deinitializeGlobalVars();
+  });
+
+  it('renders the empty state with placeholder', async () => {
+    await createOverridesNavigatorView();
+
+    await assertScreenshot('sources/overrides-navigator-empty.png');
+  });
+
+  it('marks override items as active (has-mapped-files) when overrides are enabled', async () => {
+    const {project} = createFileSystemUISourceCode({
+      url: urlString`file:///home/workspace/overrides/.headers`,
+      mimeType: 'text/plain',
+      fileSystemPath: 'file:///home/workspace/overrides',
+      type: Persistence.PlatformFileSystem.PlatformFileSystemType.OVERRIDES,
+      universe: backend.universe,
+    });
+
+    Common.Settings.Settings.instance()
+        .resolve(Persistence.NetworkPersistenceManager.persistenceNetworkOverridesEnabledSettingDescriptor)
+        .set(true);
+
+    const navigatorView = await createOverridesNavigatorView();
+
+    await assertScreenshot('sources/overrides-navigator-populated.png');
+
+    const rootElement = navigatorView.scriptsTree.rootElement();
+    const children = rootElement.children();
+    assert.lengthOf(children, 1);
+    const overridesNode = children[0];
+    assert.isTrue(overridesNode.listItemElement.classList.contains('has-mapped-files'));
+
+    // Setup a listener promise since toggling the 'persistence-network-overrides-enabled' will fire an event
+    const updatePromise = Persistence.NetworkPersistenceManager.NetworkPersistenceManager.instance().once(
+        Persistence.NetworkPersistenceManager.Events.LOCAL_OVERRIDES_PROJECT_UPDATED);
+
+    Common.Settings.Settings.instance()
+        .resolve(Persistence.NetworkPersistenceManager.persistenceNetworkOverridesEnabledSettingDescriptor)
+        .set(false);
+    // Waiting for the event to be fired
+    await updatePromise;
+
+    const disabledOverridesNode = rootElement.children()[0];
+    assert.isFalse(disabledOverridesNode.listItemElement.classList.contains('has-mapped-files'));
+
+    project.removeProject();
+  });
+
+  it('creates the checkbox for enabling local overrides only once', async () => {
+    const networkPersistenceManager = Persistence.NetworkPersistenceManager.NetworkPersistenceManager.instance();
+    const enabledSetting = Common.Settings.Settings.instance().resolve(
+        Persistence.NetworkPersistenceManager.persistenceNetworkOverridesEnabledSettingDescriptor);
+    enabledSetting.set(true);
+    const projectChanged = networkPersistenceManager.once(Persistence.NetworkPersistenceManager.Events.PROJECT_CHANGED);
+    const {project} = createFileSystemUISourceCode({
+      url: urlString`file:///home/workspace/overrides/.headers`,
+      mimeType: 'text/plain',
+      fileSystemPath: 'file:///home/workspace/overrides',
+      type: Persistence.PlatformFileSystem.PlatformFileSystemType.OVERRIDES,
+      universe: backend.universe,
+    });
+    await projectChanged;
+
+    const countSettingListeners = (): number =>
+        Common.Settings.Settings.instance().eventTargetForTest.listeners?.get(enabledSetting.name)?.size ?? 0;
+    const navigatorView = Sources.SourcesNavigator.OverridesNavigatorView.instance({forceNew: true});
+    renderElementIntoDOM(navigatorView);
+    await navigatorView.updateComplete;
+    const toolbar = navigatorView.contentElement.querySelector('.navigator-toolbar');
+    assert.exists(toolbar);
+    const checkbox = toolbar.querySelector('devtools-checkbox');
+    assert.exists(checkbox);
+    assert.isTrue(checkbox.checked);
+    const listenerCount = countSettingListeners();
+
+    // Adding or removing any project other than a file system updates the toolbar.
+    const {project: networkProject} = createContentProviderUISourceCodes({
+      items: [],
+      projectType: Workspace.Workspace.projectTypes.Network,
+      universe: backend.universe,
+    });
+    networkProject.removeProject();
+    // So does disabling local overrides.
+    const overridesUpdated =
+        networkPersistenceManager.once(Persistence.NetworkPersistenceManager.Events.LOCAL_OVERRIDES_PROJECT_UPDATED);
+    enabledSetting.set(false);
+    await overridesUpdated;
+    await navigatorView.updateComplete;
+
+    assert.strictEqual(countSettingListeners(), listenerCount);
+    const checkboxes = toolbar.querySelectorAll('devtools-checkbox');
+    assert.lengthOf(checkboxes, 1);
+    assert.strictEqual(checkboxes[0], checkbox);
+    assert.isFalse(checkbox.checked);
+
+    project.removeProject();
+  });
+});

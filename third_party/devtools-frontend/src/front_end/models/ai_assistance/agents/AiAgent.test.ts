@@ -1,0 +1,1438 @@
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import {assert} from 'chai';
+import {beforeEach, describe, it} from 'mocha';
+import sinon from 'sinon';
+
+import * as Host from '../../../core/host/host.js';
+import * as SDK from '../../../core/sdk/sdk.js';
+import {mockAidaClient, MockAidaPayloadLimitError, MockAidaQuotaError} from '../../../testing/AiAssistanceHelpers.js';
+import {setupLocaleHooks} from '../../../testing/LocaleHelpers.js';
+import * as AiAssistance from '../ai_assistance.js';
+
+function mockConversationContext(): AiAssistance.AiAgent.ConversationContext<unknown> {
+  return new (class extends AiAssistance.AiAgent.ConversationContext<unknown> {
+    override readonly jslogContext = 'ai-context-file' as const;
+    override getOrigin(): SDK.SecurityOrigin.SecurityOrigin {
+      return SDK.SecurityOrigin.SecurityOrigin.create('https://origin.test');
+    }
+
+    override getItem(): unknown {
+      return null;
+    }
+
+    override getTitle(): string {
+      return 'title';
+    }
+  })();
+}
+
+function findFirstErrorResponse(responses: AiAssistance.AiAgent.ResponseData[]): AiAssistance.AiAgent.ErrorResponse {
+  const errorResponse = responses.find(r => r.type === AiAssistance.AiAgent.ResponseType.ERROR);
+  assert.isDefined(errorResponse);
+  return errorResponse as AiAssistance.AiAgent.ErrorResponse;
+}
+
+class AiAgentMock extends AiAssistance.AiAgent.AiAgent<unknown> {
+  override preamble = 'preamble';
+
+  // eslint-disable-next-line require-yield
+  override async * handleContextDetails(): AsyncGenerator<AiAssistance.AiAgent.ContextResponse, void, void> {
+    return;
+  }
+
+  clientFeature: Host.AidaClient.ClientFeature = 0;
+  userTier: undefined|string;
+
+  options: AiAssistance.AiAgent.RequestOptions = {
+    temperature: 1,
+    modelId: 'test model',
+  };
+
+  declareFunctionForTest<Args extends Record<string, unknown>, ReturnType = unknown>(
+      name: string,
+      declaration: AiAssistance.AiAgent.FunctionDeclaration<Args, ReturnType>,
+      ): void {
+    this.declareFunction(name, declaration);
+  }
+
+  disableServerSideLoggingForTest(): void {
+    this.disableServerSideLogging();
+  }
+}
+
+describe('AiAgent', () => {
+  setupLocaleHooks();
+  describe('buildRequest', () => {
+    beforeEach(() => {
+      sinon.stub(crypto, 'randomUUID').returns('sessionId' as `${string}-${string}-${string}-${string}-${string}`);
+    });
+
+    it('builds a request with a temperature', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      assert.strictEqual(
+          agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER).options?.temperature,
+          1,
+      );
+    });
+
+    it('builds a request with a temperature -1', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      agent.options.temperature = -1;
+      assert.isUndefined(agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER).options?.temperature);
+    });
+
+    it('builds a request with a model id', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      assert.strictEqual(
+          agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER).options?.model_id,
+          'test model',
+      );
+    });
+
+    it('builds a request without a model id it is configured as an empty string', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      agent.options.modelId = '';
+      assert.isUndefined(agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER).options?.model_id);
+    });
+
+    it('builds a request with logging', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+        serverSideLoggingAllowed: true,
+      });
+      assert.isFalse(
+          agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER).metadata?.disable_user_content_logging);
+    });
+
+    it('builds a request without logging', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+        serverSideLoggingAllowed: false,
+      });
+      assert.isTrue(agent
+                        .buildRequest(
+                            {
+                              text: 'test input',
+                            },
+                            Host.AidaClient.Role.USER)
+                        .metadata?.disable_user_content_logging);
+    });
+
+    it('builds a request with input', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+        serverSideLoggingAllowed: false,
+      });
+      const request = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.deepEqual(request.current_message?.parts[0], {text: 'test input'});
+      assert.isUndefined(request.historical_contexts);
+    });
+
+    it('builds a request with a sessionId', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const request = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.strictEqual(request.metadata?.string_session_id, 'sessionId');
+    });
+
+    it('builds a request with preamble if user tier is TESTERS', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      agent.userTier = 'TESTERS';
+      const request = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.deepEqual(request.current_message?.parts[0], {text: 'test input'});
+      assert.strictEqual(request.preamble, 'preamble');
+      assert.isUndefined(request.historical_contexts);
+    });
+
+    it('builds a request without preamble if user tier is not TESTERS', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      agent.userTier = 'PUBLIC';
+      const request = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.deepEqual(request.current_message?.parts[0], {text: 'test input'});
+      assert.isUndefined(request.preamble);
+      assert.isUndefined(request.historical_contexts);
+    });
+
+    it('builds a request without preamble', async () => {
+      class AiAgentMockWithoutPreamble extends AiAssistance.AiAgent.AiAgent<unknown> {
+        override preamble = undefined;
+        // eslint-disable-next-line require-yield
+        override async * handleContextDetails(): AsyncGenerator<AiAssistance.AiAgent.ContextResponse, void, void> {
+          return;
+        }
+        clientFeature: Host.AidaClient.ClientFeature = 0;
+        userTier: undefined;
+        options: AiAssistance.AiAgent.RequestOptions = {
+          temperature: 1,
+          modelId: 'test model',
+        };
+      }
+
+      const agent = new AiAgentMockWithoutPreamble({
+        aidaClient: mockAidaClient(),
+      });
+      const request = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.deepEqual(request.current_message?.parts[0], {text: 'test input'});
+      assert.isUndefined(request.preamble);
+      assert.isUndefined(request.historical_contexts);
+    });
+
+    it('builds a request with a fact', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([[{
+          explanation: 'answer',
+        }]]),
+        serverSideLoggingAllowed: true,
+      });
+      const fact: Host.AidaClient.RequestFact = {text: 'This is a fact', metadata: {source: 'devtools'}};
+      agent.addFact(fact);
+      await Array.fromAsync(agent.run('question', {selected: null}));
+      const request = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.deepEqual(request.facts, [fact]);
+    });
+
+    it('can manage multiple facts and remove them', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([[{
+          explanation: 'answer',
+        }]]),
+        serverSideLoggingAllowed: true,
+      });
+      const f1: Host.AidaClient.RequestFact = {text: 'f1', metadata: {source: 'devtools'}};
+      const f2 = {text: 'f2', metadata: {source: 'devtools'}};
+      agent.addFact(f1);
+      agent.addFact(f2);
+
+      await Array.fromAsync(agent.run('question', {selected: null}));
+      const request1 = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.deepEqual(request1.facts, [f1, f2]);
+
+      agent.removeFact(f1);
+      await Array.fromAsync(agent.run('question', {selected: null}));
+      const request2 = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.deepEqual(request2.facts, [f2]);
+
+      agent.clearFacts();
+      await Array.fromAsync(agent.run('question', {selected: null}));
+      const request3 = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.isUndefined(request3.facts);
+    });
+
+    it('builds a request with chat history', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([[{
+          explanation: 'answer',
+        }]]),
+        serverSideLoggingAllowed: true,
+      });
+      await Array.fromAsync(agent.run('question', {selected: null}));
+
+      const request = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.deepEqual(request.current_message?.parts[0], {text: 'test input'});
+      assert.deepEqual(request.historical_contexts, [
+        {
+          parts: [{text: 'question'}],
+          role: 1,
+        },
+        {
+          role: 2,
+          parts: [{text: 'answer'}],
+        },
+      ]);
+    });
+
+    it('builds a request with aborted query in history', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([[{
+          explanation: 'answer',
+        }]]),
+        serverSideLoggingAllowed: true,
+      });
+
+      const controller = new AbortController();
+      controller.abort();
+      await Array.fromAsync(agent.run('question', {selected: null, signal: controller.signal}));
+
+      const request = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      assert.deepEqual(request.current_message?.parts[0], {text: 'test input'});
+      assert.isUndefined(request.historical_contexts);
+    });
+  });
+
+  describe('disableServerSideLogging', () => {
+    it('disables server-side logging when called', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+        serverSideLoggingAllowed: true,
+      });
+
+      assert.isFalse(
+          agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER).metadata?.disable_user_content_logging);
+
+      agent.disableServerSideLoggingForTest();
+      assert.isTrue(
+          agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER).metadata?.disable_user_content_logging);
+    });
+
+    it('keeps logging disabled when initialized with serverSideLoggingAllowed: false', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+        serverSideLoggingAllowed: false,
+      });
+
+      assert.isTrue(
+          agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER).metadata?.disable_user_content_logging);
+    });
+  });
+
+  describe('run', () => {
+    it('returns early when enhanced query is empty and no multimodal input is provided', async () => {
+      const aidaClient = mockAidaClient();
+      const agent = new AiAgentMock({
+        aidaClient,
+      });
+      const responses = await Array.fromAsync(agent.run('   ', {selected: null}));
+      assert.deepEqual(responses, []);
+    });
+
+    describe('partial yielding for answers', () => {
+      it('should yield partial answer with final answer at the end', async () => {
+        const agent = new AiAgentMock({
+          aidaClient: mockAidaClient([[
+            {
+              explanation: 'Partial ans',
+            },
+            {
+              explanation: 'Partial answer is now completed',
+            },
+          ]]),
+        });
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.deepEqual(responses, [
+          {
+            type: AiAssistance.AiAgent.ResponseType.QUERYING,
+          },
+          {
+            type: AiAssistance.AiAgent.ResponseType.ANSWER,
+            complete: false,
+            text: 'Partial ans',
+          },
+          {
+            type: AiAssistance.AiAgent.ResponseType.ANSWER,
+            text: 'Partial answer is now completed',
+            complete: true,
+            rpcId: undefined,
+            suggestions: undefined,
+          },
+        ]);
+      });
+
+      it('should not add partial answers to history', async () => {
+        const agent = new AiAgentMock({
+          aidaClient: mockAidaClient([[
+            {
+              explanation: 'Partial ans',
+            },
+            {
+              explanation: 'Partial answer is now completed',
+            },
+          ]]),
+        });
+
+        await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.deepEqual(agent.buildRequest({text: ''}, Host.AidaClient.Role.USER).historical_contexts, [
+          {
+            role: Host.AidaClient.Role.USER,
+            parts: [{text: 'query'}],
+          },
+          {
+            role: Host.AidaClient.Role.MODEL,
+            parts: [{text: 'Partial answer is now completed'}],
+          },
+        ]);
+      });
+
+      it('parses partial answers with the same suggestions parsing as completed answers', async () => {
+        const agent = new AiAgentMock({
+          aidaClient: mockAidaClient([[
+            {
+              explanation: 'Answer. SUGGESTIONS: ["a',
+            },
+            {
+              explanation: 'Answer. SUGGESTIONS: ["a"]',
+            },
+          ]]),
+        });
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.deepEqual(responses, [
+          {
+            type: AiAssistance.AiAgent.ResponseType.QUERYING,
+          },
+          {
+            type: AiAssistance.AiAgent.ResponseType.ANSWER,
+            complete: false,
+            text: 'Answer. ',
+          },
+          {
+            type: AiAssistance.AiAgent.ResponseType.ANSWER,
+            text: 'Answer. ',
+            complete: true,
+            rpcId: undefined,
+            suggestions: ['a'],
+          },
+        ]);
+      });
+    });
+
+    it('should yield unknown error when aida doConversation does not return anything', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([]),
+      });
+
+      const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+      assert.deepEqual(responses, [
+        {
+          type: AiAssistance.AiAgent.ResponseType.QUERYING,
+        },
+        {
+          type: AiAssistance.AiAgent.ResponseType.ERROR,
+          error: AiAssistance.AiAgent.ErrorType.UNKNOWN,
+        },
+      ]);
+    });
+
+    it('should yield quota error when aida throws AidaQuotaError', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([[MockAidaQuotaError]]),
+      });
+
+      const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+      assert.deepEqual(responses, [
+        {
+          type: AiAssistance.AiAgent.ResponseType.QUERYING,
+        },
+        {
+          type: AiAssistance.AiAgent.ResponseType.ERROR,
+          error: AiAssistance.AiAgent.ErrorType.QUOTA,
+        },
+      ]);
+    });
+
+    it('should yield payload too large error when aida throws payload size limit error', async () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([[MockAidaPayloadLimitError]]),
+      });
+
+      const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+      assert.deepEqual(responses, [
+        {
+          type: AiAssistance.AiAgent.ResponseType.QUERYING,
+        },
+        {
+          type: AiAssistance.AiAgent.ResponseType.ERROR,
+          error: AiAssistance.AiAgent.ErrorType.PAYLOAD_TOO_LARGE,
+        },
+      ]);
+    });
+  });
+
+  describe('ConversationContext', () => {
+    function getTestContext(originString: string): AiAssistance.AiAgent.ConversationContext<undefined> {
+      class TestContext extends AiAssistance.AiAgent.ConversationContext<undefined> {
+        override readonly jslogContext = 'ai-context-file' as const;
+        override getTitle(): string {
+          throw new Error('Method not implemented.');
+        }
+        override getOrigin(): SDK.SecurityOrigin.SecurityOrigin {
+          return SDK.SecurityOrigin.SecurityOrigin.create(originString);
+        }
+        override getItem(): undefined {
+          return undefined;
+        }
+      }
+      return new TestContext();
+    }
+
+    it('checks context origins', () => {
+      function isAllowed(opts: {newContext: string, established?: string}): boolean {
+        const origin = opts.established ? SDK.SecurityOrigin.SecurityOrigin.create(opts.established) : undefined;
+        return getTestContext(opts.newContext).isOriginAllowed(origin);
+      }
+
+      assert.isTrue(isAllowed({established: 'https://google.test', newContext: 'https://google.test'}));
+      assert.isFalse(isAllowed({established: 'about:blank', newContext: 'https://google.test'}));
+      assert.isFalse(isAllowed({established: 'https://www.google.test', newContext: 'https://google.test'}));
+      assert.isFalse(isAllowed({established: 'https://b.test', newContext: 'https://a.test'}));
+      assert.isFalse(isAllowed({established: 'file:///tmp', newContext: 'https://a.test'}));
+      assert.isFalse(isAllowed({established: 'http://a.test', newContext: 'https://a.test'}));
+      assert.isFalse(isAllowed({established: 'null', newContext: 'null'}));
+      assert.isFalse(isAllowed({established: undefined, newContext: 'null'}));
+      assert.isFalse(isAllowed({established: 'data:', newContext: 'data:'}));
+      assert.isFalse(isAllowed({established: 'about://', newContext: 'about://'}));
+      assert.isFalse(isAllowed({established: 'about:srcdoc', newContext: 'about:srcdoc'}));
+      assert.isFalse(isAllowed({established: 'detached', newContext: 'detached'}));
+      assert.isTrue(
+          isAllowed({established: 'imported-trace://example.com', newContext: 'imported-trace://example.com'}));
+      assert.isFalse(
+          isAllowed({established: 'imported-trace://other.com', newContext: 'imported-trace://example.com'}));
+    });
+  });
+
+  describe('functions', () => {
+    class AgentWithFunction extends AiAssistance.AiAgent.AiAgent<unknown> {
+      override preamble = 'preamble';
+      called = 0;
+
+      constructor(opts: AiAssistance.AiAgent.AgentOptions) {
+        super(opts);
+        this.declareFunction('testFn', {
+          description: 'test fn description',
+          parameters: {
+            type: Host.AidaClient.ParametersTypes.OBJECT,
+            properties: {},
+            description: 'arg description',
+            required: [],
+          },
+          handler: this.#test.bind(this),
+        });
+      }
+
+      async #test(...args: any[]) {
+        this.called++;
+        return {
+          result: args[0],
+        };
+      }
+
+      // eslint-disable-next-line require-yield
+      override async * handleContextDetails(): AsyncGenerator<AiAssistance.AiAgent.ContextResponse, void, void> {
+        return;
+      }
+
+      clientFeature: Host.AidaClient.ClientFeature = 0;
+      userTier: undefined;
+      options: AiAssistance.AiAgent.RequestOptions = {
+        temperature: 1,
+        modelId: 'test model',
+      };
+    }
+
+    it('should build a request with functions', () => {
+      const agent = new AgentWithFunction({
+        aidaClient: mockAidaClient(),
+      });
+      agent.options.temperature = -1;
+      assert.deepEqual(
+          agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER).function_declarations,
+          [{
+            description: 'test fn description',
+            name: 'testFn',
+            parameters: {
+              description: 'arg description',
+              properties: {},
+              type: 6,
+              required: [],
+            },
+          }],
+      );
+    });
+
+    it('should add explanation to history when function call is present', async () => {
+      const agent = new AgentWithFunction({
+        aidaClient: mockAidaClient([
+          [
+            {
+              explanation: 'This is the explanation',
+              functionCalls: [{
+                name: 'testFn',
+                args: {arg: 'test'},
+              }],
+            },
+          ],
+          [{
+            explanation: 'Final answer',
+          }],
+        ]),
+      });
+
+      await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+      const request = agent.buildRequest({text: 'test input'}, Host.AidaClient.Role.USER);
+      // History should contain:
+      // 1. User query
+      // 2. Model explanation + function call
+      // 3. Function result (user role)
+      // 4. Model final answer
+      assert.lengthOf(request.historical_contexts ?? [], 4);
+      assert.deepEqual(request.historical_contexts?.[1], {
+        role: Host.AidaClient.Role.MODEL,
+        parts: [
+          {text: 'This is the explanation'},
+          {
+            functionCall: {
+              name: 'testFn',
+              args: {arg: 'test'},
+            },
+          },
+        ],
+      });
+    });
+
+    it('disables logging during a multi-turn conversation run and keeps it disabled', async () => {
+      const aidaClient = mockAidaClient([
+        // 1. Initial turn: Aida returns a call to 'disableLoggingFn'
+        [{
+          explanation: 'I will call disableLoggingFn to disable logging.',
+          functionCalls: [{
+            name: 'disableLoggingFn',
+            args: {},
+          }],
+        }],
+        // 2. Second turn: Aida client responds to the function output
+        [{
+          explanation: 'Second turn response.',
+          functionCalls: [{
+            name: 'anotherFn',
+            args: {},
+          }],
+        }],
+        // 3. Third turn: Final answer
+        [{
+          explanation: 'All done.',
+        }],
+      ]);
+
+      class DisableLoggingAgent extends AiAssistance.AiAgent.AiAgent<unknown> {
+        override preamble = 'preamble';
+        clientFeature: Host.AidaClient.ClientFeature = 0;
+        userTier = undefined;
+        options = {};
+
+        constructor(opts: AiAssistance.AiAgent.AgentOptions) {
+          super(opts);
+          this.declareFunction('disableLoggingFn', {
+            description: 'disables logging',
+            parameters: {
+              type: Host.AidaClient.ParametersTypes.OBJECT,
+              description: 'Parameters for disable logging function',
+              properties: {},
+              required: [],
+            },
+            handler: async () => {
+              this.disableServerSideLogging();
+              return {result: 'ok'};
+            },
+          });
+          this.declareFunction('anotherFn', {
+            description: 'another function',
+            parameters: {
+              type: Host.AidaClient.ParametersTypes.OBJECT,
+              description: 'Parameters for another function',
+              properties: {},
+              required: [],
+            },
+            handler: async () => {
+              return {result: 'ok'};
+            },
+          });
+        }
+
+        // eslint-disable-next-line require-yield
+        override async * handleContextDetails(): AsyncGenerator<AiAssistance.AiAgent.ContextResponse, void, void> {
+          return;
+        }
+      }
+
+      const agent = new DisableLoggingAgent({
+        aidaClient,
+        serverSideLoggingAllowed: true,
+      });
+
+      await Array.fromAsync(agent.run('start', {selected: mockConversationContext()}));
+
+      // We had 3 calls to doConversation.
+      sinon.assert.callCount(aidaClient.doConversation, 3);
+
+      // First call (initial request): Logging is active (disable_user_content_logging: false)
+      const firstCallRequest = aidaClient.doConversation.getCall(0).args[0];
+      assert.isFalse(firstCallRequest.metadata?.disable_user_content_logging);
+
+      // Second call (after disableLoggingFn()): Logging is inactive (disable_user_content_logging: true)
+      const secondCallRequest = aidaClient.doConversation.getCall(1).args[0];
+      assert.isTrue(secondCallRequest.metadata?.disable_user_content_logging);
+
+      // Third call: Logging remains inactive (disable_user_content_logging: true)
+      const thirdCallRequest = aidaClient.doConversation.getCall(2).args[0];
+      assert.isTrue(thirdCallRequest.metadata?.disable_user_content_logging);
+    });
+
+    it('should abort execution if origin becomes blocked after approval', async () => {
+      let called = 0;
+      // Flag to simulate whether the origin is blocked or not.
+      let originBlocked = false;
+
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([
+          [
+            {
+              explanation: 'Calling function',
+              functionCalls: [{name: 'testFn', args: {}}],
+            },
+          ],
+          [{
+            explanation: 'Final answer',
+          }],
+        ]),
+        // Mock allowedOrigin to return blocked if our flag is set.
+        allowedOrigin: () =>
+            originBlocked ? {blocked: true} : {origin: SDK.SecurityOrigin.SecurityOrigin.create('https://google.com')},
+        // Mock the side effect confirmation to simulate user approval AND concurrent navigation.
+        confirmSideEffectForTest: <T>() => {
+          const resolvers = Promise.withResolvers<T>();
+          // 1. Simulate the user clicking "Continue" (approving the run).
+          resolvers.resolve(AiAssistance.Tool.PermissionDecision.ALLOW_ONCE as unknown as T);
+          // 2. Simulate that while the user was deciding, the page navigated cross-origin.
+          // This flips the flag so that the next call to allowedOrigin() will return {blocked: true}.
+          originBlocked = true;
+          return resolvers;
+        },
+      });
+
+      agent.declareFunctionForTest('testFn', {
+        description: 'test fn description',
+        parameters: {
+          type: Host.AidaClient.ParametersTypes.OBJECT,
+          description: 'test parameters',
+          properties: {},
+          required: [],
+        },
+        handler: async (args, options) => {
+          called++;
+          if (!options?.approved) {
+            return {requiresApproval: true, description: 'test approval'};
+          }
+          return {result: 'success'};
+        },
+      });
+
+      const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+      const errorResponse = findFirstErrorResponse(responses);
+      assert.strictEqual(errorResponse.error, AiAssistance.AiAgent.ErrorType.CROSS_ORIGIN);
+      // Verify that the handler was only called once (the dry run) and not re-invoked after approval.
+      assert.strictEqual(called, 1);
+    });
+
+    it('should abort execution if origin becomes blocked during handler execution', async () => {
+      let called = 0;
+      let originBlocked = false;
+
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([
+          [
+            {
+              explanation: 'Calling function',
+              functionCalls: [{name: 'testFn', args: {}}],
+            },
+          ],
+          [{
+            explanation: 'Final answer',
+          }],
+        ]),
+        allowedOrigin: () =>
+            originBlocked ? {blocked: true} : {origin: SDK.SecurityOrigin.SecurityOrigin.create('https://google.com')},
+      });
+
+      agent.declareFunctionForTest('testFn', {
+        description: 'test fn description',
+        parameters: {
+          type: Host.AidaClient.ParametersTypes.OBJECT,
+          description: 'test parameters',
+          properties: {},
+          required: [],
+        },
+        handler: async (_args, _options) => {
+          called++;
+          // Simulate navigation happening DURING handler execution.
+          originBlocked = true;
+          return {result: 'success'};
+        },
+      });
+
+      const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+      const errorResponse = findFirstErrorResponse(responses);
+      assert.strictEqual(errorResponse.error, AiAssistance.AiAgent.ErrorType.CROSS_ORIGIN);
+      assert.strictEqual(called, 1);
+    });
+
+    it('should remove the abort listener from signal after side effect confirmation resolves', async () => {
+      const abortController = new AbortController();
+      const addEventListenerSpy = sinon.spy(abortController.signal, 'addEventListener');
+      const removeEventListenerSpy = sinon.spy(abortController.signal, 'removeEventListener');
+
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient([
+          [
+            {
+              explanation: 'Calling function',
+              functionCalls: [{name: 'testFn', args: {}}],
+            },
+          ],
+          [{
+            explanation: 'Final answer',
+          }],
+        ]),
+        confirmSideEffectForTest: <T>() => {
+          const resolvers = Promise.withResolvers<T>();
+          resolvers.resolve(AiAssistance.Tool.PermissionDecision.ALLOW_ONCE as unknown as T);
+          return resolvers;
+        },
+      });
+
+      agent.declareFunctionForTest('testFn', {
+        description: 'test fn description',
+        parameters: {
+          type: Host.AidaClient.ParametersTypes.OBJECT,
+          description: 'test parameters',
+          properties: {},
+          required: [],
+        },
+        handler: async (_args, options) => {
+          if (!options?.approved) {
+            return {requiresApproval: true, description: 'test approval'};
+          }
+          return {result: 'success'};
+        },
+      });
+
+      await Array.fromAsync(agent.run('query', {
+        selected: mockConversationContext(),
+        signal: abortController.signal,
+      }));
+
+      sinon.assert.calledWith(addEventListenerSpy, 'abort');
+      sinon.assert.calledWith(removeEventListenerSpy, 'abort');
+      const abortListener = addEventListenerSpy.getCalls().find(call => call.args[0] === 'abort')?.args[1];
+      assert.isDefined(abortListener);
+      sinon.assert.calledWith(removeEventListenerSpy, 'abort', abortListener);
+    });
+
+    it('should yield MAX_STEPS error and pair the final functionCall in history if the model still does not return a final answer after MAX_STEPS',
+       async () => {
+         const agent = new AgentWithFunction({
+           aidaClient: mockAidaClient(Array(AiAssistance.AiAgent.MAX_STEPS).fill([
+             {
+               explanation: 'Calling function',
+               functionCalls: [{
+                 name: 'testFn',
+                 args: {},
+               }],
+             },
+           ])),
+         });
+
+         const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+         const errorResponse = findFirstErrorResponse(responses);
+         assert.strictEqual(errorResponse.error, AiAssistance.AiAgent.ErrorType.MAX_STEPS);
+         assert.strictEqual(agent.called, AiAssistance.AiAgent.MAX_STEPS);
+         assert.deepEqual(agent.history.slice(-2), [
+           {
+             role: Host.AidaClient.Role.MODEL,
+             parts: [
+               {text: 'Calling function'},
+               {
+                 functionCall: {
+                   name: 'testFn',
+                   args: {},
+                 },
+               },
+             ],
+           },
+           {
+             role: Host.AidaClient.Role.ROLE_UNSPECIFIED,
+             parts: [{
+               functionResponse: {
+                 name: 'testFn',
+                 response: {
+                   result: {},
+                   widgets: undefined,
+                 },
+               },
+             }],
+           },
+         ]);
+       });
+
+    describe('callId', () => {
+      function declareTestFn(agent: AiAgentMock, needsApproval: boolean): void {
+        agent.declareFunctionForTest('testFn', {
+          description: 'test fn description',
+          parameters: {
+            type: Host.AidaClient.ParametersTypes.OBJECT,
+            description: 'test parameters',
+            properties: {},
+            required: [],
+          },
+          displayInfoFromArgs: () => ({title: 'Running testFn', thought: 'Because', action: 'testFn()'}),
+          handler: async (_args, options) => {
+            if (needsApproval && !options?.approved) {
+              return {requiresApproval: true, description: 'test approval'};
+            }
+            return {result: 'success'};
+          },
+        });
+      }
+
+      it('sets the same callId on the TITLE, THOUGHT and ACTION of one call', async () => {
+        const agent = new AiAgentMock({
+          aidaClient: mockAidaClient([
+            [{explanation: '', functionCalls: [{name: 'testFn', args: {}}]}],
+            [{explanation: 'Final answer'}],
+          ]),
+        });
+        declareTestFn(agent, false);
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        const title = responses.find(r => r.type === AiAssistance.AiAgent.ResponseType.TITLE);
+        const thought = responses.find(r => r.type === AiAssistance.AiAgent.ResponseType.THOUGHT);
+        const action = responses.find(r => r.type === AiAssistance.AiAgent.ResponseType.ACTION);
+        assert.exists(title);
+        assert.exists(thought);
+        assert.exists(action);
+        assert.isString(title.callId);
+        assert.strictEqual(thought.callId, title.callId);
+        assert.strictEqual(action.callId, title.callId);
+      });
+
+      it('sets the same callId on every event of a call that needs approval', async () => {
+        const agent = new AiAgentMock({
+          aidaClient: mockAidaClient([
+            [{explanation: '', functionCalls: [{name: 'testFn', args: {}}]}],
+            [{explanation: 'Final answer'}],
+          ]),
+          confirmSideEffectForTest: <T>() => {
+            const resolvers = Promise.withResolvers<T>();
+            resolvers.resolve(AiAssistance.Tool.PermissionDecision.ALLOW_ONCE as unknown as T);
+            return resolvers;
+          },
+        });
+        declareTestFn(agent, true);
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        const title = responses.find(r => r.type === AiAssistance.AiAgent.ResponseType.TITLE);
+        const sideEffect = responses.find(r => r.type === AiAssistance.AiAgent.ResponseType.SIDE_EFFECT);
+        const actions = responses.filter(r => r.type === AiAssistance.AiAgent.ResponseType.ACTION);
+        assert.exists(title);
+        assert.exists(sideEffect);
+        assert.lengthOf(actions, 2);
+        const [codeOnlyAction, resultAction] = actions;
+        assert.isUndefined(codeOnlyAction.output);
+        assert.strictEqual(resultAction.output, 'success');
+        assert.isString(title.callId);
+        assert.strictEqual(codeOnlyAction.callId, title.callId);
+        assert.strictEqual(sideEffect.callId, title.callId);
+        assert.strictEqual(resultAction.callId, title.callId);
+      });
+
+      it('sets a different callId for each call', async () => {
+        const agent = new AiAgentMock({
+          aidaClient: mockAidaClient([
+            [{explanation: '', functionCalls: [{name: 'testFn', args: {}}]}],
+            [{explanation: '', functionCalls: [{name: 'testFn', args: {}}]}],
+            [{explanation: 'Final answer'}],
+          ]),
+        });
+        declareTestFn(agent, false);
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        const actions = responses.filter(r => r.type === AiAssistance.AiAgent.ResponseType.ACTION);
+        assert.lengthOf(actions, 2);
+        const [firstAction, secondAction] = actions;
+        assert.isString(firstAction.callId);
+        assert.isString(secondAction.callId);
+        assert.notStrictEqual(firstAction.callId, secondAction.callId);
+      });
+    });
+
+    describe('multiple function calls in one response', () => {
+      type Handler = AiAssistance.AiAgent.FunctionDeclaration<Record<string, unknown>, unknown>['handler'];
+
+      function declareFn(agent: AiAgentMock, name: string, handler: Handler): void {
+        agent.declareFunctionForTest(name, {
+          description: `${name} description`,
+          parameters: {
+            type: Host.AidaClient.ParametersTypes.OBJECT,
+            description: 'test parameters',
+            properties: {},
+            required: [],
+          },
+          handler,
+        });
+      }
+
+      /**
+       * Declares a function that needs approval. Every handler invocation is
+       * recorded in `invocations`, with `:approved` appended for the run after
+       * approval.
+       */
+      function declareApprovalFn(agent: AiAgentMock, name: string, invocations: string[]): void {
+        declareFn(agent, name, async (_args, options) => {
+          if (!options?.approved) {
+            invocations.push(name);
+            return {requiresApproval: true, description: `approve ${name}`};
+          }
+          invocations.push(`${name}:approved`);
+          return {result: `${name} done`};
+        });
+      }
+
+      /**
+       * Answers each approval prompt with the next decision in `decisions`.
+       */
+      function confirmInOrder(decisions: AiAssistance.Tool.PermissionDecision[]): <T>() => PromiseWithResolvers<T> {
+        let index = 0;
+        return <T>() => {
+          const resolvers = Promise.withResolvers<T>();
+          resolvers.resolve(decisions[index++] as unknown as T);
+          return resolvers;
+        };
+      }
+
+      it('runs every call in order and sends all responses in one request', async () => {
+        const aidaClient = mockAidaClient([
+          [{explanation: '', functionCalls: [{name: 'fnA', args: {}}, {name: 'fnB', args: {}}]}],
+          [{explanation: 'Final answer'}],
+        ]);
+        const agent = new AiAgentMock({aidaClient});
+        const invocations: string[] = [];
+        declareFn(agent, 'fnA', async () => {
+          invocations.push('fnA');
+          return {result: 'a'};
+        });
+        declareFn(agent, 'fnB', async () => {
+          invocations.push('fnB');
+          return {result: 'b'};
+        });
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.deepEqual(invocations, ['fnA', 'fnB']);
+        const actions = responses.filter(r => r.type === AiAssistance.AiAgent.ResponseType.ACTION);
+        assert.lengthOf(actions, 2);
+        assert.notStrictEqual(actions[0].callId, actions[1].callId);
+        sinon.assert.callCount(aidaClient.doConversation, 2);
+        assert.deepEqual(aidaClient.doConversation.getCall(1).args[0].current_message.parts, [
+          {functionResponse: {name: 'fnA', response: {result: 'a', widgets: undefined}}},
+          {functionResponse: {name: 'fnB', response: {result: 'b', widgets: undefined}}},
+        ]);
+      });
+
+      it('stores the explanation and every call as one MODEL turn, keeping each thoughtSignature', async () => {
+        const aidaClient = mockAidaClient([
+          [{
+            explanation: 'thinking',
+            functionCalls: [{name: 'fnA', args: {}, thoughtSignature: 'sig'}, {name: 'fnB', args: {}}],
+          }],
+          [{explanation: 'Final answer'}],
+        ]);
+        const agent = new AiAgentMock({aidaClient});
+        declareFn(agent, 'fnA', async () => ({result: 'a'}));
+        declareFn(agent, 'fnB', async () => ({result: 'b'}));
+
+        await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        const history = aidaClient.doConversation.getCall(1).args[0].historical_contexts;
+        assert.deepEqual(history?.map(content => content.role),
+                         [Host.AidaClient.Role.USER, Host.AidaClient.Role.MODEL]);
+        assert.deepEqual(history?.at(-1)?.parts, [
+          {text: 'thinking'},
+          {functionCall: {name: 'fnA', args: {}, thoughtSignature: 'sig'}},
+          {functionCall: {name: 'fnB', args: {}}},
+        ]);
+      });
+
+      it('asks for approval for each call in turn', async () => {
+        const aidaClient = mockAidaClient([
+          [{
+            explanation: '',
+            functionCalls: [{name: 'fnA', args: {}}, {name: 'fnB', args: {}}, {name: 'fnC', args: {}}],
+          }],
+          [{explanation: 'Final answer'}],
+        ]);
+        const agent = new AiAgentMock({
+          aidaClient,
+          confirmSideEffectForTest: confirmInOrder([
+            AiAssistance.Tool.PermissionDecision.ALLOW_ONCE,
+            AiAssistance.Tool.PermissionDecision.ALLOW_ONCE,
+            AiAssistance.Tool.PermissionDecision.ALLOW_ONCE,
+          ]),
+        });
+        const invocations: string[] = [];
+        declareApprovalFn(agent, 'fnA', invocations);
+        declareApprovalFn(agent, 'fnB', invocations);
+        declareApprovalFn(agent, 'fnC', invocations);
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.deepEqual(responses.map(r => r.type), [
+          AiAssistance.AiAgent.ResponseType.QUERYING,
+          AiAssistance.AiAgent.ResponseType.SIDE_EFFECT,
+          AiAssistance.AiAgent.ResponseType.ACTION,
+          AiAssistance.AiAgent.ResponseType.SIDE_EFFECT,
+          AiAssistance.AiAgent.ResponseType.ACTION,
+          AiAssistance.AiAgent.ResponseType.SIDE_EFFECT,
+          AiAssistance.AiAgent.ResponseType.ACTION,
+          AiAssistance.AiAgent.ResponseType.QUERYING,
+          AiAssistance.AiAgent.ResponseType.ANSWER,
+        ]);
+        assert.deepEqual(invocations, ['fnA', 'fnA:approved', 'fnB', 'fnB:approved', 'fnC', 'fnC:approved']);
+        const sideEffects = responses.filter(r => r.type === AiAssistance.AiAgent.ResponseType.SIDE_EFFECT);
+        assert.lengthOf(new Set(sideEffects.map(sideEffect => sideEffect.callId)), 3);
+        assert.lengthOf(aidaClient.doConversation.getCall(1).args[0].current_message.parts, 3);
+      });
+
+      it('runs the other calls when one call is denied', async () => {
+        const aidaClient = mockAidaClient([
+          [{
+            explanation: '',
+            functionCalls: [{name: 'fnA', args: {}}, {name: 'fnB', args: {}}, {name: 'fnC', args: {}}],
+          }],
+          [{explanation: 'Final answer'}],
+        ]);
+        const agent = new AiAgentMock({
+          aidaClient,
+          confirmSideEffectForTest: confirmInOrder([
+            AiAssistance.Tool.PermissionDecision.ALLOW_ONCE,
+            AiAssistance.Tool.PermissionDecision.REJECT,
+            AiAssistance.Tool.PermissionDecision.ALLOW_ONCE,
+          ]),
+        });
+        const invocations: string[] = [];
+        declareApprovalFn(agent, 'fnA', invocations);
+        declareApprovalFn(agent, 'fnB', invocations);
+        declareApprovalFn(agent, 'fnC', invocations);
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.deepEqual(invocations, ['fnA', 'fnA:approved', 'fnB', 'fnC', 'fnC:approved']);
+        const sideEffects = responses.filter(r => r.type === AiAssistance.AiAgent.ResponseType.SIDE_EFFECT);
+        const canceledAction =
+            responses.filter(r => r.type === AiAssistance.AiAgent.ResponseType.ACTION).find(action => action.canceled);
+        assert.exists(canceledAction);
+        assert.strictEqual(canceledAction.callId, sideEffects[1].callId);
+        assert.deepEqual(aidaClient.doConversation.getCall(1).args[0].current_message.parts, [
+          {functionResponse: {name: 'fnA', response: {result: 'fnA done', widgets: undefined}}},
+          {
+            functionResponse: {
+              name: 'fnB',
+              response: {
+                result:
+                    'Error: The user denied this call, so it did not run. Other calls in the same response were handled separately; check their responses.',
+                widgets: undefined,
+              },
+            },
+          },
+          {functionResponse: {name: 'fnC', response: {result: 'fnC done', widgets: undefined}}},
+        ]);
+      });
+
+      it('stops the remaining calls when the user aborts during an approval prompt', async () => {
+        const aidaClient = mockAidaClient([
+          [{
+            explanation: '',
+            functionCalls: [{name: 'fnA', args: {}}, {name: 'fnB', args: {}}, {name: 'fnC', args: {}}],
+          }],
+        ]);
+        const abortController = new AbortController();
+        let prompts = 0;
+        const agent = new AiAgentMock({
+          aidaClient,
+          // Allows the first call. Leaves the second prompt open until the abort.
+          confirmSideEffectForTest: <T>() => {
+            const resolvers = Promise.withResolvers<T>();
+            prompts++;
+            if (prompts === 1) {
+              resolvers.resolve(AiAssistance.Tool.PermissionDecision.ALLOW_ONCE as unknown as T);
+            }
+            return resolvers;
+          },
+        });
+        const invocations: string[] = [];
+        declareApprovalFn(agent, 'fnA', invocations);
+        declareApprovalFn(agent, 'fnB', invocations);
+        declareApprovalFn(agent, 'fnC', invocations);
+
+        const responses: AiAssistance.AiAgent.ResponseData[] = [];
+        for await (const response of agent.run('query',
+                                               {selected: mockConversationContext(), signal: abortController.signal})) {
+          responses.push(response);
+          if (response.type === AiAssistance.AiAgent.ResponseType.SIDE_EFFECT && prompts === 2) {
+            abortController.abort();
+          }
+        }
+
+        assert.deepEqual(responses.at(-1), {
+          type: AiAssistance.AiAgent.ResponseType.ERROR,
+          error: AiAssistance.AiAgent.ErrorType.ABORT,
+        });
+        assert.deepEqual(invocations, ['fnA', 'fnA:approved', 'fnB']);
+        sinon.assert.callCount(aidaClient.doConversation, 1);
+        assert.deepEqual(agent.history, []);
+      });
+
+      it('stops the remaining calls when the page navigates cross-origin between calls', async () => {
+        const aidaClient = mockAidaClient([
+          [{explanation: '', functionCalls: [{name: 'fnA', args: {}}, {name: 'fnB', args: {}}]}],
+          [{explanation: 'Final answer'}],
+        ]);
+        let originBlocked = false;
+        const agent = new AiAgentMock({
+          aidaClient,
+          allowedOrigin: () => originBlocked ? {blocked: true} :
+                                               {origin: SDK.SecurityOrigin.SecurityOrigin.create('https://google.com')},
+        });
+        const invocations: string[] = [];
+        declareFn(agent, 'fnA', async () => {
+          invocations.push('fnA');
+          return {result: 'a'};
+        });
+        declareFn(agent, 'fnB', async () => {
+          invocations.push('fnB');
+          return {result: 'b'};
+        });
+
+        const responses: AiAssistance.AiAgent.ResponseData[] = [];
+        for await (const response of agent.run('query', {selected: mockConversationContext()})) {
+          responses.push(response);
+          // Navigate after fnA finishes, so only the check before fnB detects it.
+          if (response.type === AiAssistance.AiAgent.ResponseType.ACTION && response.toolName === 'fnA') {
+            originBlocked = true;
+          }
+        }
+
+        assert.deepEqual(responses.at(-1), {
+          type: AiAssistance.AiAgent.ResponseType.ERROR,
+          error: AiAssistance.AiAgent.ErrorType.CROSS_ORIGIN,
+        });
+        assert.deepEqual(invocations, ['fnA']);
+        sinon.assert.callCount(aidaClient.doConversation, 1);
+        assert.deepEqual(agent.history, []);
+      });
+
+      it('sends an error result for an unknown tool and runs the next call', async () => {
+        const aidaClient = mockAidaClient([
+          [{explanation: '', functionCalls: [{name: 'missingFn', args: {}}, {name: 'fnB', args: {}}]}],
+          [{explanation: 'Final answer'}],
+        ]);
+        const agent = new AiAgentMock({aidaClient});
+        declareFn(agent, 'fnB', async () => ({result: 'b'}));
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.notExists(responses.find(r => r.type === AiAssistance.AiAgent.ResponseType.ERROR));
+        const actions = responses.filter(r => r.type === AiAssistance.AiAgent.ResponseType.ACTION);
+        const missingAction = actions.find(action => action.toolName === 'missingFn');
+        assert.exists(missingAction);
+        assert.strictEqual(missingAction.output, 'Error: Function missingFn is not found.');
+        assert.deepEqual(aidaClient.doConversation.getCall(1).args[0].current_message.parts, [
+          {
+            functionResponse:
+                {name: 'missingFn', response: {error: 'Error: Function missingFn is not found.', widgets: undefined}},
+          },
+          {functionResponse: {name: 'fnB', response: {result: 'b', widgets: undefined}}},
+        ]);
+      });
+
+      it('keeps earlier results and runs the next call when a handler throws', async () => {
+        const aidaClient = mockAidaClient([
+          [{
+            explanation: '',
+            functionCalls: [{name: 'fnA', args: {}}, {name: 'fnB', args: {}}, {name: 'fnC', args: {}}],
+          }],
+          [{explanation: 'Final answer'}],
+        ]);
+        const agent = new AiAgentMock({
+          aidaClient,
+          confirmSideEffectForTest: confirmInOrder([AiAssistance.Tool.PermissionDecision.ALLOW_ONCE]),
+        });
+        const invocations: string[] = [];
+        declareApprovalFn(agent, 'fnA', invocations);
+        declareFn(agent, 'fnB', async () => {
+          invocations.push('fnB');
+          throw new Error('boom');
+        });
+        declareFn(agent, 'fnC', async () => {
+          invocations.push('fnC');
+          return {result: 'c'};
+        });
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.notExists(responses.find(r => r.type === AiAssistance.AiAgent.ResponseType.ERROR));
+        assert.deepEqual(invocations, ['fnA', 'fnA:approved', 'fnB', 'fnC']);
+        const actions = responses.filter(r => r.type === AiAssistance.AiAgent.ResponseType.ACTION);
+        const failedAction = actions.find(action => action.toolName === 'fnB');
+        assert.exists(failedAction);
+        assert.strictEqual(failedAction.output, 'Error: boom');
+        assert.deepEqual(aidaClient.doConversation.getCall(1).args[0].current_message.parts, [
+          {functionResponse: {name: 'fnA', response: {result: 'fnA done', widgets: undefined}}},
+          {functionResponse: {name: 'fnB', response: {error: 'Error: boom', widgets: undefined}}},
+          {functionResponse: {name: 'fnC', response: {result: 'c', widgets: undefined}}},
+        ]);
+      });
+
+      it('sends an error result and runs the next call', async () => {
+        const aidaClient = mockAidaClient([
+          [{explanation: '', functionCalls: [{name: 'fnA', args: {}}, {name: 'fnB', args: {}}]}],
+          [{explanation: 'Final answer'}],
+        ]);
+        const agent = new AiAgentMock({aidaClient});
+        declareFn(agent, 'fnA', async () => ({error: 'boom'}));
+        declareFn(agent, 'fnB', async () => ({result: 'b'}));
+
+        await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.deepEqual(aidaClient.doConversation.getCall(1).args[0].current_message.parts, [
+          {functionResponse: {name: 'fnA', response: {error: 'boom', widgets: undefined}}},
+          {functionResponse: {name: 'fnB', response: {result: 'b', widgets: undefined}}},
+        ]);
+      });
+
+      it('counts model requests, not calls, towards MAX_STEPS', async () => {
+        const aidaClient = mockAidaClient(Array(AiAssistance.AiAgent.MAX_STEPS).fill([{
+          explanation: '',
+          functionCalls: [{name: 'testFn', args: {}}, {name: 'testFn', args: {}}],
+        }]));
+        const agent = new AgentWithFunction({aidaClient});
+
+        const responses = await Array.fromAsync(agent.run('query', {selected: mockConversationContext()}));
+
+        assert.strictEqual(findFirstErrorResponse(responses).error, AiAssistance.AiAgent.ErrorType.MAX_STEPS);
+        sinon.assert.callCount(aidaClient.doConversation, AiAssistance.AiAgent.MAX_STEPS);
+        assert.strictEqual(agent.called, 2 * AiAssistance.AiAgent.MAX_STEPS);
+      });
+    });
+  });
+
+  describe('parseTextResponseForSuggestions', () => {
+    it('should parse valid suggestions', () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const parsed = agent.parseTextResponseForSuggestions('SUGGESTIONS: ["how to fix", "why it fails"]');
+      assert.deepEqual(parsed.suggestions, ['how to fix', 'why it fails']);
+    });
+
+    it('should filter out non-string suggestions', () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const parsed = agent.parseTextResponseForSuggestions('SUGGESTIONS: ["valid", 123, null, {"key": "val"}]');
+      assert.deepEqual(parsed.suggestions, ['valid']);
+    });
+
+    it('should truncate long suggestions', () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const longSuggestion = 'a'.repeat(300);
+      const parsed = agent.parseTextResponseForSuggestions(`SUGGESTIONS: ["${longSuggestion}"]`);
+      assert.isDefined(parsed.suggestions);
+      assert.lengthOf(parsed.suggestions![0], 200);
+      assert.strictEqual(parsed.suggestions![0], 'a'.repeat(200));
+    });
+
+    it('should sanitize whitespace and newlines in suggestions', () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const parsed = agent.parseTextResponseForSuggestions(
+          'SUGGESTIONS: ["line1\\nline2", "word1\\r\\nword2", "excessive   spaces"]');
+      assert.deepEqual(parsed.suggestions, ['line1 line2', 'word1 word2', 'excessive spaces']);
+    });
+
+    it('should reject non-array suggestions', () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const parsed = agent.parseTextResponseForSuggestions('SUGGESTIONS: "not an array"');
+      assert.isUndefined(parsed.suggestions);
+    });
+
+    it('should remove empty suggestions after sanitization', () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const parsed = agent.parseTextResponseForSuggestions('SUGGESTIONS: ["", "   ", "\\n\\n"]');
+      assert.isUndefined(parsed.suggestions);
+    });
+
+    it('should parse suggestions from a multi-line response containing both answer and suggestions', () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const responseText = [
+        'Here is the first line of the answer.',
+        'SUGGESTIONS: ["suggestion 1", "suggestion 2"]',
+        'Here is the second line of the answer.',
+      ].join('\n');
+      const parsed = agent.parseTextResponseForSuggestions(responseText);
+      assert.strictEqual(parsed.answer,
+                         'Here is the first line of the answer.\nHere is the second line of the answer.');
+      assert.deepEqual(parsed.suggestions, ['suggestion 1', 'suggestion 2']);
+    });
+
+    it('should handle multiple SUGGESTIONS lines by keeping the last valid one', () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const responseText = [
+        'Answer text.',
+        'SUGGESTIONS: ["first suggestion"]',
+        'More answer text.',
+        'SUGGESTIONS: ["second suggestion"]',
+      ].join('\n');
+      const parsed = agent.parseTextResponseForSuggestions(responseText);
+      assert.strictEqual(parsed.answer, 'Answer text.\nMore answer text.');
+      assert.deepEqual(parsed.suggestions, ['second suggestion']);
+    });
+
+    it('should hide a partially streamed suggestions line whose text contains a closing bracket', () => {
+      const agent = new AiAgentMock({
+        aidaClient: mockAidaClient(),
+      });
+      const parsed = agent.parseTextResponseForSuggestions('SUGGESTIONS: ["Why does [type=text] fail?", "Ano');
+      assert.strictEqual(parsed.answer, '');
+      assert.isUndefined(parsed.suggestions);
+    });
+  });
+});

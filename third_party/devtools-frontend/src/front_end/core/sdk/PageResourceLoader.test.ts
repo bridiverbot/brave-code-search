@@ -1,0 +1,963 @@
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import {assert} from 'chai';
+import {beforeEach, describe, it} from 'mocha';
+import sinon from 'sinon';
+
+import type * as Protocol from '../../generated/protocol.js';
+import {
+  createTarget,
+} from '../../testing/EnvironmentHelpers.js';
+import {setupLocaleHooks} from '../../testing/LocaleHelpers.js';
+import {MockCDPConnection} from '../../testing/MockCDPConnection.js';
+import {setupRuntimeHooks} from '../../testing/RuntimeHelpers.js';
+import {setupSettingsHooks} from '../../testing/SettingsHelpers.js';
+import {TestUniverse} from '../../testing/TestUniverse.js';
+import * as Host from '../host/host.js';
+import * as Platform from '../platform/platform.js';
+import type * as ProtocolClient from '../protocol_client/protocol_client.js';
+
+import * as SDK from './sdk.js';
+
+const {urlString} = Platform.DevToolsPath;
+
+interface LoadResult {
+  success: boolean;
+  content: string;
+  errorDescription: Host.ResourceLoader.LoadErrorDescription;
+}
+
+const initiator = {
+  target: null,
+  frameId: '123' as Protocol.Page.FrameId,
+  initiatorUrl: Platform.DevToolsPath.EmptyUrlString,
+};
+
+/** Creates a PageResourceLoader, TargetManager and Settings instance without installing them as globals */
+function setup({loadOverride, maxConcurrentLoads}: {
+  loadOverride?: ((arg0: string) => Promise<{
+                    success: boolean,
+                    content: string,
+                    errorDescription: Host.ResourceLoader.LoadErrorDescription,
+                  }>),
+  maxConcurrentLoads?: number,
+} = {}) {
+  const universe =
+      new TestUniverse({pageResourceLoaderOptions: {loadOverride: loadOverride ?? null, maxConcurrentLoads}});
+  const {pageResourceLoader: loader, settings, targetManager} = universe;
+  return {loader, settings, targetManager};
+}
+
+describe('PageResourceLoader', () => {
+  const foo1Url = urlString`foo1`;
+  const foo2Url = urlString`foo2`;
+  const foo3Url = urlString`foo3`;
+  const loads: Array<{url: string, resolve?: {(_: LoadResult|PromiseLike<LoadResult>): void}}> = [];
+  const load = async (url: string) => {
+    loads.push({url});
+
+    return {
+      success: true,
+      content: `${url} - content`,
+      errorDescription: {message: '', statusCode: 0, netError: 0, netErrorName: '', urlValid: true},
+    };
+  };
+
+  beforeEach(() => {
+    loads.length = 0;
+  });
+
+  setupLocaleHooks();
+  setupSettingsHooks();
+
+  it('registers extension loads', async () => {
+    const {loader} = setup({loadOverride: load});
+    const initiator: SDK.PageResourceLoader.ExtensionInitiator = {
+      extensionId: '123',
+      initiatorUrl: urlString`www.test.com/main.wasm.dwp`,
+      target: null,
+      frameId: null,
+    };
+    const extensionResource: SDK.PageResourceLoader.PageResource = {
+      url: urlString`main.wasm.dwp`,
+      success: true,
+      initiator,
+      size: null,
+      duration: null,
+    };
+
+    loader.resourceLoadedThroughExtension(extensionResource);
+    assert.deepEqual(loader.getScopedNumberOfResources(), {loading: 0, resources: 1});
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 0, queued: 0, resources: 1});
+
+    const resources = Array.from(loader.getResourcesLoaded().values());
+
+    assert.lengthOf(resources, 1);
+    assert.isTrue(resources[0].success);
+    assert.deepEqual(resources[0].initiator, initiator);
+  });
+
+  it('loads resources correctly', async () => {
+    const {loader} = setup({loadOverride: load});
+    const loading = [
+      loader.loadResource(foo1Url, initiator),
+      loader.loadResource(foo2Url, initiator),
+      loader.loadResource(foo3Url, initiator),
+    ];
+
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 3, queued: 0, resources: 3});
+
+    const results = await Promise.all(loading);
+    assert.deepEqual(loads.map(x => x.url), ['foo1', 'foo2', 'foo3']);
+    assert.deepEqual(results.map(x => x.content), ['foo1 - content', 'foo2 - content', 'foo3 - content']);
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 0, queued: 0, resources: 3});
+    const resources = Array.from(loader.getResourcesLoaded().values());
+    assert.isTrue(resources.every(x => x.success));
+  });
+
+  it('deals with page reloads correctly', async () => {
+    const {loader} = setup({loadOverride: load, maxConcurrentLoads: 1});
+    const loading = [
+      loader.loadResource(foo1Url, initiator).catch(e => e.message),
+      loader.loadResource(foo2Url, initiator).catch(e => e.message),
+      loader.loadResource(foo3Url, initiator).catch(e => e.message),
+    ];
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 3, queued: 2, resources: 3});
+
+    loader.onPrimaryPageChanged({
+      data: {
+        frame: {
+          isOutermostFrame() {
+            return true;
+          },
+          resourceTreeModel() {
+            return {
+              target() {
+                return null;
+              },
+            };
+          },
+        } as unknown as SDK.ResourceTreeModel.ResourceTreeFrame,
+        type: SDK.ResourceTreeModel.PrimaryPageChangeType.NAVIGATION,
+      },
+    });
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 3, queued: 0, resources: 0});
+
+    const results = await Promise.all(loading);
+    assert.deepEqual(loads.map(x => x.url), ['foo1']);
+    assert.deepEqual(results[0].content, 'foo1 - content');
+    assert.deepEqual(results[1], 'Load canceled due to reload of inspected page');
+    assert.deepEqual(results[2], 'Load canceled due to reload of inspected page');
+  });
+
+  it('respects the max concurrent loads', async () => {
+    const {loader} = setup({loadOverride: load, maxConcurrentLoads: 2});
+    const loading = [
+      loader.loadResource(foo1Url, initiator),
+      loader.loadResource(foo2Url, initiator),
+      loader.loadResource(foo3Url, initiator),
+    ];
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 3, queued: 1, resources: 3});
+
+    const results = await Promise.all(loading);
+    assert.deepEqual(loads.map(x => x.url), ['foo1', 'foo2', 'foo3']);
+    assert.deepEqual(results.map(x => x.content), ['foo1 - content', 'foo2 - content', 'foo3 - content']);
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 0, queued: 0, resources: 3});
+    const resources = Array.from(loader.getResourcesLoaded().values());
+    assert.isTrue(resources.every(x => x.success));
+  });
+});
+
+// Loading via host bindings requires the settings infra to be booted.
+describe('PageResourceLoader', () => {
+  setupSettingsHooks();
+
+  it('blocks UNC file paths with the default setting', async () => {
+    if (!Host.Platform.isWin()) {
+      return;
+    }
+
+    const {loader} = setup({maxConcurrentLoads: 1});
+
+    const message = await loader.loadResource(urlString`file:////127.0.0.1/share/source-map.js.map`, initiator)
+                        .catch(e => e.message);
+
+    assert.include(message, 'remote file');
+  });
+
+  it('blocks remote file paths with the default setting', async () => {
+    const {loader} = setup({maxConcurrentLoads: 1});
+
+    const message =
+        await loader.loadResource(urlString`file://host/source-map.js.map`, initiator).catch(e => e.message);
+
+    assert.include(message, 'remote file');
+  });
+
+  it('blocks UNC file paths with a backslash on Windows with the default setting', async () => {
+    if (!Host.Platform.isWin()) {
+      return;
+    }
+
+    const {loader} = setup({maxConcurrentLoads: 1});
+
+    const message = await loader.loadResource(urlString`file:///\\127.0.0.1/share/source-map.js.map`, initiator)
+                        .catch(e => e.message);
+
+    assert.include(message, 'remote file');
+  });
+
+  it('blocks UNC file paths with path traversal on Windows with the default setting', async () => {
+    if (!Host.Platform.isWin()) {
+      return;
+    }
+
+    const {loader} = setup({maxConcurrentLoads: 1});
+
+    const message =
+        await loader.loadResource(urlString`file:///abc\\..//smb-server/share/source-map.js.map'`, initiator)
+            .catch(e => e.message);
+
+    assert.include(message, 'remote file');
+  });
+
+  it('allows remote file paths with the setting enabled', async () => {
+    const {loader, settings} = setup({maxConcurrentLoads: 1});
+    sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource')
+        .callsFake((_url, _headers, streamId, callback) => {
+          Host.ResourceLoader.streamWrite(streamId, 'content of the source map');
+          callback({statusCode: 200});
+        });
+
+    settings.resolve(SDK.SDKSettings.enableRemoteFileLoadingSettingDescriptor).set(true);
+    const response = await loader.loadResource(urlString`file://host/source-map.js.map`, initiator);
+
+    assert.strictEqual(response.content, 'content of the source map');
+  });
+
+  it('allows UNC paths on Windows with the setting enabled', async () => {
+    if (!Host.Platform.isWin()) {
+      return;
+    }
+
+    const {loader, settings} = setup({maxConcurrentLoads: 1});
+    sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource')
+        .callsFake((_url, _headers, streamId, callback) => {
+          Host.ResourceLoader.streamWrite(streamId, 'content of the source map');
+          callback({statusCode: 200});
+        });
+
+    settings.resolve(SDK.SDKSettings.enableRemoteFileLoadingSettingDescriptor).set(true);
+    const response = await loader.loadResource(urlString`file:////127.0.0.1/share/source-map.js.map`, initiator);
+
+    assert.strictEqual(response.content, 'content of the source map');
+  });
+});
+
+describe('PageResourceLoader', () => {
+  setupLocaleHooks();
+  setupRuntimeHooks();
+  setupSettingsHooks();
+
+  describe('loadResource', () => {
+    const stream = 'STREAM_ID' as Protocol.IO.StreamHandle;
+    const initiatorUrl = urlString`htp://example.com`;
+    const url = urlString`${`${initiatorUrl}/test.txt`}`;
+
+    function setupLoadingSourceMapsAsNetworkResource(connection: MockCDPConnection):
+        Promise<Protocol.Network.LoadNetworkResourceRequest> {
+      return new Promise(resolve => {
+        let contentToRead: string|null = 'foo';
+        connection.setSuccessHandler('IO.read', () => {
+          const data = contentToRead;
+          contentToRead = null;
+          return {data} as Protocol.IO.ReadResponse;
+        });
+        connection.setSuccessHandler('IO.close', () => ({}));
+        connection.setSuccessHandler('Network.loadNetworkResource', request => {
+          resolve(request);
+          return {resource: {success: true, stream, statusCode: 200}};
+        });
+      });
+    }
+
+    for (const disableCache of [true, false]) {
+      it(`loads with ${disableCache ? 'disabled' : 'enabled'} cache based on the setting`, async () => {
+        const {loader, settings, targetManager} = setup();
+        settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(disableCache);
+        const connection = new MockCDPConnection();
+        const target = createTarget({connection, targetManager});
+        const initiator = {target, frameId: null, initiatorUrl};
+        const [{options}, {content}] = await Promise.all([
+          setupLoadingSourceMapsAsNetworkResource(connection),
+          loader.loadResource(url, initiator),
+        ]);
+        // Check that we loaded the resources with appropriately enabled caching.
+        assert.strictEqual(options.disableCache, disableCache);
+        // Sanity check on the content.
+        assert.deepEqual(content, 'foo');
+      });
+    }
+  });
+
+  describe('loadResource with CSP', () => {
+    it('does not fall back to host bindings if frame has restrictive CSP', async () => {
+      const {loader, settings, targetManager} = setup();
+      settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+      const connection = new MockCDPConnection();
+
+      connection.setSuccessHandler('Network.getSecurityIsolationStatus', () => {
+        return {
+          status: {
+            csp: [{
+              effectiveDirectives: 'connect-src \'none\'',
+              isEnforced: true,
+              source: 'HTTP' as Protocol.Network.ContentSecurityPolicySource,
+            }],
+          },
+        };
+      });
+
+      connection.setFailureHandler('Network.loadNetworkResource', () => {
+        return {
+          code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+          message: 'Frame not found',
+        };
+      });
+
+      const target = createTarget({connection, targetManager});
+      const initiator = {target, frameId: '123' as Protocol.Page.FrameId, initiatorUrl: urlString`https://example.com`};
+      const url = urlString`https://example.com/source.map`;
+
+      const loadHostBindingsStub =
+          sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource');
+
+      try {
+        await loader.loadResource(url, initiator);
+        assert.fail('Expected loadResource to throw');
+      } catch (e) {
+        assert.strictEqual(e.message, 'Frame not found');
+      }
+
+      // Verify fallback was NOT called
+      sinon.assert.notCalled(loadHostBindingsStub);
+    });
+
+    it('falls back to host bindings if frame has no restrictive CSP', async () => {
+      const {loader, settings, targetManager} = setup();
+      settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+      const connection = new MockCDPConnection();
+
+      connection.setSuccessHandler('Network.getSecurityIsolationStatus', () => {
+        return {
+          status: {
+            csp: [],
+          },
+        };
+      });
+
+      connection.setFailureHandler('Network.loadNetworkResource', () => {
+        return {
+          code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+          message: 'Frame not found',
+        };
+      });
+
+      const target = createTarget({connection, targetManager, url: 'https://example.com'});
+      const frame = {
+        id: '123' as Protocol.Page.FrameId,
+        securityOrigin: () => SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+      } as unknown as SDK.ResourceTreeModel.ResourceTreeFrame;
+      const resourceTreeModel = target.model(SDK.ResourceTreeModel.ResourceTreeModel)!;
+      sinon.stub(resourceTreeModel, 'mainFrame').get(() => frame);
+      sinon.stub(resourceTreeModel, 'frameForId').withArgs('123' as Protocol.Page.FrameId).returns(frame);
+      const initiator = {target, frameId: '123' as Protocol.Page.FrameId, initiatorUrl: urlString`https://example.com`};
+      const url = urlString`https://example.com/source.map`;
+
+      const loadHostBindingsStub =
+          sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource')
+              .callsFake((_url, _headers, streamId, callback) => {
+                Host.ResourceLoader.streamWrite(streamId, 'fallback content');
+                callback({statusCode: 200});
+              });
+
+      const result = await loader.loadResource(url, initiator);
+      assert.strictEqual(result.content, 'fallback content');
+      sinon.assert.calledOnce(loadHostBindingsStub);
+    });
+
+    it('does not fall back to host bindings if security isolation status is unavailable (fail-closed)', async () => {
+      // If getSecurityIsolationStatus returns null (e.g. because the frame was removed before the query completed),
+      // the unsafe fallback must not execute.
+      const {loader, settings, targetManager} = setup();
+      settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+      const connection = new MockCDPConnection();
+
+      connection.setFailureHandler('Network.getSecurityIsolationStatus', () => {
+        return {
+          code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+          message: 'Frame not found',
+        };
+      });
+
+      connection.setFailureHandler('Network.loadNetworkResource', () => {
+        return {
+          code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+          message: 'Frame not found',
+        };
+      });
+
+      const target = createTarget({connection, targetManager});
+      const initiator = {target, frameId: '123' as Protocol.Page.FrameId, initiatorUrl: urlString`https://example.com`};
+      const url = urlString`https://example.com/source.map`;
+
+      const loadHostBindingsStub =
+          sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource');
+
+      try {
+        await loader.loadResource(url, initiator);
+        assert.fail('Expected loadResource to throw');
+      } catch (e) {
+        assert.strictEqual(e.message, 'Frame not found');
+      }
+
+      // Fallback must not be called, null status keeps the guard armed.
+      sinon.assert.notCalled(loadHostBindingsStub);
+    });
+
+    it('does not fall back to host bindings or retry without frameId when explicit frame status query fails',
+       async () => {
+         const {loader, settings, targetManager} = setup();
+         settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+         const connection = new MockCDPConnection();
+         const requestedFrameIds: Array<Protocol.Page.FrameId|undefined> = [];
+
+         connection.setHandler('Network.getSecurityIsolationStatus', params => {
+           requestedFrameIds.push(params?.frameId);
+           if (params?.frameId) {
+             return {
+               error: {
+                 code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+                 message: 'Frame not found',
+               },
+             };
+           }
+           return {
+             result: {
+               status: {},
+             },
+           };
+         });
+
+         connection.setFailureHandler('Network.loadNetworkResource', () => {
+           return {
+             code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+             message: 'Frame not found',
+           };
+         });
+
+         const target = createTarget({connection, targetManager});
+         const initiator = {
+           target,
+           frameId: '123' as Protocol.Page.FrameId,
+           initiatorUrl: urlString`https://example.com`,
+         };
+         const url = urlString`https://example.com/source.map`;
+
+         const loadHostBindingsStub =
+             sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource');
+
+         try {
+           await loader.loadResource(url, initiator);
+           assert.fail('Expected loadResource to throw');
+         } catch (e) {
+           assert.strictEqual(e.message, 'Frame not found');
+         }
+
+         assert.deepEqual(requestedFrameIds, ['123' as Protocol.Page.FrameId]);
+         sinon.assert.notCalled(loadHostBindingsStub);
+       });
+
+    it('does not fall back to host bindings if security isolation status has no csp field', async () => {
+      const {loader, settings, targetManager} = setup();
+      settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+      const connection = new MockCDPConnection();
+
+      connection.setSuccessHandler('Network.getSecurityIsolationStatus', () => {
+        return {
+          status: {},
+        };
+      });
+
+      connection.setFailureHandler('Network.loadNetworkResource', () => {
+        return {
+          code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+          message: 'Frame not found',
+        };
+      });
+
+      const target = createTarget({connection, targetManager});
+      const initiator = {target, frameId: '123' as Protocol.Page.FrameId, initiatorUrl: urlString`https://example.com`};
+      const url = urlString`https://example.com/source.map`;
+
+      const loadHostBindingsStub =
+          sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource');
+
+      try {
+        await loader.loadResource(url, initiator);
+        assert.fail('Expected loadResource to throw');
+      } catch (e) {
+        assert.strictEqual(e.message, 'Frame not found');
+      }
+
+      sinon.assert.notCalled(loadHostBindingsStub);
+    });
+
+    it('uses parentFrameId from TargetInfo for subframe worker initiators without frameId', async () => {
+      const {loader, settings, targetManager} = setup();
+      settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+      const frameConnection = new MockCDPConnection();
+      const requestedFrameIdsForSecurity: Array<Protocol.Page.FrameId|undefined> = [];
+      const requestedFrameIdsForNetwork: Array<Protocol.Page.FrameId|undefined> = [];
+
+      frameConnection.setHandler('Network.getSecurityIsolationStatus', params => {
+        requestedFrameIdsForSecurity.push(params?.frameId);
+        return {
+          result: {
+            status: {
+              csp: [],
+            },
+          },
+        };
+      });
+
+      frameConnection.setHandler('Network.loadNetworkResource', params => {
+        requestedFrameIdsForNetwork.push(params?.frameId);
+        return {
+          error: {
+            code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+            message: 'Failed to load in target',
+          },
+        };
+      });
+
+      const frameTarget = createTarget({connection: frameConnection, targetManager, url: 'https://example.com'});
+      const resourceTreeModel = frameTarget.model(SDK.ResourceTreeModel.ResourceTreeModel);
+      sinon.stub(resourceTreeModel!, 'mainFrame').get(() => ({
+                                                        id: 'main-frame-123' as Protocol.Page.FrameId,
+                                                        securityOrigin: () => SDK.SecurityOrigin.SecurityOrigin.create(
+                                                            'https://example.com'),
+                                                      }));
+      sinon.stub(resourceTreeModel!, 'frameForId').callsFake((id: Protocol.Page.FrameId) => {
+        if (id === 'subframe-123') {
+          return {securityOrigin: () => SDK.SecurityOrigin.SecurityOrigin.create('https://example.com')} as unknown as
+              SDK.ResourceTreeModel.ResourceTreeFrame;
+        }
+        return null;
+      });
+
+      // Simulates a worker created by a subframe. The targetInfo should have parentFrameId.
+      const workerTarget = createTarget({
+        targetManager,
+        parentTarget: frameTarget,
+        type: SDK.Target.Type.Worker,
+        url: 'https://example.com/worker.js',
+      });
+      sinon.stub(workerTarget, 'targetInfo').returns({
+        parentFrameId: 'subframe-123' as Protocol.Page.FrameId,
+        url: 'https://example.com/worker.js',
+      } as unknown as Protocol.Target.TargetInfo);
+
+      const initiator = {
+        target: workerTarget,
+        frameId: null,
+        initiatorUrl: urlString`https://example.com/worker.js`,
+      };
+      const url = urlString`https://example.com/worker.js.map`;
+
+      const loadHostBindingsStub =
+          sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource')
+              .callsFake((_url, _headers, streamId, callback) => {
+                Host.ResourceLoader.streamWrite(streamId, 'worker map content');
+                callback({statusCode: 200});
+              });
+
+      const result = await loader.loadResource(url, initiator);
+      assert.strictEqual(result.content, 'worker map content');
+      assert.deepEqual(requestedFrameIdsForSecurity, ['subframe-123' as Protocol.Page.FrameId]);
+      assert.deepEqual(requestedFrameIdsForNetwork, ['subframe-123' as Protocol.Page.FrameId]);
+      sinon.assert.calledOnce(loadHostBindingsStub);
+    });
+
+    // Service workers and shared workers are parented by the page target, but are not owned by any
+    // single frame and hence report no parentFrameId. Their loads must not be attributed to the page's
+    // main frame, as the browser would then issue the request with the main frame's origin and
+    // credentials. Instead, the load must go through the worker's own session, where the browser uses
+    // the worker's origin.
+    for (const type of [SDK.Target.Type.ServiceWorker, SDK.Target.Type.SHARED_WORKER]) {
+      it(`loads through the ${type} target itself when it has neither a frameId nor a parentFrameId`, async () => {
+        const {loader, settings, targetManager} = setup();
+        settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+        const connection = new MockCDPConnection();
+        const securityRequests: Array<{frameId: Protocol.Page.FrameId | undefined, sessionId: string | undefined}> = [];
+        const networkRequests: Array<{frameId: Protocol.Page.FrameId | undefined, sessionId: string | undefined}> = [];
+
+        connection.setSuccessHandler('Network.getSecurityIsolationStatus', (params, sessionId) => {
+          securityRequests.push({frameId: params?.frameId, sessionId});
+          // Non-frame targets don't report a CSP.
+          return {status: {}};
+        });
+        connection.setSuccessHandler('Network.loadNetworkResource', (params, sessionId) => {
+          networkRequests.push({frameId: params?.frameId, sessionId});
+          return {
+            resource: {success: true, httpStatusCode: 200, stream: 'stream-1' as Protocol.IO.StreamHandle},
+          };
+        });
+        let streamRead = false;
+        connection.setSuccessHandler('IO.read', () => {
+          if (streamRead) {
+            return {data: '', eof: true};
+          }
+          streamRead = true;
+          return {data: 'worker map content', eof: false};
+        });
+        connection.setSuccessHandler('IO.close', () => ({}));
+
+        const pageTarget = createTarget({connection, targetManager, url: 'https://example.com'});
+        const resourceTreeModel = pageTarget.model(SDK.ResourceTreeModel.ResourceTreeModel);
+        sinon.stub(resourceTreeModel!, 'mainFrame')
+            .get(() => ({
+                   id: 'main-frame-123' as Protocol.Page.FrameId,
+                   securityOrigin: () => SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+                 }));
+
+        // Simulates a worker registered by a cross-origin iframe. It is auto-attached via the page
+        // session, but its TargetInfo has no parentFrameId.
+        const workerTarget = createTarget({
+          id: type as string as Protocol.Target.TargetID,
+          targetManager,
+          parentTarget: pageTarget,
+          type,
+          url: 'https://cross-origin.com/worker.js',
+        });
+
+        const initiator = {
+          target: workerTarget,
+          frameId: null,
+          initiatorUrl: urlString`https://cross-origin.com/worker.js`,
+        };
+        const url = urlString`https://example.com/worker.js.map`;
+
+        const loadHostBindingsStub =
+            sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource');
+
+        const result = await loader.loadResource(url, initiator);
+        assert.strictEqual(result.content, 'worker map content');
+        assert.deepEqual(securityRequests, [{frameId: undefined, sessionId: type}]);
+        assert.deepEqual(networkRequests, [{frameId: undefined, sessionId: type}]);
+        sinon.assert.notCalled(loadHostBindingsStub);
+      });
+    }
+
+    it('blocks cross-origin fallback to loadFromHostBindings', async () => {
+      const {loader, settings, targetManager} = setup();
+      settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+      const frameConnection = new MockCDPConnection();
+
+      frameConnection.setHandler('Network.getSecurityIsolationStatus', () => {
+        return {
+          result: {
+            status: {
+              csp: [],
+            },
+          },
+        };
+      });
+
+      frameConnection.setFailureHandler('Network.loadNetworkResource', () => {
+        return {
+          code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+          message: 'Target not supported',
+        };
+      });
+
+      const mainFrameTarget = createTarget({
+        id: 'main' as Protocol.Target.TargetID,
+        connection: frameConnection,
+        targetManager,
+        url: 'https://example.com',
+      });
+      const resourceTreeModel = mainFrameTarget.model(SDK.ResourceTreeModel.ResourceTreeModel);
+      sinon.stub(resourceTreeModel!, 'mainFrame').get(() => ({
+                                                        id: 'main-frame-123' as Protocol.Page.FrameId,
+                                                        securityOrigin: () => SDK.SecurityOrigin.SecurityOrigin.create(
+                                                            'https://example.com'),
+                                                      }));
+
+      const subframeTarget = createTarget({
+        id: 'subframe' as Protocol.Target.TargetID,
+        parentTarget: mainFrameTarget,
+        targetManager,
+        url: 'https://cross-origin.com',
+      });
+      const subframeModel = subframeTarget.model(SDK.ResourceTreeModel.ResourceTreeModel);
+      sinon.stub(subframeModel!, 'mainFrame').get(() => ({
+                                                    id: 'subframe-123' as Protocol.Page.FrameId,
+                                                    securityOrigin: () => SDK.SecurityOrigin.SecurityOrigin.create(
+                                                        'https://cross-origin.com'),
+                                                  }));
+
+      const initiator = {
+        target: subframeTarget,
+        frameId: 'subframe-123' as Protocol.Page.FrameId,
+        initiatorUrl: urlString`https://cross-origin.com/script.js`,
+      };
+
+      sinon.stub(subframeModel!, 'frameForId').callsFake((id: Protocol.Page.FrameId) => {
+        if (id === 'subframe-123') {
+          return {securityOrigin: () => SDK.SecurityOrigin.SecurityOrigin.create('https://cross-origin.com')} as
+              unknown as SDK.ResourceTreeModel.ResourceTreeFrame;
+        }
+        return null;
+      });
+
+      const url = urlString`https://cross-origin.com/script.js.map`;
+
+      const loadHostBindingsStub =
+          sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource');
+
+      try {
+        await loader.loadResource(url, initiator);
+        assert.fail('Expected loadResource to throw');
+      } catch (e) {
+        assert.strictEqual(e.message, 'Target not supported');
+      }
+
+      sinon.assert.notCalled(loadHostBindingsStub);
+    });
+
+    it('falls back to mainFrame for same-origin detached frame and blocks host-bindings fallback', async () => {
+      const {loader, settings, targetManager} = setup();
+      settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+      const frameConnection = new MockCDPConnection();
+      const requestedFrameIdsForSecurity: Array<Protocol.Page.FrameId|undefined> = [];
+      const requestedFrameIdsForNetwork: Array<Protocol.Page.FrameId|undefined> = [];
+
+      frameConnection.setHandler('Network.getSecurityIsolationStatus', params => {
+        requestedFrameIdsForSecurity.push(params?.frameId);
+        return {result: {status: {csp: []}}};
+      });
+      frameConnection.setHandler('Network.loadNetworkResource', params => {
+        requestedFrameIdsForNetwork.push(params?.frameId);
+        return {
+          error: {
+            code: -32000 as ProtocolClient.CDPConnection.CDPErrorStatus,
+            message: 'Failed to load in target',
+          },
+        };
+      });
+
+      const mainFrameTarget = createTarget({
+        id: 'main' as Protocol.Target.TargetID,
+        connection: frameConnection,
+        targetManager,
+        url: 'https://example.com',
+      });
+      const resourceTreeModel = mainFrameTarget.model(SDK.ResourceTreeModel.ResourceTreeModel)!;
+      sinon.stub(resourceTreeModel, 'mainFrame').get(() => ({
+                                                       id: 'main-frame-123' as Protocol.Page.FrameId,
+                                                       securityOrigin: () => SDK.SecurityOrigin.SecurityOrigin.create(
+                                                           'https://example.com'),
+                                                     }));
+      sinon.stub(resourceTreeModel, 'frameForId').returns(null);
+
+      const loadHostBindingsStub =
+          sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource');
+
+      const detachedInitiator = {
+        target: null,
+        frameId: 'detached-frame-123' as Protocol.Page.FrameId,
+        initiatorUrl: urlString`https://example.com/script.js`,
+      };
+      try {
+        await loader.loadResource(urlString`https://example.com/script.js.map`, detachedInitiator);
+        assert.fail('Expected loadResource to throw');
+      } catch (e) {
+        assert.strictEqual(e.message, 'Failed to load in target');
+      }
+
+      assert.deepEqual(requestedFrameIdsForSecurity, ['main-frame-123' as Protocol.Page.FrameId]);
+      assert.deepEqual(requestedFrameIdsForNetwork, ['main-frame-123' as Protocol.Page.FrameId]);
+      sinon.assert.notCalled(loadHostBindingsStub);
+    });
+
+    it('rejects cross-origin detached or unassociated frames without calling target or host bindings', async () => {
+      const {loader, settings, targetManager} = setup();
+      settings.resolve(SDK.SDKSettings.cacheDisabledSettingDescriptor).set(false);
+      const frameConnection = new MockCDPConnection();
+      const loadNetworkResourceSpy = sinon.spy();
+      frameConnection.setHandler('Network.loadNetworkResource', loadNetworkResourceSpy);
+
+      const mainFrameTarget = createTarget({
+        id: 'main' as Protocol.Target.TargetID,
+        connection: frameConnection,
+        targetManager,
+        url: 'https://example.com',
+      });
+      const resourceTreeModel = mainFrameTarget.model(SDK.ResourceTreeModel.ResourceTreeModel)!;
+      sinon.stub(resourceTreeModel, 'mainFrame').get(() => ({
+                                                       id: 'main-frame-123' as Protocol.Page.FrameId,
+                                                       securityOrigin: () => SDK.SecurityOrigin.SecurityOrigin.create(
+                                                           'https://example.com'),
+                                                     }));
+      sinon.stub(resourceTreeModel, 'frameForId').returns(null);
+
+      const loadHostBindingsStub =
+          sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource');
+
+      for (const initiator of [{
+             target: null,
+             frameId: 'detached-frame-123' as Protocol.Page.FrameId,
+             initiatorUrl: urlString`https://cross-origin.com/script.js`,
+           },
+                               {
+                                 target: mainFrameTarget,
+                                 frameId: '' as Protocol.Page.FrameId,
+                                 initiatorUrl: urlString`https://cross-origin.com/script.js`,
+                               },
+      ]) {
+        try {
+          await loader.loadResource(urlString`https://cross-origin.com/script.js.map`, initiator);
+          assert.fail('Expected loadResource to throw');
+        } catch (e) {
+          assert.strictEqual(e.message, 'Can’t load resource for an unavailable cross-origin frame');
+        }
+      }
+
+      sinon.assert.notCalled(loadNetworkResourceSpy);
+      sinon.assert.notCalled(loadHostBindingsStub);
+    });
+
+    it('fails closed for HTTP(S) resource when no target is available', async () => {
+      const {loader} = setup();
+      const loadHostBindingsStub =
+          sinon.stub(Host.InspectorFrontendHost.InspectorFrontendHostInstance, 'loadNetworkResource');
+
+      try {
+        await loader.loadResource(urlString`https://example.com/script.js.map`, {
+          target: null,
+          frameId: 'detached-frame-123' as Protocol.Page.FrameId,
+          initiatorUrl: urlString`https://example.com/script.js`,
+        });
+        assert.fail('Expected loadResource to throw');
+      } catch (e) {
+        assert.strictEqual(e.message, 'Can’t load http(s) resource without a target');
+      }
+
+      sinon.assert.notCalled(loadHostBindingsStub);
+    });
+  });
+});
+
+describe('PageResourceLoader', () => {
+  const initiatorUrl = urlString`htp://example.com`;
+  const foo1Url = urlString`foo1`;
+  const foo2Url = urlString`foo2`;
+  const foo3Url = urlString`foo3`;
+
+  setupLocaleHooks();
+  setupSettingsHooks();
+  setupRuntimeHooks();
+
+  it('handles scoped resources', async () => {
+    const load = async () => {
+      await new Promise(() => {});
+      return {
+        success: true,
+        content: 'content',
+        errorDescription: {message: '', statusCode: 0, netError: 0, netErrorName: '', urlValid: true},
+      };
+    };
+    const {targetManager, loader} = setup({loadOverride: load});
+    const connection = new MockCDPConnection();
+    const target = createTarget({id: 'main' as Protocol.Target.TargetID, connection, targetManager});
+    const prerenderTarget = createTarget({id: 'prerender' as Protocol.Target.TargetID, connection, targetManager});
+    const initiator = {target, frameId: null, initiatorUrl};
+    const prerenderInitiator = {target: prerenderTarget, frameId: null, initiatorUrl};
+
+    void loader.loadResource(foo1Url, initiator);
+    void loader.loadResource(foo2Url, initiator);
+    void loader.loadResource(foo3Url, prerenderInitiator);
+
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 3, queued: 0, resources: 3});
+    assert.deepEqual(loader.getScopedNumberOfResources(), {loading: 2, resources: 2});
+
+    let resources = loader.getScopedResourcesLoaded();
+    let resourceUrls = [...resources.values()].map(x => x.url);
+    assert.deepEqual(resourceUrls, [foo1Url, foo2Url]);
+
+    targetManager.setScopeTarget(prerenderTarget);
+    assert.deepEqual(loader.getScopedNumberOfResources(), {loading: 1, resources: 1});
+
+    resources = loader.getScopedResourcesLoaded();
+    resourceUrls = [...resources.values()].map(x => x.url);
+    assert.deepEqual(resourceUrls, [foo3Url]);
+  });
+
+  it('handles prerender activation', async () => {
+    const load = async (url: string) => {
+      return {
+        success: true,
+        content: `${url} - content`,
+        errorDescription: {message: '', statusCode: 0, netError: 0, netErrorName: '', urlValid: true},
+      };
+    };
+    const {targetManager, loader} = setup({loadOverride: load});
+    const connection = new MockCDPConnection();
+    const target = createTarget({id: 'main' as Protocol.Target.TargetID, connection, targetManager});
+    const prerenderTarget = createTarget({id: 'prerender' as Protocol.Target.TargetID, connection, targetManager});
+    const initiator = {target, frameId: null, initiatorUrl};
+    const prerenderInitiator = {target: prerenderTarget, frameId: null, initiatorUrl};
+
+    await Promise.all([
+      loader.loadResource(foo1Url, initiator),
+      loader.loadResource(foo2Url, initiator),
+      loader.loadResource(foo3Url, prerenderInitiator),
+    ]);
+
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 0, queued: 0, resources: 3});
+    assert.deepEqual(loader.getScopedNumberOfResources(), {loading: 0, resources: 2});
+
+    let resources = loader.getScopedResourcesLoaded();
+    let resourceUrls = [...resources.values()].map(x => x.url);
+    assert.deepEqual(resourceUrls, [foo1Url, foo2Url]);
+
+    loader.onPrimaryPageChanged({
+      data: {
+        frame: {
+          isOutermostFrame() {
+            return true;
+          },
+          resourceTreeModel() {
+            return {
+              target() {
+                return prerenderTarget;
+              },
+            };
+          },
+        } as unknown as SDK.ResourceTreeModel.ResourceTreeFrame,
+        type: SDK.ResourceTreeModel.PrimaryPageChangeType.ACTIVATION,
+      },
+    });
+    assert.deepEqual(loader.getNumberOfResources(), {loading: 0, queued: 0, resources: 1});
+
+    targetManager.setScopeTarget(prerenderTarget);
+    assert.deepEqual(loader.getScopedNumberOfResources(), {loading: 0, resources: 1});
+
+    resources = loader.getScopedResourcesLoaded();
+    resourceUrls = [...resources.values()].map(x => x.url);
+    assert.deepEqual(resourceUrls, [foo3Url]);
+  });
+});

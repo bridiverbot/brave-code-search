@@ -1,0 +1,332 @@
+// Copyright 2023 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import {assert} from 'chai';
+import {beforeEach, describe, it} from 'mocha';
+import sinon from 'sinon';
+
+import * as Protocol from '../../generated/protocol.js';
+import {setupLocaleHooks} from '../../testing/LocaleHelpers.js';
+import {MockCDPConnection} from '../../testing/MockCDPConnection.js';
+import {setupRuntimeHooks} from '../../testing/RuntimeHelpers.js';
+import {setupSettingsHooks} from '../../testing/SettingsHelpers.js';
+import {TestUniverse} from '../../testing/TestUniverse.js';
+import * as Platform from '../platform/platform.js';
+
+import * as SDK from './sdk.js';
+
+const {urlString} = Platform.DevToolsPath;
+
+describe('OverlayModel', () => {
+  setupLocaleHooks();
+  setupSettingsHooks();
+  setupRuntimeHooks();
+  const DOCUMENT_URL_FOR_TEST = urlString`https://example.com/`;
+
+  let cssModel: SDK.CSSModel.CSSModel|null;
+  let windowControls: SDK.OverlayModel.WindowControls|null;
+  let overlayModel: SDK.OverlayModel.OverlayModel|null;
+  let universe: TestUniverse;
+  let connection: MockCDPConnection;
+
+  const header: Protocol.CSS.CSSStyleSheetHeader = {
+    styleSheetId: 'stylesheet' as Protocol.DOM.StyleSheetId,
+    frameId: 'frame' as Protocol.Page.FrameId,
+    sourceURL: `${DOCUMENT_URL_FOR_TEST}styles.css`,
+    origin: Protocol.CSS.StyleSheetOrigin.Regular,
+    title: 'title',
+    disabled: false,
+    isInline: false,
+    isMutable: false,
+    isConstructed: false,
+    loadingFailed: false,
+    startLine: 0,
+    startColumn: 0,
+    length: 0,
+    endLine: 0,
+    endColumn: 0,
+  };
+
+  const defaultStyleSheet = `.titlebar {
+    left: env(titlebar-area-x);
+    top: env(titlebar-area-y);
+    width: env(titlebar-area-width);
+    height: env(titlebar-area-height);}`;
+
+  beforeEach(() => {
+    universe = new TestUniverse();
+    connection = new MockCDPConnection();
+    const target = universe.createTarget({connection, url: DOCUMENT_URL_FOR_TEST});
+    overlayModel = target.model(SDK.OverlayModel.OverlayModel);
+    cssModel = target.model(SDK.CSSModel.CSSModel);
+    assert.exists(cssModel);
+    windowControls = new SDK.OverlayModel.WindowControls(cssModel);
+
+    // Set up mock response handler to get the default style sheet
+    connection.setSuccessHandler('CSS.getStyleSheetText', () => {
+      return {text: defaultStyleSheet};
+    });
+  });
+
+  it('toggles controls toolbar', async () => {
+    assert.exists(overlayModel);
+    let config;
+
+    // Set up mock response handler to set the configuration
+    connection.setSuccessHandler('Overlay.setShowWindowControlsOverlay', request => {
+      config = request;
+      return request as Protocol.Overlay.SetShowWindowControlsOverlayRequest;
+    });
+
+    // Verify the config is empty when toggling toolbar to be false
+    await overlayModel.toggleWindowControlsToolbar(false);
+    assert.deepEqual(config, {}, 'Expect config to be empty when toolbar is toggled false');
+
+    // Verify the current config is sent when toggling toolbar to be true
+    await overlayModel.toggleWindowControlsToolbar(true);
+    const expectedDefaultConfig = {windowControlsOverlayConfig: overlayModel.getWindowControlsConfig()};
+    assert.deepEqual(config, expectedDefaultConfig, 'Expect default config sent when toolbar is toggled true');
+  });
+
+  it('initializes the style sheet text', async () => {
+    assert.exists(cssModel);
+    assert.exists(windowControls);
+
+    // Verify the style sheet is not initialized when no styles are present
+    const checkStyleSheet = await windowControls.initializeStyleSheetText(DOCUMENT_URL_FOR_TEST);
+    assert.isFalse(checkStyleSheet, 'Style should not be initialized if no CSS stylesheets are present');
+
+    // Add a style sheet and verify it gets added
+    cssModel.styleSheetAdded(header);
+    const styleSheetIds = cssModel.getStyleSheetIdsForURL(urlString`${`${DOCUMENT_URL_FOR_TEST}styles.css`}`);
+    assert.deepEqual(styleSheetIds, ['stylesheet']);
+
+    // Verify style sheet gets initialized
+    const isInitialized = await windowControls.initializeStyleSheetText(DOCUMENT_URL_FOR_TEST);
+    assert.isTrue(isInitialized, 'Expect the style sheet to be initialized when CSS stylesheets are present');
+  });
+
+  it('toggles the emulated overlay', async () => {
+    assert.exists(cssModel);
+    assert.exists(windowControls);
+    let styleSheet;
+
+    // Set up mock response handler to set the style sheet
+    connection.setSuccessHandler('CSS.setStyleSheetText', req => {
+      styleSheet = req.text;
+      return req as unknown as Protocol.CSS.SetStyleSheetTextResponse;
+    });
+
+    // Toggle emulated overlay and verify no emulated overlay when no styles are preset
+    await windowControls.toggleEmulatedOverlay(true);
+    assert.isUndefined(styleSheet, 'Expect overlay to not be toggled if no styles are present');
+
+    // Add style sheet and verify it gets added
+    cssModel.styleSheetAdded(header);
+    const styleSheetIds = cssModel.getStyleSheetIdsForURL(urlString`${`${DOCUMENT_URL_FOR_TEST}styles.css`}`);
+    assert.deepEqual(styleSheetIds, ['stylesheet']);
+
+    // Initialize style sheet & verify it gets initialized
+    const isInitialized = await windowControls.initializeStyleSheetText(DOCUMENT_URL_FOR_TEST);
+    assert.isTrue(isInitialized);
+
+    // Toggle the emulated overlay and verify original style sheet gets replaced with emulated overlay
+    await windowControls.toggleEmulatedOverlay(true);
+    const expectedWindowsOverlay = `.titlebar {
+    left: env(titlebar-area-x, 0px);
+    top: env(titlebar-area-y, 0px);
+    width: env(titlebar-area-width, calc(100% - 238px));
+    height: env(titlebar-area-height, 33px);}`;
+
+    assert.strictEqual(styleSheet, expectedWindowsOverlay, 'Expect emulated overlay stylesheet to be used');
+
+    // Toggle the emulated overlay off and verify original style sheet is used
+    await windowControls.toggleEmulatedOverlay(false);
+    assert.strictEqual(styleSheet, defaultStyleSheet, 'Expect original default stylesheet to be used');
+  });
+
+  it('parses styles and replaces variables for style sheet correctly', () => {
+    assert.exists(windowControls);
+
+    const x = 85;
+    const y = 0;
+    const width = 185;
+    const height = 40;
+
+    let originalStyleSheet = `.titlebar {
+      position: absolute;
+      left: env(titlebar-area-x);
+      top: env(titlebar-area-y);
+      width: env(titlebar-area-width);
+      height: env(titlebar-area-height);
+    }`;
+
+    let expectedStyleSheet = `.titlebar {
+      position: absolute;
+      left: env(titlebar-area-x, ${x}px);
+      top: env(titlebar-area-y, ${y}px);
+      width: env(titlebar-area-width, calc(100% - ${width}px));
+      height: env(titlebar-area-height, ${height}px);
+    }`;
+
+    // Verify the original style sheet gets transformed to the expected style sheet for the given x, y, width, and height dimensions
+    let parsedStyleSheet = windowControls.transformStyleSheetforTesting(x, y, width, height, originalStyleSheet);
+    assert.strictEqual(parsedStyleSheet, expectedStyleSheet);
+
+    // Verify the original style sheet does not get transformed when no original stylesheet
+    originalStyleSheet = '';
+    parsedStyleSheet = windowControls.transformStyleSheetforTesting(x, y, width, height, originalStyleSheet);
+    assert.isUndefined(parsedStyleSheet);
+
+    // Verify the original style sheet gets transformed to the expected style sheet for partial CSS properties
+    originalStyleSheet = ': env(titlebar-area-xxx, 9px); width: env(titlebar-area-width);';
+    expectedStyleSheet = `: env(titlebar-area-xxx, 9px); width: env(titlebar-area-width, calc(100% - ${width}px));`;
+    parsedStyleSheet = windowControls.transformStyleSheetforTesting(x, y, width, height, originalStyleSheet);
+    assert.strictEqual(parsedStyleSheet, expectedStyleSheet);
+  });
+
+  it('clears active highlight when hideDOMNodeHighlight is called', () => {
+    assert.exists(overlayModel);
+    const clock = sinon.useFakeTimers();
+    try {
+      let hideCalled = false;
+      connection.setSuccessHandler('Overlay.hideHighlight', () => {
+        hideCalled = true;
+        return {};
+      });
+
+      overlayModel.highlightInOverlayForTwoSeconds({node: {id: 1 as Protocol.DOM.NodeId}} as unknown as
+                                                   SDK.OverlayModel.HighlightData);
+      assert.isFalse(hideCalled);
+
+      SDK.OverlayModel.OverlayModel.hideDOMNodeHighlight(universe.targetManager);
+      assert.isFalse(hideCalled);
+
+      // Advance clock by 0ms (next tick)
+      clock.tick(0);
+      assert.isTrue(hideCalled);
+    } finally {
+      clock.restore();
+    }
+  });
+  it('sends imcbHighlightConfig in Overlay.highlightNode for mode all', () => {
+    assert.exists(overlayModel);
+    let highlightParams: Protocol.Overlay.HighlightNodeRequest|undefined;
+    connection.setSuccessHandler('Overlay.highlightNode', params => {
+      highlightParams = params;
+      return {};
+    });
+
+    const deferredNode = new SDK.DOMModel.DeferredDOMNode(overlayModel.target(), 1 as Protocol.DOM.BackendNodeId);
+
+    overlayModel.highlightInOverlay({deferredNode}, 'all');
+
+    assert.exists(highlightParams);
+    const imcbConfig = highlightParams.highlightConfig.imcbHighlightConfig;
+    assert.isDefined(imcbConfig);
+    assert.isTrue(imcbConfig.showPositionAreaGrid);
+    assert.isDefined(imcbConfig.imcbBorderColor);
+    assert.isDefined(imcbConfig.imcbBackgroundColor);
+    assert.isDefined(imcbConfig.insetsBackgroundColor);
+    assert.isDefined(imcbConfig.insetsHatchColor);
+    assert.isDefined(imcbConfig.anchorBorderColor);
+    assert.isDefined(imcbConfig.anchorBackgroundColor);
+    assert.isDefined(imcbConfig.positionAreaGridLineColor);
+    assert.isDefined(imcbConfig.positionAreaActiveRegionColor);
+  });
+
+  it('omits imcbHighlightConfig in Overlay.highlightNode for unrelated modes', () => {
+    assert.exists(overlayModel);
+    let highlightParams: Protocol.Overlay.HighlightNodeRequest|undefined;
+    connection.setSuccessHandler('Overlay.highlightNode', params => {
+      highlightParams = params;
+      return {};
+    });
+
+    const deferredNode = new SDK.DOMModel.DeferredDOMNode(overlayModel.target(), 1 as Protocol.DOM.BackendNodeId);
+
+    overlayModel.highlightInOverlay({deferredNode}, 'content');
+
+    assert.exists(highlightParams);
+    assert.isUndefined(highlightParams.highlightConfig.imcbHighlightConfig);
+  });
+
+  it('sends imcbHighlightConfig for mode anchor-positioning', () => {
+    assert.exists(overlayModel);
+    let highlightParams: Protocol.Overlay.HighlightNodeRequest|undefined;
+    connection.setSuccessHandler('Overlay.highlightNode', params => {
+      highlightParams = params;
+      return {};
+    });
+
+    const deferredNode = new SDK.DOMModel.DeferredDOMNode(overlayModel.target(), 1 as Protocol.DOM.BackendNodeId);
+
+    overlayModel.highlightInOverlay({deferredNode}, 'anchor-positioning');
+
+    assert.exists(highlightParams);
+    const imcbConfig = highlightParams.highlightConfig.imcbHighlightConfig;
+    assert.isDefined(imcbConfig);
+    assert.isTrue(imcbConfig.showPositionAreaGrid);
+    assert.isDefined(imcbConfig.imcbBorderColor);
+    assert.isDefined(imcbConfig.imcbBackgroundColor);
+    assert.isDefined(imcbConfig.insetsBackgroundColor);
+    assert.isDefined(imcbConfig.insetsHatchColor);
+    assert.isDefined(imcbConfig.anchorBorderColor);
+    assert.isDefined(imcbConfig.anchorBackgroundColor);
+    assert.isDefined(imcbConfig.positionAreaGridLineColor);
+    assert.isDefined(imcbConfig.positionAreaActiveRegionColor);
+  });
+
+  it('sends imcbHighlightConfig without insets for mode position-area', () => {
+    assert.exists(overlayModel);
+    let highlightParams: Protocol.Overlay.HighlightNodeRequest|undefined;
+    connection.setSuccessHandler('Overlay.highlightNode', params => {
+      highlightParams = params;
+      return {};
+    });
+
+    const deferredNode = new SDK.DOMModel.DeferredDOMNode(overlayModel.target(), 1 as Protocol.DOM.BackendNodeId);
+
+    overlayModel.highlightInOverlay({deferredNode}, 'position-area');
+
+    assert.exists(highlightParams);
+    const imcbConfig = highlightParams.highlightConfig.imcbHighlightConfig;
+    assert.isDefined(imcbConfig);
+    assert.isTrue(imcbConfig.showPositionAreaGrid);
+    assert.isDefined(imcbConfig.imcbBorderColor);
+    assert.isDefined(imcbConfig.imcbBackgroundColor);
+    assert.isUndefined(imcbConfig.insetsBackgroundColor);
+    assert.isUndefined(imcbConfig.insetsHatchColor);
+    assert.isDefined(imcbConfig.anchorBorderColor);
+    assert.isDefined(imcbConfig.anchorBackgroundColor);
+    assert.isDefined(imcbConfig.positionAreaGridLineColor);
+    assert.isDefined(imcbConfig.positionAreaActiveRegionColor);
+  });
+
+  it('sends imcbHighlightConfig without position-area grid for mode insets', () => {
+    assert.exists(overlayModel);
+    let highlightParams: Protocol.Overlay.HighlightNodeRequest|undefined;
+    connection.setSuccessHandler('Overlay.highlightNode', params => {
+      highlightParams = params;
+      return {};
+    });
+
+    const deferredNode = new SDK.DOMModel.DeferredDOMNode(overlayModel.target(), 1 as Protocol.DOM.BackendNodeId);
+
+    overlayModel.highlightInOverlay({deferredNode}, 'insets');
+
+    assert.exists(highlightParams);
+    const imcbConfig = highlightParams.highlightConfig.imcbHighlightConfig;
+    assert.isDefined(imcbConfig);
+    assert.isUndefined(imcbConfig.showPositionAreaGrid);
+    assert.isDefined(imcbConfig.imcbBorderColor);
+    assert.isDefined(imcbConfig.imcbBackgroundColor);
+    assert.isDefined(imcbConfig.insetsBackgroundColor);
+    assert.isDefined(imcbConfig.insetsHatchColor);
+    assert.isDefined(imcbConfig.anchorBorderColor);
+    assert.isDefined(imcbConfig.anchorBackgroundColor);
+    assert.isUndefined(imcbConfig.positionAreaGridLineColor);
+    assert.isUndefined(imcbConfig.positionAreaActiveRegionColor);
+  });
+});

@@ -1,0 +1,54 @@
+/*
+ * Copyright 2018 The Chromium Authors
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+#console-prompt .CodeMirror {
+  padding: 3px 0 1px;
+}
+
+#console-prompt .CodeMirror-line {
+  padding-top: 0;
+}
+
+#console-prompt .CodeMirror-lines {
+  padding-top: 0;
+}
+
+#console-prompt .console-prompt-icon {
+  position: absolute;
+  left: -9px;
+  top: var(--sys-size-3);
+  user-select: none;
+}
+
+.console-eager-preview {
+  padding-bottom: var(--sys-size-2);
+  margin-left: var(--sys-size-3);
+  opacity: 60%;
+  position: relative;
+}
+
+.console-eager-inner-preview {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin-left: var(--sys-size-3);
+  height: 100%;
+  white-space: nowrap;
+}
+
+.preview-result-icon {
+  position: absolute;
+  left: -13px;
+  top: calc(-1 * var(--sys-size-1));
+}
+
+.console-eager-inner-preview:empty,
+.console-eager-inner-preview:empty + .preview-result-icon {
+  opacity: 0%;
+}
+
+.console-prompt-icon.console-prompt-incomplete {
+  opacity: 65%;
+}

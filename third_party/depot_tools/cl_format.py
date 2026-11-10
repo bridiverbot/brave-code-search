@@ -1,0 +1,1520 @@
+#!/usr/bin/env python3
+# Copyright 2026 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+"""Code formatting logic for git cl."""
+
+from __future__ import annotations
+
+import collections
+import concurrent.futures
+import io
+import json
+import multiprocessing
+import optparse
+import os
+import re
+import shutil
+import sys
+import tempfile
+import threading
+from typing import Any, Callable, Mapping, Optional
+
+from git_cl_core import (
+    DieWithError,
+    RunCommand,
+    RunGit,
+    RunGitDiffCmd,
+    _SplitArgsByCmdLineLimit,
+    settings,
+)
+import gclient_paths
+import gclient_utils
+import metrics
+import scm
+import subcommand
+import subprocess2
+import utils
+
+# Constants
+DEPOT_TOOLS = os.path.dirname(os.path.abspath(__file__))
+
+
+def _ComputeFormatDiffLineRanges(files, diffs, expand=0):
+    """Gets the changed line ranges for each file.
+
+    Parses a git diff on provided files and returns a dict that maps a file name
+    to an ordered list of range tuples in the form (start_line, count).
+    Ranges are in the same format as a git diff.
+
+    Args:
+        files: List of files to parse the diff of and return the ranges for.
+        diffs: a dict of diffs, where key is the file without the prefix,
+          and the value is the diff generated for the corresponding file.
+          Note that the hunks in the diffs contain prefxies, such as a/.., b/..
+        expand: Expand diff ranges by this many lines before & after.
+
+    Returns:
+        A dict of path->[(start_line, end_line), ...]
+    """
+    # If files is empty then diff_output will be a full diff.
+    if len(files) == 0:
+        return {}
+
+    # Matches the added/modified line range in a diff hunk header.
+    # 1 capture group: 'diff_start,diff_count' or 'diff_start'
+    # Matches:
+    #   @@ -12,2 +14,3 @@ -> '14,3'
+    #   @@ -12,2 +17 @@   -> '17'
+    pattern = r"^@@ -\d+(?:,\d+)? \+([0-9,]+) @@"
+
+    line_diffs = collections.defaultdict(list)
+    for file in files:
+        diff = diffs.get(file, "")
+        if not diff:
+            continue
+
+        prev_end = 0
+        for match in re.findall(pattern, diff, flags=re.MULTILINE):
+            if not match:
+                continue
+
+            # Matches +14,3
+            if "," in match:
+                diff_start, diff_count = match.split(",")
+            else:
+                # Matches +12
+                diff_start, diff_count = match, 1
+
+            # diff_count contains the diff_start line, and the line numbers
+            # given to formatter args are inclusive. For example, in
+            # google-java-format "--lines 5:10" includes 5th-10th lines.
+            diff_start = int(diff_start)
+            diff_count = int(diff_count)
+            diff_end = diff_start + diff_count - 1 + expand
+            diff_start = max(prev_end + 1, diff_start - expand)
+            # Hunks that only remove lines have a count of 0, and so yield a
+            # range only when expand > 0. Formatting around them is what
+            # collapses the blank lines that deletions leave behind.
+            if diff_start <= diff_end:
+                prev_end = diff_end
+                line_diffs[file].append((diff_start, diff_end))
+
+    return line_diffs
+
+
+def _ParseLineRange(line_range: str) -> tuple[int, int]:
+    """Parses a --lines value "FIRST:LAST" into (first, last), 1-based and
+    inclusive."""
+    match = re.fullmatch(r"(\d+):(\d+)", line_range)
+    if match:
+        first, last = int(match.group(1)), int(match.group(2))
+        if 1 <= first <= last:
+            return first, last
+    raise optparse.OptionValueError(
+        f"Invalid --lines value {line_range!r}: expected FIRST:LAST with "
+        "1 <= FIRST <= LAST."
+    )
+
+
+class _LineRangeOption(optparse.Option):
+    """optparse.Option with a "line_range" type that parses FIRST:LAST.
+
+    optparse's `type=` only accepts registered type names, so parsing --lines
+    values at parse time needs a custom type registered on an Option subclass.
+    """
+
+    TYPES = optparse.Option.TYPES + ("line_range",)
+    TYPE_CHECKER = dict(
+        optparse.Option.TYPE_CHECKER,
+        line_range=lambda _option, _opt, value: _ParseLineRange(value),
+    )
+
+
+def _FindMarkdownConfigFile(
+    fpath: str,
+    markdown_config_cache: dict[str, Optional[str]],
+    top_dir: Optional[str] = None,
+) -> Optional[str]:
+    """Checks if a .style.mdformat file is in any parent directory of fpath
+    until top_dir.
+
+    Recursively checks parent directories to find the config file and if none
+    is found returns None. Uses markdown_config_cache as a cache.
+    """
+    if fpath not in markdown_config_cache:
+        markdown_config_cache[fpath] = utils.find_config_file(
+            fpath, ".style.mdformat", top_dir
+        )
+    return markdown_config_cache[fpath]
+
+
+def _FindLitTemplateFormatterConfigFile(
+    fpath: str,
+    config_cache: dict[str, Optional[str]],
+    top_dir: Optional[str] = None,
+) -> Optional[str]:
+    """Checks if a .style.lit_template_formatter file is in any parent directory
+    of fpath until top_dir.
+
+    Recursively checks parent directories to find the config file and if none
+    is found returns None. Uses config_cache as a cache.
+    """
+    if fpath not in config_cache:
+        config_cache[fpath] = utils.find_config_file(
+            fpath, ".style.lit_template_formatter", top_dir
+        )
+    return config_cache[fpath]
+
+
+def _RunClangFormatDiff(opts, paths, top_dir, diffs):
+    """Runs clang-format-diff and sets a return value if necessary."""
+    import clang_format
+
+    # Set to 2 to signal to CheckPatchFormatted() that this patch isn't
+    # formatted. This is used to block during the presubmit.
+    return_value = 0
+
+    # Locate the clang-format binary in the checkout
+    try:
+        clang_format_tool = clang_format.FindClangFormatToolInChromiumTree()
+    except clang_format.NotFoundError as e:
+        DieWithError(e)
+
+    # Full formatting
+    if not diffs:
+        if opts.stdin_filename:
+            # clang-format only honors --assume-filename when reading from stdin.
+            # When passed a file path argument, it ignores --assume-filename,
+            # which prevents it from finding the tree's .clang-format config and
+            # causes it to misidentify the file's primary header for include sorting.
+            cmd = [
+                clang_format_tool,
+                f"--assume-filename={opts.stdin_filename}",
+            ] + [f"--lines={first}:{last}" for first, last in opts.lines]
+            with open(paths[0], "rb") as myfile:
+                input_bytes = myfile.read()
+            stdout = RunCommand(cmd, stdin=input_bytes, cwd=top_dir)
+            # Write bytes rather than text so the formatter's line endings are
+            # preserved verbatim instead of being re-translated by the platform.
+            with open(paths[0], "wb") as myfile:
+                myfile.write(stdout.encode("utf-8"))
+            return 0
+        cmd = [clang_format_tool]
+        if not opts.dry_run and not opts.diff:
+            cmd.append("-i")
+        if opts.dry_run:
+
+            def _CheckFileFormatted(p):
+                try:
+                    with open(
+                        p, "r", encoding="utf-8", errors="replace"
+                    ) as myfile:
+                        code = myfile.read().replace("\r\n", "\n")
+                    out = RunCommand(cmd + [p], cwd=top_dir).replace(
+                        "\r\n", "\n"
+                    )
+                    is_different = code != out
+                    return (p, is_different, out if opts.diff else "", None)
+                except Exception as e:
+                    return (p, False, "", e)
+
+            max_workers = min(len(paths), os.cpu_count() or 8, 16)
+            if len(paths) > 2 and max_workers > 1:
+                with concurrent.futures.ThreadPoolExecutor(
+                    max_workers=max_workers
+                ) as executor:
+                    file_results = list(
+                        executor.map(_CheckFileFormatted, paths)
+                    )
+            else:
+                file_results = [_CheckFileFormatted(p) for p in paths]
+
+            first_exc = None
+            for p, is_different, out, exc in file_results:
+                if exc is not None:
+                    if first_exc is None:
+                        first_exc = exc
+                    continue
+                if opts.diff and out:
+                    sys.stdout.write(out)
+                if is_different:
+                    return_value = 2
+
+            if first_exc is not None:
+                raise first_exc
+        else:
+            stdout = RunCommand(cmd + paths, cwd=top_dir)
+            if opts.diff:
+                sys.stdout.write(stdout)
+
+        return return_value
+
+    # Partial formatting
+    try:
+        script = clang_format.FindClangFormatScriptInChromiumTree(
+            "clang-format-diff.py"
+        )
+    except clang_format.NotFoundError as e:
+        DieWithError(e)
+
+    cmd = [sys.executable, script, "-p1"]
+    if not opts.dry_run and not opts.diff:
+        cmd.append("-i")
+
+    env = os.environ.copy()
+    env["PATH"] = (
+        str(os.path.dirname(clang_format_tool)) + os.pathsep + env["PATH"]
+    )
+
+    def _RunDiffChunk(chunk_paths):
+        get_diff = diffs.get
+        chunk_diff = "\n".join(get_diff(p, "") for p in chunk_paths)
+        return RunCommand(
+            cmd,
+            error_ok=True,
+            stdin=chunk_diff.encode(),
+            cwd=top_dir,
+            env=env,
+            shell=sys.platform.startswith("win32"),
+        )
+
+    # Parallelize formatting across worker processes when multiple files are
+    # affected.
+    max_workers = min(len(paths), os.cpu_count() or 8, 16)
+    if len(paths) > 2 and max_workers > 1:
+        chunk_size = (len(paths) + max_workers - 1) // max_workers
+        chunks = [
+            paths[i : i + chunk_size] for i in range(0, len(paths), chunk_size)
+        ]
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=len(chunks)
+        ) as executor:
+            chunk_results = list(executor.map(_RunDiffChunk, chunks))
+        stdout = "".join(chunk_results)
+    else:
+        stdout = _RunDiffChunk(paths)
+
+    if stdout:
+        # Filter out full-deletion diffs produced by clang-format-diff.py for
+        # files that are ignored by clang-format.
+        filtered_diffs = []
+        for file_diff in re.split(r"^(?=--- )", stdout, flags=re.MULTILINE):
+            if not file_diff.strip():
+                continue
+            if re.search(
+                r"^@@ -1(?:,\d+)? \+0,0 @@", file_diff, flags=re.MULTILINE
+            ):
+                continue
+            filtered_diffs.append(file_diff)
+        stdout = "".join(filtered_diffs)
+
+    if opts.diff:
+        sys.stdout.write(stdout)
+    if opts.dry_run and len(stdout) > 0:
+        return_value = 2
+
+    return return_value
+
+
+def _RunGoogleJavaFormat(opts, paths, top_dir, diffs):
+    """Runs google-java-format and sets a return value if necessary."""
+    import google_java_format
+
+    tool = google_java_format.FindGoogleJavaFormat()
+    if tool is None:
+        # Fail silently. It could be we are on an old chromium revision, or that
+        # it is a non-chromium project. https://crbug.com/1491627
+        print(
+            "google-java-format not found, skipping java formatting.",
+            file=sys.stderr,
+        )
+        return 0
+
+    base_cmd = [tool]
+    # The script now adds --aosp, but this shim is needed for the window where
+    # devs are using depot_tools that is newer than their chromium checkout.
+    # This can be remove after Dec 2025.
+    if os.path.exists(
+        os.path.join(os.path.dirname(tool), "chromium-overrides.jar")
+    ):
+        base_cmd += ["--aosp"]
+
+    if not opts.diff:
+        if opts.dry_run:
+            base_cmd += ["--dry-run"]
+        else:
+            base_cmd += ["--replace"]
+
+    changed_lines_only = bool(diffs)
+    if changed_lines_only:
+        # Format two lines around each changed line so that the correct amount
+        # of blank lines will be added between symbols.
+        line_diffs = _ComputeFormatDiffLineRanges(paths, diffs, expand=2)
+    elif opts.stdin_filename:
+        # Ranges passed via --lines (e.g. by `jj fix`) are used as is.
+        base_cmd += [f"--lines={first}:{last}" for first, last in opts.lines]
+
+    def RunFormat(cmd, path, **kwds):
+        stdout = RunCommand(cmd + [path], **kwds)
+
+        # If --diff is passed, google-java-format will output formatted content.
+        # Diff it with the existing file in the checkout and output the result.
+        if opts.diff:
+            stdout = RunGitDiffCmd(
+                ["-U3"],
+                "--no-index",
+                [path, "-"],
+                stdin=stdout.encode(),
+                **kwds,
+            )
+        return stdout
+
+    results = []
+    kwds = {"error_ok": True, "cwd": top_dir}
+    with multiprocessing.pool.ThreadPool() as pool:
+        for path in paths:
+            cmd = base_cmd
+            if changed_lines_only:
+                ranges = line_diffs.get(path)
+                if not ranges:
+                    # E.g. The diff has no hunks (a mode-only change).
+                    continue
+                # --lines constrains only the reformatting. Unused imports are
+                # always removed and imports are always sorted.
+                # --lines may not be used with more than one file.
+                cmd = base_cmd + [
+                    "--lines={}:{}".format(a, b) for a, b in ranges
+                ]
+
+            results.append(
+                pool.apply_async(RunFormat, args=[cmd, path], kwds=kwds)
+            )
+
+        return_value = 0
+        for result in results:
+            stdout = result.get()
+            if stdout:
+                if opts.diff:
+                    sys.stdout.write("Requires formatting: " + stdout)
+                if opts.dry_run:
+                    return_value = 2
+
+        return return_value
+
+
+def _RunKtfmt(opts, paths, top_dir, diffs):
+    """Runs ktfmt and sets a return value if necessary."""
+    import ktfmt
+
+    tool = ktfmt.FindKtfmt()
+    if tool is None:
+        print("ktfmt not found, skipping kotlin formatting.", file=sys.stderr)
+        return 0
+
+    paths_to_format = list(paths)
+    if diffs:
+        # Like google-java-format: format only the changed lines, plus two
+        # lines around them so blank lines between declarations get fixed.
+        line_ranges = _ComputeFormatDiffLineRanges(paths, diffs, expand=2)
+        # A diff without hunks (e.g. a mode-only change) has no lines to
+        # format.
+        paths_to_format = [p for p in paths_to_format if line_ranges.get(p)]
+    elif opts.stdin_filename:
+        # Ranges passed via --lines (e.g. by `jj fix`) are used as is.
+        line_ranges = {path: opts.lines for path in paths}
+    else:
+        line_ranges = {}
+
+    def LineArgs(path):
+        ranges = line_ranges.get(path, [])
+        return [f"--lines={first}:{last}" for first, last in ranges]
+
+    if opts.diff:
+        return_value = 0
+        kwds = {"error_ok": True, "cwd": top_dir}
+        for path in paths_to_format:
+            file_path = os.path.join(top_dir, path) if top_dir else path
+            with open(file_path, "rb") as f:
+                content = f.read()
+            stdout = RunCommand(
+                [tool] + LineArgs(path) + ["-"], stdin=content, **kwds
+            )
+            diff_output = RunGitDiffCmd(
+                ["-U3"],
+                "--no-index",
+                [path, "-"],
+                stdin=stdout.encode(),
+                **kwds,
+            )
+            if diff_output:
+                sys.stdout.write("Requires formatting: " + diff_output)
+                if opts.dry_run:
+                    return_value = 2
+        return return_value
+
+    cmd = [tool]
+    if opts.dry_run:
+        cmd += ["--set-exit-if-changed", "--dry-run"]
+
+    if line_ranges:
+        # Line ranges belong to a single file, so run ktfmt once per file.
+        arg_lists = [LineArgs(path) + [path] for path in paths_to_format]
+    else:
+        arg_lists = _SplitArgsByCmdLineLimit(paths_to_format)
+    for args in arg_lists:
+        ktfmt_exitcode = subprocess2.call(cmd + args, shell=False)
+        if opts.dry_run and ktfmt_exitcode != 0:
+            return 2
+
+    return 0
+
+
+def _RunRustFmtInMirror(
+    file_path: str,
+    rel_path: str,
+    rustfmt_toml_path: str,
+    rustfmt_tool: str,
+) -> None:
+    """Formats file_path in place as if it were located at rel_path.
+
+    rustfmt does not apply its `ignore` config when formatting stdin. So, copy
+    the config into a temporary directory, put the file at rel_path next to it,
+    and format it there. `ignore` entries are relative to the config file, so
+    this matches the real checkout without touching it. --skip-children stops
+    rustfmt from trying to resolve `mod foo;` files, which don't exist there.
+    """
+    rel_path = os.path.normpath(rel_path)
+    if os.path.isabs(rel_path) or rel_path.split(os.sep)[0] == os.pardir:
+        # Outside of the config's directory, so no `ignore` entry can match.
+        rel_path = os.path.basename(rel_path)
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        toml_path = os.path.join(tmp_dir, os.path.basename(rustfmt_toml_path))
+        shutil.copyfile(rustfmt_toml_path, toml_path)
+        target_path = os.path.join(tmp_dir, rel_path)
+        os.makedirs(os.path.dirname(target_path), exist_ok=True)
+        shutil.copyfile(file_path, target_path)
+        RunCommand(
+            [
+                rustfmt_tool,
+                f"--config-path={toml_path}",
+                "--unstable-features",
+                "--skip-children",
+                target_path,
+            ]
+        )
+        shutil.copyfile(target_path, file_path)
+
+
+def _RunRustFmt(opts, paths, top_dir, diffs):
+    """Runs rustfmt.  Just like _RunClangFormatDiff returns 2 to indicate that
+    presubmit checks have failed (and returns 0 otherwise)."""
+
+    # Locate the rustfmt binary.
+    import rustfmt
+
+    try:
+        rustfmt_tool = rustfmt.FindRustfmtToolInChromiumTree()
+    except rustfmt.NotFoundError as e:
+        DieWithError(e)
+
+    chromium_src_path = gclient_paths.GetChromiumSrcPath()
+    rustfmt_toml_path = os.path.join(chromium_src_path, ".rustfmt.toml")
+
+    stdin_filename = opts.stdin_filename
+
+    if stdin_filename:
+        rel_path = stdin_filename
+        if chromium_src_path and os.path.isabs(rel_path):
+            rel_path = os.path.relpath(rel_path, chromium_src_path)
+        _RunRustFmtInMirror(paths[0], rel_path, rustfmt_toml_path, rustfmt_tool)
+        return 0
+
+    # TODO(crbug.com/1440869): Support formatting only the changed lines
+    # if `opts.full or settings.GetFormatFullByDefault()` is False.
+    cmd = [rustfmt_tool, f"--config-path={rustfmt_toml_path}"]
+    if opts.dry_run:
+        cmd.append("--check")
+
+    for paths_batch in _SplitArgsByCmdLineLimit(paths):
+        rustfmt_exitcode = subprocess2.call(cmd + paths_batch, shell=False)
+        if opts.dry_run and rustfmt_exitcode != 0:
+            return 2
+
+    return 0
+
+
+def _RunSwiftFormat(opts, paths, top_dir, diffs):
+    """Runs swift-format.  Just like _RunClangFormatDiff returns 2 to indicate
+    that presubmit checks have failed (and returns 0 otherwise)."""
+    if sys.platform != "darwin":
+        DieWithError("swift-format is only supported on macOS.")
+
+    # Locate the swift-format binary.
+    import swift_format
+
+    try:
+        swift_format_tool = swift_format.FindSwiftFormatToolInChromiumTree()
+    except swift_format.NotFoundError as e:
+        DieWithError(e)
+
+    cmd = [swift_format_tool]
+    if opts.dry_run:
+        cmd += ["lint", "-s"]
+    else:
+        cmd += ["format", "-i"]
+    cmd += paths
+    swift_format_exitcode = subprocess2.call(cmd, stderr=subprocess2.STDOUT)
+
+    if opts.dry_run and swift_format_exitcode != 0:
+        return 2
+
+    return 0
+
+
+def _GetRuffChromiumPath() -> str:
+    """Returns the absolute path to the ruff_chromium wrapper script."""
+    return os.path.join(DEPOT_TOOLS, "ruff_chromium.py")
+
+
+def _RunPythonFormat(
+    opts: optparse.Values,
+    paths: list[str],
+    top_dir: str,
+    diffs: Optional[Mapping[str, str]],
+) -> int:
+    """Formats python files using ruff_chromium in batch mode."""
+    ruff_chromium = _GetRuffChromiumPath()
+
+    if opts.stdin_filename:
+        # For single-file stdin formatting (e.g. jj fix), bypass batch mode and
+        # stream stdin directly to ruff_chromium. Upstream Ruff evaluates
+        # exclusions and configs against --stdin-filename accurately when
+        # reading from stdin.
+        cmd = [
+            "vpython3",
+            ruff_chromium,
+            "format",
+            f"--root={top_dir}",
+            f"--stdin-filename={opts.stdin_filename}",
+        ]
+        # Ruff's --range end is exclusive, so it ends at the start of the line
+        # after LAST. ruff_chromium chains multiple ranges.
+        cmd += [f"--range={first}:1-{last + 1}:1" for first, last in opts.lines]
+        cmd.append("-")
+
+        with open(paths[0], "rb") as myfile:
+            input_bytes = myfile.read()
+
+        try:
+            (stdout, stderr), code = subprocess2.communicate(
+                cmd,
+                stdin=input_bytes,
+                stdout=subprocess2.PIPE,
+                stderr=subprocess2.PIPE,
+                cwd=top_dir,
+                shell=sys.platform == "win32",
+            )
+        except OSError as e:
+            sys.stderr.write(f"Failed to run ruff_chromium: {e}\n")
+            return 1
+        if code != 0:
+            if stderr:
+                sys.stderr.buffer.write(stderr)
+            return code
+        if stdout:
+            with open(paths[0], "wb") as myfile:
+                myfile.write(stdout)
+        return 0
+
+    config = {
+        "root": top_dir,
+        "diff": bool(opts.diff),
+        "dry_run": bool(opts.dry_run),
+        "full": bool(opts.full),
+        "force_python": bool(opts.python),
+        "files": [],
+    }
+
+    line_diffs = {}
+    if paths and diffs:
+        line_diffs = _ComputeFormatDiffLineRanges(paths, diffs)
+
+    for path in paths:
+        file_entry: dict[str, Any] = {"path": path}
+        if not opts.full:
+            ranges = line_diffs.get(path)
+            if not ranges:
+                continue
+            file_entry["ranges"] = [[start, end + 1] for start, end in ranges]
+        config["files"].append(file_entry)
+
+    if not config["files"]:
+        return 0
+
+    cmd = ["vpython3", ruff_chromium, "--batch"]
+    stdin_data = json.dumps(config).encode("utf-8")
+
+    try:
+        (stdout, stderr), code = subprocess2.communicate(
+            cmd,
+            stdin=stdin_data,
+            stdout=subprocess2.PIPE,
+            stderr=subprocess2.PIPE,
+            cwd=top_dir,
+            shell=sys.platform == "win32",
+        )
+
+        if code == 1:
+            if stderr:
+                sys.stderr.buffer.write(stderr)
+            return 1
+        if code == 2:
+            if opts.diff and stdout:
+                sys.stdout.buffer.write(stdout)
+            return 2
+        if code == 0:
+            if opts.diff and stdout:
+                sys.stdout.buffer.write(stdout)
+            return 0
+        if stderr:
+            sys.stderr.buffer.write(stderr)
+        return 1
+    except Exception as e:
+        sys.stderr.write(f"Failed to run ruff_chromium --batch: {e}\n")
+        return 1
+
+
+def _RunMarkdownFormat(
+    opts: optparse.Values,
+    paths: list[str],
+    top_dir: str,
+    diffs: Optional[Mapping[str, str]],
+) -> int:
+    markdown_tool = os.path.join(DEPOT_TOOLS, "markdown_format.py")
+
+    # Used for caching.
+    markdown_configs: dict[str, Optional[str]] = {}
+
+    target_path = opts.stdin_filename
+    # Only format files that have a .style.mdformat file in an ancestor
+    # directory.
+    paths = [
+        p
+        for p in paths
+        if _FindMarkdownConfigFile(
+            target_path or p,
+            markdown_configs,
+            top_dir,
+        )
+        is not None
+    ]
+    if not paths:
+        return 0
+
+    return_value = 0
+    cmd = ["vpython3", markdown_tool]
+    if target_path:
+        cmd.append(f"--assume-filename={target_path}")
+    if opts.diff:
+        cmd.append("--diff")
+    elif opts.dry_run:
+        cmd.append("--check")
+
+    kwargs = {}
+    if opts.stdin_filename:
+        kwargs["stdout"] = subprocess2.DEVNULL
+
+    exit_code = subprocess2.call(cmd + paths, **kwargs)
+    if exit_code == 2:
+        return_value = 2
+
+    return return_value
+
+
+def _RunLitTemplateFormatter(
+    opts: optparse.Values,
+    paths: list[str],
+    top_dir: str,
+    diffs: Optional[Mapping[str, str]],
+) -> int:
+    """Runs lit_template_formatter on .html.ts files."""
+    config_cache: dict[str, Optional[str]] = {}
+    target_path = opts.stdin_filename
+    paths = [
+        p
+        for p in paths
+        if _FindLitTemplateFormatterConfigFile(
+            target_path or p, config_cache, top_dir
+        )
+        is not None
+    ]
+    if not paths:
+        return 0
+
+    primary_solution_path = gclient_paths.GetChromiumSrcPath()
+    if not primary_solution_path:
+        print(
+            "Could not find the primary solution path, skipping Lit "
+            "template formatting."
+        )
+        return 0
+
+    formatter_path = os.path.join(
+        primary_solution_path,
+        "ui",
+        "webui",
+        "resources",
+        "tools",
+        "lit_template_formatter",
+        "main.js",
+    )
+    if not os.path.exists(formatter_path):
+        print(
+            f'lit_template_formatter not found at "{formatter_path}", '
+            "skipping Lit template formatting."
+        )
+        return 0
+
+    node_py_path = os.path.join(
+        primary_solution_path, "third_party", "node", "node.py"
+    )
+    if not os.path.exists(node_py_path):
+        print(
+            f'node.py not found at "{node_py_path}", skipping Lit template '
+            "formatting."
+        )
+        return 0
+
+    cmd = ["vpython3", node_py_path, formatter_path]
+    if opts.dry_run:
+        cmd.append("--dry-run")
+    if opts.diff:
+        cmd.append("--diff")
+
+    return_value = 0
+    for paths_batch in _SplitArgsByCmdLineLimit(paths):
+        exit_code = subprocess2.call(cmd + paths_batch, cwd=top_dir)
+        if exit_code != 0:
+            if opts.dry_run:
+                return_value = 2
+            else:
+                return_value = exit_code
+
+    return return_value
+
+
+def _RunGnFormat(opts, paths, top_dir, diffs):
+    cmd = [sys.executable, os.path.join(DEPOT_TOOLS, "gn.py"), "format"]
+    dry_run_or_diff = bool(opts.dry_run or opts.diff)
+    if dry_run_or_diff:
+        cmd.append("--dry-run")
+    return_value = 0
+    for paths_batch in _SplitArgsByCmdLineLimit(paths):
+        proc = subprocess2.Popen(
+            cmd + paths_batch,
+            shell=False,
+            cwd=top_dir,
+            stdout=subprocess2.PIPE,
+            stderr=subprocess2.PIPE,
+        )
+        stdout_bytes, stderr_bytes = proc.communicate()
+        gn_ret = proc.returncode
+        stdout = stdout_bytes.decode("utf-8", "replace") if stdout_bytes else ""
+        stderr = stderr_bytes.decode("utf-8", "replace") if stderr_bytes else ""
+
+        if dry_run_or_diff and gn_ret == 2 and stdout.strip():
+            if stderr:
+                sys.stderr.write(stderr)
+            if opts.diff:
+                for unformatted_path in stdout.splitlines():
+                    unformatted_path = unformatted_path.strip()
+                    if unformatted_path:
+                        print(
+                            "This change has GN build file diff for "
+                            + unformatted_path
+                        )
+            else:
+                sys.stdout.write(stdout)
+            if opts.dry_run:
+                return_value = 2  # Not formatted.
+        elif gn_ret != 0:
+            err_parts = [p.strip() for p in (stderr, stdout) if p and p.strip()]
+            err_msg = "\n".join(err_parts)
+            if len(paths_batch) == 1:
+                target_descr = paths_batch[0]
+            else:
+                shown_paths = ", ".join(paths_batch[:3])
+                if len(paths_batch) > 3:
+                    shown_paths += ", ..."
+                target_descr = f"{len(paths_batch)} files ({shown_paths})"
+            DieWithError(
+                f"gn format failed on {target_descr}"
+                + (f"\n{err_msg}" if err_msg else "")
+                + "\nTry running `gn format` manually."
+            )
+        else:
+            if stderr:
+                sys.stderr.write(stderr)
+            # On the stdin path stdout carries the formatted file content, so
+            # gn's "Wrote formatted to ..." chatter must not be echoed there.
+            if stdout and not dry_run_or_diff and not opts.stdin_filename:
+                sys.stdout.write(stdout)
+    return return_value
+
+
+def _RunMojomFormat(opts, paths, top_dir, diffs):
+    primary_solution_path = gclient_paths.GetChromiumSrcPath()
+    if not primary_solution_path:
+        DieWithError(
+            "Could not find the primary solution path (e.g. "
+            "the chromium checkout)"
+        )
+    mojom_format_path = os.path.join(
+        primary_solution_path,
+        "mojo",
+        "public",
+        "tools",
+        "mojom",
+        "mojom_format.py",
+    )
+    if not os.path.exists(mojom_format_path):
+        DieWithError(f'Could not find mojom formater at "{mojom_format_path}"')
+
+    cmd = ["vpython3", mojom_format_path]
+    if opts.dry_run:
+        cmd.append("--dry-run")
+    cmd.extend(paths)
+
+    ret = subprocess2.call(cmd)
+    if opts.dry_run and ret != 0:
+        return 2
+
+    return ret
+
+
+def _RunMetricsXMLFormat(opts, paths, top_dir, diffs):
+    # Skip the metrics formatting from the global presubmit hook. These files
+    # have a separate presubmit hook that issues an error if the files need
+    # formatting, whereas the top-level presubmit script merely issues a
+    # warning. Formatting these files is somewhat slow, so it's important not to
+    # duplicate the work.
+    if opts.presubmit:
+        return 0
+
+    return_value = 0
+    import metrics_xml_format
+
+    target_path = opts.stdin_filename
+    src_dir = gclient_paths.GetChromiumSrcPath()
+
+    for path in paths:
+        effective_path = target_path or path
+        if top_dir and not os.path.isabs(effective_path):
+            effective_path = os.path.join(top_dir, effective_path)
+
+        pretty_print_tool = metrics_xml_format.FindMetricsXMLFormatterTool(
+            effective_path
+        )
+        if not pretty_print_tool:
+            continue
+
+        cmd = [shutil.which("vpython3"), pretty_print_tool, "--non-interactive"]
+        # If the XML file is histograms.xml or enums.xml, add the xml path
+        # to the command as histograms/pretty_print.py now needs a relative
+        # path argument after splitting the histograms into multiple
+        # directories. For example, in tools/metrics/ukm, pretty-print could
+        # be run using: $ python pretty_print.py But in
+        # tools/metrics/histogrmas, pretty-print should be run with an
+        # additional relative path argument, like: $ python pretty_print.py
+        # metadata/UMA/histograms.xml $ python pretty_print.py enums.xml
+        metricsDir = metrics_xml_format.GetMetricsDir(src_dir, effective_path)
+        histogramsDir = os.path.join(src_dir, "tools", "metrics", "histograms")
+        if metricsDir == histogramsDir:
+            cmd.append(path)
+        if opts.dry_run or opts.diff:
+            cmd.append("--diff")
+
+        stdout = RunCommand(cmd, cwd=top_dir)
+        if opts.diff:
+            sys.stdout.write(stdout)
+        if opts.dry_run and stdout:
+            return_value = 2  # Not formatted.
+    return return_value
+
+
+def _RunLUCICfgFormat(opts, paths, top_dir, diffs):
+    lucicfg = os.path.join(DEPOT_TOOLS, "lucicfg")
+    if sys.platform == "win32":
+        lucicfg += ".bat"
+
+    cmd = [lucicfg, "fmt"]
+    if opts.dry_run:
+        cmd.append("--dry-run")
+    cmd.extend(paths)
+
+    ret = subprocess2.call(cmd)
+    if opts.dry_run and ret != 0:
+        return 2
+
+    return ret
+
+
+FormatterFunction = Callable[
+    [optparse.Values, list[str], str, Optional[Mapping[str, str]]], int
+]
+
+
+class _ThreadLocalStream:
+    """Thread-local stream proxy that routes text and binary writes to a per-thread buffer.
+
+    When multiple formatters run concurrently (e.g. clang-format, ruff, gn format),
+    each worker thread may write diffs, status messages, or warnings directly to
+    sys.stdout or sys.stderr (via print(), sys.stdout.write(), or sys.stdout.buffer.write()).
+    This proxy intercepts writes in each worker thread and redirects them into an
+    isolated thread-local memory buffer (io.BytesIO).
+
+    Note: This proxy buffers Python-level stream writes. Subprocesses that write
+    directly to inherited OS-level file descriptors (FD 1/2) without piping stdout/stderr
+    will write directly to the underlying terminal rather than this in-memory buffer.
+
+    Any write from an unmanaged thread (or the main thread when no buffer is active)
+    transparently falls back to the underlying default stream.
+    """
+
+    class _BufferProxy:
+        """Proxy for binary writes (e.g. sys.stdout.buffer.write)."""
+
+        def __init__(self, parent):
+            self._parent = parent
+
+        def write(self, b):
+            return self._parent.write(b)
+
+        def writelines(self, lines):
+            return self._parent.writelines(lines)
+
+        def flush(self):
+            return self._parent.flush()
+
+        def __getattr__(self, name):
+            fallback_buf = getattr(self._parent._fallback, "buffer", None)
+            if fallback_buf is not None:
+                return getattr(fallback_buf, name)
+            raise AttributeError(
+                f"'_BufferProxy' object has no attribute {name!r}"
+            )
+
+    def __init__(self, fallback_stream):
+        self._fallback = fallback_stream
+        self._local = threading.local()
+        self._buffer = self._BufferProxy(self)
+
+    def set_buffer(self, buf: Optional[io.BytesIO]):
+        self._local.buf = buf
+
+    def get_buffer(self) -> Optional[io.BytesIO]:
+        return getattr(self._local, "buf", None)
+
+    def write(self, s):
+        buf = self.get_buffer()
+        if buf is not None:
+            if isinstance(s, str):
+                encoding = getattr(self._fallback, "encoding", None) or "utf-8"
+                errors = getattr(self._fallback, "errors", None) or "replace"
+                buf.write(s.encode(encoding, errors))
+                return len(s)
+            return buf.write(s)
+        if isinstance(s, bytes):
+            if hasattr(self._fallback, "buffer"):
+                return self._fallback.buffer.write(s)
+            encoding = getattr(self._fallback, "encoding", None) or "utf-8"
+            errors = getattr(self._fallback, "errors", None) or "replace"
+            self._fallback.write(s.decode(encoding, errors))
+            return len(s)
+        return self._fallback.write(s)
+
+    def writelines(self, lines):
+        for line in lines:
+            self.write(line)
+
+    def flush(self):
+        buf = self.get_buffer()
+        if buf is None:
+            self._fallback.flush()
+
+    @property
+    def buffer(self):
+        return self._buffer
+
+    def __getattr__(self, name):
+        # Delegate unknown stream attributes (e.g. isatty(), encoding, fileno())
+        # to the fallback stream so formatters and libraries inspect stream
+        # capabilities transparently.
+        return getattr(self._fallback, name)
+
+
+def _RunFormatWorker(formatter, opts, paths, top_dir, diffs):
+    """Executes a single formatter while capturing stdout and stderr in thread-local buffers."""
+    out_buf = io.BytesIO()
+    err_buf = io.BytesIO()
+
+    if isinstance(sys.stdout, _ThreadLocalStream):
+        sys.stdout.set_buffer(out_buf)
+    if isinstance(sys.stderr, _ThreadLocalStream):
+        sys.stderr.set_buffer(err_buf)
+
+    ret = 0
+    exc = None
+    try:
+        ret = formatter(opts, paths, top_dir, diffs)
+    except (Exception, SystemExit) as e:
+        exc = e
+    finally:
+        if isinstance(sys.stdout, _ThreadLocalStream):
+            sys.stdout.set_buffer(None)
+        if isinstance(sys.stderr, _ThreadLocalStream):
+            sys.stderr.set_buffer(None)
+
+    return ret, out_buf.getvalue(), err_buf.getvalue(), exc
+
+
+def _SplitDiffsByFile(diff_string: str) -> dict[str, str]:
+    """Split a given diff string into per-file patches.
+
+    This function expects that the diff_string was generated with a prefix.
+    In other words, if it was generated by git-diff, don't add `--no-prefix`.
+    `diff` always generates one with prefixes.
+
+    Deleted files will be skipped.
+
+    Args:
+        diff_string: Unified diff
+    Returns:
+        a dict of file_path -> patch
+    """
+    if not diff_string:
+        return {}
+
+    file_diffs = re.split(r"^(?=diff --git)", diff_string, flags=re.MULTILINE)
+    file_diffs = [d for d in file_diffs if d.strip()]
+    ret = {}
+
+    for file_diff in file_diffs:
+        # Look for the line with `+++ ${prefix}/path/file.cc`
+        # For file deletion, the line would be omitted or with `+++ /dev/null`,
+        # which wouldn't match the regex.
+        match = re.search(
+            r"^\+\+\+ [^\s/]+/(.+)", file_diff, flags=re.MULTILINE
+        )
+        if match:
+            ret[match.group(1)] = file_diff
+
+    return ret
+
+
+def _FindFilesToFormat(
+    opts: optparse.Values,
+    files: Optional[list[str]],
+    upstream_commit: Optional[str],
+) -> tuple[list[str], Optional[dict[str, str]]]:
+    """Returns a list of files to format and the diffs.
+
+    If opts.full, returns None for the diffs.
+    Deleted files are always excluded in the return.
+    """
+    if opts.input_diff_file:
+        if opts.input_diff_file == "-":
+            if hasattr(sys.stdin, "buffer"):
+                diff_text = sys.stdin.buffer.read().decode("utf-8")
+            else:
+                diff_text = sys.stdin.read()
+        else:
+            with open(opts.input_diff_file, encoding="utf-8") as f:
+                diff_text = f.read()
+        diffs = _SplitDiffsByFile(diff_text)
+        return list(diffs.keys()), diffs
+
+    if opts.stdin_filename:
+        return [f for f in files if os.path.exists(f)], None
+
+    if opts.full:
+        files = RunGitDiffCmd(
+            ["--name-only", "--diff-filter=d"], upstream_commit, files
+        ).splitlines()
+        return files, None
+
+    diffs = _SplitDiffsByFile(
+        RunGitDiffCmd(["-U0"], upstream_commit, files, allow_prefix=True)
+    )
+    return list(diffs.keys()), diffs
+
+
+@subcommand.usage("[files or directories to diff]")
+@metrics.collector.collect_metrics("git cl format")
+def CMDformat(parser: optparse.OptionParser, args: list[str]):
+    """Runs auto-formatting tools (clang-format etc.) on the diff.
+
+    Specific languages can be opted-in for automatic formatting by placing
+    marker files in the directory hierarchy:
+      - Python: .style.yapf
+      - Markdown: .style.mdformat
+      - Lit HTML templates (.html.ts): .style.lit_template_formatter
+    """
+    import rustfmt
+    import swift_format
+
+    clang_exts = [".cc", ".cpp", ".h", ".m", ".mm", ".proto"]
+    GN_EXTS = [".gn", ".gni", ".typemap"]
+    parser.add_option(
+        "--stdin-filename",
+        dest="stdin_filename",
+        help="Format the single file content provided on stdin with the given path.",
+    )
+    parser.add_option(
+        _LineRangeOption(
+            "--lines",
+            type="line_range",
+            action="append",
+            default=[],
+            metavar="FIRST:LAST",
+            help="With --stdin-filename, only reformat this 1-based line "
+            "range. Can be repeated. Not all formatters honor it; the others "
+            "format the whole file.",
+        )
+    )
+    parser.add_option(
+        "--full",
+        action="store_true",
+        help="Reformat the full content of all touched files",
+    )
+    parser.add_option("--upstream", help="Branch to check against")
+    parser.add_option(
+        "--dry-run", action="store_true", help="Don't modify any file on disk."
+    )
+    parser.add_option(
+        "--no-clang-format",
+        dest="clang_format",
+        action="store_false",
+        default=True,
+        help="Disables formatting of various file types using clang-format.",
+    )
+    parser.add_option(
+        "--python",
+        action="store_true",
+        help="Enables python formatting on all python files.",
+    )
+    parser.add_option(
+        "--no-python",
+        action="store_false",
+        dest="python",
+        help="Disables python formatting on all python files. "
+        "If neither --python or --no-python are set, python files that have a "
+        ".style.yapf or ruff config file (ruff.toml or .ruff.toml) in an "
+        "ancestor directory will be formatted. "
+        "It is an error to set both.",
+    )
+    default_js = settings.GetFormatJs()
+    parser.add_option(
+        "--js",
+        action="store_true",
+        dest="js",
+        default=default_js,
+        help="Format javascript/typescript code with clang-format. "
+        "Defaults to False unless FORMAT_JS is set to True in codereview.settings.",
+    )
+    parser.add_option(
+        "--no-js",
+        action="store_false",
+        dest="js",
+        help="Disable formatting of javascript/typescript code with clang-format.",
+    )
+    parser.add_option(
+        "--diff",
+        action="store_true",
+        help="Print diff to stdout rather than modifying files.",
+    )
+    parser.add_option(
+        "--presubmit",
+        action="store_true",
+        help="Used when running the script from a presubmit.",
+    )
+
+    parser.add_option(
+        "--rust-fmt",
+        dest="use_rust_fmt",
+        action="store_true",
+        default=rustfmt.IsRustfmtSupported(),
+        help="Enables formatting of Rust file types using rustfmt.",
+    )
+    parser.add_option(
+        "--no-rust-fmt",
+        dest="use_rust_fmt",
+        action="store_false",
+        help="Disables formatting of Rust file types using rustfmt.",
+    )
+
+    parser.add_option(
+        "--swift-format",
+        dest="use_swift_format",
+        action="store_true",
+        default=swift_format.IsSwiftFormatSupported(),
+        help="Enables formatting of Swift file types using swift-format "
+        "(macOS host only).",
+    )
+    parser.add_option(
+        "--no-swift-format",
+        dest="use_swift_format",
+        action="store_false",
+        help="Disables formatting of Swift file types using swift-format.",
+    )
+    parser.add_option(
+        "--input_diff_file",
+        help="File to read input change diff from. "
+        "If given, the added blocks of the files in the diff "
+        "will be formatted.",
+    )
+    parser.add_option(
+        "--mojom",
+        action="store_true",
+        help="Enables formatting of .mojom files.",
+    )
+    parser.add_option(
+        "--no-java",
+        action="store_true",
+        help="Disable auto-formatting of .java",
+    )
+    parser.add_option(
+        "--no-ktfmt",
+        action="store_true",
+        help="Disable auto-formatting of .kt",
+    )
+    parser.add_option(
+        "--lucicfg",
+        action="store_true",
+        help="Enables formatting of .star files.",
+    )
+
+    opts, files = parser.parse_args(args)
+    upstream_commit: Optional[str] = None
+    upstream_branch: Optional[str] = opts.upstream
+    top_dir: Optional[str] = None
+    temp_file: Optional[str] = None
+
+    if opts.lines and not opts.stdin_filename:
+        DieWithError("--lines can only be used with --stdin-filename.")
+
+    if opts.stdin_filename:
+        # On the stdin path stdout carries the formatted file content, so it
+        # cannot double as a diff channel, and the caller (e.g. `jj fix`)
+        # treats a non-zero exit as "leave the file alone". None of these flags
+        # has a coherent meaning here, so reject them rather than emitting
+        # garbage.
+        if opts.diff or opts.dry_run or opts.input_diff_file:
+            DieWithError(
+                "--diff, --dry-run and --input_diff_file cannot be used with "
+                "--stdin-filename."
+            )
+        # There is no upstream to diff against, so format the whole file.
+        # `jj fix` already limits itself to files changed in the revisions
+        # being fixed, and can pass the changed lines via `--lines` (its
+        # `line-range-args`). clang-format, google-java-format, ktfmt and the
+        # Python formatter narrow themselves to those.
+        opts.full = True
+        stdin_bytes = sys.stdin.buffer.read()
+        if not stdin_bytes:
+            return 0
+
+    if opts.input_diff_file:
+        if opts.full:
+            print(
+                "--full and --input_diff_file cannot be used together.",
+                file=sys.stderr,
+            )
+            return 1
+        if files:
+            print(
+                "No file paths to format are allowed "
+                "if --input_diff_file is given.",
+                file=sys.stderr,
+            )
+            return 1
+    elif gclient_utils.IsEnvCog():
+        print(
+            "Use --input_diff_file to run the format command in non-git "
+            "environments. In CiderG, please use the "
+            '"Format Modified Lines in All Files (git cl format)" '
+            "functionality in the command palette instead.",
+            file=sys.stderr,
+        )
+        return 1
+    else:
+        opts.full = opts.full or settings.GetFormatFullByDefault()
+        # git diff generates paths against the root of the repository.  Change
+        # to that directory so clang-format can find files even within subdirs.
+        rel_base_path = settings.GetRelativeRoot()
+        if rel_base_path:
+            os.chdir(rel_base_path)
+
+        # Grab the merge-base commit, i.e. the upstream commit of the current
+        # branch when it was created or the last time it was rebased. This is
+        # to cover the case where the user may have called "git fetch origin",
+        # moving the origin branch to a newer commit, but hasn't rebased yet.
+        if not opts.stdin_filename:
+            if not upstream_branch:
+                upstream_branch = scm.GIT.GetUpstreamBranch(settings.GetRoot())
+            if upstream_branch:
+                upstream_commit = RunGit(
+                    ["merge-base", "HEAD", upstream_branch]
+                ).strip()
+            if not upstream_commit:
+                DieWithError(
+                    "Could not find base commit for this branch. "
+                    "Are you in detached state?"
+                )
+
+    if opts.stdin_filename:
+        with tempfile.NamedTemporaryFile(
+            prefix="git_cl_fmt_",
+            suffix="_" + os.path.basename(opts.stdin_filename),
+            delete=False,
+        ) as f:
+            f.write(stdin_bytes)
+            temp_file = f.name
+        files = [temp_file]
+
+    # Normalize files against the current path, so paths relative to the
+    # current directory are still resolved as expected.
+    cwd = os.getcwd()
+    top_dir = (
+        cwd
+        if (opts.presubmit or gclient_utils.IsEnvCog())
+        else settings.GetRoot()
+    )
+    files = [os.path.join(cwd, file) for file in files]
+    diff_files, diffs = _FindFilesToFormat(opts, files, upstream_commit)
+
+    if opts.js:
+        clang_exts.extend([".js", ".ts"])
+
+    formatters: list[tuple[list[str], FormatterFunction, list[str]]] = [
+        (GN_EXTS, _RunGnFormat, []),
+        ([".xml"], _RunMetricsXMLFormat, []),
+        ([".md"], _RunMarkdownFormat, []),
+        ([".html.ts"], _RunLitTemplateFormatter, []),
+    ]
+    if not opts.no_java:
+        formatters.append(([".java"], _RunGoogleJavaFormat, []))
+    if not opts.no_ktfmt:
+        formatters.append(([".kt"], _RunKtfmt, []))
+    if opts.clang_format:
+        formatters.append((clang_exts, _RunClangFormatDiff, [".html.ts"]))
+    if opts.use_rust_fmt:
+        formatters.append(([".rs"], _RunRustFmt, []))
+    if opts.use_swift_format:
+        formatters.append(([".swift"], _RunSwiftFormat, []))
+    if opts.python is not False:
+        formatters.append(([".py"], _RunPythonFormat, []))
+    if opts.mojom:
+        formatters.append(([".mojom", ".test-mojom"], _RunMojomFormat, []))
+    if opts.lucicfg:
+        formatters.append(([".star"], _RunLUCICfgFormat, []))
+
+    active_tasks = []
+    for item in formatters:
+        file_types, format_func, exclude_types = item
+        paths = [
+            p
+            for p in diff_files
+            if p.lower().endswith(tuple(file_types))
+            and not p.lower().endswith(tuple(exclude_types))
+        ]
+        if paths:
+            active_tasks.append((format_func, paths))
+
+    if temp_file:
+        try:
+            ret = 0
+            if active_tasks:
+                # --stdin-filename formats exactly one file, so at most one
+                # formatter should ever match. Fail loudly rather than silently
+                # dropping formatters if the extension lists ever overlap.
+                assert len(active_tasks) == 1, (
+                    f"{opts.stdin_filename} matched multiple formatters: "
+                    + ", ".join(f.__name__ for f, _ in active_tasks)
+                )
+                formatter, paths = active_tasks[0]
+                # Formatters report hard failures via DieWithError, which exits
+                # non-zero before anything is written to stdout.
+                ret = formatter(opts, paths, top_dir, diffs)
+            with open(temp_file, "rb") as f:
+                sys.stdout.buffer.write(f.read())
+        finally:
+            if os.path.exists(temp_file):
+                os.remove(temp_file)
+        return ret
+
+    if not active_tasks:
+        return 0
+
+    if len(active_tasks) == 1:
+        formatter, paths = active_tasks[0]
+        return formatter(opts, paths, top_dir, diffs)
+
+    orig_stdout = sys.stdout
+    orig_stderr = sys.stderr
+    stream_out = _ThreadLocalStream(orig_stdout)
+    stream_err = _ThreadLocalStream(orig_stderr)
+    sys.stdout = stream_out
+    sys.stderr = stream_err
+
+    futures = []
+    max_workers = min(len(active_tasks), 8)
+    try:
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=max_workers
+        ) as executor:
+            for formatter, paths in active_tasks:
+                futures.append(
+                    executor.submit(
+                        _RunFormatWorker,
+                        formatter,
+                        opts,
+                        paths,
+                        top_dir,
+                        diffs,
+                    )
+                )
+            results = [f.result() for f in futures]
+    finally:
+        sys.stdout = orig_stdout
+        sys.stderr = orig_stderr
+
+    return_value = 0
+    first_exc = None
+    for ret, out_bytes, err_bytes, exc in results:
+        if out_bytes:
+            if hasattr(sys.stdout, "buffer"):
+                sys.stdout.buffer.write(out_bytes)
+            else:
+                encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
+                errors = getattr(sys.stdout, "errors", None) or "replace"
+                sys.stdout.write(out_bytes.decode(encoding, errors))
+            sys.stdout.flush()
+        if err_bytes:
+            if hasattr(sys.stderr, "buffer"):
+                sys.stderr.buffer.write(err_bytes)
+            else:
+                encoding = getattr(sys.stderr, "encoding", None) or "utf-8"
+                errors = getattr(sys.stderr, "errors", None) or "replace"
+                sys.stderr.write(err_bytes.decode(encoding, errors))
+            sys.stderr.flush()
+        if exc is not None and first_exc is None:
+            first_exc = exc
+        return_value = return_value or ret
+
+    if first_exc is not None:
+        raise first_exc
+
+    return return_value

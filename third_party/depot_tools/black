@@ -1,0 +1,25 @@
+#!/usr/bin/env vpython3
+# Copyright 2022 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# Note: We use tags here instead of refs because refs will always hit the
+# network to see if there are any updates.
+
+# /// script
+# requires-python = '>=3.11,<3.12'
+# dependencies = [
+#   'click==8.0.3',
+#   'mypy-extensions==1.1.0',
+#   'pathspec==1.0.4',
+#   'platformdirs==2.5.2',
+#   'tomli==2.0.1',
+#   'typing-extensions==4.14.0',
+#   'black==22.3.0'
+# ]
+# ///
+
+"""Wrapper for stable version of black that we control."""
+
+import black.__main__  # noqa: F401
+
