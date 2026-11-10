@@ -1,0 +1,52 @@
+export const __webpack_esm_id__ = "brave_components_brave_new_tab_ui_containers_newTab_settings_topSites_tsx";
+export const __webpack_esm_ids__ = ["brave_components_brave_new_tab_ui_containers_newTab_settings_topSites_tsx"];
+export const __webpack_esm_modules__ = {
+
+/***/ "../../../brave/components/brave_new_tab_ui/containers/newTab/settings/topSites.tsx"
+/*!*****************************************************************************!*\
+  !*** ./components/brave_new_tab_ui/containers/newTab/settings/topSites.tsx ***!
+  \*****************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_default__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/default */ "../../../brave/components/brave_new_tab_ui/components/default/index.ts");
+/* harmony import */ var _brave_leo_react_toggle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @brave/leo/react/toggle */ "../../../brave/node_modules/.pnpm/@brave+leo@https+++codeload.github.com+brave+leo+tar.gz+c5f9c8f78f3df5b767a83ad67babd8b_0c65dd22e2a77818c131377d53e2e843/node_modules/@brave/leo/react/toggle.js");
+/* harmony import */ var $web_common_locale__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! $web-common/locale */ "../../../brave/components/common/locale.ts");
+// Copyright (c) 2020 The Brave Authors. All rights reserved.
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this file,
+// You can obtain one at https://mozilla.org/MPL/2.0/.
+
+
+
+
+function TopSitesSettings({ toggleShowTopSites, showTopSites, customLinksEnabled, setMostVisitedSettings }) {
+    const favoritesSelected = showTopSites && customLinksEnabled;
+    const frecencySelected = showTopSites && !customLinksEnabled;
+    return react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null,
+        react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.SettingsRow, null,
+            react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.SettingsText, null, (0,$web_common_locale__WEBPACK_IMPORTED_MODULE_3__.getLocale)('showTopSites')),
+            react__WEBPACK_IMPORTED_MODULE_0__.createElement(_brave_leo_react_toggle__WEBPACK_IMPORTED_MODULE_2__["default"], { onChange: toggleShowTopSites, checked: showTopSites, size: 'small' })),
+        react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.StyledTopSitesCustomizationSettings, null,
+            react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.StyledTopSitesCustomizationSettingsOption, { onClick: () => setMostVisitedSettings(true, true) },
+                react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.StyledTopSitesCustomizationImage, { isFavorites: true, selected: favoritesSelected }),
+                react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.StyledTopSitesCustomizationOptionTitle, null, (0,$web_common_locale__WEBPACK_IMPORTED_MODULE_3__.getLocale)('showFavoritesLabel')),
+                react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.StyledTopSitesCustomizationOptionDesc, null, (0,$web_common_locale__WEBPACK_IMPORTED_MODULE_3__.getLocale)('showFavoritesDesc'))),
+            react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.StyledTopSitesCustomizationSettingsOption, { onClick: () => setMostVisitedSettings(true, false) },
+                react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.StyledTopSitesCustomizationImage, { isFavorites: false, selected: frecencySelected }),
+                react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.StyledTopSitesCustomizationOptionTitle, null, (0,$web_common_locale__WEBPACK_IMPORTED_MODULE_3__.getLocale)('showFrecencyLabel')),
+                react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_default__WEBPACK_IMPORTED_MODULE_1__.StyledTopSitesCustomizationOptionDesc, null, (0,$web_common_locale__WEBPACK_IMPORTED_MODULE_3__.getLocale)('showFrecencyDesc')))));
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (react__WEBPACK_IMPORTED_MODULE_0__.memo(TopSitesSettings));
+
+
+/***/ }
+
+};
+
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnJhdmVfY29tcG9uZW50c19icmF2ZV9uZXdfdGFiX3VpX2NvbnRhaW5lcnNfbmV3VGFiX3NldHRpbmdzX3RvcFNpdGVzX3RzeC5jaHVuay5qcyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUEsNkRBQTZEO0FBQzdELHNFQUFzRTtBQUN0RSw0RUFBNEU7QUFDNUUsc0RBQXNEO0FBRXhCO0FBVU07QUFDUTtBQUVFO0FBUzlDLFNBQVMsZ0JBQWdCLENBQUMsRUFBRSxrQkFBa0IsRUFBRSxZQUFZLEVBQUUsa0JBQWtCLEVBQUUsc0JBQXNCLEVBQVM7SUFDL0csTUFBTSxpQkFBaUIsR0FBRyxZQUFZLElBQUksa0JBQWtCO0lBQzVELE1BQU0sZ0JBQWdCLEdBQUcsWUFBWSxJQUFJLENBQUMsa0JBQWtCO0lBQzVELE9BQU87UUFDTCxpREFBQyw0REFBVztZQUNWLGlEQUFDLDZEQUFZLFFBQUUsNkRBQVMsQ0FBQyxjQUFjLENBQUMsQ0FBZ0I7WUFDeEQsaURBQUMsK0RBQU0sSUFDTCxRQUFRLEVBQUUsa0JBQWtCLEVBQzVCLE9BQU8sRUFBRSxZQUFZLEVBQ3JCLElBQUksRUFBQyxPQUFPLEdBQUcsQ0FDTDtRQUNkLGlEQUFDLG9GQUFtQztZQUNsQyxpREFBQywwRkFBeUMsSUFDeEMsT0FBTyxFQUFFLEdBQUcsRUFBRSxDQUFDLHNCQUFzQixDQUFDLElBQUksRUFBRSxJQUFJLENBQUM7Z0JBQ2pELGlEQUFDLGlGQUFnQyxJQUMvQixXQUFXLEVBQUUsSUFBSSxFQUNqQixRQUFRLEVBQUUsaUJBQWlCLEdBQUk7Z0JBQ2pDLGlEQUFDLHVGQUFzQyxRQUNwQyw2REFBUyxDQUFDLG9CQUFvQixDQUFDLENBQ087Z0JBQ3pDLGlEQUFDLHNGQUFxQyxRQUNuQyw2REFBUyxDQUFDLG1CQUFtQixDQUFDLENBQ08sQ0FDRTtZQUM1QyxpREFBQywwRkFBeUMsSUFDeEMsT0FBTyxFQUFFLEdBQUcsRUFBRSxDQUFDLHNCQUFzQixDQUFDLElBQUksRUFBRSxLQUFLLENBQUM7Z0JBQ2xELGlEQUFDLGlGQUFnQyxJQUMvQixXQUFXLEVBQUUsS0FBSyxFQUNsQixRQUFRLEVBQUUsZ0JBQWdCLEdBQUk7Z0JBQ2hDLGlEQUFDLHVGQUFzQyxRQUNwQyw2REFBUyxDQUFDLG1CQUFtQixDQUFDLENBQ1E7Z0JBQ3pDLGlEQUFDLHNGQUFxQyxRQUNuQyw2REFBUyxDQUFDLGtCQUFrQixDQUFDLENBQ1EsQ0FDRSxDQUNSLENBQ2xDO0FBQ1IsQ0FBQztBQUVELGlFQUFlLHVDQUFVLENBQUMsZ0JBQWdCLENBQUMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9icmF2ZS1jb3JlLy4vY29tcG9uZW50cy9icmF2ZV9uZXdfdGFiX3VpL2NvbnRhaW5lcnMvbmV3VGFiL3NldHRpbmdzL3RvcFNpdGVzLnRzeCJdLCJzb3VyY2VzQ29udGVudCI6WyIvLyBDb3B5cmlnaHQgKGMpIDIwMjAgVGhlIEJyYXZlIEF1dGhvcnMuIEFsbCByaWdodHMgcmVzZXJ2ZWQuXG4vLyBUaGlzIFNvdXJjZSBDb2RlIEZvcm0gaXMgc3ViamVjdCB0byB0aGUgdGVybXMgb2YgdGhlIE1vemlsbGEgUHVibGljXG4vLyBMaWNlbnNlLCB2LiAyLjAuIElmIGEgY29weSBvZiB0aGUgTVBMIHdhcyBub3QgZGlzdHJpYnV0ZWQgd2l0aCB0aGlzIGZpbGUsXG4vLyBZb3UgY2FuIG9idGFpbiBvbmUgYXQgaHR0cHM6Ly9tb3ppbGxhLm9yZy9NUEwvMi4wLy5cblxuaW1wb3J0ICogYXMgUmVhY3QgZnJvbSAncmVhY3QnXG5cbmltcG9ydCB7XG4gIFNldHRpbmdzUm93LFxuICBTZXR0aW5nc1RleHQsXG4gIFN0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvblNldHRpbmdzLFxuICBTdHlsZWRUb3BTaXRlc0N1c3RvbWl6YXRpb25TZXR0aW5nc09wdGlvbixcbiAgU3R5bGVkVG9wU2l0ZXNDdXN0b21pemF0aW9uSW1hZ2UsXG4gIFN0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvbk9wdGlvblRpdGxlLFxuICBTdHlsZWRUb3BTaXRlc0N1c3RvbWl6YXRpb25PcHRpb25EZXNjXG59IGZyb20gJy4uLy4uLy4uL2NvbXBvbmVudHMvZGVmYXVsdCdcbmltcG9ydCBUb2dnbGUgZnJvbSAnQGJyYXZlL2xlby9yZWFjdC90b2dnbGUnXG5cbmltcG9ydCB7IGdldExvY2FsZSB9IGZyb20gJyR3ZWItY29tbW9uL2xvY2FsZSdcblxuaW50ZXJmYWNlIFByb3BzIHtcbiAgdG9nZ2xlU2hvd1RvcFNpdGVzOiAoKSA9PiB2b2lkXG4gIHNob3dUb3BTaXRlczogYm9vbGVhblxuICBjdXN0b21MaW5rc0VuYWJsZWQ6IGJvb2xlYW5cbiAgc2V0TW9zdFZpc2l0ZWRTZXR0aW5nczogKHNob3c6IGJvb2xlYW4sIGN1c3RvbWl6ZTogYm9vbGVhbikgPT4gdm9pZFxufVxuXG5mdW5jdGlvbiBUb3BTaXRlc1NldHRpbmdzKHsgdG9nZ2xlU2hvd1RvcFNpdGVzLCBzaG93VG9wU2l0ZXMsIGN1c3RvbUxpbmtzRW5hYmxlZCwgc2V0TW9zdFZpc2l0ZWRTZXR0aW5ncyB9OiBQcm9wcykge1xuICBjb25zdCBmYXZvcml0ZXNTZWxlY3RlZCA9IHNob3dUb3BTaXRlcyAmJiBjdXN0b21MaW5rc0VuYWJsZWRcbiAgY29uc3QgZnJlY2VuY3lTZWxlY3RlZCA9IHNob3dUb3BTaXRlcyAmJiAhY3VzdG9tTGlua3NFbmFibGVkXG4gIHJldHVybiA8ZGl2PlxuICAgIDxTZXR0aW5nc1Jvdz5cbiAgICAgIDxTZXR0aW5nc1RleHQ+e2dldExvY2FsZSgnc2hvd1RvcFNpdGVzJyl9PC9TZXR0aW5nc1RleHQ+XG4gICAgICA8VG9nZ2xlXG4gICAgICAgIG9uQ2hhbmdlPXt0b2dnbGVTaG93VG9wU2l0ZXN9XG4gICAgICAgIGNoZWNrZWQ9e3Nob3dUb3BTaXRlc31cbiAgICAgICAgc2l6ZT0nc21hbGwnIC8+XG4gICAgPC9TZXR0aW5nc1Jvdz5cbiAgICA8U3R5bGVkVG9wU2l0ZXNDdXN0b21pemF0aW9uU2V0dGluZ3M+XG4gICAgICA8U3R5bGVkVG9wU2l0ZXNDdXN0b21pemF0aW9uU2V0dGluZ3NPcHRpb25cbiAgICAgICAgb25DbGljaz17KCkgPT4gc2V0TW9zdFZpc2l0ZWRTZXR0aW5ncyh0cnVlLCB0cnVlKX0+XG4gICAgICAgIDxTdHlsZWRUb3BTaXRlc0N1c3RvbWl6YXRpb25JbWFnZVxuICAgICAgICAgIGlzRmF2b3JpdGVzPXt0cnVlfVxuICAgICAgICAgIHNlbGVjdGVkPXtmYXZvcml0ZXNTZWxlY3RlZH0gLz5cbiAgICAgICAgPFN0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvbk9wdGlvblRpdGxlPlxuICAgICAgICAgIHtnZXRMb2NhbGUoJ3Nob3dGYXZvcml0ZXNMYWJlbCcpfVxuICAgICAgICA8L1N0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvbk9wdGlvblRpdGxlPlxuICAgICAgICA8U3R5bGVkVG9wU2l0ZXNDdXN0b21pemF0aW9uT3B0aW9uRGVzYz5cbiAgICAgICAgICB7Z2V0TG9jYWxlKCdzaG93RmF2b3JpdGVzRGVzYycpfVxuICAgICAgICA8L1N0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvbk9wdGlvbkRlc2M+XG4gICAgICA8L1N0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvblNldHRpbmdzT3B0aW9uPlxuICAgICAgPFN0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvblNldHRpbmdzT3B0aW9uXG4gICAgICAgIG9uQ2xpY2s9eygpID0+IHNldE1vc3RWaXNpdGVkU2V0dGluZ3ModHJ1ZSwgZmFsc2UpfT5cbiAgICAgICAgPFN0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvbkltYWdlXG4gICAgICAgICAgaXNGYXZvcml0ZXM9e2ZhbHNlfVxuICAgICAgICAgIHNlbGVjdGVkPXtmcmVjZW5jeVNlbGVjdGVkfSAvPlxuICAgICAgICA8U3R5bGVkVG9wU2l0ZXNDdXN0b21pemF0aW9uT3B0aW9uVGl0bGU+XG4gICAgICAgICAge2dldExvY2FsZSgnc2hvd0ZyZWNlbmN5TGFiZWwnKX1cbiAgICAgICAgPC9TdHlsZWRUb3BTaXRlc0N1c3RvbWl6YXRpb25PcHRpb25UaXRsZT5cbiAgICAgICAgPFN0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvbk9wdGlvbkRlc2M+XG4gICAgICAgICAge2dldExvY2FsZSgnc2hvd0ZyZWNlbmN5RGVzYycpfVxuICAgICAgICA8L1N0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvbk9wdGlvbkRlc2M+XG4gICAgICA8L1N0eWxlZFRvcFNpdGVzQ3VzdG9taXphdGlvblNldHRpbmdzT3B0aW9uPlxuICAgIDwvU3R5bGVkVG9wU2l0ZXNDdXN0b21pemF0aW9uU2V0dGluZ3M+XG4gIDwvZGl2PlxufVxuXG5leHBvcnQgZGVmYXVsdCBSZWFjdC5tZW1vKFRvcFNpdGVzU2V0dGluZ3MpXG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=
