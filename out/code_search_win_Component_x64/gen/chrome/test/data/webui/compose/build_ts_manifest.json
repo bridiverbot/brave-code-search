@@ -1,0 +1,1 @@
+{"base_dir": "gen/chrome/test/data/webui/compose/tsc", "files": ["compose_animator_test.js", "compose_app_focus_test.js", "compose_app_test.js", "compose_textarea_test.js", "result_text_test.js", "test_compose_api_proxy.js", "word_streamer_test.js"]}

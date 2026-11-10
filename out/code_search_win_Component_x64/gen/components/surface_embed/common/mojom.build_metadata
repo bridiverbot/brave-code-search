@@ -1,0 +1,10 @@
+{
+  "deps": [
+    "../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../services/viz/public/mojom/mojom.build_metadata",
+    "../../../third_party/blink/public/mojom/mojom_core.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../components/surface_embed/common/surface_embed.mojom"
+  ]
+}
