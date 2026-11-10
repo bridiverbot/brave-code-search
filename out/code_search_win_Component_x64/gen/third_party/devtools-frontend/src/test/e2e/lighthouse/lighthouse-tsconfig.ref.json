@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/lighthouse",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/lighthouse/devtools-settings.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/lighthouse/navigation.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/lighthouse/snapshot.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/lighthouse/start-view.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/lighthouse/timespan.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../front_end/core/common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../front_end/core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../conductor/implementation-tsconfig.ref.json"
+    },
+    {
+      "path": "../conductor/implementation-tsconfig.ref.json"
+    },
+    {
+      "path": "../helpers/helpers-tsconfig.ref.json"
+    },
+    {
+      "path": "../shared/shared-tsconfig.ref.json"
+    }
+  ]
+}

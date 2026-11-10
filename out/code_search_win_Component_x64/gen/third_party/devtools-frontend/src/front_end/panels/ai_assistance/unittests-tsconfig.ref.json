@@ -1,0 +1,125 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/AiAssistancePanel.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/ExportConversation.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/ExternalHandler.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/AIv2MarkdownRenderer.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/AccessibilityAgentMarkdownRenderer.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/ChatInput.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/ChatMessage.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/ChatView.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/DisabledWidget.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/ExploreWidget.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/ExportForAgentsDialog.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/ImageResize.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/MarkdownRendererWithCodeBlock.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/OptInChangeDialog.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/PermissionPrompt.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/RelevantDataDisclaimer.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/WalkthroughUtils.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/ai_assistance/components/WalkthroughView.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/host/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/i18n/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/root/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/text_utils/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../generated/generated-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/ai_assistance/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/badges/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/bindings/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/logs/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/network_time_calculator/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/trace/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../models/workspace/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../lighthouse/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../../third_party/marked/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/buttons/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/markdown_view/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/components/snackbars/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/kit/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/legacy/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../ui/lit/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../timeline/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../timeline/components/bundle-tsconfig.ref.json"
+    }
+  ]
+}

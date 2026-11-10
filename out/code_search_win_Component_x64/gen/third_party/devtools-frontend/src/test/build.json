@@ -1,0 +1,6 @@
+{
+  "BUILD_ROOT": "../../../../..",
+  "BUILD_WITH_CHROMIUM": true,
+  "CHECKOUT_ROOT": "../../../../../../../",
+  "SOURCE_ROOT": "../../../../../../../third_party/devtools-frontend/src/"
+}

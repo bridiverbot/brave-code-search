@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/lantern/metrics",
+    "rootDirs": [
+      "../../../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/lantern/metrics/FirstContentfulPaint.test.ts",
+    "../../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/lantern/metrics/Interactive.test.ts",
+    "../../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/lantern/metrics/LargestContentfulPaint.test.ts",
+    "../../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/lantern/metrics/SpeedIndex.test.ts",
+    "../../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/lantern/metrics/TBTUtils.test.ts",
+    "../../../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../../testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../testing/bundle-tsconfig.ref.json"
+    }
+  ]
+}

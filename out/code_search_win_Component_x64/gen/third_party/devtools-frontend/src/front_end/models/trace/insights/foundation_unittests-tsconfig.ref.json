@@ -1,0 +1,65 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights",
+    "rootDirs": [
+      "../../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/CLSCulprits.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/Cache.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/CharacterSet.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/Common.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/DOMSize.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/DocumentLatency.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/DuplicatedJavaScript.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/FontDisplay.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/ForcedReflow.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/INPBreakdown.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/ImageDelivery.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/LCPBreakdown.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/LCPDiscovery.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/LegacyJavaScript.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/ModernHTTP.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/NetworkDependencyTree.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/RenderBlocking.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/SlowCSSSelector.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/Statistics.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/ThirdParties.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/models/trace/insights/Viewport.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../core/platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../generated/generated-tsconfig.ref.json"
+    },
+    {
+      "path": "../bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../helpers/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../types/bundle-tsconfig.ref.json"
+    }
+  ]
+}

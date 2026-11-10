@@ -1,0 +1,86 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/CSSWorkspaceBinding.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/CompilerScriptMapping.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/ContentProviderBasedProject.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/DebuggerLanguagePlugins.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/DebuggerWorkspaceBinding.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/DefaultScriptMapping.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/FileUtils.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/LiveLocation.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/PresentationConsoleMessageHelper.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/ResourceMapping.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/ResourceScriptMapping.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/ResourceUtils.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/SourceMapStepping.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/StylesSourceMapping.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/models/bindings/SymbolizedError.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../extension-api/extension-api-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/protocol_client/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/root/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../core/text_utils/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../generated/generated-tsconfig.ref.json"
+    },
+    {
+      "path": "../../testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../../third_party/source-map-scopes-codec/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../formatter/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../persistence/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../stack_trace/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../stack_trace/impl-tsconfig.ref.json"
+    },
+    {
+      "path": "../workspace/bundle-tsconfig.ref.json"
+    }
+  ]
+}

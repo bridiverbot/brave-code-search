@@ -1,0 +1,4847 @@
+{
+  "elements": [
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "a",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "abbr",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "acronym",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "address",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "applet",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "area",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "article",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "aside",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "audio",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "b",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "base",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "basefont",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "bdi",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "bdo",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "bgsound",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "big",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "blockquote",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "body",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "br",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "button",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "camera",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "canvas",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "caption",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "center",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "cite",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "code",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "col",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "colgroup",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "command",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "credential",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "data",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "datalist",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "dd",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "del",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "details",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "dfn",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "dir",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "dialog",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "div",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "dl",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "dt",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "em",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "embed",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "fencedframe",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "fieldset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "figcaption",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "figure",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "font",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "footer",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "form",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "frame",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "frameset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "geolocation",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "h1",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "h2",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "h3",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "h4",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "h5",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "h6",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "head",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "header",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "hgroup",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "hr",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "html",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "i",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "iframe",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "image",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "img",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "input",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "ins",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "install",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "kbd",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "keygen",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "label",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "layer",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "legend",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "li",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "login",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "link",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "listing",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "main",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "map",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "mark",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "marquee",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "menu",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "menubar",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "menuitem",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "menuitemcheckbox",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "menuitemradio",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "menulist",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "meta",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "meter",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "microphone",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "nav",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "nobr",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "noembed",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "noframes",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "nolayer",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "object",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "ol",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "optgroup",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "option",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "output",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "p",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "param",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "persistentwidget",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "picture",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "plaintext",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "pre",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "progress",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "q",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "rb",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "rp",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "rt",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "rtc",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "ruby",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "s",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "samp",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "script",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "search",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "section",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "select",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "selectedcontent",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "slot",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "small",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "source",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "span",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "strike",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "strong",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "style",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "sub",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "submenu",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "summary",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "sup",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "table",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "tbody",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "td",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "template",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "textarea",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "tfoot",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "th",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "thead",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "time",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "title",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "tr",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "track",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "tt",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "u",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "ul",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "usermedia",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "var",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "video",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "wbr",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "xmp",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xhtml",
+      "name": "noscript",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "annotation",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "annotation-xml",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "a",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "maction",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "malignmark",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "math",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mroot",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "msqrt",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "merror",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mfrac",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mglyph",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "msub",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "msup",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "msubsup",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mmultiscripts",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mprescripts",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mi",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mn",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mo",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mpadded",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mphantom",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mrow",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "ms",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mspace",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mstyle",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mtable",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mtd",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mtr",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mtext",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "mover",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "munder",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "munderover",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "semantics",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/1998/Math/MathML",
+      "name": "none",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "a",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "animate",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "animateColor",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "animateMotion",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "animateTransform",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "set",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "circle",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "clipPath",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "defs",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "desc",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "ellipse",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feBlend",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feColorMatrix",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feComponentTransfer",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feComposite",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feConvolveMatrix",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feDiffuseLighting",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feDisplacementMap",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feDistantLight",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feDropShadow",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feFlood",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feFuncA",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feFuncB",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feFuncG",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feFuncR",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feGaussianBlur",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feImage",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feMerge",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feMergeNode",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feMorphology",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feOffset",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "fePointLight",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feSpecularLighting",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feSpotLight",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feTile",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "feTurbulence",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "filter",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "foreignObject",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "g",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "image",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "line",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "linearGradient",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "marker",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "mask",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "metadata",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "mpath",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "path",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "pattern",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "polygon",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "polyline",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "radialGradient",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "rect",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "script",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "stop",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "style",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "svg",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "switch",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "symbol",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "text",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "textPath",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "title",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "tspan",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "use",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/svg",
+      "name": "view",
+      "cppnamespace": "SVG"
+    }
+  ],
+  "attributes": [
+    {
+      "namespace": null,
+      "name": "aria-actions",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-activedescendant",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-atomic",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-autocomplete",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-braillelabel",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-brailleroledescription",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-busy",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-checked",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-colcount",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-colindex",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-colindextext",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-colspan",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-controls",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-current",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-describedby",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-description",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-details",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-disabled",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-errormessage",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-expanded",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-flowto",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-haspopup",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-hidden",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-invalid",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-keyshortcuts",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-label",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-labelledby",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-labeledby",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-level",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-live",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-modal",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-multiline",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-multiselectable",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-orientation",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-owns",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-placeholder",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-posinset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-pressed",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-readonly",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-relevant",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-required",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-roledescription",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-rowcount",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-rowindex",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-rowindextext",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-rowspan",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-selected",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-setsize",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-sort",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-valuemax",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-valuemin",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-valuenow",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "aria-valuetext",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "abbr",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "accept-charset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "accept",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "accesskey",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "accuracymode",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "action",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "adauctionheaders",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "align",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "alink",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "allow",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "allowfullscreen",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "allowpaymentrequest",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "alpha",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "alt",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "archive",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "as",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "async",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "attributionsrc",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "autocapitalize",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "autocomplete",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "autocorrect",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "autofocus",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "autolocate",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "autoplay",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "axis",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "background",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "behavior",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "bgcolor",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "blocking",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "border",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "bordercolor",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "browsingtopics",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "buffer",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "capture",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "cachehint",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "cellpadding",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "cellspacing",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "char",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "challenge",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "charoff",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "charset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "checked",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "cite",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "class",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "classid",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "clientid",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "clear",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "closedby",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "code",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "codebase",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "codetype",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "color",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "colorspace",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "cols",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "configurl",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "colspan",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "command",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "commandfor",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "compact",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "connectionallowlist",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "containertiming",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "containertiming-ignore",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "containertimingignore",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "content",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "contenteditable",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "controls",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "controlslist",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "coords",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "credentialless",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "crossorigin",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "csp",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "customelementregistry",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "data",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "data-src",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "datetime",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "declare",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "decoding",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "default",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "defaultchecked",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "defer",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "delegatesfocus",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "dir",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "direction",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "dirname",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "domainhint",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "disabled",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "disablepictureinpicture",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "disableremoteplayback",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "displaymode",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "download",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "draggable",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "drawable",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "elementtiming",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "enctype",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "end",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "enterkeyhint",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "event",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "exportparts",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "face",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "fetchpriority",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "fields",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "filter",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "focusgroup",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "focusgroupstart",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "for",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "form",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "formaction",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "formenctype",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "formmethod",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "formnovalidate",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "formtarget",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "frame",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "frameborder",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "headers",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "headingoffset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "headingreset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "height",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "hidden",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "high",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "href",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "hreflang",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "hreftranslate",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "hspace",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "http-equiv",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "id",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "imagesizes",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "imagesrcset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "incremental",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "inert",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "inputmode",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "installurl",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "integrity",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "interestfor",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "is",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ismap",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "itemprop",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "keytype",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "kind",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "invisible",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "label",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "lang",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "language",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "latencyhint",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "leftmargin",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "link",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "list",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "loading",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "loginhint",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "longdesc",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "loop",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "low",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "lowsrc",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "manifest",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "manifestid",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "marginheight",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "marginwidth",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "marker",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "max",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "maxlength",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "mayscript",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "media",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "method",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "min",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "minlength",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "multiple",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "muted",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "name",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "nohref",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "nomodule",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "nonce",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "noresize",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "noshade",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "novalidate",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "nowrap",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "object",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onabort",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onafterprint",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onanimationstart",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onanimationiteration",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onanimationend",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onanimationcancel",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onautofill",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onauxclick",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onbeforecopy",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onbeforecut",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onbeforefilter",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onbeforeinput",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onbeforepaste",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onbeforeprint",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onbeforetoggle",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onbeforeunload",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onblur",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncancel",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncanplay",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncanplaythrough",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onchange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onclick",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onclose",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncommand",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncontentvisibilityautostatechange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncontextlost",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncontextmenu",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncontextrestored",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncopy",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncuechange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oncut",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ondblclick",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ondrag",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ondragend",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ondragenter",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ondragleave",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ondragover",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ondragstart",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ondrop",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ondurationchange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onemptied",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onended",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onerror",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onfocus",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onfocusin",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onfocusout",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onformdata",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ongotpointercapture",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onhashchange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oninput",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oninstallresult",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "oninvalid",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onkeydown",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onkeypress",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onkeyup",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onlanguagechange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onload",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onloadeddata",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onloadedmetadata",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onloadstart",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onlocation",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onlostpointercapture",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmessage",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmessageerror",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmousedown",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmouseenter",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmouseleave",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmousemove",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmouseout",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmouseover",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmouseup",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmousewheel",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onmove",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ononline",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onoffline",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onorientationchange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpagehide",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpageshow",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpaste",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpause",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onplay",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onplaying",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpointercancel",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpointerdown",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpointerenter",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpointerleave",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpointermove",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpointerout",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpointerover",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpointerrawupdate",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpointerup",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpopstate",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onprogress",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpromptaction",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onpromptdismiss",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onratechange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onreset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onresize",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onscroll",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onscrollend",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onsearch",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onsecuritypolicyviolation",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onseeked",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onseeking",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onselect",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onselectstart",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onselectionchange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onshow",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onslotchange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onscrollsnapchange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onscrollsnapchanging",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onstalled",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onstorage",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onstream",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onsuspend",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onsubmit",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ontimeupdate",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ontimezonechange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ontoggle",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ontouchstart",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ontouchmove",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ontouchend",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ontouchcancel",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ontransitionend",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onunload",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onvalidationstatuschange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onvolumechange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onwaiting",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onwebkitanimationstart",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onwebkitanimationiteration",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onwebkitanimationend",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onwebkitfullscreenchange",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onwebkitfullscreenerror",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onwebkittransitionend",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "onwheel",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "open",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "optimum",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "overscrollcontainer",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "overscrollarea",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "part",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "params",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "pattern",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "placeholder",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "playsinline",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "ping",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "policy",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "popover",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "popovertarget",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "popovertargetaction",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "poster",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "preload",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "property",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "pseudo",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "readonly",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "referrerpolicy",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "rel",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "required",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "rev",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "reversed",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "role",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "rows",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "rowspan",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "rules",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "sandbox",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "sanitize",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "scheme",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "scope",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "scrollamount",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "scrolldelay",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "scrolling",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "select",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "selected",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "selectedcontentelement",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shadowroot",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shadowrootadoptedstylesheets",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shadowrootmode",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shadowrootclonable",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shadowrootdelegatesfocus",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shadowrootreferencetarget",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shadowrootserializable",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shadowrootslotassignment",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shadowrootcustomelementregistry",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "shape",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "signature",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "size",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "sizes",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "slot",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "span",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "specifier",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "spellcheck",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "src",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "srcset",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "srcdoc",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "srclang",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "standby",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "start",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "step",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "style",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "summary",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "switch",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "tabindex",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "target",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "text",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "title",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "toolautosubmit",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "tooldescription",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "toolname",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "toolparamdescription",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "tooltitle",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "topmargin",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "translate",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "truespeed",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "precise",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "preciselocation",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "privatetoken",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "type",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "unbounded",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "usemap",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "valign",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "value",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "valuetype",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "version",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "vlink",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "vspace",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "virtualkeyboardpolicy",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "watch",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "webkitdirectory",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "width",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "wrap",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "writingsuggestions",
+      "cppnamespace": "HTML"
+    },
+    {
+      "namespace": null,
+      "name": "accent",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "accentunder",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "arg",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "columnspan",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "definitionURL",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "depth",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "display",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "displaystyle",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "encoding",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "fence",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "form",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "height",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "intent",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "largeop",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "linethickness",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "lspace",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "mathbackground",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "mathcolor",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "mathsize",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "mathvariant",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "maxsize",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "minsize",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "movablelimits",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "rowspan",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "rspace",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "scriptlevel",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "separator",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "stretchy",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "symmetric",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "voffset",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "width",
+      "cppnamespace": "MathML"
+    },
+    {
+      "namespace": null,
+      "name": "accumulate",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "additive",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "alignment-baseline",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "amplitude",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "animate",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "attributeName",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "attributeType",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "autofocus",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "async",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "azimuth",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "baseFrequency",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "baseline-shift",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "baseProfile",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "begin",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "bias",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "buffered-rendering",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "by",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "calcMode",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "clip",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "clip-path",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "clip-rule",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "clipPathUnits",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "color",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "color-interpolation",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "color-interpolation-filters",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "color-rendering",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "crossorigin",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "cursor",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "cx",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "cy",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "d",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "decoding",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "diffuseConstant",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "direction",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "display",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "divisor",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "dominant-baseline",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "download",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "dur",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "dx",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "dy",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "edgeMode",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "elevation",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "end",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "exponent",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "fill",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "fill-opacity",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "fill-rule",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "filter",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "filterUnits",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "flood-color",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "flood-opacity",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "focusgroup",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "focusgroupstart",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "font-family",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "font-size",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "font-size-adjust",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "font-stretch",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "font-style",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "font-variant",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "font-weight",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "format",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "from",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "fx",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "fy",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "fr",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "g1",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "g2",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "glyphRef",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "gradientTransform",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "gradientUnits",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "height",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "href",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "hreflang",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "image-rendering",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "in",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "in2",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "intercept",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "interestfor",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "k",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "k1",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "k2",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "k3",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "k4",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "kernelMatrix",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "kernelUnitLength",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "keyPoints",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "keySplines",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "keyTimes",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "lang",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "lengthAdjust",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "letter-spacing",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "lighting-color",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "limitingConeAngle",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "local",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "marker-end",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "marker-mid",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "marker-start",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "markerHeight",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "markerUnits",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "markerWidth",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "mask",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "mask-type",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "maskContentUnits",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "maskUnits",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "max",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "media",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "method",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "min",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "mode",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "name",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "numOctaves",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "offset",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "onactivate",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "onbegin",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "onend",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "onfocusin",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "onfocusout",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "onrepeat",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "opacity",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "operator",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "order",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "orient",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "origin",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "overflow",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "paint-order",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "path",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "pathLength",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "patternContentUnits",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "patternTransform",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "patternUnits",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "ping",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "pointer-events",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "points",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "pointsAtX",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "pointsAtY",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "pointsAtZ",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "preserveAlpha",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "preserveAspectRatio",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "primitiveUnits",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "r",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "radius",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "referrerpolicy",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "refX",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "refY",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "rel",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "repeatCount",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "repeatDur",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "requiredExtensions",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "requiredFeatures",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "restart",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "result",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "rotate",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "rx",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "ry",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "scale",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "seed",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "shape-rendering",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "side",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "slope",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "spacing",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "specularConstant",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "specularExponent",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "spreadMethod",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "startOffset",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stdDeviation",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stitchTiles",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stop-color",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stop-opacity",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stroke",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stroke-dasharray",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stroke-dashoffset",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stroke-linecap",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stroke-linejoin",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stroke-miterlimit",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stroke-opacity",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "stroke-width",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "style",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "surfaceScale",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "systemLanguage",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "tableValues",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "target",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "targetX",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "targetY",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "text-anchor",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "text-decoration",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "text-overflow",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "text-rendering",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "textLength",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "title",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "to",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "transform",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "transform-origin",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "type",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "u1",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "u2",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "unicode-bidi",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "values",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "vector-effect",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "version",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "viewBox",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "visibility",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "white-space",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "width",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "word-spacing",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "writing-mode",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "x",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "x1",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "x2",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "xChannelSelector",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "y",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "y1",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "y2",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "yChannelSelector",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "z",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": null,
+      "name": "zoomAndPan",
+      "cppnamespace": "SVG"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xlink",
+      "name": "actuate",
+      "cppnamespace": "XLink"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xlink",
+      "name": "arcrole",
+      "cppnamespace": "XLink"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xlink",
+      "name": "href",
+      "cppnamespace": "XLink"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xlink",
+      "name": "role",
+      "cppnamespace": "XLink"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xlink",
+      "name": "show",
+      "cppnamespace": "XLink"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xlink",
+      "name": "title",
+      "cppnamespace": "XLink"
+    },
+    {
+      "namespace": "http://www.w3.org/1999/xlink",
+      "name": "type",
+      "cppnamespace": "XLink"
+    },
+    {
+      "namespace": "http://www.w3.org/XML/1998/namespace",
+      "name": "lang",
+      "cppnamespace": "XML"
+    },
+    {
+      "namespace": "http://www.w3.org/XML/1998/namespace",
+      "name": "space",
+      "cppnamespace": "XML"
+    },
+    {
+      "namespace": "http://www.w3.org/2000/xmlns/",
+      "name": "xmlns",
+      "cppnamespace": "XMLNS"
+    }
+  ],
+  "processingInstructions": []
+}
