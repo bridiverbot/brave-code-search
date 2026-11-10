@@ -1,0 +1,66 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders",
+    "rootDirs": [
+      "../../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/AnimationsTrackAppender.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/AppenderUtils.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/CompatibilityTracksAppender.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/ExtensionTrackAppender.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/GPUTrackAppender.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/InteractionsTrackAppender.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/LayoutShiftsTrackAppender.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/NetworkTrackAppender.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/ThreadAppender.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/panels/timeline/track_appenders/TimingsTrackAppender.test.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../core/common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../core/platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../models/trace/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../models/workspace/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../ui/legacy/components/perf_ui/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../ui/legacy/theme_support/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../ui/settings/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../components/bundle-tsconfig.ref.json"
+    }
+  ]
+}

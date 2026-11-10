@@ -1,0 +1,23 @@
+{
+  "bundled_srcjars": [
+    "gen/ui/accessibility/ax_base_jni_headers.srcjar",
+    "gen/ui/accessibility/ax_base_jni_headers_placeholder.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/third_party/jni_zero/gendeps_java.params.json"
+  ],
+  "dex_path": "obj/ui/accessibility/ax_base_jni_headers_java.dex.jar",
+  "gn_target": "//ui/accessibility:ax_base_jni_headers_java",
+  "interface_jar_path": "obj/ui/accessibility/ax_base_jni_headers_java.javac.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/ui/accessibility/ax_base_jni_headers_java.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/ui/accessibility/ax_base_jni_headers_java.javac.jar"
+}

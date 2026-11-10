@@ -1,0 +1,8 @@
+[
+  {
+    "mojom_sources": [
+      "url/mojom/url.mojom"
+    ],
+    "target_name": "//url/mojom:url_mojom_gurl_rust"
+  }
+]

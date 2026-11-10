@@ -1,0 +1,8 @@
+{
+  "gn_target": "//url:gurl_java",
+  "public_deps_configs": [
+    "gen/url/url_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

@@ -1,0 +1,5 @@
+{
+  "gn_target": "//ui/android:ui_jar_jni_java",
+  "supports_android": true,
+  "type": "group"
+}

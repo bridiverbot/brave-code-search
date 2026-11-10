@@ -1,0 +1,16 @@
+[
+  {
+    "java_files": [
+      "../../third_party/jni_zero/sample/java/src/org/jni_zero/sample/Sample.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../third_party/jni_zero/java/src/org/jni_zero/CommonApis.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniRawPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniUniquePtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniZero.java"
+    ]
+  }
+]

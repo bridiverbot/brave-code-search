@@ -1,0 +1,18 @@
+[
+  {
+    "java_files": [
+      "../../third_party/jni_zero/test/java/src/org/jni_zero/SampleForAnnotationProcessor.java",
+      "../../third_party/jni_zero/test/java/src/org/jni_zero/SampleForKotlinTests.kt",
+      "../../third_party/jni_zero/test/java/src/org/jni_zero/SampleForTests.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../third_party/jni_zero/java/src/org/jni_zero/CommonApis.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniRawPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniUniquePtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniZero.java"
+    ]
+  }
+]

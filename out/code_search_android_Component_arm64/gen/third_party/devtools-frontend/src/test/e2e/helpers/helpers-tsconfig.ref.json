@@ -1,0 +1,74 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/ai-assistance-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/animations-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/application-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/changes-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/console-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/context-menu-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/coverage-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/cross-tool-helper.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/css-overview-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/datagrid-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/elements-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/emulation-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/extension-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/issues-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/layers-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/lighthouse-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/memory-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/network-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/performance-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/quick_open-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/recorder-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/security-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/settings-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/settings-shortcuts-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/sources-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/style-property-editor-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/helpers/visual-logging-helpers.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../front_end/core/host/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../front_end/panels/recorder/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../front_end/panels/recorder/models/recorder-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../front_end/panels/timeline/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../../front_end/ui/legacy/components/data_grid/data_grid-tsconfig.ref.json"
+    },
+    {
+      "path": "../../conductor/implementation-tsconfig.ref.json"
+    },
+    {
+      "path": "../../shared/shared-tsconfig.ref.json"
+    },
+    {
+      "path": "../shared/shared-tsconfig.ref.json"
+    }
+  ]
+}

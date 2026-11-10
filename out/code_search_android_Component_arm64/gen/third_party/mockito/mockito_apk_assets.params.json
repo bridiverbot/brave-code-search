@@ -1,0 +1,12 @@
+{
+  "assets": {
+    "outputs": [
+      "../mockito-extensions/org.mockito.plugins.MockMaker"
+    ],
+    "sources": [
+      "../../third_party/mockito/local/src/subprojects/android/src/main/resources/mockito-extensions/org.mockito.plugins.MockMaker"
+    ]
+  },
+  "gn_target": "//third_party/mockito:mockito_apk_assets",
+  "type": "android_assets"
+}

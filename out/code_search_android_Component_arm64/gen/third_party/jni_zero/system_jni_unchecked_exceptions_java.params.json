@@ -1,0 +1,5 @@
+{
+  "gn_target": "//third_party/jni_zero:system_jni_unchecked_exceptions_java",
+  "supports_android": true,
+  "type": "group"
+}

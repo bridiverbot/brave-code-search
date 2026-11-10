@@ -1,0 +1,7 @@
+{
+  "gn_target": "//ui/android:ui_strings_grd",
+  "resources_zip": "obj/ui/android/ui_strings_grd.compiled.resources.zip",
+  "rtxt_path": "gen/ui/android/ui_strings_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/ui/android/ui_strings_grd.resources.zip"
+}

@@ -1,0 +1,22 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/jni_zero/jni_zero_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//third_party/jni_zero:validator_processor",
+  "interface_jar_path": "obj/third_party/jni_zero/validator_processor.turbine.jar",
+  "is_prebuilt": false,
+  "main_class": "org.jni_zero.processor.JniZeroValidatorProcessor",
+  "processed_jar_path": "obj/third_party/jni_zero/validator_processor.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "target_sources_file": "gen/third_party/jni_zero/validator_processor.sources",
+  "type": "java_annotation_processor",
+  "unprocessed_jar_path": "obj/third_party/jni_zero/validator_processor.javac.jar"
+}

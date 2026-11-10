@@ -1,0 +1,9 @@
+{
+  "assets": {
+    "sources": [
+      "gen/ui/base/ui_base_test_resources.pak"
+    ]
+  },
+  "gn_target": "//ui/base:ui_base_test_android_assets",
+  "type": "android_assets"
+}

@@ -1,0 +1,15 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "gn_target": "//third_party/robolectric:robolectric_test_sdk_java",
+  "interface_jar_path": "obj/third_party/robolectric/robolectric_test_sdk_java.ijar.jar",
+  "is_prebuilt": true,
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "system_java_library",
+  "unprocessed_jar_path": "../../third_party/robolectric/cipd/lib/android-all-17-robolectric-15733970.jar"
+}

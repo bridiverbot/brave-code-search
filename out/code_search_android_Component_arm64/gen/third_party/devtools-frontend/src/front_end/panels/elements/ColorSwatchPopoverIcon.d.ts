@@ -1,0 +1,79 @@
+import * as Common from '../../core/common/common.js';
+import type * as SDK from '../../core/sdk/sdk.js';
+import type { Icon } from '../../ui/kit/kit.js';
+import * as ColorPicker from '../../ui/legacy/components/color_picker/color_picker.js';
+import * as InlineEditor from '../../ui/legacy/components/inline_editor/inline_editor.js';
+import { type RenderingContext } from './PropertyRenderer.js';
+import type { StylePropertyTreeElement } from './StylePropertyTreeElement.js';
+interface BezierPopoverIconParams {
+    treeElement: StylePropertyTreeElement;
+    swatchPopoverHelper: InlineEditor.SwatchPopoverHelper.SwatchPopoverHelper;
+    swatch: Icon;
+    match: SDK.CSSPropertyParser.Match;
+    context: RenderingContext;
+}
+export declare class BezierPopoverIcon {
+    private treeElement;
+    private readonly swatchPopoverHelper;
+    private readonly swatch;
+    private readonly match;
+    private readonly context;
+    private readonly boundBezierChanged;
+    private readonly boundOnScroll;
+    private bezierEditor?;
+    private scrollerElement?;
+    private originalPropertyText?;
+    constructor({ treeElement, swatchPopoverHelper, swatch, match, context, }: BezierPopoverIconParams);
+    private iconClick;
+    private bezierChanged;
+    private onScroll;
+    private onPopoverHidden;
+}
+export declare const enum ColorSwatchPopoverIconEvents {
+    COLOR_CHANGED = "colorchanged"
+}
+export interface ColorSwatchPopoverIconEventTypes {
+    [ColorSwatchPopoverIconEvents.COLOR_CHANGED]: Common.Color.Color;
+}
+export declare class ColorSwatchPopoverIcon extends Common.ObjectWrapper.ObjectWrapper<ColorSwatchPopoverIconEventTypes> {
+    private treeElement;
+    private readonly swatchPopoverHelper;
+    private swatch;
+    private contrastInfo;
+    private readonly boundSpectrumChanged;
+    private readonly boundOnScroll;
+    private spectrum?;
+    private scrollerElement?;
+    private originalPropertyText?;
+    constructor(treeElement: StylePropertyTreeElement, swatchPopoverHelper: InlineEditor.SwatchPopoverHelper.SwatchPopoverHelper, swatch: InlineEditor.ColorSwatch.ColorSwatch);
+    private generateCSSVariablesPalette;
+    setContrastInfo(contrastInfo: ColorPicker.ContrastInfo.ContrastInfo): void;
+    private iconClick;
+    toggleEyeDropper(): Promise<void>;
+    showPopover(): void;
+    private spectrumResized;
+    private spectrumChanged;
+    private onScroll;
+    private onPopoverHidden;
+}
+export declare const enum ShadowEvents {
+    SHADOW_CHANGED = "shadowChanged"
+}
+export interface ShadowEventTypes {
+    [ShadowEvents.SHADOW_CHANGED]: InlineEditor.CSSShadowEditor.CSSShadowModel;
+}
+export declare class ShadowSwatchPopoverHelper extends Common.ObjectWrapper.ObjectWrapper<ShadowEventTypes> {
+    private treeElement;
+    private readonly swatchPopoverHelper;
+    private readonly boundShadowChanged;
+    private readonly boundOnScroll;
+    private cssShadowEditor?;
+    private scrollerElement?;
+    private originalPropertyText?;
+    constructor(treeElement: StylePropertyTreeElement, swatchPopoverHelper: InlineEditor.SwatchPopoverHelper.SwatchPopoverHelper);
+    showPopover(shadowSwatch: InlineEditor.Swatches.CSSShadowSwatch): void;
+    private shadowChanged;
+    private onScroll;
+    private onPopoverHidden;
+}
+export {};

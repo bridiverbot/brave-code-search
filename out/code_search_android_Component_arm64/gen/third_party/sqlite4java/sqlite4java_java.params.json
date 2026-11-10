@@ -1,0 +1,17 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "gn_target": "//third_party/sqlite4java:sqlite4java_java",
+  "interface_jar_path": "obj/third_party/sqlite4java/sqlite4java_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/sqlite4java/cipd/lib/sqlite4java.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/sqlite4java/cipd/lib/sqlite4java.jar"
+}

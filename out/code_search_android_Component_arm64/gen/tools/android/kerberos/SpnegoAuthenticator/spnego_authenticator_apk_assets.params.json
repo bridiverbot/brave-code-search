@@ -1,0 +1,11 @@
+{
+  "chromium_code": true,
+  "gn_target": "//tools/android/kerberos/SpnegoAuthenticator:spnego_authenticator_apk_assets",
+  "public_deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/tools/android/kerberos/SpnegoAuthenticator/spnego_authenticator_apk_assets.res.sources",
+  "resources_zip": "obj/tools/android/kerberos/SpnegoAuthenticator/spnego_authenticator_apk_assets.resources.zip",
+  "rtxt_path": "gen/tools/android/kerberos/SpnegoAuthenticator/spnego_authenticator_apk_assets_R.txt",
+  "type": "android_resources"
+}

@@ -1,0 +1,85 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/authored-deployed-grouping.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/breakpoint-csp-violations.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/breakpoint-javascript.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/breakpoints-sidebarpane.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/call-stack.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/can-break-with-wasm-sourcemaps.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/can-disable-auto-sources-focus.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/can-handle-special-characters.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/can-open-linear-memory-inspector.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/can-pretty-print-sourcecode.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/can-show-multiple-workers.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/can-show-stylesheets-with-source-url-comment.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/can-show-wasm-scopes.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/color-swatch.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/continue-to-location-markers.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/debug-raw-wasm.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/debugger-sidebar.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/dom-breakpoints.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/eval.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/header-overrides.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/icon-row-bucket.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/ignore-list.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/inline-breakpoint.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/inline-scripts.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/inline-variable.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/link-to-correct-source-line.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/memory-leak.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/navigator-view.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/overrides.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/pause-button.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/popover.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/restart-frame.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/script-in-multiple-workers.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/scroll-into-view.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/snippets.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/sourcemap-without-mappings.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/sourcemap.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/sources-list.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/sourceurl.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/syntax-highlighting.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/text-editor.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/threads-sidebar-pane.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/watch-expressions.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/test/e2e/sources/worker-relative-sourcemap.test.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../front_end/ui/components/text_editor/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../conductor/implementation-tsconfig.ref.json"
+    },
+    {
+      "path": "../../shared/shared-tsconfig.ref.json"
+    },
+    {
+      "path": "../conductor/implementation-tsconfig.ref.json"
+    },
+    {
+      "path": "../helpers/helpers-tsconfig.ref.json"
+    },
+    {
+      "path": "../shared/shared-tsconfig.ref.json"
+    }
+  ]
+}

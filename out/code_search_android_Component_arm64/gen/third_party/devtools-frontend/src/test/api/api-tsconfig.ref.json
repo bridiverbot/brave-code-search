@@ -1,0 +1,61 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../third_party/devtools-frontend/src/test/api",
+    "rootDirs": [
+      "../../../../../../../../third_party/devtools-frontend/src/",
+      "../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../third_party/devtools-frontend/src/test/api/TargetUniverse.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/api/api-state-provider.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/api/mocha-interface.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/api/mocha_hooks.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/test/api/run-mocha.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../front_end/core/common/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../front_end/core/host/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../front_end/core/protocol_client/puppeteer_devtools_connection-tsconfig.ref.json"
+    },
+    {
+      "path": "../../front_end/core/root/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../front_end/core/sdk/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../front_end/foundation/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../front_end/testing/testing-tsconfig.ref.json"
+    },
+    {
+      "path": "../conductor/implementation-tsconfig.ref.json"
+    },
+    {
+      "path": "../e2e/conductor/implementation-tsconfig.ref.json"
+    },
+    {
+      "path": "../e2e/shared/shared-tsconfig.ref.json"
+    },
+    {
+      "path": "../shared/shared-tsconfig.ref.json"
+    }
+  ]
+}

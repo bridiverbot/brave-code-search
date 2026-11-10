@@ -1,0 +1,9 @@
+{
+  "javac_full_interface_classpath": [
+    "obj/third_party/android_build_tools/error_prone_javac/error_prone_javac_java.ijar.jar",
+    "obj/third_party/android_build_tools/error_prone/error_prone_java.ijar.jar",
+    "obj/build/android/build_java.turbine.jar",
+    "../../third_party/android_build_tools/nullaway/cipd/nullaway.jar"
+  ],
+  "sdk_interface_jars": []
+}

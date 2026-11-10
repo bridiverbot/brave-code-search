@@ -1,0 +1,12 @@
+{
+  "interface_classpath": [
+    "obj/third_party/android_deps/org_mockito_mockito_android.ijar.jar",
+    "obj/third_party/android_deps/org_mockito_mockito_core.ijar.jar",
+    "obj/third_party/junit/junit.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

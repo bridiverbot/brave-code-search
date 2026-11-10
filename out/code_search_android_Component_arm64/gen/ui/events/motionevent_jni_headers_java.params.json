@@ -1,0 +1,5 @@
+{
+  "gn_target": "//ui/events:motionevent_jni_headers_java",
+  "supports_android": true,
+  "type": "group"
+}

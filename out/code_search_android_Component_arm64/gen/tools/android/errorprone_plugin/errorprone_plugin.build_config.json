@@ -1,0 +1,8 @@
+{
+  "processed_classpath": [
+    "obj/tools/android/errorprone_plugin/errorprone_plugin.javac.jar",
+    "../../third_party/android_build_tools/error_prone_javac/cipd/javac.jar",
+    "../../third_party/android_build_tools/error_prone/cipd/error_prone_core.jar",
+    "obj/build/android/build_java.javac.jar"
+  ]
+}
