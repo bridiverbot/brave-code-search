@@ -1,0 +1,23 @@
+[package]
+name = "zcash_client_backend"
+description = "APIs for creating shielded Zcash light clients"
+version = "0.24.0-rc.1"
+authors = [
+    "Jack Grigg <jack@z.cash>",
+    "Kris Nuttycombe <kris@electriccoin.co>"
+]
+homepage = "https://github.com/zcash/librustzcash"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+edition = "2021"
+
+[dependencies]
+zcash_primitives = { version = "0.29", default-features = false }
+zcash_encoding = { version = "0.4", default-features = false }
+shardtree = "0.7"
+byteorder = "1"
+
+[lib]
+name = "zcash_client_backend"
+path = "src/lib.rs"
+crate-type = ["rlib"]
