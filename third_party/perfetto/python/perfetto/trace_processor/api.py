@@ -1,0 +1,406 @@
+# Copyright (C) 2020 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import dataclasses as dc
+from typing import Any, Dict, List, Optional, Union
+
+from perfetto.common.exceptions import PerfettoException
+from perfetto.common.query_result_iterator import QueryResultIterator
+from perfetto.trace_processor.backend import TraceProcessorBackend
+from perfetto.trace_processor.backend_factory import create_http_backend
+from perfetto.trace_processor.backend_factory import create_remote_backend
+from perfetto.trace_processor.platform import PlatformDelegate
+from perfetto.trace_processor.protos import ProtoFactory
+from perfetto.trace_processor.shell import TraceProcessorHttpSubprocess
+from perfetto.trace_uri_resolver import registry
+from perfetto.trace_uri_resolver.registry import ResolverRegistry
+
+# Defining this field as a module variable means this can be changed by
+# implementations at startup and used for all TraceProcessor objects
+# without having to specify on each one.
+# In Google3, this field is rewritten using Copybara to a implementation
+# which can integrates with internal infra.
+PLATFORM_DELEGATE = PlatformDelegate
+
+TraceReference = registry.TraceReference
+
+# Custom exception raised if any trace_processor functions return a
+# response with an error defined
+TraceProcessorException = PerfettoException
+
+
+@dc.dataclass
+class SqlPackage:
+  """Represents an SQL package to be loaded.
+
+  Attributes:
+    path: Path to the directory containing SQL files.
+    package: Optional package name override. If not specified, the directory
+      name will be used as the package name.
+  """
+  path: str
+  package: Optional[str] = None
+
+
+@dc.dataclass
+class TraceProcessorConfig:
+  # The path to the trace processor binary. If not specified, the trace
+  # processor version pinned to (and shipped with) this package is downloaded
+  # and run. See `fetch_latest_trace_processor` to override this.
+  bin_path: Optional[str] = None
+
+  # If True (and `bin_path` is not set), fetch the latest available
+  # trace_processor prebuilt from get.perfetto.dev instead of using the version
+  # pinned to this package. This trades reproducibility for always being on the
+  # newest build.
+  #
+  # Note: this option is best-effort and may be ignored on platforms which
+  # source the binary in a different way. In particular, inside Google3 the
+  # PlatformDelegate is swapped out (see PLATFORM_DELEGATE above) and the
+  # trace_processor binary always comes from internal infra, so this flag has
+  # no effect there.
+  fetch_latest_trace_processor: bool = False
+
+  # If True, the trace processor will use a unique port for each instance.
+  unique_port: bool = True
+
+  # If True, the trace processor will print verbose output to stdout.
+  verbose: bool = False
+
+  # If True, the trace processor will ingest ftrace in the `ftrace_event`
+  # table.
+  ingest_ftrace_in_raw: bool = False
+
+  # If True, the trace processor will enable development features.
+  # Any feature gated behind this flag is not guaranteed to be stable
+  # and may change or be removed in future versions.
+  # This flag is intended for use by developers and testers.
+  enable_dev_features: bool = False
+
+  # A registry of custom URI resolvers to use when resolving trace URIs.
+  resolver_registry: Optional[ResolverRegistry] = None
+
+  # The timeout in seconds for the trace processor binary starting up. If the
+  # binary does not start within this time, an exception will be raised.
+  load_timeout: int = 30
+
+  # Any extra flags to pass to the trace processor binary.
+  # Warning: this is a low-level option and should be used with caution.
+  extra_flags: Optional[List[str]] = None
+
+  # Optional list of PerfettoSQL packages to load. Each element can be:
+  # - A string path: The directory name becomes the package name.
+  # - A SqlPackage object: Allows specifying a custom package name.
+  # All SQL modules inside these packages will be available to include using
+  # `INCLUDE PERFETTO MODULE` PerfettoSQL statements.
+  add_sql_packages: Optional[List[Union[str, SqlPackage]]] = None
+
+  # If True, SQL functions may access files visible to a locally launched
+  # Trace Processor shell. Do not enable this when executing untrusted SQL.
+  # This option cannot grant access to a Trace Processor connected via
+  # `remote` or `addr`.
+  enable_sql_file_access: bool = False
+
+  def __init__(
+      self,
+      bin_path: Optional[str] = None,
+      unique_port: bool = True,
+      verbose: bool = False,
+      ingest_ftrace_in_raw: bool = False,
+      enable_dev_features=False,
+      resolver_registry: Optional[ResolverRegistry] = None,
+      load_timeout: int = 30,
+      extra_flags: Optional[List[str]] = None,
+      add_sql_packages: Optional[List[Union[str, SqlPackage]]] = None,
+      fetch_latest_trace_processor: bool = False,
+      enable_sql_file_access: bool = False,
+  ):
+    self.bin_path = bin_path
+    self.unique_port = unique_port
+    self.verbose = verbose
+    self.ingest_ftrace_in_raw = ingest_ftrace_in_raw
+    self.enable_dev_features = enable_dev_features
+    self.resolver_registry = resolver_registry
+    self.load_timeout = load_timeout
+    self.extra_flags = extra_flags
+    self.add_sql_packages = add_sql_packages
+    self.fetch_latest_trace_processor = fetch_latest_trace_processor
+    self.enable_sql_file_access = enable_sql_file_access
+
+
+class TraceProcessor:
+  QueryResultIterator = QueryResultIterator
+  Row = QueryResultIterator.Row
+
+  def __init__(self,
+               trace: Optional[TraceReference] = None,
+               addr: Optional[str] = None,
+               config: TraceProcessorConfig = TraceProcessorConfig(),
+               file_path: Optional[str] = None,
+               metadata: Optional[Dict[str, str]] = None,
+               remote: Optional[str] = None):
+    """Create a trace processor instance.
+
+    Args:
+      trace: reference to a trace to be loaded into the trace
+        processor instance.
+
+        One of several types is supported:
+        1) path to a trace file to open and read
+        2) a file like object (file, io.BytesIO or similar) to read
+        3) a generator yielding bytes
+        4) a trace URI which resolves to one of the above types
+        5) a trace URI resolver; this is a subclass of
+        resolver.TraceUriResolver which generates a reference to a
+        trace when the |resolve| method is called on it.
+
+        An URI is similar to a connection string (e.g. for a web
+        address or SQL database) which specifies where to lookup traces
+        and which traces to pick from this data source. The format of a
+        string should be as follows:
+        resolver_name:key_1=list,of,values;key_2=value
+
+        Custom resolvers can be provided to handle URIs via
+        |config.resolver_registry|.
+      remote: a running trace processor instance to connect to. Useful to
+        query an already loaded trace. Accepts the same values as the
+        `trace_processor --remote` flag: a session name started with
+        `trace_processor server unix --name <name>`, a Unix socket path, or the
+        host:port of an HTTP server.
+      config: configuration options which customize functionality of trace
+        processor and the Python binding.
+      addr (deprecated): address of a running trace processor instance. Use
+        |remote| instead of this field: specifying both will cause an
+        exception to be thrown. Always treated as an HTTP address (host:port).
+      file_path (deprecated): path to a trace file to load. Use
+        |trace| instead of this field: specifying both will cause
+        an exception to be thrown.
+    """
+
+    if trace and file_path:
+      raise TraceProcessorException(
+          "trace and file_path cannot both be specified.")
+    if addr and remote:
+      raise TraceProcessorException("addr and remote cannot both be specified.")
+    if (remote or addr) and config.enable_sql_file_access:
+      raise TraceProcessorException(
+          "enable_sql_file_access cannot grant file access to a remote Trace "
+          "Processor; the server must be started with "
+          "--allow-sql-file-access.")
+
+    self.config = config
+    self.platform_delegate = PLATFORM_DELEGATE()
+    self.protos = ProtoFactory(self.platform_delegate)
+    self.resolver_registry = config.resolver_registry or \
+      self.platform_delegate.default_resolver_registry()
+    self._backend = self._create_backend(remote, addr)
+    # Deprecated: only kept for backwards compatibility, as external code reads
+    # |self.http| directly. Use |self._backend| inside this class.
+    # TODO(gabiyev): remove once external users have migrated.
+    self.http = self._backend
+
+    if trace or file_path:
+      try:
+        self._parse_trace(trace if trace else file_path)
+      except TraceProcessorException as ex:
+        self.close()
+        raise ex
+
+  def query(self, sql: str):
+    """Executes passed in SQL query on the trace processor backend, and returns
+    the response as a QueryResultIterator. Raises TraceProcessorException if
+    the response returns with an error.
+
+    Args:
+      sql: SQL query written as a String
+
+    Returns:
+      A class which can iterate through each row of the results table. This
+      can also be converted to a pandas dataframe by calling the
+      as_pandas_dataframe() function, or a polars dataframe by calling
+      as_polars_dataframe(), after calling query.
+    """
+    response = self._backend.execute_query(sql)
+    if response.error:
+      raise TraceProcessorException(response.error)
+
+    return TraceProcessor.QueryResultIterator(response.column_names,
+                                              response.batch)
+
+  def trace_summary(self,
+                    specs: List[Union[str, bytes]],
+                    metric_ids: Optional[List[str]] = None,
+                    metadata_query_id: Optional[str] = None):
+    """Computes a structuted summary of the trace.
+
+    This function allows you to create a structured summary of the trace
+    data output in as a structured protobuf message, allowing consumption by
+    other tools for charting or bulk analysis.
+
+    This function is the replacement for the `metric` function, which is now
+    deprecated (but without any plans to remove it).
+
+    Raises TraceProcessorException if there was an error computing the summary.
+
+    Args:
+      specs: a list of `TraceSummarySpec` protos either as a textproto or in
+        binary format. Please see the definition of the `TraceSummarySpec`
+        proto for more details on how to construct these.
+      metric_ids: Optional list of metric IDs to compute in the summary.
+        If `None`, all metrics in the specs will be computed.
+      metadata_query_id: Optional query ID for metadata
+
+    Returns:
+      The trace summary data as a proto message
+    """
+    response = self._backend.trace_summary(specs, metric_ids, metadata_query_id)
+    if response.error:
+      raise TraceProcessorException(response.error)
+
+    summary = self.protos.TraceSummary()
+    summary.ParseFromString(response.proto_summary)
+    return summary
+
+  def enable_metatrace(self):
+    """Enable metatrace for the currently running trace_processor.
+    """
+    return self._backend.enable_metatrace()
+
+  def disable_and_read_metatrace(self):
+    """Disable and return the metatrace formed from the currently running
+    trace_processor. This must be enabled before attempting to disable. This
+    returns the serialized bytes of the metatrace data directly. Raises
+    TraceProcessorException if the response returns with an error.
+    """
+    response = self._backend.disable_and_read_metatrace()
+    if response.error:
+      raise TraceProcessorException(response.error)
+
+    return response.metatrace
+
+  def metric(self, metrics: List[str]):
+    """Returns the metrics data corresponding to the passed in trace metric.
+    Raises TraceProcessorException if the response returns with an error.
+
+    Note: this function is deprecated but there are no plans to remove it.
+    Consider using `trace_summary` instead, which is an indirect replacement,
+    providing much of the same functionality but in a more flexible way.
+
+    Args:
+      metrics: A list of valid metrics as defined in TraceMetrics
+
+    Returns:
+      The metrics data as a proto message
+    """
+    # A bare string would otherwise be split into one metric per character.
+    if isinstance(metrics, str):
+      metrics = [metrics]
+    response = self._backend.compute_metric(metrics)
+    if response.error:
+      raise TraceProcessorException(response.error)
+
+    metrics = self.protos.TraceMetrics()
+    metrics.ParseFromString(response.metrics)
+    return metrics
+
+  def export(self, output_path: str, export_format: str):
+    """Exports the contents of Trace Processor.
+
+    The exact contents exported are defined by `export_format`. `arrow_tar` is
+    a tar of standard Arrow files with cross-version compatibility guarantees
+    for external consumers, but it cannot be loaded back into Trace Processor.
+    `perfetto` can be loaded by a fresh Trace Processor instance from the same
+    version. Loading it in a different version may work but is not guaranteed.
+    `sqlite` writes all SQL-visible tables and views into a standard SQLite
+    database; the database is materialized on the server and streamed to
+    `output_path`, so the server must support file access.
+    Output is streamed directly to
+    disk without materializing the complete archive in memory.
+
+    Args:
+      output_path: Path to write the export to.
+      export_format: Either `arrow_tar`, `perfetto` or `sqlite`.
+    """
+    with open(output_path, 'wb') as f:
+      self._backend.export(f, export_format)
+
+  @property
+  def metadata(self) -> Dict[str, str]:
+    """Returns metadata associated with this trace.
+
+    Metadata is provided by trace URI resolvers during trace resolution.
+    If no metadata was provided or the trace was loaded directly from a file,
+    this will return an empty dictionary.
+
+    Returns:
+      A dictionary containing metadata key-value pairs.
+    """
+    return self._metadata
+
+  @property
+  def subprocess(self):
+    """The trace_processor_shell process, or None when connected remotely.
+
+    Deprecated: only kept for backwards compatibility, as external code reads
+    it directly.
+    """
+    return getattr(getattr(self, '_backend', None), 'subprocess', None)
+
+  def _create_backend(self, remote: Optional[str],
+                      addr: Optional[str]) -> TraceProcessorBackend:
+    if addr:
+      return create_http_backend(addr, protos=self.protos)
+    if remote:
+      return create_remote_backend(remote, protos=self.protos)
+    return TraceProcessorHttpSubprocess(self.config, self.platform_delegate,
+                                        self.protos)
+
+  def _parse_trace(self, trace: TraceReference):
+    resolved_lst = self.resolver_registry.resolve(trace)
+    if not resolved_lst:
+      raise TraceProcessorException(
+          'trace argument did not resolve to a trace.')
+
+    if len(resolved_lst) > 1:
+      raise TraceProcessorException(
+          'trace argument resolved to more than one trace. Trace processor '
+          'only supports loading a single trace; please use '
+          'BatchTraceProcessor to operate on multiple traces.')
+
+    resolved = resolved_lst[0]
+    # Capture metadata from the resolved trace
+    self._metadata = resolved.metadata
+    for chunk in resolved.generator:
+      result = self._backend.parse(chunk)
+      if result.error:
+        raise TraceProcessorException(
+            f'Failed while parsing trace. Error message: {result.error}')
+    self._backend.notify_eof()
+
+  def __enter__(self):
+    return self
+
+  def __exit__(self, a, b, c):
+    del a, b, c  # Unused.
+    self.close()
+    return False
+
+  def __del__(self):
+    # Fallback for callers that skip close()/the context manager, so temp files
+    # and the connection don't leak (as a "ResourceWarning: unclosed file").
+    self.close()
+
+  def close(self):
+    if hasattr(self, '_backend'):
+      self._backend.close()

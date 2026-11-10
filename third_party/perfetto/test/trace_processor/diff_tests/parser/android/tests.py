@@ -1,0 +1,650 @@
+#!/usr/bin/env python3
+# Copyright (C) 2023 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from python.generators.diff_tests.testing import Path, DataPath, Metric, Systrace
+from python.generators.diff_tests.testing import Csv, Json, TextProto, BinaryProto
+from python.generators.diff_tests.testing import DiffTestBlueprint, TraceInjector
+from python.generators.diff_tests.testing import TestSuite
+from python.generators.diff_tests.testing import PrintProfileProto
+
+
+class AndroidParser(TestSuite):
+
+  def test_android_system_property_counter(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          timestamp: 1000
+          android_system_property {
+            values {
+              name: "debug.tracing.screen_state"
+              value: "2"
+            }
+            values {
+              name: "debug.tracing.device_state"
+              value: "some_state_from_sysprops"
+            }
+          }
+        }
+        packet {
+          ftrace_events {
+            cpu: 1
+            event {
+              timestamp: 2000
+              pid: 1
+              print {
+                buf: "C|1000|ScreenState|1\n"
+              }
+            }
+            event {
+              timestamp: 3000
+              pid: 1
+              print {
+                buf: "N|1000|DeviceStateChanged|some_state_from_atrace\n"
+              }
+            }
+          }
+        }
+        """),
+        query="""
+        SELECT t.name, c.id, c.ts, c.value
+        FROM counter_track t JOIN counter c ON t.id = c.track_id
+        WHERE name = 'ScreenState';
+        """,
+        out=Csv("""
+        "name","id","ts","value"
+        "ScreenState",0,1000,2.000000
+        "ScreenState",1,2000,1.000000
+        """))
+
+  def test_android_system_property_slice(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          timestamp: 1000
+          android_system_property {
+            values {
+              name: "debug.tracing.screen_state"
+              value: "2"
+            }
+            values {
+              name: "debug.tracing.device_state"
+              value: "some_state_from_sysprops"
+            }
+          }
+        }
+        packet {
+          ftrace_events {
+            cpu: 1
+            event {
+              timestamp: 2000
+              pid: 1
+              print {
+                buf: "C|1000|ScreenState|1\n"
+              }
+            }
+            event {
+              timestamp: 3000
+              pid: 1
+              print {
+                buf: "N|1000|DeviceStateChanged|some_state_from_atrace\n"
+              }
+            }
+          }
+        }
+        """),
+        query="""
+        SELECT t.name, s.id, s.ts, s.dur, s.name
+        FROM track t JOIN slice s ON s.track_id = t.id
+        WHERE t.name = 'DeviceStateChanged';
+        """,
+        out=Csv("""
+        "name","id","ts","dur","name"
+        "DeviceStateChanged",0,1000,0,"some_state_from_sysprops"
+        "DeviceStateChanged",1,3000,0,"some_state_from_atrace"
+        """))
+
+  def test_binder_txn_sync_good(self):
+    return DiffTestBlueprint(
+        trace=Systrace(
+            """          client-521390  [005] ..... 137012.464739: binder_command: cmd=0x40406300 BC_TRANSACTION
+          client-521390  [005] ..... 137012.464741: binder_transaction: transaction=5149 dest_node=5143 dest_proc=521383 dest_thread=0 reply=0 flags=0x0 code=0x3
+          server-521383  [004] ..... 137012.464771: binder_transaction_received: transaction=5149
+          server-521383  [004] ..... 137012.464772: binder_return: cmd=0x80407202 BR_TRANSACTION
+          server-521383  [004] ..... 137012.464815: binder_command: cmd=0x40086303 BC_FREE_BUFFER
+          server-521383  [004] ..... 137012.464823: binder_command: cmd=0x40406301 BC_REPLY
+          server-521383  [004] ..... 137012.464826: binder_transaction: transaction=5150 dest_node=0 dest_proc=521390 dest_thread=521390 reply=1 flags=0x20 code=0x3
+          server-521383  [004] ..... 137012.464837: binder_return: cmd=0x7206 BR_TRANSACTION_COMPLETE
+          client-521390  [005] ..... 137012.464847: binder_return: cmd=0x7206 BR_TRANSACTION_COMPLETE
+          client-521390  [005] ..... 137012.464848: binder_transaction_received: transaction=5150
+          client-521390  [005] ..... 137012.464849: binder_return: cmd=0x80407203 BR_REPLY
+          """),
+        query="""
+      SELECT
+        dur
+      FROM slice
+      ORDER BY dur;
+      """,
+        out=Csv("""
+      "dur"
+      55000
+      107000
+      """))
+
+  def test_binder_txn_sync_bad_request(self):
+    return DiffTestBlueprint(
+        trace=Systrace(
+            """          client-521349  [005] ..... 137004.281009: binder_command: cmd=0x40406300 BC_TRANSACTION
+          client-521349  [005] ..... 137004.281010: binder_transaction: transaction=5135 dest_node=5129 dest_proc=521347 dest_thread=0 reply=0 flags=0x0 code=0x3
+          client-521349  [005] ..... 137004.281410: binder_return: cmd=0x7211 BR_FAILED_REPLY
+          """),
+        query="""
+      SELECT
+        dur
+      FROM slice
+      ORDER BY dur;
+      """,
+        out=Csv("""
+      "dur"
+      400000
+      """))
+
+  def test_binder_txn_sync_bad_reply(self):
+    return DiffTestBlueprint(
+        trace=Systrace(
+            """          client-521332  [007] ..... 136996.112660: binder_command: cmd=0x40406300 BC_TRANSACTION
+          client-521332  [007] ..... 136996.112662: binder_transaction: transaction=5120 dest_node=5114 dest_proc=521330 dest_thread=0 reply=0 flags=0x0 code=0x3
+          server-521330  [000] ..... 136996.112714: binder_transaction_received: transaction=5120
+          server-521330  [000] ..... 136996.112715: binder_return: cmd=0x80407202 BR_TRANSACTION
+          server-521330  [000] ..... 136996.112752: binder_command: cmd=0x40086303 BC_FREE_BUFFER
+          server-521330  [000] ..... 136996.112758: binder_command: cmd=0x40406301 BC_REPLY
+          server-521330  [000] ..... 136996.112760: binder_transaction: transaction=5121 dest_node=0 dest_proc=521332 dest_thread=521332 reply=1 flags=0x20 code=0x3
+          server-521330  [000] ..... 136996.113163: binder_return: cmd=0x7206 BR_TRANSACTION_COMPLETE
+          client-521332  [007] ..... 136996.113201: binder_return: cmd=0x7206 BR_TRANSACTION_COMPLETE
+          client-521332  [007] ..... 136996.113201: binder_return: cmd=0x7211 BR_FAILED_REPLY
+          """),
+        query="""
+      SELECT
+        dur
+      FROM slice
+      ORDER BY dur;
+      """,
+        out=Csv("""
+      "dur"
+      46000
+      539000
+      """))
+
+  def test_binder_txn_oneway_good(self):
+    return DiffTestBlueprint(
+        trace=Systrace(
+            """          client-521406  [003] ..... 137020.679833: binder_command: cmd=0x40406300 BC_TRANSACTION
+          client-521406  [003] ..... 137020.679834: binder_transaction: transaction=5161 dest_node=5155 dest_proc=521404 dest_thread=0 reply=0 flags=0x1 code=0x3
+          client-521406  [003] ..... 137020.679843: binder_return: cmd=0x7206 BR_TRANSACTION_COMPLETE
+          server-521404  [006] ..... 137020.679890: binder_transaction_received: transaction=5161
+          server-521404  [006] ..... 137020.679890: binder_return: cmd=0x80407202 BR_TRANSACTION
+          """),
+        query="""
+      SELECT
+        dur
+      FROM slice
+      ORDER BY dur;
+      """,
+        out=Csv("""
+      "dur"
+      0
+      0
+      """))
+
+  def test_android_user_list_dedup(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_pid: 1
+          user_list {
+            users {
+              type: "android.os.usertype.full.SECONDARY"
+              uid: 10
+            }
+          }
+        }
+        packet {
+          trusted_pid: 2
+          user_list {
+            users {
+              type: "android.os.usertype.full.SECONDARY"
+              uid: 10
+            }
+          }
+        }
+        """),
+        query="""
+        INCLUDE PERFETTO MODULE android.user_list;
+        SELECT android_user_id, type FROM android_user_list
+        ORDER BY android_user_id;
+        """,
+        out=Csv("""
+        "android_user_id","type"
+        10,"android.os.usertype.full.SECONDARY"
+        """))
+
+  # Tests when counter_tack.machine_id is not null.
+  def test_android_system_property_counter_machine_id(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          timestamp: 1000
+          android_system_property {
+            values {
+              name: "debug.tracing.screen_state"
+              value: "2"
+            }
+            values {
+              name: "debug.tracing.device_state"
+              value: "some_state_from_sysprops"
+            }
+          }
+          machine_id: 1001
+        }
+        packet {
+          ftrace_events {
+            cpu: 1
+            event {
+              timestamp: 2000
+              pid: 1
+              print {
+                buf: "C|1000|ScreenState|1\n"
+              }
+            }
+            event {
+              timestamp: 3000
+              pid: 1
+              print {
+                buf: "N|1000|DeviceStateChanged|some_state_from_atrace\n"
+              }
+            }
+          }
+          machine_id: 1001
+        }
+        """),
+        query="""
+        SELECT t.name, c.id, c.ts, c.value
+        FROM counter_track t JOIN counter c ON t.id = c.track_id
+        WHERE name = 'ScreenState'
+          AND t.machine_id IS NOT NULL;
+        """,
+        out=Csv("""
+          "name","id","ts","value"
+          "ScreenState",0,1000,2.000000
+          "ScreenState",1,2000,1.000000
+        """))
+
+  def test_android_framework_track_event_process(self):
+    return DiffTestBlueprint(
+        trace=Path('android_framework_track_event.textproto'),
+        query="""
+        SELECT
+          p.pid,
+          p.name,
+          p.uid,
+          t.start_seq_id,
+          t.package_uid,
+          t.caller_uid,
+          t.defining_uid,
+          t.fw_start_ts,
+          t.fw_end_ts
+        FROM __intrinsic_android_track_event_process t
+        JOIN process p USING (upid);
+        """,
+        out=Csv("""
+          "pid","name","uid","start_seq_id","package_uid","caller_uid","defining_uid","fw_start_ts","fw_end_ts"
+          100,"com.example.app",10001,42,10002,10003,10004,2000,5000
+        """))
+
+  def test_android_framework_track_event_process_died(self):
+    return DiffTestBlueprint(
+        trace=Path('android_framework_track_event_process_died.textproto'),
+        query="""
+        SELECT
+          p.pid,
+          t.start_seq_id,
+          t.fw_start_ts,
+          t.fw_end_ts,
+          p.end_ts,
+          t.exit_reason,
+          t.exit_sub_reason
+        FROM __intrinsic_android_track_event_process t
+        JOIN process p USING (upid)
+        ORDER BY p.pid, t.upid;
+        """,
+        out=Csv("""
+          "pid","start_seq_id","fw_start_ts","fw_end_ts","end_ts","exit_reason","exit_sub_reason"
+          100,1,1000000000,2000000000,2000000000,"APP_EXIT_REASON_CRASH","APP_EXIT_SUBREASON_TOO_MANY_CACHED"
+          100,3,3000000000,"[NULL]","[NULL]","[NULL]","[NULL]"
+          200,2,1000000000,3000000000,3000000000,"APP_EXIT_REASON_ANR","[NULL]"
+          300,4,1000000000,"[NULL]","[NULL]","APP_EXIT_REASON_ANR","[NULL]"
+          400,5,"[NULL]",2000000000,2000000000,"APP_EXIT_REASON_LOW_MEMORY","[NULL]"
+          500,6,1000000000,"[NULL]","[NULL]","[NULL]","[NULL]"
+          600,"[NULL]","[NULL]","[NULL]","[NULL]","APP_EXIT_REASON_SIGNALED","[NULL]"
+          700,7,"[NULL]",2000000000,2000000000,"APP_EXIT_REASON_FREEZER","[NULL]"
+          800,9,1000000000,"[NULL]","[NULL]","[NULL]","[NULL]"
+          1100,10,1000000000,4000000000,2000000000,"[NULL]","[NULL]"
+          1100,11,3000000000,"[NULL]","[NULL]","[NULL]","[NULL]"
+        """))
+
+  def test_android_framework_track_event_enum(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor { uuid: 2 thread { pid: 100 tid: 100 } }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 100
+          extension_descriptor {
+            extension_set {
+              file {
+                package: "com.android.internal"
+                name: "fbte_enums.proto"
+                enum_type {
+                  name: "TriggerType"
+                  value { name: "TRIGGER_TYPE_UNKNOWN" number: 0 }
+                  value { name: "TRIGGER_TYPE_JOB" number: 4 }
+                }
+                enum_type {
+                  name: "HostingTypeId"
+                  value { name: "HOSTING_TYPE_UNKNOWN" number: 0 }
+                  value { name: "HOSTING_TYPE_SERVICE" number: 11 }
+                }
+              }
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 2000
+          track_event {
+            track_uuid: 2
+            type: TYPE_INSTANT
+            [com.android.internal.FrameworksBaseTrackEvent.process_start_event] {
+              pid: 100
+              trigger_type: TRIGGER_TYPE_JOB
+              hosting_type: HOSTING_TYPE_SERVICE
+            }
+          }
+        }
+        """),
+        query="""
+        SELECT trigger_type, hosting_type
+        FROM __intrinsic_android_track_event_process;
+        """,
+        out=Csv("""
+          "trigger_type","hosting_type"
+          "TRIGGER_TYPE_JOB","HOSTING_TYPE_SERVICE"
+        """))
+
+  def test_android_process_state(self):
+    return DiffTestBlueprint(
+        trace=Path('android_process_state.textproto'),
+        query="""
+        SELECT
+          t.ts,
+          p.pid,
+          t.proc_state,
+          t.oom_score,
+          t.capability_flags,
+          t.process_group,
+          t.reason,
+          t.seq_id,
+          t.is_initial
+        FROM __intrinsic_android_process_state t
+        JOIN process p USING (upid)
+        ORDER BY p.pid, t.ts, t.reason;
+        """,
+        out=Csv("""
+          "ts","pid","proc_state","oom_score","capability_flags","process_group","reason","seq_id","is_initial"
+          "[NULL]",100,"PROCESS_STATE_TOP",0,1,"PROCESS_GROUP_TOP_APP","[NULL]","[NULL]",1
+          "[NULL]",200,"PROCESS_STATE_TOP",0,1,"PROCESS_GROUP_TOP_APP","[NULL]","[NULL]",1
+          2000,200,"PROCESS_STATE_IMPORTANT_FOREGROUND",200,0,"PROCESS_GROUP_FOREGROUND","OOM_ADJ_REASON_START_RECEIVER",10,0
+          4000,200,"PROCESS_STATE_CACHED_ACTIVITY",900,0,"PROCESS_GROUP_BACKGROUND","OOM_ADJ_REASON_BIND_SERVICE",11,0
+          "[NULL]",300,"PROCESS_STATE_PERSISTENT",-1000,1,"PROCESS_GROUP_SYSTEM","[NULL]","[NULL]",1
+          "[NULL]",400,"PROCESS_STATE_FOREGROUND_SERVICE",0,0,"PROCESS_GROUP_UNKNOWN","[NULL]","[NULL]",1
+          "[NULL]",500,"PROCESS_STATE_TOP",0,1,"PROCESS_GROUP_TOP_APP","[NULL]","[NULL]",1
+          2000,500,"PROCESS_STATE_IMPORTANT_FOREGROUND",300,0,"PROCESS_GROUP_BACKGROUND","OOM_ADJ_REASON_BIND_SERVICE",21,0
+          2000,500,"PROCESS_STATE_BOUND_FOREGROUND_SERVICE",250,0,"PROCESS_GROUP_FOREGROUND","OOM_ADJ_REASON_START_RECEIVER",20,0
+        """))
+
+  def test_android_freezer_state(self):
+    return DiffTestBlueprint(
+        trace=Path('android_process_state.textproto'),
+        query="""
+        SELECT
+          t.ts,
+          p.pid,
+          t.unfrozen_dur_ms,
+          t.frozen_dur_ms,
+          t.unfreeze_reason,
+          t.is_initial
+        FROM __intrinsic_android_freezer_state t
+        JOIN process p USING (upid)
+        ORDER BY p.pid, t.ts;
+        """,
+        out=Csv("""
+          "ts","pid","unfrozen_dur_ms","frozen_dur_ms","unfreeze_reason","is_initial"
+          "[NULL]",100,"[NULL]","[NULL]","UFR_ACTIVITY",1
+          3000,200,100,300,"UFR_BIND_SERVICE",0
+          "[NULL]",600,"[NULL]","[NULL]","UFR_PING",1
+          "[NULL]",700,"[NULL]","[NULL]","UFR_NONE",1
+          "[NULL]",800,"[NULL]","[NULL]","[NULL]",1
+        """))
+
+  def test_android_process_state_metadata(self):
+    return DiffTestBlueprint(
+        trace=Path('android_process_state_metadata.textproto'),
+        query="""
+        SELECT
+          p.pid,
+          p.name,
+          p.uid,
+          p.android_user_id,
+          t.start_seq_id,
+          t.fw_start_ts,
+          t.fw_end_ts,
+          p.end_ts
+        FROM process p
+        LEFT JOIN __intrinsic_android_track_event_process t
+          ON t.upid = p.upid
+        WHERE p.pid > 0
+        ORDER BY p.pid;
+        """,
+        out=Csv("""
+          "pid","name","uid","android_user_id","start_seq_id","fw_start_ts","fw_end_ts","end_ts"
+          100,"com.example.appa",10001,0,1,1000000000,"[NULL]","[NULL]"
+          200,"com.example.dumps_only",20001,0,10,"[NULL]","[NULL]","[NULL]"
+          300,"system_server",1000,0,"[NULL]","[NULL]","[NULL]","[NULL]"
+          400,"com.example.pre_existing",40001,0,5,"[NULL]",3000000000,3000000000
+          500,"com.example.started_late",50001,0,6,2000000000,"[NULL]","[NULL]"
+        """))
+
+  def test_android_process_state_metadata_freezer(self):
+    return DiffTestBlueprint(
+        trace=Path('android_process_state_metadata.textproto'),
+        query="""
+        SELECT t.ts, p.pid, t.unfreeze_reason, t.is_initial
+        FROM __intrinsic_android_freezer_state t
+        JOIN process p USING (upid)
+        ORDER BY p.pid, t.ts;
+        """,
+        out=Csv("""
+          "ts","pid","unfreeze_reason","is_initial"
+          "[NULL]",200,"UFR_PING",1
+          2500000000,400,"UFR_BINDER_TXNS",0
+        """))
+
+  def test_android_process_state_metadata_state(self):
+    return DiffTestBlueprint(
+        trace=Path('android_process_state_metadata.textproto'),
+        query="""
+        SELECT
+          t.ts,
+          p.pid,
+          t.proc_state,
+          t.oom_score,
+          t.capability_flags,
+          t.process_group,
+          t.reason,
+          t.seq_id,
+          t.is_initial
+        FROM __intrinsic_android_process_state t
+        JOIN process p USING (upid)
+        ORDER BY p.pid, t.ts;
+        """,
+        out=Csv("""
+          "ts","pid","proc_state","oom_score","capability_flags","process_group","reason","seq_id","is_initial"
+          "[NULL]",100,"PROCESS_STATE_TOP",100,0,"PROCESS_GROUP_TOP_APP","[NULL]","[NULL]",1
+          "[NULL]",200,"PROCESS_STATE_PERSISTENT",-1000,0,"PROCESS_GROUP_SYSTEM","[NULL]","[NULL]",1
+          "[NULL]",300,"PROCESS_STATE_PERSISTENT",-1000,0,"PROCESS_GROUP_UNKNOWN","[NULL]","[NULL]",1
+          "[NULL]",400,"PROCESS_STATE_TOP",0,1,"PROCESS_GROUP_TOP_APP","[NULL]","[NULL]",1
+          2000000000,400,"PROCESS_STATE_IMPORTANT_FOREGROUND",200,0,"PROCESS_GROUP_FOREGROUND","OOM_ADJ_REASON_START_RECEIVER",7,0
+          "[NULL]",500,"PROCESS_STATE_TOP",100,0,"PROCESS_GROUP_TOP_APP","[NULL]","[NULL]",1
+        """))
+
+  def test_android_process_state_capability_flags(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          timestamp: 500
+          process_tree {
+            processes { pid: 100 ppid: 1 cmdline: "proc100" }
+          }
+        }
+        packet {
+          timestamp: 1000
+          track_descriptor {
+            uuid: 1
+            thread { pid: 100 tid: 100 thread_name: "main" }
+          }
+        }
+        packet {
+          timestamp: 2000
+          trusted_packet_sequence_id: 1
+          track_event {
+            type: TYPE_INSTANT
+            track_uuid: 1
+            name: "proc_state_change"
+            [com.android.internal.FrameworksBaseTrackEvent.process_state_changed_event] {
+              pid: 100
+              uid: 10001
+              prev_proc_state: PROCESS_STATE_TOP
+              cur_proc_state: PROCESS_STATE_FOREGROUND_SERVICE
+              prev_capability_flags: 3
+              cur_capability_flags: -2147483131
+            }
+          }
+        }
+        """),
+        query="""
+        SELECT
+          t.ts,
+          t.is_initial,
+          t.capability_flags,
+          a.flat_key,
+          a.key,
+          a.string_value,
+          a.value_type
+        FROM __intrinsic_android_process_state t
+        JOIN args a USING (arg_set_id)
+        ORDER BY t.is_initial DESC, a.key;
+        """,
+        out=Csv("""
+          "ts","is_initial","capability_flags","flat_key","key","string_value","value_type"
+          "[NULL]",1,3,"capability_flags","capability_flags[0]","PROCESS_CAPABILITY_FOREGROUND_LOCATION","string"
+          "[NULL]",1,3,"capability_flags","capability_flags[1]","PROCESS_CAPABILITY_FOREGROUND_CAMERA","string"
+          2000,0,-2147483131,"capability_flags","capability_flags[0]","PROCESS_CAPABILITY_FOREGROUND_LOCATION","string"
+          2000,0,-2147483131,"capability_flags","capability_flags[1]","PROCESS_CAPABILITY_FOREGROUND_MICROPHONE","string"
+          2000,0,-2147483131,"capability_flags","capability_flags[2]","0x80000200","string"
+        """))
+
+  def test_android_service_state_changed_flags(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          timestamp: 1000
+          track_descriptor {
+            uuid: 1
+            thread { pid: 100 tid: 100 thread_name: "main" }
+          }
+        }
+        packet {
+          timestamp: 2000
+          trusted_packet_sequence_id: 1
+          track_event {
+            type: TYPE_INSTANT
+            track_uuid: 1
+            name: "fgs_start"
+            [com.android.internal.FrameworksBaseTrackEvent.fg_service_state_changed_event] {
+              pid: 100
+              uid: 10001
+              component_name: "com.example/.MyFgService"
+              foreground_service_type: -2147483639
+            }
+          }
+        }
+        packet {
+          timestamp: 3000
+          trusted_packet_sequence_id: 1
+          track_event {
+            type: TYPE_INSTANT
+            track_uuid: 1
+            name: "service_binding"
+            [com.android.internal.FrameworksBaseTrackEvent.service_state_changed_event] {
+              pid: 100
+              uid: 10001
+              component_name: "com.example/.MyBoundService"
+              bind_flags_32: -2147482559
+              bind_flags_32_to_64: 5
+            }
+          }
+        }
+        """),
+        query="""
+        SELECT
+          s.ts,
+          s.name,
+          a.flat_key,
+          a.key,
+          a.string_value,
+          a.value_type
+        FROM slice s
+        JOIN args a USING (arg_set_id)
+        WHERE a.flat_key GLOB '*foreground_service_type'
+           OR a.flat_key GLOB '*bind_flags*'
+        ORDER BY s.ts, a.key;
+        """,
+        out=Csv("""
+          "ts","name","flat_key","key","string_value","value_type"
+          2000,"fgs_start","fg_service_state_changed_event.foreground_service_type","fg_service_state_changed_event.foreground_service_type[0]","FOREGROUND_SERVICE_TYPE_DATA_SYNC","string"
+          2000,"fgs_start","fg_service_state_changed_event.foreground_service_type","fg_service_state_changed_event.foreground_service_type[1]","FOREGROUND_SERVICE_TYPE_LOCATION","string"
+          2000,"fgs_start","fg_service_state_changed_event.foreground_service_type","fg_service_state_changed_event.foreground_service_type[2]","0x80000000","string"
+          3000,"service_binding","service_state_changed_event.bind_flags_32","service_state_changed_event.bind_flags_32[0]","SERVICE_BIND_FLAG_AUTO_CREATE","string"
+          3000,"service_binding","service_state_changed_event.bind_flags_32","service_state_changed_event.bind_flags_32[1]","SERVICE_BIND_FLAG_IMPORTANT","string"
+          3000,"service_binding","service_state_changed_event.bind_flags_32","service_state_changed_event.bind_flags_32[2]","SERVICE_BIND_FLAG_EXTERNAL_SERVICE","string"
+          3000,"service_binding","service_state_changed_event.bind_flags_32","service_state_changed_event.bind_flags_32[3]","0x400","string"
+          3000,"service_binding","service_state_changed_event.bind_flags_32_to_64","service_state_changed_event.bind_flags_32_to_64[0]","SERVICE_BIND_FLAG_LONG_BYPASS_USER_NETWORK_RESTRICTIONS","string"
+          3000,"service_binding","service_state_changed_event.bind_flags_32_to_64","service_state_changed_event.bind_flags_32_to_64[1]","SERVICE_BIND_FLAG_LONG_ALLOW_FREEZE","string"
+        """))

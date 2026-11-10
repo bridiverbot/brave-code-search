@@ -1,0 +1,129 @@
+name: Rust
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Clippy
+      run: cargo clippy --workspace --exclude bind9-tests --all-features -- -D warnings 
+
+  test-dev:
+    name: Test Dev on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-14]
+      
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: cargo build --workspace --exclude simple-dns-fuzz --exclude bind9-tests --verbose --all-features
+    - name: Run tests
+      run: cargo test --workspace --exclude simple-dns-fuzz --exclude bind9-tests --verbose --all-features
+
+  test-release:
+    name: Test Release on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-14]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: cargo build --workspace --exclude simple-dns-fuzz --exclude bind9-tests --verbose --release --all-features
+    - name: Run tests
+      run: cargo test --workspace --exclude simple-dns-fuzz --exclude bind9-tests --verbose --release --all-features
+
+  fuzzing:
+    name: Fuzz 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@nightly
+    - name: Install cargo-fuzz
+      run: |
+        cargo install cargo-fuzz
+    - name: Run Fuzzing
+      run: |
+        cd simple-dns
+        cargo fuzz run packet_parse -- -max_total_time=300 -timeout=5
+
+  test-bind-check:
+    name: Test Bind9 check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - name: Install build dependencies
+      run: sudo apt-get update && sudo apt-get install -y liburcu-dev libcap-dev libssl-dev libuv1-dev
+    - name: Compile bind9
+      run: |
+        cd bind9
+        autoreconf -fi
+        ./configure --disable-doh
+        make
+    - name: Run tests
+      run: |
+        cd bind9-tests
+        RUSTFLAGS="-C linker-features=-lld" cargo test --verbose
+
+  test-no-std:
+    name: Test no_std
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: stable
+        targets: thumbv6m-none-eabi
+    - name: Build
+      run: cargo build --target thumbv6m-none-eabi --no-default-features --features alloc --package simple-dns
+    # - name: Run tests
+    #   run: cargo test --target thumbv6m-none-eabi --no-default-features --features alloc --package simple-dns
+
+  release-simple-dns:
+    name: Release simple-dns
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: [clippy, test-dev, test-release, fuzzing, test-bind-check, test-no-std]
+    permissions:
+      contents: write
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect version and release
+        run: bash .github/scripts/release-crate.sh simple-dns
+
+  release-simple-mdns:
+    name: Release simple-mdns
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: [clippy, test-dev, test-release, fuzzing, test-bind-check, test-no-std]
+    permissions:
+      contents: write
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect version and release
+        run: bash .github/scripts/release-crate.sh simple-mdns

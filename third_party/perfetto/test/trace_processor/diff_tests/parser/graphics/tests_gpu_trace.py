@@ -1,0 +1,1312 @@
+#!/usr/bin/env python3
+# Copyright (C) 2023 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from python.generators.diff_tests.testing import Path, DataPath, Metric
+from python.generators.diff_tests.testing import Csv, Json, TextProto
+from python.generators.diff_tests.testing import DiffTestBlueprint, TraceInjector
+from python.generators.diff_tests.testing import TestSuite
+
+# vkSetDebugUtilsObjectNameEXT history of framebuffer handle 4096 on two
+# devices: named, renamed twice at the same timestamp, cleared with an empty
+# name without affecting a render pass with the same handle value (4096), and
+# then named again when the handle is reused on device 100, plus a render pass
+# with zero pid/vk_device whose omitted name is a tombstone and VK_NULL_HANDLE /
+# omitted-object events that are dropped.
+_VULKAN_DEBUG_NAMES_TRACE = r"""
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 10
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 42
+      vk_device: 100
+      object_type: 24
+      object: 4096
+      object_name: "swapchain_framebuffer"
+    }
+  }
+}
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 20
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 42
+      vk_device: 100
+      object_type: 24
+      object: 4096
+      object_name: "shadow_framebuffer"
+    }
+  }
+}
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 20
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 42
+      vk_device: 100
+      object_type: 24
+      object: 4096
+      object_name: "shadow_framebuffer_v2"
+    }
+  }
+}
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 25
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 42
+      vk_device: 100
+      object_type: 18
+      object: 4096
+      object_name: "main_render_pass"
+    }
+  }
+}
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 30
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 42
+      vk_device: 200
+      object_type: 24
+      object: 4096
+      object_name: "offscreen_framebuffer"
+    }
+  }
+}
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 40
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 42
+      vk_device: 100
+      object_type: 24
+      object: 4096
+      object_name: ""
+    }
+  }
+}
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 50
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 0
+      vk_device: 0
+      object_type: 18
+      object: 8192
+    }
+  }
+}
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 60
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 42
+      vk_device: 100
+      object_type: 18
+      object: 0
+      object_name: "null_handle_is_dropped"
+    }
+  }
+}
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 65
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 42
+      vk_device: 100
+      object_type: 24
+      object_name: "omitted_handle_is_dropped"
+    }
+  }
+}
+packet {
+  trusted_packet_sequence_id: 1
+  timestamp: 70
+  vulkan_api_event {
+    vk_debug_utils_object_name {
+      pid: 42
+      vk_device: 100
+      object_type: 24
+      object: 4096
+      object_name: "swapchain_framebuffer_reused"
+    }
+  }
+}
+"""
+
+
+class GraphicsGpuTrace(TestSuite):
+
+  def test_gpu_counters(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_counters.py'),
+        query="""
+        SELECT "ts", "value", "name", "gpu_id", "description", "unit"
+        FROM counter
+        JOIN gpu_counter_track
+          ON counter.track_id = gpu_counter_track.id
+        ORDER BY "ts";
+        """,
+        out=Csv("""
+        "ts","value","name","gpu_id","description","unit"
+        11,10.000000,"Vertex / Second",0,"Number of vertices per second","Vertex/s"
+        12,14.000000,"Fragment / Second",0,"Number of fragments per second","Pixel/s"
+        14,9.000000,"Triangle Acceleration",1,"Number of triangles per ms-ms","Triangle/ms:ms"
+        15,0.000000,"Bytes Only",0,"Counter with NONE denominator","B"
+        16,0.000000,"Frequency",0,"Counter with numerator only","Hz"
+        21,15.500000,"Vertex / Second",0,"Number of vertices per second","Vertex/s"
+        22,21.000000,"Fragment / Second",0,"Number of fragments per second","Pixel/s"
+        24,7.000000,"Triangle Acceleration",1,"Number of triangles per ms-ms","Triangle/ms:ms"
+        25,0.000000,"Bytes Only",0,"Counter with NONE denominator","B"
+        26,0.000000,"Frequency",0,"Counter with numerator only","Hz"
+        31,0.000000,"Vertex / Second",0,"Number of vertices per second","Vertex/s"
+        32,0.000000,"Fragment / Second",0,"Number of fragments per second","Pixel/s"
+        34,0.000000,"Triangle Acceleration",1,"Number of triangles per ms-ms","Triangle/ms:ms"
+        """))
+
+  def test_gpu_counters_forwards_looking(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_counters_forwards_looking.py'),
+        query="""
+        SELECT ts, value
+        FROM counter
+        JOIN gpu_counter_track ON counter.track_id = gpu_counter_track.id
+        WHERE gpu_counter_track.name = 'forward_counter'
+        ORDER BY ts;
+        """,
+        out=Csv("""
+        "ts","value"
+        10,100.000000
+        20,0.000000
+        30,0.000000
+        40,50.000000
+        """))
+
+  def test_gpu_table(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_counters.py'),
+        query="""
+        SELECT gpu, name, vendor, model, architecture, uuid, machine_id
+        FROM gpu
+        ORDER BY gpu;
+        """,
+        out=Csv("""
+        "gpu","name","vendor","model","architecture","uuid","machine_id"
+        0,"[NULL]","[NULL]","[NULL]","[NULL]","[NULL]",0
+        1,"[NULL]","[NULL]","[NULL]","[NULL]","[NULL]",0
+        """))
+
+  def test_gpu_info(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_info.textproto'),
+        query="""
+        SELECT gpu, name, vendor, model, architecture, uuid, pci_bdf
+        FROM gpu
+        ORDER BY gpu;
+        """,
+        out=Csv("""
+        "gpu","name","vendor","model","architecture","uuid","pci_bdf"
+        0,"NVIDIA A100-SXM4-80GB","NVIDIA","A100","Ampere","0123456789abcdef0123456789abcdef","0000:01:00.0"
+        1,"NVIDIA A100-SXM4-80GB","NVIDIA","A100","Ampere","abcdefabcdefabcdabcdefabcdefabcd","0000:02:00.0"
+        """))
+
+  def test_gpu_info_extra_args(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_info.textproto'),
+        query="""
+        SELECT
+          g.gpu,
+          args.key,
+          args.string_value
+        FROM gpu g
+        JOIN args USING (arg_set_id)
+        ORDER BY g.gpu, args.key;
+        """,
+        out=Csv("""
+        "gpu","key","string_value"
+        0,"driver_version","535.129.03"
+        0,"memory_total_mb","81920"
+        """))
+
+  def test_gpu_table_machine_id(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_counters.py'),
+        trace_modifier=TraceInjector(['gpu_counter_event'],
+                                     {'machine_id': 1001}),
+        query="""
+        SELECT gpu, machine_id
+        FROM gpu
+        ORDER BY gpu;
+        """,
+        out=Csv("""
+        "gpu","machine_id"
+        0,0
+        1,0
+        """))
+
+  def test_gpu_counter_specs(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_counter_specs.textproto'),
+        query="""
+        SELECT group_id, c.name, c.description, unit
+        FROM gpu_counter_group AS g
+        JOIN gpu_counter_track AS c
+          ON g.track_id = c.id;
+        """,
+        out=Csv("""
+        "group_id","name","description","unit"
+        0,"GPU Frequency","clock speed","/s"
+        3,"Fragments / vertex","Number of fragments per vertex","Fragment/Vertex"
+        2,"Fragments / vertex","Number of fragments per vertex","Fragment/Vertex"
+        3,"Fragment / Second","Number of fragments per second","Pixel/s"
+        4,"Triangle Acceleration","Number of triangles per ms-ms","Triangle/ms:ms"
+        """))
+
+  def test_gpu_counter_groups_custom(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_counter_groups_custom.textproto'),
+        query="""
+        SELECT g.group_id, g.name, g.description,
+               t.name as track_name
+        FROM gpu_counter_group AS g
+        JOIN gpu_counter_track AS t
+          ON g.track_id = t.id
+        ORDER BY g.group_id, g.name, t.name;
+        """,
+        out=Csv("""
+        "group_id","name","description","track_name"
+        0,"[NULL]","[NULL]","Counter D"
+        5,"Memory","Memory counters","Counter C"
+        5,"Memory","Memory counters","Counter D"
+        6,"Compute Core","Compute core counters","Counter A"
+        6,"Compute Core","Compute core counters","Counter B"
+        100,"L2 Cache","L2 cache counters","Counter C"
+        """))
+
+  def test_gpu_context(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_context.textproto'),
+        query="""
+        INCLUDE PERFETTO MODULE std.gpu.context;
+        SELECT context_id, pid, api
+        FROM gpu_context
+        ORDER BY context_id;
+        """,
+        out=Csv("""
+        "context_id","pid","api"
+        1,100,"VULKAN"
+        2,200,"CUDA"
+        """))
+
+  def test_gpu_render_stages(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_render_stages.py'),
+        query='''
+          SELECT
+            g.name AS track_name,
+            g.description AS track_desc,
+            ts,
+            dur,
+            s.name AS slice_name,
+            depth,
+            args.flat_key,
+            args.string_value,
+            s.context_id,
+            render_target,
+            render_target_name,
+            render_pass,
+            render_pass_name,
+            command_buffer,
+            command_buffer_name,
+            submission_id,
+            hw_queue_id,
+            render_subpasses
+          FROM gpu_track g
+          JOIN gpu_slice s ON g.id = s.track_id
+          LEFT JOIN (
+            SELECT arg_set_id, flat_key, string_value
+            FROM args
+            WHERE args.key IS NULL OR args.key NOT IN (
+              'context_id',
+              'render_target',
+              'render_target_name',
+              'render_pass',
+              'render_pass_name',
+              'command_buffer',
+              'command_buffer_name',
+              'submission_id',
+              'hw_queue_id',
+              'render_subpasses',
+              'render_stage_category',
+              'render_stage_name',
+              'upid'
+            )
+          ) args USING (arg_set_id)
+          ORDER BY ts;
+        ''',
+        out=Csv('''
+          "track_name","track_desc","ts","dur","slice_name","depth","flat_key","string_value","context_id","render_target","render_target_name","render_pass","render_pass_name","command_buffer","command_buffer_name","submission_id","hw_queue_id","render_subpasses"
+          "queue 1","queue desc 1",0,5,"render stage(1)",0,"[NULL]","[NULL]",0,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,1,"[NULL]"
+          "queue 0","queue desc 0",0,5,"stage 0",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"[NULL]"
+          "queue 1","queue desc 1",10,5,"stage 1",0,"description","stage desc 1",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,1,"[NULL]"
+          "queue 2","[NULL]",20,5,"stage 2",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,2,"[NULL]"
+          "queue 0","queue desc 0",30,5,"stage 3",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"[NULL]"
+          "Unknown GPU Queue 3","[NULL]",40,5,"render stage(4)",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,3,"[NULL]"
+          "queue 0","queue desc 0",50,5,"stage 0",0,"key1","value1",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"[NULL]"
+          "queue 0","queue desc 0",60,5,"stage 0",0,"key1","value1",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"[NULL]"
+          "queue 0","queue desc 0",60,5,"stage 0",0,"key2","value2",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"[NULL]"
+          "queue 0","queue desc 0",70,5,"stage 0",0,"key1","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"[NULL]"
+          "queue 0","queue desc 0",80,5,"stage 2",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"[NULL]"
+          "queue 0","queue desc 0",90,5,"stage 0",0,"[NULL]","[NULL]",42,16,"[NULL]",32,"[NULL]",48,"[NULL]",0,0,"[NULL]"
+          "queue 0","queue desc 0",100,5,"stage 0",0,"[NULL]","[NULL]",42,16,"[NULL]",16,"[NULL]",16,"command_buffer",0,0,"[NULL]"
+          "queue 0","queue desc 0",110,5,"stage 0",0,"[NULL]","[NULL]",42,16,"[NULL]",16,"render_pass",16,"command_buffer",0,0,"[NULL]"
+          "queue 0","queue desc 0",120,5,"stage 0",0,"correlation_id","rp:#42",42,16,"framebuffer",16,"render_pass",16,"command_buffer",0,0,"[NULL]"
+          "queue 0","queue desc 0",130,5,"stage 0",0,"[NULL]","[NULL]",42,16,"renamed_buffer",0,"[NULL]",0,"[NULL]",0,0,"[NULL]"
+          "Unknown GPU Queue 4294967295","[NULL]",140,5,"render stage(18446744073709551615)",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,4294967295,"[NULL]"
+          "queue 0","queue desc 0",150,5,"stage 0",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"0"
+          "queue 0","queue desc 0",160,5,"stage 0",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"63,64"
+          "queue 0","queue desc 0",170,5,"stage 0",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"64"
+          "queue 0","queue desc 0",180,5,"stage 0",0,"[NULL]","[NULL]",42,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,0,"3,68,69,70,71"
+      '''))
+
+  def test_gpu_render_stages_interned_spec(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_render_stages_interned_spec.textproto'),
+        query='''
+          SELECT
+            g.name AS track_name,
+            g.description AS track_desc,
+            ts,
+            dur,
+            s.name AS slice_name,
+            depth,
+            args.flat_key,
+            args.string_value,
+            s.context_id,
+            render_target,
+            render_target_name,
+            render_pass,
+            render_pass_name,
+            command_buffer,
+            command_buffer_name,
+            submission_id,
+            hw_queue_id,
+            render_subpasses
+          FROM gpu_track g
+          JOIN gpu_slice s ON g.id = s.track_id
+          LEFT JOIN (
+            SELECT arg_set_id, flat_key, string_value
+            FROM args
+            WHERE args.key IS NULL OR args.key NOT IN (
+              'context_id',
+              'render_target',
+              'render_target_name',
+              'render_pass',
+              'render_pass_name',
+              'command_buffer',
+              'command_buffer_name',
+              'submission_id',
+              'hw_queue_id',
+              'render_subpasses',
+              'render_stage_category',
+              'render_stage_name',
+              'upid'
+            )
+          ) args USING (arg_set_id)
+          ORDER BY ts;
+        ''',
+        out=Csv('''
+          "track_name","track_desc","ts","dur","slice_name","depth","flat_key","string_value","context_id","render_target","render_target_name","render_pass","render_pass_name","command_buffer","command_buffer_name","submission_id","hw_queue_id","render_subpasses"
+          "vertex","vertex queue",100,10,"binning",0,"description","binning graphics",0,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,1,"[NULL]"
+          "fragment","fragment queue",200,10,"render",0,"description","render graphics",0,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,2,"[NULL]"
+          "queue2","queue2 description",300,10,"render",0,"description","render graphics",0,0,"[NULL]",0,"[NULL]",0,"[NULL]",0,1,"[NULL]"
+        '''))
+
+  def test_vulkan_api_events(self):
+    return DiffTestBlueprint(
+        trace=Path('vulkan_api_events.py'),
+        query="""
+        SELECT
+          g.name AS track_name,
+          g.description AS track_desc,
+          ts,
+          dur,
+          s.name AS slice_name,
+          depth,
+          s.context_id,
+          command_buffer,
+          extract_arg(s.arg_set_id, 'command_buffers[0]') as cb0,
+          extract_arg(s.arg_set_id, 'command_buffers[1]') as cb1,
+          extract_arg(s.arg_set_id, 'command_buffers[2]') as cb2,
+          submission_id,
+          extract_arg(s.arg_set_id, 'tid') as tid,
+          extract_arg(s.arg_set_id, 'pid') as pid
+        FROM gpu_track g
+        JOIN gpu_slice s ON g.id = s.track_id
+        ORDER BY ts;
+        """,
+        out=Csv('''
+          "track_name","track_desc","ts","dur","slice_name","depth","context_id","command_buffer","cb0","cb1","cb2","submission_id","tid","pid"
+          "Vulkan Events","[NULL]",10,2,"vkQueueSubmit",0,"[NULL]",100,100,"[NULL]","[NULL]",1,43,42
+          "Vulkan Events","[NULL]",20,2,"vkQueueSubmit",0,"[NULL]",200,200,300,400,2,45,44
+        '''))
+
+  def test_vulkan_debug_names(self):
+    return DiffTestBlueprint(
+        trace=TextProto(_VULKAN_DEBUG_NAMES_TRACE),
+        query="""
+        INCLUDE PERFETTO MODULE std.gpu.vulkan_debug_names;
+        SELECT
+          d.ts,
+          p.pid,
+          d.vk_device,
+          d.object_type,
+          d.object,
+          d.name
+        FROM gpu_vulkan_debug_names d
+        LEFT JOIN process p USING (upid)
+        ORDER BY d.ts, d.id;
+        """,
+        out=Csv('''
+          "ts","pid","vk_device","object_type","object","name"
+          10,42,100,24,4096,"swapchain_framebuffer"
+          20,42,100,24,4096,"shadow_framebuffer"
+          20,42,100,24,4096,"shadow_framebuffer_v2"
+          25,42,100,18,4096,"main_render_pass"
+          30,42,200,24,4096,"offscreen_framebuffer"
+          40,42,100,24,4096,"[NULL]"
+          50,"[NULL]","[NULL]",18,8192,"[NULL]"
+          70,42,100,24,4096,"swapchain_framebuffer_reused"
+        '''))
+
+  def test_vulkan_debug_names_point_in_time_lookup(self):
+    # The name in effect at a timestamp is the newest row at or before it,
+    # breaking ties on id. The NULL tombstone hides the cleared name without
+    # affecting the same handle value on another device or another object_type,
+    # and a name set after the tombstone resolves again.
+    return DiffTestBlueprint(
+        trace=TextProto(_VULKAN_DEBUG_NAMES_TRACE),
+        query="""
+        INCLUDE PERFETTO MODULE std.gpu.vulkan_debug_names;
+        WITH snapshot(ts, vk_device, object_type) AS (
+          VALUES
+            (5, 100, 24), (15, 100, 24), (25, 100, 24), (35, 100, 24),
+            (45, 100, 18), (45, 100, 24), (45, 200, 24), (75, 100, 24)
+        )
+        SELECT
+          snapshot.ts AS snapshot_ts,
+          snapshot.vk_device,
+          snapshot.object_type,
+          (
+            SELECT name
+            FROM gpu_vulkan_debug_names
+            WHERE vk_device = snapshot.vk_device
+              AND object_type = snapshot.object_type
+              AND object = 4096
+              AND ts <= snapshot.ts
+            ORDER BY ts DESC, id DESC
+            LIMIT 1
+          ) AS name
+        FROM snapshot
+        ORDER BY snapshot.ts, snapshot.vk_device, snapshot.object_type;
+        """,
+        out=Csv('''
+          "snapshot_ts","vk_device","object_type","name"
+          5,100,24,"[NULL]"
+          15,100,24,"swapchain_framebuffer"
+          25,100,24,"shadow_framebuffer_v2"
+          35,100,24,"shadow_framebuffer_v2"
+          45,100,18,"main_render_pass"
+          45,100,24,"[NULL]"
+          45,200,24,"offscreen_framebuffer"
+          75,100,24,"swapchain_framebuffer_reused"
+        '''))
+
+  def test_vulkan_debug_names_render_stage_tombstones(self):
+    # Clearing a high-bit uint64 framebuffer name with "" and destroying the
+    # render pass (object_name omitted) remove their names from later render
+    # stage slices instead of leaving an empty or stale name; the renamed
+    # command buffer resolves to its new name, and so does the framebuffer
+    # handle once it is named again after the tombstone.
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          interned_data {
+            graphics_contexts {
+              iid: 1
+              pid: 42
+              api: VULKAN
+            }
+            gpu_specifications {
+              iid: 1
+              name: "queue 0"
+              description: "queue desc 0"
+            }
+            gpu_specifications {
+              iid: 2
+              name: "stage 0"
+              description: "stage desc 0"
+            }
+          }
+          sequence_flags: 1
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 1
+          vulkan_api_event {
+            vk_debug_utils_object_name {
+              pid: 42
+              vk_device: 9223372036854775809
+              object_type: 24
+              object: 18446744073709551614
+              object_name: "framebuffer"
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 2
+          vulkan_api_event {
+            vk_debug_utils_object_name {
+              pid: 42
+              vk_device: 9223372036854775809
+              object_type: 18
+              object: 32
+              object_name: "render_pass"
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 3
+          vulkan_api_event {
+            vk_debug_utils_object_name {
+              pid: 42
+              vk_device: 9223372036854775809
+              object_type: 6
+              object: 48
+              object_name: "command_buffer"
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 10
+          gpu_render_stage_event {
+            event_id: 1
+            duration: 5
+            hw_queue_iid: 1
+            stage_iid: 2
+            context: 1
+            render_target_handle: 18446744073709551614
+            render_pass_handle: 32
+            command_buffer_handle: 48
+          }
+          sequence_flags: 2
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 20
+          vulkan_api_event {
+            vk_debug_utils_object_name {
+              pid: 42
+              vk_device: 9223372036854775809
+              object_type: 24
+              object: 18446744073709551614
+              object_name: ""
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 21
+          vulkan_api_event {
+            vk_debug_utils_object_name {
+              pid: 42
+              vk_device: 9223372036854775809
+              object_type: 18
+              object: 32
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 22
+          vulkan_api_event {
+            vk_debug_utils_object_name {
+              pid: 42
+              vk_device: 9223372036854775809
+              object_type: 6
+              object: 48
+              object_name: "command_buffer_renamed"
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 30
+          gpu_render_stage_event {
+            event_id: 2
+            duration: 5
+            hw_queue_iid: 1
+            stage_iid: 2
+            context: 1
+            render_target_handle: 18446744073709551614
+            render_pass_handle: 32
+            command_buffer_handle: 48
+          }
+          sequence_flags: 2
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 40
+          vulkan_api_event {
+            vk_debug_utils_object_name {
+              pid: 42
+              vk_device: 9223372036854775809
+              object_type: 24
+              object: 18446744073709551614
+              object_name: "framebuffer_reused"
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 50
+          gpu_render_stage_event {
+            event_id: 3
+            duration: 5
+            hw_queue_iid: 1
+            stage_iid: 2
+            context: 1
+            render_target_handle: 18446744073709551614
+            render_pass_handle: 32
+            command_buffer_handle: 48
+          }
+          sequence_flags: 2
+        }
+        """),
+        query="""
+        INCLUDE PERFETTO MODULE std.gpu.vulkan_debug_names;
+        SELECT
+          s.ts,
+          s.render_target,
+          s.render_target_name,
+          (
+            SELECT v.vk_device
+            FROM gpu_vulkan_debug_names v
+            WHERE v.object = s.render_target
+            LIMIT 1
+          ) AS vk_device,
+          s.render_pass,
+          s.render_pass_name,
+          s.command_buffer,
+          s.command_buffer_name
+        FROM gpu_slice s
+        ORDER BY s.ts;
+        """,
+        out=Csv('''
+          "ts","render_target","render_target_name","vk_device","render_pass","render_pass_name","command_buffer","command_buffer_name"
+          10,-2,"framebuffer",-9223372036854775807,32,"render_pass",48,"command_buffer"
+          30,-2,"[NULL]",-9223372036854775807,32,"[NULL]",48,"command_buffer_renamed"
+          50,-2,"framebuffer_reused",-9223372036854775807,32,"[NULL]",48,"command_buffer_renamed"
+        '''))
+
+  def test_gpu_render_stages_vulkan_debug_names(self):
+    # Every add_vk_debug_marker call of the synthetic gpu_render_stages trace
+    # is recorded as one row with its pid resolved to a process, so the table
+    # also covers traces that were written for render stage naming only.
+    return DiffTestBlueprint(
+        trace=Path('gpu_render_stages.py'),
+        query="""
+        INCLUDE PERFETTO MODULE std.gpu.vulkan_debug_names;
+        SELECT
+          d.ts,
+          p.pid,
+          d.vk_device,
+          d.object_type,
+          d.object,
+          d.name
+        FROM gpu_vulkan_debug_names d
+        LEFT JOIN process p USING (upid)
+        ORDER BY d.ts, d.id;
+        """,
+        out=Csv('''
+          "ts","pid","vk_device","object_type","object","name"
+          91,100,1,6,16,"command_buffer"
+          101,100,1,18,16,"render_pass"
+          111,100,1,24,16,"framebuffer"
+          121,100,1,24,16,"renamed_buffer"
+        '''))
+
+  def test_gpu_log(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_log.py'),
+        query="""
+        SELECT scope, track.name AS track_name, ts, dur, gpu_slice.name AS slice_name,
+          key, string_value AS value
+        FROM gpu_track
+        LEFT JOIN track USING (id)
+        LEFT JOIN gpu_slice ON gpu_track.id = gpu_slice.track_id
+        LEFT JOIN args USING (arg_set_id)
+        ORDER BY ts, slice_name, key;
+        """,
+        out=Csv("""
+        "scope","track_name","ts","dur","slice_name","key","value"
+        "gpu_log","GPU Log",1,0,"VERBOSE","message","message0"
+        "gpu_log","GPU Log",1,0,"VERBOSE","tag","tag0"
+        "gpu_log","GPU Log",2,0,"DEBUG","message","message1"
+        "gpu_log","GPU Log",2,0,"DEBUG","tag","tag0"
+        "gpu_log","GPU Log",3,0,"INFO","message","message2"
+        "gpu_log","GPU Log",3,0,"INFO","tag","tag0"
+        "gpu_log","GPU Log",4,0,"ERROR","message","message4"
+        "gpu_log","GPU Log",4,0,"ERROR","tag","tag0"
+        "gpu_log","GPU Log",4,0,"WARNING","message","message3"
+        "gpu_log","GPU Log",4,0,"WARNING","tag","tag0"
+        "gpu_log","GPU Log",5,0,"VERBOSE","message","message5"
+        "gpu_log","GPU Log",5,0,"VERBOSE","tag","tag1"
+        """))
+
+  def test_gpu_render_stages_overlapping(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_render_stages_overlapping.py'),
+        query='''
+          SELECT
+            g.name AS track_name,
+            ts,
+            dur,
+            s.name AS slice_name,
+            depth
+          FROM gpu_track g
+          JOIN gpu_slice s ON g.id = s.track_id
+          ORDER BY ts;
+        ''',
+        out=Csv('''
+          "track_name","ts","dur","slice_name","depth"
+          "queue 1",100,10,"stage 1",0
+          "queue 1",105,10,"stage 1",0
+        '''))
+
+  def test_gpu_render_stages_per_process(self):
+    return DiffTestBlueprint(
+        trace=DataPath('gpu_render_stages.pftrace'),
+        query='''
+          SELECT
+            CASE
+              WHEN g.name LIKE 'vkcube%' THEN 'vkcube_process'
+              WHEN g.name LIKE 'vulkan_sam%' THEN 'vulkan_sam_process'
+              ELSE 'other'
+            END AS process_indicator,
+            COUNT(DISTINCT g.id) AS distinct_track_count,
+            COUNT(*) AS total_slices
+          FROM gpu_track g
+          JOIN gpu_slice s ON g.id = s.track_id
+          WHERE g.name LIKE 'vkcube%' OR g.name LIKE 'vulkan_sam%'
+          GROUP BY process_indicator
+          ORDER BY process_indicator;
+        ''',
+        out=Csv('''
+          "process_indicator","distinct_track_count","total_slices"
+          "vkcube_process",6,3220
+          "vulkan_sam_process",22,111019
+        '''))
+
+  def test_gpu_counter_duplicate_ids_different_sequences(self):
+    # With the legacy inline counter_descriptor path, counter specs are
+    # globally keyed by counter_id. The second sequence's spec is rejected
+    # as a duplicate, so only the first sequence's data is recorded.
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+          packet {
+            trusted_packet_sequence_id: 1
+            timestamp: 0
+            gpu_counter_event {
+              gpu_id: 0
+              counter_descriptor {
+                specs {
+                  counter_id: 1
+                  name: "CounterA"
+                  description: "desc A"
+                }
+              }
+            }
+          }
+          packet {
+            trusted_packet_sequence_id: 2
+            timestamp: 0
+            gpu_counter_event {
+              gpu_id: 1
+              counter_descriptor {
+                specs {
+                  counter_id: 1
+                  name: "CounterA"
+                  description: "desc A"
+                }
+              }
+            }
+          }
+          packet {
+            trusted_packet_sequence_id: 1
+            timestamp: 10
+            gpu_counter_event {
+              gpu_id: 0
+              counters { counter_id: 1 int_value: 100 }
+            }
+          }
+          packet {
+            trusted_packet_sequence_id: 2
+            timestamp: 10
+            gpu_counter_event {
+              gpu_id: 1
+              counters { counter_id: 1 int_value: 200 }
+            }
+          }
+          packet {
+            trusted_packet_sequence_id: 1
+            timestamp: 20
+            gpu_counter_event {
+              gpu_id: 0
+              counters { counter_id: 1 int_value: 150 }
+            }
+          }
+          packet {
+            trusted_packet_sequence_id: 2
+            timestamp: 20
+            gpu_counter_event {
+              gpu_id: 1
+              counters { counter_id: 1 int_value: 250 }
+            }
+          }
+        """),
+        query="""
+          SELECT ts, value, name, gpu_id
+          FROM counter
+          JOIN gpu_counter_track ON counter.track_id = gpu_counter_track.id
+          ORDER BY gpu_id, ts;
+        """,
+        out=Csv("""
+          "ts","value","name","gpu_id"
+          10,200.000000,"CounterA",0
+          10,150.000000,"CounterA",0
+          20,250.000000,"CounterA",0
+          20,0.000000,"CounterA",0
+        """))
+
+  def test_gpu_counter_interned_descriptor(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+          # Data source 1: register counter descriptor via interning
+          packet {
+            trusted_packet_sequence_id: 1
+            sequence_flags: 1
+            interned_data {
+              gpu_counter_descriptors {
+                iid: 1
+                gpu_id: 0
+                counter_descriptor {
+                  specs {
+                    counter_id: 1
+                    name: "CounterA"
+                    description: "desc A"
+                  }
+                }
+              }
+            }
+          }
+          # Data source 2: same counter_id, different sequence
+          packet {
+            trusted_packet_sequence_id: 2
+            sequence_flags: 1
+            interned_data {
+              gpu_counter_descriptors {
+                iid: 1
+                gpu_id: 1
+                counter_descriptor {
+                  specs {
+                    counter_id: 1
+                    name: "CounterB"
+                    description: "desc B"
+                  }
+                }
+              }
+            }
+          }
+          # Data source 1: reference interned descriptor + emit data
+          packet {
+            trusted_packet_sequence_id: 1
+            sequence_flags: 2
+            timestamp: 10
+            gpu_counter_event {
+              counter_descriptor_iid: 1
+              counters { counter_id: 1 int_value: 100 }
+            }
+          }
+          # Data source 2: reference interned descriptor + emit data
+          packet {
+            trusted_packet_sequence_id: 2
+            sequence_flags: 2
+            timestamp: 10
+            gpu_counter_event {
+              counter_descriptor_iid: 1
+              counters { counter_id: 1 int_value: 200 }
+            }
+          }
+          # Second batch of data
+          packet {
+            trusted_packet_sequence_id: 1
+            sequence_flags: 2
+            timestamp: 20
+            gpu_counter_event {
+              counter_descriptor_iid: 1
+              counters { counter_id: 1 int_value: 150 }
+            }
+          }
+          packet {
+            trusted_packet_sequence_id: 2
+            sequence_flags: 2
+            timestamp: 20
+            gpu_counter_event {
+              counter_descriptor_iid: 1
+              counters { counter_id: 1 int_value: 250 }
+            }
+          }
+        """),
+        query="""
+          SELECT ts, value, name, gpu_id
+          FROM counter
+          JOIN gpu_counter_track ON counter.track_id = gpu_counter_track.id
+          ORDER BY gpu_id, ts;
+        """,
+        out=Csv("""
+          "ts","value","name","gpu_id"
+          10,150.000000,"CounterA",0
+          20,0.000000,"CounterA",0
+          10,250.000000,"CounterB",1
+          20,0.000000,"CounterB",1
+        """))
+
+  def test_gpu_counter_missing_timestamp_dropped(self):
+    # A GpuCounterEvent packet without a timestamp on the containing TracePacket
+    # cannot be placed on the timeline, so it is dropped at tokenization time
+    # and counted in the gpu_counters_missing_timestamp stat.
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+          packet {
+            trusted_packet_sequence_id: 1
+            timestamp: 10
+            gpu_counter_event {
+              gpu_id: 0
+              counter_descriptor {
+                specs {
+                  counter_id: 1
+                  name: "CounterA"
+                  description: "desc A"
+                }
+              }
+              counters { counter_id: 1 int_value: 100 }
+            }
+          }
+          packet {
+            trusted_packet_sequence_id: 1
+            gpu_counter_event {
+              gpu_id: 0
+              counters { counter_id: 1 int_value: 200 }
+            }
+          }
+        """),
+        query="""
+          SELECT
+            (SELECT count(*) FROM counter
+             JOIN gpu_counter_track ON counter.track_id = gpu_counter_track.id)
+              AS sample_count,
+            (SELECT value FROM stats
+             WHERE name = 'gpu_counters_missing_timestamp') AS dropped;
+        """,
+        out=Csv("""
+          "sample_count","dropped"
+          1,1
+        """))
+
+  def test_gpu_counter_descriptor_parsed_without_timestamp(self):
+    # The descriptor section of a GpuCounterEvent is handled at tokenization
+    # time independently of the event section. Even though the descriptor packet
+    # has no timestamp (so it is dropped as a sample-bearing event), the track is
+    # still set up, so a later timestamped sample resolves to it.
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+          packet {
+            trusted_packet_sequence_id: 1
+            gpu_counter_event {
+              gpu_id: 0
+              counter_descriptor {
+                specs {
+                  counter_id: 1
+                  name: "CounterA"
+                  description: "desc A"
+                  # VALUE_DIRECTION_FORWARDS_LOOKING, so the sample value lands on
+                  # its own timestamp (avoids the backwards-looking placeholder).
+                  value_direction: 2
+                }
+              }
+            }
+          }
+          packet {
+            trusted_packet_sequence_id: 1
+            timestamp: 10
+            gpu_counter_event {
+              gpu_id: 0
+              counters { counter_id: 1 int_value: 100 }
+            }
+          }
+        """),
+        query="""
+          SELECT
+            (SELECT value FROM stats
+             WHERE name = 'gpu_counters_missing_timestamp') AS dropped,
+            ts, value, name, gpu_id
+          FROM counter
+          JOIN gpu_counter_track ON counter.track_id = gpu_counter_track.id
+          ORDER BY ts;
+        """,
+        out=Csv("""
+          "dropped","ts","value","name","gpu_id"
+          0,10,100.000000,"CounterA",0
+        """))
+
+  def test_gpu_render_stages_flow(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_render_stages_flow.textproto'),
+        query='''
+          SELECT
+            slice_out.name AS source_slice,
+            slice_in.name AS dest_slice
+          FROM flow
+          JOIN slice AS slice_out ON flow.slice_out = slice_out.id
+          JOIN slice AS slice_in ON flow.slice_in = slice_in.id
+          ORDER BY slice_out.ts, slice_in.ts;
+        ''',
+        out=Csv('''
+          "source_slice","dest_slice"
+          "HostSubmit","softmax"
+          "softmax","cudaEventWait"
+          "softmax","matmul"
+        '''))
+
+  def test_gpu_api_arg(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_api_slice.textproto'),
+        query='''
+          SELECT
+            s.name AS slice_name,
+            extract_arg(s.arg_set_id, 'gpu_api') AS gpu_api
+          FROM slice s
+          WHERE extract_arg(s.arg_set_id, 'gpu_api') IS NOT NULL
+          ORDER BY s.ts;
+        ''',
+        out=Csv('''
+          "slice_name","gpu_api"
+          "cuLaunchKernel","GPU_API_CUDA"
+          "vkCmdDispatch","GPU_API_VULKAN"
+        '''))
+
+  def test_gpu_compute_kernel(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_compute_kernel.textproto'),
+        query='''
+          SELECT
+            s.name AS slice_name,
+            extract_arg(s.arg_set_id, 'kernel_name') AS kernel_name,
+            extract_arg(s.arg_set_id, 'kernel_demangled_name')
+              AS kernel_demangled_name,
+            extract_arg(s.arg_set_id, 'arch') AS arch
+          FROM gpu_slice s
+          WHERE extract_arg(s.arg_set_id, 'kernel_name') IS NOT NULL
+          ORDER BY s.ts;
+        ''',
+        out=Csv('''
+          "slice_name","kernel_name","kernel_demangled_name","arch"
+          "Kernel","_Z9vectorAddPfS_S_i","vectorAdd(float*, float*, float*, int)","sm_80"
+          "Kernel","_Z6matMulPfS_S_ii","matMul(float*, float*, float*, int, int)","sm_80"
+          "Kernel","_Z9vectorAddPfS_S_i","vectorAdd(float*, float*, float*, int)","sm_80"
+        '''))
+
+  def test_gpu_compute_launch(self):
+    return DiffTestBlueprint(
+        trace=Path('gpu_compute_launch.textproto'),
+        query='''
+          SELECT
+            s.name AS slice_name,
+            extract_arg(s.arg_set_id, 'kernel_name') AS kernel_name,
+            extract_arg(s.arg_set_id, 'launch.grid_size.x') AS grid_x,
+            extract_arg(s.arg_set_id, 'launch.grid_size.y') AS grid_y,
+            extract_arg(s.arg_set_id, 'launch.grid_size.z') AS grid_z,
+            extract_arg(s.arg_set_id, 'launch.workgroup_size.x') AS wg_x,
+            extract_arg(s.arg_set_id, 'launch.workgroup_size.y') AS wg_y,
+            extract_arg(s.arg_set_id, 'launch.workgroup_size.z') AS wg_z,
+            extract_arg(s.arg_set_id, 'registers_per_thread') AS regs,
+            extract_arg(s.arg_set_id, 'shared_mem_dynamic') AS shmem
+          FROM gpu_slice s
+          ORDER BY s.ts;
+        ''',
+        out=Csv('''
+          "slice_name","kernel_name","grid_x","grid_y","grid_z","wg_x","wg_y","wg_z","regs","shmem"
+          "vectorAdd","_Z9vectorAddPfS_S_i",256,1,1,128,1,1,32,4096
+        '''))
+
+  # A named render stage event's slice takes the event's name, so the stage
+  # name must survive as an arg.
+  def test_gpu_render_stage_name(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+          packet {
+            trusted_packet_sequence_id: 1
+            timestamp: 0
+            interned_data {
+              gpu_specifications {
+                iid: 1
+                name: "Compute Queue"
+                category: COMPUTE
+              }
+              gpu_specifications {
+                iid: 2
+                name: "Kernel"
+                category: COMPUTE
+              }
+              gpu_specifications {
+                iid: 3
+                name: "MemoryTransfer"
+                category: OTHER
+              }
+            }
+            sequence_flags: 1
+          }
+          packet {
+            trusted_packet_sequence_id: 1
+            timestamp: 100
+            gpu_render_stage_event {
+              event_id: 0
+              duration: 10
+              hw_queue_iid: 1
+              stage_iid: 2
+              name: "vectorAdd"
+            }
+            sequence_flags: 2
+          }
+          packet {
+            trusted_packet_sequence_id: 1
+            timestamp: 200
+            gpu_render_stage_event {
+              event_id: 1
+              duration: 10
+              hw_queue_iid: 1
+              stage_iid: 3
+              name: "Memcpy HtoD"
+            }
+            sequence_flags: 2
+          }
+          packet {
+            trusted_packet_sequence_id: 1
+            timestamp: 300
+            gpu_render_stage_event {
+              event_id: 2
+              duration: 10
+              hw_queue_iid: 1
+              stage_iid: 2
+            }
+            sequence_flags: 2
+          }
+          packet {
+            trusted_packet_sequence_id: 2
+            timestamp: 0
+            gpu_render_stage_event {
+              specifications {
+                hw_queue { name: "queue 0" }
+                stage { name: "MemorySet" }
+              }
+            }
+          }
+          packet {
+            trusted_packet_sequence_id: 2
+            timestamp: 400
+            gpu_render_stage_event {
+              event_id: 3
+              duration: 10
+              hw_queue_id: 0
+              stage_id: 0
+              name: "Memset"
+            }
+          }
+        """),
+        query='''
+          SELECT
+            s.ts,
+            s.name AS slice_name,
+            extract_arg(s.arg_set_id, 'render_stage_name') AS render_stage_name
+          FROM gpu_slice s
+          ORDER BY s.ts;
+        ''',
+        out=Csv('''
+          "ts","slice_name","render_stage_name"
+          100,"vectorAdd","Kernel"
+          200,"Memcpy HtoD","MemoryTransfer"
+          300,"Kernel","Kernel"
+          400,"Memset","MemorySet"
+        '''))
+
+  def test_gpu_frequency_event(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+          packet {
+            timestamp: 1000
+            generic_gpu_frequency_event {
+              gpu_id: 0
+              frequency_khz: 1500000
+            }
+          }
+          packet {
+            timestamp: 2000
+            generic_gpu_frequency_event {
+              gpu_id: 0
+              frequency_khz: 2100000
+            }
+          }
+        """),
+        query='''
+          SELECT
+            t.name AS track_name,
+            t.type AS track_type,
+            c.ts,
+            c.value
+          FROM counter c
+          JOIN counter_track t ON c.track_id = t.id
+          WHERE t.type = 'gpu_frequency'
+          ORDER BY c.ts;
+        ''',
+        out=Csv('''
+          "track_name","track_type","ts","value"
+          "gpufreq","gpu_frequency",1000,1500000.000000
+          "gpufreq","gpu_frequency",2000,2100000.000000
+        '''))

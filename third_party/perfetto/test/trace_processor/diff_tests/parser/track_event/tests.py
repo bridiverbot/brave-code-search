@@ -1,0 +1,2563 @@
+#!/usr/bin/env python3
+# Copyright (C) 2023 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from python.generators.diff_tests.testing import Path, DataPath, Metric
+from python.generators.diff_tests.testing import Csv, Json, TextProto
+from python.generators.diff_tests.testing import DiffTestBlueprint, TraceInjector
+from python.generators.diff_tests.testing import TestSuite
+
+
+class TrackEvent(TestSuite):
+  # Contains tests on the parsing and ingestion of TrackEvent packets. Same
+  # handling
+  def test_track_event_same_tids_threads(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            thread {
+              pid: 5
+              tid: 1
+              thread_name: "t1"
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 2
+            thread {
+              pid: 10
+              tid: 1
+              thread_name: "t2"
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 1000
+          track_event {
+            track_uuid: 1
+            categories: "cat"
+            name: "name1"
+            type: 3
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 2000
+          track_event {
+            track_uuid: 2
+            categories: "cat"
+            name: "name2"
+            type: 3
+          }
+        }
+        """),
+        query="""
+        SELECT tid, pid, process.name AS pname, thread.name AS tname
+        FROM thread
+        LEFT JOIN process USING(upid)
+        WHERE tid > 0
+        ORDER BY tid;
+        """,
+        out=Csv("""
+        "tid","pid","pname","tname"
+        1,5,"[NULL]","t1"
+        1,10,"[NULL]","t2"
+        5,5,"[NULL]","[NULL]"
+        10,10,"[NULL]","[NULL]"
+        """))
+
+  def test_track_event_same_tids_slices(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            thread {
+              pid: 5
+              tid: 1
+              thread_name: "t1"
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 2
+            thread {
+              pid: 10
+              tid: 1
+              thread_name: "t2"
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 1000
+          track_event {
+            track_uuid: 1
+            categories: "cat"
+            name: "name1"
+            type: 3
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 2000
+          track_event {
+            track_uuid: 2
+            categories: "cat"
+            name: "name2"
+            type: 3
+          }
+        }
+        """),
+        query="""
+        SELECT
+          track.name AS track,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          slice.ts,
+          slice.dur,
+          slice.category,
+          slice.name
+        FROM slice
+        LEFT JOIN track ON slice.track_id = track.id
+        LEFT JOIN process_track ON slice.track_id = process_track.id
+        LEFT JOIN process ON process_track.upid = process.upid
+        LEFT JOIN thread_track ON slice.track_id = thread_track.id
+        LEFT JOIN thread ON thread_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+        "track","process","thread","thread_process","ts","dur","category","name"
+        "[NULL]","[NULL]","t1","[NULL]",1000,0,"cat","name1"
+        "[NULL]","[NULL]","t2","[NULL]",2000,0,"cat","name2"
+        """))
+
+  # Typed args
+  def test_track_event_typed_args_slices(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_typed_args.textproto'),
+        query="""
+        SELECT
+          track.name AS track,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          slice.ts,
+          slice.dur,
+          slice.category,
+          slice.name
+        FROM slice
+        LEFT JOIN track ON slice.track_id = track.id
+        LEFT JOIN process_track ON slice.track_id = process_track.id
+        LEFT JOIN process ON process_track.upid = process.upid
+        LEFT JOIN thread_track ON slice.track_id = thread_track.id
+        LEFT JOIN thread ON thread_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+        "track","process","thread","thread_process","ts","dur","category","name"
+        "[NULL]","[NULL]","t1","[NULL]",1000,0,"cat","name1"
+        "[NULL]","[NULL]","t1","[NULL]",2000,0,"cat","name2"
+        "[NULL]","[NULL]","t1","[NULL]",3000,0,"cat","name3"
+        "[NULL]","[NULL]","t1","[NULL]",4000,0,"cat","name4"
+        "[NULL]","[NULL]","t1","[NULL]",6000,0,"cat","name5"
+        "[NULL]","[NULL]","t1","[NULL]",7000,0,"cat","name6"
+        """))
+
+  def test_track_event_typed_args_args(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_typed_args.textproto'),
+        query="""
+        SELECT
+          flat_key,
+          key,
+          int_value,
+          string_value
+        FROM args
+        ORDER BY key, display_value, arg_set_id, key ASC;
+        """,
+        out=Path('track_event_typed_args_args.out'))
+
+  # Track handling
+  def test_track_event_tracks_slices(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_tracks.textproto'),
+        query="""
+        SELECT
+          track.name AS track,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          slice.ts,
+          slice.dur,
+          slice.category,
+          slice.name
+        FROM slice
+        LEFT JOIN track ON slice.track_id = track.id
+        LEFT JOIN process_track ON slice.track_id = process_track.id
+        LEFT JOIN process ON process_track.upid = process.upid
+        LEFT JOIN thread_track ON slice.track_id = thread_track.id
+        LEFT JOIN thread ON thread_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+      "track","process","thread","thread_process","ts","dur","category","name"
+      "[NULL]","[NULL]","t1","p1",1000,0,"cat","event1_on_t1"
+      "[NULL]","[NULL]","t2","p1",2000,0,"cat","event1_on_t2"
+      "[NULL]","[NULL]","t2","p1",3000,0,"cat","event2_on_t2"
+      "[NULL]","p1","[NULL]","[NULL]",4000,0,"cat","event1_on_p1"
+      "async","p1","[NULL]","[NULL]",5000,0,"cat","event1_on_async"
+      "async2","p1","[NULL]","[NULL]",5100,100,"cat","event1_on_async2"
+      "async3","[NULL]","t2","p1",6000,0,"cat","event1_on_async3"
+      "[NULL]","[NULL]","t1","p1",6000,0,"cat","event3_on_t1"
+      "[NULL]","[NULL]","t3","p1",11000,0,"cat","event1_on_t3"
+      "[NULL]","p2","[NULL]","[NULL]",21000,0,"cat","event1_on_p2"
+      "[NULL]","[NULL]","t4","p2",22000,0,"cat","event1_on_t4"
+      "Default Track","[NULL]","[NULL]","[NULL]",30000,0,"cat","event1_on_t1"
+      "[NULL]","p2","[NULL]","[NULL]",31000,0,"cat","event2_on_p2"
+      "[NULL]","[NULL]","t4","p2",32000,0,"cat","event2_on_t4"
+      "event_and_track_async3","p1","[NULL]","[NULL]",40000,0,"cat","event_and_track_async3"
+        """))
+
+  def test_track_event_tracks_processes(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_tracks.textproto'),
+        query="""
+        SELECT
+          id,
+          name,
+          extract_arg(arg_set_id, "chrome.host_app_package_name") AS host_app
+        FROM process;
+        """,
+        out=Csv("""
+        "id","name","host_app"
+        0,"[NULL]","[NULL]"
+        1,"p1","host_app"
+        2,"p2","[NULL]"
+        """))
+
+  def test_track_event_tracks(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_tracks.textproto'),
+        query="""
+        WITH track_with_name AS (
+          SELECT
+            COALESCE(
+              t1.name,
+              'thread=' || thread.name,
+              'process=' || process.name,
+              'tid=' || thread.tid,
+              'pid=' || process.pid
+            ) AS full_name,
+            *
+          FROM track t1
+          LEFT JOIN thread_track t2 USING (id)
+          LEFT JOIN thread USING (utid)
+          LEFT JOIN process_track t3 USING (id)
+          LEFT JOIN process ON t3.upid = process.id
+          ORDER BY id
+        )
+        SELECT
+        t1.full_name AS name,
+        EXTRACT_ARG(t1.source_arg_set_id, 'has_first_packet_on_sequence')
+               AS has_first_packet_on_sequence
+        FROM track_with_name t1
+        ORDER BY 1, 2;
+        """,
+        out=Csv("""
+        "name","has_first_packet_on_sequence"
+        "Default Track","[NULL]"
+        "async",1
+        "async2",1
+        "async3",1
+        "event_and_track_async3",1
+        "process=p1",1
+        "process=p2","[NULL]"
+        "process=p2","[NULL]"
+        "thread=t1",1
+        "thread=t2",1
+        "thread=t3",1
+        "thread=t4","[NULL]"
+        """))
+
+  def test_track_event_descriptions(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_tracks.textproto'),
+        query="""
+        WITH track_with_name AS (
+          SELECT
+            COALESCE(
+              t1.name,
+              'thread=' || thread.name,
+              'process=' || process.name,
+              'tid=' || thread.tid,
+              'pid=' || process.pid
+            ) AS full_name,
+            *
+          FROM track t1
+          LEFT JOIN thread_track t2 USING (id)
+          LEFT JOIN thread USING (utid)
+          LEFT JOIN process_track t3 USING (id)
+          LEFT JOIN process ON t3.upid = process.id
+          ORDER BY id
+        )
+        SELECT
+        t1.full_name AS name,
+        EXTRACT_ARG(t1.source_arg_set_id, 'description') AS description
+        FROM track_with_name t1
+        ORDER BY 1, 2;
+        """,
+        out=Csv("""
+        "name","description"
+        "Default Track","[NULL]"
+        "async","Async events for p1"
+        "async2","[NULL]"
+        "async3","Async events for t2"
+        "event_and_track_async3","[NULL]"
+        "process=p1","Chrome process: p1"
+        "process=p2","[NULL]"
+        "process=p2","[NULL]"
+        "thread=t1","Thread t1"
+        "thread=t2","Thread t2"
+        "thread=t3","[NULL]"
+        "thread=t4","[NULL]"
+        """))
+
+  # Instant events
+  def test_track_event_instant_slices(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            thread {
+              pid: 5
+              tid: 1
+              thread_name: "t1"
+            }
+          }
+          trace_packet_defaults {
+            track_event_defaults {
+              track_uuid: 1
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 1000
+          track_event {
+            categories: "cat"
+            name: "instant_on_t1"
+            type: 3
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 2000
+          track_event {
+            categories: "cat"
+            name: "legacy_instant_on_t1"
+            legacy_event {
+              phase: 73               # 'I'
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 3000
+          track_event {
+            categories: "cat"
+            name: "legacy_mark_on_t1"
+            legacy_event {
+              phase: 82               # 'R'
+            }
+          }
+        }
+        """),
+        query="""
+        SELECT
+          track.name AS track,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          slice.ts,
+          slice.dur,
+          slice.category,
+          slice.name
+        FROM slice
+        LEFT JOIN track ON slice.track_id = track.id
+        LEFT JOIN process_track ON slice.track_id = process_track.id
+        LEFT JOIN process ON process_track.upid = process.upid
+        LEFT JOIN thread_track ON slice.track_id = thread_track.id
+        LEFT JOIN thread ON thread_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+        "track","process","thread","thread_process","ts","dur","category","name"
+        "[NULL]","[NULL]","t1","[NULL]",1000,0,"cat","instant_on_t1"
+        "[NULL]","[NULL]","t1","[NULL]",2000,0,"cat","legacy_instant_on_t1"
+        "[NULL]","[NULL]","t1","[NULL]",3000,0,"cat","legacy_mark_on_t1"
+        """))
+
+  # Legacy async events
+  def test_legacy_async_event(self):
+    return DiffTestBlueprint(
+        trace=Path('legacy_async_event.textproto'),
+        query="""
+        SELECT
+          track.name AS track,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          slice.ts,
+          slice.dur,
+          slice.category,
+          slice.name,
+          args.key,
+          args.string_value,
+          args.int_value
+        FROM slice
+        LEFT JOIN track ON slice.track_id = track.id
+        LEFT JOIN process_track ON slice.track_id = process_track.id
+        LEFT JOIN process ON process_track.upid = process.upid
+        LEFT JOIN thread_track ON slice.track_id = thread_track.id
+        LEFT JOIN thread ON thread_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        LEFT JOIN args ON slice.arg_set_id = args.arg_set_id
+        ORDER BY slice.ts, args.id;
+        """,
+        out=Csv("""
+        "track","process","thread","thread_process","ts","dur","category","name","key","string_value","int_value"
+        "name1","[NULL]","[NULL]","[NULL]",1000,7000,"cat","name1","legacy_trace_source_id","[NULL]",1234
+        "name1","[NULL]","[NULL]","[NULL]",1000,7000,"cat","name1","debug.arg1","value1","[NULL]"
+        "name1","[NULL]","[NULL]","[NULL]",1000,7000,"cat","name1","legacy_event.passthrough_utid","[NULL]",2
+        "name1","[NULL]","[NULL]","[NULL]",1000,7000,"cat","name1","legacy_event.phase","S","[NULL]"
+        "name1","[NULL]","[NULL]","[NULL]",1000,7000,"cat","name1","debug.arg2","value2","[NULL]"
+        "name1","[NULL]","[NULL]","[NULL]",2000,1000,"cat","name1","legacy_trace_source_id","[NULL]",1234
+        "name1","[NULL]","[NULL]","[NULL]",2000,1000,"cat","name1","legacy_event.passthrough_utid","[NULL]",1
+        "name1","[NULL]","[NULL]","[NULL]",2000,1000,"cat","name1","legacy_event.phase","S","[NULL]"
+        "name1","[NULL]","[NULL]","[NULL]",3000,0,"cat","name1","legacy_trace_source_id","[NULL]",1234
+        "name1","[NULL]","[NULL]","[NULL]",3000,0,"cat","name1","debug.arg3","value3","[NULL]"
+        "name1","[NULL]","[NULL]","[NULL]",3000,0,"cat","name1","debug.step","Step1","[NULL]"
+        "name1","[NULL]","[NULL]","[NULL]",3000,0,"cat","name1","legacy_event.passthrough_utid","[NULL]",2
+        "name1","[NULL]","[NULL]","[NULL]",3000,0,"cat","name1","legacy_event.phase","T","[NULL]"
+        "name1","[NULL]","[NULL]","[NULL]",5000,0,"cat","name1","legacy_trace_source_id","[NULL]",1234
+        "name1","[NULL]","[NULL]","[NULL]",5000,0,"cat","name1","debug.arg4","value4","[NULL]"
+        "name1","[NULL]","[NULL]","[NULL]",5000,0,"cat","name1","debug.step","Step2","[NULL]"
+        "name1","[NULL]","[NULL]","[NULL]",5000,0,"cat","name1","legacy_event.passthrough_utid","[NULL]",2
+        "name1","[NULL]","[NULL]","[NULL]",5000,0,"cat","name1","legacy_event.phase","p","[NULL]"
+        """))
+
+  # Legacy atrace
+  def test_track_event_with_atrace(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_with_atrace.textproto'),
+        query="""
+        SELECT
+          track.name AS track,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          slice.ts,
+          slice.dur,
+          slice.category,
+          slice.name
+        FROM slice
+        LEFT JOIN track ON slice.track_id = track.id
+        LEFT JOIN process_track ON slice.track_id = process_track.id
+        LEFT JOIN process ON process_track.upid = process.upid
+        LEFT JOIN thread_track ON slice.track_id = thread_track.id
+        LEFT JOIN thread ON thread_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+        "track","process","thread","thread_process","ts","dur","category","name"
+        "[NULL]","[NULL]","t1","[NULL]",10000,1000,"cat","event1"
+        "[NULL]","[NULL]","t1","[NULL]",20000,8000,"cat","event2"
+        "[NULL]","[NULL]","t1","[NULL]",21000,7000,"[NULL]","atrace"
+        """))
+
+  def test_track_event_with_atrace_separate_tracks(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_with_atrace_separate_tracks.textproto'),
+        query="""
+        SELECT
+          track.name AS track,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          slice.ts,
+          slice.dur,
+          slice.category,
+          slice.name
+        FROM slice
+        LEFT JOIN track ON slice.track_id = track.id
+        LEFT JOIN process_track ON slice.track_id = process_track.id
+        LEFT JOIN process ON process_track.upid = process.upid
+        LEFT JOIN thread_track ON slice.track_id = thread_track.id
+        LEFT JOIN thread ON thread_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+        "track","process","thread","thread_process","ts","dur","category","name"
+        "[NULL]","[NULL]","t1","[NULL]",10000,1000,"cat","event1"
+        "[NULL]","[NULL]","t1","[NULL]",20000,8000,"cat","event2"
+        "[NULL]","[NULL]","t1","[NULL]",21000,8000,"[NULL]","atrace"
+        """))
+
+  # Debug annotations
+  def test_track_event_merged_debug_annotations_args(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_merged_debug_annotations.textproto'),
+        query="""
+        SELECT
+          flat_key,
+          key,
+          int_value,
+          string_value
+        FROM args
+        ORDER BY key, display_value, arg_set_id, key ASC;
+        """,
+        out=Csv('''
+          "flat_key","key","int_value","string_value"
+          "debug.debug1.key1","debug.debug1.key1",10,"[NULL]"
+          "debug.debug1.key2","debug.debug1.key2[0]",20,"[NULL]"
+          "debug.debug1.key2","debug.debug1.key2[1]",21,"[NULL]"
+          "debug.debug1.key2","debug.debug1.key2[2]",22,"[NULL]"
+          "debug.debug1.key2","debug.debug1.key2[3]",23,"[NULL]"
+          "debug.debug1.key3","debug.debug1.key3",30,"[NULL]"
+          "debug.debug2.key1","debug.debug2.key1",10,"[NULL]"
+          "debug.debug2.key2","debug.debug2.key2[0]",20,"[NULL]"
+          "debug.debug2.key2","debug.debug2.key2[1]",21,"[NULL]"
+          "debug.debug2.key2","debug.debug2.key2[2]",22,"[NULL]"
+          "debug.debug2.key2","debug.debug2.key2[3]",23,"[NULL]"
+          "debug.debug2.key3.key31","debug.debug2.key3.key31",31,"[NULL]"
+          "debug.debug2.key3.key32","debug.debug2.key3.key32",32,"[NULL]"
+          "debug.debug2.key4","debug.debug2.key4",40,"[NULL]"
+          "debug.debug3","debug.debug3",32,"[NULL]"
+          "debug.debug4.key1","debug.debug4.key1",10,"[NULL]"
+          "debug.debug4.key2","debug.debug4.key2[0]",20,"[NULL]"
+          "debug.debug4.key2","debug.debug4.key2[1]",21,"[NULL]"
+          "event.category","event.category","[NULL]","cat"
+          "event.category","event.category","[NULL]","cat"
+          "event.name","event.name","[NULL]","[NULL]"
+          "event.name","event.name","[NULL]","name1"
+          "legacy_event.passthrough_utid","legacy_event.passthrough_utid",2,"[NULL]"
+          "legacy_trace_source_id","legacy_trace_source_id",1234,"[NULL]"
+          "name","name","[NULL]","name1"
+          "scope","scope","[NULL]","cat"
+          "source","source","[NULL]","chrome"
+          "source_scope","source_scope","[NULL]","cat"
+          "trace_id_is_process_scoped","trace_id_is_process_scoped",0,"[NULL]"
+          "track_compressor_idx","track_compressor_idx",0,"[NULL]"
+          "upid","upid",1,"[NULL]"
+        '''))
+
+  # Counters
+  def test_track_event_counters_slices(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_counters.textproto'),
+        query="""
+        SELECT
+          track.name AS track,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          slice.ts,
+          slice.dur,
+          slice.category,
+          slice.name
+        FROM slice
+        LEFT JOIN track ON slice.track_id = track.id
+        LEFT JOIN process_track ON slice.track_id = process_track.id
+        LEFT JOIN process ON process_track.upid = process.upid
+        LEFT JOIN thread_track ON slice.track_id = thread_track.id
+        LEFT JOIN thread ON thread_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+        "track","process","thread","thread_process","ts","dur","category","name"
+        "[NULL]","[NULL]","t1","Browser",1000,100,"cat","event1_on_t1"
+        "[NULL]","[NULL]","t1","Browser",2000,200,"cat","event2_on_t1"
+        "[NULL]","[NULL]","t1","Browser",2000,200,"cat","event3_on_t1"
+        "[NULL]","[NULL]","t1","Browser",4000,0,"cat","event4_on_t1"
+        "[NULL]","[NULL]","t4","Browser",4000,100,"cat","event1_on_t3"
+        "[NULL]","[NULL]","t1","Browser",4300,0,"cat","float_counter_on_t1"
+        "[NULL]","[NULL]","t1","Browser",4500,0,"cat","float_counter_on_t1"
+        """))
+
+  def test_track_event_counters_counters(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_counters.textproto'),
+        query="""
+        SELECT
+          counter_track.name AS counter_name,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          counter_track.unit AS unit,
+          counter.ts,
+          counter.value
+        FROM counter
+        LEFT JOIN counter_track ON counter.track_id = counter_track.id
+        LEFT JOIN process_counter_track ON counter.track_id = process_counter_track.id
+        LEFT JOIN process ON process_counter_track.upid = process.upid
+        LEFT JOIN thread_counter_track ON counter.track_id = thread_counter_track.id
+        LEFT JOIN thread ON thread_counter_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+        "counter_name","process","thread","thread_process","unit","ts","value"
+        "thread_time","[NULL]","t1","Browser","ns",1000,1000000.000000
+        "thread_time","[NULL]","t1","Browser","ns",1100,1010000.000000
+        "thread_time","[NULL]","t1","Browser","ns",2000,2000000.000000
+        "thread_time","[NULL]","t1","Browser","ns",2000,2010000.000000
+        "thread_time","[NULL]","t1","Browser","ns",2200,2020000.000000
+        "thread_time","[NULL]","t1","Browser","ns",2200,2030000.000000
+        "MySizeCounter","[NULL]","[NULL]","[NULL]","bytes",3000,1024.000000
+        "MySizeCounter","[NULL]","[NULL]","[NULL]","bytes",3100,2048.000000
+        "thread_time","[NULL]","t1","Browser","ns",4000,2040000.000000
+        "MySizeCounter","[NULL]","[NULL]","[NULL]","bytes",4000,1024.000000
+        "thread_time","[NULL]","t4","Browser","[NULL]",4000,10000.000000
+        "thread_instruction_count","[NULL]","t4","Browser","[NULL]",4000,20.000000
+        "thread_time","[NULL]","t4","Browser","[NULL]",4100,15000.000000
+        "thread_instruction_count","[NULL]","t4","Browser","[NULL]",4100,25.000000
+        "MyDoubleCounter","[NULL]","[NULL]","[NULL]","[NULL]",4200,3.141593
+        "MyDoubleCounter","[NULL]","[NULL]","[NULL]","[NULL]",4300,0.500000
+        "MySizeCounter","[NULL]","[NULL]","[NULL]","bytes",4500,4096.000000
+        "MyDoubleCounter","[NULL]","[NULL]","[NULL]","[NULL]",4500,2.718280
+        """))
+
+  def test_incremental_counter_sequences(self):
+    return DiffTestBlueprint(
+        trace=Path('incremental_counter_sequences.textproto'),
+        query="""
+        SELECT
+          ts,
+          value
+        FROM counter
+        JOIN track ON counter.track_id = track.id
+        WHERE
+          track.name = 'MyIncrementalCounter'
+        ORDER BY ts;
+        """,
+        out=Csv("""
+        "ts","value"
+        100,100.000000
+        150,50.000000
+        200,110.000000
+        250,55.000000
+        """))
+
+  # Clock handling
+  def test_track_event_monotonic_trace_clock_slices(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          clock_snapshot {
+            primary_trace_clock: 3  # BUILTIN_CLOCK_MONOTONIC
+            clocks {
+              clock_id: 3  # BUILTIN_CLOCK_MONOTONIC
+              timestamp: 1000
+            }
+            clocks {
+              clock_id: 6  # BUILTIN_CLOCK_BOOTTIME
+              timestamp: 11000
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 1000
+          timestamp_clock_id: 3  # BUILTIN_CLOCK_MONOTONIC
+          track_event {
+            track_uuid: 1
+            categories: "cat"
+            name: "name1"
+            type: 3
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 12000
+          timestamp_clock_id: 6  # BUILTIN_CLOCK_BOOTTIME
+          track_event {
+            track_uuid: 1
+            categories: "cat"
+            name: "name2"
+            type: 3
+          }
+        }
+        """),
+        query="""
+        SELECT
+          track.name AS track,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          slice.ts,
+          slice.dur,
+          slice.category,
+          slice.name
+        FROM slice
+        LEFT JOIN track ON slice.track_id = track.id
+        LEFT JOIN process_track ON slice.track_id = process_track.id
+        LEFT JOIN process ON process_track.upid = process.upid
+        LEFT JOIN thread_track ON slice.track_id = thread_track.id
+        LEFT JOIN thread ON thread_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+        "track","process","thread","thread_process","ts","dur","category","name"
+        "name1","[NULL]","[NULL]","[NULL]",1000,0,"cat","name1"
+        "name1","[NULL]","[NULL]","[NULL]",2000,0,"cat","name2"
+        """))
+
+  # HistogramName interning
+  def test_track_event_chrome_histogram_sample_args(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_chrome_histogram_sample.textproto'),
+        query="""
+        SELECT
+          flat_key,
+          key,
+          int_value,
+          string_value
+        FROM args
+        ORDER BY key, display_value, arg_set_id, key ASC;
+        """,
+        out=Csv('''
+          "flat_key","key","int_value","string_value"
+          "chrome_histogram_sample.name","chrome_histogram_sample.name","[NULL]","Compositing.Display.DrawToSwapUs"
+          "chrome_histogram_sample.name","chrome_histogram_sample.name","[NULL]","CompositorLatency.TotalLatency"
+          "chrome_histogram_sample.name","chrome_histogram_sample.name","[NULL]","Graphics.Smoothness.Checkerboarding.MainThreadAnimation"
+          "chrome_histogram_sample.name","chrome_histogram_sample.name","[NULL]","Memory.GPU.PeakMemoryUsage.PageLoad"
+          "chrome_histogram_sample.name_hash","chrome_histogram_sample.name_hash",10,"[NULL]"
+          "chrome_histogram_sample.name_hash","chrome_histogram_sample.name_hash",20,"[NULL]"
+          "chrome_histogram_sample.name_hash","chrome_histogram_sample.name_hash",30,"[NULL]"
+          "chrome_histogram_sample.name_hash","chrome_histogram_sample.name_hash",40,"[NULL]"
+          "chrome_histogram_sample.name_hash","chrome_histogram_sample.name_hash",50,"[NULL]"
+          "chrome_histogram_sample.name_hash","chrome_histogram_sample.name_hash",60,"[NULL]"
+          "chrome_histogram_sample.name_iid","chrome_histogram_sample.name_iid",1,"[NULL]"
+          "chrome_histogram_sample.name_iid","chrome_histogram_sample.name_iid",2,"[NULL]"
+          "chrome_histogram_sample.name_iid","chrome_histogram_sample.name_iid",3,"[NULL]"
+          "chrome_histogram_sample.name_iid","chrome_histogram_sample.name_iid",4,"[NULL]"
+          "chrome_histogram_sample.sample","chrome_histogram_sample.sample",100,"[NULL]"
+          "chrome_histogram_sample.sample","chrome_histogram_sample.sample",200,"[NULL]"
+          "chrome_histogram_sample.sample","chrome_histogram_sample.sample",300,"[NULL]"
+          "chrome_histogram_sample.sample","chrome_histogram_sample.sample",400,"[NULL]"
+          "chrome_histogram_sample.sample","chrome_histogram_sample.sample",500,"[NULL]"
+          "chrome_histogram_sample.sample","chrome_histogram_sample.sample",600,"[NULL]"
+          "event.category","event.category","[NULL]","disabled-by-default-histogram_samples"
+          "event.name","event.name","[NULL]","[NULL]"
+          "is_root_in_scope","is_root_in_scope",1,"[NULL]"
+          "merge_key_type","merge_key_type",0,"[NULL]"
+          "merge_key_value","merge_key_value","[NULL]","Default Track"
+          "parent_track_uuid","parent_track_uuid",0,"[NULL]"
+          "source","source","[NULL]","descriptor"
+          "trace_id","trace_id",0,"[NULL]"
+          "track_compressor_idx","track_compressor_idx",0,"[NULL]"
+        '''))
+
+  # Flow events importing from proto
+  def test_flow_events_track_event(self):
+    return DiffTestBlueprint(
+        trace=Path('flow_events_track_event.textproto'),
+        query="""
+        SELECT t1.name AS slice_out, t2.name AS slice_in FROM flow t
+        JOIN slice t1 ON t.slice_out = t1.slice_id
+        JOIN slice t2 ON t.slice_in = t2.slice_id;
+        """,
+        out=Csv("""
+        "slice_out","slice_in"
+        "FlowSlice1Start","FlowSlice1End"
+        "FlowSlice1Start2Start","FlowSlice1End"
+        "FlowSlice1Start2Start","FlowSlice2End"
+        "FlowSlice3Begin","FlowSlice3End4Begin"
+        "FlowSlice3End4Begin","FlowSlice4Step"
+        "FlowSlice4Step","FlowSlice4Step2_FlowIdOnAsyncEndEvent"
+        "FlowSlice4Step2_FlowIdOnAsyncEndEvent","FlowSlice4Step2_FlowIdOnEndEvent"
+        "FlowSlice4Step2_FlowIdOnEndEvent","FlowSlice4End"
+        """))
+
+  def test_flow_events_proto_v2(self):
+    return DiffTestBlueprint(
+        trace=Path('flow_events_proto_v2.textproto'),
+        query="""
+        SELECT t1.name AS slice_out, t2.name AS slice_in FROM flow t
+        JOIN slice t1 ON t.slice_out = t1.slice_id
+        JOIN slice t2 ON t.slice_in = t2.slice_id;
+        """,
+        out=Csv("""
+        "slice_out","slice_in"
+        "FlowBeginSlice","FlowEndSlice_1"
+        "FlowBeginSlice","FlowStepSlice"
+        "FlowStepSlice","FlowEndSlice_2"
+        """))
+
+  def test_flow_events_proto_v1(self):
+    return DiffTestBlueprint(
+        trace=Path('flow_events_proto_v1.textproto'),
+        query="""
+        SELECT t1.name AS slice_out, t2.name AS slice_in FROM flow t
+        JOIN slice t1 ON t.slice_out = t1.slice_id
+        JOIN slice t2 ON t.slice_in = t2.slice_id;
+        """,
+        out=Csv("""
+        "slice_out","slice_in"
+        "FlowBeginSlice","FlowEndSlice_1"
+        "FlowEndSlice_1","FlowStepSlice"
+        "FlowStepSlice","FlowEndSlice_2"
+        """))
+
+  # Async slices starting and ending at the same time
+  def test_experimental_slice_layout_depth(self):
+    return DiffTestBlueprint(
+        trace=Path('experimental_slice_layout_depth.py'),
+        query="""
+        SELECT layout_depth
+        FROM experimental_slice_layout((
+          SELECT group_concat(track_id, ',')
+          FROM slice
+        ))
+        """,
+        out=Csv("""
+        "layout_depth"
+        0
+        0
+        0
+        """))
+
+  # Descriptor merging regression test (bug: b/197203390)
+  def test_merging_regression(self):
+    return DiffTestBlueprint(
+        trace=DataPath('trace_with_descriptor.pftrace'),
+        query="""
+        SELECT ts FROM slice ORDER BY ts LIMIT 10;
+        """,
+        out=Csv("""
+        "ts"
+        605361018360000
+        605361018360000
+        605361028265000
+        605361028265000
+        605361028361000
+        605361028878000
+        605361033445000
+        605361033445000
+        605361034257000
+        605361035040000
+        """))
+
+  # Range of interest
+  def test_range_of_interest(self):
+    return DiffTestBlueprint(
+        trace=Path('range_of_interest.textproto'),
+        query="""
+        SELECT ts, name
+        FROM slice
+        ORDER BY ts;
+        """,
+        out=Csv("""
+        "ts","name"
+        12000,"slice3"
+        13000,"slice4"
+        """))
+
+  def test_track_event_tracks_ordering(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_tracks_ordering.textproto'),
+        query="""
+        SELECT
+          t.name,
+          p.name AS parent_name,
+          EXTRACT_ARG(t.source_arg_set_id, 'child_ordering') AS ordering,
+          EXTRACT_ARG(t.source_arg_set_id, 'sibling_order_rank') AS rank
+        FROM track t
+        LEFT JOIN track p ON t.parent_id = p.id
+        ORDER BY p.name, t.name
+        """,
+        out=Csv("""
+        "name","parent_name","ordering","rank"
+        "p1","[NULL]","explicit","[NULL]"
+        "p1_child_1","[NULL]","[NULL]",-10
+        "p1_child_2","[NULL]","[NULL]",-2
+        "parent","[NULL]","explicit","[NULL]"
+        "async3","child_2","[NULL]","[NULL]"
+        "async","parent","[NULL]",1
+        "async2","parent","[NULL]",2
+        "child_1","parent","[NULL]",-10
+        "child_2","parent","[NULL]",-2
+        "child_3","parent","[NULL]","[NULL]"
+        """))
+
+  def test_track_event_tracks_machine_id(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_tracks.textproto'),
+        trace_modifier=TraceInjector(['track_descriptor', 'track_event'],
+                                     {'machine_id': 1001}),
+        query="""
+        WITH track_with_name AS (
+          SELECT
+            COALESCE(
+              t1.name,
+              'thread=' || thread.name,
+              'process=' || process.name,
+              'tid=' || thread.tid,
+              'pid=' || process.pid
+            ) AS full_name,
+            *
+          FROM track t1
+          LEFT JOIN thread_track t2 USING (id)
+          LEFT JOIN thread USING (utid)
+          LEFT JOIN process_track t3 USING (id)
+          LEFT JOIN process ON t3.upid = process.id
+          WHERE t1.machine_id IS NOT NULL
+          ORDER BY id
+        )
+        SELECT
+        t.full_name AS name,
+        EXTRACT_ARG(t.source_arg_set_id, 'has_first_packet_on_sequence')
+               AS has_first_packet_on_sequence
+        FROM track_with_name t
+        ORDER BY 1, 2;
+        """,
+        out=Csv("""
+        "name","has_first_packet_on_sequence"
+        "Default Track","[NULL]"
+        "async",1
+        "async2",1
+        "async3",1
+        "event_and_track_async3",1
+        "process=p1",1
+        "process=p2","[NULL]"
+        "process=p2","[NULL]"
+        "thread=t1",1
+        "thread=t2",1
+        "thread=t3",1
+        "thread=t4","[NULL]"
+        """))
+
+  # Tests thread_counter_track.machine_id is not null.
+  def test_track_event_counters_counters_machine_id(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_counters.textproto'),
+        trace_modifier=TraceInjector(
+            ['track_descriptor', 'track_event', 'trace_packet_defaults'],
+            {'machine_id': 1001}),
+        query="""
+        SELECT name, machine_id
+        FROM thread_counter_track
+        WHERE machine_id IS NOT NULL
+        """,
+        out=Csv("""
+        "name","machine_id"
+        "thread_time",0
+        "thread_time",0
+        "thread_instruction_count",0
+        """))
+
+  def test_track_event_name_resolution(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_name_resolution.textproto'),
+        query="""
+        SELECT name
+        FROM track
+        ORDER BY name;
+        """,
+        out=Csv("""
+        "name"
+        "Before Event"
+        "Event Name"
+        "Second Name"
+        """))
+
+  def test_track_event_callstacks(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_callstacks.textproto'),
+        query="""
+        WITH inline_slices AS (
+          SELECT
+            callsite_id
+          FROM slice
+          JOIN __intrinsic_track_event_callstacks USING (slice_id)
+          WHERE name GLOB 'Inline Slice *'
+        ),
+        inline_stats AS (
+          SELECT
+            COUNT(DISTINCT callsite_id) AS inline_unique_callstacks
+          FROM inline_slices
+          WHERE callsite_id IS NOT NULL
+        )
+        SELECT
+          slice.name,
+          COALESCE(spf.name, '[NULL]') AS leaf_frame,
+          COALESCE(sps.source_file, '[NULL]') AS source_file,
+          COALESCE(sps.line_number, 0) AS line_number,
+          inline_stats.inline_unique_callstacks
+        FROM slice
+        CROSS JOIN inline_stats
+        LEFT JOIN __intrinsic_track_event_callstacks tec
+          ON tec.slice_id = slice.id AND tec.callsite_id IS NOT NULL
+        LEFT JOIN stack_profile_callsite spc
+          ON spc.id = tec.callsite_id
+        LEFT JOIN stack_profile_frame spf
+          ON spf.id = spc.frame_id
+        LEFT JOIN stack_profile_symbol sps
+          ON sps.symbol_set_id = spf.symbol_set_id AND sps.id = spf.symbol_set_id
+        WHERE slice.name IN ('Inline Slice 1', 'Inline Slice 2', 'Interned Slice')
+        ORDER BY slice.name;
+        """,
+        out=Csv("""
+        "name","leaf_frame","source_file","line_number","inline_unique_callstacks"
+        "Inline Slice 1","InlineLeaf","leaf.cc",42,1
+        "Inline Slice 2","InlineLeaf","leaf.cc",42,1
+        "Interned Slice","FuncB","[NULL]",0,1
+        """))
+
+  def test_track_event_callstack_weights(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_callstacks.textproto'),
+        query="""
+        SELECT
+          slice.name,
+          iif(callsite_id IS NOT NULL, 'begin', 'end') AS event_type,
+          weight
+        FROM __intrinsic_track_event_callstacks
+        JOIN slice USING (slice_id)
+        ORDER BY slice.name, event_type;
+        """,
+        out=Csv("""
+        "name","event_type","weight"
+        "Inline Slice 1","begin",2.500000
+        "Inline Slice 2","begin","[NULL]"
+        "Interned Slice","begin","[NULL]"
+        "Interned Slice","end",4.000000
+        """))
+
+  def test_track_event_name_resolution_extended(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_name_resolution_extended.textproto'),
+        query="""
+        SELECT t.name, t.parent_id is null as is_root
+        FROM track t
+        ORDER BY t.name;
+        """,
+        out=Csv("""
+        "name","is_root"
+        "After Event",1
+        "Child Event",0
+        "Event Name",1
+        "Parent",1
+        "Second Name",1
+        """))
+
+  def test_track_event_name_resolution_null_override(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_name_resolution_null_override.textproto'),
+        query="""
+        SELECT name
+        FROM track
+        WHERE name IS NOT NULL;
+        """,
+        out=Csv("""
+        "name"
+        "First Name"
+        """))
+
+  def test_track_descriptor_process_thread_sort_index(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 0
+            process_ordering: PROCESS_ORDERING_EXPLICIT
+            thread_ordering: THREAD_ORDERING_EXPLICIT
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 1
+            process {
+              pid: 100
+              process_name: "ProcessA"
+            }
+            sibling_order_rank: 5
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 2
+            thread {
+              pid: 100
+              tid: 101
+              thread_name: "ThreadA"
+            }
+            sibling_order_rank: 42
+          }
+        }
+        """),
+        query="""
+        SELECT pid, name, extract_arg(arg_set_id, 'process_sort_index_hint') AS sort_index FROM process WHERE pid = 100
+        UNION ALL
+        SELECT tid, name, extract_arg(arg_set_id, 'thread_sort_index_hint') AS sort_index FROM thread WHERE tid = 101;
+        """,
+        out=Csv("""
+        "pid","name","sort_index"
+        100,"ProcessA",5
+        101,"ThreadA",42
+        """))
+
+  def test_track_descriptor_process_thread_sort_index_default_ignored(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            process {
+              pid: 100
+              process_name: "ProcessA"
+            }
+            sibling_order_rank: 5
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 2
+            thread {
+              pid: 100
+              tid: 101
+              thread_name: "ThreadA"
+            }
+            sibling_order_rank: 42
+          }
+        }
+        """),
+        query="""
+        SELECT pid, name, extract_arg(arg_set_id, 'process_sort_index_hint') AS sort_index FROM process WHERE pid = 100
+        UNION ALL
+        SELECT tid, name, extract_arg(arg_set_id, 'thread_sort_index_hint') AS sort_index FROM thread WHERE tid = 101;
+        """,
+        out=Csv("""
+        "pid","name","sort_index"
+        100,"ProcessA","[NULL]"
+        101,"ThreadA","[NULL]"
+        """))
+
+  def test_track_event_simple_state(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 10
+            name: "MyStateTrack"
+            state {}
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 1000
+          track_event {
+            track_uuid: 10
+            type: 5
+            categories: "state_cat"
+            name: "state_active"
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 3000
+          track_event {
+            track_uuid: 10
+            type: 5
+            categories: "state_cat"
+            name: "state_idle"
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 4000
+          track_event {
+            track_uuid: 10
+            type: 5
+          }
+        }
+        """),
+        query="""
+        SELECT state.id, ts, dur, category, value, track.name AS track_name
+        FROM state
+        JOIN track ON track.id = state.track_id
+        ORDER BY ts;
+        """,
+        out=Csv("""
+        "id","ts","dur","category","value","track_name"
+        0,1000,2000,"state_cat","state_active","MyStateTrack"
+        1,3000,1000,"state_cat","state_idle","MyStateTrack"
+        """))
+
+  def test_state_track_legacy_fallback_error(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 0
+            state {}
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 1000
+          track_event {
+            track_uuid: 0
+            type: 5
+            legacy_event {
+              pid_override: 10
+            }
+          }
+        }
+        """),
+        query="""
+        SELECT name, value FROM stats WHERE name = 'track_event_parser_errors';
+        """,
+        out=Csv("""
+        "name","value"
+        "track_event_parser_errors",1
+        """))
+
+  def test_track_event_state_state(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_state.textproto'),
+        query="""
+        SELECT
+          state_track.name AS state_name,
+          process.name AS process,
+          thread.name AS thread,
+          thread_process.name AS thread_process,
+          state.ts,
+          state.value
+        FROM state
+        LEFT JOIN state_track ON state.track_id = state_track.id
+        LEFT JOIN process_state_track ON state.track_id = process_state_track.id
+        LEFT JOIN process ON process_state_track.upid = process.upid
+        LEFT JOIN thread_state_track ON state.track_id = thread_state_track.id
+        LEFT JOIN thread ON thread_state_track.utid = thread.utid
+        LEFT JOIN process thread_process ON thread.upid = thread_process.upid
+        ORDER BY ts ASC;
+        """,
+        out=Csv("""
+        "state_name","process","thread","thread_process","ts","value"
+        "ProcState","Browser","[NULL]","[NULL]",1000,"Foreground"
+        "ThreadState","[NULL]","t1","Browser",2000,"Running"
+        "GlobalState","[NULL]","[NULL]","[NULL]",3000,"Active"
+        """))
+
+  def test_track_event_state_on_non_state_track(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 101
+            name: "Regular Track"
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 1000
+          track_event {
+            track_uuid: 101
+            type: 5
+            categories: "cat"
+            name: "High"
+          }
+        }
+        """),
+        query="""
+        SELECT name, value FROM stats WHERE name = 'track_event_parser_errors';
+        """,
+        out=Csv("""
+        "name","value"
+        "track_event_parser_errors",1
+        """))
+
+  def test_track_event_out_of_order_state_descriptors(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 101
+            parent_uuid: 100
+            name: "Priority"
+            state {}
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 100
+            name: "Process track"
+            process {
+              pid: 10
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 1000
+          track_event {
+            track_uuid: 101
+            type: 5
+            categories: "cat"
+            name: "High"
+          }
+        }
+        """),
+        query="""
+        SELECT state.id, ts, value, track.name AS track_name
+        FROM state
+        JOIN track ON track.id = state.track_id
+        ORDER BY ts;
+        """,
+        out=Csv("""
+        "id","ts","value","track_name"
+        0,1000,"High","Priority"
+        """))
+
+  # A sentinel/uninitialized microsecond timestamp near INT64_MIN must not
+  # wrap to a large positive value when converted to nanoseconds (x1000).
+  # SaturatingMultiply keeps it negative so the trace sorter's ts < 0 guard
+  # drops the event instead of poisoning trace_bounds (which previously
+  # produced a ~INT64_MAX end_ts and crashed the mipmap operator in the UI).
+  def test_track_event_absolute_timestamp_us_overflow(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          clock_snapshot {
+            primary_trace_clock: 4  # BUILTIN_CLOCK_MONOTONIC_RAW
+            clocks {
+              clock_id: 3  # BUILTIN_CLOCK_MONOTONIC
+              timestamp: 1
+            }
+            clocks {
+              clock_id: 4  # BUILTIN_CLOCK_MONOTONIC_RAW
+              timestamp: 0
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            name: "track"
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          track_event {
+            track_uuid: 1
+            type: TYPE_INSTANT
+            name: "good"
+            timestamp_absolute_us: 1000
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          track_event {
+            track_uuid: 1
+            type: TYPE_INSTANT
+            name: "sentinel"
+            timestamp_absolute_us: -9223372036854776
+          }
+        }
+        """),
+        query="""
+        SELECT
+          (SELECT count(*) FROM slice) AS slice_count,
+          (SELECT name FROM slice) AS slice_name,
+          (SELECT ts FROM slice) AS slice_ts,
+          (SELECT value FROM stats
+           WHERE name = 'track_event_invalid_timestamp') AS errors;
+        """,
+        out=Csv("""
+        "slice_count","slice_name","slice_ts","errors"
+        1,"good",999999,1
+        """))
+
+  # Streaming profile timestamp deltas use the same TrackEvent sequence state.
+  # Their microsecond-to-nanosecond conversion must saturate before updating
+  # that state so a subsequent TrackEvent cannot observe a wrapped timestamp.
+  def test_streaming_profile_timestamp_delta_overflow(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          clock_snapshot {
+            primary_trace_clock: 4  # BUILTIN_CLOCK_MONOTONIC_RAW
+            clocks {
+              clock_id: 3  # BUILTIN_CLOCK_MONOTONIC
+              timestamp: 0
+            }
+            clocks {
+              clock_id: 4  # BUILTIN_CLOCK_MONOTONIC_RAW
+              timestamp: 1
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            name: "track"
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          track_event {
+            track_uuid: 1
+            type: TYPE_INSTANT
+            name: "good"
+            timestamp_absolute_us: 1000
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          thread_descriptor {
+            reference_timestamp_us: 0
+            reference_thread_time_us: 0
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          streaming_profile_packet {
+            timestamp_delta_us: -9223372036854776
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          streaming_profile_packet {
+            timestamp_delta_us: 0
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          track_event {
+            track_uuid: 1
+            type: TYPE_INSTANT
+            name: "sentinel"
+            timestamp_delta_us: 0
+          }
+        }
+        """),
+        query="""
+        SELECT
+          (SELECT count(*) FROM slice) AS slice_count,
+          (SELECT name FROM slice) AS slice_name,
+          (SELECT ts FROM slice) AS slice_ts,
+          (SELECT value FROM stats
+           WHERE name = 'track_event_invalid_timestamp') AS track_errors,
+          (SELECT value FROM stats
+           WHERE name = 'streaming_profile_invalid_timestamp')
+            AS profile_errors;
+        """,
+        out=Csv("""
+        "slice_count","slice_name","slice_ts","track_errors","profile_errors"
+        1,"good",1000001,1,2
+        """))
+
+  # Adding a negative delta to a reference timestamp near INT64_MIN must also
+  # saturate instead of wrapping to a large positive timestamp.
+  def test_track_event_delta_timestamp_addition_overflow(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            name: "track"
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          track_event {
+            track_uuid: 1
+            type: TYPE_INSTANT
+            name: "good"
+            timestamp_absolute_us: 1000
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          thread_descriptor {
+            reference_timestamp_us: -9223372036854775
+            reference_thread_time_us: 0
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          track_event {
+            track_uuid: 1
+            type: TYPE_INSTANT
+            name: "sentinel"
+            timestamp_delta_us: -1
+          }
+        }
+        """),
+        query="""
+        SELECT
+          (SELECT count(*) FROM slice) AS slice_count,
+          (SELECT name FROM slice) AS slice_name,
+          (SELECT ts FROM slice) AS slice_ts,
+          (SELECT value FROM stats
+           WHERE name = 'track_event_invalid_timestamp') AS errors;
+        """,
+        out=Csv("""
+        "slice_count","slice_name","slice_ts","errors"
+        1,"good",1000000,1
+        """))
+
+  # Producer-declared custom dimensions (TrackDescriptor.dimensions) and the
+  # well known dimensions synthesized by trace processor.
+  def test_track_event_dimensions(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_dimensions.textproto'),
+        query="""
+        SELECT
+          extract_arg(t.dimension_arg_set_id, 'track_uuid') AS track_uuid,
+          t.name AS track_name,
+          d.name,
+          d.int_value,
+          d.string_value,
+          d.display_name
+        FROM track_dimension AS d
+        JOIN track AS t ON t.id = d.track_id
+        WHERE d.is_well_known = 0
+        ORDER BY track_uuid, d.name;
+        """,
+        out=Csv("""
+        "track_uuid","track_name","name","int_value","string_value","display_name"
+        10,"[NULL]","rank",3,"[NULL]","[NULL]"
+        10,"[NULL]","stage","[NULL]","forward","[NULL]"
+        11,"async","rank",3,"[NULL]","[NULL]"
+        11,"async","stage","[NULL]","forward","[NULL]"
+        20,"[NULL]","rank",7,"[NULL]","worker-east"
+        21,"child","rank",7,"[NULL]","worker-east"
+        30,"[NULL]","chrome.process_label","[NULL]","IMDb: Ratings, Reviews","IMDb: Ratings, Reviews"
+        30,"[NULL]","chrome.process_label2","[NULL]","Subframe: https://prebid.a-mo.net/","Subframe: https://prebid.a-mo.net/"
+        """))
+
+  # Dimensions are a query axis: slices can be filtered/grouped by the
+  # dimensions of the track they are on, whatever the track type.
+  def test_track_event_dimensions_slice_join(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_dimensions.textproto'),
+        query="""
+        SELECT
+          s.name AS slice,
+          d.name AS dimension,
+          d.int_value,
+          d.string_value
+        FROM slice AS s
+        JOIN track_dimension AS d USING (track_id)
+        WHERE d.is_well_known = 0
+        ORDER BY s.ts, d.name;
+        """,
+        out=Csv("""
+        "slice","dimension","int_value","string_value"
+        "work","rank",3,"[NULL]"
+        "work","stage","[NULL]","forward"
+        "other","rank",7,"[NULL]"
+        "frame","chrome.process_label","[NULL]","IMDb: Ratings, Reviews"
+        "frame","chrome.process_label2","[NULL]","Subframe: https://prebid.a-mo.net/"
+        """))
+
+  # Invalid dimension declarations are dropped and reported as stats: a child
+  # cannot override an inherited value, cannot use a reserved well known name
+  # and must provide a value.
+  def test_track_event_dimensions_invalid(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_dimensions.textproto'),
+        query="""
+        SELECT name, value
+        FROM stats
+        WHERE name IN (
+          'track_descriptor_invalid_dimension',
+          'track_descriptor_reserved_dimension_name',
+          'track_dimension_conflicting_value')
+          AND value > 0
+        ORDER BY name;
+        """,
+        out=Csv("""
+        "name","value"
+        "track_descriptor_invalid_dimension",1
+        "track_descriptor_reserved_dimension_name",1
+        "track_dimension_conflicting_value",1
+        """))
+
+  # Producers re-emit their descriptors, e.g. on every incremental state
+  # clear: the errors of their dimensions are only recorded once per
+  # descriptor.
+  def test_track_event_dimensions_errors_once(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            name: "bad"
+            dimensions { name: "cpu" int_value: 1 }
+            dimensions { name: "shard" }
+            dimensions { name: "rank" int_value: 1 }
+            dimensions { name: "rank" int_value: 2 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 10
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            name: "bad"
+            dimensions { name: "cpu" int_value: 1 }
+            dimensions { name: "shard" }
+            dimensions { name: "rank" int_value: 1 }
+            dimensions { name: "rank" int_value: 2 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 20
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            name: "bad"
+            dimensions { name: "cpu" int_value: 1 }
+            dimensions { name: "shard" }
+            dimensions { name: "rank" int_value: 1 }
+            dimensions { name: "rank" int_value: 2 }
+          }
+        }
+        packet { trusted_packet_sequence_id: 1 timestamp: 100
+          track_event { track_uuid: 1 type: TYPE_INSTANT name: "a" } }
+        """),
+        query="""
+        SELECT name, value
+        FROM stats
+        WHERE name IN (
+          'track_descriptor_conflicting_reservation',
+          'track_descriptor_invalid_dimension',
+          'track_descriptor_reserved_dimension_name',
+          'track_dimension_conflicting_value')
+        ORDER BY name;
+        """,
+        out=Csv("""
+        "name","value"
+        "track_descriptor_conflicting_reservation",0
+        "track_descriptor_invalid_dimension",1
+        "track_descriptor_reserved_dimension_name",1
+        "track_dimension_conflicting_value",1
+        """))
+
+  # A global track only gets the dimensions declared on itself or an explicit
+  # parent_uuid ancestor, plus synthesized well known ones. It must not pick up
+  # dimensions from unrelated trees or processes.
+  def test_track_event_dimensions_global_tracks(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            name: "global parent"
+            sibling_merge_behavior: SIBLING_MERGE_BEHAVIOR_NONE
+            dimensions { name: "shard" int_value: 1 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 2
+            parent_uuid: 1
+            name: "global child"
+            sibling_merge_behavior: SIBLING_MERGE_BEHAVIOR_NONE
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 3
+            name: "unrelated global"
+            sibling_merge_behavior: SIBLING_MERGE_BEHAVIOR_NONE
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 4
+            process { pid: 100 process_name: "p" }
+            dimensions { name: "rank" int_value: 9 }
+          }
+        }
+        packet { trusted_packet_sequence_id: 1 timestamp: 100
+          track_event { track_uuid: 1 type: TYPE_INSTANT name: "a" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 100
+          track_event { track_uuid: 2 type: TYPE_INSTANT name: "b" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 100
+          track_event { track_uuid: 3 type: TYPE_INSTANT name: "c" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 100
+          track_event { track_uuid: 4 type: TYPE_INSTANT name: "d" } }
+        """),
+        query="""
+        SELECT
+          t.name AS track,
+          (
+            SELECT group_concat(n, ',')
+            FROM (
+              SELECT
+                CASE
+                  WHEN d.is_well_known THEN d.name
+                  ELSE d.name || '=' || coalesce(d.int_value, d.string_value)
+                END AS n
+              FROM track_dimension AS d
+              WHERE d.track_id = t.id
+              ORDER BY d.name
+            )
+          ) AS dimensions
+        FROM track AS t
+        ORDER BY t.name;
+        """,
+        out=Csv("""
+        "track","dimensions"
+        "[NULL]","machine,process,rank=9"
+        "global child","machine,shard=1"
+        "global parent","machine,shard=1"
+        "unrelated global","machine"
+        """))
+
+  # Well known dimensions are synthesized by trace processor from existing
+  # columns rather than declared by producers.
+  def test_track_event_dimensions_well_known(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_dimensions.textproto'),
+        query="""
+        SELECT DISTINCT name
+        FROM track_dimension
+        WHERE is_well_known = 1
+        ORDER BY name;
+        """,
+        out=Csv("""
+        "name"
+        "machine"
+        "process"
+        "thread"
+        """))
+
+  # Dimensions are part of the track identity: a re-emitted descriptor with
+  # different dimensions (including a first descriptor without any) is a
+  # conflicting reservation and the first descriptor is kept. Order and display
+  # names don't matter.
+  def test_track_event_dimensions_identity_reservation(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_dimensions_identity.textproto'),
+        query="""
+        SELECT
+          s.name AS slice,
+          (
+            SELECT group_concat(d.name || '=' || coalesce(d.int_value, d.string_value), ',')
+            FROM (
+              SELECT * FROM track_dimension
+              WHERE track_id = s.track_id AND is_well_known = 0
+              ORDER BY name
+            ) AS d
+          ) AS dimensions,
+          (
+            SELECT value FROM stats
+            WHERE name = 'track_descriptor_conflicting_reservation'
+          ) AS conflicts
+        FROM slice AS s
+        WHERE s.name IN ('g1_event', 'g2_event')
+        ORDER BY s.name;
+        """,
+        out=Csv("""
+        "slice","dimensions","conflicts"
+        "g1_event","rank=1,stage=fwd",2
+        "g2_event","[NULL]",2
+        """))
+
+  # The declared dimensions are normalized: sorted by name and without repeated
+  # names, a name declared twice keeping its first value. Re-emitting the same
+  # dimensions in another order or with a repeated name is the same identity.
+  def test_track_event_dimensions_normalized(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            name: "repeated"
+            sibling_merge_behavior: SIBLING_MERGE_BEHAVIOR_NONE
+            dimensions { name: "rank" int_value: 1 }
+            dimensions { name: "stage" string_value: "fwd" }
+            dimensions { name: "rank" int_value: 1 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 1
+            name: "repeated"
+            sibling_merge_behavior: SIBLING_MERGE_BEHAVIOR_NONE
+            dimensions { name: "stage" string_value: "fwd" }
+            dimensions { name: "rank" int_value: 1 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 2
+            name: "conflicting"
+            sibling_merge_behavior: SIBLING_MERGE_BEHAVIOR_NONE
+            dimensions { name: "shard" int_value: 1 }
+            dimensions { name: "shard" int_value: 2 }
+          }
+        }
+        packet { trusted_packet_sequence_id: 1 timestamp: 100
+          track_event { track_uuid: 1 type: TYPE_INSTANT name: "on_repeated" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 200
+          track_event { track_uuid: 2 type: TYPE_INSTANT name: "on_conflicting" } }
+        """),
+        query="""
+        SELECT
+          'slice' AS kind,
+          s.name,
+          (
+            SELECT group_concat(d.name || '=' || coalesce(d.int_value, d.string_value), ',')
+            FROM (
+              SELECT * FROM track_dimension
+              WHERE track_id = s.track_id AND NOT is_well_known
+              ORDER BY name
+            ) AS d
+          ) AS value
+        FROM slice AS s
+        UNION ALL
+        SELECT 'stat' AS kind, name, value
+        FROM stats
+        WHERE name IN (
+          'track_descriptor_conflicting_reservation',
+          'track_dimension_conflicting_value')
+        ORDER BY kind, name;
+        """,
+        out=Csv("""
+        "kind","name","value"
+        "slice","on_conflicting","shard=1"
+        "slice","on_repeated","rank=1,stage=fwd"
+        "stat","track_descriptor_conflicting_reservation",0
+        "stat","track_dimension_conflicting_value",1
+        """))
+
+  # Dimensions are part of the sibling merge key: siblings are only merged if
+  # they declare the same dimensions.
+  def test_track_event_dimensions_identity_merging(self):
+    return DiffTestBlueprint(
+        trace=Path('track_event_dimensions_identity.textproto'),
+        query="""
+        SELECT
+          s.name AS slice,
+          dense_rank() OVER (
+            ORDER BY (SELECT min(ts) FROM slice WHERE track_id = s.track_id)
+          ) AS track_idx,
+          (
+            SELECT int_value FROM track_dimension
+            WHERE track_id = s.track_id AND name = 'rank'
+          ) AS rank
+        FROM slice AS s
+        JOIN track AS t ON t.id = s.track_id
+        WHERE t.name = 'step'
+        ORDER BY s.ts;
+        """,
+        out=Csv("""
+        "slice","track_idx","rank"
+        "rank1_a",1,1
+        "rank2",2,2
+        "rank1_b",1,1
+        "no_rank",3,"[NULL]"
+        """))
+
+  # Siblings are merged on their effective dimensions, inherited ones
+  # included: a sibling redundantly declaring the rank of its parent is merged
+  # with one which only inherits it, but not with one which has another
+  # dimension.
+  def test_track_event_dimensions_merge_effective(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 10
+            process { pid: 100 process_name: "trainer" }
+            dimensions { name: "rank" int_value: 1 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 11
+            parent_uuid: 10
+            name: "step"
+            dimensions { name: "rank" int_value: 1 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor { uuid: 12 parent_uuid: 10 name: "step" }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 13
+            parent_uuid: 10
+            name: "step"
+            dimensions { name: "stage" string_value: "fwd" }
+          }
+        }
+        packet { trusted_packet_sequence_id: 1 timestamp: 100
+          track_event { track_uuid: 11 type: TYPE_INSTANT name: "redundant" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 200
+          track_event { track_uuid: 12 type: TYPE_INSTANT name: "inherited" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 300
+          track_event { track_uuid: 13 type: TYPE_INSTANT name: "other" } }
+        """),
+        query="""
+        SELECT
+          s.name AS slice,
+          dense_rank() OVER (
+            ORDER BY (SELECT min(ts) FROM slice WHERE track_id = s.track_id)
+          ) AS track_idx,
+          (
+            SELECT group_concat(d.name || '=' || coalesce(d.int_value, d.string_value), ',')
+            FROM (
+              SELECT * FROM track_dimension
+              WHERE track_id = s.track_id AND NOT is_well_known
+              ORDER BY name
+            ) AS d
+          ) AS dimensions
+        FROM slice AS s
+        ORDER BY s.ts;
+        """,
+        out=Csv("""
+        "slice","track_idx","dimensions"
+        "redundant",1,"rank=1"
+        "inherited",1,"rank=1"
+        "other",2,"rank=1,stage=fwd"
+        """))
+
+  # Dimension names, string values and display names can be interned with
+  # `name_iid` / `string_value_iid` / `display_name_iid`. The resolved strings
+  # are the name and value: they are the same identity (and merge key) as
+  # inline strings with the same contents. A descriptor with a name or value
+  # iid without interned data is ignored, so that a re-emission with the
+  # interned data (e.g. after the original was lost) is still accepted. A
+  # display name iid without interned data only drops the display name.
+  def test_track_event_dimensions_interned_string_value(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          sequence_flags: 2
+          interned_data {
+            track_dimension_strings { iid: 1 str: "fwd" }
+            track_dimension_strings { iid: 2 str: "forward pass" }
+            track_dimension_strings { iid: 3 str: "stage" }
+          }
+          track_descriptor {
+            uuid: 10
+            process { pid: 100 process_name: "trainer" }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          sequence_flags: 2
+          track_descriptor {
+            uuid: 11
+            parent_uuid: 10
+            name: "step"
+            dimensions {
+              name: "stage" string_value_iid: 1 display_name_iid: 2
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          sequence_flags: 2
+          track_descriptor {
+            uuid: 12
+            parent_uuid: 10
+            name: "step"
+            dimensions { name: "stage" string_value: "fwd" }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          sequence_flags: 2
+          track_descriptor {
+            uuid: 13
+            parent_uuid: 10
+            name: "step"
+            dimensions { name: "stage" string_value_iid: 99 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          sequence_flags: 2
+          track_descriptor {
+            uuid: 14
+            parent_uuid: 10
+            name: "other"
+            dimensions {
+              name: "stage" string_value: "bwd" display_name_iid: 98
+            }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          sequence_flags: 2
+          track_descriptor {
+            uuid: 15
+            parent_uuid: 10
+            name: "step"
+            dimensions { name_iid: 3 string_value_iid: 1 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          sequence_flags: 2
+          track_descriptor {
+            uuid: 16
+            parent_uuid: 10
+            name: "step"
+            dimensions { name_iid: 97 string_value: "fwd" }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 2
+          timestamp: 0
+          incremental_state_cleared: true
+          sequence_flags: 2
+          interned_data {
+            track_dimension_strings { iid: 99 str: "fwd" }
+          }
+          track_descriptor {
+            uuid: 13
+            parent_uuid: 10
+            name: "step"
+            dimensions { name: "stage" string_value_iid: 99 }
+          }
+        }
+        packet { trusted_packet_sequence_id: 1 timestamp: 1000
+          track_event { track_uuid: 11 type: TYPE_INSTANT name: "interned" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 2000
+          track_event { track_uuid: 12 type: TYPE_INSTANT name: "inline" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 3000
+          track_event { track_uuid: 13 type: TYPE_INSTANT name: "reemitted" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 4000
+          track_event {
+            track_uuid: 14 type: TYPE_INSTANT name: "unknown_display_iid"
+          }
+        }
+        packet { trusted_packet_sequence_id: 1 timestamp: 5000
+          track_event { track_uuid: 15 type: TYPE_INSTANT name: "interned_name" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 6000
+          track_event {
+            track_uuid: 16 type: TYPE_INSTANT name: "unknown_name_iid"
+          }
+        }
+        """),
+        query="""
+        SELECT
+          s.name AS slice,
+          dense_rank() OVER (
+            ORDER BY (SELECT min(ts) FROM slice WHERE track_id = s.track_id)
+          ) AS track_idx,
+          (
+            SELECT string_value FROM track_dimension
+            WHERE track_id = s.track_id AND name = 'stage'
+          ) AS stage,
+          (
+            SELECT display_name FROM track_dimension
+            WHERE track_id = s.track_id AND name = 'stage'
+          ) AS stage_display_name,
+          (
+            SELECT value FROM stats
+            WHERE name = 'track_descriptor_invalid_dimension'
+          ) AS invalid
+        FROM slice AS s
+        ORDER BY s.ts;
+        """,
+        out=Csv("""
+        "slice","track_idx","stage","stage_display_name","invalid"
+        "interned",1,"fwd","forward pass",3
+        "inline",1,"fwd","forward pass",3
+        "reemitted",1,"fwd","forward pass",3
+        "unknown_display_iid",2,"bwd","[NULL]",3
+        "interned_name",1,"fwd","forward pass",3
+        "unknown_name_iid",3,"[NULL]","[NULL]",3
+        """))
+
+  # Dimensions only flow down parent_uuid: a process or thread track is just a
+  # track which may declare dimensions. The threads of a process only inherit
+  # its dimensions if their descriptors are parent_uuid children of the process
+  # track. A value conflicting with an inherited one, or a name declared twice
+  # with different values, is ignored and counted once per declaration, not
+  # once per track inheriting from it.
+  def test_track_event_dimensions_parent_uuid_only(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 10
+            process { pid: 100 process_name: "trainer" }
+            dimensions { name: "rank" int_value: 3 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 11
+            thread { pid: 100 tid: 101 thread_name: "standalone" }
+            dimensions { name: "stage" string_value: "fwd" }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 12
+            parent_uuid: 10
+            thread { pid: 100 tid: 102 thread_name: "nested" }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 13
+            parent_uuid: 12
+            name: "child"
+            sibling_merge_behavior: SIBLING_MERGE_BEHAVIOR_NONE
+            dimensions { name: "rank" int_value: 4 }
+            dimensions { name: "shard" int_value: 1 }
+            dimensions { name: "shard" int_value: 2 }
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 14
+            parent_uuid: 13
+            name: "grandchild"
+            sibling_merge_behavior: SIBLING_MERGE_BEHAVIOR_NONE
+          }
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          track_descriptor {
+            uuid: 15
+            parent_uuid: 10
+            name: "async"
+            dimensions { name: "rank" int_value: 9 }
+          }
+        }
+        packet { trusted_packet_sequence_id: 1 timestamp: 1000
+          track_event { track_uuid: 11 type: TYPE_INSTANT name: "on_standalone" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 2000
+          track_event { track_uuid: 12 type: TYPE_INSTANT name: "on_nested" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 3000
+          track_event { track_uuid: 13 type: TYPE_INSTANT name: "on_child" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 3500
+          track_event { track_uuid: 14 type: TYPE_INSTANT name: "on_grandchild" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 4000
+          track_event { track_uuid: 15 type: TYPE_INSTANT name: "on_async" } }
+        """),
+        query="""
+        SELECT
+          'slice' AS kind,
+          s.name,
+          (
+            SELECT group_concat(d.name || '=' || coalesce(d.int_value, d.string_value), ',')
+            FROM (
+              SELECT * FROM track_dimension
+              WHERE track_id = s.track_id AND NOT is_well_known
+              ORDER BY name
+            ) AS d
+          ) AS value
+        FROM slice AS s
+        UNION ALL
+        SELECT 'error' AS kind, name, extract_arg(arg_set_id, 'track_uuid')
+        FROM _trace_import_logs
+        WHERE name = 'track_dimension_conflicting_value'
+        ORDER BY kind, name, value;
+        """,
+        out=Csv("""
+        "kind","name","value"
+        "error","track_dimension_conflicting_value",13
+        "error","track_dimension_conflicting_value",13
+        "error","track_dimension_conflicting_value",15
+        "slice","on_async","rank=3"
+        "slice","on_child","rank=3,shard=1"
+        "slice","on_grandchild","rank=3,shard=1"
+        "slice","on_nested","rank=3"
+        "slice","on_standalone","stage=fwd"
+        """))
+
+  # Two thread descriptors for the same tid don't share the thread track: the
+  # second one is a tid reuse and gets a thread of its own, so each track gets
+  # the dimensions of a single descriptor whatever the order they are parsed
+  # in.
+  def test_track_event_dimensions_same_tid(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet { trusted_packet_sequence_id: 1 timestamp: 100
+          incremental_state_cleared: true
+          track_descriptor { uuid: 20 thread { pid: 10 tid: 11 } } }
+        packet { trusted_packet_sequence_id: 2 timestamp: 100
+          incremental_state_cleared: true
+          track_descriptor { uuid: 21 thread { pid: 10 tid: 11 }
+            dimensions { name: "rank" int_value: 3 } } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 200
+          track_event { track_uuid: 20 type: TYPE_INSTANT name: "without" } }
+        packet { trusted_packet_sequence_id: 2 timestamp: 300
+          track_event { track_uuid: 21 type: TYPE_INSTANT name: "with" } }
+        """),
+        query="""
+        SELECT
+          s.name AS slice,
+          t.tid,
+          (
+            SELECT group_concat(d.name || '=' || d.int_value, ',')
+            FROM track_dimension AS d
+            WHERE d.track_id = s.track_id AND NOT d.is_well_known
+          ) AS dimensions,
+          (SELECT count(DISTINCT utid) FROM thread WHERE tid = 11) AS threads
+        FROM slice AS s
+        JOIN thread_track AS tt ON tt.id = s.track_id
+        JOIN thread AS t USING (utid)
+        ORDER BY s.ts;
+        """,
+        out=Csv("""
+        "slice","tid","dimensions","threads"
+        "without",11,"[NULL]",2
+        "with",11,"rank=3",2
+        """))
+
+  # Writing dimensions as tracks are created doesn't depend on the order in
+  # which tracks and descriptors show up: a track gets the dimensions of its own
+  # descriptor and its parent_uuid ancestors, never the ones of descriptors it
+  # is only associated with through its process or thread.
+  def test_track_event_dimensions_order_independent(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet { trusted_packet_sequence_id: 1 timestamp: 100 sequence_flags: 1
+          track_descriptor { uuid: 20 thread { pid: 10 tid: 11 } } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 200
+          track_event { track_uuid: 20 type: TYPE_SLICE_BEGIN name: "early" } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 300
+          track_event { track_uuid: 20 type: TYPE_SLICE_END } }
+        packet { trusted_packet_sequence_id: 2 timestamp: 1000 sequence_flags: 1
+          track_descriptor { uuid: 10 process { pid: 10 }
+            dimensions { name: "rank" int_value: 3 } } }
+        packet { timestamp: 1400 process_stats { processes { pid: 10 rss_anon_kb: 100 } } }
+        packet { trusted_packet_sequence_id: 2 timestamp: 1500
+          track_event { track_uuid: 10 type: TYPE_INSTANT name: "late" } }
+        """),
+        query="""
+        SELECT
+          t.name,
+          t.type,
+          (
+            SELECT group_concat(d.name || '=' || coalesce(d.int_value, d.string_value), ',')
+            FROM (
+              SELECT * FROM track_dimension
+              WHERE track_id = t.id AND NOT is_well_known
+              ORDER BY name
+            ) AS d
+          ) AS dimensions
+        FROM track AS t
+        ORDER BY t.type;
+        """,
+        out=Csv("""
+        "name","type","dimensions"
+        "mem.rss.anon","process_memory","[NULL]"
+        "[NULL]","process_track_event","rank=3"
+        "[NULL]","thread_execution","[NULL]"
+        """))
+
+  # Well known dimensions are derived by trace processor for every track, not
+  # only track event ones. Tracks only associated with a thread have no
+  # `process` dimension. The `cpu` dimension is the machine aware `ucpu`, so
+  # CPU 1 of each machine is a different CPU.
+  def test_track_event_dimensions_well_known_all_tracks(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet {
+          ftrace_events {
+            cpu: 0
+            event {
+              timestamp: 1000
+              pid: 0
+              cpu_frequency { state: 1000000 cpu_id: 1 }
+            }
+          }
+        }
+        packet {
+          timestamp: 1500
+          generic_kernel_cpu_freq_event { cpu: 1 freq_hz: 2500000000 }
+          machine_id: 349028234
+        }
+        packet {
+          trusted_packet_sequence_id: 1
+          timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 11
+            thread { pid: 100 tid: 101 thread_name: "worker" }
+          }
+        }
+        packet { trusted_packet_sequence_id: 1 timestamp: 2000
+          track_event { track_uuid: 11 type: TYPE_INSTANT name: "tick" } }
+        """),
+        query="""
+        SELECT type, dimensions
+        FROM (
+          SELECT
+            t.type,
+            (
+              SELECT group_concat(n, ',')
+              FROM (
+                SELECT
+                  CASE d.name
+                    WHEN 'cpu' THEN 'cpu=' || (
+                      SELECT c.cpu || '@' || m.raw_id
+                      FROM cpu AS c
+                      JOIN machine AS m ON m.id = c.machine_id
+                      WHERE c.id = d.int_value
+                    )
+                    WHEN 'machine' THEN 'machine=' || (
+                      SELECT raw_id FROM machine WHERE id = d.int_value
+                    )
+                    ELSE d.name
+                  END AS n
+                FROM track_dimension AS d
+                WHERE d.track_id = t.id AND d.is_well_known
+                ORDER BY d.name
+              )
+            ) AS dimensions
+          FROM track AS t
+        )
+        ORDER BY type, dimensions;
+        """,
+        out=Csv("""
+        "type","dimensions"
+        "cpu_frequency","cpu=1@0,machine=0"
+        "cpu_frequency","cpu=1@349028234,machine=349028234"
+        "thread_execution","machine=0,thread"
+        """))
+
+  def test_track_event_dimensions_display_values(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet { timestamp: 0 gpu_counter_event {
+          gpu_id: 7
+          counter_descriptor { specs { counter_id: 1 name: "GPU Frequency" } }
+        } }
+        packet { timestamp: 100 machine_id: 349028234
+          generic_kernel_cpu_freq_event { cpu: 1 freq_hz: 2500000000 } }
+        packet { timestamp: 0 machine_id: 349028234
+          gpu_counter_event {
+            gpu_id: 0
+            counter_descriptor { specs { counter_id: 1 name: "GPU Frequency" } }
+          } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 0
+          incremental_state_cleared: true machine_id: 349028234
+          track_descriptor { uuid: 10 process { pid: 100 process_name: "proc" } } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 200 machine_id: 349028234
+          track_event { track_uuid: 10 type: TYPE_INSTANT name: "p" } }
+        packet { trusted_packet_sequence_id: 2 timestamp: 0
+          incremental_state_cleared: true machine_id: 349028234
+          track_descriptor { uuid: 11 thread { pid: 100 tid: 101 thread_name: "worker" } } }
+        packet { trusted_packet_sequence_id: 2 timestamp: 300 machine_id: 349028234
+          track_event { track_uuid: 11 type: TYPE_INSTANT name: "t" } }
+        packet { timestamp: 400 machine_id: 349028234
+          system_info { machine_name: "training-host" } }
+        packet { timestamp: 400 machine_id: 349028234
+          gpu_info { gpus { name: "training-gpu" } } }
+        """),
+        query="""
+        SELECT DISTINCT
+          d.name,
+          d.display_value,
+          d.display_name,
+          CASE d.name
+            WHEN 'cpu' THEN EXISTS(
+              SELECT 1 FROM cpu
+              WHERE id = d.int_value AND cast_string!(cpu) = d.display_value
+            )
+            WHEN 'gpu' THEN EXISTS(
+              SELECT 1 FROM gpu
+              WHERE id = d.int_value AND cast_string!(gpu) = d.display_value
+            )
+            WHEN 'process' THEN EXISTS(
+              SELECT 1 FROM process
+              WHERE upid = d.int_value AND cast_string!(pid) = d.display_value
+            )
+            WHEN 'thread' THEN EXISTS(
+              SELECT 1 FROM thread
+              WHERE utid = d.int_value AND cast_string!(tid) = d.display_value
+            )
+            WHEN 'machine' THEN EXISTS(
+              SELECT 1 FROM machine
+              WHERE id = d.int_value AND cast_string!(label_index) = d.display_value
+            )
+          END AS canonical_identity_valid
+        FROM track_dimension AS d
+        JOIN track AS t ON t.id = d.track_id
+        JOIN machine AS m ON m.id = t.machine_id
+        WHERE d.is_well_known AND m.raw_id = 349028234
+        ORDER BY d.name;
+        """,
+        out=Csv("""
+        "name","display_value","display_name","canonical_identity_valid"
+        "cpu","1","[NULL]",1
+        "gpu","0","training-gpu",1
+        "machine","1","training-host",1
+        "process","100","proc",1
+        "thread","101","worker",1
+        """))
+
+  def test_track_event_dimensions_custom_display_values(self):
+    return DiffTestBlueprint(
+        trace=TextProto(r"""
+        packet { trusted_packet_sequence_id: 1 timestamp: 0
+          incremental_state_cleared: true
+          track_descriptor {
+            uuid: 1
+            dimensions { name: "max" int_value: 9223372036854775807 display_name: "largest" }
+            dimensions { name: "min" int_value: -9223372036854775808 }
+            dimensions { name: "stage" string_value: "forward" display_name: "forward pass" }
+            dimensions { name: "empty" string_value: "" }
+            dimensions { name: "zero" int_value: 0 }
+          } }
+        packet { trusted_packet_sequence_id: 1 timestamp: 100
+          track_event { track_uuid: 1 type: TYPE_INSTANT name: "event" } }
+        """),
+        query="""
+        SELECT name, int_value, string_value, display_value, display_name
+        FROM track_dimension
+        WHERE NOT is_well_known
+        ORDER BY name;
+        """,
+        out=Csv("""
+        "name","int_value","string_value","display_value","display_name"
+        "empty","[NULL]","","","[NULL]"
+        "max",9223372036854775807,"[NULL]","9223372036854775807","largest"
+        "min",-9223372036854775808,"[NULL]","-9223372036854775808","[NULL]"
+        "stage","[NULL]","forward","forward","forward pass"
+        "zero",0,"[NULL]","0","[NULL]"
+        """))

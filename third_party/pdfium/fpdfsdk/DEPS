@@ -1,0 +1,15 @@
+include_rules = [
+  '+core',
+  '+fxjs',
+  '+public',
+  '+xfa/fgas/font',
+  '+xfa/fgas/graphics',
+  '+xfa/fwl',
+  '+xfa/fxfa',
+]
+
+specific_include_rules = {
+  'fpdf_view_embeddertest\\.cpp': [
+    '+third_party/skia/include',
+  ],
+}
