@@ -1,0 +1,12 @@
+{
+  "gn_target": "//third_party/androidx:androidx_tracing_tracing_perfetto_java",
+  "mergeable_android_manifests": [
+    "obj/third_party/androidx/androidx_tracing_tracing_perfetto_java/AndroidManifest.xml"
+  ],
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_tracing_tracing_perfetto_java__classes.params.json",
+    "gen/third_party/androidx/androidx_tracing_tracing_perfetto_java__resources.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

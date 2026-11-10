@@ -1,0 +1,8 @@
+{
+  "gn_target": "//third_party/androidx:androidx_xr_arcore_arcore_testing_java__ignored_manifest",
+  "mergeable_android_manifests": [
+    "obj/third_party/androidx/androidx_xr_arcore_arcore_testing_java/AndroidManifest.xml"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

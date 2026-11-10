@@ -1,0 +1,27 @@
+{
+  "aar_path": "../../third_party/android_deps/cipd/libs/com_squareup_leakcanary_leakcanary_object_watcher_android_androidx/leakcanary-object-watcher-android-androidx.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/com_squareup_leakcanary_leakcanary_object_watcher_android_core_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/android_deps/com_squareup_leakcanary_leakcanary_object_watcher_android_androidx_java__classes.dex.jar",
+  "gn_target": "//third_party/android_deps:com_squareup_leakcanary_leakcanary_object_watcher_android_androidx_java",
+  "interface_jar_path": "obj/third_party/android_deps/com_squareup_leakcanary_leakcanary_object_watcher_android_androidx_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/android_deps/com_squareup_leakcanary_leakcanary_object_watcher_android_androidx_java/classes.jar",
+  "proguard_configs": [
+    "obj/third_party/android_deps/com_squareup_leakcanary_leakcanary_object_watcher_android_androidx_java/proguard.txt"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/android_deps/com_squareup_leakcanary_leakcanary_object_watcher_android_androidx_java/classes.jar"
+}

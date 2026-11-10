@@ -1,0 +1,25 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/androidx:androidx_compose_foundation_foundation_android_java__resources",
+  "package_name": "androidx.compose.foundation",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_experimental_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_collection_collection_java.params.json",
+    "gen/third_party/androidx/androidx_compose_animation_animation_java.params.json",
+    "gen/third_party/androidx/androidx_compose_foundation_foundation_layout_java.params.json",
+    "gen/third_party/androidx/androidx_compose_runtime_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_compose_ui_ui_java.params.json",
+    "gen/third_party/androidx/androidx_compose_ui_ui_text_java.params.json",
+    "gen/third_party/androidx/androidx_compose_ui_ui_util_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/androidx/androidx_emoji2_emoji2_java.params.json",
+    "gen/third_party/androidx/androidx_graphics_graphics_shapes_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/androidx/androidx_compose_foundation_foundation_android_java__resources.res.sources",
+  "resources_overlay_zip": "obj/third_party/androidx/androidx_compose_foundation_foundation_android_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/androidx/androidx_compose_foundation_foundation_android_java__resources_R.txt",
+  "type": "android_resources"
+}

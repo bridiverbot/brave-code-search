@@ -1,0 +1,17 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "gn_target": "//third_party/android_deps:io_github_eisop_dataflow_errorprone_java",
+  "interface_jar_path": "obj/third_party/android_deps/io_github_eisop_dataflow_errorprone.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/io_github_eisop_dataflow_errorprone/dataflow-errorprone.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/io_github_eisop_dataflow_errorprone/dataflow-errorprone.jar"
+}

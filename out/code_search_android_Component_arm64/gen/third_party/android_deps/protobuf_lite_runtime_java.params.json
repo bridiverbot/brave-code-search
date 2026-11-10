@@ -1,0 +1,9 @@
+{
+  "gn_target": "//third_party/android_deps:protobuf_lite_runtime_java",
+  "preferred_dep": true,
+  "public_deps_configs": [
+    "gen/third_party/android_deps/com_google_protobuf_protobuf_javalite_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

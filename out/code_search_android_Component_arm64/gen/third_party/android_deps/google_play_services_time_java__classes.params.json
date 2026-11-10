@@ -1,0 +1,28 @@
+{
+  "aar_path": "../../third_party/android_deps/cipd/libs/com_google_android_gms_play_services_time/play-services-time.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/google_play_services_base_java.params.json",
+    "gen/third_party/android_deps/google_play_services_basement_java.params.json",
+    "gen/third_party/android_deps/google_play_services_tasks_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/android_deps/google_play_services_time_java__classes.dex.jar",
+  "gn_target": "//third_party/android_deps:google_play_services_time_java",
+  "interface_jar_path": "obj/third_party/android_deps/google_play_services_time_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/android_deps/google_play_services_time_java/classes.jar",
+  "proguard_configs": [
+    "obj/third_party/android_deps/google_play_services_time_java/proguard.txt"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/android_deps/google_play_services_time_java/classes.jar"
+}

@@ -1,0 +1,27 @@
+{
+  "aar_path": "../../third_party/android_deps/cipd/libs/com_google_android_gms_play_services_stats/play-services-stats.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/google_play_services_basement_java.params.json",
+    "gen/third_party/androidx/androidx_legacy_legacy_support_core_utils_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/android_deps/google_play_services_stats_java__classes.dex.jar",
+  "gn_target": "//third_party/android_deps:google_play_services_stats_java",
+  "interface_jar_path": "obj/third_party/android_deps/google_play_services_stats_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/android_deps/google_play_services_stats_java/classes.jar",
+  "proguard_configs": [
+
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/android_deps/google_play_services_stats_java/classes.jar"
+}

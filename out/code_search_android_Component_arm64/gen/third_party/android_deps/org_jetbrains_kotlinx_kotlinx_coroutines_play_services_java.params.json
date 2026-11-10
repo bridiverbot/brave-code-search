@@ -1,0 +1,24 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_core_java.params.json",
+    "gen/third_party/android_deps/google_play_services_tasks_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_play_services_java.dex.jar",
+  "gn_target": "//third_party/android_deps:org_jetbrains_kotlinx_kotlinx_coroutines_play_services_java",
+  "interface_jar_path": "obj/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_play_services.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/org_jetbrains_kotlinx_kotlinx_coroutines_play_services/kotlinx-coroutines-play-services.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/org_jetbrains_kotlinx_kotlinx_coroutines_play_services/kotlinx-coroutines-play-services.jar"
+}

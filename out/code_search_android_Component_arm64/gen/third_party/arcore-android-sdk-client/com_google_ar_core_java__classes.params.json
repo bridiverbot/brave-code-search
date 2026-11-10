@@ -1,0 +1,30 @@
+{
+  "aar_path": "../../third_party/arcore-android-sdk-client/cipd/core-1.44.0.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/arcore-android-sdk-client/com_google_ar_core_java__resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/arcore-android-sdk-client/com_google_ar_core_java__classes.dex.jar",
+  "gn_target": "//third_party/arcore-android-sdk-client:com_google_ar_core_java",
+  "interface_jar_path": "obj/third_party/arcore-android-sdk-client/com_google_ar_core_java.ijar.jar",
+  "is_prebuilt": true,
+  "mergeable_android_manifests": [
+    "../../third_party/arcore-android-sdk-client/AndroidManifest_basesplit.xml",
+    "../../third_party/arcore-android-sdk-client/AndroidManifest_install_activity.xml"
+  ],
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/arcore-android-sdk-client/com_google_ar_core_java/classes.jar",
+  "proguard_configs": [
+    "../../third_party/arcore-android-sdk-client/proguard.txt"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/arcore-android-sdk-client/com_google_ar_core_java/classes.jar"
+}

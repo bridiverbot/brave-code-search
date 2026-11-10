@@ -1,0 +1,26 @@
+{
+  "assets": {
+    "outputs": [
+      "trace_processor_shell_aarch64",
+      "trace_processor_shell_arm",
+      "trace_processor_shell_x86",
+      "trace_processor_shell_x86_64",
+      "tracebox_aarch64",
+      "tracebox_arm",
+      "tracebox_x86",
+      "tracebox_x86_64"
+    ],
+    "sources": [
+      "obj/third_party/androidx/androidx_benchmark_benchmark_common_java/assets/trace_processor_shell_aarch64",
+      "obj/third_party/androidx/androidx_benchmark_benchmark_common_java/assets/trace_processor_shell_arm",
+      "obj/third_party/androidx/androidx_benchmark_benchmark_common_java/assets/trace_processor_shell_x86",
+      "obj/third_party/androidx/androidx_benchmark_benchmark_common_java/assets/trace_processor_shell_x86_64",
+      "obj/third_party/androidx/androidx_benchmark_benchmark_common_java/assets/tracebox_aarch64",
+      "obj/third_party/androidx/androidx_benchmark_benchmark_common_java/assets/tracebox_arm",
+      "obj/third_party/androidx/androidx_benchmark_benchmark_common_java/assets/tracebox_x86",
+      "obj/third_party/androidx/androidx_benchmark_benchmark_common_java/assets/tracebox_x86_64"
+    ]
+  },
+  "gn_target": "//third_party/androidx:androidx_benchmark_benchmark_common_java__assets",
+  "type": "android_assets"
+}

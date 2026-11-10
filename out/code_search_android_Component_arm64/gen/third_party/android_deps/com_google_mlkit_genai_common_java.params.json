@@ -1,0 +1,12 @@
+{
+  "gn_target": "//third_party/android_deps:com_google_mlkit_genai_common_java",
+  "mergeable_android_manifests": [
+    "obj/third_party/android_deps/com_google_mlkit_genai_common_java/AndroidManifest.xml"
+  ],
+  "public_deps_configs": [
+    "gen/third_party/android_deps/com_google_mlkit_genai_common_java__classes.params.json",
+    "gen/third_party/android_deps/com_google_mlkit_genai_common_java__resources.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

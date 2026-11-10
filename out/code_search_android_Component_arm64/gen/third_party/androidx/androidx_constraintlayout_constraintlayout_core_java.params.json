@@ -1,0 +1,23 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/androidx/androidx_constraintlayout_constraintlayout_core_java.dex.jar",
+  "gn_target": "//third_party/androidx:androidx_constraintlayout_constraintlayout_core_java",
+  "interface_jar_path": "obj/third_party/androidx/androidx_constraintlayout_constraintlayout_core.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/androidx/cipd/libs/androidx_constraintlayout_constraintlayout_core/constraintlayout-core.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/androidx/cipd/libs/androidx_constraintlayout_constraintlayout_core/constraintlayout-core.jar"
+}

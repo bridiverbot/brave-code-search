@@ -1,0 +1,35 @@
+{
+  "aar_path": "../../third_party/android_deps/cipd/libs/com_google_firebase_firebase_common/firebase-common.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_play_services_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_annotations_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_components_java.params.json",
+    "gen/third_party/android_deps/google_play_services_basement_java.params.json",
+    "gen/third_party/android_deps/google_play_services_tasks_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_concurrent_concurrent_futures_java.params.json",
+    "gen/third_party/androidx/androidx_datastore_datastore_preferences_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_common_java__resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/android_deps/google_firebase_firebase_common_java__classes.dex.jar",
+  "gn_target": "//third_party/android_deps:google_firebase_firebase_common_java",
+  "interface_jar_path": "obj/third_party/android_deps/google_firebase_firebase_common_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/android_deps/google_firebase_firebase_common_java/classes.jar",
+  "proguard_configs": [
+    "obj/third_party/android_deps/google_firebase_firebase_common_java/proguard.txt"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/android_deps/google_firebase_firebase_common_java/classes.jar"
+}

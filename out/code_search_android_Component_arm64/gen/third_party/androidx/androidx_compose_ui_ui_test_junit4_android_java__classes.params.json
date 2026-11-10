@@ -1,0 +1,40 @@
+{
+  "aar_path": "../../third_party/androidx/cipd/libs/androidx_compose_ui_ui_test_junit4_android/ui-test-junit4-android.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/androidx/androidx_activity_activity_compose_java.params.json",
+    "gen/third_party/androidx/androidx_activity_activity_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_compose_runtime_runtime_saveable_java.params.json",
+    "gen/third_party/androidx/androidx_compose_ui_ui_test_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_common_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_test_core_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_core_java.params.json",
+    "gen/third_party/androidx/androidx_test_ext_junit_java.params.json",
+    "gen/third_party/androidx/androidx_test_monitor_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_core_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_test_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/androidx/androidx_compose_ui_ui_test_junit4_android_java__classes.dex.jar",
+  "gn_target": "//third_party/androidx:androidx_compose_ui_ui_test_junit4_android_java",
+  "interface_jar_path": "obj/third_party/androidx/androidx_compose_ui_ui_test_junit4_android_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/androidx/androidx_compose_ui_ui_test_junit4_android_java/classes.jar",
+  "proguard_configs": [
+
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/androidx/androidx_compose_ui_ui_test_junit4_android_java/classes.jar"
+}

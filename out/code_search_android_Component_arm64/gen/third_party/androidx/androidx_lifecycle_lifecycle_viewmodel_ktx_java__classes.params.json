@@ -1,0 +1,29 @@
+{
+  "aar_path": "../../third_party/androidx/cipd/libs/androidx_lifecycle_lifecycle_viewmodel_ktx/lifecycle-viewmodel-ktx.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_android_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_ktx_java__resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_ktx_java__classes.dex.jar",
+  "gn_target": "//third_party/androidx:androidx_lifecycle_lifecycle_viewmodel_ktx_java",
+  "interface_jar_path": "obj/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_ktx_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_ktx_java/classes.jar",
+  "proguard_configs": [
+
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_ktx_java/classes.jar"
+}

@@ -1,0 +1,12 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/arcore-android-sdk-client:com_google_ar_core_java__resources",
+  "package_name": "com.google.ar.core",
+  "public_deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/arcore-android-sdk-client/com_google_ar_core_java__resources.res.sources",
+  "resources_zip": "obj/third_party/arcore-android-sdk-client/com_google_ar_core_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/arcore-android-sdk-client/com_google_ar_core_java__resources_R.txt",
+  "type": "android_resources"
+}

@@ -1,0 +1,12 @@
+{
+  "gn_target": "//third_party/androidx:androidx_media3_media3_exoplayer_java",
+  "mergeable_android_manifests": [
+    "obj/third_party/androidx/androidx_media3_media3_exoplayer_java/AndroidManifest.xml"
+  ],
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_media3_media3_exoplayer_java__classes.params.json",
+    "gen/third_party/androidx/androidx_media3_media3_exoplayer_java__resources.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

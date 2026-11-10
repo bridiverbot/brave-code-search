@@ -1,0 +1,19 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "dex_path": "obj/third_party/android_deps/com_google_auto_service_auto_service_annotations_java.dex.jar",
+  "gn_target": "//third_party/android_deps:com_google_auto_service_auto_service_annotations_java",
+  "interface_jar_path": "obj/third_party/android_deps/com_google_auto_service_auto_service_annotations.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "preferred_dep": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/com_google_auto_service_auto_service_annotations/auto-service-annotations.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/com_google_auto_service_auto_service_annotations/auto-service-annotations.jar"
+}

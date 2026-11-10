@@ -1,0 +1,12 @@
+{
+  "javac_full_interface_classpath": [
+    "obj/third_party/jni_zero/jni_zero_java.turbine.jar",
+    "obj/third_party/jni_zero/generate_jni_java.javac.jar",
+    "obj/third_party/androidx/local_modifications/graphics_core/graphics_core_jni_headers_java.javac.jar",
+    "obj/third_party/jni_zero/gendeps_java.turbine.jar",
+    "obj/build/android/build_java.turbine.jar"
+  ],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

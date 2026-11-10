@@ -1,0 +1,28 @@
+{
+  "aar_path": "../../third_party/androidx/cipd/libs/androidx_benchmark_benchmark_traceprocessor_android/benchmark-traceprocessor-android.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/android_deps/com_squareup_wire_wire_runtime_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/androidx/androidx_benchmark_benchmark_traceprocessor_android_java__classes.dex.jar",
+  "gn_target": "//third_party/androidx:androidx_benchmark_benchmark_traceprocessor_android_java",
+  "interface_jar_path": "obj/third_party/androidx/androidx_benchmark_benchmark_traceprocessor_android_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/androidx/androidx_benchmark_benchmark_traceprocessor_android_java/classes.jar",
+  "proguard_configs": [
+
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/androidx/androidx_benchmark_benchmark_traceprocessor_android_java/classes.jar"
+}

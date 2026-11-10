@@ -1,0 +1,25 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/androidx:androidx_navigation_navigation_runtime_android_java__resources",
+  "package_name": "androidx.navigation",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_activity_activity_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_experimental_java.params.json",
+    "gen/third_party/androidx/androidx_collection_collection_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_common_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_runtime_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_viewmodel_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_navigation_navigation_common_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_core_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_serialization_core_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/androidx/androidx_navigation_navigation_runtime_android_java__resources.res.sources",
+  "resources_overlay_zip": "obj/third_party/androidx/androidx_navigation_navigation_runtime_android_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/androidx/androidx_navigation_navigation_runtime_android_java__resources_R.txt",
+  "type": "android_resources"
+}

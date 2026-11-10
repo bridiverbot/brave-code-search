@@ -1,0 +1,11 @@
+{
+  "chromium_code": true,
+  "gn_target": "//testing/android/native_test:cleartext_traffic_resources",
+  "public_deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/testing/android/native_test/cleartext_traffic_resources.res.sources",
+  "resources_zip": "obj/testing/android/native_test/cleartext_traffic_resources.resources.zip",
+  "rtxt_path": "gen/testing/android/native_test/cleartext_traffic_resources_R.txt",
+  "type": "android_resources"
+}

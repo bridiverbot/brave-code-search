@@ -1,0 +1,36 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/com_google_testparameterinjector_test_parameter_injector_java.params.json",
+    "gen/third_party/android_deps/javax_annotation_javax_annotation_api_java.params.json",
+    "gen/third_party/android_deps/javax_inject_javax_inject_java.params.json",
+    "gen/third_party/android_deps/org_bouncycastle_bcprov_jdk18on_java.params.json",
+    "gen/third_party/android_deps/org_conscrypt_conscrypt_openjdk_uber_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_annotations_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_junit_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_pluginapi_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_plugins_maven_dependency_resolver_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_resources_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_sandbox_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_shadows_framework_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_utils_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_utils_reflector_java.params.json",
+    "gen/third_party/android_deps/org_yaml_snakeyaml_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_idling_resource_java.params.json",
+    "gen/third_party/androidx/androidx_test_monitor_java.params.json"
+  ],
+  "gn_target": "//third_party/android_deps:org_robolectric_robolectric_java",
+  "interface_jar_path": "obj/third_party/android_deps/org_robolectric_robolectric.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/org_robolectric_robolectric/robolectric.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/org_robolectric_robolectric/robolectric.jar"
+}

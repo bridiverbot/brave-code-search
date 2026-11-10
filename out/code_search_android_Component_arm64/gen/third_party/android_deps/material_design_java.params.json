@@ -1,0 +1,9 @@
+{
+  "gn_target": "//third_party/android_deps:material_design_java",
+  "preferred_dep": true,
+  "public_deps_configs": [
+    "gen/third_party/android_deps/com_google_android_material_material_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

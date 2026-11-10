@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDeclarationOnly": true,
+    "outDir": ".",
+    "rootDir": "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/i18n",
+    "rootDirs": [
+      "../../../../../../../../../third_party/devtools-frontend/src/",
+      "../../../"
+    ],
+    "skipLibCheck": true
+  },
+  "files": [
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/i18n/ByteUtilities.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/i18n/DevToolsLocale.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/i18n/NumberFormatter.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/i18n/i18nImpl.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/i18n/i18nTypes.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/core/i18n/time-utilities.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/legacy/legacy-defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/front_end/global_typings/global_defs.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filesystem/index.d.ts",
+    "../../../../../../../../../third_party/devtools-frontend/src/node_modules/@types/filewriter/index.d.ts"
+  ],
+  "references": [
+    {
+      "path": "locales_js-tsconfig.ref.json"
+    },
+    {
+      "path": "../platform/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../root/bundle-tsconfig.ref.json"
+    },
+    {
+      "path": "../../third_party/i18n/bundle-tsconfig.ref.json"
+    }
+  ]
+}

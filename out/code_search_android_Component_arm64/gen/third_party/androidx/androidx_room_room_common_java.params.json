@@ -1,0 +1,8 @@
+{
+  "gn_target": "//third_party/androidx:androidx_room_room_common_java",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_room_room_common_jvm_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

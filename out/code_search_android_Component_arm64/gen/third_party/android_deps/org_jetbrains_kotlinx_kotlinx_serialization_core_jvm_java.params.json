@@ -1,0 +1,21 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json"
+  ],
+  "dex_path": "obj/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_serialization_core_jvm_java.dex.jar",
+  "gn_target": "//third_party/android_deps:org_jetbrains_kotlinx_kotlinx_serialization_core_jvm_java",
+  "interface_jar_path": "obj/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_serialization_core_jvm.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/org_jetbrains_kotlinx_kotlinx_serialization_core_jvm/kotlinx-serialization-core-jvm.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/org_jetbrains_kotlinx_kotlinx_serialization_core_jvm/kotlinx-serialization-core-jvm.jar"
+}

@@ -1,0 +1,12 @@
+{
+  "assets": {
+    "outputs": [
+      "images/black_skybox_android_xr_scenecore.exr"
+    ],
+    "sources": [
+      "obj/third_party/androidx/androidx_xr_scenecore_scenecore_java/assets/images/black_skybox_android_xr_scenecore.exr"
+    ]
+  },
+  "gn_target": "//third_party/androidx:androidx_xr_scenecore_scenecore_java__assets",
+  "type": "android_assets"
+}

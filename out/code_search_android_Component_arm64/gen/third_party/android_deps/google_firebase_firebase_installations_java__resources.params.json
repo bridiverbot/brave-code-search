@@ -1,0 +1,19 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/android_deps:google_firebase_firebase_installations_java__resources",
+  "package_name": "com.google.firebase.installations",
+  "public_deps_configs": [
+    "gen/third_party/android_deps/google_firebase_firebase_annotations_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_common_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_components_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_installations_interop_java.params.json",
+    "gen/third_party/android_deps/google_play_services_tasks_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/androidx/androidx_datastore_datastore_preferences_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/android_deps/google_firebase_firebase_installations_java__resources.res.sources",
+  "resources_zip": "obj/third_party/android_deps/google_firebase_firebase_installations_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/android_deps/google_firebase_firebase_installations_java__resources_R.txt",
+  "type": "android_resources"
+}

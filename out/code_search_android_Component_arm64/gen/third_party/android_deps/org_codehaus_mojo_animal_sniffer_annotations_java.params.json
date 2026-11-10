@@ -1,0 +1,18 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "dex_path": "obj/third_party/android_deps/org_codehaus_mojo_animal_sniffer_annotations_java.dex.jar",
+  "gn_target": "//third_party/android_deps:org_codehaus_mojo_animal_sniffer_annotations_java",
+  "interface_jar_path": "obj/third_party/android_deps/org_codehaus_mojo_animal_sniffer_annotations.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/org_codehaus_mojo_animal_sniffer_annotations/animal-sniffer-annotations.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/org_codehaus_mojo_animal_sniffer_annotations/animal-sniffer-annotations.jar"
+}

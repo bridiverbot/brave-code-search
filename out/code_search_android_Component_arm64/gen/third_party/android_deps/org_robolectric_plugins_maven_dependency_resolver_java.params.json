@@ -1,0 +1,23 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/com_google_auto_value_auto_value_annotations_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_pluginapi_java.params.json",
+    "gen/third_party/android_deps/org_robolectric_utils_java.params.json",
+    "gen/third_party/android_deps/guava_java.params.json"
+  ],
+  "gn_target": "//third_party/android_deps:org_robolectric_plugins_maven_dependency_resolver_java",
+  "interface_jar_path": "obj/third_party/android_deps/org_robolectric_plugins_maven_dependency_resolver.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/org_robolectric_plugins_maven_dependency_resolver/plugins-maven-dependency-resolver.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/org_robolectric_plugins_maven_dependency_resolver/plugins-maven-dependency-resolver.jar"
+}

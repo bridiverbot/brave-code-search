@@ -1,0 +1,23 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/androidx:androidx_benchmark_benchmark_common_java__resources",
+  "package_name": "androidx.benchmark",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_experimental_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_benchmark_benchmark_traceprocessor_java.params.json",
+    "gen/third_party/androidx/androidx_test_monitor_java.params.json",
+    "gen/third_party/androidx/androidx_tracing_tracing_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_tracing_tracing_perfetto_handshake_java.params.json",
+    "gen/third_party/android_deps/com_squareup_moshi_moshi_java.params.json",
+    "gen/third_party/android_deps/com_squareup_wire_wire_runtime_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_android_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/androidx/androidx_benchmark_benchmark_common_java__resources.res.sources",
+  "resources_overlay_zip": "obj/third_party/androidx/androidx_benchmark_benchmark_common_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/androidx/androidx_benchmark_benchmark_common_java__resources_R.txt",
+  "type": "android_resources"
+}

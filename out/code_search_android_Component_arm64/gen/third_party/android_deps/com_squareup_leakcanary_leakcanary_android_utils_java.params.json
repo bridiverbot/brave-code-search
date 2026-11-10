@@ -1,0 +1,8 @@
+{
+  "gn_target": "//third_party/android_deps:com_squareup_leakcanary_leakcanary_android_utils_java",
+  "public_deps_configs": [
+    "gen/third_party/android_deps/com_squareup_leakcanary_leakcanary_android_utils_java__classes.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

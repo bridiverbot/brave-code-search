@@ -1,0 +1,16 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/android_deps:com_google_mlkit_genai_common_java__resources",
+  "package_name": "com.google.mlkit.genai.common",
+  "public_deps_configs": [
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_core_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_guava_java.params.json",
+    "gen/third_party/android_deps/google_play_services_basement_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/android_deps/com_google_mlkit_genai_common_java__resources.res.sources",
+  "resources_zip": "obj/third_party/android_deps/com_google_mlkit_genai_common_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/android_deps/com_google_mlkit_genai_common_java__resources_R.txt",
+  "type": "android_resources"
+}

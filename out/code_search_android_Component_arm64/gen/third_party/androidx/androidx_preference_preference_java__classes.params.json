@@ -1,0 +1,37 @@
+{
+  "aar_path": "../../third_party/androidx/cipd/libs/androidx_preference_preference/preference.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/androidx/androidx_activity_activity_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_appcompat_appcompat_java.params.json",
+    "gen/third_party/androidx/androidx_collection_collection_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_fragment_fragment_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_recyclerview_recyclerview_java.params.json",
+    "gen/third_party/androidx/androidx_slidingpanelayout_slidingpanelayout_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/androidx/androidx_preference_preference_java__resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/androidx/androidx_preference_preference_java__classes.dex.jar",
+  "gn_target": "//third_party/androidx:androidx_preference_preference_java",
+  "interface_jar_path": "obj/third_party/androidx/androidx_preference_preference_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/androidx/androidx_preference_preference_java/classes.jar",
+  "proguard_configs": [
+    "../../third_party/androidx/androidx_preferences.flags"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/androidx/androidx_preference_preference_java/classes.jar"
+}

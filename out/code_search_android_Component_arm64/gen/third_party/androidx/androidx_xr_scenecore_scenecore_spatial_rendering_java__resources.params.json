@@ -1,0 +1,20 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/androidx:androidx_xr_scenecore_scenecore_spatial_rendering_java__resources",
+  "package_name": "androidx.xr.scenecore.spatial.rendering",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_xr_runtime_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_xr_scenecore_scenecore_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_xr_scenecore_scenecore_spatial_core_java.params.json",
+    "gen/third_party/android_deps/com_google_ar_impress_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/android_sdk/android_xr_extensions_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/androidx/androidx_xr_scenecore_scenecore_spatial_rendering_java__resources.res.sources",
+  "resources_overlay_zip": "obj/third_party/androidx/androidx_xr_scenecore_scenecore_spatial_rendering_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/androidx/androidx_xr_scenecore_scenecore_spatial_rendering_java__resources_R.txt",
+  "type": "android_resources"
+}

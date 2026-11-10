@@ -1,0 +1,8 @@
+{
+  "gn_target": "//third_party/androidx:androidx_cursoradapter_cursoradapter_java",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_cursoradapter_cursoradapter_java__classes.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

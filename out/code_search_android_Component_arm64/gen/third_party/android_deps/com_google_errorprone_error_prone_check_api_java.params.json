@@ -1,0 +1,28 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/com_github_ben_manes_caffeine_caffeine_java.params.json",
+    "gen/third_party/android_deps/com_github_kevinstern_software_and_algorithms_java.params.json",
+    "gen/third_party/android_deps/com_google_auto_value_auto_value_annotations_java.params.json",
+    "gen/third_party/android_deps/com_google_errorprone_error_prone_annotations_java.params.json",
+    "gen/third_party/android_deps/io_github_eisop_dataflow_errorprone_java.params.json",
+    "gen/third_party/android_deps/io_github_java_diff_utils_java_diff_utils_java.params.json",
+    "gen/third_party/android_deps/javax_inject_javax_inject_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/android_deps/org_safere_safere_java.params.json"
+  ],
+  "gn_target": "//third_party/android_deps:com_google_errorprone_error_prone_check_api_java",
+  "interface_jar_path": "obj/third_party/android_deps/com_google_errorprone_error_prone_check_api.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/com_google_errorprone_error_prone_check_api/error_prone_check_api.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/com_google_errorprone_error_prone_check_api/error_prone_check_api.jar"
+}

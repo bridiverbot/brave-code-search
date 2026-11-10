@@ -1,0 +1,21 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/androidx:androidx_media3_media3_exoplayer_java__resources",
+  "package_name": "androidx.media3.exoplayer",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_collection_collection_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/androidx/androidx_exifinterface_exifinterface_java.params.json",
+    "gen/third_party/androidx/androidx_media3_media3_common_java.params.json",
+    "gen/third_party/androidx/androidx_media3_media3_database_java.params.json",
+    "gen/third_party/androidx/androidx_media3_media3_datasource_java.params.json",
+    "gen/third_party/androidx/androidx_media3_media3_decoder_java.params.json",
+    "gen/third_party/androidx/androidx_media3_media3_extractor_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/androidx/androidx_media3_media3_exoplayer_java__resources.res.sources",
+  "resources_overlay_zip": "obj/third_party/androidx/androidx_media3_media3_exoplayer_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/androidx/androidx_media3_media3_exoplayer_java__resources_R.txt",
+  "type": "android_resources"
+}

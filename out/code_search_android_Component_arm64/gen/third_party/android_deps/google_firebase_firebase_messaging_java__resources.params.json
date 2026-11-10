@@ -1,0 +1,33 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/android_deps:google_firebase_firebase_messaging_java__resources",
+  "package_name": "com.google.firebase.messaging",
+  "public_deps_configs": [
+    "gen/third_party/android_deps/com_google_errorprone_error_prone_annotations_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_api_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_backend_cct_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_runtime_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_common_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_components_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_datatransport_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_encoders_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_encoders_json_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_encoders_proto_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_iid_interop_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_installations_interop_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_installations_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_measurement_connector_java.params.json",
+    "gen/third_party/android_deps/google_play_services_base_java.params.json",
+    "gen/third_party/android_deps/google_play_services_basement_java.params.json",
+    "gen/third_party/android_deps/google_play_services_cloud_messaging_java.params.json",
+    "gen/third_party/android_deps/google_play_services_stats_java.params.json",
+    "gen/third_party/android_deps/google_play_services_tasks_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/android_deps/google_firebase_firebase_messaging_java__resources.res.sources",
+  "resources_zip": "obj/third_party/android_deps/google_firebase_firebase_messaging_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/android_deps/google_firebase_firebase_messaging_java__resources_R.txt",
+  "type": "android_resources"
+}

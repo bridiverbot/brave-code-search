@@ -1,0 +1,17 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "gn_target": "//third_party/android_deps:org_bouncycastle_bcprov_jdk18on_java",
+  "interface_jar_path": "obj/third_party/android_deps/org_bouncycastle_bcprov_jdk18on.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/org_bouncycastle_bcprov_jdk18on/bcprov-jdk18on.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/org_bouncycastle_bcprov_jdk18on/bcprov-jdk18on.jar"
+}

@@ -1,0 +1,25 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/com_google_errorprone_error_prone_annotations_java.params.json",
+    "gen/third_party/android_deps/io_grpc_grpc_api_java.params.json",
+    "gen/third_party/android_deps/org_codehaus_mojo_animal_sniffer_annotations_java.params.json",
+    "gen/third_party/android_deps/guava_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/android_deps/io_grpc_grpc_stub_java.dex.jar",
+  "gn_target": "//third_party/android_deps:io_grpc_grpc_stub_java",
+  "interface_jar_path": "obj/third_party/android_deps/io_grpc_grpc_stub.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/io_grpc_grpc_stub/grpc-stub.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/io_grpc_grpc_stub/grpc-stub.jar"
+}

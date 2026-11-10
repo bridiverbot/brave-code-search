@@ -1,0 +1,9 @@
+{
+  "gn_target": "//third_party/androidx:androidx_xr_scenecore_scenecore_spatial_core_java",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_xr_scenecore_scenecore_spatial_core_java__classes.params.json",
+    "gen/third_party/androidx/androidx_xr_scenecore_scenecore_spatial_core_java__resources.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

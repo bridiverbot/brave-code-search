@@ -1,0 +1,13 @@
+{
+  "gn_target": "//third_party/androidx:androidx_benchmark_benchmark_common_java",
+  "mergeable_android_manifests": [
+    "obj/third_party/androidx/androidx_benchmark_benchmark_common_java/AndroidManifest.xml"
+  ],
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_benchmark_benchmark_common_java__classes.params.json",
+    "gen/third_party/androidx/androidx_benchmark_benchmark_common_java__resources.params.json",
+    "gen/third_party/androidx/androidx_benchmark_benchmark_common_java__assets.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

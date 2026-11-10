@@ -1,0 +1,21 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/org_ow2_asm_asm_java.params.json",
+    "gen/third_party/android_deps/org_ow2_asm_asm_tree_java.params.json"
+  ],
+  "gn_target": "//third_party/android_deps:org_ow2_asm_asm_commons_java",
+  "interface_jar_path": "obj/third_party/android_deps/org_ow2_asm_asm_commons.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/org_ow2_asm_asm_commons/asm-commons.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/org_ow2_asm_asm_commons/asm-commons.jar"
+}

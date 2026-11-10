@@ -1,0 +1,18 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/android_deps:google_firebase_firebase_datatransport_java__resources",
+  "package_name": "com.google.firebase.datatransport",
+  "public_deps_configs": [
+    "gen/third_party/android_deps/javax_inject_javax_inject_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_api_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_backend_cct_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_runtime_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/android_deps/google_firebase_firebase_datatransport_java__resources.res.sources",
+  "resources_zip": "obj/third_party/android_deps/google_firebase_firebase_datatransport_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/android_deps/google_firebase_firebase_datatransport_java__resources_R.txt",
+  "type": "android_resources"
+}

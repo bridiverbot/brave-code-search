@@ -1,0 +1,40 @@
+{
+  "aar_path": "../../third_party/androidx/cipd/libs/androidx_ink_ink_authoring_android/ink-authoring-android.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/androidx/androidx_collection_collection_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_fragment_fragment_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_graphics_graphics_core_java.params.json",
+    "gen/third_party/androidx/androidx_ink_ink_brush_java.params.json",
+    "gen/third_party/androidx/androidx_ink_ink_geometry_java.params.json",
+    "gen/third_party/androidx/androidx_ink_ink_nativeloader_java.params.json",
+    "gen/third_party/androidx/androidx_ink_ink_rendering_java.params.json",
+    "gen/third_party/androidx/androidx_ink_ink_strokes_java.params.json",
+    "gen/third_party/androidx/androidx_input_input_motionprediction_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_idling_resource_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_android_java.params.json",
+    "gen/third_party/androidx/androidx_ink_ink_authoring_android_java__resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/androidx/androidx_ink_ink_authoring_android_java__classes.dex.jar",
+  "gn_target": "//third_party/androidx:androidx_ink_ink_authoring_android_java",
+  "interface_jar_path": "obj/third_party/androidx/androidx_ink_ink_authoring_android_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/androidx/androidx_ink_ink_authoring_android_java/classes.jar",
+  "proguard_configs": [
+
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/androidx/androidx_ink_ink_authoring_android_java/classes.jar"
+}

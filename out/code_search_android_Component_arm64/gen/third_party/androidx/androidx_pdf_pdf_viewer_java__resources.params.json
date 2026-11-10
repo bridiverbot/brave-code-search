@@ -1,0 +1,24 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/androidx:androidx_pdf_pdf_viewer_java__resources",
+  "package_name": "androidx.pdf",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_autofill_autofill_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/androidx/androidx_customview_customview_java.params.json",
+    "gen/third_party/androidx/androidx_exifinterface_exifinterface_java.params.json",
+    "gen/third_party/androidx/androidx_pdf_pdf_core_java.params.json",
+    "gen/third_party/androidx/androidx_recyclerview_recyclerview_java.params.json",
+    "gen/third_party/android_deps/com_google_errorprone_error_prone_annotations_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/material_design_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_core_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/androidx/androidx_pdf_pdf_viewer_java__resources.res.sources",
+  "resources_overlay_zip": "obj/third_party/androidx/androidx_pdf_pdf_viewer_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/androidx/androidx_pdf_pdf_viewer_java__resources_R.txt",
+  "type": "android_resources"
+}

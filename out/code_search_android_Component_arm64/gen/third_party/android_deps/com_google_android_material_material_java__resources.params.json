@@ -1,0 +1,32 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/android_deps:com_google_android_material_material_java__resources",
+  "package_name": "com.google.android.material",
+  "public_deps_configs": [
+    "gen/third_party/android_deps/com_google_errorprone_error_prone_annotations_java.params.json",
+    "gen/third_party/androidx/androidx_activity_activity_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_experimental_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_appcompat_appcompat_java.params.json",
+    "gen/third_party/androidx/androidx_cardview_cardview_java.params.json",
+    "gen/third_party/androidx/androidx_constraintlayout_constraintlayout_java.params.json",
+    "gen/third_party/androidx/androidx_coordinatorlayout_coordinatorlayout_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/androidx/androidx_customview_customview_java.params.json",
+    "gen/third_party/androidx/androidx_drawerlayout_drawerlayout_java.params.json",
+    "gen/third_party/androidx/androidx_dynamicanimation_dynamicanimation_java.params.json",
+    "gen/third_party/androidx/androidx_fragment_fragment_java.params.json",
+    "gen/third_party/androidx/androidx_graphics_graphics_shapes_java.params.json",
+    "gen/third_party/androidx/androidx_lifecycle_lifecycle_runtime_java.params.json",
+    "gen/third_party/androidx/androidx_recyclerview_recyclerview_java.params.json",
+    "gen/third_party/androidx/androidx_resourceinspection_resourceinspection_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_transition_transition_java.params.json",
+    "gen/third_party/androidx/androidx_vectordrawable_vectordrawable_java.params.json",
+    "gen/third_party/androidx/androidx_viewpager2_viewpager2_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/android_deps/com_google_android_material_material_java__resources.res.sources",
+  "resources_zip": "obj/third_party/android_deps/com_google_android_material_material_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/android_deps/com_google_android_material_material_java__resources_R.txt",
+  "type": "android_resources"
+}

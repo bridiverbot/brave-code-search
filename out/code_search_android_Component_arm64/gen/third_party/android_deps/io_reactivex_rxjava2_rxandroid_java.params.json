@@ -1,0 +1,8 @@
+{
+  "gn_target": "//third_party/android_deps:io_reactivex_rxjava2_rxandroid_java",
+  "public_deps_configs": [
+    "gen/third_party/android_deps/io_reactivex_rxjava2_rxandroid_java__classes.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

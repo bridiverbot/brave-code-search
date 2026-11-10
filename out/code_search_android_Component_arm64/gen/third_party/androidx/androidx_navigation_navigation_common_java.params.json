@@ -1,0 +1,8 @@
+{
+  "gn_target": "//third_party/androidx:androidx_navigation_navigation_common_java",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_navigation_navigation_common_android_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

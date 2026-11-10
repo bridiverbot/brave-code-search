@@ -1,0 +1,18 @@
+{
+  "assets": {
+    "outputs": [
+      "arm64-v8a/shell",
+      "armeabi-v7a/shell",
+      "x86/shell",
+      "x86_64/shell"
+    ],
+    "sources": [
+      "obj/third_party/androidx/androidx_test_uiautomator_uiautomator_shell_android_java/assets/arm64-v8a/shell",
+      "obj/third_party/androidx/androidx_test_uiautomator_uiautomator_shell_android_java/assets/armeabi-v7a/shell",
+      "obj/third_party/androidx/androidx_test_uiautomator_uiautomator_shell_android_java/assets/x86/shell",
+      "obj/third_party/androidx/androidx_test_uiautomator_uiautomator_shell_android_java/assets/x86_64/shell"
+    ]
+  },
+  "gn_target": "//third_party/androidx:androidx_test_uiautomator_uiautomator_shell_android_java__assets",
+  "type": "android_assets"
+}

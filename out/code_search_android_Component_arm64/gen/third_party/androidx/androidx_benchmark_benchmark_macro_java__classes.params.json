@@ -1,0 +1,42 @@
+{
+  "aar_path": "../../third_party/androidx/cipd/libs/androidx_benchmark_benchmark_macro/benchmark-macro.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_benchmark_benchmark_common_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/androidx/androidx_test_core_java.params.json",
+    "gen/third_party/androidx/androidx_test_ext_junit_java.params.json",
+    "gen/third_party/androidx/androidx_test_runner_java.params.json",
+    "gen/third_party/androidx/androidx_test_uiautomator_uiautomator_java.params.json",
+    "gen/third_party/androidx/androidx_tracing_tracing_ktx_java.params.json",
+    "gen/third_party/androidx/androidx_tracing_tracing_perfetto_binary_java.params.json",
+    "gen/third_party/androidx/androidx_tracing_tracing_perfetto_handshake_java.params.json",
+    "gen/third_party/androidx/androidx_tracing_tracing_perfetto_java.params.json",
+    "gen/third_party/android_deps/com_squareup_wire_wire_runtime_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/androidx/androidx_profileinstaller_profileinstaller_java.params.json",
+    "gen/third_party/androidx/androidx_benchmark_benchmark_macro_java__resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/androidx/androidx_benchmark_benchmark_macro_java__classes.dex.jar",
+  "gn_target": "//third_party/androidx:androidx_benchmark_benchmark_macro_java",
+  "interface_jar_path": "obj/third_party/androidx/androidx_benchmark_benchmark_macro_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/androidx/androidx_benchmark_benchmark_macro_java/classes.jar",
+  "proguard_configs": [
+
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/androidx/androidx_benchmark_benchmark_macro_java/classes.jar"
+}

@@ -1,0 +1,25 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/com_google_auto_auto_common_java.params.json",
+    "gen/third_party/android_deps/com_google_auto_value_auto_value_annotations_java.params.json",
+    "gen/third_party/android_deps/com_google_truth_truth_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/android_deps/guava_java.params.json",
+    "gen/third_party/junit/junit.params.json"
+  ],
+  "gn_target": "//third_party/android_deps:com_google_testing_compile_compile_testing_java",
+  "interface_jar_path": "obj/third_party/android_deps/com_google_testing_compile_compile_testing.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/com_google_testing_compile_compile_testing/compile-testing.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/com_google_testing_compile_compile_testing/compile-testing.jar"
+}

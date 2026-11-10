@@ -1,0 +1,35 @@
+{
+  "aar_path": "../../third_party/androidx/cipd/libs/androidx_test_espresso_espresso_contrib/espresso-contrib.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/androidx/androidx_drawerlayout_drawerlayout_java.params.json",
+    "gen/third_party/androidx/androidx_legacy_legacy_support_core_utils_java.params.json",
+    "gen/third_party/androidx/androidx_recyclerview_recyclerview_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_core_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_idling_resource_java.params.json",
+    "gen/third_party/androidx/androidx_viewpager_viewpager_java.params.json",
+    "gen/third_party/android_deps/com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework_java.params.json",
+    "gen/third_party/android_deps/material_design_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_contrib_java__resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/androidx/androidx_test_espresso_espresso_contrib_java__classes.dex.jar",
+  "gn_target": "//third_party/androidx:androidx_test_espresso_espresso_contrib_java",
+  "interface_jar_path": "obj/third_party/androidx/androidx_test_espresso_espresso_contrib_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/androidx/androidx_test_espresso_espresso_contrib_java/classes.jar",
+  "proguard_configs": [
+
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/androidx/androidx_test_espresso_espresso_contrib_java/classes.jar"
+}

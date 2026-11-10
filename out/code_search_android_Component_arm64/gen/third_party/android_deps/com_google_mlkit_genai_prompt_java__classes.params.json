@@ -1,0 +1,40 @@
+{
+  "aar_path": "../../third_party/android_deps/cipd/libs/com_google_mlkit_genai_prompt/genai-prompt.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/com_google_mlkit_common_java.params.json",
+    "gen/third_party/android_deps/com_google_mlkit_genai_common_java.params.json",
+    "gen/third_party/android_deps/com_google_mlkit_genai_schema_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_core_java.params.json",
+    "gen/third_party/android_deps/org_jetbrains_kotlinx_kotlinx_coroutines_guava_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_api_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_backend_cct_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_runtime_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_encoders_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_encoders_json_java.params.json",
+    "gen/third_party/android_deps/google_play_services_basement_java.params.json",
+    "gen/third_party/android_deps/google_play_services_tasks_java.params.json",
+    "gen/third_party/android_deps/guava_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/com_google_mlkit_genai_prompt_java__resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/third_party/android_deps/com_google_mlkit_genai_prompt_java__classes.dex.jar",
+  "gn_target": "//third_party/android_deps:com_google_mlkit_genai_prompt_java",
+  "interface_jar_path": "obj/third_party/android_deps/com_google_mlkit_genai_prompt_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/third_party/android_deps/com_google_mlkit_genai_prompt_java/classes.jar",
+  "proguard_configs": [
+    "obj/third_party/android_deps/com_google_mlkit_genai_prompt_java/proguard.txt"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/third_party/android_deps/com_google_mlkit_genai_prompt_java/classes.jar"
+}

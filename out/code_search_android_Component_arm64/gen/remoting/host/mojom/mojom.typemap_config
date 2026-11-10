@@ -1,0 +1,55 @@
+[
+  {
+    "traits_headers": [
+      "remoting/host/mojom/remoting_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//mojo/public/cpp/base:shared_typemap_traits",
+      "//mojo/public/cpp/bindings",
+      "//mojo/public/cpp/bindings:protobuf_support",
+      "//remoting/base",
+      "//remoting/base:buildflags",
+      "//remoting/host/base",
+      "//remoting/proto",
+      "//remoting/protocol",
+      "//remoting/protocol:errors",
+      "//remoting/protocol:transport",
+      "//remoting/signaling",
+      "//services/network/public/cpp:ip_address_mojom_support",
+      "//third_party/webrtc_overrides:webrtc_component"
+    ],
+    "traits_sources": [
+      "remoting_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::remoting::ErrorCode",
+        "mojom": "remoting.mojom.ProtocolErrorCode"
+      },
+      {
+        "cpp": "::remoting::SourceLocation",
+        "mojom": "remoting.mojom.SourceLocation"
+      },
+      {
+        "cpp": "::remoting::PortRange",
+        "mojom": "remoting.mojom.PortRange"
+      },
+      {
+        "cpp": "::remoting::SessionPolicies",
+        "mojom": "remoting.mojom.SessionPolicies"
+      },
+      {
+        "cpp": "::remoting::SessionOptions",
+        "mojom": "remoting.mojom.SessionOptions"
+      },
+      {
+        "cpp": "::remoting::protocol::TerminalControl_AgentInfo_AgentState",
+        "mojom": "remoting.mojom.AgentState"
+      },
+      {
+        "cpp": "::remoting::protocol::TerminalControl_AgentInfo",
+        "mojom": "remoting.mojom.AgentStatus"
+      }
+    ]
+  }
+]

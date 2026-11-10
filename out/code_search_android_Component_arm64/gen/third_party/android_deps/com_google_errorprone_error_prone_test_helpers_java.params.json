@@ -1,0 +1,30 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/com_google_errorprone_error_prone_annotations_java.params.json",
+    "gen/third_party/android_deps/com_google_errorprone_error_prone_check_api_java.params.json",
+    "gen/third_party/android_deps/com_google_googlejavaformat_google_java_format_java.params.json",
+    "gen/third_party/android_deps/com_google_jimfs_jimfs_java.params.json",
+    "gen/third_party/android_deps/com_google_testing_compile_compile_testing_java.params.json",
+    "gen/third_party/android_deps/com_google_truth_truth_java.params.json",
+    "gen/third_party/android_deps/io_github_eisop_dataflow_errorprone_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/hamcrest/hamcrest_core_java.params.json",
+    "gen/third_party/hamcrest/hamcrest_library_java.params.json",
+    "gen/third_party/junit/junit.params.json"
+  ],
+  "gn_target": "//third_party/android_deps:com_google_errorprone_error_prone_test_helpers_java",
+  "interface_jar_path": "obj/third_party/android_deps/com_google_errorprone_error_prone_test_helpers.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/com_google_errorprone_error_prone_test_helpers/error_prone_test_helpers.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/com_google_errorprone_error_prone_test_helpers/error_prone_test_helpers.jar"
+}

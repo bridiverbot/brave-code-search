@@ -1,0 +1,10 @@
+{
+  "assets": {
+    "disable_compression": true,
+    "sources": [
+      "../../third_party/angle/src/feature_support_util/a4a_rules.json"
+    ]
+  },
+  "gn_target": "//third_party/angle:org.chromium.angle.agi_assets",
+  "type": "android_assets"
+}

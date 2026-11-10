@@ -1,0 +1,17 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "gn_target": "//third_party/android_deps:io_github_java_diff_utils_java_diff_utils_java",
+  "interface_jar_path": "obj/third_party/android_deps/io_github_java_diff_utils_java_diff_utils.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../third_party/android_deps/cipd/libs/io_github_java_diff_utils_java_diff_utils/java-diff-utils.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../third_party/android_deps/cipd/libs/io_github_java_diff_utils_java_diff_utils/java-diff-utils.jar"
+}

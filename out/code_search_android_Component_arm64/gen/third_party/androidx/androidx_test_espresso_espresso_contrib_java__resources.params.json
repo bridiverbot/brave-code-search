@@ -1,0 +1,21 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/androidx:androidx_test_espresso_espresso_contrib_java__resources",
+  "package_name": "androidx.test.espresso.contrib",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/androidx/androidx_drawerlayout_drawerlayout_java.params.json",
+    "gen/third_party/androidx/androidx_legacy_legacy_support_core_utils_java.params.json",
+    "gen/third_party/androidx/androidx_recyclerview_recyclerview_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_core_java.params.json",
+    "gen/third_party/androidx/androidx_test_espresso_espresso_idling_resource_java.params.json",
+    "gen/third_party/androidx/androidx_viewpager_viewpager_java.params.json",
+    "gen/third_party/android_deps/com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework_java.params.json",
+    "gen/third_party/android_deps/material_design_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/androidx/androidx_test_espresso_espresso_contrib_java__resources.res.sources",
+  "resources_overlay_zip": "obj/third_party/androidx/androidx_test_espresso_espresso_contrib_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/androidx/androidx_test_espresso_espresso_contrib_java__resources_R.txt",
+  "type": "android_resources"
+}

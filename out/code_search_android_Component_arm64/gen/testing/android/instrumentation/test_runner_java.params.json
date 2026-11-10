@@ -1,0 +1,32 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/testing/android/instrumentation/test_runner_permissions_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_test_monitor_java.params.json",
+    "gen/third_party/androidx/androidx_test_runner_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/testing/android/instrumentation/test_runner_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//testing/android/instrumentation:test_runner_java",
+  "interface_jar_path": "obj/testing/android/instrumentation/test_runner_java.turbine.jar",
+  "is_prebuilt": false,
+  "mergeable_android_manifests": [
+    "../../testing/android/instrumentation/java/AndroidManifest_runner.xml"
+  ],
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/testing/android/instrumentation/test_runner_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/testing/android/instrumentation/test_runner_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/testing/android/instrumentation/test_runner_java.javac.jar"
+}

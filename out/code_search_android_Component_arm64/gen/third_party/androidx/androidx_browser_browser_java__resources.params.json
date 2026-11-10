@@ -1,0 +1,22 @@
+{
+  "chromium_code": false,
+  "gn_target": "//third_party/androidx:androidx_browser_browser_java__resources",
+  "package_name": "androidx.browser",
+  "public_deps_configs": [
+    "gen/third_party/androidx/androidx_activity_activity_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_experimental_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_collection_collection_java.params.json",
+    "gen/third_party/androidx/androidx_concurrent_concurrent_futures_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/androidx/androidx_interpolator_interpolator_java.params.json",
+    "gen/third_party/android_deps/guava_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/third_party/androidx/androidx_browser_browser_java__resources.res.sources",
+  "resources_overlay_zip": "obj/third_party/androidx/androidx_browser_browser_java__resources.resources.zip",
+  "rtxt_path": "gen/third_party/androidx/androidx_browser_browser_java__resources_R.txt",
+  "type": "android_resources"
+}

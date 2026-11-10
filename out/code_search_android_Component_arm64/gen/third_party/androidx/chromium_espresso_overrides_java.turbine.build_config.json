@@ -1,0 +1,17 @@
+{
+  "interface_classpath": [
+    "obj/third_party/junit/junit.turbine.jar",
+    "obj/third_party/androidx/androidx_annotation_annotation_jvm.ijar.jar",
+    "obj/third_party/androidx/androidx_test_core_java.ijar.jar",
+    "obj/third_party/androidx/androidx_test_espresso_espresso_core_java.ijar.jar",
+    "obj/third_party/androidx/androidx_test_monitor_java.ijar.jar",
+    "obj/third_party/androidx/androidx_test_services_storage_java.ijar.jar",
+    "obj/third_party/hamcrest/hamcrest_core_java.ijar.jar",
+    "obj/third_party/hamcrest/hamcrest_library_java.ijar.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}
