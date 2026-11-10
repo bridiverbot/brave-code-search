@@ -1,0 +1,195 @@
+// Copyright (C) 2026 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import m from 'mithril';
+import {Icons} from '../../base/semantic_icons';
+import {Accordion, AccordionSection} from '../../widgets/accordion';
+import {Button} from '../../widgets/button';
+import {Checkbox} from '../../widgets/checkbox';
+import {Spinner} from '../../widgets/spinner';
+import {EmptyState} from '../../widgets/empty_state';
+import type {QueryExecution} from './query_store';
+import {filterHistory, groupHistoryByDay, historyStore} from './history_store';
+import {renderHistoryItem, type OpenQueryFn} from './query_history_item';
+
+interface QueryHistoryComponentAttrs {
+  readonly className?: string;
+  openQuery: OpenQueryFn;
+  readonly refreshSignal?: number;
+}
+
+// Kind filter above the list: two independent checkboxes, so "everything" is
+// just both ticked and there's no redundant "All" to spend the row on.
+const KINDS: ReadonlyArray<{
+  readonly key: 'ephemeral' | 'persistent';
+  readonly label: string;
+  readonly title: string;
+}> = [
+  {
+    key: 'ephemeral',
+    label: 'Ephemeral',
+    title:
+      'Queries run with Persistent off — results were shown inline at run ' +
+      'time and not saved. Reopen to see the SQL again or rerun.',
+  },
+  {
+    key: 'persistent',
+    label: 'Persistent',
+    title:
+      'Queries run with Persistent on — results saved to a temporary ' +
+      'backend table you can reopen and browse.',
+  },
+];
+
+export class QueryHistoryComponent implements m.ClassComponent<QueryHistoryComponentAttrs> {
+  private allExpanded = true;
+  private openGen = 0;
+
+  oninit(vnode: m.CVnode<QueryHistoryComponentAttrs>) {
+    historyStore.requestRefresh(vnode.attrs.refreshSignal ?? 0);
+  }
+
+  onbeforeupdate(vnode: m.CVnode<QueryHistoryComponentAttrs>) {
+    historyStore.requestRefresh(vnode.attrs.refreshSignal ?? 0);
+    return true;
+  }
+
+  view({attrs}: m.CVnode<QueryHistoryComponentAttrs>) {
+    const {openQuery, ...rest} = attrs;
+    const shown = filterHistory(historyStore.history, historyStore.filter);
+
+    // The frame is unconditional: loading and error states render inside the
+    // list, so the panel keeps its bounded layout and the refresh button stays
+    // reachable — that button is how you retry a failed load.
+    return m(
+      '.pf-query-history',
+      rest,
+      m(
+        '.pf-bt-history-toolbar',
+        m(
+          '.pf-bt-history-filter',
+          KINDS.map((kind) => {
+            const checked = historyStore.filter[kind.key];
+            const count = historyStore.history.filter(
+              (h) => (h.materialized === true) === (kind.key === 'persistent'),
+            ).length;
+            return m(Checkbox, {
+              label: `${kind.label} (${count})`,
+              title: kind.title,
+              checked,
+              onchange: () => {
+                historyStore.filter = {
+                  ...historyStore.filter,
+                  [kind.key]: !checked,
+                };
+                m.redraw();
+              },
+            });
+          }),
+        ),
+        m(
+          '.pf-bt-history-actions',
+          m(Button, {
+            icon: this.allExpanded ? Icons.UnfoldLess : Icons.UnfoldMore,
+            title: this.allExpanded ? 'Collapse all' : 'Expand all',
+            onclick: () => {
+              this.allExpanded = !this.allExpanded;
+              this.openGen++;
+            },
+          }),
+          m(Button, {
+            icon: 'refresh',
+            title: 'Refresh history',
+            onclick: () => historyStore.refreshNow(),
+          }),
+        ),
+      ),
+      m('.pf-bt-history-list', this.renderBody(shown, openQuery)),
+    );
+  }
+
+  private renderBody(
+    shown: QueryExecution[],
+    openQuery: OpenQueryFn,
+  ): m.Children {
+    if (historyStore.isLoading && historyStore.history.length === 0) {
+      return m(
+        EmptyState,
+        {title: 'Loading history…', icon: 'hourglass_empty', fillHeight: true},
+        m(Spinner),
+      );
+    }
+    if (historyStore.error !== null) {
+      return m(
+        EmptyState,
+        {title: "Couldn't load history", icon: 'error', fillHeight: true},
+        m('div.pf-bt-history-empty-hint', historyStore.error),
+      );
+    }
+    return this.renderHistoryList(shown, openQuery);
+  }
+
+  private renderHistoryList(
+    queries: QueryExecution[],
+    openQuery?: OpenQueryFn,
+  ): m.Children {
+    const {ephemeral, persistent} = historyStore.filter;
+    if (!ephemeral && !persistent) {
+      return m(
+        EmptyState,
+        {title: 'Nothing selected', icon: 'filter_alt_off', fillHeight: true},
+        m(
+          'div.pf-bt-history-empty-hint',
+          'Tick Ephemeral or Persistent to see queries.',
+        ),
+      );
+    }
+    if (queries.length === 0) {
+      return m(
+        EmptyState,
+        {
+          title: 'No queries yet',
+          icon: 'search',
+          fillHeight: true,
+        },
+        m(
+          'div.pf-bt-history-empty-hint',
+          !ephemeral
+            ? 'Run a query with Persistent on to see it here.'
+            : !persistent
+              ? 'Run a query with Persistent off to see it here.'
+              : 'Queries you run show up here.',
+        ),
+      );
+    }
+
+    return m(
+      Accordion,
+      {multi: true},
+      groupHistoryByDay(queries).map((group) =>
+        m(
+          AccordionSection,
+          {
+            key: `${group.dayKey}-${this.openGen}`,
+            defaultOpen: this.allExpanded,
+            summary: `${group.label} (${group.entries.length})`,
+          },
+          group.entries.map((entry, index) =>
+            renderHistoryItem(entry, index, openQuery),
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,208 @@
+// Copyright (C) 2026 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// Keep this import first.
+import '../base/static_initializers';
+import '../assets/bigtrace.scss';
+import '../frontend/ui_main.scss';
+import m from 'mithril';
+import {defer} from '../base/deferred';
+import {reportError, addErrorHandler, type ErrorDetails} from '../base/logging';
+import {initLiveReload} from '../core/live_reload';
+import {settingsStorage} from './settings/settings_storage';
+import {ThemeProvider} from '../frontend/theme_provider';
+import {OverlayContainer} from '../widgets/overlay_container';
+import {QueryPage, queryRightSidebarToggleFn} from './pages/query_page';
+import {bigTraceSettingsStorage} from './settings/bigtrace_settings_storage';
+import {Topbar} from './layout/topbar';
+import {BigTraceApp as BigTraceAppSingleton} from './bigtrace_app';
+import {type HotkeyConfig, HotkeyContext} from '../widgets/hotkey_context';
+import {maybeRenderFullscreenModalDialog} from '../widgets/modal';
+import {initAssets} from '../base/assets';
+import {toggleHelp} from './help_modal';
+
+function getRoot() {
+  // Root for serving content, e.g. `http://origin/v1.2.3/`.
+  const script = document.currentScript as HTMLScriptElement;
+
+  // DOM tests have no script element.
+  if (script === null) {
+    return '';
+  }
+
+  let root = script.src;
+  root = root.substr(0, root.lastIndexOf('/') + 1);
+  return root;
+}
+
+function setupContentSecurityPolicy() {
+  // Note: self and sha-xxx must be quoted, urls data: and blob: must not.
+  const policy = {
+    'default-src': [`'self'`],
+    // wasm-unsafe-eval: the SQL formatter runs as WebAssembly; this allows
+    // Wasm compilation without enabling JS eval().
+    'script-src': [`'self'`, `'wasm-unsafe-eval'`],
+    'object-src': [`'none'`],
+    'connect-src': [
+      `'self'`,
+      'https://autopush-brush-googleapis.corp.google.com',
+      'https://brush-googleapis.corp.google.com',
+    ],
+    'img-src': [`'self'`, 'data:', 'blob:'],
+    // unsafe-inline: the editor (CodeMirror) generates its own stylesheet at
+    // runtime, so no fixed hash can cover it — pinned hashes left the editor
+    // unstyled in any browser that enforces the policy. Same allowance the
+    // main Perfetto UI makes, for the same reason.
+    'style-src': [`'self'`, `'unsafe-inline'`],
+  };
+  const meta = document.createElement('meta');
+  meta.httpEquiv = 'Content-Security-Policy';
+  let policyStr = '';
+  for (const [key, list] of Object.entries(policy)) {
+    policyStr += `${key} ${list.join(' ')}; `;
+  }
+  meta.content = policyStr;
+  document.head.appendChild(meta);
+}
+
+function main() {
+  // Unregister service workers
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+  setupContentSecurityPolicy();
+  initAssets();
+  // Settings will be lazy-loaded by the UI components that require them.
+
+  // Load the css. The load is asynchronous and the CSS is not ready by the time
+  // appendChild returns.
+  const root = getRoot();
+  const cssLoadPromise = defer<void>();
+  const css = document.createElement('link');
+  css.rel = 'stylesheet';
+  css.href = root + 'bigtrace.css';
+  css.onload = () => cssLoadPromise.resolve();
+  css.onerror = (err) => cssLoadPromise.reject(err);
+  const favicon = document.head.querySelector('#favicon');
+  if (favicon instanceof HTMLLinkElement) {
+    favicon.href = root + 'assets/favicon.png';
+  }
+
+  document.head.append(css);
+
+  // Add Error handlers for JS error and for uncaught exceptions in promises.
+  addErrorHandler((err: ErrorDetails) => console.error(err.message, err.stack));
+  window.addEventListener('error', (e) => reportError(e));
+  window.addEventListener('unhandledrejection', (e) => reportError(e));
+
+  // Prevent pinch zoom.
+  document.body.addEventListener(
+    'wheel',
+    (e: MouseEvent) => {
+      if (e.ctrlKey) e.preventDefault();
+    },
+    {passive: false},
+  );
+
+  cssLoadPromise.then(() => onCssLoaded());
+}
+
+class BigTraceLayout implements m.ClassComponent {
+  oninit() {
+    bigTraceSettingsStorage.loadSettings();
+  }
+
+  view(vnode: m.Vnode) {
+    return m('main.pf-ui-main', [
+      m(Topbar),
+      m('.pf-ui-main__page-container', vnode.children),
+      maybeRenderFullscreenModalDialog(),
+    ]);
+  }
+}
+
+// Root: theme + hotkeys around the single page. Uses m.mount (not m.route)
+// because m.route bypasses the raf scheduler and breaks portal-based popups.
+class BigTraceRoot implements m.ClassComponent {
+  view(): m.Children {
+    const theme = settingsStorage.get('theme');
+    const themeValue = theme ? theme.get() : 'light';
+
+    const commands = BigTraceAppSingleton.instance.commands;
+    const hotkeys: HotkeyConfig[] = [];
+    for (const {id, defaultHotkey} of commands.getCommands()) {
+      if (defaultHotkey) {
+        hotkeys.push({
+          callback: () => commands.runCommand(id),
+          hotkey: defaultHotkey,
+        });
+      }
+    }
+
+    return m(ThemeProvider, {theme: themeValue as 'dark' | 'light'}, [
+      m(
+        HotkeyContext,
+        {hotkeys, fillHeight: true, focusable: false},
+        m(
+          OverlayContainer,
+          {fillHeight: true},
+          m(BigTraceLayout, m(QueryPage, {useBigtraceBackend: true})),
+        ),
+      ),
+    ]);
+  }
+}
+
+function registerCommands() {
+  const app = BigTraceAppSingleton.instance;
+
+  app.commands.registerCommand({
+    id: 'bigtrace.ToggleTheme',
+    name: 'Toggle UI Theme (Dark/Light)',
+    callback: () => {
+      const theme = settingsStorage.get('theme');
+      if (theme) theme.set(theme.get() === 'light' ? 'dark' : 'light');
+    },
+  });
+
+  app.commands.registerCommand({
+    id: 'bigtrace.ToggleHistorySidebar',
+    name: 'Toggle history sidebar',
+    callback: () => {
+      queryRightSidebarToggleFn?.();
+    },
+    defaultHotkey: '!Mod+Shift+B',
+  });
+
+  app.commands.registerCommand({
+    id: 'bigtrace.ShowHelp',
+    name: 'Show help',
+    callback: () => toggleHelp(),
+    // '!' prefix fires even when the omnibox has focus.
+    defaultHotkey: '!?',
+  });
+}
+
+function onCssLoaded() {
+  document.body.innerHTML = '';
+  m.mount(document.body, BigTraceRoot);
+  initLiveReload();
+  registerCommands();
+}
+
+main();

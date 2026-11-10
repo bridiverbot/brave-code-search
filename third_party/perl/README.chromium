@@ -1,0 +1,16 @@
+Name: Strawberry Perl
+URL: http://strawberryperl.com/releases.html
+Version: 5.30.0.1 / 32bit PortableZIP edition.
+License: Artistic-1.0-Perl, GPL-2.0
+License File: licenses/License.rtf
+Shipped: no
+Security Critical: no
+Update Mechanism: Manual
+License Android Compatible: no
+
+Description: Strawberry Perl for Windows.
+
+Local Modifications:
+
+Add perl_wrap.bat that sets environment and forwards to real perl binary.
+Based on portableshell.bat from distribution.
