@@ -1,0 +1,328 @@
+# LiteRT Qualcomm Options Reference
+
+A friendlier, more complete reference than `--help` for every user-settable
+Qualcomm (`--qualcomm_*`) option in LiteRT. Covers what each option does, its
+valid values and default, **when** it takes effect (compile time vs. dispatch
+time), **which backend** it applies to, and how to set it from each surface (CLI
+flag, TOML config, C API, C++ API).
+
+> Every option here is publicly settable — exposed as a CLI flag with a matching
+> TOML key and C / C++ API. Internal-only knobs that have no public surface are
+> omitted, since you cannot set them.
+
+---
+
+## 1. How an option flows through the stack
+
+```mermaid
+flowchart LR
+    A["CLI flag<br/>--qualcomm_xxx"] --> M
+    T["TOML config<br/>xxx = ..."] --> C
+    CPP["C++ API<br/>QualcommOptions::SetXxx"] --> C
+    M["UpdateQualcommOptionsFromFlags"] --> C
+    C["C API (opaque)<br/>LrtQualcommOptions"] --> Q["InitQnnOptions()"]
+    Q --> O["::qnn::Options<br/>(internal model)"]
+    O --> P["Compiler plugin<br/>(compile time)"]
+    O --> D["Dispatch / runtime<br/>(dispatch time)"]
+```
+
+Every option ultimately lands in the internal `::qnn::Options` object, which is
+consumed at two distinct moments:
+
+| Phase | Who reads it | Examples |
+|-------|--------------|----------|
+| **Compile time** | Compiler plugin (`apply_plugin_main`, AOT / JIT graph build) | `use_conv_hmx`, `optimization_level`, `vtcm_size`, `graph_priority` |
+| **Dispatch time** | Runtime dispatcher (on-device execution) | `htp_performance_mode` |
+| **Both** | Compiler plugin and runtime dispatcher | `log_level`, `backend`, `profiling`, `htp_device_id` |
+
+---
+
+## 2. Categories at a glance
+
+### Quick lookup: phase × backend
+
+```mermaid
+%%{init: {"flowchart": {"rankSpacing": 20, "nodeSpacing": 25}}}%%
+flowchart TB
+    subgraph ROW1[" "]
+        direction LR
+        BOTH["🌐 Both<br/><div style='text-align:left'>─────────────────<br/>log_level<br/>backend<br/>custom_op_package<br/>profiling<br/>htp_device_id</div>"]
+        DISPATCH["🚀 Dispatch<br/><div style='text-align:left'>────────────────────────<br/>HTP: htp_performance_mode, htp_pd_session<br/>DSP: dsp_performance_mode, dsp_pd_session</div>"]
+        BOTH ~~~ DISPATCH
+    end
+    subgraph ROW2[" "]
+        direction LR
+        C_GEN["🛠 Compile · General<br/><div style='text-align:left'>────────────────────────<br/>enable_just_in_time<br/>graph_io_tensor_mem_type<br/>graph_priority</div>"]
+        C_HTP["🛠 Compile · HTP<br/><div style='text-align:left'>───────────────────────<br/>use_conv_hmx<br/>use_fold_relu<br/>htp_dlbc<br/>htp_dlbc_weights<br/>htp_p_point<br/>htp_weight_sharing_channel_tile_size<br/>optimization_level<br/>vtcm_size<br/>num_hvx_threads<br/>use_int64_bias_as_int32<br/>enable_weight_sharing</div>"]
+        C_OTHER["🛠 Compile · IR / SAVER / Debug<br/><div style='text-align:left'>──────────────────────────────<br/>dlc_dir<br/>saver_output_dir<br/>dump_tensor_ids<br/>ir_json_dir</div>"]
+        C_GEN ~~~ C_HTP ~~~ C_OTHER
+    end
+    ROW1 ~~~ ROW2
+```
+
+| Category | Options |
+|----------|---------|
+| **General / SDK** | `log_level`, `backend`, `graph_priority`, `custom_op_package`, `enable_just_in_time`, `graph_io_tensor_mem_type`, `profiling` |
+| **HTP** | `use_conv_hmx`, `use_fold_relu`, `htp_dlbc`, `htp_dlbc_weights`, `htp_p_point`, `htp_weight_sharing_channel_tile_size`, `htp_performance_mode`, `htp_pd_session`, `htp_device_id`, `optimization_level`, `vtcm_size`, `num_hvx_threads`, `use_int64_bias_as_int32`, `enable_weight_sharing` |
+| **DSP** | `dsp_performance_mode`, `dsp_pd_session` |
+| **LPAI** | `lpai_target`, `lpai_fps`, `lpai_ftrt_ratio`, `lpai_client_perf_type`, `lpai_core_affinity_type`, `lpai_core_selection` |
+| **IR** | `dlc_dir` |
+| **SAVER** | `saver_output_dir` |
+| **Debug** | `dump_tensor_ids`, `ir_json_dir` |
+
+### A note on surfaces
+
+Every option in the tables below is settable from **all four surfaces** — CLI
+flag, TOML key, C API, and C++ API. The tables list the CLI flag name; the TOML
+key and the C / C++ setters follow the same name (see §10 for examples), with
+**two exceptions** where the TOML key differs from the flag:
+
+| CLI flag | TOML key |
+|----------|----------|
+| `--qualcomm_backend` | `qnn_backend` |
+| `--qualcomm_num_hvx_thread` | `num_hvx_threads` |
+
+---
+
+## 3. General / SDK options
+
+| Option | CLI flag (`--qualcomm_…`) | Default | Phase | Notes |
+|--------|------|---------|-------|----------------|
+| Log level | `log_level` | `info` | both | `off` · `error` · `warn` · `info` · `verbose` · `debug`. SDK libs only — not LiteRT's own logging. |
+| Backend | `backend` | `htp` | both | `gpu` · `htp` · `dsp` · `ir`. |
+| Graph priority | `graph_priority` | `default` | compile | `default` · `low` · `normal` · `normal_high` · `high`. `default` maps to normal. |
+| Just-In-Time | `enable_just_in_time` | `false` | compile | Pass QNN context plugin→dispatcher in-memory, skipping serialization. |
+| Graph I/O mem type | `graph_io_tensor_mem_type` | `memhandle` | compile | `raw` · `memhandle`. Mem type for graph I/O tensors at graph-creation. |
+| Profiling | `profiling` | `off` | both | `off` · `basic` · `detailed` · `linting` · `optrace`. Higher = more detailed report. Read at compile (context creation) and dispatch (graph execution). |
+| Custom op package | `custom_op_package` | *(empty)* | both | See note below. |
+
+### `custom_op_package` details
+
+Registers a custom QNN op package. The value is a `;`-separated list of
+`key:value` pairs, with these keys:
+
+| Key | Meaning |
+|-----|---------|
+| `name` | Op package name |
+| `interface_provider` | Interface provider symbol |
+| `compile_package_path` | `.so` used at compile time |
+| `dispatch_package_path` | `.so` used at dispatch time |
+| `target` | QNN backend — **must** match `backend` (`HTP`, `GPU`, …) |
+
+```bash
+--qualcomm_custom_op_package="\
+name:TestPackage;\
+interface_provider:Provider;\
+compile_package_path:libQnnTestPackage.so;\
+dispatch_package_path:libQnnTestPackage.so;\
+target:HTP"
+```
+
+---
+
+## 4. HTP options
+
+| Option | CLI flag (`--qualcomm_…`) | Default | Phase | Notes |
+|--------|------|---------|-------|----------------|
+| Short Conv HMX | `use_conv_hmx` | `true` | compile | Faster, but short-depth / non-symmetric weights may be inaccurate. |
+| Fold ReLU | `use_fold_relu` | `true` | compile | Faster. Correct only when conv's quant range ⊆ the ReLU's. |
+| DLBC input compression | `htp_dlbc` | `false` | compile | Enables HTP DLBC input / activation compression through the QNN HTP graph optimization config. |
+| DLBC weight compression | `htp_dlbc_weights` | `false` | compile | Enables HTP DLBC weight compression through the QNN HTP graph optimization config. |
+| P-point | `htp_p_point` | `0` | compile | **Experimental** (HTP + `O3` only). Predefined configs trading latency vs. DRAM bandwidth. |
+| Optimization level | `optimization_level` | `O3` | compile | `O1` (inference) · `O2` (prepare) · `O3` (inference, aggressive). |
+| HTP perf mode | `htp_performance_mode` | `default` | dispatch | `default` · `sustained_high_performance` · `burst` · `high_performance` · `power_saver` · `low_power_saver` · `high_power_saver` · `low_balanced` · `balanced` · `extreme_power_saver`. |
+| HTP PD session | `htp_pd_session` | `unsigned` | dispatch | `unsigned` preserves the existing device configuration. `signed` enables QNN SignedPD. `adaptive` uses unsigned PD only when QNN reports support, otherwise it enables SignedPD. |
+| HTP device ID | `htp_device_id` | `0` | both | A nonzero value selects the matching platform-reported HTP `deviceId`; it requires QNN platform information. `0` leaves device selection to QNN's default configuration. |
+| VTCM size | `vtcm_size` | `0` (=max) | compile | VTCM size (MB) of target device. `0` → device max. |
+| HVX threads | `num_hvx_thread` | `0` (=max) | compile | HVX threads for target device. `0` → device max. |
+| INT64→INT32 bias | `use_int64_bias_as_int32` | `true` | compile | Convert FullyConnected/Conv2D bias int64 → int32. |
+| Weight sharing | `enable_weight_sharing` | `false` | compile | Subgraphs share weight tensors. **x86 AOT only** — unsupported on device. |
+| Weight sharing channel tile size | `htp_weight_sharing_channel_tile_size` | `0` | compile | `0` disables this config. Positive values are passed as the QAIRT finalize config `weight_sharing_channel_tile_size`. Use a tile size that is a multiple of 32 for 16-bit weights, 64 for 8-bit weights, or 128 for 2-bit or 4-bit weights. For more details, please refer to the official QAIRT documentation. |
+
+---
+
+## 5. DSP options
+
+| Option | CLI flag (`--qualcomm_…`) | Default | Phase | Notes |
+|--------|------|---------|-------|----------------|
+| DSP perf mode | `dsp_performance_mode` | `default` | dispatch | `default` · `sustained_high_performance` · `burst` · `high_performance` · `power_saver` · `low_power_saver` · `high_power_saver` · `low_balanced` · `balanced`. |
+| DSP PD session | `dsp_pd_session` | `unsigned` | dispatch | `unsigned` preserves the existing backend configuration. `signed` requests SignedPD. `adaptive` requests unsigned PD only when QNN reports unsigned-PD support, otherwise it requests SignedPD. |
+
+---
+
+## 6. LPAI options
+
+| Option | CLI flag (`--qualcomm_…`) | Default | Phase | Notes |
+|--------|------|---------|-------|----------------|
+| LPAI target | `lpai_target` | `adsp` | compile | Target environment: `x86`, `arm`, `adsp`, `tensilica`. |
+| LPAI FPS | `lpai_fps` | `1` | compile | Target inference rate. |
+| LPAI FTRT ratio | `lpai_ftrt_ratio` | `10` | compile | Faster-than-real-time ratio. |
+| LPAI client perf type | `lpai_client_perf_type` | `default` | compile | `default`, `real_time`, `non_real_time`. |
+| LPAI core affinity | `lpai_core_affinity_type` | `default` | compile | `default`, `soft`, `hard`. |
+| LPAI core selection | `lpai_core_selection` | `0` | compile | Core-selection bitmask, `0` leaves SDK default. |
+
+LPAI accepts `v5` or `v6` directly through `soc_model`. A Snapdragon SoC name
+with an LPAI entry in the LiteRT SoC table is also accepted. For example,
+`SM8850` resolves to `v6`.
+
+With `apply_plugin_main`, specify the target with:
+
+```bash
+--qualcomm_backend=lpai \
+--soc_model=v6
+```
+
+## 7. IR options
+
+QNN intermediate-representation dumps — diagnostic artifacts produced at compile time.
+
+| Option | CLI flag (`--qualcomm_…`) | Default | Phase | Notes |
+|--------|------|---------|-------|----------------|
+| DLC dir | `dlc_dir` | *(empty)* | compile | If set, compile QNN graphs as DLC to this dir. |
+
+---
+
+## 8. SAVER options
+
+| Option | CLI flag (`--qualcomm_…`) | Default | Phase | Notes |
+|--------|------|---------|-------|----------------|
+| Saver output dir | `saver_output_dir` | *(empty)* | compile | If set, compile `saver_output.c` + `params.bin` (records all QNN API calls for replay). See QAIRT SDK docs. |
+
+---
+
+## 9. Debug options
+
+| Option | CLI flag (`--qualcomm_…`) | Default | Phase | Notes |
+|--------|------|---------|-------|----------------|
+| Dump tensor IDs | `dump_tensor_ids` | *(empty)* | compile | Comma-separated tensor IDs to mark as extra graph outputs (per-layer dump for the accuracy debugger). `-1` = dump all op outputs. |
+| IR JSON dir | `ir_json_dir` | *(empty)* | compile | If set, compile QNN IR as QNN JSON to this dir. |
+
+---
+
+## 10. Deprecated / retired options
+
+These remain as **no-ops** purely to preserve the C ABI contract. Setting them
+does nothing.
+
+| Option | CLI flag | Notes |
+|--------|----------|--------|
+| `use_htp_preference` | `--qualcomm_use_htp_preference` (retired) | Transform a LiteRT op into the HTP-preferred pattern |
+| `use_qint16_as_quint16` | `--qualcomm_use_qint16_as_quint16` (retired) | Auto-convert quantized int16 model → quint16 |
+
+---
+
+## 11. Worked examples
+
+### CLI — compile (`apply_plugin_main`)
+
+```bash
+apply_plugin_main \
+    --cmd=apply \
+    --model=model.tflite \
+    --o=model_compiled.tflite \
+    --qualcomm_backend=htp \
+    --qualcomm_optimization_level=O3 \
+    --qualcomm_use_conv_hmx=true \
+    --qualcomm_htp_dlbc=false \
+    --qualcomm_htp_dlbc_weights=false \
+    --qualcomm_vtcm_size=8 \
+    --qualcomm_htp_pd_session=unsigned \
+    --qualcomm_htp_device_id=0 \
+    --qualcomm_profiling=detailed
+```
+
+### CLI — dispatch (`run_model`)
+
+```bash
+run_model \
+    --graph=model_compiled.tflite \
+    --accelerator npu \
+    --qualcomm_htp_performance_mode=burst \
+    --qualcomm_htp_device_id=0 \
+    --qualcomm_profiling=detailed
+```
+
+CLI enum flags take the **string** spellings listed in each option's section
+above (e.g. `burst`, `O3`, `detailed`).
+
+### TOML config
+
+Unlike the CLI, the TOML parser reads enums as **integers** (the enum's
+underlying value), *not* their string names — see the `ParseTomlInt` calls in
+`litert/c/options/litert_qualcomm_options.cc`. Bools are `true`/`false`. This is
+what `LrtCreateQualcommOptionsFromToml` consumes (and what the C API serializes).
+
+```toml
+# enum values are integers, see the enum tables in each section
+log_level = 3              # info
+qnn_backend = 2            # htp   (note the key is qnn_backend, not backend)
+optimization_level = 2     # O3 == kOptimizeForInferenceO3
+use_conv_hmx = true
+htp_dlbc = false
+htp_dlbc_weights = false
+vtcm_size = 8
+htp_performance_mode = 2   # burst
+htp_pd_session = 0         # unsigned (default); 1 = signed, 2 = adaptive
+htp_device_id = 0
+dsp_pd_session = 0         # unsigned (default); 1 = signed, 2 = adaptive
+profiling = 2              # detailed
+```
+
+### C++ API
+
+```cpp
+#include "litert/cc/options/litert_qualcomm_options.h"
+
+LITERT_ASSIGN_OR_RETURN(auto opts, litert::qualcomm::QualcommOptions::Create());
+opts.SetBackend(litert::qualcomm::QualcommOptions::Backend::kHtp);
+opts.SetOptimizationLevel(
+    litert::qualcomm::QualcommOptions::OptimizationLevel::kOptimizeForInferenceO3);
+opts.SetUseConvHMX(true);
+opts.SetHtpDlbc(false);
+opts.SetHtpDlbcWeights(false);
+opts.SetVtcmSize(8);
+opts.SetHtpPerformanceMode(
+    litert::qualcomm::QualcommOptions::HtpPerformanceMode::kBurst);
+opts.SetHtpDeviceId(0);
+opts.SetProfiling(litert::qualcomm::QualcommOptions::Profiling::kDetailed);
+```
+
+### Kotlin API
+
+```kotlin
+val options =
+  CompiledModel.Options(Accelerator.NPU).apply {
+    qualcommOptions =
+      CompiledModel.QualcommOptions(
+        optimizationLevel =
+          CompiledModel.QualcommOptions.OptimizationLevel.HTP_OPTIMIZE_FOR_INFERENCE_O3,
+        useConvHmx = true,
+        htpDlbc = false,
+        htpDlbcWeights = false,
+        vtcmSize = 8,
+        htpPerformanceMode = CompiledModel.QualcommOptions.HtpPerformanceMode.BURST,
+        profiling = CompiledModel.QualcommOptions.Profiling.DETAILED,
+      )
+  }
+```
+
+### C API
+
+```c
+#include "litert/c/options/litert_qualcomm_options.h"
+
+LrtQualcommOptions opts;
+LrtCreateQualcommOptions(&opts);
+LrtQualcommOptionsSetBackend(opts, kLiteRtQualcommBackendHtp);
+LrtQualcommOptionsSetOptimizationLevel(opts, kHtpOptimizeForInferenceO3);
+LrtQualcommOptionsSetUseConvHMX(opts, true);
+LrtQualcommOptionsSetHtpDlbc(opts, false);
+LrtQualcommOptionsSetHtpDlbcWeights(opts, false);
+LrtQualcommOptionsSetVtcmSize(opts, 8);
+LrtQualcommOptionsSetHtpPerformanceMode(
+    opts, kLiteRtQualcommHtpPerformanceModeBurst);
+LrtQualcommOptionsSetHtpDeviceId(opts, 0);
+LrtQualcommOptionsSetProfiling(opts, kLiteRtQualcommProfilingDetailed);
+/* ... use opts ... */
+LrtDestroyQualcommOptions(opts);
+```
