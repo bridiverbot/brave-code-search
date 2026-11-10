@@ -1,0 +1,98 @@
+// Copyright 2023 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/icons.html.js';
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_checkbox/cr_checkbox.js';
+import '//resources/cr_elements/cr_icon/cr_icon.js';
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import '//resources/cr_elements/cr_slider/cr_slider.js';
+import '//resources/cr_elements/cr_url_list_item/cr_url_list_item.js';
+import '//webui-gallery/shared/sp_empty_state.js';
+import '//webui-gallery/shared/sp_footer.js';
+import '//webui-gallery/shared/sp_heading.js';
+import '//webui-gallery/shared/sp_icons.html.js';
+import '//webui-gallery/shared/sp_list_item_badge.js';
+import { CrUrlListItemSize } from '//resources/cr_elements/cr_url_list_item/cr_url_list_item.js';
+import { loadTimeData } from '//resources/js/load_time_data.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './sp_components_demo.css.js';
+import { getHtml } from './sp_components_demo.html.js';
+export class SpComponentsDemoElement extends CrLitElement {
+    static get is() {
+        return 'sp-components-demo';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            hideBackButton_: { type: Boolean },
+            itemSize_: { type: String },
+            itemSizeOptions_: { type: Array },
+            showBadges_: { type: Boolean },
+            urlCount_: { type: Number },
+            urls_: { type: Array },
+            webuiRoundedIconsEnabled_: { type: Boolean },
+        };
+    }
+    #hideBackButton__accessor_storage = true;
+    get hideBackButton_() { return this.#hideBackButton__accessor_storage; }
+    set hideBackButton_(value) { this.#hideBackButton__accessor_storage = value; }
+    #itemSize__accessor_storage = CrUrlListItemSize.COMPACT;
+    get itemSize_() { return this.#itemSize__accessor_storage; }
+    set itemSize_(value) { this.#itemSize__accessor_storage = value; }
+    #itemSizeOptions__accessor_storage = [
+        CrUrlListItemSize.COMPACT,
+        CrUrlListItemSize.MEDIUM,
+        CrUrlListItemSize.LARGE,
+    ];
+    get itemSizeOptions_() { return this.#itemSizeOptions__accessor_storage; }
+    set itemSizeOptions_(value) { this.#itemSizeOptions__accessor_storage = value; }
+    #showBadges__accessor_storage = false;
+    get showBadges_() { return this.#showBadges__accessor_storage; }
+    set showBadges_(value) { this.#showBadges__accessor_storage = value; }
+    #urlCount__accessor_storage = 15;
+    get urlCount_() { return this.#urlCount__accessor_storage; }
+    set urlCount_(value) { this.#urlCount__accessor_storage = value; }
+    #urls__accessor_storage = [];
+    get urls_() { return this.#urls__accessor_storage; }
+    set urls_(value) { this.#urls__accessor_storage = value; }
+    #webuiRoundedIconsEnabled__accessor_storage = loadTimeData.getBoolean('webuiRoundedIconsEnabled');
+    get webuiRoundedIconsEnabled_() { return this.#webuiRoundedIconsEnabled__accessor_storage; }
+    set webuiRoundedIconsEnabled_(value) { this.#webuiRoundedIconsEnabled__accessor_storage = value; }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        const changedPrivateProperties = changedProperties;
+        if (changedPrivateProperties.has('urlCount_')) {
+            this.urls_ = this.computeUrls_();
+        }
+    }
+    computeUrls_() {
+        const urls = [];
+        for (let i = 0; i < this.urlCount_; i++) {
+            urls.push({
+                title: 'Google',
+                url: 'http://www.google.com',
+            });
+        }
+        return urls;
+    }
+    onItemSizeChange_() {
+        this.itemSize_ = this.$.itemSizeSelect.value;
+    }
+    onUrlCountCrSliderValueChanged_() {
+        this.urlCount_ = this.$.urlCountSlider.value;
+    }
+    onHideBackButtonCheckedChanged_(e) {
+        this.hideBackButton_ = e.detail.value;
+    }
+    onShowBadgesCheckedChanged_(e) {
+        this.showBadges_ = e.detail.value;
+    }
+}
+export const tagName = SpComponentsDemoElement.is;
+customElements.define(SpComponentsDemoElement.is, SpComponentsDemoElement);

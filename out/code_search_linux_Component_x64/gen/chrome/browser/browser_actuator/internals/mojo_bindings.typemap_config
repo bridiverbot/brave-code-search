@@ -1,0 +1,25 @@
+[
+  {
+    "traits_headers": [
+      "chrome/browser/browser_actuator/internals/browser_actuator_internals_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//base",
+      "//components/browser_actuator/internal/transport:session_stream_recorder",
+      "//mojo/public/cpp/base"
+    ],
+    "traits_sources": [
+      "browser_actuator_internals_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::browser_actuator::transport::SessionEventSnapshot",
+        "mojom": "browser_actuator_internals.mojom.RecordedEvent"
+      },
+      {
+        "cpp": "::browser_actuator::transport::SessionSnapshot",
+        "mojom": "browser_actuator_internals.mojom.SessionSummary"
+      }
+    ]
+  }
+]

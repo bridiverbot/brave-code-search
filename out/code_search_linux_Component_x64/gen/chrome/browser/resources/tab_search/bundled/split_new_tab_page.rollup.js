@@ -1,0 +1,7 @@
+import './shared.rollup.js';
+import 'chrome://tab-search.top-chrome/strings.m.js';
+import 'chrome://resources/lit/v3_0/lit.rollup.js';
+import 'chrome://resources/brave/leo.bundle.js';
+import 'chrome://resources/js/load_time_data.js';
+import 'chrome://resources/mojo/mojo/public/js/bindings.js';
+//# sourceMappingURL=split_new_tab_page.rollup.js.map

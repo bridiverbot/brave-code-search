@@ -1,0 +1,59 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_button/cr_button.js';
+import '//resources/cr_elements/cr_checkbox/cr_checkbox.js';
+import '//resources/cr_elements/cr_drawer/cr_drawer.js';
+import './nav_menu.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './nav_menu_demo.css.js';
+import { getHtml } from './nav_menu_demo.html.js';
+export class NavMenuDemoElement extends CrLitElement {
+    static get is() {
+        return 'nav-menu-demo';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            isDrawerOpen_: { type: Boolean },
+            selectedIndex_: { type: Number },
+            showIcons_: { type: Boolean },
+            showRipples_: { type: Boolean },
+        };
+    }
+    #isDrawerOpen__accessor_storage = false;
+    get isDrawerOpen_() { return this.#isDrawerOpen__accessor_storage; }
+    set isDrawerOpen_(value) { this.#isDrawerOpen__accessor_storage = value; }
+    #selectedIndex__accessor_storage;
+    get selectedIndex_() { return this.#selectedIndex__accessor_storage; }
+    set selectedIndex_(value) { this.#selectedIndex__accessor_storage = value; }
+    #showIcons__accessor_storage = true;
+    get showIcons_() { return this.#showIcons__accessor_storage; }
+    set showIcons_(value) { this.#showIcons__accessor_storage = value; }
+    #showRipples__accessor_storage = true;
+    get showRipples_() { return this.#showRipples__accessor_storage; }
+    set showRipples_(value) { this.#showRipples__accessor_storage = value; }
+    onShowDrawerMenuClick_() {
+        this.$.drawer.openDrawer();
+        this.isDrawerOpen_ = this.$.drawer.open;
+    }
+    onDrawerClose_() {
+        this.isDrawerOpen_ = this.$.drawer.open;
+    }
+    onSelectedIndexChanged_(e) {
+        this.selectedIndex_ = e.detail.value;
+    }
+    onShowIconsCheckedChanged_(e) {
+        this.showIcons_ = e.detail.value;
+    }
+    onShowRipplesCheckedChanged_(e) {
+        this.showRipples_ = e.detail.value;
+    }
+}
+export const tagName = NavMenuDemoElement.is;
+customElements.define(NavMenuDemoElement.is, NavMenuDemoElement);

@@ -1,0 +1,4 @@
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";export const LanguageSpec={$:{}};mojo.internal.Struct(LanguageSpec.$,"Language",[mojo.internal.StructField("languageCode",0,0,mojo.internal.String,null,false,0,undefined,undefined),mojo.internal.StructField("name",8,0,mojo.internal.String,null,false,0,undefined,undefined)],[[0,24]]);

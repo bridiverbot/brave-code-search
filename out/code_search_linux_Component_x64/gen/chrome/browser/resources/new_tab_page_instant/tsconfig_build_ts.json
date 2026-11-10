@@ -1,0 +1,28 @@
+{
+  "extends": "../../../../../../../tools/typescript/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/most_visited_title.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../chrome/browser/resources/new_tab_page_instant/embedded_search.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    }
+  ]
+}

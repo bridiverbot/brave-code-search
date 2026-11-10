@@ -1,0 +1,4 @@
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+let loadTime;function sendLoadTime(time){window.parent.postMessage({frameType:"background-image",messageType:"loaded",url:location.href,time:time},"chrome://new-tab-page")}function onImageLoad(){document.body.toggleAttribute("shown",true);loadTime=Date.now();sendLoadTime(loadTime)}function main(){window.addEventListener("message",(({data:data})=>{if(data==="sendLoadTime"&&loadTime){sendLoadTime(loadTime)}}));const img=document.body.querySelector("img");if(img.complete){onImageLoad();return}img.addEventListener("load",onImageLoad)}document.addEventListener("DOMContentLoaded",main);export{};

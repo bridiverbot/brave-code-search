@@ -1,0 +1,18 @@
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { LensGhostLoaderPageCallbackRouter, LensGhostLoaderPageHandlerFactory } from './lens_ghost_loader.mojom-webui.js';
+let instance = null;
+export class BrowserProxyImpl {
+    callbackRouter = new LensGhostLoaderPageCallbackRouter();
+    constructor() {
+        const factory = LensGhostLoaderPageHandlerFactory.getRemote();
+        factory.createGhostLoaderPage(this.callbackRouter.$.bindNewPipeAndPassRemote());
+    }
+    static getInstance() {
+        return instance || (instance = new BrowserProxyImpl());
+    }
+    static setInstance(obj) {
+        instance = obj;
+    }
+}

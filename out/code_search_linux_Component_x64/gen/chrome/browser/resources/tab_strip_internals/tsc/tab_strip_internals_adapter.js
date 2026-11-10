@@ -1,0 +1,390 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+/**
+ * Adapter that converts Mojo-provided data into a tree of ModelNodes suitable
+ * for rendering (simplified view with semantic meaning).
+ */
+export class DataModelAdapter {
+    /**
+     * Build a tree of ModelNode from the given Container.
+     */
+    static build(container) {
+        const root = {
+            path: 'Container',
+            value: container,
+            children: [],
+            label: 'Container',
+            displayName: 'Container',
+        };
+        const tabstripNode = this.buildTabStripTree(container.tabstripTree);
+        const tabRestoreNode = this.buildTabRestore(container.tabRestore);
+        const restoredSessionNode = this.buildSessionRestore(container.restoredSession, 'Restored Session');
+        const savedSessionNode = this.buildSessionRestore(container.savedSession, 'Saved Session');
+        root.children.push(tabstripNode, tabRestoreNode, restoredSessionNode, savedSessionNode);
+        return root;
+    }
+    /**
+     * Build a sub-tree representing the current TabStrip tree.
+     */
+    static buildTabStripTree(tree) {
+        const node = {
+            path: 'Container.tabstripTree',
+            value: tree,
+            children: [],
+            label: 'TabStrip Tree',
+            displayName: 'TabStrip Tree',
+        };
+        tree.windows.forEach((window, idx) => {
+            const winNode = {
+                path: `${node.path}.windows[${idx}]`,
+                value: window,
+                children: [],
+                label: `Window ${idx + 1}`,
+                displayName: `Window ${idx + 1}`,
+            };
+            winNode.children =
+                this.buildTabNodes(window.tabstripModel.root, winNode.path);
+            node.children.push(winNode);
+        });
+        return node;
+    }
+    /**
+     * Recursively build ModelNode objects for each tab in the TabStrip tree.
+     */
+    static buildTabNodes(node, basePath) {
+        if (!node) {
+            return [];
+        }
+        const data = node.data;
+        const out = [];
+        if ('tab' in data) {
+            const tab = data.tab;
+            out.push({
+                path: `${basePath}.tab`,
+                value: tab,
+                children: [],
+                label: this.formatTabLabel(tab),
+                displayName: tab.title,
+            });
+            // Recursion base case: Given node is a tab (tabs do not have children).
+            // Only collections (if they have children) result in recursive calls.
+            return out;
+        }
+        if ('tabGroupCollection' in data && data.tabGroupCollection) {
+            const groupCollection = data.tabGroupCollection;
+            const group = {
+                path: `${basePath}.group`,
+                value: groupCollection,
+                children: [],
+                label: this.formatGroupLabel(groupCollection.visualData),
+                displayName: groupCollection.visualData.title,
+            };
+            node.children.forEach((childNode, childIndex) => {
+                const tabModelNodes = this.buildTabNodes(childNode, `${group.path}.children[${childIndex}]`);
+                for (const tab of tabModelNodes) {
+                    group.children.push(tab);
+                }
+            });
+            out.push(group);
+            return out;
+        }
+        if ('splitTabCollection' in data && data.splitTabCollection) {
+            const splitCollection = data.splitTabCollection;
+            const split = {
+                path: `${basePath}.split`,
+                value: splitCollection,
+                children: [],
+                label: this.formatSplitLabel(splitCollection.visualData),
+                displayName: `Split`,
+            };
+            node.children.forEach((childNode, childIndex) => split.children.push(...this.buildTabNodes(childNode, `${split.path}.children[${childIndex}]`)));
+            out.push(split);
+            return out;
+        }
+        // Other container types: PinnedCollection, UnPinnedCollection, etc.
+        node.children.forEach((childNode, childIndex) => out.push(...this.buildTabNodes(childNode, `${basePath}.children[${childIndex}]`)));
+        return out;
+    }
+    /**
+     * Build a sub-tree representing the recently closed tabs (TabRestore data).
+     */
+    static buildTabRestore(restore) {
+        const node = {
+            path: 'Container.tabRestore',
+            value: restore,
+            children: [],
+            label: 'Recently Closed',
+            displayName: 'Recently Closed',
+        };
+        restore.entries.forEach((entry, i) => {
+            if ('tab' in entry) {
+                const tab = entry.tab;
+                node.children.push({
+                    path: `${node.path}.entries[${i}]`,
+                    value: tab,
+                    children: [],
+                    label: this.formatTabLabel(tab),
+                    displayName: tab.title,
+                });
+            }
+            else if ('window' in entry) {
+                const window = entry.window;
+                const windowNode = {
+                    path: `${node.path}.entries[${i}]`,
+                    value: window,
+                    children: [],
+                    label: `Window ${window.id.nodeId}`,
+                    displayName: `Window ${window.id.nodeId}`,
+                };
+                // Group tabs by a stable string key derived from TokenMojoType.
+                const groupedTabs = new Map();
+                const groupVisuals = new Map();
+                const ungroupedTabs = [];
+                for (const tab of window.tabs) {
+                    if (tab.groupId) {
+                        const groupKey = this.tokenToString_(tab.groupId);
+                        if (!groupedTabs.has(groupKey)) {
+                            groupedTabs.set(groupKey, []);
+                        }
+                        groupedTabs.get(groupKey).push(tab);
+                        if (tab.groupVisualData) {
+                            groupVisuals.set(groupKey, tab.groupVisualData);
+                        }
+                    }
+                    else {
+                        ungroupedTabs.push(tab);
+                    }
+                }
+                for (const [groupKey, groupTabs] of groupedTabs.entries()) {
+                    const visual = groupVisuals.get(groupKey);
+                    const groupNode = {
+                        path: `${windowNode.path}.groups[${groupKey}]`,
+                        value: visual,
+                        children: [],
+                        label: this.formatGroupLabel(visual),
+                        displayName: visual.title,
+                    };
+                    this.appendRestoreTabs(groupTabs, groupNode);
+                    windowNode.children.push(groupNode);
+                }
+                this.appendRestoreTabs(ungroupedTabs, windowNode);
+                node.children.push(windowNode);
+            }
+            else if ('group' in entry) {
+                const group = entry.group;
+                const groupNode = {
+                    path: `${node.path}.entries[${i}]`,
+                    value: group,
+                    children: [],
+                    label: this.formatGroupLabel(group.visualData),
+                    displayName: group.visualData.title,
+                };
+                this.appendRestoreTabs(group.tabs, groupNode);
+                node.children.push(groupNode);
+            }
+            else if ('split' in entry) {
+                const split = entry.split;
+                const splitNode = {
+                    path: `${node.path}.entries[${i}]`,
+                    value: split,
+                    children: [],
+                    label: this.formatSplitLabel(split.visualData),
+                    displayName: 'Split',
+                };
+                split.tabs.forEach((tab, index) => {
+                    splitNode.children.push({
+                        path: `${splitNode.path}.tabs[${index}]`,
+                        value: tab,
+                        children: [],
+                        label: this.formatTabLabel(tab),
+                        displayName: tab.title,
+                    });
+                });
+                node.children.push(splitNode);
+            }
+        });
+        return node;
+    }
+    /**
+     * Build a sub-tree representing SessionRestore data (either saved or
+     * restored session).
+     */
+    static buildSessionRestore(session, label) {
+        // Regex removes whitespaces from label to build path string.
+        const labelToPathStr = label.replace(/\s+/g, '').toLowerCase();
+        const node = {
+            path: `Container.${labelToPathStr}`,
+            value: session,
+            children: [],
+            label: label,
+            displayName: label,
+        };
+        if (!session || !session.entries?.length) {
+            return node;
+        }
+        session.entries.forEach((window, windowIndex) => {
+            const windowNode = {
+                path: `${node.path}.entries[${windowIndex}]`,
+                value: window,
+                children: [],
+                label: `Window ${window.windowId.id}`,
+                displayName: `Window ${window.windowId.id}`,
+            };
+            const tabGroups = window.tabGroups ?? [];
+            const splitTabs = window.splitTabs ?? [];
+            const tabs = window.tabs ?? [];
+            // TokenMojoType is converted to a string representation so it can be
+            // safely used as the map key.
+            const groupVisualsMap = new Map();
+            for (const group of tabGroups) {
+                groupVisualsMap.set(this.tokenToString_(group.groupId), group.visualData);
+            }
+            const splitVisualsMap = new Map();
+            for (const split of splitTabs) {
+                splitVisualsMap.set(this.tokenToString_(split.splitId), split.splitVisualData);
+            }
+            // Building group as you go along.
+            const groupNodes = new Map();
+            const splitNodes = new Map();
+            for (const tab of tabs) {
+                // Convert TokenMojoType to a string representation to use it as the
+                // map key.
+                const groupKey = tab.groupId ? this.tokenToString_(tab.groupId) : null;
+                const splitKey = tab.splitId ? this.tokenToString_(tab.splitId) : null;
+                // Tab is a Grouped tab.
+                if (groupKey && groupVisualsMap.has(groupKey)) {
+                    let groupNode = groupNodes.get(groupKey);
+                    if (!groupNode) {
+                        const visualData = groupVisualsMap.get(groupKey);
+                        groupNode = {
+                            path: `${windowNode.path}.groups[${groupKey}]`,
+                            value: visualData,
+                            children: [],
+                            label: this.formatGroupLabel(visualData),
+                            displayName: visualData.title,
+                        };
+                        groupNodes.set(groupKey, groupNode);
+                        windowNode.children.push(groupNode);
+                    }
+                    groupNode.children.push({
+                        path: `${groupNode.path}.tabs[${groupNode.children.length}]`,
+                        value: tab,
+                        children: [],
+                        label: this.formatTabLabel(tab),
+                        displayName: tab.title,
+                    });
+                    continue;
+                }
+                // Tab is a Split tab.
+                if (splitKey && splitVisualsMap.has(splitKey)) {
+                    let splitNode = splitNodes.get(splitKey);
+                    if (!splitNode) {
+                        const visualData = splitVisualsMap.get(splitKey);
+                        splitNode = {
+                            path: `${windowNode.path}.splits[${splitKey}]`,
+                            value: visualData,
+                            children: [],
+                            label: this.formatSplitLabel(visualData),
+                            displayName: 'Split',
+                        };
+                        splitNodes.set(splitKey, splitNode);
+                        windowNode.children.push(splitNode);
+                    }
+                    splitNode.children.push({
+                        path: `${splitNode.path}.tabs[${splitNode.children.length}]`,
+                        value: tab,
+                        children: [],
+                        label: this.formatTabLabel(tab),
+                        displayName: tab.title,
+                    });
+                    continue;
+                }
+                // Tab is a regular tab (unpinned or pinned).
+                windowNode.children.push({
+                    path: `${windowNode.path}.tabs[${windowNode.children.length}]`,
+                    value: tab,
+                    children: [],
+                    label: this.formatTabLabel(tab),
+                    displayName: tab.title,
+                });
+            }
+            node.children.push(windowNode);
+        });
+        return node;
+    }
+    /**
+     * Appends TabRestoreTabs to a parent ModelNode's children, automatically
+     * grouping them into nested Split nodes where splitId is present.
+     */
+    static appendRestoreTabs(tabs, parent) {
+        const splitNodes = new Map();
+        tabs.forEach((tab, index) => {
+            if (tab.splitId) {
+                const splitKey = this.tokenToString_(tab.splitId);
+                let splitNode = splitNodes.get(splitKey);
+                if (!splitNode) {
+                    const split = {
+                        splitId: tab.splitId,
+                        visualData: tab.splitVisualData || {
+                            layout: 0, // kSideBySide
+                            splitRatio: 0.5,
+                        },
+                        tabs: [],
+                    };
+                    splitNode = {
+                        path: `${parent.path}.synthetic_split_${splitKey}`,
+                        value: split,
+                        children: [],
+                        label: this.formatSplitLabel(split.visualData),
+                        displayName: 'Split',
+                    };
+                    splitNodes.set(splitKey, splitNode);
+                    parent.children.push(splitNode);
+                }
+                if (splitNode.value.tabs) {
+                    splitNode.value.tabs.push(tab);
+                }
+                splitNode.children.push({
+                    path: `${splitNode.path}.tabs[${splitNode.children.length}]`,
+                    value: tab,
+                    children: [],
+                    label: this.formatTabLabel(tab),
+                    displayName: tab.title,
+                });
+            }
+            else {
+                parent.children.push({
+                    path: `${parent.path}.tabs[${index}]`,
+                    value: tab,
+                    children: [],
+                    label: this.formatTabLabel(tab),
+                    displayName: tab.title,
+                });
+            }
+        });
+    }
+    static formatTabLabel(tab) {
+        return `Tab: ${tab.title}`;
+    }
+    static formatGroupLabel(data) {
+        const { color, title, isCollapsed } = data;
+        return `[Group] ${title} (color: ${color}, collapsed: ${isCollapsed})`;
+    }
+    static formatSplitLabel(visual) {
+        const { layout, splitRatio } = visual;
+        return `[Split] Layout: ${layout}, Ratio: ${splitRatio}`;
+    }
+    /**
+     * Convert a Mojo Token to its canonical string representation i.e. represents
+     * a 128-bit value as two 64-bit words using zero-padded uppercase
+     * hexadecimal format.
+     *
+     * Note: This mirrors C++ representation of base::Token::ToString().
+     */
+    static tokenToString_(token) {
+        const hi = token.high.toString(16).padStart(16, '0').toUpperCase();
+        const lo = token.low.toString(16).padStart(16, '0').toUpperCase();
+        return `${hi}${lo}`;
+    }
+}

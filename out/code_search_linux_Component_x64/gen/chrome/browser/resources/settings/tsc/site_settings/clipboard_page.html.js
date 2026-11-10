@@ -1,0 +1,26 @@
+import { html } from '//resources/polymer/v3_0/polymer/polymer_bundled.min.js';
+export function getTemplate() {
+    return html `<!--_html_template_start_--><style include="settings-shared site-settings-shared"></style>
+<settings-subpage page-title="$i18n{siteSettingsClipboard}"
+    search-label="$i18n{siteSettingsAllSitesFilter}"
+    search-icon="settings20:filter-list"
+    search-term="{{searchTerm}}" route-path$="[[routePath]]">
+  <div class="content-settings-header secondary">
+    $i18n{siteSettingsClipboardDescription}
+  </div>
+  <settings-category-default-radio-group
+      category="[[contentSettingsTypesEnum_.CLIPBOARD]]"
+      ask-option-label="$i18n{siteSettingsClipboardAsk}"
+      ask-option-icon="privacy:content-paste"
+      block-option-label="$i18n{siteSettingsClipboardBlocked}"
+      block-option-icon="privacy:content-paste-off">
+  </settings-category-default-radio-group>
+  <category-setting-exceptions
+      category="[[contentSettingsTypesEnum_.CLIPBOARD]]"
+      allow-header="$i18n{siteSettingsClipboardAllowedExceptions}"
+      block-header="$i18n{siteSettingsClipboardBlockedExceptions}"
+      search-filter="[[searchTerm]]">
+  </category-setting-exceptions>
+</settings-subpage>
+<!--_html_template_end_-->`;
+}

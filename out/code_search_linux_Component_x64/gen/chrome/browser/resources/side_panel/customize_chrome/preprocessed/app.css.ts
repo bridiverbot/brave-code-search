@@ -1,0 +1,7 @@
+import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
+import {getCss as getAppChromium} from './app-chromium.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[getAppChromium()], css`:host{--toolbar-button-height:20px;--cr-theme-color-max-width:80px;--cr-grid-template-columns:repeat(auto-fill,minmax(64px,80px));--cr-grid-width-override:100%;--cr-grid-justify-content:center}#container{padding-top:0}#appearance>sp-heading{height:60px}sp-heading h2[slot='heading']{--leo-icon-color:var(--leo-gradient-icons-active);display:flex;align-items:center;gap:var(--leo-spacing-m);flex-grow:1}#overviewPage .sp-cards-separator:first-of-type{border-top:1px solid var(--leo-color-divider-subtle);box-sizing:border-box;height:var(--leo-spacing-xl)}#toolbarButton{height:var(--toolbar-button-height)}#toolbar-customization-heading{margin:0;height:var(--toolbar-button-height)}#toolbar-customization-inner-heading{color:var(--leo-color-text-interactive);font:var(--leo-font-components-button-small);line-height:var(--leo-typography-line-height-button-small)}.sp-card{max-width:none}customize-chrome-appearance,customize-chrome-shortcuts,customize-chrome-cards,customize-chrome-categories,customize-chrome-themes,customize-chrome-wallpaper-search,customize-chrome-toolbar{max-width:none}#shortcuts{display:none}`]);
+}
