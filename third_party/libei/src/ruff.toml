@@ -1,0 +1,8 @@
+# Same as Black.
+line-length = 88
+
+[lint]
+# UP006/UP007/UP035/UP045: don't enforce modern typing syntax, we need to support Python 3.9
+# E741: allow ambiguous variable names (l, O, I) used in protocol code
+# E501: line length handled by formatter
+ignore = ["UP006", "UP007", "UP035", "UP045", "E741", "E501"]
