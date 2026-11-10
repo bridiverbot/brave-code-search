@@ -1,0 +1,9 @@
+{
+  "deps": [
+    "../../../../mojo/public/mojom/base/base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../components/actor/public/mojom/actor_internals.mojom",
+    "../../../../../../../components/actor/public/mojom/actor_types.mojom"
+  ]
+}

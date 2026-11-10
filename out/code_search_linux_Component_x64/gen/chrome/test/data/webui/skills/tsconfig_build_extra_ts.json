@@ -1,0 +1,34 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/skills/tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "../../../../../../../../chrome/test/data/webui/skills",
+    "outDir": ".",
+    "skipLibCheck": true,
+    "paths": {
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://skills/*": [
+        "./../../../../browser/resources/skills/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "../../../../../../../../chrome/test/data/webui/skills/test_client/client.ts",
+    "../../../../../../../../chrome/test/data/webui/skills/test_client/test_client.ts",
+    "../../../../../../../../chrome/test/data/webui/skills/test_client/page_element_types.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_event.d.ts",
+    "../../../../../../../../tools/typescript/definitions/webview_tag.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../browser/resources/skills/tsconfig_build_ts.json"
+    }
+  ]
+}

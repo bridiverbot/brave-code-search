@@ -1,0 +1,127 @@
+{
+  "extends": "../../../../../../../../chrome/test/data/webui/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/polymer/v3_0/polymer/polymer_bundled.min.js": [
+        "./../../../../../../../../third_party/polymer/v3_0/components-chromium/polymer/polymer.d.ts"
+      ],
+      "chrome://resources/polymer/v3_0/polymer/polymer_bundled.min.js": [
+        "./../../../../../../../../third_party/polymer/v3_0/components-chromium/polymer/polymer.d.ts"
+      ],
+      "//resources/polymer/v3_0/*": [
+        "./../../../../../../../../third_party/polymer/v3_0/components-chromium/*"
+      ],
+      "chrome://resources/polymer/v3_0/*": [
+        "./../../../../../../../../third_party/polymer/v3_0/components-chromium/*"
+      ],
+      "//resources/cr_components/color_change_listener/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "chrome://resources/cr_components/color_change_listener/*": [
+        "./../../../../../ui/webui/resources/tsc/cr_components/color_change_listener/*"
+      ],
+      "//resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome://password-manager/password_manager.js": [
+        "./../../../../browser/resources/password_manager/tsc/password_manager.d.ts"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "//webui-test/*": [
+        "./../tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/add_password_dialog_test.ts",
+    "preprocessed/backup_password_details_card_test.ts",
+    "preprocessed/checkup_details_section_test.ts",
+    "preprocessed/checkup_list_item_test.ts",
+    "preprocessed/checkup_section_test.ts",
+    "preprocessed/credential_field_test.ts",
+    "preprocessed/credential_note_test.ts",
+    "preprocessed/delete_passkey_dialog_test.ts",
+    "preprocessed/edit_passkey_dialog_test.ts",
+    "preprocessed/edit_password_dialog_test.ts",
+    "preprocessed/find_shortcut_mixin_test.ts",
+    "preprocessed/full_data_reset_test.ts",
+    "preprocessed/move_passwords_dialog_test.ts",
+    "preprocessed/notification_cards_test.ts",
+    "preprocessed/passkey_details_card_test.ts",
+    "preprocessed/password_change_details_test.ts",
+    "preprocessed/password_details_card_test.ts",
+    "preprocessed/password_details_section_test.ts",
+    "preprocessed/password_manager_app_test.ts",
+    "preprocessed/password_manager_focus_test.ts",
+    "preprocessed/password_manager_routing_test.ts",
+    "preprocessed/password_manager_side_bar_test.ts",
+    "preprocessed/passwords_exporter_test.ts",
+    "preprocessed/passwords_importer_test.ts",
+    "preprocessed/passwords_section_test.ts",
+    "preprocessed/policy_utils_test.ts",
+    "preprocessed/remove_actor_login_permission_dialog_test.ts",
+    "preprocessed/trusted_vault_error_dialog_test.ts",
+    "preprocessed/settings_section_test.ts",
+    "preprocessed/share_password_confirmation_dialog_test.ts",
+    "preprocessed/share_password_family_picker_dialog_test.ts",
+    "preprocessed/share_password_flow_test.ts",
+    "preprocessed/share_password_group_avatar_test.ts",
+    "preprocessed/share_password_header_test.ts",
+    "preprocessed/share_password_loading_dialog_test.ts",
+    "preprocessed/share_password_recipient_test.ts",
+    "preprocessed/site_favicon_test.ts",
+    "preprocessed/test_password_manager_proxy.ts",
+    "preprocessed/test_notification_cards_browser_proxy.ts",
+    "preprocessed/test_prefs_browser_proxy.ts",
+    "preprocessed/test_sync_browser_proxy.ts",
+    "preprocessed/test_util.ts",
+    "preprocessed/user_utils_mixin_test.ts",
+    "preprocessed/password_manager.mojom-webui.ts",
+    "../../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../../tools/typescript/definitions/chrome_event.d.ts",
+    "../../../../../../../../tools/typescript/definitions/passwords_private.d.ts",
+    "../../../../../../../../tools/typescript/definitions/settings_private.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../browser/resources/password_manager/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../third_party/polymer/v3_0/tsconfig_library.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/cr_components/color_change_listener/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    }
+  ]
+}
