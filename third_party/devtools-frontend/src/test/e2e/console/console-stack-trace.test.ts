@@ -1,0 +1,154 @@
+// Copyright 2021 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import {assert} from 'chai';
+
+import {describe, it} from '../conductor/mocha-interface.js';
+import {
+  CONSOLE_TAB_SELECTOR,
+  focusConsolePrompt,
+  getStructuredConsoleMessages,
+  STACK_PREVIEW_CONTAINER,
+} from '../helpers/console-helpers.js';
+import {setIgnoreListPattern} from '../helpers/settings-helpers.js';
+
+const CONSOLE_MESSAGE_WRAPPER = '.console-message-stack-trace-wrapper';
+const SHOW_MORE_LINK = '.show-all-link .link';
+const SHOW_LESS_LINK = '.show-less-link .link';
+
+describe('The Console Tab', () => {
+  it('shows messages with stack traces', async ({devToolsPage, inspectedPage}) => {
+    await devToolsPage.click(CONSOLE_TAB_SELECTOR);
+    await focusConsolePrompt(devToolsPage);
+    await inspectedPage.goToResource('console/stack-trace.html');
+
+    await devToolsPage.waitFor(CONSOLE_MESSAGE_WRAPPER);
+    await devToolsPage.click(CONSOLE_MESSAGE_WRAPPER);
+    const stack = await devToolsPage.waitFor(STACK_PREVIEW_CONTAINER);
+
+    const expected = [
+      {text: '\nshown3 @ showMe.js:10', visible: true},
+      {text: '\nshown2 @ showMe.js:6', visible: true},
+      {text: '\nshown1 @ showMe.js:2', visible: true},
+      {text: '\n(anonymous) @ ignoreMe.js:21', visible: true},
+      {text: '\nPromise.then', visible: true},
+      {text: '\nignoreListed4 @ ignoreMe.js:20', visible: true},
+      {text: '\nignoreListed3 @ ignoreMe.js:16', visible: true},
+      {text: '\nignoreListed2 @ ignoreMe.js:12', visible: true},
+      {text: '\nignoreListed1 @ ignoreMe.js:8', visible: true},
+      {text: '\n(anonymous) @ ignoreMe.js:5', visible: true},
+      {text: '', visible: false},
+      {text: '', visible: false},
+    ];
+
+    await devToolsPage.waitForFunction(async () => {
+      const stackTraceRows = await devToolsPage.evaluate(stack => {
+        return Array.from(stack.querySelectorAll('tr'))
+            .map(node => ({text: node.textContent, visible: node.checkVisibility()}));
+      }, stack!);
+      return JSON.stringify(stackTraceRows) === JSON.stringify(expected);
+    });
+  });
+
+  it('shows messages with stack traces containing ignore-listed frames', async ({devToolsPage, inspectedPage}) => {
+    await setIgnoreListPattern(devToolsPage, 'ignoreMe.js');
+
+    await devToolsPage.click(CONSOLE_TAB_SELECTOR);
+    await focusConsolePrompt(devToolsPage);
+    await inspectedPage.goToResource('console/stack-trace.html');
+
+    await devToolsPage.waitFor(CONSOLE_MESSAGE_WRAPPER);
+    await devToolsPage.click(CONSOLE_MESSAGE_WRAPPER);
+    const stack = await devToolsPage.waitFor(STACK_PREVIEW_CONTAINER);
+
+    const expected = [
+      {text: '\nshown3 @ showMe.js:10', visible: true},
+      {text: '\nshown2 @ showMe.js:6', visible: true},
+      {text: '\nshown1 @ showMe.js:2', visible: true},
+      {text: '\n(anonymous) @ ignoreMe.js:21', visible: false},
+      {text: '\nPromise.then', visible: false},
+      {text: '\nignoreListed4 @ ignoreMe.js:20', visible: false},
+      {text: '\nignoreListed3 @ ignoreMe.js:16', visible: false},
+      {text: '\nignoreListed2 @ ignoreMe.js:12', visible: false},
+      {text: '\nignoreListed1 @ ignoreMe.js:8', visible: false},
+      {text: '\n(anonymous) @ ignoreMe.js:5', visible: false},
+      {text: '', visible: true},
+      {text: '', visible: false},
+    ];
+
+    await devToolsPage.waitForFunction(async () => {
+      const stackTraceRows = await devToolsPage.evaluate(stack => {
+        return Array.from(stack.querySelectorAll('tr'))
+            .map(node => ({text: node.textContent, visible: node.checkVisibility()}));
+      }, stack!);
+      return JSON.stringify(stackTraceRows) === JSON.stringify(expected);
+    });
+
+    // assert that hidden rows are not shown initially
+    let showHidden = await stack.evaluate(x => x.classList.contains('show-hidden-rows'));
+    assert.isFalse(showHidden);
+
+    // assert that after clicking 'show all'-button, hidden rows are shown
+    await devToolsPage.click(SHOW_MORE_LINK);
+    await devToolsPage.waitFor(`${STACK_PREVIEW_CONTAINER}.show-hidden-rows`);
+    showHidden = await stack.evaluate(x => x.classList.contains('show-hidden-rows'));
+    assert.isTrue(showHidden);
+
+    const expectedUnhidden = [
+      {text: '\nshown3 @ showMe.js:10', visible: true},
+      {text: '\nshown2 @ showMe.js:6', visible: true},
+      {text: '\nshown1 @ showMe.js:2', visible: true},
+      {text: '\n(anonymous) @ ignoreMe.js:21', visible: true},
+      {text: '\nPromise.then', visible: true},
+      {text: '\nignoreListed4 @ ignoreMe.js:20', visible: true},
+      {text: '\nignoreListed3 @ ignoreMe.js:16', visible: true},
+      {text: '\nignoreListed2 @ ignoreMe.js:12', visible: true},
+      {text: '\nignoreListed1 @ ignoreMe.js:8', visible: true},
+      {text: '\n(anonymous) @ ignoreMe.js:5', visible: true},
+      {text: '', visible: false},
+      {text: '', visible: true},
+    ];
+
+    await devToolsPage.waitForFunction(async () => {
+      const stackTraceRows = await devToolsPage.evaluate(stack => {
+        return Array.from(stack.querySelectorAll('tr'))
+            .map(node => ({text: node.textContent, visible: node.checkVisibility()}));
+      }, stack!);
+      return JSON.stringify(stackTraceRows) === JSON.stringify(expectedUnhidden);
+    });
+
+    // assert that after clicking 'show less'-button, hidden rows are hidden again
+    await devToolsPage.click(SHOW_LESS_LINK);
+    await devToolsPage.waitFor(`${STACK_PREVIEW_CONTAINER}:not(.show-hidden-rows)`);
+    showHidden = await stack.evaluate(x => x.classList.contains('show-hidden-rows'));
+    assert.isFalse(showHidden);
+  });
+
+  it('shows stack traces for stack overflow exceptions', async ({devToolsPage, inspectedPage}) => {
+    await devToolsPage.click(CONSOLE_TAB_SELECTOR);
+    await focusConsolePrompt(devToolsPage);
+
+    await inspectedPage.evaluate(`
+      // Both the call and the function entry may trigger stack overflow.
+      // Intentionally keep both on the same line to avoid flaky test failures.
+      window.overflow = function() { window.overflow(); }
+      window.doOverflow = function() { setTimeout(window.overflow, 0); }
+    `);
+
+    await inspectedPage.evaluate(`window.doOverflow()`);
+
+    // Wait for the console message to appear and have a stack trace.
+    await devToolsPage.waitForFunction(async () => {
+      const messages = await getStructuredConsoleMessages(devToolsPage);
+      return messages.length > 0 && messages.some(m => m.message?.includes('Maximum call stack size exceeded'));
+    });
+
+    const messages = await getStructuredConsoleMessages(devToolsPage);
+    const overflowMessage = messages.find(m => m.message?.includes('Maximum call stack size exceeded'));
+
+    assert.exists(overflowMessage);
+    assert.exists(overflowMessage.stackPreview);
+    assert.include(overflowMessage.stackPreview, 'overflow');
+  });
+});

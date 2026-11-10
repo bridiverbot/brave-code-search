@@ -1,0 +1,52 @@
+# Copyright 2020 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../../../scripts/build/ninja/devtools_entrypoint.gni")
+import("../../../scripts/build/ninja/devtools_module.gni")
+import("../../../scripts/build/ninja/devtools_pre_built.gni")
+import("../visibility.gni")
+
+devtools_pre_built("diff_match_patch") {
+  sources_are_release = false
+
+  sources = [
+    "diff_match_patch.d.ts",
+    "diff_match_patch.js",
+  ]
+}
+
+devtools_module("diff") {
+  sources = [ "DiffWrapper.ts" ]
+
+  ts_deps = [
+    ":diff_match_patch",
+    "../../core/common:bundle",
+  ]
+}
+
+devtools_entrypoint("bundle") {
+  entrypoint = "diff.ts"
+
+  ts_deps = [
+    ":diff",
+    ":diff_match_patch",
+  ]
+
+  visibility = [
+    ":*",
+    "../../../test/*",
+    "../../models/ai_assistance/*",
+    "../../models/workspace_diff/*",
+    "../../panels/application/*",
+    "../../panels/changes/*",
+    "../../panels/sources/*",
+    "../../panels/utils:unittests",
+    "../../panels/utils/*",
+    "../../ui/components/diff_view/*",
+    "../../ui/legacy/components/quick_open/*",
+    "../../ui/legacy/components/source_frame/*",
+  ]
+
+  visibility += devtools_third_party_visibility
+}

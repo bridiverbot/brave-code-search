@@ -1,0 +1,15 @@
+{
+  "extends": "../config/typescript/tsconfig.base.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+
+    "allowJs": false,
+    "checkJs": false
+  },
+  "references": [
+    {
+      "path": "../front_end/tsconfig.json"
+    }
+  ]
+}

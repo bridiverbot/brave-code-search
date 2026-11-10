@@ -1,0 +1,153 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import {assert} from 'chai';
+import type * as puppeteer from 'puppeteer-core';
+
+import {describe, it} from '../conductor/mocha-interface.js';
+import {
+  elementWithPartialText,
+  getContentOfSelectedNode,
+  waitForAndClickTreeElementWithPartialText,
+  waitForChildrenOfSelectedElementNode,
+  waitForElementWithPartialText,
+  waitForPartialContentOfSelectedElementsNode,
+  waitForSelectedNodeChange,
+} from '../helpers/elements-helpers.js';
+import type {DevToolsPage} from '../shared/DevToolsPage.js';
+
+async function waitForStartsWith(devToolsPage: DevToolsPage, tree: puppeteer.ElementHandle,
+                                 expectedText: string): Promise<void> {
+  await devToolsPage.waitForFunction(async () => {
+    const content = await tree.evaluate(e => e.textContent);
+    return content?.startsWith(expectedText) ? content : undefined;
+  }, undefined, `Waiting for text to start with ${expectedText}`);
+}
+
+describe('The Elements tab', function() {
+  it('shows adopted stylesheets in document root', async ({devToolsPage, inspectedPage}) => {
+    await inspectedPage.goToResource('elements/adopted-stylesheet.html');
+    const tree = await devToolsPage.waitForAria('Page DOM');
+    await waitForStartsWith(devToolsPage, tree, '#adopted-style-sheets');
+    await waitForAndClickTreeElementWithPartialText(devToolsPage, '#adopted-style-sheets', 'adopted-style-sheets');
+    await devToolsPage.pressKey('ArrowRight');
+    await devToolsPage.pressKey('ArrowDown');
+    await devToolsPage.pressKey('ArrowRight');
+    const expectedAdoptedStyleSheet = '#adopted-style-sheets#adopted-style-sheet/* For document */';
+    await waitForStartsWith(devToolsPage, tree, expectedAdoptedStyleSheet);
+  });
+
+  it('updates adopted stylesheets in document root', async ({devToolsPage, inspectedPage}) => {
+    await inspectedPage.goToResource('elements/adopted-stylesheet.html');
+    const tree = await devToolsPage.waitForAria('Page DOM');
+    await waitForStartsWith(devToolsPage, tree, '#adopted-style-sheets');
+    await waitForAndClickTreeElementWithPartialText(devToolsPage, '#adopted-style-sheets', 'adopted-style-sheets');
+    await devToolsPage.pressKey('ArrowRight');
+    await devToolsPage.pressKey('ArrowDown');
+    await devToolsPage.pressKey('ArrowRight');
+    const initialAdoptedStyleSheet = '#adopted-style-sheets#adopted-style-sheet/* For document */';
+    await waitForStartsWith(devToolsPage, tree, initialAdoptedStyleSheet);
+    await inspectedPage.evaluate(() => {
+      document.adoptedStyleSheets = [];
+    });
+    await waitForStartsWith(devToolsPage, tree, '<html>');
+    await inspectedPage.evaluate(() => {
+      document.adoptedStyleSheets = [new CSSStyleSheet(), new CSSStyleSheet()];
+    });
+    await waitForStartsWith(devToolsPage, tree, '#adopted-style-sheets#adopted-style-sheet#adopted-style-sheet<html>');
+    await inspectedPage.evaluate(() => {
+      document.adoptedStyleSheets[0].replaceSync('/**/');
+    });
+    await waitForAndClickTreeElementWithPartialText(devToolsPage, '#adopted-style-sheets', 'adopted-style-sheets');
+    await devToolsPage.pressKey('ArrowDown');
+    await devToolsPage.pressKey('ArrowRight');
+    await waitForStartsWith(devToolsPage, tree,
+                            '#adopted-style-sheets#adopted-style-sheet/**/#adopted-style-sheet<html>');
+  });
+
+  it('shows link to imported stylesheet', async ({devToolsPage, inspectedPage}) => {
+    await inspectedPage.goToResource('elements/adopted-stylesheet.html');
+    const tree = await devToolsPage.waitForAria('Page DOM');
+    // Wait until adopted stylesheets have been reported.
+    await waitForStartsWith(devToolsPage, tree, '#adopted-style-sheets');
+
+    // Check to make sure we have the correct node selected after opening a file
+    await waitForPartialContentOfSelectedElementsNode(devToolsPage, '<body>');
+    // This isn't consistently expanded, so this arrow right might expand it
+    // or it might move the selected node, but either way it should change
+    // the text of the selected node.
+    const bodyNodeText = await getContentOfSelectedNode(devToolsPage);
+    await devToolsPage.pressKey('ArrowRight');
+    await waitForSelectedNodeChange(devToolsPage, bodyNodeText);
+
+    // Click the node for this test.
+    await waitForAndClickTreeElementWithPartialText(devToolsPage, '"with-constructed-stylesheet-import"');
+
+    // Expand and navigate to its shadow root.
+    await devToolsPage.pressKey('ArrowRight');
+    await waitForChildrenOfSelectedElementNode(devToolsPage);
+    await devToolsPage.pressKey('ArrowRight');
+    await waitForPartialContentOfSelectedElementsNode(devToolsPage, '#shadow-root');
+
+    // One more time to get the adopted stylesheet set.
+    await devToolsPage.pressKey('ArrowRight');
+    await waitForChildrenOfSelectedElementNode(devToolsPage);
+    await devToolsPage.pressKey('ArrowRight');
+    await waitForPartialContentOfSelectedElementsNode(devToolsPage, '#adopted-style-sheets');
+
+    // One more time to get the adopted stylesheet.
+    await devToolsPage.pressKey('ArrowRight');
+    await waitForChildrenOfSelectedElementNode(devToolsPage);
+    await devToolsPage.pressKey('ArrowRight');
+
+    // Wait until the link to the imported stylesheet is present and populated.
+    const stylesheetLinkRegex =
+        /#adopted-style-sheet \(https?:\/\/.*\/test\/e2e\/resources\/elements\/adopted-style.css\)/;
+    await devToolsPage.waitForFunction(async () => {
+      const content = await getContentOfSelectedNode(devToolsPage);
+      return stylesheetLinkRegex.test(content);
+    });
+
+    // Check that the link to the imported stylesheet is present.
+    assert.match(await getContentOfSelectedNode(devToolsPage), stylesheetLinkRegex);
+  });
+
+  it('reveals adopted stylesheets in document root when clicking link from styles pane',
+     async ({devToolsPage, inspectedPage}) => {
+       await inspectedPage.goToResource('elements/adopted-stylesheet.html');
+       const tree = await devToolsPage.waitForAria('Page DOM');
+       await waitForStartsWith(devToolsPage, tree, '#adopted-style-sheets');
+       const styleSheets = await elementWithPartialText(devToolsPage, '#adopted-style-sheets');
+       assert.isOk(styleSheets);
+       const expectExpanded = async (expanded: boolean) =>
+           assert.strictEqual(await styleSheets.evaluate(e => e.getAttribute('aria-expanded')), `${expanded}`);
+       await expectExpanded(false);
+
+       // Check to make sure we have the correct node selected after opening a file
+       await waitForPartialContentOfSelectedElementsNode(devToolsPage, '<body>');
+       // This isn't consistently expanded, so this arrow right might expand it
+       // or it might move the selected node, but either way it should change
+       // the text of the selected node.
+       const bodyNodeText = await getContentOfSelectedNode(devToolsPage);
+       await devToolsPage.pressKey('ArrowRight');
+       await waitForSelectedNodeChange(devToolsPage, bodyNodeText);
+
+       // Click the node for this test.
+       await waitForAndClickTreeElementWithPartialText(devToolsPage, '"from-document"');
+
+       // Wait for the link text to appear to ensure it's fully rendered.
+       const rule = await devToolsPage.waitFor('.matched-styles[aria-label=".from-document, css selector"]');
+       await devToolsPage.waitForElementWithTextContent('constructed stylesheet', rule);
+
+       // Click the link to the adopted stylesheet in the styles pane.
+       await devToolsPage.click(
+           '.matched-styles[aria-label=".from-document, css selector"] > .styles-section-subtitle > devtools-widget');
+
+       // The adopted stylesheet set should now be expanded.
+       const expandedStyleSheets = await waitForElementWithPartialText(devToolsPage, '#adopted-style-sheets');
+       assert.isOk(expandedStyleSheets);
+       await devToolsPage.waitForClass(expandedStyleSheets, 'expanded');
+       assert.strictEqual(await expandedStyleSheets.evaluate((e: Element) => e.getAttribute('aria-expanded')), 'true');
+     });
+});

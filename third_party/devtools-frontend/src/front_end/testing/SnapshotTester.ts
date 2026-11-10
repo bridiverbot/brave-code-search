@@ -1,0 +1,236 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+/**
+ * Asserts two strings are equal, and logs the first differing line if not equal.
+ */
+
+import type * as Mocha from 'mocha';
+function assertSnapshotContent(actual: string, expected: string): void {
+  if (actual !== expected) {
+    const actualLines = actual.split('\n');
+    const expectedLines = expected.split('\n');
+    for (let i = 0; i < Math.max(actualLines.length, expectedLines.length); i++) {
+      const actualLine = actualLines.at(i);
+      const expectedLine = expectedLines.at(i);
+      if (actualLine !== expectedLine) {
+        const firstDifference = `First differing line:\nexpected: ${expectedLine}\nactual:   ${actualLine}`;
+        throw new Error(
+            `snapshot assertion failed! to update snapshot, run \`scripts/tools/dt.py test --on-diff=update ...\`\n\n${
+                firstDifference}`);
+      }
+    }
+  }
+}
+
+/**
+ * Provides snapshot testing for karma unit tests.
+ * See README.md for more.
+ *
+ * Note: karma.conf.ts implements the server logic (see snapshotTesterFactory).
+ */
+class BaseSnapshotTester {
+  static #updateMode: boolean|null = null;
+
+  protected snapshotPath: string;
+  #expected = new Map<string, string>();
+  #actual = new Map<string, string>();
+  #seenTestObjects = new WeakSet<Mocha.Runnable>();
+
+  constructor(context: Mocha.Suite, meta: ImportMeta) {
+    if (context.timeout() > 0) {
+      // The first usage of SnapshotTester in a test seems to take an extraordinary
+      // amount of time, so let's bump the timeout for all snapshot tests.
+      context.timeout(Math.max(context.timeout(), 45000));
+    }
+
+    context.beforeAll(async () => {
+      await this.load();
+    });
+
+    context.afterAll(async () => {
+      await this.finish();
+    });
+
+    // out/Default/gen/third_party/devtools-frontend/src/front_end/testing/SnapshotTester.test.js?8ee4f2b123e221040a4aa075a28d0e5b41d3d3ed
+    // ->
+    // front_end/testing/SnapshotTester.snapshot.txt
+    const relativePathStart =
+        meta.url.includes('/front_end/') ? meta.url.indexOf('front_end') : meta.url.indexOf('/test/') + 1;
+    this.snapshotPath = meta.url.substring(relativePathStart).replace('.test.js', '.snapshot.txt').split('?')[0];
+  }
+
+  async load(): Promise<void> {
+    if (BaseSnapshotTester.#updateMode === null) {
+      const config = await this.checkIfUpdateMode();
+      BaseSnapshotTester.#updateMode = config.updateMode;
+    }
+    const content = await this.loadSnapshot(this.snapshotPath);
+    if (content) {
+      this.#parseSnapshotFileContent(content);
+    }
+  }
+
+  assert(context: Mocha.Context, actual: string): void {
+    const title = context.test?.fullTitle() ?? '';
+
+    if (context.test && this.#seenTestObjects.has(context.test)) {
+      throw new Error('sorry, currently only support 1 snapshot assertion per test');
+    }
+    if (context.test) {
+      this.#seenTestObjects.add(context.test);
+    }
+
+    if (actual.includes('=== end content')) {
+      throw new Error('invalid content');
+    }
+
+    actual = actual.trim();
+    this.#actual.set(title, actual);
+
+    const expected = this.#expected.get(title);
+    if (expected === undefined) {
+      if (BaseSnapshotTester.#updateMode) {
+        return;
+      }
+
+      throw new Error(`snapshot assertion failed! new snapshot found (${
+          title}), must run \`scripts/tools/dt.py test --on-diff=update ...\` to accept it.`);
+    }
+
+    const isDifferent = actual !== expected;
+    if (isDifferent && !BaseSnapshotTester.#updateMode) {
+      assertSnapshotContent(actual, expected);
+    }
+  }
+
+  async finish(): Promise<void> {
+    if (BaseSnapshotTester.#updateMode) {
+      await this.postUpdate();
+    }
+  }
+
+  #parseSnapshotFileContent(content: string): void {
+    const sections = content.split('=== end content').map(s => s.trim()).filter(Boolean);
+    for (const section of sections) {
+      const [titleField, contentField, ...contentLines] = section.split('\n');
+      const title = titleField.replace('Title:', '').trim();
+      if (contentField !== 'Content:') {
+        throw new Error('unexpected snapshot file');
+      }
+      const content = contentLines.join('\n').trim();
+      this.#expected.set(title, content);
+    }
+  }
+
+  protected serializeSnapshotFileContent(): string {
+    const resultMap = new Map<string, string>();
+
+    for (const [title, expectedContent] of this.#expected) {
+      if (this.#actual.has(title)) {
+        resultMap.set(title, this.#actual.get(title)!);
+      } else {
+        resultMap.set(title, expectedContent);
+      }
+    }
+
+    for (const [title, actualContent] of this.#actual) {
+      if (!resultMap.has(title)) {
+        resultMap.set(title, actualContent);
+      }
+    }
+
+    if (!resultMap.size) {
+      return '';
+    }
+
+    const lines = [];
+    for (const [title, result] of resultMap) {
+      lines.push(`Title: ${title}`);
+      lines.push(`Content:\n${result}`);
+      lines.push('=== end content\n');
+    }
+    lines.push('');
+
+    return lines.join('\n').trim() + '\n';
+  }
+
+  protected async checkIfUpdateMode(): Promise<{updateMode: boolean}> {
+    return {updateMode: false};
+  }
+
+  protected async postUpdate(): Promise<void> {
+    throw new Error(`Not implemented`);
+  }
+
+  protected async loadSnapshot(_snapshotPath: string): Promise<string|undefined> {
+    throw new Error('not implemented');
+  }
+}
+
+class WebSnapshotTester extends BaseSnapshotTester {
+  protected override async checkIfUpdateMode(): Promise<{updateMode: boolean}> {
+    const response = await fetch('/snapshot-update-mode');
+    const data = await response.json();
+    return {updateMode: data.updateMode === true};
+  }
+
+  protected override async postUpdate(): Promise<void> {
+    const url = new URL('/update-snapshot', import.meta.url);
+    url.searchParams.set('snapshotPath', this.snapshotPath);
+    const content = this.serializeSnapshotFileContent();
+    const response = await fetch(url, {method: 'POST', body: content});
+    if (response.status !== 200) {
+      throw new Error(`Unable to update snapshot ${url}`);
+    }
+  }
+
+  protected override async loadSnapshot(snapshotPath: string): Promise<string|undefined> {
+    const url = new URL('/snapshot', import.meta.url);
+    url.searchParams.set('snapshotPath', snapshotPath);
+    const response = await fetch(url);
+    if (response.status === 404) {
+      console.warn(`Snapshot file not found: ${snapshotPath}. Will create it for you.`);
+      return;
+    }
+    if (response.status !== 200) {
+      throw new Error('failed to load snapshot');
+    }
+    return await response.text();
+  }
+}
+
+class NodeSnapshotTester extends BaseSnapshotTester {
+  protected override async checkIfUpdateMode(): Promise<{updateMode: boolean}> {
+    // cannot update in node mode yet.
+    return {updateMode: false};
+  }
+
+  protected override async postUpdate(): Promise<void> {
+    const content = this.serializeSnapshotFileContent();
+    // @ts-expect-error no node types here.
+    const fs = await import('node:fs/promises');
+    await fs.writeFile(await this.#getSnapshotPath(this.snapshotPath), content);
+  }
+
+  protected override async loadSnapshot(snapshotPath: string): Promise<string|undefined> {
+    // @ts-expect-error no node types here.
+    const fs = await import('node:fs/promises');
+    return await fs.readFile(await this.#getSnapshotPath(snapshotPath), 'utf-8');
+  }
+
+  async #getSnapshotPath(snapshotPath: string): Promise<string> {
+    // @ts-expect-error no node types here.
+    const path = await import('node:path');
+    // @ts-expect-error no ESM types here.
+    const SOURCE_ROOT = path.join(import.meta.dirname, '..', '..', '..', '..', '..');
+    return path.join(SOURCE_ROOT, snapshotPath);
+  }
+}
+
+export type SnapshotTester = NodeSnapshotTester|WebSnapshotTester;
+
+const SnapshotTesterValue: typeof WebSnapshotTester | typeof NodeSnapshotTester = (typeof window === 'undefined') ? NodeSnapshotTester : WebSnapshotTester;
+
+export {SnapshotTesterValue as SnapshotTester};

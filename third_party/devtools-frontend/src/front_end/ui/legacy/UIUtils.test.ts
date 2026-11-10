@@ -1,0 +1,1300 @@
+// Copyright 2022 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import {assert} from 'chai';
+import {after, afterEach, before, beforeEach, describe, it} from 'mocha';
+import sinon from 'sinon';
+
+import * as Host from '../../core/host/host.js';
+import * as i18n from '../../core/i18n/i18n.js';
+import {querySelectorErrorOnMissing, raf, renderElementIntoDOM} from '../../testing/DOMHelpers.js';
+import {createFakeSetting} from '../../testing/EnvironmentHelpers.js';
+import {setupLocaleHooks} from '../../testing/LocaleHelpers.js';
+import {setupSettingsHooks} from '../../testing/SettingsHelpers.js';
+import {StubStackTrace} from '../../testing/StackTraceHelpers.js';
+import * as Buttons from '../components/buttons/buttons.js';
+import * as Lit from '../lit/lit.js';
+
+import * as UI from './legacy.js';
+
+const {html, nothing} = Lit;
+
+describe('UIUtils', () => {
+  describe('isEditing', () => {
+    it('returns true if an element is marked as being edited', () => {
+      const el = document.createElement('div');
+      UI.UIUtils.markBeingEdited(el, true);
+      assert.isTrue(UI.UIUtils.isEditing());
+      UI.UIUtils.markBeingEdited(el, false);
+      assert.isFalse(UI.UIUtils.isEditing());
+    });
+
+    it('returns true if an input is focused', () => {
+      const input = document.createElement('input');
+      renderElementIntoDOM(input);
+      input.focus();
+      assert.isTrue(UI.UIUtils.isEditing());
+    });
+
+    it('returns true if a textarea is focused', () => {
+      const textarea = document.createElement('textarea');
+      renderElementIntoDOM(textarea);
+      textarea.focus();
+      assert.isTrue(UI.UIUtils.isEditing());
+    });
+
+    it('returns true if a contentEditable element is focused', () => {
+      const el = document.createElement('div');
+      el.contentEditable = 'true';
+      renderElementIntoDOM(el);
+      el.focus();
+      assert.isTrue(UI.UIUtils.isEditing());
+    });
+  });
+
+  describe('isBeingEdited', () => {
+    it('returns true for the edited element and its descendants', () => {
+      const parent = document.createElement('div');
+      const child = parent.createChild('span');
+      const grandChild = child.createChild('b');
+      UI.UIUtils.markBeingEdited(parent, true);
+      try {
+        assert.isTrue(UI.UIUtils.isBeingEdited(parent));
+        assert.isTrue(UI.UIUtils.isBeingEdited(child));
+        assert.isTrue(UI.UIUtils.isBeingEdited(grandChild));
+      } finally {
+        UI.UIUtils.markBeingEdited(parent, false);
+      }
+      assert.isFalse(UI.UIUtils.isBeingEdited(parent));
+      assert.isFalse(UI.UIUtils.isBeingEdited(grandChild));
+    });
+
+    it('returns false for an element outside of the edited subtree', () => {
+      const edited = document.createElement('div');
+      const other = document.createElement('div');
+      UI.UIUtils.markBeingEdited(edited, true);
+      try {
+        assert.isFalse(UI.UIUtils.isBeingEdited(other));
+      } finally {
+        UI.UIUtils.markBeingEdited(edited, false);
+      }
+    });
+  });
+
+  describe('LongClickController', () => {
+    it('does not invoke callback when disposed', () => {
+      const clock = sinon.useFakeTimers({toFake: ['setTimeout']});
+      const el = document.createElement('div');
+      const callback = sinon.spy();
+      const controller = new UI.UIUtils.LongClickController(el, callback);
+
+      el.dispatchEvent(new PointerEvent('pointerdown'));
+      clock.runAll();
+      sinon.assert.calledOnce(callback);
+
+      controller.dispose();
+
+      el.dispatchEvent(new PointerEvent('pointerdown'));
+      sinon.assert.calledOnce(callback);
+    });
+  });
+
+  describe('measuredScrollbarWidth', () => {
+    let style: HTMLStyleElement;
+    before(() => {
+      UI.UIUtils.resetMeasuredScrollbarWidthForTest();
+    });
+    after(() => {
+      style.remove();
+    });
+
+    it('provides a default value', () => {
+      const expectedDefaultWidth = 16;
+      assert.strictEqual(UI.UIUtils.measuredScrollbarWidth(), expectedDefaultWidth);
+    });
+
+    it('calculates specific widths correctly', () => {
+      const width = 20;
+
+      // Enforce custom width on scrollbars to test.
+      style = document.createElement('style');
+      style.textContent = `::-webkit-scrollbar {
+        appearance: none;
+        width: ${width}px;
+      }`;
+      document.head.appendChild(style);
+      assert.strictEqual(UI.UIUtils.measuredScrollbarWidth(document), width);
+
+      // Remove the styles and try again to detect that cached values are used.
+      style.remove();
+      assert.strictEqual(UI.UIUtils.measuredScrollbarWidth(document), width);
+    });
+  });
+
+  describe('createFileSelectorElement', () => {
+    it('by default it accepts any file types', async () => {
+      const callback = () => {};
+      const inputElement = UI.UIUtils.createFileSelectorElement(callback);
+      assert.isNull(inputElement.getAttribute('accept'));
+    });
+
+    it('can set the accept attribute on the input', async () => {
+      const callback = () => {};
+      const inputElement = UI.UIUtils.createFileSelectorElement(callback, '.json');
+      assert.strictEqual(inputElement.getAttribute('accept'), '.json');
+    });
+  });
+
+  describe('bindToAction', () => {
+    setupLocaleHooks();
+    setupSettingsHooks();
+
+    const actionId = 'mock.action.bind.to.action';
+    const toggleActionId = 'mock.toggle.action.bind.to.action';
+
+    beforeEach(() => {
+      UI.GlassPane.GlassPane.setContainer(document.body);
+      const mockHandleAction = sinon.stub();
+      UI.ActionRegistration.registerActionExtension({
+        actionId,
+        category: UI.ActionRegistration.ActionCategory.GLOBAL,
+        title: i18n.i18n.lockedLazyString('Mock action for bindToAction'),
+        loadActionDelegate: async () => ({handleAction: mockHandleAction}),
+      });
+      UI.ActionRegistration.registerActionExtension({
+        actionId: toggleActionId,
+        category: UI.ActionRegistration.ActionCategory.GLOBAL,
+        title: i18n.i18n.lockedLazyString('Mock toggle action for bindToAction'),
+        iconClass: UI.ActionRegistration.IconClass.LARGEICON_PAUSE,
+        toggledIconClass: UI.ActionRegistration.IconClass.LARGEICON_RESUME,
+        toggleable: true,
+        loadActionDelegate: async () => ({handleAction: mockHandleAction}),
+      });
+      const actionRegistry = UI.ActionRegistry.ActionRegistry.instance({forceNew: true});
+      UI.ShortcutRegistry.ShortcutRegistry.instance({forceNew: true, actionRegistry});
+    });
+
+    afterEach(() => {
+      UI.ActionRegistration.reset();
+      UI.ActionRegistry.ActionRegistry.reset();
+      UI.ShortcutRegistry.ShortcutRegistry.removeInstance();
+    });
+
+    function setup() {
+      const {bindToAction} = UI.UIUtils;
+      const container = document.createElement('div');
+      renderElementIntoDOM(container);
+      const buttonRef = Lit.Directives.createRef<Buttons.Button.Button>();
+      Lit.render(html`<devtools-button ${Lit.Directives.ref(buttonRef)} ${bindToAction(actionId)}></devtools-button>`,
+                 container);
+
+      const button = buttonRef.value;
+      assert.exists(button);
+      const action = UI.ActionRegistry.ActionRegistry.instance().getAction(actionId);
+      return {button, container, action};
+    }
+
+    it('sets button properties from the action', () => {
+      const {button, action} = setup();
+      const innerButton = button.shadowRoot?.querySelector('button') as HTMLButtonElement;
+      assert.strictEqual(innerButton.title, action.title());
+      assert.strictEqual(button.getAttribute('aria-label'), action.title());
+      assert.strictEqual(button.disabled, !action.enabled());
+    });
+
+    it('updates the button when the action\'s enabled state changes', () => {
+      const {button, action} = setup();
+
+      action.setEnabled(false);
+      assert.isTrue(button.disabled);
+
+      action.setEnabled(true);
+      assert.isFalse(button.disabled);
+    });
+
+    it('removes the change listener when the button is removed from the DOM', () => {
+      const {button, container, action} = setup();
+      const spy = sinon.spy(action, 'removeEventListener');
+
+      Lit.render(nothing, container);
+
+      assert.isFalse(button.isConnected);
+      sinon.assert.calledWith(spy, UI.ActionRegistration.Events.ENABLED);
+    });
+
+    it('supports child devtools-buttons as long-press options when toggled', () => {
+      const clock = sinon.useFakeTimers({toFake: ['setTimeout']});
+      try {
+        const {bindToAction} = UI.UIUtils;
+        const container = document.createElement('div');
+        renderElementIntoDOM(container);
+        const buttonRef = Lit.Directives.createRef<Buttons.Button.Button>();
+        const onOptionClick = sinon.spy();
+        const action = UI.ActionRegistry.ActionRegistry.instance().getAction(toggleActionId);
+        action.setToggled(false);
+
+        // clang-format off
+        Lit.render(html`
+          <devtools-button ${Lit.Directives.ref(buttonRef)} ${bindToAction(toggleActionId)}>
+            <devtools-button title="Alternative option"
+                             .iconName=${'stop'}
+                             .variant=${Buttons.Button.Variant.TOOLBAR}
+                             @click=${onOptionClick}></devtools-button>
+          </devtools-button>`, container);
+        // clang-format on
+
+        const button = buttonRef.value;
+        assert.exists(button);
+        assert.isFalse(button.longClickable);
+
+        action.setToggled(true);
+        assert.isTrue(button.longClickable);
+
+        button.dispatchEvent(new PointerEvent('pointerdown', {button: 0}));
+        clock.runAll();
+
+        const floatingToolbar = Array.from(document.body.children)
+                                    .map(el => el.shadowRoot?.querySelector('devtools-toolbar[floating]'))
+                                    .find(Boolean);
+        assert.exists(floatingToolbar);
+        const optionClones = floatingToolbar.querySelectorAll('devtools-button');
+        assert.lengthOf(optionClones, 2);
+
+        const altClone = Array.from(optionClones).find(b => b.title === 'Alternative option');
+        assert.exists(altClone);
+        for (const clone of optionClones) {
+          clone.classList.remove('emulate-active');
+        }
+        altClone.dispatchEvent(new MouseEvent('mousemove', {bubbles: true, which: 1} as MouseEventInit));
+        assert.isTrue(altClone.classList.contains('emulate-active'));
+
+        document.documentElement.dispatchEvent(new MouseEvent('mouseup', {bubbles: true, which: 1} as MouseEventInit));
+        sinon.assert.calledOnce(onOptionClick);
+
+        action.setToggled(false);
+        assert.isFalse(button.longClickable);
+      } finally {
+        clock.restore();
+      }
+    });
+  });
+
+  describe('HTMLElementWithLightDOMTemplate', () => {
+    class TestElement extends UI.UIUtils.HTMLElementWithLightDOMTemplate {
+      updates: Array<{node: string, attributeName: string|null}> = [];
+      additions: Node[] = [];
+      removals: Node[] = [];
+
+      clear() {
+        this.updates.splice(0);
+        this.additions.splice(0);
+        this.removals.splice(0);
+      }
+      override updateNode(node: Node, attributeName: string|null): void {
+        this.updates.push({node: node.nodeName, attributeName});
+      }
+
+      override addNodes(nodes: NodeList|Node[]): void {
+        this.additions.push(...nodes);
+      }
+
+      override removeNodes(nodes: NodeList|Node[]): void {
+        this.removals.push(...nodes);
+      }
+    }
+    customElements.define('test-element', TestElement);
+
+    it('returns null when corresponding tree structures do not match', () => {
+      const sourceRoot = document.createElement('div');
+      const sourceRow = document.createElement('div');
+      const sourceCell = document.createElement('div');
+      sourceCell.textContent = 'cell';
+      sourceRow.appendChild(sourceCell);
+      sourceRoot.appendChild(sourceRow);
+
+      const targetRoot = document.createElement('div');
+
+      assert.isNull(
+          UI.UIUtils.HTMLElementWithLightDOMTemplate.findCorrespondingElement(sourceCell, sourceRoot, targetRoot));
+    });
+
+    it('renders its input into a template', async () => {
+      const container = document.createElement('div');
+      Lit.render(html`
+        <test-element
+          .template=${html`
+            <button id=button>button</button>
+          `}></test-element>`,
+                 container);
+      const element = container.firstElementChild;
+      assert.instanceOf(element, TestElement);
+      assert.lengthOf(element.children, 1);
+      const template = element.firstChild;
+      assert.instanceOf(template, HTMLTemplateElement);
+      const button = template.content.firstElementChild;
+      assert.instanceOf(button, HTMLButtonElement);
+      assert.strictEqual(button.id, 'button');
+      assert.strictEqual(button.textContent, 'button');
+    });
+
+    it('observes its contents for modifications', async () => {
+      const container = document.createElement('test-element');
+      renderElementIntoDOM(container);
+      assert.instanceOf(container, TestElement);
+
+      const nodeContents = (nodes: Node[]) =>
+          nodes.filter(node => node.nodeName !== '#comment').map(({nodeName,
+                                                                   textContent}) => ({[nodeName]: textContent}));
+
+      container.clear();
+      Lit.render(html`<div>add</div>`, container);
+      await raf();
+      assert.deepEqual(nodeContents(container.additions), [{DIV: 'add'}]);
+      assert.deepEqual(nodeContents(container.removals), []);
+      assert.deepEqual(container.updates,
+                       [{node: 'TEST-ELEMENT', attributeName: null}, {node: 'TEST-ELEMENT', attributeName: null}]);
+
+      container.clear();
+      Lit.render(html`<div attribute>add</div>`, container);
+      await raf();
+      assert.deepEqual(nodeContents(container.additions), [{DIV: 'add'}]);
+      assert.deepEqual(nodeContents(container.removals), [{DIV: 'add'}]);
+      assert.deepEqual(container.updates,
+                       [{node: 'TEST-ELEMENT', attributeName: null}, {node: 'TEST-ELEMENT', attributeName: null}]);
+
+      container.clear();
+      Lit.render(html`<div attribute><p>inner</p></div>`, container);
+      await raf();
+      assert.deepEqual(nodeContents(container.additions), [{DIV: 'inner'}]);
+      assert.deepEqual(nodeContents(container.removals), [{DIV: 'add'}]);
+      assert.deepEqual(container.updates,
+                       [{node: 'TEST-ELEMENT', attributeName: null}, {node: 'TEST-ELEMENT', attributeName: null}]);
+
+      container.clear();
+      Lit.render(nothing, container);
+      await raf();
+      assert.deepEqual(nodeContents(container.additions), []);
+      assert.deepEqual(nodeContents(container.removals), [{DIV: 'inner'}]);
+      assert.deepEqual(container.updates, [{node: 'TEST-ELEMENT', attributeName: null}]);
+    });
+
+    it('observes its attributes for modifications', async () => {
+      const container = document.createElement('div');
+      renderElementIntoDOM(container);
+
+      Lit.render(html`
+        <test-element ?attribute=${false}>
+        </test-element>`,
+                 container);
+
+      await raf();
+      {
+        const element = container.querySelector('test-element');
+        assert.instanceOf(element, TestElement);
+        assert.deepEqual(element.additions, []);
+        assert.deepEqual(element.removals, []);
+        assert.deepEqual(element.updates, []);
+      }
+
+      Lit.render(html`
+        <test-element ?attribute=${true}>
+        </test-element>`,
+                 container);
+
+      await raf();
+      {
+        const element = container.querySelector('test-element');
+        assert.instanceOf(element, TestElement);
+        assert.deepEqual(element.additions, []);
+        assert.deepEqual(element.removals, []);
+        assert.deepEqual(element.updates, [{node: 'TEST-ELEMENT', attributeName: 'attribute'}]);
+      }
+    });
+
+    it('uses InterceptBindingDirective', async () => {
+      const container = document.createElement('div');
+      renderElementIntoDOM(container);
+
+      const onClick = () => {};
+
+      const interception = sinon.stub(Lit.CustomDirectives.InterceptBindingDirective.prototype, 'render');
+
+      Lit.render(html`
+        <test-element
+          .template=${html`<button @click=${onClick}>button</button>`}></test-element>`,
+                 container);
+
+      await raf();
+
+      sinon.assert.calledOnceWithExactly(interception, onClick);
+    });
+
+    class TestLightDOMTemplate extends UI.UIUtils.HTMLElementWithLightDOMTemplate {}
+    customElements.define('test-light-dom-template', TestLightDOMTemplate);
+
+    it('correctly patches callables inside directives and iterables', async () => {
+      const el = new TestLightDOMTemplate();
+      const container = document.createElement('div');
+      renderElementIntoDOM(container);
+      container.appendChild(el);
+
+      const items = ['a', 'b'];
+      const clickHandler1 = sinon.spy();
+      const clickHandler2 = sinon.spy();
+      const handlers = [clickHandler1, clickHandler2];
+
+      const renderFunction = (item: string, index: number) => {
+        return html`<button @click=${handlers[index]}>${item}</button>`;
+      };
+
+      el.template = html`<div>
+        ${Lit.Directives.repeat(items, item => item, renderFunction)}
+      </div>`;
+
+      await raf();
+
+      const template = el.querySelector('template');
+      assert.exists(template);
+      const buttons = template.content.querySelectorAll('button');
+      assert.lengthOf(buttons, 2);
+
+      const clonedButton1 = UI.UIUtils.HTMLElementWithLightDOMTemplate.cloneNode(buttons[0]) as HTMLButtonElement;
+      clonedButton1.click();
+      sinon.assert.calledOnce(clickHandler1);
+
+      const clonedButton2 = UI.UIUtils.HTMLElementWithLightDOMTemplate.cloneNode(buttons[1]) as HTMLButtonElement;
+      clonedButton2.click();
+      sinon.assert.calledOnce(clickHandler2);
+    });
+
+    it('correctly patches callables inside a directive returned by a callback', async () => {
+      const el = new TestLightDOMTemplate();
+      const container = document.createElement('div');
+      renderElementIntoDOM(container);
+      container.appendChild(el);
+
+      const items = ['a'];
+      const clickHandler = sinon.spy();
+
+      class InnerDirective extends Lit.Directive.Directive {
+        render(renderItem: () => Lit.LitTemplate) {
+          return html`<div>${renderItem()}</div>`;
+        }
+      }
+      const innerDirective = Lit.Directive.directive(InnerDirective);
+
+      const renderFunction = () => {
+        return innerDirective(() => html`<button @click=${clickHandler}></button>`);
+      };
+
+      el.template = html`<div>
+        ${Lit.Directives.repeat(items, item => item, renderFunction)}
+      </div>`;
+
+      await raf();
+
+      const template = el.querySelector('template');
+      assert.exists(template);
+      const button = template.content.querySelector('button');
+      assert.exists(button);
+
+      const clonedButton = UI.UIUtils.HTMLElementWithLightDOMTemplate.cloneNode(button) as HTMLButtonElement;
+      clonedButton.click();
+      sinon.assert.calledOnce(clickHandler);
+    });
+
+    it('does not patch native class constructors', async () => {
+      const el = new TestLightDOMTemplate();
+      const container = document.createElement('div');
+      renderElementIntoDOM(container);
+      container.appendChild(el);
+
+      class MockWidget {}
+
+      let instantiatedWidget: MockWidget|null = null;
+      class WidgetDirective extends Lit.Directive.Directive {
+        render(ctor: typeof MockWidget) {
+          instantiatedWidget = new ctor();
+          return Lit.nothing;
+        }
+      }
+      const widget = Lit.Directive.directive(WidgetDirective);
+
+      // If MockWidget was wrongly wrapped by patchingWrapper, ctor would be a regular function.
+      // Calling `new ctor()` would invoke the wrapper, which calls `fn.apply(this, args)`.
+      // Since fn is a native class constructor, fn.apply throws a TypeError.
+      assert.doesNotThrow(() => {
+        el.template = html`${widget(MockWidget)}`;
+      });
+
+      await raf();
+
+      assert.instanceOf(instantiatedWidget, MockWidget);
+    });
+
+    it('synchronizes widget config updates to cloned template', async () => {
+      class MockWidget extends UI.Widget.Widget {
+        payload = '';
+      }
+
+      class TestComponent2 extends UI.UIUtils.HTMLElementWithLightDOMTemplate {}
+      if (!customElements.get('test-component-reactivity')) {
+        customElements.define('test-component-reactivity', TestComponent2);
+      }
+
+      const container = document.createElement('div');
+      renderElementIntoDOM(container);
+
+      function renderMockWidget(payload: string) {
+        Lit.render(html`
+          <test-component-reactivity
+            .template=${
+                       html`<devtools-widget ${
+                           UI.Widget.widget(MockWidget, {payload})}></devtools-widget>`}></test-component-reactivity>`,
+                   container);
+      }
+
+      renderMockWidget('initial');
+
+      await raf();
+
+      const el = container.querySelector('test-component-reactivity');
+      assert.exists(el);
+      const template = el.querySelector('template');
+      assert.exists(template);
+      const lightWidgetStr = template.content.querySelector('devtools-widget');
+      assert.exists(lightWidgetStr);
+
+      // Simulate DevTools cloning the template into a shadow root
+      const shadowRootMock = document.createElement('div');
+      container.appendChild(shadowRootMock);
+      const shadowWidgetStr = UI.UIUtils.HTMLElementWithLightDOMTemplate.cloneNode(lightWidgetStr);
+      shadowRootMock.appendChild(shadowWidgetStr);
+
+      const widget = UI.Widget.Widget.get(shadowWidgetStr) as MockWidget;
+      assert.instanceOf(widget, MockWidget);
+      assert.strictEqual(widget.payload, 'initial');
+
+      // Re-render with new payload
+      renderMockWidget('updated');
+
+      await raf();
+
+      // The update is successfully synchronized to the clone!
+      assert.strictEqual(widget.payload, 'updated');
+    });
+
+    it('synchronizes widget config updates to cloned template for CHILD bindings and caches the DOM node', async () => {
+      class MockWidget extends UI.Widget.Widget {
+        payload = '';
+      }
+
+      class TestComponentCHILD extends UI.UIUtils.HTMLElementWithLightDOMTemplate {}
+      if (!customElements.get('test-component-reactivity-child')) {
+        customElements.define('test-component-reactivity-child', TestComponentCHILD);
+      }
+
+      const container = document.createElement('div');
+      renderElementIntoDOM(container);
+
+      function renderMockWidget(payload: string) {
+        Lit.render(html`
+          <test-component-reactivity-child
+            .template=${html`${UI.Widget.widget(MockWidget, {payload})}`}></test-component-reactivity-child>`,
+                   container);
+      }
+
+      renderMockWidget('initial');
+
+      await raf();
+
+      const el = container.querySelector('test-component-reactivity-child');
+      assert.exists(el);
+      const template = el.querySelector('template');
+      assert.exists(template);
+      const lightWidgetStr = template.content.querySelector('devtools-widget');
+      assert.exists(lightWidgetStr);
+
+      // Simulate DevTools cloning the template into a shadow root
+      const shadowRootMock = document.createElement('div');
+      container.appendChild(shadowRootMock);
+      const shadowWidgetStr = UI.UIUtils.HTMLElementWithLightDOMTemplate.cloneNode(lightWidgetStr);
+      shadowRootMock.appendChild(shadowWidgetStr);
+
+      const widget = UI.Widget.Widget.get(shadowWidgetStr) as MockWidget;
+      assert.instanceOf(widget, MockWidget);
+      assert.strictEqual(widget.payload, 'initial');
+
+      // Re-render with new payload
+      renderMockWidget('updated');
+
+      await raf();
+
+      // The update is successfully synchronized to the clone!
+      assert.strictEqual(widget.payload, 'updated');
+
+      // Also ensure it is the same DOM node
+      const updatedLightWidgetStr = template.content.querySelector('devtools-widget');
+      assert.strictEqual(updatedLightWidgetStr, lightWidgetStr,
+                         'DOM node should be cached and reused for CHILD binding');
+    });
+
+    it('recreates the DOM node if widgetClass changes for CHILD bindings', async () => {
+      class MockWidgetA extends UI.Widget.Widget {
+        payload = '';
+      }
+
+      class MockWidgetB extends UI.Widget.Widget {
+        payload = '';
+      }
+
+      class TestComponentCHILDClass extends UI.UIUtils.HTMLElementWithLightDOMTemplate {}
+      if (!customElements.get('test-component-reactivity-child-class')) {
+        customElements.define('test-component-reactivity-child-class', TestComponentCHILDClass);
+      }
+
+      const container = document.createElement('div');
+      renderElementIntoDOM(container);
+
+      type CommonMockWidget = MockWidgetA|MockWidgetB;
+      let currentClass: UI.Widget.WidgetFactory<CommonMockWidget> = MockWidgetA;
+
+      function renderMockWidget(payload: string) {
+        Lit.render(html`
+          <test-component-reactivity-child-class
+            .template=${html`${UI.Widget.widget(currentClass, {payload})}`}></test-component-reactivity-child-class>`,
+                   container);
+      }
+
+      renderMockWidget('initial');
+      await raf();
+
+      const el = container.querySelector('test-component-reactivity-child-class');
+      assert.exists(el);
+      const template = el.querySelector('template');
+      assert.exists(template);
+
+      const lightWidgetStrA = template.content.querySelector('devtools-widget');
+      assert.exists(lightWidgetStrA);
+
+      // Re-render with new class
+      currentClass = MockWidgetB;
+      renderMockWidget('updated class');
+      await raf();
+
+      const lightWidgetStrB = template.content.querySelector('devtools-widget');
+      assert.exists(lightWidgetStrB);
+      assert.notStrictEqual(lightWidgetStrB, lightWidgetStrA, 'DOM node should be recreated when widgetClass changes');
+
+      // Test inline factory recreation tracking
+      currentClass = (elem: HTMLElement): MockWidgetB => new MockWidgetB(elem);
+      renderMockWidget('updated factory');
+      await raf();
+
+      const lightWidgetStrC = template.content.querySelector('devtools-widget');
+      assert.exists(lightWidgetStrC);
+      assert.notStrictEqual(lightWidgetStrC, lightWidgetStrB,
+                            'DOM node should be recreated for the initial inline factory array format');
+
+      const prevFactoryStrC = lightWidgetStrC;
+      currentClass = (elem: HTMLElement): MockWidgetB => new MockWidgetB(elem);
+      renderMockWidget('updated identical factory string');
+      await raf();
+
+      const lightWidgetStrD = template.content.querySelector('devtools-widget');
+      assert.strictEqual(
+          lightWidgetStrD, prevFactoryStrC,
+          'DOM node should NOT be recreated if the identical inline factory stringified representations match');
+    });
+
+    it('prunes discarded clones not attached to a Document or DocumentFragment', () => {
+      const original = document.createElement('div');
+      const clone1 = UI.UIUtils.HTMLElementWithLightDOMTemplate.cloneNode(original);
+      const clone2 = UI.UIUtils.HTMLElementWithLightDOMTemplate.cloneNode(original);
+
+      // clone1 is attached to a DocumentFragment (e.g. ShadowRoot)
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(clone1);
+
+      // clone2 is detached (root is itself), so only clone1 is returned
+      const clones = UI.UIUtils.HTMLElementWithLightDOMTemplate.getClones(original);
+      assert.deepEqual(clones, [clone1]);
+      assert.isFalse(clones.includes(clone2));
+
+      // clone1 is removed from fragment (now also detached)
+      fragment.removeChild(clone1);
+      assert.deepEqual(UI.UIUtils.HTMLElementWithLightDOMTemplate.getClones(original), []);
+    });
+  });
+
+  describe('animateOn', () => {
+    it('triggers an animation when the condition transitions from false to true', () => {
+      const {animateOn} = UI.UIUtils;
+      const container = document.createElement('div');
+      const className = 'animate-me';
+
+      function render(condition: boolean) {
+        Lit.render(html`<div ${animateOn(condition, className)}></div>`, container);
+      }
+
+      render(false);
+      const div = container.firstElementChild as HTMLElement;
+      assert.isFalse(div.classList.contains(className));
+
+      render(true);
+      assert.isTrue(div.classList.contains(className));
+    });
+
+    it('does not trigger an animation when the condition remains true', () => {
+      const {animateOn} = UI.UIUtils;
+      const container = document.createElement('div');
+      const className = 'animate-me';
+
+      function render(condition: boolean) {
+        Lit.render(html`<div ${animateOn(condition, className)}></div>`, container);
+      }
+
+      render(true);
+      const div = container.firstElementChild as HTMLElement;
+      assert.isTrue(div.classList.contains(className));
+
+      // Manually remove the class to see if it gets re-added
+      div.classList.remove(className);
+
+      render(true);
+      assert.isFalse(div.classList.contains(className));
+    });
+
+    it('does not trigger an animation when the condition remains false', () => {
+      const {animateOn} = UI.UIUtils;
+      const container = document.createElement('div');
+      const className = 'animate-me';
+
+      function render(condition: boolean) {
+        Lit.render(html`<div ${animateOn(condition, className)}></div>`, container);
+      }
+
+      render(false);
+      const div = container.firstElementChild as HTMLElement;
+      assert.isFalse(div.classList.contains(className));
+
+      render(false);
+      assert.isFalse(div.classList.contains(className));
+    });
+
+    it('does not trigger an animation when the condition transitions from true to false', () => {
+      const {animateOn} = UI.UIUtils;
+      const container = document.createElement('div');
+      const className = 'animate-me';
+
+      function render(condition: boolean) {
+        Lit.render(html`<div ${animateOn(condition, className)}></div>`, container);
+      }
+
+      render(true);
+      const div = container.firstElementChild as HTMLElement;
+      assert.isTrue(div.classList.contains(className));
+
+      // Manually remove the class
+      div.classList.remove(className);
+
+      render(false);
+      assert.isFalse(div.classList.contains(className));
+    });
+
+    it('triggers an animation when it transitions from false to true, then false, then true again', () => {
+      const {animateOn} = UI.UIUtils;
+      const container = document.createElement('div');
+      const className = 'animate-me';
+
+      function render(condition: boolean) {
+        Lit.render(html`<div ${animateOn(condition, className)}></div>`, container);
+      }
+
+      render(false);
+      const div = container.firstElementChild as HTMLElement;
+      assert.isFalse(div.classList.contains(className));
+
+      render(true);
+      assert.isTrue(div.classList.contains(className));
+
+      div.classList.remove(className);
+      render(false);
+      assert.isFalse(div.classList.contains(className));
+
+      render(true);
+      assert.isTrue(div.classList.contains(className));
+    });
+  });
+});
+
+describe('bindToSetting (string)', () => {
+  function setup(opts: UI.UIUtils.BindToSettingOpts = {}) {
+    const {bindToSetting} = UI.UIUtils;
+    const setting = createFakeSetting<string>('fake-setting', 'defaultValue');
+    const container = document.createElement('div');
+    renderElementIntoDOM(container);
+    const inputRef = Lit.Directives.createRef<HTMLInputElement>();
+    const render = () => {
+      Lit.render(html`<input ${Lit.Directives.ref(inputRef)} ${bindToSetting(setting, opts)}>`, container);
+    };
+    render();
+
+    const input = inputRef.value;
+    assert.exists(input);
+
+    return {input, setting, container, render};
+  }
+
+  it('shows the current value on initial render', () => {
+    const {input} = setup();
+
+    assert.strictEqual(input.value, 'defaultValue');
+  });
+
+  it('adds jslog for tracking changes', async () => {
+    const {input} = setup();
+
+    assert.strictEqual(input.getAttribute('jslog'), 'Toggle; context: fake-setting; track: change');
+  });
+
+  it('does not add jslog if disabled via options', async () => {
+    const {input} = setup({jslog: false});
+
+    assert.isNull(input.getAttribute('jslog'));
+  });
+
+  it('changes the setting when the input changes', () => {
+    const {setting, input} = setup();
+
+    input.value = 'new value via user edit';
+    input.dispatchEvent(new Event('change'));
+
+    assert.strictEqual(setting.get(), 'new value via user edit');
+  });
+
+  it('changes the input when the setting changes', () => {
+    const {setting, input} = setup();
+
+    setting.set('new value via change listener');
+
+    assert.strictEqual(input.value, 'new value via change listener');
+  });
+
+  it('does not change the setting when validation fails', () => {
+    const {setting, input} = setup({validator: arg => /[0-9]+/.test(arg)});
+
+    input.value = 'text must not update the setting';
+    input.dispatchEvent(new Event('change'));
+
+    assert.strictEqual(setting.get(), 'defaultValue');
+
+    input.value = '42';
+    input.dispatchEvent(new Event('change'));
+
+    assert.strictEqual(setting.get(), '42');
+  });
+
+  it('removes the change listener when the input is removed from the DOM', () => {
+    const {setting, input, container} = setup();
+    Lit.render(nothing, container);
+
+    setting.set('new value via change listener');
+
+    assert.isFalse(input.isConnected);
+    assert.strictEqual(input.value, 'defaultValue');
+
+    input.value = 'new value via user edit';
+    input.dispatchEvent(new Event('change'));
+
+    assert.strictEqual(setting.get(), 'new value via change listener');
+  });
+
+  it('does not stack listeners across multiple renders', () => {
+    const {setting, input, render} = setup();
+    const setSpy = sinon.spy(setting, 'set');
+    for (let i = 0; i < 4; i++) {
+      render();
+    }
+
+    input.value = 'new value via user edit';
+    input.dispatchEvent(new Event('change'));
+
+    sinon.assert.calledOnceWithExactly(setSpy, 'new value via user edit');
+  });
+});
+
+describe('bindToSetting (boolean)', () => {
+  function setup(opts: UI.UIUtils.BindToSettingOpts = {}) {
+    const {bindToSetting} = UI.UIUtils;
+    const setting = createFakeSetting<boolean>('fake-setting', true);
+    const container = document.createElement('div');
+    renderElementIntoDOM(container);
+    const inputRef = Lit.Directives.createRef<UI.UIUtils.CheckboxLabel>();
+    const render = () => {
+      Lit.render(
+          html`<devtools-checkbox ${Lit.Directives.ref(inputRef)} ${bindToSetting(setting, opts)}></devtools-checkbox>`,
+          container);
+    };
+    render();
+
+    const input = inputRef.value;
+    assert.exists(input);
+
+    return {input, setting, container, render};
+  }
+
+  it('shows the current value on initial render', () => {
+    const {input} = setup();
+
+    assert.isTrue(input.checked);
+  });
+
+  it('adds jslog for tracking changes', async () => {
+    const {input} = setup();
+
+    assert.strictEqual(input.getAttribute('jslog'), 'Toggle; context: fake-setting; track: change');
+  });
+
+  it('does not add jslog if disabled via options', async () => {
+    const {input} = setup({jslog: false});
+
+    assert.isNull(input.getAttribute('jslog'));
+  });
+
+  it('changes the setting when the checkbox changes', () => {
+    const {input, setting} = setup();
+
+    input.checked = false;
+    input.dispatchEvent(new Event('change'));
+
+    assert.isFalse(setting.get());
+  });
+
+  it('changes the checkbox when the setting changes', () => {
+    const {input, setting} = setup();
+
+    setting.set(false);
+
+    assert.isFalse(input.checked);
+  });
+
+  it('removes the change listener when the input is removed from the DOM', () => {
+    const {setting, input, container} = setup();
+    Lit.render(nothing, container);
+
+    setting.set(false);
+
+    assert.isFalse(input.isConnected);
+    assert.isTrue(input.checked);
+
+    input.checked = true;
+    input.dispatchEvent(new Event('change'));
+
+    assert.isFalse(setting.get());
+  });
+
+  it('does not stack listeners across multiple renders', () => {
+    const {setting, input, render} = setup();
+    const setSpy = sinon.spy(setting, 'set');
+    for (let i = 0; i < 4; i++) {
+      render();
+    }
+
+    input.checked = false;
+    input.dispatchEvent(new Event('change'));
+
+    sinon.assert.calledOnceWithExactly(setSpy, false);
+  });
+});
+
+describe('bindToSetting (devtools-button)', () => {
+  setupLocaleHooks();
+
+  function setup(opts: UI.UIUtils.BindToSettingOpts = {}) {
+    const {bindToSetting} = UI.UIUtils;
+    const setting = createFakeSetting<boolean>('fake-setting', true);
+    const container = document.createElement('div');
+    renderElementIntoDOM(container);
+    const inputRef = Lit.Directives.createRef<Buttons.Button.Button>();
+    Lit.render(
+        html`<devtools-button ${Lit.Directives.ref(inputRef)} ${bindToSetting(setting, opts)}></devtools-button>`,
+        container);
+
+    const input = inputRef.value;
+    assert.exists(input);
+
+    return {input, setting, container};
+  }
+
+  it('shows the current value on initial render', () => {
+    const {input} = setup();
+
+    assert.isTrue(input.toggled);
+  });
+
+  it('adds jslog for tracking changes', () => {
+    const {input} = setup();
+
+    assert.strictEqual(input.getAttribute('jslog'), 'Toggle; context: fake-setting; track: click');
+  });
+
+  it('does not add jslog if disabled via options', () => {
+    const {input} = setup({jslog: false});
+
+    assert.isNull(input.getAttribute('jslog'));
+  });
+
+  it('changes the setting when the button is clicked', () => {
+    const {input, setting} = setup();
+
+    input.click();
+
+    assert.isFalse(setting.get());
+  });
+
+  it('changes the button when the setting changes', () => {
+    const {input, setting} = setup();
+
+    setting.set(false);
+
+    assert.isFalse(input.toggled);
+  });
+
+  it('removes the change listener when the input is removed from the DOM', () => {
+    const {setting, input, container} = setup();
+    Lit.render(nothing, container);
+
+    setting.set(false);
+
+    assert.isFalse(input.isConnected);
+    assert.isTrue(input.toggled);
+  });
+});
+
+describe('CheckboxLabel', () => {
+  it('treats a non-boolean falsy checked value as unchecked instead of toggling', () => {
+    const checkbox = document.createElement('devtools-checkbox');
+    checkbox.checked = true;
+    assert.isTrue(checkbox.checked);
+
+    checkbox.checked = undefined as unknown as boolean;
+    assert.isFalse(checkbox.checked);
+
+    checkbox.checked = undefined as unknown as boolean;
+    assert.isFalse(checkbox.checked);
+  });
+
+  it('stays unchecked across re-renders of a .checked binding that is undefined', () => {
+    const container = document.createElement('div');
+    renderElementIntoDOM(container);
+    function renderCheckbox(checked: boolean|undefined): void {
+      Lit.render(html`<devtools-checkbox .checked=${checked}>Label</devtools-checkbox>`, container);
+    }
+
+    renderCheckbox(true);
+    renderCheckbox(undefined);
+    const checkbox = querySelectorErrorOnMissing<UI.UIUtils.CheckboxLabel>(container, 'devtools-checkbox');
+    assert.isFalse(checkbox.checked);
+
+    renderCheckbox(false);
+    renderCheckbox(undefined);
+    assert.isFalse(checkbox.checked);
+  });
+});
+
+describe('bindCheckbox', () => {
+  function setup() {
+    const setting = createFakeSetting<boolean>('fake-setting', true);
+    const input = document.createElement('devtools-checkbox');
+    UI.UIUtils.bindCheckbox(input, setting);
+
+    return {setting, input};
+  }
+
+  it('shows the current value on initial render', () => {
+    const {input} = setup();
+
+    assert.isTrue(input.checked);
+  });
+
+  it('changes the setting when the checkbox changes', () => {
+    const {input, setting} = setup();
+
+    input.checked = false;
+    input.dispatchEvent(new Event('change'));
+
+    assert.isFalse(setting.get());
+  });
+
+  it('changes the checkbox when the setting changes', () => {
+    const {input, setting} = setup();
+
+    setting.set(false);
+
+    assert.isFalse(input.checked);
+  });
+
+  describe('asyncFragmentLabel', () => {
+    setupLocaleHooks();
+
+    it('returns "Async call" if description is missing', () => {
+      const stackTrace = StubStackTrace.create([], [{description: '', frames: []}]);
+      assert.strictEqual(UI.UIUtils.asyncFragmentLabel(stackTrace, stackTrace.asyncFragments[0]), 'Async call');
+    });
+
+    it('returns the description as is for other descriptions', () => {
+      const stackTrace = StubStackTrace.create([], [{description: 'Other description', frames: []}]);
+      assert.strictEqual(UI.UIUtils.asyncFragmentLabel(stackTrace, stackTrace.asyncFragments[0]), 'Other description');
+    });
+
+    it('returns "Promise resolved (async)" if description is "Promise.resolve"', () => {
+      const stackTrace = StubStackTrace.create([], [{description: 'Promise.resolve', frames: []}]);
+      assert.strictEqual(UI.UIUtils.asyncFragmentLabel(stackTrace, stackTrace.asyncFragments[0]),
+                         'Promise resolved (async)');
+    });
+
+    it('returns "Promise rejected (async)" if description is "Promise.reject"', () => {
+      const stackTrace = StubStackTrace.create([], [{description: 'Promise.reject', frames: []}]);
+      assert.strictEqual(UI.UIUtils.asyncFragmentLabel(stackTrace, stackTrace.asyncFragments[0]),
+                         'Promise rejected (async)');
+    });
+
+    it('returns "await in <functionName>" if description is "await" and there is a previous frame', () => {
+      const stackTrace = StubStackTrace.create(['url:1:functionName:10:1'], [{description: 'await', frames: []}]);
+      assert.strictEqual(UI.UIUtils.asyncFragmentLabel(stackTrace, stackTrace.asyncFragments[0]),
+                         'await in functionName');
+    });
+
+    it('returns "await" if description is "await" and there is no previous frame', () => {
+      const stackTrace = StubStackTrace.create([], [{description: 'await', frames: []}]);
+      assert.strictEqual(UI.UIUtils.asyncFragmentLabel(stackTrace, stackTrace.asyncFragments[0]), 'await');
+    });
+
+    it('returns "await in <functionName>" if description is "await" and the previous frame is another async fragment',
+       () => {
+         const stackTrace = StubStackTrace.create([], [
+           {description: 'someAsyncCall', frames: ['url:1:asyncFunction:10:1']},
+           {description: 'await', frames: []},
+         ]);
+         assert.strictEqual(UI.UIUtils.asyncFragmentLabel(stackTrace, stackTrace.asyncFragments[1]),
+                            'await in asyncFunction');
+       });
+  });
+});
+
+describe('element value modifications', () => {
+  function keyEvent(key: string,
+                    modifiers: {ctrlEquivalent?: boolean, shift?: boolean, alt?: boolean} = {}): KeyboardEvent {
+    const isMac = Host.Platform.isMac();
+    return new KeyboardEvent('keydown', {
+      key,
+      ctrlKey: Boolean(modifiers.ctrlEquivalent) && !isMac,
+      metaKey: Boolean(modifiers.ctrlEquivalent) && isMac,
+      shiftKey: Boolean(modifiers.shift),
+      altKey: Boolean(modifiers.alt),
+      bubbles: true,
+      cancelable: true,
+    });
+  }
+
+  describe('getValueModificationDirection', () => {
+    it('maps arrow and page keys to a direction', () => {
+      assert.strictEqual(UI.UIUtils.getValueModificationDirection(keyEvent('ArrowUp')), 'Up');
+      assert.strictEqual(UI.UIUtils.getValueModificationDirection(keyEvent('PageUp')), 'Up');
+      assert.strictEqual(UI.UIUtils.getValueModificationDirection(keyEvent('ArrowDown')), 'Down');
+      assert.strictEqual(UI.UIUtils.getValueModificationDirection(keyEvent('PageDown')), 'Down');
+      assert.isNull(UI.UIUtils.getValueModificationDirection(keyEvent('Enter')));
+    });
+  });
+
+  describe('createReplacementString', () => {
+    it('increments and decrements hex colors per channel with modifier keys', () => {
+      assert.strictEqual(UI.UIUtils.createReplacementString('#FF2', keyEvent('PageUp')), '#FF3');
+      // Ctrl/Cmd adds 1 to the red channel and Shift adds 1 to the green channel.
+      assert.strictEqual(
+          UI.UIUtils.createReplacementString('#FF3', keyEvent('ArrowDown', {ctrlEquivalent: true, shift: true})),
+          '#EE3');
+      assert.strictEqual(UI.UIUtils.createReplacementString('#FF3', keyEvent('ArrowDown', {alt: true})), '#FF2');
+      assert.strictEqual(UI.UIUtils.createReplacementString('#001100', keyEvent('PageUp', {shift: true})), '#001200');
+      // The result is clamped and keeps the original length.
+      assert.strictEqual(UI.UIUtils.createReplacementString('#FFF', keyEvent('ArrowUp')), '#FFF');
+      assert.strictEqual(UI.UIUtils.createReplacementString('#001', keyEvent('ArrowDown', {alt: true})), '#000');
+      // Hex values that are neither rgb nor rrggbb are left alone.
+      assert.isNull(UI.UIUtils.createReplacementString('#FFFF', keyEvent('ArrowUp')));
+    });
+
+    it('increments numbers by 0.1 with Alt, 1 without modifiers, 10 with Shift and 100 with Ctrl/Cmd', () => {
+      assert.strictEqual(UI.UIUtils.createReplacementString('.5', keyEvent('ArrowUp', {alt: true})), '0.6');
+      assert.strictEqual(UI.UIUtils.createReplacementString('0.6', keyEvent('ArrowUp')), '1.6');
+      assert.strictEqual(UI.UIUtils.createReplacementString('1.6', keyEvent('PageUp', {shift: true})), '11.6');
+      assert.strictEqual(UI.UIUtils.createReplacementString('11.6px', keyEvent('PageDown', {ctrlEquivalent: true})),
+                         '-88.4px');
+    });
+
+    it('leaves numbers that cannot be represented without an exponent unchanged', () => {
+      assert.isNull(UI.UIUtils.createReplacementString('1000000000000000065537deg', keyEvent('ArrowUp')));
+      assert.isNull(UI.UIUtils.createReplacementString('1000000000000000065537deg', keyEvent('PageUp')));
+    });
+  });
+
+  describe('modifiedFloatNumber', () => {
+    it('applies modifier deltas, multipliers and ranges', () => {
+      assert.strictEqual(UI.UIUtils.modifiedFloatNumber(0.5, keyEvent('ArrowUp', {alt: true})), 0.6);
+      assert.strictEqual(UI.UIUtils.modifiedFloatNumber(0.6, keyEvent('ArrowUp')), 1.6);
+      assert.strictEqual(UI.UIUtils.modifiedFloatNumber(1.6, keyEvent('PageUp', {shift: true})), 11.6);
+      assert.strictEqual(UI.UIUtils.modifiedFloatNumber(1, keyEvent('ArrowDown'), 0.5), 0.5);
+      assert.strictEqual(UI.UIUtils.modifiedFloatNumber(0.5, keyEvent('ArrowDown'), undefined, {min: 0}), 0);
+      assert.isNull(UI.UIUtils.modifiedFloatNumber(1e21, keyEvent('ArrowUp')));
+      assert.isNull(UI.UIUtils.modifiedFloatNumber(1, keyEvent('Enter')));
+    });
+  });
+
+  describe('handleElementValueModifications', () => {
+    function setup(text: string, caretOffset: number): {element: HTMLElement, press: (event: KeyboardEvent) => void} {
+      const element = document.createElement('span');
+      element.textContent = text;
+      renderElementIntoDOM(element);
+      const range = document.createRange();
+      range.setStart(element.firstChild as Text, caretOffset);
+      range.setEnd(element.firstChild as Text, caretOffset);
+      const selection = element.getComponentSelection();
+      assert.exists(selection);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      element.addEventListener('keydown', event => {
+        UI.UIUtils.handleElementValueModifications(event, element);
+      });
+      return {element, press: event => element.dispatchEvent(event)};
+    }
+
+    it('modifies a hex color in place', () => {
+      const {element, press} = setup('#FF2', 1);
+      press(keyEvent('PageUp'));
+      assert.strictEqual(element.textContent, '#FF3');
+      press(keyEvent('ArrowDown', {ctrlEquivalent: true, shift: true}));
+      assert.strictEqual(element.textContent, '#EE3');
+    });
+
+    it('modifies a number in place', () => {
+      const {element, press} = setup('.5', 1);
+      press(keyEvent('ArrowUp', {alt: true}));
+      assert.strictEqual(element.textContent, '0.6');
+      press(keyEvent('ArrowUp'));
+      assert.strictEqual(element.textContent, '1.6');
+      press(keyEvent('PageUp', {shift: true}));
+      assert.strictEqual(element.textContent, '11.6');
+    });
+
+    it('does not modify a huge number', () => {
+      const text = 'rotate(1000000000000000065537deg)';
+      const {element, press} = setup(text, 10);
+      const upEvent = keyEvent('ArrowUp');
+      press(upEvent);
+      press(keyEvent('PageUp'));
+      assert.strictEqual(element.textContent, text);
+      assert.isFalse(upEvent.defaultPrevented);
+    });
+  });
+});
