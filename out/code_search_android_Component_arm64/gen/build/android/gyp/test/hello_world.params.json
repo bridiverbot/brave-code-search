@@ -1,0 +1,23 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/build/android/gyp/test/hello_world_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//build/android/gyp/test:hello_world",
+  "interface_jar_path": "obj/build/android/gyp/test/hello_world.turbine.jar",
+  "is_prebuilt": false,
+  "main_class": "org.chromium.helloworld.HelloWorldMain",
+  "processed_jar_path": "obj/build/android/gyp/test/hello_world.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "target_sources_file": "gen/build/android/gyp/test/hello_world.sources",
+  "type": "java_binary",
+  "unprocessed_jar_path": "obj/build/android/gyp/test/hello_world.javac.jar"
+}

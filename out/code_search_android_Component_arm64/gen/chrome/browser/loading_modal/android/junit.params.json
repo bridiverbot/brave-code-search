@@ -1,0 +1,37 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/browser/loading_modal/android/java.params.json",
+    "gen/chrome/browser/loading_modal/android/java_resources.params.json",
+    "gen/base/base_java.params.json",
+    "gen/base/base_java_test_support.params.json",
+    "gen/base/base_junit_test_support.params.json",
+    "gen/components/browser_ui/styles/android/java_resources.params.json",
+    "gen/third_party/hamcrest/hamcrest_core_java.params.json",
+    "gen/third_party/hamcrest/hamcrest_library_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/mockito/mockito_java.params.json",
+    "gen/ui/android/ui_full_java.params.json",
+    "gen/ui/android/ui_java_test_support.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/loading_modal/android:junit",
+  "interface_jar_path": "obj/chrome/browser/loading_modal/android/junit.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome.browser.loading_modal",
+  "processed_jar_path": "obj/chrome/browser/loading_modal/android/junit.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/chrome/browser/loading_modal/android/junit.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/loading_modal/android/junit.javac.jar"
+}

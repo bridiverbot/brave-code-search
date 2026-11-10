@@ -1,0 +1,40 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/base/base_java_test_support.params.json",
+    "gen/chrome/browser/collaboration/factory_java.params.json",
+    "gen/chrome/browser/flags/java.params.json",
+    "gen/chrome/browser/profiles/android/java.params.json",
+    "gen/chrome/test/android/chrome_java_integration_test_support.params.json",
+    "gen/chrome/test/android/chrome_java_transit.params.json",
+    "gen/components/collaboration/public/java.params.json",
+    "gen/components/data_sharing/public/public_java.params.json",
+    "gen/components/saved_tab_groups/public/java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_test_runner_java.params.json",
+    "gen/third_party/hamcrest/hamcrest_core_java.params.json",
+    "gen/third_party/hamcrest/hamcrest_library_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/url/url_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/browser/collaboration/javatests.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/collaboration:javatests",
+  "interface_jar_path": "obj/chrome/browser/collaboration/javatests.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/browser/collaboration/javatests.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/browser/collaboration/javatests.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/collaboration/javatests.javac.jar"
+}

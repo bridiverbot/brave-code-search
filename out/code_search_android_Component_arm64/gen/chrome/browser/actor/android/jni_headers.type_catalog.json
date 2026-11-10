@@ -1,0 +1,3 @@
+{
+  "org/chromium/chrome/browser/actor/background_tabs/OffscreenRenderingManager$NativeOffscreenRenderingManagerAndroid": "::actor::OffscreenRenderingManagerAndroid"
+}

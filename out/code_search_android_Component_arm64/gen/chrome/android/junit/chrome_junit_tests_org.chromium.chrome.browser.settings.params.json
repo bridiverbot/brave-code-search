@@ -1,0 +1,37 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/android/junit/chrome_junit_tests_helper.params.json",
+    "gen/chrome/android/chrome_app_java_resources.params.json",
+    "gen/chrome/browser/actor/android/java.params.json",
+    "gen/chrome/browser/preferences/java.params.json",
+    "gen/chrome/browser/prefetch/android/java.params.json",
+    "gen/chrome/browser/safe_browsing/android/java.params.json",
+    "gen/chrome/browser/settings/java.params.json",
+    "gen/chrome/browser/settings/settings_in_tab_java.params.json",
+    "gen/chrome/browser/ui/android/edge_to_edge/factory_java.params.json",
+    "gen/chrome/browser/ui/android/toolbar/optional_button_java.params.json",
+    "gen/chrome/browser/ui/vertical_tabs/java.params.json",
+    "gen/third_party/androidx/androidx_preference_preference_java.params.json",
+    "gen/third_party/androidx/androidx_slidingpanelayout_slidingpanelayout_java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/android/junit:chrome_junit_tests_org.chromium.chrome.browser.settings",
+  "interface_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.settings.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.settings.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.settings.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.settings.javac.jar"
+}

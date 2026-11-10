@@ -1,0 +1,7 @@
+int id close_button 0x7f010001
+int id drag_handlebar 0x7f010001
+int id filter_header_title 0x7f010001
+int id filter_item_list 0x7f010001
+int id list_content 0x7f010001
+int layout filter_sheet_content 0x7f010001
+int layout filter_sheet_header 0x7f010001

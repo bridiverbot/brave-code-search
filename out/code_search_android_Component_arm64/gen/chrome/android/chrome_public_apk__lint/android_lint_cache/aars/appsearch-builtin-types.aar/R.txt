@@ -1,0 +1,10 @@
+int attr database 0x0
+int attr entityMatchRequired 0x0
+int attr namespace 0x0
+int attr schemaType 0x0
+int[] styleable AppSearch { 0x0, 0x0, 0x0 }
+int styleable AppSearch_database 0
+int styleable AppSearch_namespace 1
+int styleable AppSearch_schemaType 2
+int[] styleable Capability { 0x0 }
+int styleable Capability_entityMatchRequired 0

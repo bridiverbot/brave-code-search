@@ -1,0 +1,3 @@
+{
+  "org/chromium/chrome/browser/ui/android/webid/AccountSelectionBridge$NativeAccountSelectionViewAndroid": "::AccountSelectionViewAndroid"
+}

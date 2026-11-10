@@ -1,0 +1,11 @@
+{
+  "chromium_code": true,
+  "gn_target": "//chrome/browser/android/examples/partner_browser_customizations_provider:partner_browser_customizations_example_apk_resources",
+  "public_deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/chrome/browser/android/examples/partner_browser_customizations_provider/partner_browser_customizations_example_apk_resources.res.sources",
+  "resources_zip": "obj/chrome/browser/android/examples/partner_browser_customizations_provider/partner_browser_customizations_example_apk_resources.resources.zip",
+  "rtxt_path": "gen/chrome/browser/android/examples/partner_browser_customizations_provider/partner_browser_customizations_example_apk_resources_R.txt",
+  "type": "android_resources"
+}

@@ -1,0 +1,10 @@
+{
+  "assets": {
+    "disable_compression": true,
+    "sources": [
+      "gen/chrome/dev_ui_resources.pak"
+    ]
+  },
+  "gn_target": "//chrome/android:chrome_public_bundle__dev_ui_bundle_module__pak_assets",
+  "type": "android_assets"
+}

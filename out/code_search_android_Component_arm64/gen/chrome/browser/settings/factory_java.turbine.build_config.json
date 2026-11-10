@@ -1,0 +1,18 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/chrome/browser/settings/settings_in_tab_java.turbine.jar",
+    "obj/base/tasks_java.turbine.jar",
+    "obj/chrome/browser/flags/java.turbine.jar",
+    "obj/components/browser_ui/settings/android/java.turbine.jar",
+    "obj/ui/android/ui_no_recycler_view_java.turbine.jar",
+    "obj/base/tasks_jni_java.javac.jar",
+    "obj/base/tasks_minimal_jni_java.javac.jar",
+    "obj/components/cached_flags/java.turbine.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

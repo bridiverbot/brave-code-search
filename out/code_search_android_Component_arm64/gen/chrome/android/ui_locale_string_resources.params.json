@@ -1,0 +1,7 @@
+{
+  "gn_target": "//chrome/android:ui_locale_string_resources",
+  "resources_zip": "resource_zips/chrome/android/ui_locale_string_resources.compiled.resources.zip",
+  "rtxt_path": "gen/chrome/android/ui_locale_string_resources.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "resource_zips/chrome/android/ui_locale_string_resources.zip"
+}

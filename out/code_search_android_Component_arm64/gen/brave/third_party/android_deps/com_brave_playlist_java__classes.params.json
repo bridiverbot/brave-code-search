@@ -1,0 +1,34 @@
+{
+  "aar_path": "../../brave/third_party/android_deps/libs/com_brave_playlist/playlist_release.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/brave/third_party/android_deps/androidx_media3_media3_exoplayer_hls_java.params.json",
+    "gen/brave/third_party/android_deps/androidx_room_room_runtime_java.params.json",
+    "gen/brave/third_party/android_deps/com_google_code_gson_gson_java.params.json",
+    "gen/third_party/android_deps/material_design_java.params.json",
+    "gen/third_party/androidx/androidx_media3_media3_common_java.params.json",
+    "gen/third_party/androidx/androidx_media3_media3_session_java.params.json",
+    "gen/third_party/androidx/androidx_media3_media3_ui_java.params.json",
+    "gen/third_party/androidx/exoplayer_java.params.json",
+    "gen/brave/third_party/android_deps/com_brave_playlist_java__resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/brave/third_party/android_deps/com_brave_playlist_java__classes.dex.jar",
+  "gn_target": "//brave/third_party/android_deps:com_brave_playlist_java",
+  "interface_jar_path": "obj/brave/third_party/android_deps/com_brave_playlist_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/brave/third_party/android_deps/com_brave_playlist_java/classes.jar",
+  "proguard_configs": [
+    "obj/brave/third_party/android_deps/com_brave_playlist_java/proguard.txt"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/brave/third_party/android_deps/com_brave_playlist_java/classes.jar"
+}

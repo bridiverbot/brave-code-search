@@ -1,0 +1,8 @@
+{
+  "gn_target": "//chrome/browser/password_manager/android:javatests",
+  "public_deps_configs": [
+    "gen/chrome/browser/password_manager/android/grouped_affiliations/javatests.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

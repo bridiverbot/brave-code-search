@@ -1,0 +1,1233 @@
+<?xml version="1.0" ?>
+<lint>
+  
+  
+  
+  <issue id="all">
+    
+    
+    <ignore regexp="^\.\./\.\./clank/"/>
+    
+    
+    <ignore regexp="^gen/clank/"/>
+    
+    
+    
+    <ignore regexp="/obj/clank/"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="AcceptsUserCertificates">
+    
+    
+    
+    <ignore regexp="chrome/android/java/res_base/xml/network_security_config.xml"/>
+    
+  
+  </issue>
+  
+  
+  
+  <issue id="ContentDescription">
+    
+    
+    <ignore regexp="chrome/android/java/res/layout/history_item_view.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/commerce/price_change/android/java/res/layout/price_change_module_layout.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/data_sharing/android/java/res/layout/recent_activity_log_item.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/glic/android/java/res/layout/glic_auto_browse.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/glic/android/java/res/layout/glic_default_tab_access.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/glic/android/java/res/layout/glic_spark_auto_browse.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/safety_hub/android/java/res/layout/safety_hub_expandable_preference.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/ui/android/omnibox/java/res/layout/fusebox_layout.xml"/>
+    
+    
+    <ignore regexp="components/browser_ui/settings/android/java/res/layout/chrome_expandable_switch_preference.xml"/>
+    
+    
+    <ignore regexp="components/browser_ui/widget/android/java/res/layout/rich_radio_button.xml"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="ExifInterface">
+    
+      
+      
+    <ignore regexp="components/browser_ui/photo_picker/android/java/src/org/chromium/components/browser_ui/photo_picker/BitmapUtils.java"/>
+    
+  
+  </issue>
+  
+  
+  
+  <issue id="FlaggedApi" severity="ignore"/>
+  
+  
+  <issue id="IconDensities">
+    
+    
+    
+    <ignore regexp="btn_bg_holo_active_normal.png, btn_bg_holo_active_pressed.png, btn_bg_holo_pressed.png"/>
+    
+    
+    
+    <ignore regexp="chrome/android/webapk/shell_apk/res/drawable-*"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="IconDipSize">
+    
+    
+    
+    <ignore regexp="chrome/android/java/res/.*tab_strip_fade"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="IconLocation">
+    
+    
+    
+    <ignore regexp="content/shell/android/java/res/"/>
+    
+    
+    
+    <ignore regexp="tools/android/memconsumer/java/res/drawable/"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="IconMissingDensityFolder">
+    
+    
+    
+    <ignore regexp="components/embedder_support/android/java/res"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="ImpliedQuantity">
+    
+    
+    <ignore regexp="chrome/app/generated_resources"/>
+    
+    
+    <ignore regexp="chrome/android/features/tab_ui/java_strings_grd"/>
+    
+    
+    <ignore regexp="chrome/browser/touch_to_fill/password_manager/android/internal/java_strings_grd"/>
+    
+    
+    <ignore regexp="chrome/browser/ui/android/strings/ui_strings_grd"/>
+    
+    
+    <ignore regexp="components/browser_ui/strings/android/browser_ui_strings_grd"/>
+    
+    
+    <ignore regexp="components/strings/components_strings_grd"/>
+    
+    
+    <ignore regexp="components/strings/privacy_sandbox_strings_grd"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="InsecureBaseConfiguration">
+    
+    
+    
+    <ignore regexp="chrome/android/java/res_base/xml/network_security_config.xml"/>
+    
+  
+  </issue>
+  
+  
+  
+  <issue id="InvalidVectorPath" severity="ignore"/>
+  
+  
+  <issue id="LogConditional" severity="ignore"/>
+  
+  
+  <issue id="LongLogTag" severity="ignore"/>
+  
+  
+  <issue id="MissingClass" severity="ignore"/>
+  
+  
+  <issue id="MissingDefaultResource">
+    
+    
+    
+    <ignore regexp="toolbar_background.9.png"/>
+    
+    
+    
+    <ignore regexp="window_background.xml"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="MissingPermission" severity="ignore"/>
+  
+  
+  <issue id="MissingQuantity" severity="ignore"/>
+  
+  
+  <issue id="MissingTranslation">
+    
+    
+    <ignore regexp="restriction_values.xml.*"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="NewApi">
+    
+    
+    
+    
+    <ignore regexp="Default method requires API level 24"/>
+    
+    
+    <ignore regexp="Static interface  method requires API level 24"/>
+    
+    
+    
+    <ignore regexp="Field requires API level .*`android.app.TaskInfo"/>
+    
+    
+  
+  </issue>
+  
+  
+  
+  <issue id="ObsoleteSdkInt" severity="ignore"/>
+  
+  
+  <issue id="OldTargetApi" severity="ignore"/>
+  
+  
+  <issue id="OnClick">
+    
+    
+    
+    <ignore regexp="tools/android/audio_focus_grabber/java/res/layout/audio_focus_grabber_activity.xml"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="Overdraw" severity="ignore"/>
+  
+  
+  <issue id="PackageManagerGetSignatures">
+    
+    
+    <ignore regexp="chrome/browser/android/browserservices/verification/java/src/org/chromium/chrome/browser/browserservices/verification/PackageFingerprintCalculator.java"/>
+    
+    
+    <ignore regexp="chrome/android/webapk/libs/client/src/org/chromium/webapk/lib/client/WebApkValidator.java"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="PluralsCandidate">
+    
+    
+    <ignore regexp="chrome/browser/ui/android/strings/ui_strings_grd.resources.zip/values-en-rGB/android_chrome_strings.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/ui/android/strings/ui_strings_grd.resources.zip/values/android_chrome_strings.xml"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="PrivateApi" severity="ignore"/>
+  
+  
+  
+  <issue id="ProtectedPermissions" severity="ignore"/>
+  
+  
+  
+  <issue id="QueryAllPackagesPermission" severity="ignore"/>
+  
+  
+  <issue id="RestrictedApi">
+    
+    
+    
+    <ignore regexp="is marked as internal and should not be accessed from apps"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="Recycle" severity="ignore"/>
+  
+  
+  <issue id="Registered" severity="ignore"/>
+  
+  
+  <issue id="RtlCompat" severity="ignore"/>
+  
+  
+  <issue id="RtlEnabled" severity="ignore"/>
+  
+  
+  <issue id="RtlSymmetry" severity="ignore"/>
+  
+  
+  
+  <issue id="ScopedStorage" severity="ignore"/>
+  
+  
+  <issue id="SetJavaScriptEnabled" severity="ignore"/>
+  
+  
+  <issue id="SignatureOrSystemPermissions" severity="ignore"/>
+  
+  
+  <issue id="StringFormatCount">
+    
+    
+    <ignore regexp="chrome/browser/ui/android/strings/ui_strings_grd.resources.zip/values-af/android_chrome_strings.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/ui/android/strings/ui_strings_grd.resources.zip/values-cs/android_chrome_strings.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/ui/android/strings/ui_strings_grd.resources.zip/values-fr/android_chrome_strings.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/ui/android/strings/ui_strings_grd.resources.zip/values-pl/android_chrome_strings.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/ui/android/strings/ui_strings_grd.resources.zip/values/android_chrome_strings.xml"/>
+    
+    
+    
+    <ignore regexp="data_reduction_promo_infobar_title"/>
+    
+  
+  </issue>
+  
+  
+  
+  <issue id="StringFormatInvalid" severity="ignore"/>
+  
+  
+  <issue id="StringFormatMatches" severity="ignore"/>
+  
+  
+  <issue id="TypographyDashes" severity="ignore"/>
+  
+  
+  <issue id="TypographyEllipsis">
+    
+    
+    <ignore regexp="chrome/browser/ui/android/strings/ui_strings_grd.resources.zip/values-uz/android_chrome_strings.xml"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="UnusedIds" severity="ignore"/>
+  
+  
+  <issue id="UnusedQuantity" severity="ignore"/>
+  
+  
+  <issue id="UnusedResources">
+    
+    
+    
+    
+    <ignore regexp="The resource `R.string.glic_fre_dialog_.*` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.glic_experimental_opt_in_notification_.*` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.actor_notification_prompt_toast_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.actor_notification_prompt_toast_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.actor_notification_prompt_toast_manage_button` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.settings_show_gemini_in_bottom_bar_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.settings_show_gemini_in_bottom_bar_summary` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.extensions_menu_.*` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.extensions_request_access_button` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.acc_name_extensions_button_.*` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="R.string.private_browsing_warning"/>
+    
+    
+    
+    <ignore regexp="The resource `R.mipmap.ic_launcher_background` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.mipmap.ic_launcher_foreground` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.mipmap.maskable_splash_icon_xxhdpi` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.mipmap.maskable_splash_icon_xxxhdpi` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.*_module_title` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_tab_suggestion_review_button` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_tab_suggestion_close_stale_message` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_tab_suggestion_dismiss_button` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.tab_suggestion_close_stale_message` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.tab_suggestion_close_tab_action_button` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.tab_suggestion_review_button` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.layout.language_picker` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_tab_suggestion_group_tabs_message` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.tab_suggestion_group_tabs_message` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_tab_switcher` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_close_tab_group_button` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_close_tab_group_button_with_group_name` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_expand_tab_group_with_group_name` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.languages_content_description` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.languages_select_suggested` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.languages_select_other` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.languages_settings_advanced` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.languages_settings_dont_offer_sites` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.languages_settings_never_sites_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.languages_settings_target` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.translate_dont_offer_site` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.translate_dont_offer_lang` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.style.SplashTheme` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="android_webview/java/res/drawable-hdpi/ic_play_circle_outline_black_48dp.png"/>
+    
+    
+    
+    <ignore regexp="The resource `R.drawable.*_expand_.*` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="restriction_values.xml"/>
+    
+    
+    
+    <ignore regexp="components/page_info/android/java/res/drawable-hdpi/pageinfo_*"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.page_info_permission_ads_subtitle` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.download_manager_ui_documents` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.download_manager_offline_home` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.ntp_learn_more_about_suggested_content` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.tab_switcher_button_label` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.website_settings_category_notifications_block` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.autofill_cc_google_issued` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.notification_manage_button` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.app_banner_add` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.notification_category_permission_requests` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.most_visited_tiles_header` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_omnibox_showing_suggestions_for_website` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_omnibox_most_visited_tile` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="webview_.*__lint.*components_strings_grd"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.show_content` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.hide_content` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.clear` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.merchant_viewer_message_description_rating` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.merchant_viewer_message_rating_word` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.plurals.accessibility_merchant_viewer_message_description` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.accessibility_merchant_viewer_message_announcement` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.merchant_viewer_message_rating_numerical` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.merchant_viewer_message_title_see_reviews` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.plurals.merchant_viewer_message_description_reviews_from_google` appears to be unused"/>
+    
+    
+    
+    <ignore regexp="The resource `R.string.price_drop_notification_content_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.price_drop_notification_content_text` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.price_drop_notification_action_visit_site` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.price_drop_notification_action_turn_off_alert` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.adaptive_toolbar_button_new_tab_iph` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.adaptive_toolbar_button_share_iph` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.adaptive_toolbar_button_voice_search_iph` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.adaptive_toolbar_menu_edit_shortcut` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.adaptive_toolbar_button_new_tab_iph_settings` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.adaptive_toolbar_button_share_iph_settings` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.adaptive_toolbar_button_voice_search_iph_settings` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.quick_action_search_widget_message_no_google_lens` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.quick_action_search_widget_message_no_incognito` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.quick_action_search_widget_message_no_voice_search` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.price_tracking_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.discount_icon_expanded_text` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.iph_translate_message_dismissed_text` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.iph_translate_message_dismissed_accessibility_text` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.home_modules_tab_resumption_one_tab_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.home_modules_tab_resumption_multiple_tabs_title` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.notification_unsubscribing_label` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.website_settings_category_permission_quiet` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.website_settings_category_permission_cpss` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.website_settings_category_permission_loud` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.tab_group_creation_dialog_sync_description` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.tab_groups_category` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.saved_tab_groups_data_summary` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.tab_group_surface_iph_with_sync` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.tab_group_surface_iph_no_sync` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.newly_synced_tab_group_iph` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.management_legacy_tech_report_no_link` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.discount_code_copied_button_text` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.discount_code_copy_button_text` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.discount_container_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.discount_expiration_date_android` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_manage_group_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_manage_stop_sharing_option` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_stop_sharing_dialog_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_remove_member_dialog_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_remove_member_dialog_confirm` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_delete_dialog_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_delete_dialog_confirm` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_preview_dialog_confirm` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_link_failed_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_leave_dialog_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_leave_dialog_confirm` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_block_dialog_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_block_dialog_confirm` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_block_leave_dialog_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_block_leave_dialog_confirm` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_delete_last_tab_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_delete_last_tab_cancel` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_delete_last_tab_confirm` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_member_delete_last_tab_confirm` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_share_group_share_as` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_stop_sharing_dialog_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_remove_member_dialog_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_delete_dialog_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_link_failed_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_join_group_as` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_leave_dialog_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_block_dialog_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_block_leave_dialog_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_block_leave_learn_more` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_delete_last_tab_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_owner_delete_last_tab_body_2` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_member_delete_last_tab_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_learn_about_shared_groups` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_people_with_access` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_link_edit_access` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_link_join_toggle` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_cancel` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_something_went_wrong_header` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_something_went_wrong_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_chrome_out_of_date_error_dialog_header` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_chrome_out_of_date_error_dialog_update_button` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_chrome_out_of_date_error_dialog_not_now_button` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_chrome_out_of_date_error_dialog_continue_body` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.collaboration_shared_tab_groups_panel_out_of_date_message_cell_text` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.data_sharing_recent_activity_bottom_sheet_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.update` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.auxiliary_search_module_content_short` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.auxiliary_search_module_content_default_off_short` appears to be unused"/>
+    
+
+    
+    <ignore regexp="The resource `R.string.ntp_customization_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.ntp_customization_subtitle` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.ntp_setting_option` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.feed_setting_option` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.feed_section_on` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.ntp_customization_theme_bottom_sheet_opened_full` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.ntp_customization_theme_bottom_sheet` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.ntp_customization_theme_title` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.ntp_customization_theme_bottom_sheet_default_option` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.ntp_customization_theme_bottom_sheet_upload_image_option` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.ntp_customization_theme_bottom_sheet_chrome_colors_option` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.string.ntp_customization_theme_bottom_sheet_theme_collections_option` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.plurals.tab_selection_editor_pin_tabs` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.plurals.accessibility_tab_selection_editor_pin_tabs` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.plurals.tab_selection_editor_unpin_tabs` appears to be unused"/>
+    
+    
+    <ignore regexp="The resource `R.plurals.accessibility_tab_selection_editor_unpin_tabs` appears to be unused"/>
+    
+
+    
+    
+    <ignore regexp="The resource `R.string.menu` appears to be unused"/>
+    
+
+    
+  
+  </issue>
+  
+  
+  <issue id="VectorPath" severity="ignore"/>
+  
+  
+  
+  <issue id="ViewConstructor" severity="ignore"/>
+  
+  
+  
+  <issue id="UseCompoundDrawables">
+    
+    
+    <ignore regexp="chrome/browser/glic/android/java/res/layout/glic_auto_browse.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/glic/android/java/res/layout/glic_default_tab_access.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/glic/android/java/res/layout/glic_spark_auto_browse.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/ui/android/appmenu/internal/java/res/layout/submenu_header.xml"/>
+    
+    
+    <ignore regexp="chrome/browser/ui/android/toolbar/java/res/layout/sheet_tab_toolbar.xml"/>
+    
+  
+  </issue>
+  
+  
+  <issue id="WrongConstant">
+    
+    
+    
+    <ignore regexp="Must be one of: LineBreaker.BREAK_STRATEGY_SIMPLE, LineBreaker.BREAK_STRATEGY_HIGH_QUALITY, LineBreaker.BREAK_STRATEGY_BALANCED"/>
+    
+  
+  </issue>
+  
+
+  <issue id="NewApi">
+    <ignore regexp="android\.content\.res\.TypedArray#close|android\.media\.MediaDrm#close|android\.media\.MediaMetadataRetriever#close|android\.util\.SparseArray#set|java\.lang\.Byte#compareUnsigned|java\.lang\.CharSequence#compare|java\.lang\.Character#toString|java\.lang\.Integer#parseInt|java\.lang\.Integer#parseUnsignedInt|java\.lang\.Long#parseLong|java\.lang\.Long#parseUnsignedLong|java\.lang\.Math#absExact|java\.lang\.Math#floorDiv|java\.lang\.Math#floorMod|java\.lang\.Math#multiplyExact|java\.lang\.Math#multiplyFull|java\.lang\.Math#multiplyHigh|java\.lang\.Short#compareUnsigned|java\.lang\.StrictMath#absExact|java\.lang\.StrictMath#decrementExact|java\.lang\.StrictMath#floorDiv|java\.lang\.StrictMath#floorMod|java\.lang\.StrictMath#incrementExact|java\.lang\.StrictMath#multiplyExact|java\.lang\.StrictMath#multiplyFull|java\.lang\.StrictMath#multiplyHigh|java\.lang\.StrictMath#negateExact|java\.lang\.String#isBlank|java\.lang\.String#repeat|java\.lang\.String#strip|java\.lang\.String#stripLeading|java\.lang\.String#stripTrailing|java\.math\.BigDecimal#stripTrailingZeros|java\.util\.List#copyOf|java\.util\.List#of|java\.util\.Map#copyOf|java\.util\.Map#entry|java\.util\.Map#of|java\.util\.Map#ofEntries|java\.util\.Objects#checkFromIndexSize|java\.util\.Objects#checkFromToIndex|java\.util\.Objects#checkIndex|java\.util\.Objects#requireNonNullElse|java\.util\.Objects#requireNonNullElseGet|java\.util\.Optional#ifPresentOrElse|java\.util\.Optional#isEmpty|java\.util\.Optional#or|java\.util\.Optional#orElseThrow|java\.util\.Optional#stream|java\.util\.OptionalDouble#ifPresentOrElse|java\.util\.OptionalDouble#isEmpty|java\.util\.OptionalDouble#orElseThrow|java\.util\.OptionalDouble#stream|java\.util\.OptionalInt#ifPresentOrElse|java\.util\.OptionalInt#isEmpty|java\.util\.OptionalInt#orElseThrow|java\.util\.OptionalInt#stream|java\.util\.OptionalLong#ifPresentOrElse|java\.util\.OptionalLong#isEmpty|java\.util\.OptionalLong#orElseThrow|java\.util\.OptionalLong#stream|java\.util\.Set#copyOf|java\.util\.Set#of|java\.util\.concurrent\.atomic\.AtomicReference#compareAndSet|java\.util\.concurrent\.atomic\.AtomicReferenceArray#compareAndSet|java\.util\.concurrent\.atomic\.AtomicReferenceFieldUpdater#compareAndSet|java\.util\.function\.Predicate#not|java\.util\.stream\.Stream#ofNullable|sun\.misc\.Unsafe#compareAndSwapObject"/>
+  </issue>
+  <issue id="ExportedService" severity="ignore"/>
+  
+    
+  <issue id="DuplicateDefinition">
+    
+        
+    <ignore regexp="chrome/android/java/res/values/colors.xml"/>
+    
+    
+  </issue>
+  
+    
+  <issue id="StringFormatCount">
+    
+        
+    <ignore regexp="sponsored_images_bottom_sheet_text"/>
+    
+        
+    <ignore regexp="notification_marketing"/>
+    
+        
+    <ignore regexp="renew_monthly_save"/>
+    
+        
+    <ignore regexp="wallet_swap_fees_notice"/>
+    
+        
+    <ignore regexp="processing_fee"/>
+    
+    
+  </issue>
+  
+    
+  <issue id="WrongConstant">
+    
+        
+    <ignore regexp="ContentSettingsType.BRAVE_CONTENT_SETTINGS_TYPES_LIST"/>
+    
+    
+  </issue>
+  
+    
+  <issue id="UnusedResources">
+    
+        
+    <ignore regexp="The resource `R.string.playlist_.*` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.new_tab_otr.*` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.dimen.md_incognito_ntp.*` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.layout.incognito.*` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.layout.logo_view_layout` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.*_BrowserUI_Switch_Incognito` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.CardTransparentForDark` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.TextAppearance_IncognitoNewTabLearnMoreLinkModern` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.dimen.quick_action_search_widget_.*` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.xml.quick_action_search_widget_.*` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.layout.quick_action_search_widget_.*` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.quick_action_search_widget_.*` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.drawable.quick_action_search_widget_.*` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.drawable.hairline_border` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.dino_widget_description` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.IncognitoTextViewWithClickableSpans` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.IncognitoNewTabLearnMoreLinkModernTextView` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.IncognitoNewTabTextView` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.incognito_tab_learn_more_accessibility_label` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.accessibility_incognito_3pc_settings` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.empty_state_asset_bg_color` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.empty_state_asset_outline_color_primary` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.empty_state_asset_outline_color_secondary` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.empty_state_icon_tabswitcher_bg_color` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.empty_state_tab_border_color` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.empty_state_tab_group_border_color` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.empty_state_icon_bg_color` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.macro.default_bg_color_elev_0` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.drawable.incognito_card_bg` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.incognito_ntp_block_third_party_cookies_header` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.autofill_bnpl_tos_review_text` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.autofill_bnpl_tos_approve_text` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.autofill_bnpl_tos_link_text` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.autofill_bnpl_tos_unlinked_title` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.autofill_bnpl_tos_linked_title` appears to be unused"/>
+    
+
+        
+        
+    <ignore regexp="The resource `R.dimen.ntp_section_bottom_margin` appears to be unused"/>
+    
+
+        
+        
+    <ignore regexp="The resource `R.color.incognito_history_placeholder_bottom_circle_color` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.incognito_history_placeholder_stroke_color` appears to be unused"/>
+    
+
+        
+        
+    <ignore regexp="The resource `R.style.BottomSheetActivityTheme` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.BraveAccountTheme` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.BottomSheetAnimation` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.FadeEnterAnimation` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.style.Theme_Brave_WelcomeOnboarding` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.anim.fast_fade_in` appears to be unused"/>
+    
+
+        
+        
+    <ignore regexp="The resource `R.xml.quick_action_search_and_bookmark_widget_info` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.string.brave_quick_action_search` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.drawable.ic_quick_action_search_and_bookmark_widget_preview` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.drawable.widget_preview appears` appears to be unused"/>
+    
+        
+    <ignore regexp="brave/android/java/brave-res/drawable-night-nodpi/widget_preview.png"/>
+    
+
+        
+        
+    <ignore regexp="The resource `R.drawable.themed_app_icon` appears to be unused"/>
+    
+
+        
+        
+    <ignore regexp="The resource `R.color.settings_search_logo_color_1` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.settings_search_logo_color_2` appears to be unused"/>
+    
+        
+    <ignore regexp="The resource `R.color.settings_search_logo_color_3` appears to be unused"/>
+    
+
+        
+        
+    <ignore regexp="The resource `R.dimen.toolbar_edge_padding_ntp` appears to be unused"/>
+    
+    
+  </issue>
+  
+    
+  <issue id="ImpliedQuantity">
+    
+        
+    <ignore regexp="brave/build/android/android_brave_strings_grd"/>
+    
+    
+  </issue>
+  
+
+    
+    
+  <issue id="DataExtractionRules">
+    
+        
+    <ignore regexp="The attribute `android:allowBackup` is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute `android:dataExtractionRules` specifying an `@xml` resource which configures cloud backups and device transfers on Android 12 and higher."/>
+    
+    
+  </issue>
+  
+
+</lint>

@@ -1,0 +1,18 @@
+{
+  "chromium_code": false,
+  "gn_target": "//brave/third_party/android_deps:com_github_bumptech_glide_java__resources",
+  "package_name": "com.bumptech.glide",
+  "public_deps_configs": [
+    "gen/brave/third_party/android_deps/com_github_bumptech_disklrucache_java.params.json",
+    "gen/brave/third_party/android_deps/com_github_bumptech_glide_gifdecoder_java.params.json",
+    "gen/third_party/androidx/androidx_appcompat_appcompat_java.params.json",
+    "gen/third_party/androidx/androidx_exifinterface_exifinterface_java.params.json",
+    "gen/third_party/androidx/androidx_fragment_fragment_java.params.json",
+    "gen/third_party/androidx/androidx_vectordrawable_vectordrawable_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/brave/third_party/android_deps/com_github_bumptech_glide_java__resources.res.sources",
+  "resources_zip": "obj/brave/third_party/android_deps/com_github_bumptech_glide_java__resources.resources.zip",
+  "rtxt_path": "gen/brave/third_party/android_deps/com_github_bumptech_glide_java__resources_R.txt",
+  "type": "android_resources"
+}

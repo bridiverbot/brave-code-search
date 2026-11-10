@@ -1,0 +1,8 @@
+{
+  "gn_target": "//brave/third_party/android_deps:com_brave_playlist_java__ignored_manifest",
+  "mergeable_android_manifests": [
+    "obj/brave/third_party/android_deps/com_brave_playlist_java/AndroidManifest.xml"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

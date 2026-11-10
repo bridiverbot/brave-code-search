@@ -1,0 +1,20 @@
+{
+  "gn_target": "//chrome/android:chrome_public_base_module_java_test_support",
+  "public_deps_configs": [
+    "gen/chrome/android/browser_java_test_support.params.json",
+    "gen/chrome/android/chrome_test_util_java.params.json",
+    "gen/chrome/browser/android/metrics/ukm_java_test_support.params.json",
+    "gen/chrome/browser/password_manager/android/test_support_java.params.json",
+    "gen/chrome/browser/subresource_filter/subresource_filter_java_test_support.params.json",
+    "gen/chrome/browser/supervised_user/test_support_java.params.json",
+    "gen/chrome/browser/thumbnail/thumbnail_java_test_support.params.json",
+    "gen/components/external_intents/android/test_support_java.params.json",
+    "gen/components/minidump_uploader/minidump_uploader_java.params.json",
+    "gen/components/paint_preview/player/android/player_java_test_support.params.json",
+    "gen/components/variations/android/test_support_java.params.json",
+    "gen/content/public/test/android/content_java_test_support.params.json",
+    "gen/ui/android/clipboard_java_test_support.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

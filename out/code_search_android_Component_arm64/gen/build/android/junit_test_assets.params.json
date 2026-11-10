@@ -1,0 +1,9 @@
+{
+  "assets": {
+    "sources": [
+      "../../build/android/junit/src/org/chromium/build/AndroidAssetsTest.java"
+    ]
+  },
+  "gn_target": "//build/android:junit_test_assets",
+  "type": "android_assets"
+}

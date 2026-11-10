@@ -1,0 +1,43 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/chrome/android/chrome_java.params.json",
+    "gen/chrome/browser/android/lifecycle/java.params.json",
+    "gen/chrome/browser/profiles/android/java.params.json",
+    "gen/chrome/browser/tabmodel/java.params.json",
+    "gen/components/payments/content/android/java.params.json",
+    "gen/components/payments/content/android/junit_test_support.params.json",
+    "gen/components/payments/content/android/service_impl_java.params.json",
+    "gen/components/payments/content/android/service_java.params.json",
+    "gen/components/payments/mojom/mojom_java.params.json",
+    "gen/content/public/android/content_java.params.json",
+    "gen/mojo/public/java/bindings_java.params.json",
+    "gen/mojo/public/java/system_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/blink/public/mojom/android_mojo_bindings_java.params.json",
+    "gen/third_party/mockito/mockito_java.params.json",
+    "gen/ui/android/ui_no_recycler_view_java.params.json",
+    "gen/url/gurl_java.params.json",
+    "gen/url/gurl_junit_test_support.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/payments/android:junit_test_support",
+  "interface_jar_path": "obj/chrome/browser/payments/android/junit_test_support.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/browser/payments/android/junit_test_support.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/chrome/browser/payments/android/junit_test_support.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/payments/android/junit_test_support.javac.jar"
+}

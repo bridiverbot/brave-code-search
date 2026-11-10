@@ -1,0 +1,21 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/build/android/test/nocompile_gn/c_prebuilt_java.dex.jar",
+  "gn_target": "//build/android/test/nocompile_gn:c_prebuilt_java",
+  "interface_jar_path": "obj/build/android/test/nocompile_gn/c_prebuilt_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../build/android/java/test/missing_symbol/c.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../build/android/java/test/missing_symbol/c.jar"
+}

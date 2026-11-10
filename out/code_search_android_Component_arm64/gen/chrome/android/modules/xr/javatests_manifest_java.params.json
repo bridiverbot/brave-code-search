@@ -1,0 +1,8 @@
+{
+  "gn_target": "//chrome/android/modules/xr:javatests_manifest_java",
+  "mergeable_android_manifests": [
+    "../../chrome/android/modules/xr/internal/java/AndroidManifest.xml"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

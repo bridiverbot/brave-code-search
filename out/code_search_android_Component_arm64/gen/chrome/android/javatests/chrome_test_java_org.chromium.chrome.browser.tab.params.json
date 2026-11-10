@@ -1,0 +1,28 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/android/javatests/chrome_test_java_helper.params.json",
+    "gen/components/tabs/public/android/java.params.json",
+    "gen/ui/accessibility/ui_accessibility_test_support_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/android/javatests/chrome_test_java_org.chromium.chrome.browser.tab.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/android/javatests:chrome_test_java_org.chromium.chrome.browser.tab",
+  "interface_jar_path": "obj/chrome/android/javatests/chrome_test_java_org.chromium.chrome.browser.tab.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome",
+  "processed_jar_path": "obj/chrome/android/javatests/chrome_test_java_org.chromium.chrome.browser.tab.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/android/javatests/chrome_test_java_org.chromium.chrome.browser.tab.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/android/javatests/chrome_test_java_org.chromium.chrome.browser.tab.javac.jar"
+}

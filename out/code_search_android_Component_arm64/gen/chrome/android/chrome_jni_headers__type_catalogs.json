@@ -1,0 +1,9 @@
+[
+  "gen/chrome/browser/ui/browser_window/public/android/jni.type_catalog.json",
+  "gen/chrome/android/base_module_jni.type_catalog.json",
+  "gen/chrome/browser/bookmarks/android/jni_headers.type_catalog.json",
+  "gen/chrome/browser/browsing_data/android/jni_headers.type_catalog.json",
+  "gen/chrome/browser/partnerbookmarks/jni_headers.type_catalog.json",
+  "gen/chrome/browser/webid/jni_headers.type_catalog.json",
+  "gen/components/tabs/public/android/jni_headers.type_catalog.json"
+]

@@ -1,0 +1,9 @@
+{
+  "processed_classpath": [
+    "obj/build/android/bytecode/system_load_library_remover.javac.jar",
+    "../../third_party/android_deps/cipd/libs/org_ow2_asm_asm_commons/asm-commons.jar",
+    "../../third_party/android_deps/cipd/libs/org_ow2_asm_asm_tree/asm-tree.jar",
+    "../../third_party/android_deps/cipd/libs/org_ow2_asm_asm/asm.jar",
+    "obj/build/android/build_java.javac.jar"
+  ]
+}

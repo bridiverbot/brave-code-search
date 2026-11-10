@@ -1,0 +1,27 @@
+{
+  "aar_path": "../../brave/third_party/android_deps/libs/com_wireguard_android/tunnel-1.0.20250531.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_collection_collection_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/brave/third_party/android_deps/com_wireguard_android_java__classes.dex.jar",
+  "gn_target": "//brave/third_party/android_deps:com_wireguard_android_java",
+  "interface_jar_path": "obj/brave/third_party/android_deps/com_wireguard_android_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/brave/third_party/android_deps/com_wireguard_android_java/classes.jar",
+  "proguard_configs": [
+
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/brave/third_party/android_deps/com_wireguard_android_java/classes.jar"
+}

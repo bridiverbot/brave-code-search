@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- blaze-out/k8-opt/genfiles/java/com/google/android/gmscore/integ/client/cast/framework/res/values-zh-rHK/cast_strings.xml -->
+<eat-comment/>
+<string name="cast_ad_label">廣告</string>
+<string name="cast_casting_to_device">正投放至「%1$s」</string>
+<string name="cast_closed_captions">隱藏式字幕</string>
+<string name="cast_closed_captions_unavailable">未能提供隱藏式字幕</string>
+<string name="cast_connecting_to_device">正在連線至「%1$s」</string>
+<string name="cast_disconnect">中斷連線</string>
+<string name="cast_expanded_controller_ad_image_description">投放接收器播放廣告時顯示的圖片</string>
+<string name="cast_expanded_controller_ad_in_progress">正在投放廣告…</string>
+<string name="cast_expanded_controller_background_image">專輯封面</string>
+<string name="cast_expanded_controller_live_head_description">目前正處於即時串流開始位置</string>
+<string name="cast_expanded_controller_live_stream_indicator">即時串流</string>
+<string name="cast_expanded_controller_loading">正在載入…</string>
+<string name="cast_expanded_controller_skip_ad_label">略過廣告</string>
+<string name="cast_expanded_controller_skip_ad_text">你可在 %1$d 秒後略過廣告…</string>
+<string name="cast_forward">前轉</string>
+<string name="cast_forward_10">前轉 10 秒</string>
+<string name="cast_forward_30">前轉 30 秒</string>
+<string name="cast_intro_overlay_button_text">@android:string/ok</string>
+<string name="cast_live_label">直播</string>
+<string name="cast_mute">靜音</string>
+<string name="cast_pause">暫停</string>
+<string name="cast_play">播放</string>
+<string name="cast_rewind">倒帶</string>
+<string name="cast_rewind_10">倒帶 10 秒</string>
+<string name="cast_rewind_30">倒帶 30 秒</string>
+<string name="cast_seek_bar">播放控制介面</string>
+<string name="cast_skip_next">跳到下一個項目</string>
+<string name="cast_skip_prev">跳到上一個項目</string>
+<string name="cast_stop">停止</string>
+<string name="cast_stop_live_stream">停止即時串流</string>
+<string name="cast_tracks_chooser_dialog_audio">音訊</string>
+<string name="cast_tracks_chooser_dialog_cancel">取消</string>
+<string name="cast_tracks_chooser_dialog_closed_captions">隱藏式字幕</string>
+<string name="cast_tracks_chooser_dialog_default_track_name">歌曲 %1$d</string>
+<string name="cast_tracks_chooser_dialog_none">沒有</string>
+<string name="cast_tracks_chooser_dialog_ok">確定</string>
+<string name="cast_tracks_chooser_dialog_subtitles">字幕</string>
+<string name="cast_unmute">取消靜音</string>
+<string name="media_notification_channel_name">投放</string>
+</resources>

@@ -1,0 +1,40 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/browser/password_manager/android/add_username_dialog/java.params.json",
+    "gen/chrome/browser/password_manager/android/add_username_dialog/java_resources.params.json",
+    "gen/base/base_java.params.json",
+    "gen/base/base_java_test_support.params.json",
+    "gen/base/base_junit_test_support.params.json",
+    "gen/chrome/browser/ui/android/strings/ui_strings_grd.params.json",
+    "gen/third_party/android_deps/material_design_java.params.json",
+    "gen/third_party/androidx/androidx_appcompat_appcompat_java.params.json",
+    "gen/third_party/androidx/androidx_test_core_java.params.json",
+    "gen/third_party/google-truth/google_truth_java.params.json",
+    "gen/third_party/jni_zero/jni_zero_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/mockito/mockito_java.params.json",
+    "gen/ui/android/ui_java_test_support.params.json",
+    "gen/ui/android/ui_no_recycler_view_java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/password_manager/android/add_username_dialog:junit",
+  "interface_jar_path": "obj/chrome/browser/password_manager/android/add_username_dialog/junit.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome.browser.add_username_dialog",
+  "processed_jar_path": "obj/chrome/browser/password_manager/android/add_username_dialog/junit.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/chrome/browser/password_manager/android/add_username_dialog/junit.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/password_manager/android/add_username_dialog/junit.javac.jar"
+}

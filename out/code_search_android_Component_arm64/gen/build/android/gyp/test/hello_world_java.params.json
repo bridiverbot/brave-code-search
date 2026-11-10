@@ -1,0 +1,22 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//build/android/gyp/test:hello_world_java",
+  "interface_jar_path": "obj/build/android/gyp/test/hello_world_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/build/android/gyp/test/hello_world_java.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "target_sources_file": "gen/build/android/gyp/test/hello_world_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/build/android/gyp/test/hello_world_java.javac.jar"
+}

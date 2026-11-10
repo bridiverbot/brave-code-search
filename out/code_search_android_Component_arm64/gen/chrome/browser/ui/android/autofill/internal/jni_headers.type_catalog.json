@@ -1,0 +1,4 @@
+{
+  "org/chromium/chrome/browser/ui/autofill/AutofillProgressDialogBridge$NativeAutofillProgressDialogViewAndroid": "::autofill::AutofillProgressDialogViewAndroid",
+  "org/chromium/chrome/browser/ui/autofill/ephemeraltab/PaymentsWindowBridge$NativePaymentsWindowBridge": "::autofill::payments::PaymentsWindowBridge"
+}

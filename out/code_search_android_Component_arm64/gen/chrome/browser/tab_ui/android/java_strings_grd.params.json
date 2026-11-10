@@ -1,0 +1,7 @@
+{
+  "gn_target": "//chrome/browser/tab_ui/android:java_strings_grd",
+  "resources_zip": "obj/chrome/browser/tab_ui/android/java_strings_grd.compiled.resources.zip",
+  "rtxt_path": "gen/chrome/browser/tab_ui/android/java_strings_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/chrome/browser/tab_ui/android/java_strings_grd.resources.zip"
+}

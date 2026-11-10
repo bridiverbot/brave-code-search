@@ -1,0 +1,24 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/third_party/android_deps/org_ow2_asm_asm_commons_java.params.json",
+    "gen/third_party/android_deps/org_ow2_asm_asm_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//build/android/bytecode:trace_event_adder",
+  "interface_jar_path": "obj/build/android/bytecode/trace_event_adder.turbine.jar",
+  "is_prebuilt": false,
+  "main_class": "org.chromium.bytecode.TraceEventAdder",
+  "processed_jar_path": "obj/build/android/bytecode/trace_event_adder.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "target_sources_file": "gen/build/android/bytecode/trace_event_adder.sources",
+  "type": "java_binary",
+  "unprocessed_jar_path": "obj/build/android/bytecode/trace_event_adder.javac.jar"
+}

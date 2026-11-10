@@ -1,0 +1,21 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/brave/third_party/android_deps/com_android_support_support_annotations_java.dex.jar",
+  "gn_target": "//brave/third_party/android_deps:com_android_support_support_annotations_java",
+  "interface_jar_path": "obj/brave/third_party/android_deps/com_android_support_support_annotations.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../brave/third_party/android_deps/libs/com_android_support_support_annotations/support-annotations.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../brave/third_party/android_deps/libs/com_android_support_support_annotations/support-annotations.jar"
+}

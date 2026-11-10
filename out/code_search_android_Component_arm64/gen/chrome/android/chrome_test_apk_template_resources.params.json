@@ -1,0 +1,10 @@
+{
+  "gn_target": "//chrome/android:chrome_test_apk_template_resources",
+  "public_deps_configs": [
+    "gen/chrome/android/chrome_public_apk_template_resources.params.json"
+  ],
+  "resources_overlay_zip": "obj/chrome/android/chrome_test_apk_template_resources.compiled.resources.zip",
+  "rtxt_path": "gen/chrome/android/chrome_test_apk_template_resources.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/chrome/android/chrome_test_apk_template_resources.resources.zip"
+}

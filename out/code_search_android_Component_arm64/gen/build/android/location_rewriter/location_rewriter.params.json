@@ -1,0 +1,17 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/location_rewriter/location_rewriter_java.params.json"
+  ],
+  "gn_target": "//build/android/location_rewriter:location_rewriter",
+  "is_prebuilt": false,
+  "main_class": "org.chromium.build.location_rewriter.LocationRewriter",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "type": "java_binary"
+}

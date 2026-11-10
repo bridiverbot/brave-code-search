@@ -1,0 +1,18 @@
+{
+  "chromium_code": false,
+  "gn_target": "//brave/third_party/android_deps:com_android_billingclient_java__resources",
+  "package_name": "com.android.billingclient",
+  "public_deps_configs": [
+    "gen/third_party/android_deps/google_android_datatransport_transport_backend_cct_java.params.json",
+    "gen/third_party/android_deps/google_android_datatransport_transport_runtime_java.params.json",
+    "gen/third_party/android_deps/google_firebase_firebase_messaging_java.params.json",
+    "gen/third_party/android_deps/google_play_services_base_java.params.json",
+    "gen/third_party/android_deps/google_play_services_location_java.params.json",
+    "gen/third_party/androidx/androidx_activity_activity_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/brave/third_party/android_deps/com_android_billingclient_java__resources.res.sources",
+  "resources_zip": "obj/brave/third_party/android_deps/com_android_billingclient_java__resources.resources.zip",
+  "rtxt_path": "gen/brave/third_party/android_deps/com_android_billingclient_java__resources_R.txt",
+  "type": "android_resources"
+}

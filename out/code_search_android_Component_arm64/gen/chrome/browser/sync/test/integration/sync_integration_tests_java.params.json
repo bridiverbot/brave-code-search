@@ -1,0 +1,12 @@
+{
+  "gn_target": "//chrome/browser/sync/test/integration:sync_integration_tests_java",
+  "public_deps_configs": [
+    "gen/chrome/android/delegate_public_impl_java.params.json",
+    "gen/chrome/test/android_browsertests_assets.params.json",
+    "gen/chrome/test/android_browsertests_java.params.json",
+    "gen/chrome/test/sync_integration_test_support_java.params.json",
+    "gen/chrome/test/test_support_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

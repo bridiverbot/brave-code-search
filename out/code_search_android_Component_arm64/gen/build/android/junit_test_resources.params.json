@@ -1,0 +1,14 @@
+{
+  "chromium_code": true,
+  "gn_target": "//build/android:junit_test_resources",
+  "mergeable_android_manifests": [
+    "../../build/android/junit/AndroidManifest_mergetest.xml"
+  ],
+  "public_deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/build/android/junit_test_resources.res.sources",
+  "resources_zip": "obj/build/android/junit_test_resources.resources.zip",
+  "rtxt_path": "gen/build/android/junit_test_resources_R.txt",
+  "type": "android_resources"
+}

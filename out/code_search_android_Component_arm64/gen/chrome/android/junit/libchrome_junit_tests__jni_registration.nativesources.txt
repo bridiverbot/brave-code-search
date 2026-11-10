@@ -1,0 +1,98 @@
+[
+  {
+    "java_files": [
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/util/EmbedderSupportFeatures.java",
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/util/InputStreamUtil.java",
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/util/UrlUtilities.java",
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/util/WebResourceResponseInfo.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../third_party/jni_zero/java/src/org/jni_zero/CommonApis.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniRawPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniUniquePtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniZero.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/Callback.java",
+      "../../base/android/java/src/org/chromium/base/Callback2.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/CommandLine.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/JavaExceptionReporter.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/JniAndroid.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/IntStringCallback.java",
+      "../../base/android/java/src/org/chromium/base/JniCallbackImpl.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/JNIUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/library_loader/LibraryLoader.java",
+      "../../base/android/java/src/org/chromium/base/library_loader/LibraryPrefetcher.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/metrics/NativeUmaRecorder.java",
+      "../../base/android/java/src/org/chromium/base/metrics/StatisticsRecorderAndroid.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/TraceEvent.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/Token.java",
+      "../../base/android/java/src/org/chromium/base/TokenBase.java",
+      "../../base/android/java/src/org/chromium/base/UnguessableToken.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../url/android/java/src/org/chromium/url/IDNStringUtil.java",
+      "../../url/android/java/src/org/chromium/url/GURL.java",
+      "../../url/android/java/src/org/chromium/url/Origin.java",
+      "../../url/android/java/src/org/chromium/url/Parsed.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/url_formatter/android/java/src/org/chromium/components/url_formatter/UrlFormatter.java"
+    ]
+  }
+]

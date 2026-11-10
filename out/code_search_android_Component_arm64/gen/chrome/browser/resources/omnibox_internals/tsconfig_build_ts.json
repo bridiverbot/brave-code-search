@@ -1,0 +1,65 @@
+{
+  "extends": "../../../../../../../chrome/browser/resources/omnibox_internals/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/ml/ml_calculator.ts",
+    "preprocessed/ml/ml_chart.ts",
+    "preprocessed/ml/ml_table.ts",
+    "preprocessed/ml/ml_ui.ts",
+    "preprocessed/ml/ml_browser_proxy.ts",
+    "preprocessed/omnibox.ts",
+    "preprocessed/omnibox_element.ts",
+    "preprocessed/omnibox_input.ts",
+    "preprocessed/omnibox_output.ts",
+    "preprocessed/omnibox_util.ts",
+    "preprocessed/ml/ml_calculator.html.ts",
+    "preprocessed/ml/ml_chart.html.ts",
+    "preprocessed/ml/ml_table.html.ts",
+    "preprocessed/ml/ml_ui.html.ts",
+    "preprocessed/omnibox_internals.mojom-webui.ts",
+    "preprocessed/omnibox.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../tools/typescript/definitions/pending.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

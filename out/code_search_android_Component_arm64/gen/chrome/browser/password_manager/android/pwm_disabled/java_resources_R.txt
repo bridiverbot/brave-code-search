@@ -1,0 +1,6 @@
+int id details_paragraph1 0x7f010001
+int id details_paragraph2 0x7f010001
+int id negative_button 0x7f010001
+int id positive_button 0x7f010001
+int id title 0x7f010001
+int layout password_csv_download_dialog_view 0x7f010001

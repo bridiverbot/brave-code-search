@@ -1,0 +1,7 @@
+{
+  "gn_target": "//chrome/app:generated_resources_grd",
+  "resources_zip": "obj/chrome/app/generated_resources_grd.compiled.resources.zip",
+  "rtxt_path": "gen/chrome/app/generated_resources_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/chrome/app/generated_resources.resources.zip"
+}

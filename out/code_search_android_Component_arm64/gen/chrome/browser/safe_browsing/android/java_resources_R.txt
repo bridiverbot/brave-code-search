@@ -1,0 +1,7 @@
+int id enhanced_protection 0x7f010001
+int id no_protection 0x7f010001
+int id standard_protection 0x7f010001
+int layout radio_button_group_safe_browsing_preference 0x7f010001
+int xml enhanced_protection_preferences 0x7f010001
+int xml safe_browsing_preferences 0x7f010001
+int xml standard_protection_preferences 0x7f010001

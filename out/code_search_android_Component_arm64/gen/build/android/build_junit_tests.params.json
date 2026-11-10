@@ -1,0 +1,34 @@
+{
+  "bundled_srcjars": [
+    "gen/build/android/build_config_for_robolectric_srcjar.srcjar",
+    "gen/build/android/build_junit_tests__compile_resources.srcjar",
+    "gen/build/android/build_junit_tests__native_libraries.srcjar",
+    "gen/build/android/build_junit_tests__final_jni.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/testing/android/junit/junit_test_support.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/mockito/mockito_jvm_java.params.json",
+    "gen/build/android/junit_test_assets.params.json",
+    "gen/build/android/junit_test_resources.params.json",
+    "gen/build/android/test/incremental_javac_gn/no_signature_change_prebuilt_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//build/android:build_junit_tests",
+  "interface_jar_path": "obj/build/android/build_junit_tests.turbine.jar",
+  "is_prebuilt": false,
+  "main_class": "org.chromium.testing.local.JunitTestMain",
+  "package_name": "org.chromium.build",
+  "processed_jar_path": "obj/build/android/build_junit_tests.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/build/android/build_junit_tests.sources",
+  "type": "robolectric_binary",
+  "unprocessed_jar_path": "obj/build/android/build_junit_tests.javac.jar"
+}

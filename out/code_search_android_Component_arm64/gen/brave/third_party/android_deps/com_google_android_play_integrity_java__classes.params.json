@@ -1,0 +1,27 @@
+{
+  "aar_path": "../../brave/third_party/android_deps/libs/com_google_android_play_integrity/integrity-1.1.0.aar",
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/google_play_services_basement_java.params.json",
+    "gen/third_party/android_deps/google_play_services_tasks_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/brave/third_party/android_deps/com_google_android_play_integrity_java__classes.dex.jar",
+  "gn_target": "//brave/third_party/android_deps:com_google_android_play_integrity_java",
+  "interface_jar_path": "obj/brave/third_party/android_deps/com_google_android_play_integrity_java.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/brave/third_party/android_deps/com_google_android_play_integrity_java/classes.jar",
+  "proguard_configs": [
+
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/brave/third_party/android_deps/com_google_android_play_integrity_java/classes.jar"
+}

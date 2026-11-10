@@ -1,0 +1,4 @@
+int dimen loading_modal_loading_indicator_size 0x7f010001
+int id cancel_loading_modal 0x7f010001
+int layout loading_modal 0x7f010001
+int layout loading_modal_button_bar 0x7f010001

@@ -1,0 +1,32 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/android/junit/chrome_junit_tests_helper.params.json",
+    "gen/chrome/browser/ntp_customization/java.params.json",
+    "gen/chrome/browser/ntp_customization/public_java.params.json",
+    "gen/chrome/browser/prefs/android/java.params.json",
+    "gen/chrome/browser/sync/synced_set_up/android/java.params.json",
+    "gen/components/sync_preferences/cross_device_pref_tracker/android/java.params.json",
+    "gen/components/sync_preferences/synced_set_up/android/java.params.json",
+    "gen/components/sync_preferences/synced_set_up/android/jni_headers_java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/android/junit:chrome_junit_tests_org.chromium.chrome.browser.sync.synced_set_up",
+  "interface_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.sync.synced_set_up.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.sync.synced_set_up.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.sync.synced_set_up.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.sync.synced_set_up.javac.jar"
+}

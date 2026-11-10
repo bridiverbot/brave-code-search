@@ -1,0 +1,42 @@
+{
+  "bundled_srcjars": [
+    "gen/chrome/browser/glic/glic_pref_names_srcjar.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/callback_java.params.json",
+    "gen/base/log_java.params.json",
+    "gen/base/resetters_java.params.json",
+    "gen/base/supplier_java.params.json",
+    "gen/chrome/browser/flags/java.params.json",
+    "gen/chrome/browser/glic/android/java_resources.params.json",
+    "gen/chrome/browser/glic/android/jni_headers_java.params.json",
+    "gen/chrome/browser/profiles/android/java.params.json",
+    "gen/chrome/browser/tab/java.params.json",
+    "gen/chrome/browser/tabmodel/java.params.json",
+    "gen/chrome/browser/ui/browser_window/public/android/java.params.json",
+    "gen/components/cached_flags/java.params.json",
+    "gen/content/public/android/content_full_java.params.json",
+    "gen/third_party/android_deps/com_airbnb_android_lottie_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/jni_zero/jni_zero_java.params.json",
+    "gen/url/gurl_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/browser/glic/public_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/glic:public_java",
+  "interface_jar_path": "obj/chrome/browser/glic/public_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome.browser.glic",
+  "processed_jar_path": "obj/chrome/browser/glic/public_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/browser/glic/public_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/glic/public_java.javac.jar"
+}

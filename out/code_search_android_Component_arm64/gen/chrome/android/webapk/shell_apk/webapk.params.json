@@ -1,0 +1,46 @@
+{
+  "android_manifest": "gen/chrome/android/webapk/shell_apk/webapk_generate_manifest/AndroidManifest.xml",
+  "apk_path": "apks/WebApk.apk",
+  "bundled_srcjars": [
+    "gen/chrome/android/webapk/shell_apk/webapk__compile_resources.srcjar",
+    "gen/chrome/android/webapk/shell_apk/webapk__native_libraries.srcjar",
+    "gen/chrome/android/webapk/shell_apk/webapk__build_config_srcjar.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "create_locales_java_list": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/android/webapk/shell_apk/webapk_generated_webapk_with_service_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/android/webapk/shell_apk/webapk.dex.jar",
+  "enable_bytecode_checks": true,
+  "enable_lint": false,
+  "final_dex_path": "obj/chrome/android/webapk/shell_apk/webapk/webapk.r8dex.jar",
+  "gn_target": "//chrome/android/webapk/shell_apk:webapk__java",
+  "interface_jar_path": "obj/chrome/android/webapk/shell_apk/webapk.turbine.jar",
+  "is_prebuilt": false,
+  "loadable_modules": [
+
+  ],
+  "merged_android_manifest": "gen/chrome/android/webapk/shell_apk/webapk/AndroidManifest.merged.xml",
+  "native_lib_placeholders": [
+    "libfoo.so"
+  ],
+  "processed_jar_path": "obj/chrome/android/webapk/shell_apk/webapk.javac.jar",
+  "proguard_configs": [
+    "obj/chrome/android/webapk/shell_apk/webapk/webapk.resources.proguard.txt",
+    "../../chrome/android/webapk/shell_apk/proguard.flags"
+  ],
+  "proguard_enabled": true,
+  "proguard_mapping_path": "apks/WebApk.apk.mapping",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "rtxt_path": "gen/chrome/android/webapk/shell_apk/webapk__compile_resources_R.txt",
+  "supports_android": true,
+  "type": "android_apk",
+  "unprocessed_jar_path": "obj/chrome/android/webapk/shell_apk/webapk.javac.jar",
+  "version_code": "1",
+  "version_name": "1.101.0"
+}

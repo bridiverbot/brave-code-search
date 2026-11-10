@@ -1,0 +1,39 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/callback_java.params.json",
+    "gen/base/supplier_java.params.json",
+    "gen/base/test/public_transit_java.params.json",
+    "gen/chrome/android/chrome_test_util_java.params.json",
+    "gen/chrome/android/javatests/common_unit_test_deps_java.params.json",
+    "gen/chrome/browser/android/screenshot_protection/java.params.json",
+    "gen/chrome/browser/enterprise/util/java.params.json",
+    "gen/chrome/browser/policy/android/java.params.json",
+    "gen/chrome/browser/profiles/android/java.params.json",
+    "gen/chrome/browser/tab/java.params.json",
+    "gen/chrome/browser/ui/android/layouts/java.params.json",
+    "gen/chrome/browser/url_constants/android/java.params.json",
+    "gen/chrome/test/android/chrome_java_transit.params.json",
+    "gen/components/policy/android/policy_java.params.json",
+    "gen/net/android/net_java_test_support.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/browser/android/screenshot_protection/javatests.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/android/screenshot_protection:javatests",
+  "interface_jar_path": "obj/chrome/browser/android/screenshot_protection/javatests.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/browser/android/screenshot_protection/javatests.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/browser/android/screenshot_protection/javatests.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/android/screenshot_protection/javatests.javac.jar"
+}

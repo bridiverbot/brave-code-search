@@ -1,0 +1,16 @@
+{
+  "deps_configs": [
+    "gen/chrome/android/chrome_public_bundle__base_bundle_module.params.json",
+    "gen/chrome/android/chrome_public_bundle__on_demand_bundle_module.params.json",
+    "gen/chrome/android/chrome_public_bundle__stack_unwinder_bundle_module.params.json",
+    "gen/chrome/android/chrome_public_bundle__xr_bundle_module.params.json",
+    "gen/chrome/android/chrome_public_bundle__dev_ui_bundle_module.params.json",
+    "gen/chrome/android/chrome_public_bundle__chrome_bundle_module.params.json"
+  ],
+  "enable_lint": false,
+  "gn_target": "//chrome/android:chrome_public_bundle",
+  "proguard_enabled": true,
+  "proguard_mapping_path": "apks/ChromePublic.aab.mapping",
+  "trace_events_jar_dir": "obj/chrome/android/chrome_public_bundle__base_bundle_module",
+  "type": "android_app_bundle"
+}

@@ -1,0 +1,30 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/android/junit/chrome_junit_tests_helper.params.json",
+    "gen/chrome/browser/lens/java.params.json",
+    "gen/chrome/browser/quick_delete/java.params.json",
+    "gen/chrome/browser/safe_browsing/android/java.params.json",
+    "gen/chrome/browser/tips/android/java.params.json",
+    "gen/chrome/browser/ui/android/toolbar/core_java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/android/junit:chrome_junit_tests_org.chromium.chrome.browser.tips",
+  "interface_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.tips.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.tips.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.tips.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.tips.javac.jar"
+}

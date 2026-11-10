@@ -1,0 +1,7 @@
+{
+  "gn_target": "//chrome/browser/keyboard_accessory/android/internal:java_strings_grd",
+  "resources_zip": "obj/chrome/browser/keyboard_accessory/android/internal/java_strings_grd.compiled.resources.zip",
+  "rtxt_path": "gen/chrome/browser/keyboard_accessory/android/internal/java_strings_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/chrome/browser/keyboard_accessory/android/internal/java_strings_grd.resources.zip"
+}

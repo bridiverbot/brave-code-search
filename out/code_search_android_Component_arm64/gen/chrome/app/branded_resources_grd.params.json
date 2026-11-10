@@ -1,0 +1,7 @@
+{
+  "gn_target": "//chrome/app:branded_resources_grd",
+  "resources_zip": "obj/chrome/app/branded_resources_grd.compiled.resources.zip",
+  "rtxt_path": "gen/chrome/app/branded_resources_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/chrome/app/branded_strings.resources.zip"
+}

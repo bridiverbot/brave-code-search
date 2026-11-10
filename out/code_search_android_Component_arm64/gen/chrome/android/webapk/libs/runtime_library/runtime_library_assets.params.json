@@ -1,0 +1,10 @@
+{
+  "assets": {
+    "sources": [
+      "gen/chrome/android/webapk/libs/runtime_library/webapk_dex_version.txt",
+      "obj/chrome/android/webapk/libs/runtime_library/webapk8.dex"
+    ]
+  },
+  "gn_target": "//chrome/android/webapk/libs/runtime_library:runtime_library_assets",
+  "type": "android_assets"
+}

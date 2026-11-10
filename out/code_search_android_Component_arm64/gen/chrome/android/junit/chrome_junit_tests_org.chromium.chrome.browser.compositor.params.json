@@ -1,0 +1,31 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/android/junit/chrome_junit_tests_helper.params.json",
+    "gen/chrome/browser/contextual_tasks/java.params.json",
+    "gen/chrome/browser/glic/android/jni_headers_java.params.json",
+    "gen/chrome/browser/task_manager/android/factory_java.params.json",
+    "gen/chrome/browser/task_manager/android/java.params.json",
+    "gen/chrome/browser/ui/vertical_tabs/java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/android/junit:chrome_junit_tests_org.chromium.chrome.browser.compositor",
+  "interface_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.compositor.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome",
+  "processed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.compositor.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.compositor.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.compositor.javac.jar"
+}

@@ -1,0 +1,7 @@
+{
+  "gn_target": "//build/config/android/test/resource_overlay:root_tagged_dependency_resources",
+  "resources_zip": "obj/build/config/android/test/resource_overlay/root_tagged_dependency_resources.compiled.resources.zip",
+  "rtxt_path": "gen/build/config/android/test/resource_overlay/root_tagged_dependency_resources.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/build/config/android/test/resource_overlay/root_tagged_dependency_resources.resources.zip"
+}

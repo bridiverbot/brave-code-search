@@ -1,0 +1,8 @@
+{
+  "gn_target": "//chrome/browser/thumbnail:thumbnail_java_test_support",
+  "public_deps_configs": [
+    "gen/chrome/browser/thumbnail/generator/generator_java_test_support.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

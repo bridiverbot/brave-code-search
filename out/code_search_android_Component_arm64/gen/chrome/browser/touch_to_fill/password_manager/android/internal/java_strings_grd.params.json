@@ -1,0 +1,7 @@
+{
+  "gn_target": "//chrome/browser/touch_to_fill/password_manager/android/internal:java_strings_grd",
+  "resources_zip": "obj/chrome/browser/touch_to_fill/password_manager/android/internal/java_strings_grd.compiled.resources.zip",
+  "rtxt_path": "gen/chrome/browser/touch_to_fill/password_manager/android/internal/java_strings_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/chrome/browser/touch_to_fill/password_manager/android/internal/java_strings_grd.resources.zip"
+}

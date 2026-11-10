@@ -1,0 +1,15 @@
+{
+  "gn_target": "//chrome/android:chrome_unit_test_java",
+  "public_deps_configs": [
+    "gen/chrome/android/javatests/chrome_unit_test_java_org.chromium.chrome.browser.actor.params.json",
+    "gen/chrome/android/javatests/chrome_unit_test_java_org.chromium.chrome.browser.compositor.params.json",
+    "gen/chrome/android/javatests/chrome_unit_test_java_org.chromium.chrome.browser.contextmenu.params.json",
+    "gen/chrome/android/javatests/chrome_unit_test_java_org.chromium.chrome.browser.customtabs.params.json",
+    "gen/chrome/android/javatests/chrome_unit_test_java_org.chromium.chrome.browser.download.params.json",
+    "gen/chrome/android/javatests/chrome_unit_test_java_org.chromium.chrome.browser.share.params.json",
+    "gen/chrome/android/javatests/chrome_unit_test_java_various.params.json",
+    "gen/url/url_java_unit_tests.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

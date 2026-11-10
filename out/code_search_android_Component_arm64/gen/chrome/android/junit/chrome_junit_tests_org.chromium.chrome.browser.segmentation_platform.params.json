@@ -1,0 +1,29 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/android/junit/chrome_junit_tests_helper.params.json",
+    "gen/chrome/browser/tab_group_suggestion/toolbar_java.params.json",
+    "gen/chrome/browser/ui/android/toolbar/adaptive_features_java.params.json",
+    "gen/chrome/browser/ui/android/toolbar/optional_button_java.params.json",
+    "gen/components/dom_distiller/content/browser/android/dom_distiller_content_java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/android/junit:chrome_junit_tests_org.chromium.chrome.browser.segmentation_platform",
+  "interface_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.segmentation_platform.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.segmentation_platform.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.segmentation_platform.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/android/junit/chrome_junit_tests_org.chromium.chrome.browser.segmentation_platform.javac.jar"
+}

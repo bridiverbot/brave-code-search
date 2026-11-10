@@ -1,0 +1,6 @@
+{
+  "javac_full_classpath_targets": [
+    "//components/webapk/android/libs/common:java",
+    "//build/android:build_java"
+  ]
+}
