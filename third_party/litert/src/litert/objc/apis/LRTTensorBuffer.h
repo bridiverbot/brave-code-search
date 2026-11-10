@@ -1,0 +1,226 @@
+// Copyright 2026 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#import <Foundation/Foundation.h>
+#import <Metal/Metal.h>
+
+#import "third_party/odml/litert/litert/objc/apis/LRTEnvironment.h"
+#import "third_party/odml/litert/litert/objc/apis/LRTTensorBufferRequirements.h"
+#import "third_party/odml/litert/litert/objc/apis/LRTTensorType.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+// LINT.IfChange(tensor_buffer_types)
+/** Underlying storage type of a LiteRT tensor buffer (matching @c LiteRtTensorBufferType in
+ * litert_tensor_buffer_types.h). */
+typedef NS_ENUM(NSInteger, LRTTensorBufferType) {
+  LRTTensorBufferTypeUnknown = 0,
+  LRTTensorBufferTypeHostMemory = 1,
+  LRTTensorBufferTypeAHWB = 2,
+  LRTTensorBufferTypeION = 3,
+  LRTTensorBufferTypeDMABuf = 4,
+  LRTTensorBufferTypeFastRPC = 5,
+  LRTTensorBufferTypeGLBuffer = 6,
+  LRTTensorBufferTypeGLTexture = 7,
+  LRTTensorBufferTypeOpenCLBuffer = 10,
+  LRTTensorBufferTypeOpenCLBufferFP16 = 11,
+  LRTTensorBufferTypeOpenCLTexture = 12,
+  LRTTensorBufferTypeOpenCLTextureFP16 = 13,
+  LRTTensorBufferTypeOpenCLBufferPacked = 14,
+  LRTTensorBufferTypeOpenCLImageBuffer = 15,
+  LRTTensorBufferTypeOpenCLImageBufferFP16 = 16,
+  LRTTensorBufferTypeWebGPUBuffer = 20,
+  LRTTensorBufferTypeWebGPUBufferFP16 = 21,
+  LRTTensorBufferTypeWebGPUTexture = 22,
+  LRTTensorBufferTypeWebGPUTextureFP16 = 23,
+  LRTTensorBufferTypeWebGPUImageBuffer = 24,
+  LRTTensorBufferTypeWebGPUImageBufferFP16 = 25,
+  LRTTensorBufferTypeWebGPUBufferPacked = 26,
+  LRTTensorBufferTypeMetalBuffer = 30,
+  LRTTensorBufferTypeMetalBufferFP16 = 31,
+  LRTTensorBufferTypeMetalTexture = 32,
+  LRTTensorBufferTypeMetalTextureFP16 = 33,
+  LRTTensorBufferTypeMetalBufferPacked = 34,
+  LRTTensorBufferTypeVulkanBuffer = 40,
+  LRTTensorBufferTypeVulkanBufferFP16 = 41,
+  LRTTensorBufferTypeVulkanTexture = 42,
+  LRTTensorBufferTypeVulkanTextureFP16 = 43,
+  LRTTensorBufferTypeVulkanImageBuffer = 44,
+  LRTTensorBufferTypeVulkanImageBufferFP16 = 45,
+  LRTTensorBufferTypeVulkanBufferPacked = 46,
+};
+// LINT.ThenChange(../../c/litert_tensor_buffer_types.h:tensor_buffer_types)
+
+/** Wraps a LiteRT tensor buffer holding model inputs or outputs. */
+@interface LRTTensorBuffer : NSObject
+
+/** Buffer storage type (HostMemory, MetalBuffer, etc.). */
+@property(nonatomic, readonly) LRTTensorBufferType bufferType;
+
+/** Tensor type describing the element type and shape of this buffer, or nil if unavailable. */
+@property(nonatomic, readonly, nullable) LRTTensorType *tensorType;
+
+/** Element type of tensor elements. */
+@property(nonatomic, readonly) LRTElementType elementType;
+
+/** Tensor shape dimension sizes. */
+@property(nonatomic, readonly, copy) NSArray<NSNumber *> *dimensions;
+
+/** Packed buffer size in bytes. */
+@property(nonatomic, readonly) NSUInteger size;
+
+/** Metal buffer reference if backing memory is a Metal buffer, or nil otherwise. */
+@property(nonatomic, readonly, nullable) id<MTLBuffer> metalBuffer;
+
+/** Metal texture reference if backing memory is a Metal texture, or nil otherwise. */
+@property(nonatomic, readonly, nullable) id<MTLTexture> metalTexture;
+
+/**
+ * Creates a managed host memory tensor buffer.
+ *
+ * @param environment LiteRT environment instance.
+ * @param size Buffer capacity in bytes.
+ * @param elementType Data element type.
+ * @param dimensions Tensor shape dimensions array.
+ * @param error Out-parameter populated on failure.
+ * @return A new LRTTensorBuffer instance, or nil on failure.
+ */
++ (nullable instancetype)tensorBufferWithEnvironment:(LRTEnvironment *)environment
+                                                size:(NSUInteger)size
+                                         elementType:(LRTElementType)elementType
+                                          dimensions:(NSArray<NSNumber *> *)dimensions
+                                               error:(NSError **)error;
+
+/**
+ * Creates a managed Metal buffer tensor buffer.
+ *
+ * @param environment LiteRT environment instance configured with Metal options.
+ * @param size Buffer capacity in bytes.
+ * @param elementType Data element type.
+ * @param dimensions Tensor shape dimensions array.
+ * @param error Out-parameter populated on failure.
+ * @return A new LRTTensorBuffer instance, or nil on failure.
+ */
++ (nullable instancetype)managedMetalTensorBufferWithEnvironment:(LRTEnvironment *)environment
+                                                            size:(NSUInteger)size
+                                                     elementType:(LRTElementType)elementType
+                                                      dimensions:(NSArray<NSNumber *> *)dimensions
+                                                           error:(NSError **)error;
+
+/**
+ * Creates a managed tensor buffer with the specified buffer type.
+ *
+ * @param environment LiteRT environment instance.
+ * @param bufferType Underlying buffer storage type (e.g., HostMemory, MetalBuffer).
+ * @param size Buffer capacity in bytes.
+ * @param elementType Data element type.
+ * @param dimensions Tensor shape dimensions array.
+ * @param error Out-parameter populated on failure.
+ * @return A new LRTTensorBuffer instance, or nil on failure.
+ */
++ (nullable instancetype)tensorBufferWithEnvironment:(LRTEnvironment *)environment
+                                          bufferType:(LRTTensorBufferType)bufferType
+                                                size:(NSUInteger)size
+                                         elementType:(LRTElementType)elementType
+                                          dimensions:(NSArray<NSNumber *> *)dimensions
+                                               error:(NSError **)error;
+
+/**
+ * Creates a managed tensor buffer with the specified buffer type and tensor type.
+ *
+ * @param environment LiteRT environment instance.
+ * @param bufferType Underlying buffer storage type (e.g., HostMemory, MetalBuffer).
+ * @param size Buffer capacity in bytes.
+ * @param tensorType Tensor type describing element type and shape dimensions.
+ * @param error Out-parameter populated on failure.
+ * @return A new LRTTensorBuffer instance, or nil on failure.
+ */
++ (nullable instancetype)tensorBufferWithEnvironment:(LRTEnvironment *)environment
+                                          bufferType:(LRTTensorBufferType)bufferType
+                                                size:(NSUInteger)size
+                                          tensorType:(LRTTensorType *)tensorType
+                                               error:(NSError **)error;
+
+/**
+ * Creates a managed tensor buffer satisfying the given allocation requirements.
+ *
+ * @param environment LiteRT environment instance.
+ * @param tensorType Tensor type describing element type and shape dimensions.
+ * @param requirements Allocation requirements specifying supported buffer types, size, and
+ * alignment.
+ * @param error Out-parameter populated on failure.
+ * @return A new LRTTensorBuffer instance, or nil on failure.
+ */
++ (nullable instancetype)tensorBufferWithEnvironment:(LRTEnvironment *)environment
+                                          tensorType:(LRTTensorType *)tensorType
+                                        requirements:(LRTTensorBufferRequirements *)requirements
+                                               error:(NSError **)error;
+
+/**
+ * Creates a tensor buffer wrapping an existing Metal buffer.
+ *
+ * @param environment LiteRT environment instance.
+ * @param metalBuffer Metal buffer object.
+ * @param elementType Data element type.
+ * @param dimensions Tensor shape dimensions array.
+ * @param error Out-parameter populated on failure.
+ * @return A new LRTTensorBuffer instance, or nil on failure.
+ */
++ (nullable instancetype)tensorBufferWithEnvironment:(LRTEnvironment *)environment
+                                         metalBuffer:(id<MTLBuffer>)metalBuffer
+                                         elementType:(LRTElementType)elementType
+                                          dimensions:(NSArray<NSNumber *> *)dimensions
+                                               error:(NSError **)error;
+
+/**
+ * Creates a tensor buffer wrapping an existing Metal texture.
+ *
+ * @param environment LiteRT environment instance.
+ * @param metalTexture Metal texture object.
+ * @param elementType Data element type.
+ * @param dimensions Tensor shape dimensions array.
+ * @param error Out-parameter populated on failure.
+ * @return A new LRTTensorBuffer instance, or nil on failure.
+ */
++ (nullable instancetype)tensorBufferWithEnvironment:(LRTEnvironment *)environment
+                                        metalTexture:(id<MTLTexture>)metalTexture
+                                         elementType:(LRTElementType)elementType
+                                          dimensions:(NSArray<NSNumber *> *)dimensions
+                                               error:(NSError **)error;
+
+- (instancetype)init NS_UNAVAILABLE;
+
+/**
+ * Copies and returns the raw byte data from the tensor buffer.
+ *
+ * @param error Out-parameter populated on failure.
+ * @return Data buffer copy, or nil on failure.
+ */
+- (nullable NSData *)readDataWithError:(NSError **)error;
+
+/**
+ * Overwrites the contents of the tensor buffer with the provided data.
+ *
+ * @note At most @c size bytes are written: any extra bytes in @c data are ignored, and any bytes
+ * of the tensor buffer beyond @c data.length keep their previous contents.
+ *
+ * @param data Bytes to write into the tensor buffer.
+ * @param error Out-parameter populated on failure.
+ * @return YES on success, NO on failure.
+ */
+- (BOOL)writeData:(NSData *)data error:(NSError **)error;
+
+@end
+
+NS_ASSUME_NONNULL_END

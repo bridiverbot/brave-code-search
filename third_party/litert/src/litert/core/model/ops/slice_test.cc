@@ -1,0 +1,609 @@
+// Copyright 2026 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "litert/core/model/ops/slice.h"
+
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include <limits>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include "absl/strings/string_view.h"  // from @com_google_absl
+#include "absl/types/span.h"  // from @com_google_absl
+#include "litert/c/litert_common.h"
+#include "litert/c/litert_model_types.h"
+#include "litert/c/litert_op_code.h"
+#include "litert/cc/litert_buffer_ref.h"
+#include "litert/core/model/model.h"
+#include "litert/core/model/shape_inference_types.h"
+#include "litert/core/util/flatbuffer_tools.h"
+#include "tflite/schema/schema_generated.h"
+
+namespace litert::internal {
+namespace {
+
+using ::testing::ElementsAre;
+
+TEST(SliceOpTest, DynamicUpdateSlice) {
+  LiteRtOpT op;
+  // DynamicUpdateSlice takes 3 inputs: operand, update, start_indices.
+  // Output shape is same as operand.
+  std::vector<Dims> input_shapes = {
+      {1, 10, 10, 3},  // operand
+      {1, 2, 2, 3},    // update
+      {4}              // start_indices
+  };
+  std::vector<Dims> output_shapes(1);
+
+  // Setup inputs
+  LiteRtTensorT operand;
+  LiteRtTensorT update;
+  LiteRtTensorT start_indices;
+
+  op.Inputs().push_back(&operand);
+  op.Inputs().push_back(&update);
+  op.Inputs().push_back(&start_indices);
+
+  ASSERT_EQ(
+      InferDynamicUpdateSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+      kLiteRtStatusOk);
+
+  EXPECT_THAT(output_shapes[0], ElementsAre(1, 10, 10, 3));
+}
+
+TEST(SliceOpTest, SliceStatic) {
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = {
+      {1, 10, 10, 3}, {4}, {4}};  // Input, Begin, Size
+  std::vector<Dims> output_shapes(1);
+
+  LiteRtTensorT size_tensor;
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(&size_tensor);
+
+  int32_t size_data[] = {1, 5, 5, 3};
+  SetWeightsFromOwnedBuffer(
+      size_tensor.Weights(),
+      OwningBufferRef<uint8_t>(reinterpret_cast<const uint8_t*>(size_data),
+                               sizeof(size_data)));
+
+  ASSERT_EQ(InferSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusOk);
+  EXPECT_THAT(output_shapes[0], ElementsAre(1, 5, 5, 3));
+}
+
+TEST(SliceOpTest, StridedSliceSimple) {
+  LiteRtOpT op;
+  // Input [2, 3, 4]
+  std::vector<Dims> input_shapes = {
+      {2, 3, 4}, {3}, {3}, {3}};  // Input, Begin, End, Strides
+  std::vector<Dims> output_shapes(1);
+
+  // Setup inputs for begin/end/strides (dummy rank 1 tensors)
+  LiteRtTensorT begin;
+  LiteRtTensorT end;
+  LiteRtTensorT strides;
+  // Set shapes for begin/end/strides to match '3'
+  begin.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {3}));
+
+  op.Inputs().push_back(nullptr);  // Input
+  op.Inputs().push_back(&begin);
+  op.Inputs().push_back(&end);
+  op.Inputs().push_back(&strides);
+
+  auto options = std::make_unique<tflite::StridedSliceOptionsT>();
+  options->begin_mask = 0;
+  options->end_mask = 0;
+  options->ellipsis_mask = 0;
+  options->new_axis_mask = 0;
+  options->shrink_axis_mask = 0;
+
+  TflOptions tfl_options;
+  tfl_options.type = tflite::BuiltinOptions_StridedSliceOptions;
+  tfl_options.value = options.release();
+  SetTflOptions(op, std::move(tfl_options));
+
+  // The simplified logic sets output dims to -1 if not shrink/new_axis.
+  ASSERT_EQ(InferStridedSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusOk);
+
+  // Expect [ -1, -1, -1 ]
+  EXPECT_THAT(output_shapes[0], ElementsAre(-1, -1, -1));
+}
+
+TEST(SliceOpTest, StridedSliceShrinkAxis) {
+  LiteRtOpT op;
+  // Input [2, 3, 4]
+  std::vector<Dims> input_shapes = {{2, 3, 4}, {3}, {3}, {3}};
+  std::vector<Dims> output_shapes(1);
+
+  LiteRtTensorT begin;
+  begin.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {3}));
+
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(&begin);
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(nullptr);
+
+  auto options = std::make_unique<tflite::StridedSliceOptionsT>();
+  options->shrink_axis_mask = 2;  // Shrink axis 1 (bit 1 set: 1<<1 = 2)
+
+  TflOptions tfl_options;
+  tfl_options.type = tflite::BuiltinOptions_StridedSliceOptions;
+  tfl_options.value = options.release();
+  SetTflOptions(op, std::move(tfl_options));
+
+  // Axis 1 removed.
+  // Expect [ -1, -1 ]
+  ASSERT_EQ(InferStridedSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusOk);
+  EXPECT_THAT(output_shapes[0], ElementsAre(-1, -1));
+}
+
+TEST(SliceOpTest, Int64SizeTensorBaseFailure) {
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = {{10}, {1}, {1}};
+  std::vector<Dims> output_shapes(1);
+
+  LiteRtTensorT begin, size;
+  int64_t begin_data[] = {0};
+  int64_t size_data[] = {5};  // INT64 size tensor
+  SetWeightsFromOwnedBuffer(begin.Weights(),
+                            OwningBufferRef<uint8_t>(absl::string_view(
+                                reinterpret_cast<char*>(begin_data), 8)));
+  SetWeightsFromOwnedBuffer(size.Weights(),
+                            OwningBufferRef<uint8_t>(absl::string_view(
+                                reinterpret_cast<char*>(size_data), 8)));
+  begin.SetType(MakeRankedTensorType(kLiteRtElementTypeInt64, {1}));
+  size.SetType(MakeRankedTensorType(kLiteRtElementTypeInt64, {1}));
+
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(&begin);
+  op.Inputs().push_back(&size);
+
+  // Must return `{5}`, but on base commit casts INT64 to int32_t*, reading `{5,
+  // 0}` (`rank = 2`).
+  ASSERT_EQ(InferSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusOk);
+  EXPECT_THAT(output_shapes[0], ElementsAre(5));
+}
+
+TEST(SliceOpTest, RejectsMismatchedBeginAndSizeTypes) {
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = {{10}, {1}, {1}};
+  std::vector<Dims> output_shapes(1);
+
+  LiteRtTensorT begin, size;
+  int32_t begin_data[] = {0};
+  int64_t size_data[] = {5};
+  SetWeightsFromOwnedBuffer(begin.Weights(),
+                            OwningBufferRef<uint8_t>(absl::string_view(
+                                reinterpret_cast<char*>(begin_data), 4)));
+  SetWeightsFromOwnedBuffer(size.Weights(),
+                            OwningBufferRef<uint8_t>(absl::string_view(
+                                reinterpret_cast<char*>(size_data), 8)));
+  begin.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+  size.SetType(MakeRankedTensorType(kLiteRtElementTypeInt64, {1}));
+
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(&begin);
+  op.Inputs().push_back(&size);
+
+  EXPECT_EQ(InferSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusErrorShapeInferenceFailed);
+}
+
+TEST(SliceOpTest, RejectsInvalidBeginType) {
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = {{10}, {1}, {1}};
+  std::vector<Dims> output_shapes(1);
+
+  LiteRtTensorT begin, size;
+  float begin_data[] = {0.0f};
+  int32_t size_data[] = {5};
+  SetWeightsFromOwnedBuffer(begin.Weights(),
+                            OwningBufferRef<uint8_t>(absl::string_view(
+                                reinterpret_cast<char*>(begin_data), 4)));
+  SetWeightsFromOwnedBuffer(size.Weights(),
+                            OwningBufferRef<uint8_t>(absl::string_view(
+                                reinterpret_cast<char*>(size_data), 4)));
+  begin.SetType(MakeRankedTensorType(kLiteRtElementTypeFloat32, {1}));
+  size.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(&begin);
+  op.Inputs().push_back(&size);
+
+  EXPECT_EQ(InferSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusErrorShapeInferenceFailed);
+}
+
+TEST(SliceOpTest, ZeroStrideBaseFailure) {
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = {{10}, {1}, {1}, {1}};
+  std::vector<Dims> output_shapes(1);
+
+  LiteRtTensorT begin, end, strides;
+  int32_t b[] = {0}, e[] = {10}, s[] = {0};  // ZERO STRIDE
+  SetWeightsFromOwnedBuffer(
+      begin.Weights(), OwningBufferRef<uint8_t>(
+                           absl::string_view(reinterpret_cast<char*>(b), 4)));
+  SetWeightsFromOwnedBuffer(
+      end.Weights(), OwningBufferRef<uint8_t>(
+                         absl::string_view(reinterpret_cast<char*>(e), 4)));
+  SetWeightsFromOwnedBuffer(
+      strides.Weights(), OwningBufferRef<uint8_t>(
+                             absl::string_view(reinterpret_cast<char*>(s), 4)));
+  begin.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+  end.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+  strides.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(&begin);
+  op.Inputs().push_back(&end);
+  op.Inputs().push_back(&strides);
+
+  auto options = std::make_unique<tflite::StridedSliceOptionsT>();
+  TflOptions tfl_options;
+  tfl_options.type = tflite::BuiltinOptions_StridedSliceOptions;
+  tfl_options.value = options.release();
+  SetTflOptions(op, std::move(tfl_options));
+
+  // Must reject zero stride, but on base commit returns `kLiteRtStatusOk`
+  // (`{-1}`).
+  EXPECT_EQ(InferStridedSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusErrorInvalidArgument);
+}
+
+TEST(SliceOpTest, EndMaskOverrideBaseFailure) {
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = {{3}, {1}, {1}, {1}};
+  std::vector<Dims> output_shapes(1);
+
+  LiteRtTensorT begin, end, strides;
+  int32_t b[] = {0}, e[] = {0}, s[] = {1};  // end = {0}, end_mask = 1
+  SetWeightsFromOwnedBuffer(
+      begin.Weights(), OwningBufferRef<uint8_t>(
+                           absl::string_view(reinterpret_cast<char*>(b), 4)));
+  SetWeightsFromOwnedBuffer(
+      end.Weights(), OwningBufferRef<uint8_t>(
+                         absl::string_view(reinterpret_cast<char*>(e), 4)));
+  SetWeightsFromOwnedBuffer(
+      strides.Weights(), OwningBufferRef<uint8_t>(
+                             absl::string_view(reinterpret_cast<char*>(s), 4)));
+  begin.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+  end.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+  strides.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(&begin);
+  op.Inputs().push_back(&end);
+  op.Inputs().push_back(&strides);
+
+  auto options = std::make_unique<tflite::StridedSliceOptionsT>();
+  options->end_mask = 1;  // Override stop to dim_size (3)
+  TflOptions tfl_options;
+  tfl_options.type = tflite::BuiltinOptions_StridedSliceOptions;
+  tfl_options.value = options.release();
+  SetTflOptions(op, std::move(tfl_options));
+
+  ASSERT_EQ(InferStridedSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusOk);
+  EXPECT_THAT(output_shapes[0], ElementsAre(3));
+}
+
+TEST(SliceOpTest, NegativeStrideBackwardBaseFailure) {
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = {{3}, {1}, {1}, {1}};
+  std::vector<Dims> output_shapes(1);
+
+  LiteRtTensorT begin, end, strides;
+  int32_t b[] = {2}, e[] = {0},
+          s[] = {-1};  // Slicing from index 2 down past index 0 (end_mask = 1)
+  SetWeightsFromOwnedBuffer(
+      begin.Weights(), OwningBufferRef<uint8_t>(
+                           absl::string_view(reinterpret_cast<char*>(b), 4)));
+  SetWeightsFromOwnedBuffer(
+      end.Weights(), OwningBufferRef<uint8_t>(
+                         absl::string_view(reinterpret_cast<char*>(e), 4)));
+  SetWeightsFromOwnedBuffer(
+      strides.Weights(), OwningBufferRef<uint8_t>(
+                             absl::string_view(reinterpret_cast<char*>(s), 4)));
+  begin.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+  end.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+  strides.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(&begin);
+  op.Inputs().push_back(&end);
+  op.Inputs().push_back(&strides);
+
+  auto options = std::make_unique<tflite::StridedSliceOptionsT>();
+  options->end_mask = 1;  // TFLite requires end_mask = 1 to slice beyond index
+                          // 0 when stride < 0
+  TflOptions tfl_options;
+  tfl_options.type = tflite::BuiltinOptions_StridedSliceOptions;
+  tfl_options.value = options.release();
+  SetTflOptions(op, std::move(tfl_options));
+
+  ASSERT_EQ(InferStridedSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusOk);
+  EXPECT_THAT(output_shapes[0], ElementsAre(3));
+}
+
+class SliceTestShapeInferenceContext : public ShapeInferenceContext {
+ public:
+  explicit SliceTestShapeInferenceContext(
+      std::vector<Dims> input_shapes, TflOptions options = {},
+      std::vector<std::vector<uint8_t>> input_data = {})
+      : input_shapes_(std::move(input_shapes)),
+        options_(std::move(options)),
+        input_data_(std::move(input_data)) {}
+
+  size_t GetNumInputs() const override { return input_shapes_.size(); }
+  size_t GetNumOutputs() const override { return 1; }
+  Dims GetInputShape(size_t index) const override {
+    if (index >= input_shapes_.size()) return {};
+    return input_shapes_[index];
+  }
+  absl::Span<const uint8_t> GetInputData(size_t index) const override {
+    if (index >= input_data_.size()) return {};
+    return absl::MakeConstSpan(input_data_[index]);
+  }
+  LiteRtElementType GetInputElementType(size_t index) const override {
+    if (index == 0) {
+      if (!input_shapes_.empty() && !input_shapes_[0].empty() &&
+          input_shapes_[0][0] > 0 && !input_data_.empty() &&
+          input_data_[0].size() ==
+              static_cast<size_t>(input_shapes_[0][0]) * sizeof(int32_t)) {
+        return kLiteRtElementTypeInt32;
+      }
+      return kLiteRtElementTypeInt64;
+    }
+    return kLiteRtElementTypeInt32;
+  }
+  const TflOptions& GetOptions() const override { return options_; }
+  LiteRtOpCode GetOpCode() const override {
+    return kLiteRtOpCodeTflStridedSlice;
+  }
+  const LiteRtOpT* GetOp() const override { return nullptr; }
+
+ private:
+  std::vector<Dims> input_shapes_;
+  TflOptions options_;
+  std::vector<std::vector<uint8_t>> input_data_;
+};
+
+TEST(SliceOpTest, Int64DataPropagationBaseFailure) {
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = {{3}, {1}, {1}, {1}};
+  std::vector<Dims> output_shapes(1);
+
+  std::vector<int64_t> in_vec = {100, 200, 300};
+  std::vector<uint8_t> in_bytes(in_vec.size() * sizeof(int64_t));
+  std::memcpy(in_bytes.data(), in_vec.data(), in_bytes.size());
+
+  std::vector<int32_t> b = {1}, e = {3}, s = {1};
+  std::vector<uint8_t> bb(4), eb(4), sb(4);
+  std::memcpy(bb.data(), b.data(), 4);
+  std::memcpy(eb.data(), e.data(), 4);
+  std::memcpy(sb.data(), s.data(), 4);
+
+  LiteRtTensorT begin, end, strides;
+  SetWeightsFromOwnedBuffer(begin.Weights(),
+                            OwningBufferRef<uint8_t>(absl::string_view(
+                                reinterpret_cast<char*>(bb.data()), 4)));
+  SetWeightsFromOwnedBuffer(end.Weights(),
+                            OwningBufferRef<uint8_t>(absl::string_view(
+                                reinterpret_cast<char*>(eb.data()), 4)));
+  SetWeightsFromOwnedBuffer(strides.Weights(),
+                            OwningBufferRef<uint8_t>(absl::string_view(
+                                reinterpret_cast<char*>(sb.data()), 4)));
+  begin.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+  end.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+  strides.SetType(MakeRankedTensorType(kLiteRtElementTypeInt32, {1}));
+
+  op.Inputs().push_back(nullptr);
+  op.Inputs().push_back(&begin);
+  op.Inputs().push_back(&end);
+  op.Inputs().push_back(&strides);
+
+  auto options = std::make_unique<tflite::StridedSliceOptionsT>();
+  TflOptions tfl_options;
+  tfl_options.type = tflite::BuiltinOptions_StridedSliceOptions;
+  tfl_options.value = options.release();
+  SetTflOptions(op, std::move(tfl_options));
+
+  ASSERT_EQ(InferStridedSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusOk);
+  // True contract: slicing {3}[1:3:1] produces {2}.
+  // On base commit without fixes (`116`), out_shape is wildcard `{-1}`, so this
+  // naturally FAILS. On HEAD commit with fixes (`117`), out_shape is calculated
+  // as `{2}`, so this naturally PASSES.
+  EXPECT_THAT(output_shapes[0], ElementsAre(2));
+}
+
+TEST(SliceOpTest, ReferenceSliceMultiDimensional) {
+  // 3D tensor of shape [2, 3, 4]
+  std::vector<int32_t> input(2 * 3 * 4);
+  for (int i = 0; i < 24; ++i) {
+    input[i] = i;
+  }
+  const int32_t input_dims[] = {2, 3, 4};
+  const int32_t begins[] = {0, 1, 2};
+  const int32_t output_dims[] = {2, 2, 2};
+  std::vector<int32_t> output(2 * 2 * 2, -1);
+
+  ReferenceSlice(input.data(), input_dims, begins, output_dims, 3,
+                 output.data());
+
+  // Expected coordinates:
+  // (0,1,2)->6,  (0,1,3)->7
+  // (0,2,2)->10, (0,2,3)->11
+  // (1,1,2)->18, (1,1,3)->19
+  // (1,2,2)->22, (1,2,3)->23
+  EXPECT_THAT(output, ElementsAre(6, 7, 10, 11, 18, 19, 22, 23));
+}
+
+TflOptions MakeStridedSliceOptions() {
+  auto options = std::make_unique<tflite::StridedSliceOptionsT>();
+  TflOptions tfl_options;
+  tfl_options.type = tflite::BuiltinOptions_StridedSliceOptions;
+  tfl_options.value = options.release();
+  return tfl_options;
+}
+
+template <typename T>
+std::vector<uint8_t> ToBytes(const std::vector<T>& values) {
+  std::vector<uint8_t> bytes(values.size() * sizeof(T));
+  if (!bytes.empty()) {
+    std::memcpy(bytes.data(), values.data(), bytes.size());
+  }
+  return bytes;
+}
+
+struct SliceErrorCase {
+  std::string test_name;
+  std::vector<Dims> input_shapes;
+  LiteRtElementType index_type;
+  std::vector<uint8_t> begin_bytes;
+  std::vector<uint8_t> size_bytes;
+};
+
+using SliceErrorTest = ::testing::TestWithParam<SliceErrorCase>;
+
+TEST_P(SliceErrorTest, RejectsInvalidDimsAndOverflows) {
+  const auto& param = GetParam();
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = param.input_shapes;
+  std::vector<Dims> output_shapes(1);
+  LiteRtTensorT begin, size;
+  if (!param.begin_bytes.empty()) {
+    SetWeightsFromOwnedBuffer(
+        begin.Weights(), OwningBufferRef<uint8_t>(param.begin_bytes.data(),
+                                                  param.begin_bytes.size()));
+  }
+  if (!param.size_bytes.empty()) {
+    SetWeightsFromOwnedBuffer(
+        size.Weights(), OwningBufferRef<uint8_t>(param.size_bytes.data(),
+                                                 param.size_bytes.size()));
+  }
+  begin.SetType(MakeRankedTensorType(param.index_type, {1}));
+  size.SetType(MakeRankedTensorType(param.index_type, {1}));
+  op.Inputs() = {nullptr, &begin, &size};
+  EXPECT_EQ(InferSlice(op, absl::MakeSpan(input_shapes), output_shapes),
+            kLiteRtStatusErrorShapeInferenceFailed);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    SliceErrorTests, SliceErrorTest,
+    ::testing::Values(
+        SliceErrorCase{
+            "Int64SizeExceedingInt32Max",
+            {{10}, {1}, {1}},
+            kLiteRtElementTypeInt64,
+            ToBytes<int64_t>({0}),
+            ToBytes<int64_t>(
+                {static_cast<int64_t>(std::numeric_limits<int32_t>::max()) +
+                 1}),
+        },
+        SliceErrorCase{
+            "NegativeInputDimWithDynamicBegin",
+            {{-2}, {1}, {1}},
+            kLiteRtElementTypeInt32,
+            {},
+            ToBytes<int32_t>({1}),
+        }),
+    [](const ::testing::TestParamInfo<SliceErrorCase>& info) {
+      return info.param.test_name;
+    });
+
+struct StridedSliceErrorCase {
+  std::string test_name;
+  std::vector<Dims> input_shapes;
+};
+
+using StridedSliceErrorTest = ::testing::TestWithParam<StridedSliceErrorCase>;
+
+TEST_P(StridedSliceErrorTest, RejectsInvalidDimsAndMaskShiftOverflow) {
+  SliceTestShapeInferenceContext ctx(GetParam().input_shapes,
+                                     MakeStridedSliceOptions());
+  InferenceResult result;
+  EXPECT_EQ(InferStridedSlice(ctx, result),
+            kLiteRtStatusErrorShapeInferenceFailed);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    StridedSliceErrorTests, StridedSliceErrorTest,
+    ::testing::Values(StridedSliceErrorCase{"ProcessingDimsMaskShiftOverflow",
+                                            {{2, 3}, {31}, {31}, {31}}},
+                      StridedSliceErrorCase{"NegativeInputDimension",
+                                            {{-2, 3}, {2}, {2}, {2}}}),
+    [](const ::testing::TestParamInfo<StridedSliceErrorCase>& info) {
+      return info.param.test_name;
+    });
+
+struct StridedSlicePropagationCase {
+  std::string test_name;
+  std::vector<uint8_t> input_bytes;
+  size_t expected_output_bytes;
+};
+
+using StridedSlicePropagationTest =
+    ::testing::TestWithParam<StridedSlicePropagationCase>;
+
+TEST_P(StridedSlicePropagationTest, Propagates1DConstantData) {
+  const auto& param = GetParam();
+  SliceTestShapeInferenceContext ctx(
+      {{3}, {1}, {1}, {1}}, MakeStridedSliceOptions(),
+      {param.input_bytes, ToBytes<int32_t>({-2}), ToBytes<int32_t>({3}),
+       ToBytes<int32_t>({1})});
+  InferenceResult result;
+  ASSERT_EQ(InferStridedSlice(ctx, result), kLiteRtStatusOk);
+  EXPECT_THAT(result.output_shapes[0], ElementsAre(2));
+  ASSERT_TRUE(result.propagated_data.find(0) != result.propagated_data.end());
+  EXPECT_EQ(result.propagated_data[0].size(), param.expected_output_bytes);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    StridedSlicePropagationTests, StridedSlicePropagationTest,
+    ::testing::Values(StridedSlicePropagationCase{"Int64ConstantData",
+                                                  ToBytes<int64_t>({100, 200,
+                                                                    300}),
+                                                  2 * sizeof(int64_t)},
+                      StridedSlicePropagationCase{
+                          "Int32ConstantData", ToBytes<int32_t>({10, 20, 30}),
+                          2 * sizeof(int32_t)}),
+    [](const ::testing::TestParamInfo<StridedSlicePropagationCase>& info) {
+      return info.param.test_name;
+    });
+
+TEST(SliceOpTest, DynamicUpdateSliceRejectsEmptyOutputs) {
+  LiteRtOpT op;
+  std::vector<Dims> input_shapes = {{1, 10}, {1, 2}, {2}};
+  std::vector<Dims> empty_outputs;
+  EXPECT_EQ(
+      InferDynamicUpdateSlice(op, absl::MakeSpan(input_shapes), empty_outputs),
+      kLiteRtStatusErrorShapeInferenceFailed);
+}
+
+}  // namespace
+}  // namespace litert::internal

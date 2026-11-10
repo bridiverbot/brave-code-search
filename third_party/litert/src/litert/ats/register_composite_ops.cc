@@ -1,0 +1,65 @@
+// Copyright 2026 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "litert/ats/register_composite_ops.h"
+
+#include <cstddef>
+
+#include "litert/ats/compile_fixture.h"
+#include "litert/ats/configure.h"
+#include "litert/ats/inference_fixture.h"
+#include "litert/ats/register_cache_update_sdpa_transposed.h"
+#include "litert/ats/register_group_norm.h"
+#include "litert/ats/register_layer_norm.h"
+#include "litert/ats/register_moe_experts.h"
+#include "litert/ats/register_qkv_norm_rope.h"
+#include "litert/ats/register_rms_norm.h"
+#include "litert/ats/register_runtime_bmm.h"
+#include "litert/ats/register_sdpa.h"
+#include "litert/ats/register_sdpa_transposed.h"
+#include "litert/ats/register_swiglu.h"
+
+namespace litert::testing {
+namespace {
+
+constexpr size_t kDefaultIters = 16;
+
+template <typename Fixture>
+void RegisterCompositeOpsImpl(const AtsConf& options, size_t& test_id,
+                              typename Fixture::Capture& cap) {
+  RegisterCacheUpdateSdpaTransposed(options, test_id, kDefaultIters, cap);
+  RegisterGroupNorm(options, test_id, kDefaultIters, cap);
+  RegisterLayerNorm(options, test_id, kDefaultIters, cap);
+  RegisterMoeExperts(options, test_id, kDefaultIters, cap);
+  RegisterQkvNormRope(options, test_id, kDefaultIters, cap);
+  RegisterRmsNorm(options, test_id, kDefaultIters, cap);
+  RegisterRuntimeBmm(options, test_id, kDefaultIters, cap);
+  RegisterSdpa(options, test_id, /*iters=*/20, cap);
+  RegisterSdpaTransposed(options, test_id, kDefaultIters, cap);
+  RegisterSwiglu(options, test_id, kDefaultIters, cap);
+}
+
+}  // namespace
+
+void RegisterCompositeOps(const AtsConf& options, size_t& test_id,
+                          AtsInferenceTest::Capture& cap) {
+  RegisterCompositeOpsImpl<AtsInferenceTest>(options, test_id, cap);
+}
+
+void RegisterCompositeOps(const AtsConf& options, size_t& test_id,
+                          AtsCompileTest::Capture& cap) {
+  RegisterCompositeOpsImpl<AtsCompileTest>(options, test_id, cap);
+}
+
+}  // namespace litert::testing
