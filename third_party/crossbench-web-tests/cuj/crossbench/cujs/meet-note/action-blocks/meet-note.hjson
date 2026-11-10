@@ -1,0 +1,52 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+{
+  template: ../../../common-action-blocks/meet/meet-note-template.hjson
+  args: {
+    MEETING_SETUP_ACTIONS: [
+      // Switch to Meet to have the bot present
+      {
+        action: switch_tab
+        url: https://meet.google.com
+        timeout: 15s
+      }
+      {
+        action: wait
+        duration: 2s
+      }
+      {
+        action: meet_script
+        script: @b1 start_presenting
+      }
+      {
+        action: wait
+        duration: 2s
+      }
+      // Switch back to Docs to take notes
+      {
+        action: switch_tab
+        url: https://docs.google.com/document
+        timeout: 15s
+      }
+      {
+        action: wait
+        duration: 2s
+      }
+      {
+        action: click
+        position: {
+          selector: div.kix-page-paginated.canvas-first-page
+          required: true
+          wait: true
+        }
+        source: touch
+        timeout: 10s
+      }
+    ]
+  }
+  unbound_args: [
+    NUM_BOTS
+    BACKGROUND_BLUR
+  ]
+}
