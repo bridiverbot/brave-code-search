@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2013 The Chromium Authors. All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+-->
+
+<link rel="import" href="/tracing/base/base.html">
+<link rel="import" href="/tracing/base/base64.html">
+<link rel="import" href="/tracing/ui/extras/about_tracing/profiling_view.html">
+
+<script>
+'use strict';
+
+// See https://crbug.com/1143376.
+tr.b.unittest.skippedTestSuite(function() {
+  const ProfilingView = tr.ui.e.about_tracing.ProfilingView;
+
+  test('protobufTraceDetection', function() {
+    const protobufTrace = new Uint8Array([
+      // Arbitrary data.
+      0xda, 0xda, 0xca, 0xfe,
+      // Sync marker.
+      0x82, 0x47, 0x7a, 0x76, 0xb2, 0x8d, 0x42, 0xba, 0x81, 0xdc, 0x33, 0x32,
+      0x6d, 0x57, 0xa0, 0x79,
+      // More data
+      0x0b, 0x0a, 0x0d, 0x0c, 0x00, 0x0d, 0x0e]);
+    const view = new ProfilingView(null);
+    view.setActiveTrace('trace.json', protobufTrace);
+    assert.strictEqual('trace.pftrace', view.activeTrace_.filename);
+  });
+});
+</script>
+
