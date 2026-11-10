@@ -1,0 +1,494 @@
+// Copyright (C) 2019 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import m from 'mithril';
+import {Time} from '../base/time';
+import {showModal} from '../widgets/modal';
+import {initCssConstants} from './css_constants';
+import {toggleHelp} from './help_modal';
+import {AppImpl} from '../core/app_impl';
+import type {SerializedAppState} from '../core/state_serialization_schema';
+import {parseAppState} from '../core/state_serialization';
+import {BUCKET_NAME, isValidGcsFileName} from '../base/gcs_uploader';
+import {toArrayBuffer} from '../base/utils';
+import {TraceReadableStream} from '../core/trace_stream';
+
+const TRUSTED_ORIGINS_KEY = 'trustedOrigins';
+
+interface PostedTraceBase {
+  title: string;
+
+  // The hash of the app state to load from GCS after the trace is loaded
+  appStateHash?: string;
+
+  keepApiOpen?: boolean;
+}
+
+// A trace posted as a single in-memory buffer.
+export interface PostedBufferTrace extends PostedTraceBase {
+  kind: 'buffer';
+  buffer: ArrayBuffer;
+  fileName?: string;
+  url?: string;
+
+  // Whether the UI may share the trace externally (e.g. upload it to GCS
+  // as a permalink) and/or download it to disk. Both default to false:
+  // traces pushed via postMessage are local-only unless the sender opts in.
+  shareable?: boolean;
+  downloadable?: boolean;
+
+  // Allows to pass extra arguments to plugins. This can be read by plugins
+  // onTraceLoad() and can be used to trigger plugin-specific-behaviours (e.g.
+  // allow dashboards like APC to pass extra data to materialize onto tracks).
+  // The format is the following:
+  // pluginArgs: {
+  //   'dev.perfetto.PluginFoo': { 'key1': 'value1', 'key2': 1234 }
+  //   'dev.perfetto.PluginBar': { 'key3': '...', 'key4': ... }
+  // }
+  pluginArgs?: {[pluginId: string]: {[key: string]: unknown}};
+}
+
+// A trace posted as a transferred ReadableStream. The stream is consumed while
+// loading and not retained, so it can't be shared, downloaded or cached.
+export interface PostedStreamTrace extends PostedTraceBase {
+  kind: 'stream';
+  stream: ReadableStream<unknown>;
+
+  // Total size of the stream for progress reporting; 0 means unknown.
+  bytesTotal: number;
+}
+
+export type PostedTrace = PostedBufferTrace | PostedStreamTrace;
+
+// The raw, un-sanitized trace as received over postMessage(). Nothing here can
+// be trusted: sanitizePostedTrace() validates it and converts it to a
+// PostedTrace.
+interface RawPostedTrace {
+  title: string;
+  appStateHash?: string;
+  keepApiOpen?: boolean;
+
+  // Exactly one of |buffer| and |stream| must be set. Senders routinely pass a
+  // view (e.g. Uint8Array) for |buffer|, so accept either.
+  buffer?: ArrayBuffer | ArrayBufferView;
+  stream?: ReadableStream<unknown>;
+  bytesTotal?: number;
+
+  fileName?: string;
+  url?: string;
+  shareable?: boolean;
+  downloadable?: boolean;
+  pluginArgs?: {[pluginId: string]: {[key: string]: unknown}};
+
+  // Legacy field: senders that predate the shareable/downloadable split may
+  // still pass |localOnly|. localOnly: false opts into both sharing and
+  // downloading; anything else (or absent) keeps the trace local-only.
+  // Translated in sanitizePostedTrace().
+  localOnly?: boolean;
+}
+
+interface PostedTraceWrapped {
+  perfetto: RawPostedTrace;
+}
+
+interface PostedScrollToRangeWrapped {
+  perfetto: PostedScrollToRange;
+}
+
+interface PostedScrollToRange {
+  timeStart: number;
+  timeEnd: number;
+  viewPercentage?: number;
+}
+
+// Returns whether incoming traces should be opened automatically or should
+// instead require a user interaction.
+export function isTrustedOrigin(origin: string): boolean {
+  const TRUSTED_ORIGINS = [
+    'https://chrometto.googleplex.com',
+    'https://uma.googleplex.com',
+    'https://android-build.googleplex.com',
+  ];
+  if (origin === window.origin) return true;
+  if (origin === 'null') return false;
+  if (TRUSTED_ORIGINS.includes(origin)) return true;
+  if (isUserTrustedOrigin(origin)) return true;
+
+  const hostname = new URL(origin).hostname;
+  if (hostname.endsWith('.corp.google.com')) return true;
+  if (hostname.endsWith('.c.googlers.com')) return true;
+  if (hostname.endsWith('.proxy.googlers.com')) return true;
+  if (
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname === '[::1]'
+  ) {
+    return true;
+  }
+  return false;
+}
+
+// Returns whether the user saved this as an always-trusted origin.
+function isUserTrustedOrigin(hostname: string): boolean {
+  const trustedOrigins = window.localStorage.getItem(TRUSTED_ORIGINS_KEY);
+  if (trustedOrigins === null) return false;
+  try {
+    return JSON.parse(trustedOrigins).includes(hostname);
+  } catch {
+    return false;
+  }
+}
+
+// Saves the given hostname as a trusted origin.
+// This is used for user convenience: if it fails for any reason, it's not a
+// big deal.
+function saveUserTrustedOrigin(hostname: string) {
+  const s = window.localStorage.getItem(TRUSTED_ORIGINS_KEY);
+  let origins: string[];
+  try {
+    origins = JSON.parse(s ?? '[]');
+    if (origins.includes(hostname)) return;
+    origins.push(hostname);
+    window.localStorage.setItem(TRUSTED_ORIGINS_KEY, JSON.stringify(origins));
+  } catch (e) {
+    console.warn('unable to save trusted origins to localStorage', e);
+  }
+}
+
+// Returns whether we should ignore a given message based on the value of
+// the 'perfettoIgnore' field in the event data.
+function shouldGracefullyIgnoreMessage(messageEvent: MessageEvent) {
+  return messageEvent.data.perfettoIgnore === true;
+}
+
+export function parsePostedTrace(
+  data: MessageEvent['data'],
+): PostedTrace | undefined {
+  if (isPostedTraceWrapped(data)) {
+    return sanitizePostedTrace(data.perfetto);
+  } else if (data instanceof ArrayBuffer || ArrayBuffer.isView(data)) {
+    return {
+      kind: 'buffer',
+      title: 'External trace',
+      // A bare buffer gives the sender no way to opt into sharing or
+      // downloading, so both default to false (matching the wrapped path).
+      shareable: false,
+      downloadable: false,
+      buffer: toArrayBuffer(data),
+    };
+  } else {
+    return undefined;
+  }
+}
+
+// The message handler supports loading traces from an ArrayBuffer or a
+// transferred ReadableStream. A bare ArrayBuffer can be sent as the |data|
+// property. However, since this will happen across different origins, it is not
+// possible for the source website to inspect whether the message handler is
+// ready, so the message handler always replies to a 'PING' message with 'PONG',
+// which indicates it is ready to receive a trace.
+export function postMessageHandler(messageEvent: MessageEvent) {
+  if (shouldGracefullyIgnoreMessage(messageEvent)) {
+    // This message should not be handled in this handler,
+    // because it will be handled elsewhere.
+    return;
+  }
+
+  if (messageEvent.origin === 'https://tagassistant.google.com') {
+    // The GA debugger, does a window.open() and sends messages to the GA
+    // script. Ignore them.
+    return;
+  }
+
+  if (document.readyState !== 'complete') {
+    console.error('Ignoring message - document not ready yet.');
+    return;
+  }
+
+  const fromOpener = messageEvent.source === window.opener;
+  const fromIframeHost = messageEvent.source === window.parent;
+  // This adds support for the folowing flow:
+  // * A (page that whats to open a trace in perfetto) opens B
+  // * B (does something to get the traceBuffer)
+  // * A is navigated to Perfetto UI
+  // * B sends the traceBuffer to A
+  // * closes itself
+  const fromOpenee = (messageEvent.source as WindowProxy).opener === window;
+
+  if (
+    messageEvent.source === null ||
+    !(fromOpener || fromIframeHost || fromOpenee)
+  ) {
+    // This can happen if an extension tries to postMessage.
+    return;
+  }
+
+  if (!('data' in messageEvent)) {
+    throw new Error('Incoming message has no data property');
+  }
+
+  if (messageEvent.data === 'PING') {
+    // Cross-origin messaging means we can't read |messageEvent.source|, but
+    // it still needs to be of the correct type to be able to invoke the
+    // correct version of postMessage(...).
+    const windowSource = messageEvent.source as Window;
+
+    // Use '*' for the reply because in cases of cross-domain isolation, we
+    // see the messageEvent.origin as 'null'. PONG doen't disclose any
+    // interesting information, so there is no harm sending that to the wrong
+    // origin in the worst case.
+    windowSource.postMessage('PONG', '*');
+    return;
+  }
+
+  if (messageEvent.data === 'SHOW-HELP') {
+    toggleHelp();
+    return;
+  }
+
+  if (messageEvent.data === 'RELOAD-CSS-CONSTANTS') {
+    initCssConstants();
+    return;
+  }
+
+  let postedScrollToRange: PostedScrollToRange;
+  if (isPostedScrollToRange(messageEvent.data)) {
+    postedScrollToRange = messageEvent.data.perfetto;
+    scrollToTimeRange(postedScrollToRange);
+    return;
+  }
+
+  const postedTrace = parsePostedTrace(messageEvent.data);
+  if (!postedTrace) {
+    console.warn(
+      'Unknown postMessage() event received. If you are trying to open a ' +
+        'trace via postMessage(), this is a bug in your code. If not, this ' +
+        'could be due to some Chrome extension.',
+    );
+    console.log('origin:', messageEvent.origin, 'data:', messageEvent.data);
+    return;
+  }
+
+  if (postedTrace.kind === 'buffer' && postedTrace.buffer.byteLength === 0) {
+    throw new Error('Incoming message trace buffer is empty');
+  }
+
+  if (!postedTrace.keepApiOpen) {
+    /* Removing this event listener to avoid callers posting the trace multiple
+     * times. If the callers add an event listener which upon receiving 'PONG'
+     * posts the trace to ui.perfetto.dev, the callers can receive multiple
+     * 'PONG' messages and accidentally post the trace multiple times. This was
+     * part of the cause of b/182502595.
+     */
+    window.removeEventListener('message', postMessageHandler);
+  }
+
+  const openTrace = async () => {
+    // Maybe load the app state from the URL.
+    let appState: SerializedAppState | undefined;
+    if (postedTrace.appStateHash) {
+      if (!isValidGcsFileName(postedTrace.appStateHash)) {
+        throw new Error(
+          `Invalid appStateHash: ${postedTrace.appStateHash}. ` +
+            `Expected a 40-char hex hash.`,
+        );
+      }
+      const url = `https://storage.googleapis.com/${BUCKET_NAME}/${postedTrace.appStateHash}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch app state from ${url}: ` +
+            `${response.status} ${response.statusText}`,
+        );
+      }
+      const json = (await response.json()).appState;
+      const parsedState = parseAppState(json);
+      if (parsedState.ok) {
+        appState = parsedState.value;
+      }
+    }
+    switch (postedTrace.kind) {
+      case 'buffer':
+        AppImpl.instance.openTraceFromBuffer(postedTrace, appState);
+        break;
+      case 'stream':
+        AppImpl.instance.openTraceFromStream(
+          new TraceReadableStream(postedTrace.stream, postedTrace.bytesTotal),
+          postedTrace.title,
+          appState,
+        );
+        break;
+    }
+  };
+
+  const trustAndOpenTrace = () => {
+    saveUserTrustedOrigin(messageEvent.origin);
+    openTrace();
+  };
+
+  // If the origin is trusted open the trace directly.
+  if (isTrustedOrigin(messageEvent.origin)) {
+    openTrace();
+    return;
+  }
+
+  // If not ask the user if they expect this and trust the origin.
+  let originTxt = messageEvent.origin;
+  let originUnknown = false;
+  if (originTxt === 'null') {
+    originTxt = 'An unknown origin';
+    originUnknown = true;
+  }
+  showModal({
+    title: 'Open trace?',
+    content: m(
+      'div',
+      m('div', `${originTxt} is trying to open a trace file.`),
+      m('div', 'Do you trust the origin and want to proceed?'),
+    ),
+    buttons: [
+      {text: 'No', primary: true},
+      {
+        text: 'Yes',
+        primary: false,
+        action: () => {
+          openTrace();
+        },
+      },
+    ].concat(
+      originUnknown
+        ? []
+        : {text: 'Always trust', primary: false, action: trustAndOpenTrace},
+    ),
+  });
+}
+
+// Validates and normalizes a trace received over postMessage(). Returns
+// undefined unless exactly one of |buffer| and |stream| is valid.
+function sanitizePostedTrace(
+  postedTrace: RawPostedTrace,
+): PostedTrace | undefined {
+  const {buffer, stream} = postedTrace;
+  const base: PostedTraceBase = {
+    title: sanitizeString(postedTrace.title),
+    appStateHash: postedTrace.appStateHash,
+    keepApiOpen: postedTrace.keepApiOpen,
+  };
+
+  if (stream instanceof ReadableStream && buffer === undefined) {
+    return {
+      ...base,
+      kind: 'stream',
+      stream,
+      bytesTotal: sanitizeBytesTotal(postedTrace.bytesTotal),
+    };
+  }
+
+  // Anything other than an ArrayBuffer or a view (string, number, etc.) is
+  // rejected rather than slipping through and being treated as an ArrayBuffer
+  // downstream.
+  const isBinary = buffer instanceof ArrayBuffer || ArrayBuffer.isView(buffer);
+  if (!isBinary || stream !== undefined) {
+    return undefined;
+  }
+
+  // Translate the legacy |localOnly| field. Absent localOnly defaults to true
+  // (local-only); localOnly: false opts into both sharing and downloading.
+  // Explicit shareable/downloadable fields win over the legacy field.
+  const localOnly = postedTrace.localOnly ?? true;
+  const result: PostedBufferTrace = {
+    ...base,
+    kind: 'buffer',
+    // Senders routinely pass a view (e.g. Uint8Array) despite the static type;
+    // normalize to a pure ArrayBuffer at the boundary. See b/390473162.
+    buffer: toArrayBuffer(buffer),
+    // For external traces, we need to disable other features such as
+    // downloading and sharing a trace, unless the caller allows it.
+    shareable: postedTrace.shareable ?? !localOnly,
+    downloadable: postedTrace.downloadable ?? !localOnly,
+    pluginArgs: postedTrace.pluginArgs,
+  };
+  if (postedTrace.fileName !== undefined) {
+    result.fileName = sanitizeString(postedTrace.fileName);
+  }
+  if (postedTrace.url !== undefined) {
+    result.url = sanitizeString(postedTrace.url);
+  }
+  return result;
+}
+
+// Returns the stream size for progress reporting, or 0 if it is unknown or
+// invalid.
+function sanitizeBytesTotal(bytesTotal: unknown): number {
+  if (typeof bytesTotal !== 'number' || !Number.isFinite(bytesTotal)) {
+    return 0;
+  }
+  return Math.max(0, Math.floor(bytesTotal));
+}
+
+function sanitizeString(str: string): string {
+  return str.replace(/[^A-Za-z0-9.\-_#:/?=&;%+$ ]/g, ' ');
+}
+
+const _maxScrollToRangeAttempts = 20;
+async function scrollToTimeRange(
+  postedScrollToRange: PostedScrollToRange,
+  maxAttempts?: number,
+) {
+  const app = AppImpl.instance;
+  const trace = app.trace;
+  if (trace && !app.isLoadingTrace) {
+    const start = Time.fromSeconds(postedScrollToRange.timeStart);
+    const end = Time.fromSeconds(postedScrollToRange.timeEnd);
+    const behavior =
+      postedScrollToRange.viewPercentage !== undefined
+        ? {viewPercentage: postedScrollToRange.viewPercentage}
+        : undefined;
+    trace.scrollTo({
+      time: {start, end, behavior},
+    });
+  } else {
+    if (maxAttempts === undefined) {
+      maxAttempts = 0;
+    }
+    if (maxAttempts > _maxScrollToRangeAttempts) {
+      console.warn('Could not scroll to time range. Trace viewer not ready.');
+      return;
+    }
+    setTimeout(scrollToTimeRange, 200, postedScrollToRange, maxAttempts + 1);
+  }
+}
+
+function isPostedScrollToRange(
+  obj: unknown,
+): obj is PostedScrollToRangeWrapped {
+  const wrapped = obj as PostedScrollToRangeWrapped;
+  if (wrapped.perfetto === undefined) {
+    return false;
+  }
+  return (
+    wrapped.perfetto.timeStart !== undefined ||
+    wrapped.perfetto.timeEnd !== undefined
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isPostedTraceWrapped(obj: any): obj is PostedTraceWrapped {
+  const wrapped = obj as PostedTraceWrapped;
+  if (wrapped.perfetto === undefined) {
+    return false;
+  }
+  // The trace payload itself is validated by sanitizePostedTrace().
+  return typeof wrapped.perfetto.title === 'string';
+}

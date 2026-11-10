@@ -1,0 +1,71 @@
+// Copyright (C) 2025 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import {test, type Page} from '@playwright/test';
+import {PerfettoTestHelper} from './perfetto_ui_test_helper';
+
+let pth: PerfettoTestHelper;
+let page: Page;
+
+test.beforeAll(async ({browser}, _testInfo) => {
+  page = await browser.newPage();
+  pth = new PerfettoTestHelper(page);
+  await pth.openTraceFile('perf_sample_multicallstacks.pftrace');
+});
+
+test('perf_event', async () => {
+  test.setTimeout(2 * 60_000);
+
+  await pth.step('multiple callstack tracks', async () => {
+    const grp = pth.locateTrack('surfaceflinger 558');
+    await grp.scrollIntoViewIfNeeded();
+    await pth.expandTrackGroup(grp);
+
+    await pth.waitForIdleAndScreenshot('perf_event_sf.png', {
+      locator: page.locator('.pf-timeline-page__timeline'),
+    });
+
+    const processGrp = pth.locateTrack(
+      'surfaceflinger 558/Process Callstacks',
+      grp,
+    );
+    await processGrp.scrollIntoViewIfNeeded();
+    await pth.expandTrackGroup(processGrp);
+    const threadGrp = pth.locateTrack(
+      'surfaceflinger 558/Thread 558 Callstacks',
+      grp,
+    );
+    await threadGrp.scrollIntoViewIfNeeded();
+    await pth.expandTrackGroup(threadGrp);
+
+    await pth.waitForIdleAndScreenshot('perf_event_sf_expanded.png', {
+      locator: page.locator('.pf-timeline-page__timeline'),
+    });
+  });
+
+  await pth.step('flamechart mapping colors', async () => {
+    const grp = pth.locateTrack('surfaceflinger 558');
+    const flamechart = grp
+      .locator('.pf-track[ref$="/Callstack flamechart"]')
+      .first();
+    await flamechart.scrollIntoViewIfNeeded();
+    await flamechart.locator('.pf-track__shell').first().hover();
+    await flamechart.getByTitle('Track options', {exact: true}).click();
+    await page.getByText('Color by', {exact: true}).click();
+    await page.getByText('Mapping', {exact: true}).click();
+    await pth.waitForIdleAndScreenshot('flamechart_mapping_colors.png', {
+      locator: page.locator('.pf-timeline-page__timeline'),
+    });
+  });
+});

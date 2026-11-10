@@ -1,0 +1,366 @@
+// Copyright (C) 2026 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import m from 'mithril';
+import {AsyncMemo} from '../../base/async_memo';
+import {Time} from '../../base/time';
+import {Spinner} from '../../widgets/spinner';
+import {Button, ButtonVariant} from '../../widgets/button';
+import {MenuItem, PopupMenu} from '../../widgets/menu';
+import {Tabs} from '../../widgets/tabs';
+import type {TabsTab} from '../../widgets/tabs';
+import {formatDuration} from '../../components/time_utils';
+import type {NavState, NavView} from './nav_state';
+import type {HeapDump} from './types';
+import {OverviewView} from './views/overview_view';
+import {DominatorsView} from './views/dominators_view';
+import {ObjectView} from './views/object_view';
+import {AllObjectsView} from './views/all_objects_view';
+import {BitmapGalleryView} from './views/bitmap_gallery_view';
+import {ClassesView} from './views/classes_view';
+import {StringsView} from './views/strings_view';
+import {ArraysView} from './views/arrays_view';
+import {FlamegraphObjectsView} from './views/flamegraph_objects_view';
+import {FlamegraphView} from './views/flamegraph_view';
+import {CallstackView} from './views/callstack_view';
+import type {HeapDumpExplorerSession} from './session';
+import * as queries from './queries';
+
+interface HeapDumpPageAttrs {
+  readonly session: HeapDumpExplorerSession;
+  readonly subpage: string | undefined;
+}
+
+const FG_KEY_PREFIX = 'fg-';
+const INSTANCE_KEY_PREFIX = 'inst-';
+
+function fgTabKey(pathHashes: string, isDominator: boolean): string {
+  return `${FG_KEY_PREFIX}${isDominator ? 'd' : 'n'}:${pathHashes}`;
+}
+
+function instanceTabKey(objId: number): string {
+  return `${INSTANCE_KEY_PREFIX}${objId}`;
+}
+
+function activeTabKey(session: HeapDumpExplorerSession): string {
+  const tabs = session.flamegraphTabs;
+  if (session.nav.view === 'flamegraph-objects' && tabs.length > 0) {
+    const active = session.activeFlamegraph;
+    const tab =
+      (active &&
+        tabs.find(
+          (t) =>
+            t.pathHashes === active.pathHashes &&
+            t.isDominator === active.isDominator,
+        )) ||
+      tabs[tabs.length - 1]!;
+    return fgTabKey(tab.pathHashes, tab.isDominator);
+  }
+  const objId = session.activeInstanceObjId;
+  if (objId !== null) {
+    return instanceTabKey(objId);
+  }
+  return session.nav.view;
+}
+
+// Per-tab select/close actions, looked up by key.
+interface TabActions {
+  select(): void;
+  close?(): void;
+}
+
+function buildTabs(
+  session: HeapDumpExplorerSession,
+  activeDump: HeapDump,
+  state: NavState,
+  potentiallyMergedClasses: ReadonlySet<string>,
+): {tabs: TabsTab[]; actions: Map<string, TabActions>} {
+  const {engine, trace} = session;
+  const navigateWithTabs = session.navigateWithTabs.bind(session);
+  const clearNavParam = session.clearNavParam.bind(session);
+  const hideExplanationSetting = session.hideDefaultChangedHint;
+  const hideHint = hideExplanationSetting.get();
+  const actions = new Map<string, TabActions>();
+
+  const tabs: TabsTab[] = [
+    {
+      key: 'overview',
+      title: 'Overview',
+      content: m(OverviewView, {
+        engine,
+        activeDump,
+        hasFieldValues: session.hasFieldValues,
+        navigate: navigateWithTabs,
+        showDefaultChangedHint: session.autoNavigated && !hideHint,
+        onBackToTimeline: () => trace.navigate('#!/viewer'),
+        onDismissDefaultChangedHint: () => hideExplanationSetting.set(true),
+      }),
+    },
+    {
+      key: 'flamegraph',
+      title: 'Flamegraph',
+      content: m(FlamegraphView, {
+        trace,
+        upid: activeDump.upid,
+        ts: activeDump.ts,
+        state: session.flamegraphPanelState,
+        onStateChange: session.setFlamegraphPanelState.bind(session),
+        onShowObjects: (pathHashes, isDominator) =>
+          session.openFlamegraph({
+            pathHashes,
+            isDominator,
+            upid: activeDump.upid,
+            ts: activeDump.ts,
+          }),
+      }),
+    },
+    {
+      key: 'classes',
+      title: 'Classes',
+      content: m(ClassesView, {
+        engine,
+        activeDump,
+        navigate: navigateWithTabs,
+        clearNavParam,
+        potentiallyMergedClasses,
+        initialRootClass:
+          state.view === 'classes' ? state.params.rootClass : undefined,
+      }),
+    },
+    {
+      key: 'objects',
+      title: 'Objects',
+      content: m(AllObjectsView, {
+        engine,
+        activeDump,
+        navigate: navigateWithTabs,
+        clearNavParam,
+        potentiallyMergedClasses,
+        initialClass: state.view === 'objects' ? state.params.cls : undefined,
+      }),
+    },
+    {
+      key: 'dominators',
+      title: 'Dominators',
+      content: m(DominatorsView, {
+        engine,
+        activeDump,
+        navigate: navigateWithTabs,
+        potentiallyMergedClasses,
+      }),
+    },
+    {
+      key: 'bitmaps',
+      title: 'Bitmaps',
+      content: m(BitmapGalleryView, {
+        engine,
+        activeDump,
+        navigate: navigateWithTabs,
+        clearNavParam,
+        hasFieldValues: session.hasFieldValues,
+        filterKey:
+          state.view === 'bitmaps' ? state.params.filterKey : undefined,
+      }),
+    },
+    {
+      key: 'strings',
+      title: 'Strings',
+      content: m(StringsView, {
+        engine,
+        activeDump,
+        navigate: navigateWithTabs,
+        clearNavParam,
+        initialQuery: state.view === 'strings' ? state.params.q : undefined,
+        hasFieldValues: session.hasFieldValues,
+      }),
+    },
+    {
+      key: 'arrays',
+      title: 'Arrays',
+      content: m(ArraysView, {
+        engine,
+        activeDump,
+        navigate: navigateWithTabs,
+        clearNavParam,
+        initialArrayHash:
+          state.view === 'arrays' ? state.params.arrayHash : undefined,
+        hasFieldValues: session.hasFieldValues,
+      }),
+    },
+    {
+      key: 'callstack',
+      title: 'Callstack',
+      content: m(CallstackView, {
+        trace,
+        dump: activeDump,
+        state: session.callstackPanelState,
+        onStateChange: session.setCallstackPanelState.bind(session),
+      }),
+    },
+  ];
+
+  // Static tab keys are view names.
+  for (const tab of tabs) {
+    actions.set(tab.key, {select: () => session.navigate(tab.key as NavView)});
+  }
+
+  for (const fg of session.flamegraphTabs) {
+    const key = fgTabKey(fg.pathHashes, fg.isDominator);
+    const title =
+      fg.count !== null
+        ? `Flamegraph objects (${fg.count.toLocaleString()})`
+        : 'Flamegraph objects';
+    tabs.push({
+      key,
+      title,
+      closeButton: true,
+      content: m(FlamegraphObjectsView, {
+        engine,
+        navigate: navigateWithTabs,
+        potentiallyMergedClasses,
+        pathHashes: fg.pathHashes,
+        isDominator: fg.isDominator,
+        onBackToTimeline: () => trace.navigate('#!/viewer'),
+      }),
+    });
+    actions.set(key, {
+      select: () =>
+        session.navigate('flamegraph-objects', {
+          pathHashes: fg.pathHashes,
+          isDominator: fg.isDominator,
+        }),
+      close: () => session.closeFlamegraph(fg.pathHashes, fg.isDominator),
+    });
+  }
+
+  for (const obj of session.instanceTabs) {
+    const key = instanceTabKey(obj.objId);
+    tabs.push({
+      key,
+      title: obj.label,
+      closeButton: true,
+      content: m(ObjectView, {
+        engine,
+        activeDump,
+        navigate: navigateWithTabs,
+        openFlamegraphPivotedAt: session.openFlamegraphPivotedAt.bind(session),
+        params: {id: obj.objId},
+        potentiallyMergedClasses,
+      }),
+    });
+    actions.set(key, {
+      select: () => session.navigate('object', {id: obj.objId}),
+      close: () => session.closeInstanceTab(obj.objId),
+    });
+  }
+
+  // Lazy: a view only mounts (and runs its queries) once its tab is first
+  // opened, rather than every view loading when the page opens.
+  return {tabs: tabs.map((t) => ({...t, lazy: true})), actions};
+}
+
+function processLabel(d: HeapDump): string {
+  const name = d.processName ?? '<unknown>';
+  return d.pid !== null ? `${name} (pid ${d.pid})` : name;
+}
+
+function renderDumpSelector(session: HeapDumpExplorerSession): m.Children {
+  const allDumps = session.dumps;
+  const active = session.activeDump;
+  if (allDumps.length <= 1 || active === null) return null;
+
+  return m(
+    '.pf-hde-dump-selector',
+    m('span.pf-hde-dump-selector__label', 'Heap dump:'),
+    m(
+      PopupMenu,
+      {
+        trigger: m(Button, {
+          label: processLabel(active),
+          icon: 'memory',
+          rightIcon: 'arrow_drop_down',
+          variant: ButtonVariant.Outlined,
+          compact: true,
+        }),
+      },
+      allDumps.map((d) => {
+        const offset = Time.diff(d.ts, session.trace.traceInfo.start);
+        return m(MenuItem, {
+          label: `${processLabel(d)} — ${formatDuration(session.trace, offset)}`,
+          active: d === active,
+          onclick: () => session.selectDump(d),
+        });
+      }),
+    ),
+  );
+}
+
+const NO_CLASSES: ReadonlySet<string> = new Set();
+
+export class HeapDumpPage implements m.ClassComponent<HeapDumpPageAttrs> {
+  // Class names in the active dump flagged as potentially merged by app
+  // optimization.
+  private readonly mergedClassesMemo = new AsyncMemo<ReadonlySet<string>>();
+
+  onremove() {
+    this.mergedClassesMemo.dispose();
+  }
+
+  view({attrs}: m.Vnode<HeapDumpPageAttrs>) {
+    const {session, subpage} = attrs;
+    session.syncFromSubpage(subpage);
+    session.syncInstanceTabFromNav();
+    session.syncFlamegraphTabFromNav();
+
+    const active = session.activeDump;
+    if (active === null) {
+      return m(
+        '.pf-hde-page',
+        renderDumpSelector(session),
+        m('.pf-hde-loading', m(Spinner, {easing: true})),
+      );
+    }
+
+    // Keyed so Mithril remounts views (and their SQLDataSources) on
+    // dump switch.
+    const tabsKey = `${active.upid}:${active.ts}`;
+    const {data: potentiallyMergedClasses} = this.mergedClassesMemo.use({
+      key: {upid: active.upid, ts: active.ts},
+      compute: () =>
+        queries.getPotentiallyMergedClasses(session.engine, active),
+    });
+    const {tabs, actions} = buildTabs(
+      session,
+      active,
+      session.nav,
+      potentiallyMergedClasses ?? NO_CLASSES,
+    );
+
+    return m(
+      '.pf-hde-page',
+      renderDumpSelector(session),
+      m(
+        'main',
+        {class: 'pf-hde-page__tabs'},
+        m(Tabs, {
+          key: tabsKey,
+          tabs,
+          activeTabKey: activeTabKey(session),
+          onTabChange: (key: string) => actions.get(key)?.select(),
+          onTabClose: (key: string) => actions.get(key)?.close?.(),
+        }),
+      ),
+    );
+  }
+}

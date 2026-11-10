@@ -1,0 +1,193 @@
+// Copyright (C) 2026 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import m from 'mithril';
+import type {Engine} from '../../../trace_processor/engine';
+import type {SqlValue} from '../../../trace_processor/query_result';
+import {EmptyState} from '../../../widgets/empty_state';
+import {DataGrid} from '../../../components/widgets/datagrid/datagrid';
+import {SQLDataSource} from '../../../components/widgets/datagrid/sql_data_source';
+import type {ColumnSchema} from '../../../components/widgets/datagrid/datagrid_schema';
+import type {Filter} from '../../../components/widgets/datagrid/model';
+import {fmtHex} from '../format';
+import {
+  type NavFn,
+  sizeRenderer,
+  countRenderer,
+  shortClassName,
+  RowCounter,
+  rowCountHeading,
+  COL_INFO,
+  colHeader,
+} from '../components';
+import {dumpFilterSql} from '../queries';
+import type {HeapDump} from '../types';
+import {Anchor} from '../../../widgets/anchor';
+import {DetailsShell} from '../../../widgets/details_shell';
+
+function buildQuery(activeDump: HeapDump): string {
+  return `
+    SELECT
+      o.id,
+      ifnull(c.deobfuscated_name, c.name) AS cls,
+      o.self_size,
+      o.native_size,
+      od.array_element_count AS element_count,
+      ifnull(o.heap_type, 'default') AS heap,
+      CAST(od.array_data_hash AS TEXT) AS array_hash
+    FROM heap_graph_object o
+    JOIN heap_graph_class c ON o.type_id = c.id
+    LEFT JOIN heap_graph_object_data od ON o.object_data_id = od.id
+    WHERE o.reachable != 0
+      AND ${dumpFilterSql(activeDump, 'o')}
+      AND od.array_data_hash IS NOT NULL
+  `;
+}
+
+function makeUiSchema(navigate: NavFn): ColumnSchema {
+  return {
+    id: {
+      title: 'Object',
+      columnType: 'identifier',
+      cellRenderer: (value: SqlValue, row) => {
+        const id = Number(value);
+        const cls = String(row.cls ?? '');
+        const display = `${shortClassName(cls)} ${fmtHex(id)}`;
+        return m(
+          Anchor,
+          {
+            onclick: () => navigate('object', {id, label: display}),
+          },
+          display,
+        );
+      },
+    },
+    cls: {
+      title: 'Class',
+      columnType: 'text',
+    },
+    self_size: {
+      title: colHeader('Shallow', COL_INFO.shallow),
+      titleString: 'Shallow',
+      columnType: 'quantitative',
+      cellRenderer: sizeRenderer,
+    },
+    native_size: {
+      title: colHeader('Native', COL_INFO.shallowNative),
+      titleString: 'Native',
+      columnType: 'quantitative',
+      cellRenderer: sizeRenderer,
+    },
+    element_count: {
+      title: 'Elements',
+      columnType: 'quantitative',
+      cellRenderer: countRenderer,
+    },
+    heap: {
+      title: 'Heap',
+      columnType: 'text',
+    },
+    array_hash: {
+      title: 'Content Hash',
+      columnType: 'text',
+    },
+  };
+}
+
+interface ArraysViewAttrs {
+  readonly engine: Engine;
+  readonly activeDump: HeapDump;
+  readonly navigate: NavFn;
+  readonly clearNavParam: (key: string) => void;
+  readonly initialArrayHash?: string;
+  readonly hasFieldValues?: boolean;
+}
+
+export function ArraysView({
+  attrs: {engine, activeDump},
+}: m.Vnode<ArraysViewAttrs>): m.Component<ArraysViewAttrs> {
+  const query = buildQuery(activeDump);
+  const datasource = new SQLDataSource({
+    engine,
+    tableOrSubquery: query,
+  });
+  const counter = new RowCounter();
+
+  let filters: Filter[] = [];
+
+  function applyNavFilter(
+    ah: string | undefined,
+    clearNavParam: (key: string) => void,
+  ) {
+    if (!ah) return;
+    filters = [{field: 'array_hash', op: '=' as const, value: ah}];
+    clearNavParam('arrayHash');
+  }
+
+  return {
+    oninit(vnode) {
+      applyNavFilter(vnode.attrs.initialArrayHash, vnode.attrs.clearNavParam);
+    },
+    onbeforeupdate(vnode) {
+      applyNavFilter(vnode.attrs.initialArrayHash, vnode.attrs.clearNavParam);
+    },
+    onremove() {
+      datasource.dispose();
+      counter.dispose();
+    },
+    view(vnode) {
+      const {navigate} = vnode.attrs;
+      if (vnode.attrs.hasFieldValues === false) {
+        return m(
+          DetailsShell,
+          {title: 'Arrays', fillHeight: true},
+          m(EmptyState, {
+            icon: 'data_array',
+            title: 'Array data requires an ART heap dump (.hprof)',
+            fillHeight: true,
+          }),
+        );
+      }
+
+      return m(
+        DetailsShell,
+        {
+          title: rowCountHeading(
+            'Arrays',
+            counter.use({engine, query, filters}),
+          ),
+          fillHeight: true,
+        },
+        m(DataGrid, {
+          schema: makeUiSchema(navigate),
+          data: datasource,
+          fillHeight: true,
+          initialColumns: [
+            {id: 'id', field: 'id'},
+            {id: 'cls', field: 'cls'},
+            {id: 'self_size', field: 'self_size'},
+            {id: 'native_size', field: 'native_size'},
+            {id: 'element_count', field: 'element_count'},
+            {id: 'heap', field: 'heap'},
+          ],
+          filters,
+          showExportButton: true,
+          onFiltersChanged: (f) => {
+            filters = [...f];
+          },
+        }),
+      );
+    },
+  };
+}
