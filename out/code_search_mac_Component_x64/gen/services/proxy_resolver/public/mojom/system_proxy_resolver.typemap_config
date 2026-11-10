@@ -1,0 +1,16 @@
+[
+  {
+    "traits_headers": [
+      "services/proxy_resolver_mac/public/cpp/proxy_resolver_mac_mojom_traits.h"
+    ],
+    "traits_sources": [
+      "//services/proxy_resolver_mac/public/cpp/proxy_resolver_mac_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::net::MacProxyResolutionStatus",
+        "mojom": "proxy_resolver.mojom.MacProxyStatus"
+      }
+    ]
+  }
+]

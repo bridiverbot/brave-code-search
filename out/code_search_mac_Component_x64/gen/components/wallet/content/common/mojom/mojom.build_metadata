@@ -1,0 +1,8 @@
+{
+  "deps": [
+    "../../../../../skia/public/mojom/mojom.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../../../components/wallet/content/common/mojom/image_extractor.mojom"
+  ]
+}

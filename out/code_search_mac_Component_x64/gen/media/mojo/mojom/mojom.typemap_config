@@ -1,0 +1,238 @@
+[
+  {
+    "traits_headers": [
+      "media/mojo/mojom/audio_encoder_config_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//base",
+      "//media",
+      "//media/base/ipc"
+    ],
+    "traits_sources": [
+      "audio_encoder_config_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::media::AudioEncoder::Options",
+        "mojom": "media.mojom.AudioEncoderConfig"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/encoded_audio_buffer_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//base",
+      "//media"
+    ],
+    "traits_sources": [
+      "encoded_audio_buffer_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::media::EncodedAudioBuffer",
+        "mojom": "media.mojom.EncodedAudioBuffer",
+        "move_only": true
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/cdm_key_information_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//media"
+    ],
+    "traits_sources": [
+      "cdm_key_information_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::std::unique_ptr\u003C::media::CdmKeyInformation>",
+        "mojom": "media.mojom.CdmKeyInformation",
+        "move_only": true
+      },
+      {
+        "cpp": "::media::CdmKeyInformation::KeyStatus",
+        "mojom": "media.mojom.CdmKeyStatus"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/cdm_config_mojom_traits.h"
+    ],
+    "types": [
+      {
+        "cpp": "::media::CdmConfig",
+        "mojom": "media.mojom.CdmConfig"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/supported_video_decoder_config_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//media",
+      "//media/base/ipc",
+      "//ui/gfx/geometry/mojom:mojom_traits"
+    ],
+    "traits_sources": [
+      "supported_video_decoder_config_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::media::SupportedVideoDecoderConfig",
+        "mojom": "media.mojom.SupportedVideoDecoderConfig"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/supported_audio_decoder_config_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//base",
+      "//media"
+    ],
+    "traits_sources": [
+      "supported_audio_decoder_config_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::media::SupportedAudioDecoderConfig",
+        "mojom": "media.mojom.SupportedAudioDecoderConfig"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/base/ipc/media_param_traits_macros.h"
+    ],
+    "traits_public_deps": [
+      "//media/base/ipc"
+    ],
+    "types": [
+      {
+        "cpp": "::media::CdmPromise::Exception",
+        "mojom": "media.mojom.CdmPromiseResult.Exception"
+      },
+      {
+        "cpp": "::media::CdmSessionType",
+        "mojom": "media.mojom.CdmSessionType"
+      },
+      {
+        "cpp": "::media::CdmMessageType",
+        "mojom": "media.mojom.CdmMessageType"
+      },
+      {
+        "cpp": "::media::Decryptor::Status",
+        "mojom": "media.mojom.Decryptor.Status"
+      },
+      {
+        "cpp": "::media::Decryptor::StreamType",
+        "mojom": "media.mojom.Decryptor.StreamType"
+      },
+      {
+        "cpp": "::media::DemuxerStream::Status",
+        "mojom": "media.mojom.DemuxerStream.Status"
+      },
+      {
+        "cpp": "::media::DemuxerStream::Type",
+        "mojom": "media.mojom.DemuxerStream.Type"
+      },
+      {
+        "cpp": "::media::EmeInitDataType",
+        "mojom": "media.mojom.EmeInitDataType"
+      },
+      {
+        "cpp": "::media::HdcpVersion",
+        "mojom": "media.mojom.HdcpVersion"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/cdm_capability_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//media"
+    ],
+    "traits_sources": [
+      "cdm_capability_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::media::CdmCapability",
+        "mojom": "media.mojom.CdmCapability"
+      },
+      {
+        "cpp": "::media::CdmCapabilityQueryStatus",
+        "mojom": "media.mojom.CdmCapabilityQueryStatus"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/key_system_capability_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      "//media"
+    ],
+    "traits_sources": [
+      "key_system_capability_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::media::KeySystemCapability",
+        "mojom": "media.mojom.KeySystemCapability"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/audio_parameters_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      ":shared_mojom_traits"
+    ],
+    "types": [
+      {
+        "cpp": "::media::AudioParameters",
+        "mojom": "media.mojom.AudioParameters"
+      },
+      {
+        "cpp": "::media::AudioParameters::HardwareCapabilities",
+        "mojom": "media.mojom.AudioParametersHardwareCapabilities"
+      },
+      {
+        "cpp": "::media::AudioParameters::Format",
+        "mojom": "media.mojom.AudioParametersFormat"
+      },
+      {
+        "cpp": "::media::AudioLatency::Type",
+        "mojom": "media.mojom.AudioLatencyType"
+      }
+    ]
+  },
+  {
+    "traits_headers": [
+      "media/mojo/mojom/audio_processing_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      ":shared_mojom_traits"
+    ],
+    "types": [
+      {
+        "cpp": "::media::AudioProcessingSettings",
+        "mojom": "media.mojom.AudioProcessingSettings"
+      },
+      {
+        "cpp": "::media::AudioProcessingStats",
+        "mojom": "media.mojom.AudioProcessingStats"
+      }
+    ]
+  }
+]

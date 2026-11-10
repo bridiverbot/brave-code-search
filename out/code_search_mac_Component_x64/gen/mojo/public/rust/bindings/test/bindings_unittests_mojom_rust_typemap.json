@@ -1,0 +1,11 @@
+[
+  {
+    "traits_file": "../../mojo/public/rust/bindings/test/test_traits.rs",
+    "types": [
+      {
+        "mojom": "bindings_unittests.mojom.TypemappedStruct",
+        "rust": "MyCustomStruct"
+      }
+    ]
+  }
+]
