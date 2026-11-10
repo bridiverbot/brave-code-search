@@ -1,0 +1,10 @@
+Name: EGL-Registry
+Short Name: EGL-Registry
+URL: https://github.com/KhronosGroup/EGL-Registry/
+Update Mechanism: Autoroll
+Security Critical: no
+Version: N/A
+Revision: e964211ff5f7c2bcada786954a16d5b813379395
+License: Apache-2.0, MIT
+License File: LICENSE
+Shipped: yes
