@@ -1,0 +1,20 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/brave/build/android/nala_vd_rasterizer/common_java.params.json"
+  ],
+  "gn_target": "//brave/build/android/nala_vd_rasterizer:layoutlib_api_java",
+  "interface_jar_path": "obj/brave/build/android/nala_vd_rasterizer/brave_nala_layoutlib_api.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../brave/third_party/android_deps/libs/com_android_tools_layoutlib_layoutlib_api/layoutlib-api.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../brave/third_party/android_deps/libs/com_android_tools_layoutlib_layoutlib_api/layoutlib-api.jar"
+}

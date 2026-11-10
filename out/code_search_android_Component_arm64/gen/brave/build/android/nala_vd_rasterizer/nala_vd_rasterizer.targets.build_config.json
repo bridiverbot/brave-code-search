@@ -1,0 +1,15 @@
+{
+  "javac_full_classpath_targets": [
+    "//brave/build/android/nala_vd_rasterizer:sdk_common_java",
+    "//brave/build/android/nala_vd_rasterizer:layoutlib_api_java",
+    "//brave/build/android/nala_vd_rasterizer:common_java",
+    "//third_party/android_deps:org_jetbrains_kotlin_kotlin_stdlib_java",
+    "//third_party/android_deps:org_jetbrains_annotations_java",
+    "//third_party/android_deps:com_google_guava_guava_java",
+    "//third_party/android_deps:com_google_guava_failureaccess_java",
+    "//third_party/android_deps:org_jspecify_jspecify_java",
+    "//third_party/android_deps:com_google_j2objc_j2objc_annotations_java",
+    "//third_party/android_deps:com_google_errorprone_error_prone_annotations_java",
+    "//build/android:build_java"
+  ]
+}

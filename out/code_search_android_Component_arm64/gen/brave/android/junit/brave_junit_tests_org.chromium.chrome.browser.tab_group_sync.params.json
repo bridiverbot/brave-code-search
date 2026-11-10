@@ -1,0 +1,32 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/brave/browser/tab_group_sync/java.params.json",
+    "gen/chrome/android/junit/chrome_junit_tests_helper.params.json",
+    "gen/chrome/browser/preferences/java.params.json",
+    "gen/chrome/browser/tab/java.params.json",
+    "gen/chrome/browser/tabmodel/java.params.json",
+    "gen/components/prefs/android/java.params.json",
+    "gen/components/saved_tab_groups/public/java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//brave/android/junit:brave_junit_tests_org.chromium.chrome.browser.tab_group_sync",
+  "interface_jar_path": "obj/brave/android/junit/brave_junit_tests_org.chromium.chrome.browser.tab_group_sync.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/brave/android/junit/brave_junit_tests_org.chromium.chrome.browser.tab_group_sync.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/brave/android/junit/brave_junit_tests_org.chromium.chrome.browser.tab_group_sync.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/brave/android/junit/brave_junit_tests_org.chromium.chrome.browser.tab_group_sync.javac.jar"
+}

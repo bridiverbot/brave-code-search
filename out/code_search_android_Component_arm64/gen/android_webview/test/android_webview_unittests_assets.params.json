@@ -1,0 +1,12 @@
+{
+  "assets": {
+    "sources": [
+      "../../android_webview/test/unittest/assets/asset_file.ogg"
+    ]
+  },
+  "deps_configs": [
+    "gen/third_party/icu/icu_assets.params.json"
+  ],
+  "gn_target": "//android_webview/test:android_webview_unittests_assets",
+  "type": "android_assets"
+}

@@ -1,0 +1,12 @@
+{
+  "chromium_code": true,
+  "gn_target": "//android_webview:resources",
+  "public_deps_configs": [
+    "gen/android_webview/strings_grd.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/android_webview/resources.res.sources",
+  "resources_zip": "obj/android_webview/resources.resources.zip",
+  "rtxt_path": "gen/android_webview/resources_R.txt",
+  "type": "android_resources"
+}

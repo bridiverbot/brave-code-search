@@ -1,0 +1,947 @@
+[
+  {
+    "java_files": [
+      "../../third_party/jni_zero/java/src/org/jni_zero/CommonApis.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniRawPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniUniquePtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniZero.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/ApkAssets.java",
+      "../../base/android/java/src/org/chromium/base/BaseFeatureMap.java",
+      "../../base/android/java/src/org/chromium/base/CpuFeatures.java",
+      "../../base/android/java/src/org/chromium/base/EventLog.java",
+      "../../base/android/java/src/org/chromium/base/FieldTrialList.java",
+      "../../base/android/java/src/org/chromium/base/ImportantFileWriterAndroid.java",
+      "../../base/android/java/src/org/chromium/base/InputHintChecker.java",
+      "../../base/android/java/src/org/chromium/base/JavaHandlerThread.java",
+      "../../base/android/java/src/org/chromium/base/LocaleUtils.java",
+      "../../base/android/java/src/org/chromium/base/PathService.java",
+      "../../base/android/java/src/org/chromium/base/PowerMonitor.java",
+      "../../base/android/java/src/org/chromium/base/PowerMonitorReading.java",
+      "../../base/android/java/src/org/chromium/base/RadioUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/CommandLine.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/Callback.java",
+      "../../base/android/java/src/org/chromium/base/Callback2.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/metrics/NativeUmaRecorder.java",
+      "../../base/android/java/src/org/chromium/base/metrics/StatisticsRecorderAndroid.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/ApplicationStatus.java",
+      "../../base/android/java/src/org/chromium/base/EarlyTraceEvent.java",
+      "../../base/android/java/src/org/chromium/base/ThreadUtils.java",
+      "../../base/android/java/src/org/chromium/base/task/PostTask.java",
+      "../../base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/TraceEvent.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/AndroidInfo.java",
+      "../../base/android/java/src/org/chromium/base/ApkInfo.java",
+      "../../base/android/java/src/org/chromium/base/DeviceInfo.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/BundleUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/library_loader/LibraryLoader.java",
+      "../../base/android/java/src/org/chromium/base/library_loader/LibraryPrefetcher.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/SysUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/FeatureList.java",
+      "../../base/android/java/src/org/chromium/base/FeatureMap.java",
+      "../../base/android/java/src/org/chromium/base/Features.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/FileUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/JniAndroid.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/JavaExceptionReporter.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/IntStringCallback.java",
+      "../../base/android/java/src/org/chromium/base/JniCallbackImpl.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/JNIUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/memory_coordinator/MemoryConsumerRegistration.java",
+      "../../base/android/java/src/org/chromium/base/memory_coordinator/MemoryConsumerTraits.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/MemoryPressureListener.java",
+      "../../base/android/java/src/org/chromium/base/memory/MemoryInfoBridge.java",
+      "../../base/android/java/src/org/chromium/base/memory/MemoryPurgeManager.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/PathUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/ScreenStateReceiver.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/Token.java",
+      "../../base/android/java/src/org/chromium/base/TokenBase.java",
+      "../../base/android/java/src/org/chromium/base/UnguessableToken.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../components/android_autofill/browser/java/src/org/chromium/components/autofill/AndroidAutofillFeatures.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/feature_engagement/public/android/java/src/org/chromium/components/feature_engagement/CppWrappedTestTracker.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/gwp_asan/client/android/org/chromium/components/gwp_asan/GwpAsanFeatureMap.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentFeatureMap.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/shared_preferences/SharedPreferencesManager.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/version_info/android/java/src/org/chromium/base/version_info/VersionConstantsBridge.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../device/vr/public/java/src/org/chromium/device/vr/XrFeatureStatus.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/webxr/android/java/src/org/chromium/components/webxr/WebXrAndroidFeatureMap.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/android/java/src/org/chromium/ui/listmenu/MenuModelBridge.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/android/java/src/org/chromium/ui/base/UiAndroidFeatureMap.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/ContentUriUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../cc/input/android/java/src/org/chromium/cc/input/BrowserControlsOffsetTagModifications.java",
+      "../../cc/input/android/java/src/org/chromium/cc/input/BrowserControlsOffsetTags.java",
+      "../../cc/input/android/java/src/org/chromium/cc/input/OffsetTag.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/input/android/java/src/org/chromium/components/input/InputFeatureMap.java",
+      "../../components/input/android/java/src/org/chromium/components/input/InputUtils.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../url/android/java/src/org/chromium/url/IDNStringUtil.java",
+      "../../url/android/java/src/org/chromium/url/GURL.java",
+      "../../url/android/java/src/org/chromium/url/Origin.java",
+      "../../url/android/java/src/org/chromium/url/Parsed.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/url_formatter/android/java/src/org/chromium/components/url_formatter/UrlFormatter.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/accessibility/android/java/src/org/chromium/ui/accessibility/AccessibilityAutofillHelper.java",
+      "../../ui/accessibility/android/java/src/org/chromium/ui/accessibility/AccessibilityState.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/android/java/src/org/chromium/ui/base/Clipboard.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/android/java/src/org/chromium/ui/base/SelectFileDialog.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/color/android/java/src/org/chromium/ui/color/ColorProviderBridgeFactory.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/android/java/src/org/chromium/ui/gl/ChromeSurfaceTexture.java",
+      "../../ui/android/java/src/org/chromium/ui/gl/ScopedJavaSurfaceControl.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/android/java/src/org/chromium/ui/BrowserControlsOffsetTagConstraints.java",
+      "../../ui/android/java/src/org/chromium/ui/BrowserControlsOffsetTagDefinitions.java",
+      "../../ui/android/java/src/org/chromium/ui/ModalDialogWrapper.java",
+      "../../ui/android/java/src/org/chromium/ui/OffsetTagConstraints.java",
+      "../../ui/android/java/src/org/chromium/ui/OverscrollRefreshHandler.java",
+      "../../ui/android/java/src/org/chromium/ui/base/AcceleratorManager.java",
+      "../../ui/android/java/src/org/chromium/ui/base/BytesFormatting.java",
+      "../../ui/android/java/src/org/chromium/ui/base/EventForwarder.java",
+      "../../ui/android/java/src/org/chromium/ui/base/LocalizationUtils.java",
+      "../../ui/android/java/src/org/chromium/ui/base/ViewAndroidDelegate.java",
+      "../../ui/android/java/src/org/chromium/ui/base/WindowAndroid.java",
+      "../../ui/android/java/src/org/chromium/ui/display/DisplayAndroidManager.java",
+      "../../ui/android/java/src/org/chromium/ui/dragdrop/DropDataAndroid.java",
+      "../../ui/android/java/src/org/chromium/ui/events/devices/InputDeviceObserver.java",
+      "../../ui/android/java/src/org/chromium/ui/gfx/ViewConfigurationHelper.java",
+      "../../ui/android/java/src/org/chromium/ui/modaldialog/ModalDialogManagerBridge.java",
+      "../../ui/android/java/src/org/chromium/ui/resources/HandleViewResources.java",
+      "../../ui/android/java/src/org/chromium/ui/resources/ResourceFactory.java",
+      "../../ui/android/java/src/org/chromium/ui/resources/ResourceManager.java",
+      "../../ui/android/java/src/org/chromium/ui/resources/dynamics/CaptureResult.java",
+      "../../ui/android/java/src/org/chromium/ui/xr/scenecore/XrMeshData.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/permissions/android/java/src/org/chromium/components/permissions/PermissionsAndroidFeatureMap.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/safe_browsing/android/java/src/org/chromium/components/safe_browsing/SafeBrowsingApiBridge.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../content/public/android/java/src/org/chromium/content/app/ContentChildProcessServiceDelegate.java",
+      "../../content/public/android/java/src/org/chromium/content/app/ContentMain.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../content/public/android/java/src/org/chromium/content/browser/BrowserStartupControllerImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/TracingControllerAndroidImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/common/SurfaceWrapper.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/ContentFeatureMap.java",
+      "../../content/public/android/java/src/org/chromium/content_public/common/ChildProcessId.java",
+      "../../content/public/android/java/src/org/chromium/content_public/common/ResourceRequestBody.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/process_launcher/ChildProcessService.java",
+      "../../base/android/java/src/org/chromium/base/process_launcher/ScopedServiceBindingBatch.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../components/download/internal/common/android/java/src/org/chromium/components/download/DownloadCollectionBridge.java",
+      "../../components/download/internal/common/android/java/src/org/chromium/components/download/DownloadDocumentUriBridge.java",
+      "../../components/download/internal/common/android/java/src/org/chromium/components/download/InMemoryDownloadFile.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/origin_matcher/android/java/src/org/chromium/components/origin_matcher/OriginMatcher.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/ChromeBluetoothAdapter.java",
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/ChromeBluetoothDevice.java",
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/ChromeBluetoothRemoteGattCharacteristic.java",
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/ChromeBluetoothRemoteGattDescriptor.java",
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/ChromeBluetoothRemoteGattService.java",
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/ChromeBluetoothScanFilterBuilder.java",
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/ChromeBluetoothScanFilterList.java",
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/ChromeBluetoothSocket.java",
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/Outcome.java",
+      "../../device/bluetooth/android/java/src/org/chromium/device/bluetooth/wrapper/BluetoothAdapterWrapper.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../services/device/public/java/src/org/chromium/device/DeviceFeatureMap.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../device/gamepad/android/java/src/org/chromium/device/gamepad/GamepadList.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../media/base/android/java/src/org/chromium/media/AudioManagerAndroid.java",
+      "../../media/base/android/java/src/org/chromium/media/CodecProfileLevelList.java",
+      "../../media/base/android/java/src/org/chromium/media/HdrMetadata.java",
+      "../../media/base/android/java/src/org/chromium/media/MediaCodecBridge.java",
+      "../../media/base/android/java/src/org/chromium/media/MediaCodecBridgeBuilder.java",
+      "../../media/base/android/java/src/org/chromium/media/MediaCodecUtil.java",
+      "../../media/base/android/java/src/org/chromium/media/MediaDrmBridge.java",
+      "../../media/base/android/java/src/org/chromium/media/MediaDrmStorageBridge.java",
+      "../../media/base/android/java/src/org/chromium/media/MediaServerCrashListener.java",
+      "../../media/base/android/java/src/org/chromium/media/VideoAcceleratorUtil.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../media/capture/video/android/java/src/org/chromium/media/CameraAvailabilityObserver.java",
+      "../../media/capture/video/android/java/src/org/chromium/media/PhotoCapabilities.java",
+      "../../media/capture/video/android/java/src/org/chromium/media/VideoCapture.java",
+      "../../media/capture/video/android/java/src/org/chromium/media/VideoCaptureFactory.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../media/midi/java/src/org/chromium/midi/MidiDeviceAndroid.java",
+      "../../media/midi/java/src/org/chromium/midi/MidiInputPortAndroid.java",
+      "../../media/midi/java/src/org/chromium/midi/MidiManagerAndroid.java",
+      "../../media/midi/java/src/org/chromium/midi/MidiOutputPortAndroid.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../mojo/public/java/system/src/org/chromium/mojo/system/impl/BaseRunLoop.java",
+      "../../mojo/public/java/system/src/org/chromium/mojo/system/impl/CoreImpl.java",
+      "../../mojo/public/java/system/src/org/chromium/mojo/system/impl/WatcherImpl.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../net/android/java/src/org/chromium/net/AndroidCertVerifyResult.java",
+      "../../net/android/java/src/org/chromium/net/AndroidKeyStore.java",
+      "../../net/android/java/src/org/chromium/net/AndroidNetworkLibrary.java",
+      "../../net/android/java/src/org/chromium/net/AndroidTrafficStats.java",
+      "../../net/android/java/src/org/chromium/net/DnsStatus.java",
+      "../../net/android/java/src/org/chromium/net/GURLUtils.java",
+      "../../net/android/java/src/org/chromium/net/HttpNegotiateAuthenticator.java",
+      "../../net/android/java/src/org/chromium/net/HttpUtil.java",
+      "../../net/android/java/src/org/chromium/net/NetStringUtil.java",
+      "../../net/android/java/src/org/chromium/net/NetworkActiveNotifier.java",
+      "../../net/android/java/src/org/chromium/net/NetworkChangeNotifier.java",
+      "../../net/android/java/src/org/chromium/net/ProxyChangeListener.java",
+      "../../net/android/java/src/org/chromium/net/X509Util.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../services/device/generic_sensor/android/java/src/org/chromium/device/sensors/PlatformSensor.java",
+      "../../services/device/generic_sensor/android/java/src/org/chromium/device/sensors/PlatformSensorProvider.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../services/device/geolocation/android/java/src/org/chromium/device/geolocation/LocationProviderAdapter.java",
+      "../../services/device/geolocation/android/java/src/org/chromium/device/geolocation/LocationProviderFactory.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../services/device/hid/android/java/src/org/chromium/device/hid/ChromeHidConnection.java",
+      "../../services/device/hid/android/java/src/org/chromium/device/hid/ChromeHidManager.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/variations/android/java/src/org/chromium/components/variations/VariationsAssociatedData.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/variations/android/java/src/org/chromium/components/variations/firstrun/VariationsSeedBridge.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../services/device/serial/android/java/src/org/chromium/device/serial/ChromeSerialManager.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../services/device/time_zone_monitor/android/java/src/org/chromium/device/time_zone_monitor/TimeZoneMonitor.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../services/device/usb/android/java/src/org/chromium/device/usb/ChromeUsbConfiguration.java",
+      "../../services/device/usb/android/java/src/org/chromium/device/usb/ChromeUsbConnection.java",
+      "../../services/device/usb/android/java/src/org/chromium/device/usb/ChromeUsbDevice.java",
+      "../../services/device/usb/android/java/src/org/chromium/device/usb/ChromeUsbEndpoint.java",
+      "../../services/device/usb/android/java/src/org/chromium/device/usb/ChromeUsbInterface.java",
+      "../../services/device/usb/android/java/src/org/chromium/device/usb/ChromeUsbService.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../services/device/android/java/src/org/chromium/services/device/InterfaceRegistrar.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/accessibility/android/java/src/org/chromium/ui/accessibility/AccessibilityFeaturesMap.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../content/public/android/java/src/org/chromium/content/browser/AdditionalNavigationParamsImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/AppWebMessagePort.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/AudioFocusDelegate.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/BackgroundSyncNetworkObserver.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/BrowserContextHandleImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/ChildProcessLauncherHelperImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/ClientDataJsonImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/ContentNfcDelegate.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/ContentUiEventHandler.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/ContentViewStaticsImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/GestureListenerManagerImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/GpuProcessCallback.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/HostZoomMapImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/InterfaceRegistrarImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/JavascriptInjectorImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/LauncherThread.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/MediaSessionImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/MessagePayloadJni.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/NfcHost.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/RenderWidgetHostViewImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/ScreenOrientationProviderImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/SpeechRecognitionImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/SyntheticGestureTarget.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/TtsPlatformImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/UnboundedSurfacePopupWindow.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/accessibility/AccessibilityNodeInfoBuilder.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/accessibility/AccessibilityNodeInfoUtils.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/accessibility/FakeAndroidCache.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/accessibility/ViewStructureBuilder.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/accessibility/WebContentsAccessibilityImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/accessibility/captioning/CaptioningController.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/androidoverlay/AndroidOverlayProviderImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/androidoverlay/DialogOverlayImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/device_posture/DevicePosturePlatformProviderAndroid.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/framehost/NavigationControllerImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/framehost/PageImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/framehost/RenderFrameHostImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/input/DateTimeChooserAndroid.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/input/ImeAdapterImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/input/ImeTextSpan.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/input/InputTokenForwarderManager.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/input/SelectPopup.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/input/SuggestionInfo.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/input/TextSuggestionHost.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/input/TextSuggestionPopupController.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/selection/MagnifierSurfaceControl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/selection/SelectionPopupControllerImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/selection/SmartSelectionClient.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/sms/SmsProviderGms.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/webcontents/WebContentsImpl.java",
+      "../../content/public/android/java/src/org/chromium/content/browser/webcontents/WebContentsObserverProxy.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/ContactsDialogHost.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/ContentWebFeatureUsageUtils.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/InputTransferHandler.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/LoadCommittedDetails.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/LoadUrlParams.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/NavigationHandle.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/NavigationResult.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/SharedArrayBuffer.java",
+      "../../content/public/android/java/src/org/chromium/content_public/browser/media/capture/ScreenCapture.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../android_webview/java/src/org/chromium/android_webview/common/AwFeatureMap.java",
+      "../../android_webview/java/src/org/chromium/android_webview/common/AwGrContextOptionsProvider.java",
+      "../../android_webview/java/src/org/chromium/android_webview/common/AwResource.java",
+      "../../android_webview/java/src/org/chromium/android_webview/common/WebViewCachedFlags.java",
+      "../../android_webview/java/src/org/chromium/android_webview/common/origin_trial/DisableOriginTrialsSafeModeUtils.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/crash/android/java/src/org/chromium/components/crash/anr/AnrCollector.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/minidump_uploader/android/java/src/org/chromium/components/minidump_uploader/CrashReportMimeWriter.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../android_webview/java/src/org/chromium/android_webview/common/crash/AwCrashReporterClient.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/AutofillSaveCardUiInfo.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/AutofillSaveIbanUiInfo.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/BankAccount.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/BnplIssuerContext.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/BnplIssuerForSettings.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/BnplIssuerTosDetail.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/Ewallet.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/Iban.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/LegalMessageLine.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/PaymentInstrument.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/payments/TouchToFillDisplayOptions.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/AddressNormalizer.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/AtMemoryPayload.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/AutofillAddressEditorUiInfo.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/AutofillAddressUiComponent.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/AutofillAiPayload.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/AutofillProfile.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/AutofillProfilePayload.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/DropdownKeyValue.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/FillingProductBridge.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/LoyaltyCard.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/PaymentsPayload.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/SubKeyRequester.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/autofill_ai/AttributeInstance.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/autofill_ai/AttributeType.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/autofill_ai/AutofillAiSourceAttributionInfo.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/autofill_ai/DetailsForUpsertPass.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/autofill_ai/EntityInstance.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/autofill_ai/EntityInstanceWithLabels.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/autofill_ai/EntityMetadata.java",
+      "../../components/autofill/android/java/src/org/chromium/components/autofill/autofill_ai/EntityType.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/android_autofill/browser/java/src/org/chromium/components/autofill/AutofillProvider.java",
+      "../../components/android_autofill/browser/java/src/org/chromium/components/autofill/FormData.java",
+      "../../components/android_autofill/browser/java/src/org/chromium/components/autofill/FormFieldData.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/content_capture/android/java/src/org/chromium/components/content_capture/ContentCaptureData.java",
+      "../../components/content_capture/android/java/src/org/chromium/components/content_capture/ContentCaptureFeatures.java",
+      "../../components/content_capture/android/java/src/org/chromium/components/content_capture/ContentCaptureFrame.java",
+      "../../components/content_capture/android/java/src/org/chromium/components/content_capture/OnscreenContentProvider.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/crash/android/java/src/org/chromium/components/crash/CrashKeys.java",
+      "../../components/crash/android/java/src/org/chromium/components/crash/PureJavaExceptionHandler.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/crash/android/java/src/org/chromium/components/crash/browser/ChildProcessCrashObserver.java",
+      "../../components/crash/android/java/src/org/chromium/components/crash/browser/ProcessExitReasonFromSystem.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/contextmenu/ContextMenuParams.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/util/EmbedderSupportFeatures.java",
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/util/InputStreamUtil.java",
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/util/UrlUtilities.java",
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/util/WebResourceResponseInfo.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/EyeDropperBridge.java",
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/HtmlColorPickerBridge.java",
+      "../../components/embedder_support/android/java/src/org/chromium/components/embedder_support/delegate/WebContentsDelegateAndroid.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/navigation_interception/android/java/src/org/chromium/components/navigation_interception/InterceptNavigationDelegate.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentRequestUpdateEventListener.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentHandlerHost.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentRequestSpec.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/CSPCheckerBridge.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/ErrorMessageUtil.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/HasEnrolledInstrumentQuery.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/JniPaymentApp.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/JourneyLogger.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/OriginSecurityChecker.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentAppServiceBridge.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentHandlerNavigationThrottle.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentManifestDownloader.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentManifestParser.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentRequestWebContentsData.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/PaymentValidator.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/SslValidityChecker.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/UrlUtil.java",
+      "../../components/payments/content/android/java/src/org/chromium/components/payments/WebPaymentsWebDataService.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/policy/android/java/src/org/chromium/components/policy/CombinedPolicyProvider.java",
+      "../../components/policy/android/java/src/org/chromium/components/policy/EnterpriseInfo.java",
+      "../../components/policy/android/java/src/org/chromium/components/policy/PolicyCacheUpdater.java",
+      "../../components/policy/android/java/src/org/chromium/components/policy/PolicyConverter.java",
+      "../../components/policy/android/java/src/org/chromium/components/policy/PolicyFeatureMap.java",
+      "../../components/policy/android/java/src/org/chromium/components/policy/PolicyMap.java",
+      "../../components/policy/android/java/src/org/chromium/components/policy/PolicyService.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/sensitive_content/android/java/src/org/chromium/components/sensitive_content/SensitiveContentClient.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/viz/service/java/src/org/chromium/components/viz/service/frame_sinks/ExternalBeginFrameSourceAndroid.java",
+      "../../components/viz/service/java/src/org/chromium/components/viz/service/gl/ThrowUncaughtException.java",
+      "../../components/viz/service/java/src/org/chromium/components/viz/service/input/InputTransferHandlerViz.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/ukm/android/java/src/org/chromium/components/ukm/UkmRecorder.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/webauthn/android/java/src/org/chromium/components/webauthn/Fido2Api.java",
+      "../../components/webauthn/android/java/src/org/chromium/components/webauthn/Fido2CredentialRequest.java",
+      "../../components/webauthn/android/java/src/org/chromium/components/webauthn/InternalAuthenticator.java",
+      "../../components/webauthn/android/java/src/org/chromium/components/webauthn/WebauthnBrowserBridge.java",
+      "../../components/webauthn/android/java/src/org/chromium/components/webauthn/WebauthnFeatureMap.java",
+      "../../components/webauthn/android/java/src/org/chromium/components/webauthn/WebauthnModeProvider.java",
+      "../../components/webauthn/android/java/src/org/chromium/components/webauthn/cred_man/CredManSupportProvider.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/spellcheck/browser/android/java/src/org/chromium/components/spellcheck/SpellCheckerSessionBridge.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../android_webview/java/src/org/chromium/android_webview/AndroidProtocolHandler.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwBrowserContext.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwBrowserContextStore.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwBrowserProcess.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwContentRestrictionManagerBridge.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwContents.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwContentsClientBridge.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwContentsIoThreadClient.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwContentsLifecycleNotifier.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwContentsStatics.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwCookieManager.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwCrashyClassUtils.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwDarkMode.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwDevToolsServer.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwHttpAuthHandler.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwHttpCacheManager.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwInterfaceRegistrar.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwLoadUrlMetricsObserver.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwMinidumpUploader.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwNavigationClient.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwNetLogsConnection.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwNoVarySearchData.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwOriginMatchedHeader.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwPacProcessor.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwPdfExporter.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwPreconnector.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwPrefetchManager.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwPrefetchParameters.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwProxyController.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwQuotaManagerBridge.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwRenderProcess.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwSettings.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwTracingController.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwWebContentsDelegate.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwWebResourceInterceptResponse.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwWebResourceRequest.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwWebSurface.java",
+      "../../android_webview/java/src/org/chromium/android_webview/AwWindowCoverageTracker.java",
+      "../../android_webview/java/src/org/chromium/android_webview/JsReplyProxy.java",
+      "../../android_webview/java/src/org/chromium/android_webview/PersistentJavascriptInfo.java",
+      "../../android_webview/java/src/org/chromium/android_webview/PopupTouchHandleDrawable.java",
+      "../../android_webview/java/src/org/chromium/android_webview/ShouldInterceptRequestMediator.java",
+      "../../android_webview/java/src/org/chromium/android_webview/SystemStateUtil.java",
+      "../../android_webview/java/src/org/chromium/android_webview/WebMessageListenerHolder.java",
+      "../../android_webview/java/src/org/chromium/android_webview/WebMessageListenerInfo.java",
+      "../../android_webview/java/src/org/chromium/android_webview/client_hints/AwUserAgentMetadata.java",
+      "../../android_webview/java/src/org/chromium/android_webview/contextmenu/AwContextMenuHelper.java",
+      "../../android_webview/java/src/org/chromium/android_webview/gfx/AwDrawFnImpl.java",
+      "../../android_webview/java/src/org/chromium/android_webview/gfx/AwPicture.java",
+      "../../android_webview/java/src/org/chromium/android_webview/gfx/JavaBrowserViewRendererHelper.java",
+      "../../android_webview/java/src/org/chromium/android_webview/gfx/RootBeginFrameSourceWebView.java",
+      "../../android_webview/java/src/org/chromium/android_webview/http_headers/AwHeaderInterceptorStore.java",
+      "../../android_webview/java/src/org/chromium/android_webview/metrics/AndroidMetricsLogUploader.java",
+      "../../android_webview/java/src/org/chromium/android_webview/metrics/AwMetricsServiceClient.java",
+      "../../android_webview/java/src/org/chromium/android_webview/metrics/AwSiteVisitLogger.java",
+      "../../android_webview/java/src/org/chromium/android_webview/permission/AwPermissionRequest.java",
+      "../../android_webview/java/src/org/chromium/android_webview/safe_browsing/AwAdvancedProtectionStatusManagerBridge.java",
+      "../../android_webview/java/src/org/chromium/android_webview/safe_browsing/AwSafeBrowsingConfigHelper.java",
+      "../../android_webview/java/src/org/chromium/android_webview/safe_browsing/AwSafeBrowsingSafeModeAction.java",
+      "../../android_webview/java/src/org/chromium/android_webview/supervised_user/AwSupervisedUserHelper.java",
+      "../../android_webview/java/src/org/chromium/android_webview/supervised_user/AwSupervisedUserSafeModeAction.java",
+      "../../android_webview/java/src/org/chromium/android_webview/supervised_user/AwSupervisedUserUrlClassifier.java",
+      "../../android_webview/java/src/org/chromium/android_webview/variations/VariationsSeedLoader.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../android_webview/javatests/src/org/chromium/android_webview/test/util/AwPerformanceManagerTestUtil.java",
+      "../../android_webview/javatests/src/org/chromium/android_webview/test/util/AwPrefetchTestUtil.java",
+      "../../android_webview/javatests/src/org/chromium/android_webview/test/util/DisableOriginTrialsSafeModeTestUtils.java",
+      "../../android_webview/javatests/src/org/chromium/android_webview/test/util/RendererProcessMetricsProviderUtils.java",
+      "../../android_webview/javatests/src/org/chromium/android_webview/test/util/TrafficStatsTestUtil.java",
+      "../../android_webview/javatests/src/org/chromium/android_webview/test/util/VariationsTestUtils.java",
+      "../../android_webview/test/shell/src/org/chromium/android_webview/test/util/MemoryMetricsLoggerUtils.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/VirtualDocumentPath.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../components/prefs/android/java/src/org/chromium/components/prefs/PrefChangeRegistrar.java",
+      "../../components/prefs/android/java/src/org/chromium/components/prefs/PrefService.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/android/java/src/org/chromium/ui/gfx/BitmapHelper.java",
+      "../../ui/android/java/src/org/chromium/ui/gfx/ViewConfigurationHelper.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/android/java/src/org/chromium/ui/events/devices/InputDeviceObserver.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../ui/android/java/src/org/chromium/ui/base/DeviceFormFactor.java",
+      "../../ui/android/java/src/org/chromium/ui/base/IdleDetector.java",
+      "../../ui/android/java/src/org/chromium/ui/base/LocalizationUtils.java",
+      "../../ui/android/java/src/org/chromium/ui/base/ResourceBundle.java",
+      "../../ui/android/java/src/org/chromium/ui/base/TouchDevice.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../services/media_session/public/cpp/android/java/src/org/chromium/services/media_session/MediaImage.java",
+      "../../services/media_session/public/cpp/android/java/src/org/chromium/services/media_session/MediaMetadata.java",
+      "../../services/media_session/public/cpp/android/java/src/org/chromium/services/media_session/MediaPosition.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/background_task_scheduler/internal/android/java/src/org/chromium/components/background_task_scheduler/internal/NativeTaskScheduler.java",
+      "../../components/background_task_scheduler/internal/android/java/src/org/chromium/components/background_task_scheduler/internal/TaskInfoBridge.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/metrics/android/java/src/org/chromium/components/metrics/LowEntropySource.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/regional_capabilities/android/java/src/org/chromium/components/regional_capabilities/RegionalCapabilitiesService.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../google_apis/gaia/android/java/src/org/chromium/google_apis/gaia/CoreAccountId.java",
+      "../../google_apis/gaia/android/java/src/org/chromium/google_apis/gaia/DeviceManagementErrorDetails.java",
+      "../../google_apis/gaia/android/java/src/org/chromium/google_apis/gaia/GaiaId.java",
+      "../../google_apis/gaia/android/java/src/org/chromium/google_apis/gaia/GoogleServiceAuthError.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../android_webview/js_sandbox/java/src/org/chromium/android_webview/js_sandbox/service/JsSandboxIsolate.java",
+      "../../android_webview/js_sandbox/java/src/org/chromium/android_webview/js_sandbox/service/JsSandboxIsolateCallback.java",
+      "../../android_webview/js_sandbox/java/src/org/chromium/android_webview/js_sandbox/service/JsSandboxIsolateFdCallback.java",
+      "../../android_webview/js_sandbox/java/src/org/chromium/android_webview/js_sandbox/service/JsSandboxMessagePort.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/webui/about/android/java/src/org/chromium/components/aboutui/CreditUtils.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../android_webview/nonembedded/java/src/org/chromium/android_webview/nonembedded/WebViewApkApplication.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/test/android/javatests/src/org/chromium/base/test/task/ThreadPoolTestHelpers.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../components/content_relationship_verification/android/java/src/org/chromium/components/content_relationship_verification/OriginVerifier.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../net/test/android/javatests/src/org/chromium/net/AndroidNetworkLibraryTestUtil.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../chrome/browser/preferences/android/java/src/org/chromium/chrome/browser/preferences/ChromeSharedPreferences.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeFeatureMap.java",
+      "../../chrome/browser/flags/android/java/src/org/chromium/chrome/browser/flags/ChromeSessionState.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/offline_items_collection/core/android/java/src/org/chromium/components/offline_items_collection/OfflineContentAggregatorBridge.java",
+      "../../components/offline_items_collection/core/android/java/src/org/chromium/components/offline_items_collection/bridges/OfflineItemBridge.java",
+      "../../components/offline_items_collection/core/android/java/src/org/chromium/components/offline_items_collection/bridges/OfflineItemShareInfoBridge.java",
+      "../../components/offline_items_collection/core/android/java/src/org/chromium/components/offline_items_collection/bridges/OfflineItemVisualsBridge.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/browser_ui/modaldialog/android/java/src/org/chromium/components/browser_ui/modaldialog/ModalDialogFeatureMap.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../content/public/test/android/javatests/src/org/chromium/content_public/browser/test/RenderFrameHostTestExt.java",
+      "../../content/public/test/android/javatests/src/org/chromium/content_public/browser/test/util/DOMUtils.java",
+      "../../content/public/test/android/javatests/src/org/chromium/content_public/browser/test/util/NavigationControllerUtil.java",
+      "../../content/public/test/android/javatests/src/org/chromium/content_public/browser/test/util/NavigationEntrySimple.java",
+      "../../content/public/test/android/javatests/src/org/chromium/content_public/browser/test/util/PrefetchTestUtil.java",
+      "../../content/public/test/android/javatests/src/org/chromium/content_public/browser/test/util/RenderProcessHostUtils.java",
+      "../../content/public/test/android/javatests/src/org/chromium/content_public/browser/test/util/UiThreadSchedulerTestUtils.java",
+      "../../content/public/test/android/javatests/src/org/chromium/content_public/browser/test/util/WebContentsUtils.java"
+    ]
+  }
+]

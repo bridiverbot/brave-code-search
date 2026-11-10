@@ -1,0 +1,30 @@
+{
+  "bundled_srcjars": [
+    "gen/android_webview/test/embedded_test_server/aw_net_jni_headers.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/base_java_test_support.params.json",
+    "gen/net/android/embedded_test_server_aidl_java.params.json",
+    "gen/net/android/net_java.params.json",
+    "gen/net/android/net_java_test_support.params.json",
+    "gen/net/android/net_test_support_provider_java.params.json",
+    "gen/third_party/jni_zero/jni_zero_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/android_webview/test/embedded_test_server/aw_net_java_test_support.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//android_webview/test/embedded_test_server:aw_net_java_test_support",
+  "interface_jar_path": "obj/android_webview/test/embedded_test_server/aw_net_java_test_support.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/android_webview/test/embedded_test_server/aw_net_java_test_support.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/android_webview/test/embedded_test_server/aw_net_java_test_support.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/android_webview/test/embedded_test_server/aw_net_java_test_support.javac.jar"
+}

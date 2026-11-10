@@ -1,0 +1,7 @@
+{
+  "gn_target": "//brave/browser/quick_search_engines/android:java_strings_grd",
+  "resources_zip": "obj/brave/browser/quick_search_engines/android/java_strings_grd.compiled.resources.zip",
+  "rtxt_path": "gen/brave/browser/quick_search_engines/android/java_strings_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/brave/browser/quick_search_engines/android/java_strings_grd.resources.zip"
+}

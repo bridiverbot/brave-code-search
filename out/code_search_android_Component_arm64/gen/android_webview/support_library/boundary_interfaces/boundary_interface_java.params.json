@@ -1,0 +1,29 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": false,
+  "deps_configs": [
+    "gen/third_party/android_deps/org_jspecify_jspecify_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_core_core_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/android_webview/support_library/boundary_interfaces/boundary_interface_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//android_webview/support_library/boundary_interfaces:boundary_interface_java",
+  "interface_jar_path": "obj/android_webview/support_library/boundary_interfaces/boundary_interface_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/android_webview/support_library/boundary_interfaces/boundary_interface_java.javac.jar",
+  "proguard_configs": [
+    "../../android_webview/support_library/proguard.flags"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/android_webview/support_library/boundary_interfaces/boundary_interface_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/android_webview/support_library/boundary_interfaces/boundary_interface_java.javac.jar"
+}

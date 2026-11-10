@@ -1,0 +1,7 @@
+{
+  "gn_target": "//android_webview:strings_grd",
+  "resources_zip": "obj/android_webview/strings_grd.compiled.resources.zip",
+  "rtxt_path": "gen/android_webview/strings_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/android_webview/strings_grd.resources.zip"
+}

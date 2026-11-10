@@ -1,0 +1,5 @@
+int string currently_used_search_engines 0x7f010001
+int string long_press_to_change_order 0x7f010001
+int string quick_search_engines 0x7f010001
+int string show_quick_search_bar 0x7f010001
+int string youtube 0x7f010001

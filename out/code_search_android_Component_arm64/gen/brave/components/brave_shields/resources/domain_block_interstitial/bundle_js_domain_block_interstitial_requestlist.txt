@@ -1,0 +1,1 @@
+{"domain_block_interstitial.rollup.js": ["../../../../../components/security_interstitials/core/common/resources/interstitial_common.js", "../../../../../../../../brave/components/brave_shields/resources/domain_block_interstitial.js"]}

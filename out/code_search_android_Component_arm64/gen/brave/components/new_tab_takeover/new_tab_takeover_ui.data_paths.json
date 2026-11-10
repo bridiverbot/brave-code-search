@@ -1,0 +1,5 @@
+[
+  "//brave/components/common/",
+  "//brave/components/new_tab_takeover/",
+  "//brave/components/brave_new_tab_ui/containers/newTab/"
+]

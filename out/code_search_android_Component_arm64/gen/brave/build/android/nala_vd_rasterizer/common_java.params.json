@@ -1,0 +1,21 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/third_party/android_deps/guava_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json"
+  ],
+  "gn_target": "//brave/build/android/nala_vd_rasterizer:common_java",
+  "interface_jar_path": "obj/brave/build/android/nala_vd_rasterizer/brave_nala_android_common.ijar.jar",
+  "is_prebuilt": true,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "../../brave/third_party/android_deps/libs/com_android_tools_common/common.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "type": "java_library",
+  "unprocessed_jar_path": "../../brave/third_party/android_deps/libs/com_android_tools_common/common.jar"
+}

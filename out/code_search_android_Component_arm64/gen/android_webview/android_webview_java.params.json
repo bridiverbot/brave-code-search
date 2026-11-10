@@ -1,0 +1,8 @@
+{
+  "gn_target": "//android_webview:android_webview_java",
+  "public_deps_configs": [
+    "gen/android_webview/android_webview_no_weblayer_java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

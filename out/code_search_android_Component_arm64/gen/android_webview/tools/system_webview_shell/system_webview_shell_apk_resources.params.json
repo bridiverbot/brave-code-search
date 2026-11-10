@@ -1,0 +1,11 @@
+{
+  "chromium_code": true,
+  "gn_target": "//android_webview/tools/system_webview_shell:system_webview_shell_apk_resources",
+  "public_deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/android_webview/tools/system_webview_shell/system_webview_shell_apk_resources.res.sources",
+  "resources_zip": "obj/android_webview/tools/system_webview_shell/system_webview_shell_apk_resources.resources.zip",
+  "rtxt_path": "gen/android_webview/tools/system_webview_shell/system_webview_shell_apk_resources_R.txt",
+  "type": "android_resources"
+}

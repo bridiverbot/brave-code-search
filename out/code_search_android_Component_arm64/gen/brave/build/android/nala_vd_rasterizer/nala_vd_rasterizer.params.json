@@ -1,0 +1,23 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/brave/build/android/nala_vd_rasterizer/sdk_common_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//brave/build/android/nala_vd_rasterizer:nala_vd_rasterizer",
+  "interface_jar_path": "obj/brave/build/android/nala_vd_rasterizer/nala_vd_rasterizer.turbine.jar",
+  "is_prebuilt": false,
+  "main_class": "org.chromium.build.nala.NalaVdRasterizer",
+  "processed_jar_path": "obj/brave/build/android/nala_vd_rasterizer/nala_vd_rasterizer.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": false,
+  "target_sources_file": "gen/brave/build/android/nala_vd_rasterizer/nala_vd_rasterizer.sources",
+  "type": "java_binary",
+  "unprocessed_jar_path": "obj/brave/build/android/nala_vd_rasterizer/nala_vd_rasterizer.javac.jar"
+}

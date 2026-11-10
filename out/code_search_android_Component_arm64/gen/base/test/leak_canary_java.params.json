@@ -1,0 +1,40 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/test/leak_canary_test_resources.params.json",
+    "gen/base/base_java_test_support.params.json",
+    "gen/base/command_line_java.params.json",
+    "gen/base/log_java.params.json",
+    "gen/third_party/android_deps/com_squareup_leakcanary_leakcanary_android_core_java.params.json",
+    "gen/third_party/android_deps/com_squareup_leakcanary_leakcanary_android_instrumentation_java.params.json",
+    "gen/third_party/android_deps/com_squareup_leakcanary_leakcanary_android_java.params.json",
+    "gen/third_party/android_deps/com_squareup_leakcanary_leakcanary_object_watcher_android_core_java.params.json",
+    "gen/third_party/android_deps/com_squareup_leakcanary_leakcanary_object_watcher_java.params.json",
+    "gen/third_party/android_deps/com_squareup_leakcanary_shark_android_java.params.json",
+    "gen/third_party/android_deps/com_squareup_leakcanary_shark_java.params.json",
+    "gen/third_party/android_deps/kotlin_stdlib_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/androidx/androidx_work_work_multiprocess_java.params.json",
+    "gen/third_party/androidx/androidx_work_work_runtime_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/base/test/leak_canary_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//base/test:leak_canary_java",
+  "interface_jar_path": "obj/base/test/leak_canary_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/base/test/leak_canary_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/base/test/leak_canary_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/base/test/leak_canary_java.javac.jar"
+}

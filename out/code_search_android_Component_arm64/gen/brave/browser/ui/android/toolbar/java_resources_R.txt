@@ -1,0 +1,6 @@
+int id adaptive_option_bookmarks 0x7f010001
+int id adaptive_option_brave_leo 0x7f010001
+int id adaptive_option_brave_wallet 0x7f010001
+int id adaptive_option_downloads 0x7f010001
+int id adaptive_option_history 0x7f010001
+int layout brave_adaptive_preference_buttons 0x7f010001

@@ -1,0 +1,9 @@
+{
+  "gn_target": "//brave/browser/password_entry_edit:public_java",
+  "public_deps_configs": [
+    "gen/brave/browser/password_entry_edit/android/factory_java.params.json",
+    "gen/brave/browser/password_entry_edit/android/java.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

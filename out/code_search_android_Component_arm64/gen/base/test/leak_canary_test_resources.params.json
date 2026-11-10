@@ -1,0 +1,11 @@
+{
+  "chromium_code": true,
+  "gn_target": "//base/test:leak_canary_test_resources",
+  "public_deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/base/test/leak_canary_test_resources.res.sources",
+  "resources_overlay_zip": "obj/base/test/leak_canary_test_resources.resources.zip",
+  "rtxt_path": "gen/base/test/leak_canary_test_resources_R.txt",
+  "type": "android_resources"
+}

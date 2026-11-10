@@ -1,0 +1,10 @@
+{
+  "deps_configs": [
+    "gen/android_webview/system_webview_64_base_bundle_module.params.json"
+  ],
+  "enable_lint": false,
+  "gn_target": "//android_webview:system_webview_64_bundle",
+  "proguard_enabled": true,
+  "proguard_mapping_path": "apks/SystemWebView64.aab.mapping",
+  "type": "android_app_bundle"
+}

@@ -1,0 +1,108 @@
+// Copyright 2023 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+import '//resources/cr_elements/icons.html.js';
+import { EventTracker } from '//resources/js/event_tracker.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './horizontal_carousel.css.js';
+import { getHtml } from './horizontal_carousel.html.js';
+export class HorizontalCarouselElement extends CrLitElement {
+    static get is() {
+        return 'horizontal-carousel';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            showForwardButton_: {
+                type: Boolean,
+                reflect: true,
+            },
+            showBackButton_: {
+                type: Boolean,
+                reflect: true,
+            },
+        };
+    }
+    //============================================================================
+    // Properties
+    //============================================================================
+    resizeObserver_ = null;
+    eventTracker_ = new EventTracker();
+    #showBackButton__accessor_storage = false;
+    get showBackButton_() { return this.#showBackButton__accessor_storage; }
+    set showBackButton_(value) { this.#showBackButton__accessor_storage = value; }
+    #showForwardButton__accessor_storage = false;
+    get showForwardButton_() { return this.#showForwardButton__accessor_storage; }
+    set showForwardButton_(value) { this.#showForwardButton__accessor_storage = value; }
+    //============================================================================
+    // Overridden methods
+    //============================================================================
+    connectedCallback() {
+        super.connectedCallback();
+        this.resizeObserver_ = new ResizeObserver(() => {
+            this.setShowCarouselButtons_();
+        });
+        this.resizeObserver_.observe(this.$.carouselContainer);
+        this.eventTracker_.add(this, 'keyup', this.onTabFocus_.bind(this));
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.resizeObserver_) {
+            this.resizeObserver_.unobserve(this.$.carouselContainer);
+            this.resizeObserver_ = null;
+        }
+    }
+    //============================================================================
+    // Event handlers
+    //============================================================================
+    onCarouselBackClick_() {
+        const targetPosition = this.calculateTargetPosition_(-1);
+        this.$.carouselContainer.scrollTo({ left: targetPosition, behavior: 'smooth' });
+        this.showBackButton_ = targetPosition > 0;
+        this.showForwardButton_ = true;
+    }
+    onCarouselForwardClick_() {
+        const targetPosition = this.calculateTargetPosition_(1);
+        this.$.carouselContainer.scrollTo({ left: targetPosition, behavior: 'smooth' });
+        this.showForwardButton_ =
+            targetPosition + this.$.carouselContainer.clientWidth <
+                this.$.carouselContainer.scrollWidth;
+        this.showBackButton_ = true;
+    }
+    onTabFocus_(event) {
+        const element = event.target;
+        if (event.code === 'Tab') {
+            // -2px as offsetLeft includes padding
+            this.$.carouselContainer.scrollTo({ left: element.offsetLeft - 2, behavior: 'smooth' });
+        }
+    }
+    //============================================================================
+    // Helper methods
+    //============================================================================
+    setShowCarouselButtons_() {
+        if (Math.round(this.$.carouselContainer.scrollLeft) +
+            this.$.carouselContainer.clientWidth <
+            this.$.carouselContainer.scrollWidth) {
+            // On shrinking the window, the forward button should show up again.
+            this.showForwardButton_ = true;
+        }
+        else {
+            // On expanding the window, the back and forward buttons should disappear.
+            this.showBackButton_ = this.$.carouselContainer.scrollLeft > 0;
+            this.showForwardButton_ = false;
+        }
+    }
+    calculateTargetPosition_(direction) {
+        const offset = this.$.carouselContainer.clientWidth / 2 * direction;
+        const targetPosition = Math.floor(this.$.carouselContainer.scrollLeft + offset);
+        return Math.max(0, Math.min(targetPosition, this.$.carouselContainer.scrollWidth -
+            this.$.carouselContainer.clientWidth));
+    }
+}
+customElements.define(HorizontalCarouselElement.is, HorizontalCarouselElement);

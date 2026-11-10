@@ -1,0 +1,50 @@
+{
+  "android_manifest": "../../android_webview/tools/automated_ui_tests/javatests/AndroidManifest.xml",
+  "apk_path": "apks/WebViewUiTestAppTest.apk",
+  "bundled_srcjars": [
+    "gen/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk__compile_resources.srcjar",
+    "gen/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk__native_libraries.srcjar",
+    "gen/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk__build_config_srcjar.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "create_locales_java_list": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/testing/android/instrumentation/test_runner_java.params.json",
+    "gen/android_webview/tools/automated_ui_tests/webview_ui_test_app_apk_resources.params.json",
+    "gen/base/base_java.params.json",
+    "gen/base/base_java_test_support.params.json",
+    "gen/base/test/public_transit_java.params.json",
+    "gen/third_party/android_deps/espresso_java.params.json",
+    "gen/third_party/androidx/androidx_test_monitor_java.params.json",
+    "gen/third_party/androidx/androidx_test_runner_java.params.json",
+    "gen/third_party/androidx/androidx_test_uiautomator_uiautomator_java.params.json",
+    "gen/third_party/hamcrest/hamcrest_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/ui/android/ui_java_test_support.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk.dex.jar",
+  "enable_bytecode_checks": true,
+  "enable_lint": false,
+  "final_dex_path": "obj/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk/webview_ui_test_app_test_apk__test_apk.mergeddex.jar",
+  "gn_target": "//android_webview/tools/automated_ui_tests:webview_ui_test_app_test_apk__test_apk__java",
+  "interface_jar_path": "obj/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk.turbine.jar",
+  "is_prebuilt": false,
+  "loadable_modules": [
+
+  ],
+  "merged_android_manifest": "gen/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk/AndroidManifest.merged.xml",
+  "processed_jar_path": "obj/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk.javac.jar",
+  "proguard_enabled": false,
+  "requires_android": true,
+  "requires_robolectric": false,
+  "rtxt_path": "gen/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk__compile_resources_R.txt",
+  "supports_android": true,
+  "target_sources_file": "gen/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk.sources",
+  "type": "android_apk",
+  "unprocessed_jar_path": "obj/android_webview/tools/automated_ui_tests/webview_ui_test_app_test_apk__test_apk.javac.jar",
+  "version_code": "1",
+  "version_name": "1.101.0"
+}

@@ -1,0 +1,8 @@
+{
+  "gn_target": "//android_webview:webview_primary_abi_assets",
+  "public_deps_configs": [
+    "gen/gin/v8_snapshot_assets.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

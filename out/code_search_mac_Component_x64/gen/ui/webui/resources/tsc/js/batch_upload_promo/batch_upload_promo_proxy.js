@@ -1,0 +1,20 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import { PageCallbackRouter, PageHandlerFactory, PageHandlerRemote } from '../batch_upload_promo.mojom-webui.js';
+export class BatchUploadPromoProxyImpl {
+    callbackRouter;
+    handler;
+    constructor() {
+        this.callbackRouter = new PageCallbackRouter();
+        this.handler = new PageHandlerRemote();
+        PageHandlerFactory.getRemote().createBatchUploadPromoHandler(this.callbackRouter.$.bindNewPipeAndPassRemote(), this.handler.$.bindNewPipeAndPassReceiver());
+    }
+    static setInstance(obj) {
+        instance = obj;
+    }
+    static getInstance() {
+        return instance || (instance = new BatchUploadPromoProxyImpl());
+    }
+}
+let instance = null;

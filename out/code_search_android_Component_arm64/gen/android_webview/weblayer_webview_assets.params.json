@@ -1,0 +1,13 @@
+{
+  "assets": {
+    "sources": [
+
+    ]
+  },
+  "deps_configs": [
+    "gen/android_webview/webview_primary_abi_assets.params.json",
+    "gen/third_party/icu/icu_assets.params.json"
+  ],
+  "gn_target": "//android_webview:weblayer_webview_assets",
+  "type": "android_assets"
+}
