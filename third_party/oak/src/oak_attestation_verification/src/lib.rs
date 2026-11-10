@@ -1,0 +1,109 @@
+//
+// Copyright 2022 The Project Oak Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#![cfg_attr(not(feature = "std"), no_std)]
+
+extern crate alloc;
+
+mod amd;
+mod compare;
+mod expect;
+mod extract;
+mod intel;
+mod platform;
+mod policy;
+pub mod results {
+    pub use oak_attestation_verification_results::*;
+}
+mod util;
+mod validity;
+pub mod verifier;
+mod verifiers;
+mod x509;
+
+#[cfg(test)]
+mod test_util;
+
+pub use expect::get_expected_values;
+pub use extract::{extract_evidence, extract_root_values};
+pub use key_util::convert_pem_to_raw;
+use oak_proto_rust::oak::attestation::v1::{
+    Endorsement, EndorsementDetails, EndorsementReferenceValue, PesEndorsementReferenceValue,
+    SignedEndorsement,
+};
+use oak_time::Instant;
+// TODO: b/437347358 - Most tests in policy_tests.rs are unit tests for a
+// policy. The policies here are exported only for that purpose. This
+// visibility should be revoked after moving the tests.
+pub use policy::{
+    application::ApplicationPolicy,
+    application_keys::ApplicationKeysPolicy,
+    binary::BinaryPolicy,
+    cb_transparent::{TransparentLayer1Policy, TransparentLayer2Policy, TransparentStage0Policy},
+    container::ContainerPolicy,
+    firmware::FirmwarePolicy,
+    kernel::KernelPolicy,
+    platform::{AmdSevSnpPolicy, IntelTdxPolicy},
+    session_binding_public_key::{
+        SessionBindingPublicKeyPolicy, SessionBindingPublicKeyVerificationError,
+        SessionBindingPublicKeyVerificationReport,
+    },
+    system::SystemPolicy,
+};
+pub use rekor::log_entry::verify_rekor_log_entry; // Exported utility function.
+pub use util::decode_event_proto;
+pub use verifiers::{
+    AmdSevSnpDiceAttestationVerifier, AmdSevSnpTransparentDiceAttestationVerifier,
+    EventLogVerifier, InsecureAttestationVerifier, IntelTdxAttestationVerifier,
+    RestrictedKernelVerificationReport, create_amd_verifier, create_insecure_verifier,
+    create_intel_tdx_verifier,
+};
+
+/// Verifies a signed endorsement against a reference value.
+///
+/// `now_utc_millis`: Current time in milliseconds UTC since Unix epoch.
+/// `signed_endorsement`: The endorsement, its signature, and optional Rekor log
+/// entry. `ref_value`: Reference value containing public keys for verification.
+pub fn verify_endorsement(
+    now_utc_millis: i64,
+    signed_endorsement: &SignedEndorsement,
+    ref_value: &EndorsementReferenceValue,
+) -> anyhow::Result<EndorsementDetails> {
+    let (statement, _tlog_verification) =
+        verify_endorsement::verify_endorsement(now_utc_millis, signed_endorsement, ref_value)?;
+    statement.get_details()
+}
+
+/// Verifies a PES signed endorsement against a reference value.
+///
+/// `now_utc_millis`: Current time in milliseconds UTC since Unix epoch.
+/// `endorsement`: The underlying endorsement.
+/// `pes_confirmation`: The PES confirmation bytes.
+/// `ref_value`: Reference value containing PES public keys for verification.
+pub fn verify_pes_endorsement(
+    now_utc_millis: i64,
+    endorsement: &Endorsement,
+    pes_confirmation: &[u8],
+    ref_value: &PesEndorsementReferenceValue,
+) -> anyhow::Result<EndorsementDetails> {
+    let s = pes::verify_pes_endorsement(
+        Instant::from_unix_millis(now_utc_millis),
+        endorsement,
+        pes_confirmation,
+        ref_value,
+    )?;
+    s.get_details()
+}

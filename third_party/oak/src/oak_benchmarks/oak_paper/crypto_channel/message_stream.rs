@@ -1,0 +1,901 @@
+//
+// Copyright 2026 The Project Oak Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#![no_std]
+
+extern crate alloc;
+// Needed for the framing implementation over `std::io` streams, which is where
+// every socket-backed leg lives. The crate stays `no_std` for the enclave
+// build, whose transports implement [`MessageStream`] directly.
+#[cfg(feature = "std")]
+extern crate std;
+
+#[cfg(feature = "std")]
+use alloc::vec;
+use alloc::vec::Vec;
+use core::default::Default;
+
+use oak_channel::{message::ResponseMessage, server::ServerChannelHandle};
+use oak_proto_rust::oak::session::v1::{PlaintextMessage, SessionRequest, SessionResponse};
+use oak_session::{ClientSession, ProtocolEngine, ServerSession, Session, config::SessionConfig};
+use prost::Message;
+
+/// Control messages understood by every benchmark echo server.
+///
+/// The servers echo any payload that is not one of these straight back. The
+/// sentinels are how a client says it has finished with a channel, which only
+/// became necessary once the benchmarks started reusing a channel across many
+/// exchanges instead of building a fresh one per message.
+///
+/// The benchmark's own payloads cannot collide with these. `create_message`
+/// fills a buffer with `0, 1, 2, ...`, so a four-byte payload is
+/// `[0, 1, 2, 3]`, never `b"exit"`.
+pub mod control {
+    /// Asks the server to stop serving the current channel.
+    ///
+    /// The server echoes it back *before* acting, so the client can tell the
+    /// cycle completed. That acknowledgement is not a nicety. The Restricted
+    /// Kernel leg has no connection to close and no end-of-stream to observe,
+    /// so a client that simply walked away would leave the enclave blocked
+    /// reading an application message while the client sent the first frame
+    /// of a new handshake.
+    ///
+    /// Afterwards the TCP legs return to `accept`, and the Restricted Kernel
+    /// Noise leg discards its session and waits for a fresh handshake.
+    pub const CLOSE: &[u8] = b"close";
+
+    /// Asks the server to exit altogether.
+    ///
+    /// Only used by the legs whose server the harness owns and must join.
+    /// The server does not echo this one; the connection dropping is the
+    /// acknowledgement.
+    pub const EXIT: &[u8] = b"exit";
+}
+
+/// A bidirectional stream of length-prefixed messages.
+///
+/// The trait itself is `no_std`. Implementations exist for the Restricted
+/// Kernel channel at either end ([`OakServerChannelMessageStream`] here, and
+/// `OakClientChannelMessageStream` in `rk_launcher.rs`), for a Noise session
+/// layered over any other implementation, and -- behind the `std` feature
+/// only -- a blanket impl covering everything that is `std::io::Read` plus
+/// `std::io::Write`, so a `TcpStream` or a `rustls::StreamOwned` qualifies.
+pub trait MessageStream {
+    fn send_message(&mut self, msg: &[u8]);
+
+    /// Reads one message, or returns `None` if the peer closed the stream
+    /// cleanly -- that is, at a message boundary, having sent nothing.
+    ///
+    /// Servers must use this. An echo server is shared by every iteration of
+    /// a benchmark, and clients come and go; a client that exits without
+    /// sending [`control::CLOSE`] is untidy but it must not take the server
+    /// thread down, because the resulting panic surfaces much later as an
+    /// unrelated failure in whichever leg runs next.
+    ///
+    /// Transports with no notion of end-of-stream -- the Restricted Kernel
+    /// channel is one, being a pair of file descriptors into a running
+    /// enclave rather than a connection -- never return `None`.
+    fn try_read_message(&mut self) -> Option<Vec<u8>>;
+
+    /// Reads one message, panicking if the peer has gone away.
+    ///
+    /// Clients use this: the server is part of the harness, so its
+    /// disappearance is a bug rather than a condition worth handling.
+    fn read_message(&mut self) -> Vec<u8> {
+        self.try_read_message().expect("peer closed the stream")
+    }
+}
+
+pub struct OakServerChannelMessageStream {
+    oak_server_channel: ServerChannelHandle,
+}
+
+impl OakServerChannelMessageStream {
+    pub fn new(oak_server_channel: ServerChannelHandle) -> Self {
+        OakServerChannelMessageStream { oak_server_channel }
+    }
+}
+
+impl MessageStream for OakServerChannelMessageStream {
+    /// Never `None`: the enclave channel is a pair of file descriptors, not a
+    /// connection, so there is nothing that could close.
+    fn try_read_message(&mut self) -> Option<Vec<u8>> {
+        let (msg, _timer) = self.oak_server_channel.read_request().expect("reading message");
+        Some(msg.body)
+    }
+
+    fn send_message(&mut self, msg: &[u8]) {
+        self.oak_server_channel
+            .write_response(ResponseMessage { invocation_id: 0, body: msg.to_vec() })
+            .expect("writing message");
+    }
+}
+
+/// A stream that reads through a buffer and writes straight through.
+///
+/// Every leg must issue the same number of socket calls per message, or the
+/// benchmark measures syscall counts instead of cryptography. At a one-byte
+/// payload a syscall costs about 1.03 µs on the reference host, far more than
+/// the AEAD work, so an unmatched read dominates the result. Unbuffered, the
+/// length read and the body read are two separate `recvfrom` calls; buffered,
+/// they are one.
+///
+/// Each leg wraps its own stream, and *where* it wraps matters. Put this
+/// directly above whatever produces message bytes: the socket for the raw legs,
+/// the `rustls::StreamOwned` for the TLS legs. Underneath rustls it would
+/// instead coalesce rustls's own 4 KiB record reads and copy every byte of
+/// ciphertext, which changes the count being reported.
+///
+/// Writes deliberately pass straight through. Buffering them would need an
+/// explicit flush per message to preserve the request/response shape, which is
+/// the same syscall count with an extra copy.
+#[cfg(feature = "std")]
+pub struct BufferedStream<S: std::io::Read + std::io::Write> {
+    inner: std::io::BufReader<S>,
+}
+
+#[cfg(feature = "std")]
+impl<S: std::io::Read + std::io::Write> BufferedStream<S> {
+    pub fn new(inner: S) -> Self {
+        BufferedStream { inner: std::io::BufReader::new(inner) }
+    }
+
+    /// Borrows the wrapped stream, for setting or inspecting socket options.
+    pub fn get_ref(&self) -> &S {
+        self.inner.get_ref()
+    }
+}
+
+#[cfg(feature = "std")]
+impl<S: std::io::Read + std::io::Write> std::io::Read for BufferedStream<S> {
+    fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
+        self.inner.read(buf)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<S: std::io::Read + std::io::Write> std::io::Write for BufferedStream<S> {
+    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+        self.inner.get_mut().write(buf)
+    }
+
+    /// Forwarded deliberately. The default implementation writes only the first
+    /// slice, which would turn rustls's single vectored record write into a
+    /// loop of one-slice writes and change the leg's syscall count -- the exact
+    /// thing this type exists to hold constant.
+    fn write_vectored(&mut self, bufs: &[std::io::IoSlice<'_>]) -> std::io::Result<usize> {
+        self.inner.get_mut().write_vectored(bufs)
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        self.inner.get_mut().flush()
+    }
+}
+
+/// The body size at or above which [`MessageStream::send_message`] frames with
+/// a vectored write rather than by copying.
+///
+/// Both framings issue exactly one write. They differ in what they spend to get
+/// there: the copy costs an allocation and a `memcpy` proportional to the body,
+/// the vectored write costs a second `iovec` for the kernel to walk. Neither is
+/// free, and which one wins depends on the payload.
+///
+/// Measured on the local TCP legs, vectored against copying, median of three
+/// runs per point, arms interleaved within one binary. Positive means the
+/// vectored write is *slower*:
+///
+/// | payload | plaintext | Noise |
+/// | ---: | ---: | ---: |
+/// | 1 B | +4.9% | +6.2% |
+/// | 1 kB | +4.9% | +3.2% |
+/// | 4 kB | +3.0% | +2.1% |
+/// | 8 kB | +2.7% | +0.1% |
+/// | 16,380 B | +1.9% | +0.7% |
+/// | 65,532 B | -3.1% | -1.9% |
+/// | 100 MB | -24.0% | -22.8% |
+///
+/// The run-to-run spread at these points is 1-4%, so everything from 2 kB to
+/// 16 kB is a tie and the only resolvable effects are the ~5% loss at and below
+/// 1 kB and the large win from 64 kB up. 16 KiB is the smallest round threshold
+/// that keeps the loss out of the sweep, and the boundary it introduces is
+/// smaller than the noise floor either side of it.
+#[cfg(feature = "std")]
+const VECTORED_FRAMING_THRESHOLD: usize = 16 * 1024;
+
+/// Framing for anything that is already a `std::io` stream: the raw sockets,
+/// `BufferedStream`, and `rustls::StreamOwned`.
+///
+/// This is deliberately narrower than [`oak_channel::Read`] +
+/// [`oak_channel::Write`], which is what it used to be written against.
+/// `oak_channel::Write` offers only `write_all`, so it cannot express the
+/// vectored write that [`MessageStream::send_message`] needs. Nothing is lost
+/// by narrowing it: every transport that reached this impl is a `std` socket
+/// type, and the enclave transports ([`OakServerChannelMessageStream`] and
+/// [`OakClientChannelMessageStream`]) implement [`MessageStream`] themselves.
+/// The `no_std` build therefore has no blanket impl at all.
+#[cfg(feature = "std")]
+impl<T: std::io::Read + std::io::Write> MessageStream for T {
+    fn try_read_message(&mut self) -> Option<Vec<u8>> {
+        let mut size_buf = [0u8; 4];
+        match std::io::Read::read_exact(self, &mut size_buf) {
+            Ok(()) => {}
+            // Only a failure to read the *length* can be a clean close. Once a
+            // length has arrived the peer has committed to a body, so a short
+            // read there is a truncated message and a real error.
+            Err(err) if err.kind() == std::io::ErrorKind::UnexpectedEof => return None,
+            Err(err) => panic!("reading message size: {err}"),
+        }
+        let size = u32::from_le_bytes(size_buf) as usize;
+        let mut buf = vec![0u8; size];
+        std::io::Read::read_exact(self, &mut buf).expect("reading message");
+        Some(buf)
+    }
+
+    /// Writes the length prefix and the body as a single write.
+    ///
+    /// Not a micro-optimisation. Every leg shares this framing but sits at a
+    /// different level relative to it. The Noise legs encrypt above it, so two
+    /// writes cost two syscalls. The TLS legs wrap this stream in a
+    /// `rustls::StreamOwned`, whose `write` forms a record and then calls
+    /// `complete_io`, so a length write followed by a body write became **two
+    /// TLS records** -- two AEAD seals and two sets of record overhead, doubled
+    /// again on the read side -- for every message a Noise leg sealed once.
+    ///
+    /// Measured on the local TCP legs, one write versus two:
+    ///
+    /// | leg | two writes | one write | change |
+    /// | --- | ---: | ---: | ---: |
+    /// | plaintext | 10.730 µs | 8.660 µs | -2.07 µs |
+    /// | Noise | 11.644 µs | 9.571 µs | -2.07 µs |
+    /// | TLS | 14.629 µs | 7.721 µs | -6.91 µs |
+    ///
+    /// Plaintext and Noise save an identical 2.07 µs, which is the two `sendto`
+    /// calls this removes (`strace -c` confirms 4 per exchange before and 2
+    /// after, with reads unchanged) and puts a syscall on this host at about
+    /// 1.03 µs. TLS saves 3.3x that, and the surplus is the second record's
+    /// crypto. So most of what looked like TLS overhead was this framing.
+    ///
+    /// # Getting the single write without paying for a copy
+    ///
+    /// The obvious way to write two buffers at once is to concatenate them, and
+    /// that is what this did first. The copy is charged inside the timed region
+    /// to every leg, and it is proportional to the payload, so at the top of
+    /// the sweep it was an allocation and a `memcpy` of 100 MB per message
+    /// per direction -- about a quarter of the reported 100 MB figure.
+    ///
+    /// Handing the prefix and the body to `write_vectored` as two `IoSlice`s
+    /// keeps the single write and drops the copy. rustls does not reintroduce
+    /// one: `Writer::write_vectored` wraps the slices in `OutboundChunks` and
+    /// fragments by total length, so both still land in one record.
+    /// [`BufferedStream`] forwards `write_vectored` to the socket, and a
+    /// `TcpStream` turns it into one `writev`.
+    ///
+    /// Below [`VECTORED_FRAMING_THRESHOLD`] the copy is the cheaper of the two;
+    /// see that constant for the measurements.
+    ///
+    /// # On its own this did not make the legs comparable
+    ///
+    /// It removed one asymmetry and exposed another. With a single record,
+    /// rustls served the second `read_exact` out of `received_plaintext`, so
+    /// the TLS legs issued **4** socket syscalls per exchange against
+    /// plaintext's **6** (measured: 2.34 versus 4.55 reads per exchange). At
+    /// 1.03 µs each that is 2.06 µs in TLS's favour, against roughly 1.1 µs of
+    /// AEAD work, which made TLS report *faster than plaintext* -- an
+    /// impossible result that was entirely an artefact of read buffering.
+    ///
+    /// The two-write framing was accidentally syscall-symmetric (8 per exchange
+    /// on every leg) while being crypto-asymmetric; one write is the reverse.
+    /// `BufferedStream` closes the gap by giving every leg one socket read
+    /// per message.
+    ///
+    /// Note also that rustls writes with `writev` while the raw legs use
+    /// `sendto` below the threshold. That difference is not controlled for, and
+    /// on this host the `write` family has been measured as materially more
+    /// expensive than the `send` family.
+    fn send_message(&mut self, msg: &[u8]) {
+        let prefix = (msg.len() as u32).to_le_bytes();
+        if msg.len() < VECTORED_FRAMING_THRESHOLD {
+            let mut frame = Vec::with_capacity(size_of::<u32>() + msg.len());
+            frame.extend_from_slice(&prefix);
+            frame.extend_from_slice(msg);
+            std::io::Write::write_all(self, &frame).expect("writing message");
+            return;
+        }
+        // `write_vectored` is permitted to consume only part of what it is
+        // given, so it needs the same advance-and-retry loop `write_all` has.
+        // `write_all_vectored` does exactly this but is still nightly-only.
+        let mut slices = [std::io::IoSlice::new(&prefix), std::io::IoSlice::new(msg)];
+        let mut slices: &mut [std::io::IoSlice<'_>] = &mut slices;
+        while !slices.is_empty() {
+            match std::io::Write::write_vectored(self, slices) {
+                Ok(0) => panic!("writing message: the stream accepted no bytes"),
+                Ok(n) => std::io::IoSlice::advance_slices(&mut slices, n),
+                Err(err) if err.kind() == std::io::ErrorKind::Interrupted => {}
+                Err(err) => panic!("writing message: {err}"),
+            }
+        }
+    }
+}
+
+// A message stream implemented as a noise session over a message stream.
+pub struct NoiseMessageStream<MS: MessageStream, S>
+where
+    S: ProtocolEngine + Session,
+{
+    message_stream: MS,
+    session: S,
+}
+
+pub type ClientNoiseMessageStream<MS> = NoiseMessageStream<MS, ClientSession>;
+pub type ServerNoiseMessageStream<MS> = NoiseMessageStream<MS, ServerSession>;
+
+/// The config used by the unattested Noise legs.
+///
+/// `Unattested` removes the attestation *evidence*, not the attestation
+/// *round trip*: the session protocol still exchanges an `AttestRequest` and an
+/// `AttestResponse`, they are just empty. That is what makes the attested and
+/// unattested legs comparable — they have the same network shape, so the
+/// difference between them is attestation's cryptography rather than its
+/// latency.
+pub fn unattested_noise_nn_config() -> SessionConfig {
+    SessionConfig::builder(
+        oak_session::attestation::AttestationType::Unattested,
+        oak_session::handshake::HandshakeType::NoiseNN,
+    )
+    .build()
+}
+
+impl<MS: MessageStream> ClientNoiseMessageStream<MS> {
+    // Create a new client session for the provided message stream, and perform
+    // handshake. Unattested NoiseNN is used.
+    pub fn new_client(message_stream: MS) -> ClientNoiseMessageStream<MS> {
+        Self::new_client_with_config(message_stream, unattested_noise_nn_config())
+    }
+
+    /// Same as [`Self::new_client`], but with a caller-supplied
+    /// [`SessionConfig`].
+    ///
+    /// The handshake loop is identical whether or not the session attests:
+    /// attestation is carried inside the session protocol's own messages, so
+    /// the transport does not need to know about it. Constructing the config is
+    /// left to the caller because the attested configs need `std` and pull in
+    /// the attestation verification stack, which this crate deliberately does
+    /// not depend on.
+    pub fn new_client_with_config(
+        mut message_stream: MS,
+        config: SessionConfig,
+    ) -> ClientNoiseMessageStream<MS> {
+        let mut session = ClientSession::create(config).unwrap();
+        while !session.is_open() {
+            let init_req = session
+                .get_outgoing_message()
+                .expect("failed to get outgoing handshake message")
+                .expect("expected outgoing message");
+            message_stream.send_message(init_req.encode_to_vec().as_slice());
+            if !session.is_open() {
+                let resp_msg = message_stream.read_message();
+                let session_response = SessionResponse::decode(resp_msg.as_slice())
+                    .expect("failed to decode session response");
+                session
+                    .put_incoming_message(session_response)
+                    .expect("failed to put incoming message");
+            }
+        }
+        NoiseMessageStream { message_stream, session }
+    }
+
+    /// Same as [`Self::new_client_with_config`], but appends a timed breakdown
+    /// of the handshake to `trace`.
+    ///
+    /// This is what makes the handshake decomposition a measurement rather than
+    /// a model. Every boundary it times is one this crate already owns: the
+    /// session protocol hands the client a message to send and takes back the
+    /// one that arrives, and the four things that happen between those points
+    /// -- key material produced, bytes on the wire, bytes consumed -- are
+    /// separated by the calls below and by nothing else. No timer is placed
+    /// inside `oak_session`, so nothing about the protocol implementation
+    /// changes to accommodate the measurement.
+    ///
+    /// What each segment is worth reading as:
+    ///
+    /// - [`HandshakeWork::Create`] is `ClientSession::create`: the config is
+    ///   resolved and the client's ephemeral key pair is generated. It happens
+    ///   before any message exists, so it has no phase.
+    /// - [`HandshakeWork::Produce`] is `get_outgoing_message` plus protobuf
+    ///   encoding.
+    /// - [`HandshakeWork::Exchange`] is the send and the blocking read. It
+    ///   contains the wire time and all of the peer's own processing, and on a
+    ///   loopback benchmark it is dominated by the latter. It is not a network
+    ///   cost and must not be reported as one.
+    /// - [`HandshakeWork::Ingest`] is protobuf decoding plus
+    ///   `put_incoming_message`. In the [`HandshakePhase::Attest`] phase this
+    ///   is where the client verifies the server's evidence; in the
+    ///   [`HandshakePhase::Handshake`] phase it is the Noise step and the
+    ///   binding-signature check. The two cannot be separated further without
+    ///   instrumenting `oak_session`.
+    ///
+    /// The phase comes from the protobuf variant actually exchanged, not from
+    /// the round-trip index, so a session that changes shape reports the shape
+    /// it had rather than the one this code expected.
+    #[cfg(feature = "std")]
+    pub fn new_client_with_config_traced(
+        mut message_stream: MS,
+        config: SessionConfig,
+        trace: &mut Vec<HandshakeSegment>,
+    ) -> ClientNoiseMessageStream<MS> {
+        use std::time::Instant;
+
+        let start = Instant::now();
+        let mut session = ClientSession::create(config).unwrap();
+        trace.push(HandshakeSegment {
+            phase: HandshakePhase::None,
+            work: HandshakeWork::Create,
+            duration: start.elapsed(),
+        });
+
+        while !session.is_open() {
+            let start = Instant::now();
+            let init_req = session
+                .get_outgoing_message()
+                .expect("failed to get outgoing handshake message")
+                .expect("expected outgoing message");
+            let encoded = init_req.encode_to_vec();
+            let phase = HandshakePhase::of_request(&init_req);
+            trace.push(HandshakeSegment {
+                phase,
+                work: HandshakeWork::Produce,
+                duration: start.elapsed(),
+            });
+
+            if session.is_open() {
+                // The session opened on an outgoing message, so there is no
+                // response to wait for and the send is the last thing that
+                // happens. Time it as an exchange anyway, so the segments still
+                // sum to the total.
+                let start = Instant::now();
+                message_stream.send_message(encoded.as_slice());
+                trace.push(HandshakeSegment {
+                    phase,
+                    work: HandshakeWork::Exchange,
+                    duration: start.elapsed(),
+                });
+                break;
+            }
+
+            let start = Instant::now();
+            message_stream.send_message(encoded.as_slice());
+            let resp_msg = message_stream.read_message();
+            trace.push(HandshakeSegment {
+                phase,
+                work: HandshakeWork::Exchange,
+                duration: start.elapsed(),
+            });
+
+            let start = Instant::now();
+            let session_response = SessionResponse::decode(resp_msg.as_slice())
+                .expect("failed to decode session response");
+            let phase = HandshakePhase::of_response(&session_response);
+            session.put_incoming_message(session_response).expect("failed to put incoming message");
+            trace.push(HandshakeSegment {
+                phase,
+                work: HandshakeWork::Ingest,
+                duration: start.elapsed(),
+            });
+        }
+
+        NoiseMessageStream { message_stream, session }
+    }
+}
+
+/// Which session-protocol message a handshake segment was spent on.
+#[cfg(feature = "std")]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum HandshakePhase {
+    /// The attestation exchange: `AttestRequest` out, `AttestResponse` back.
+    ///
+    /// An unattested session still performs this exchange with empty evidence,
+    /// which is what makes the attested and unattested legs comparable segment
+    /// by segment.
+    Attest,
+    /// The handshake exchange: `HandshakeRequest` out, `HandshakeResponse`
+    /// back. The binding signature travels here.
+    Handshake,
+    /// An encrypted message seen before the session reported itself open.
+    ///
+    /// Not expected. Recorded rather than asserted, so that an unexpected
+    /// protocol shape appears in the data instead of aborting the run.
+    Encrypted,
+    /// A message carrying no variant at all, or a segment that belongs to no
+    /// message.
+    None,
+}
+
+#[cfg(feature = "std")]
+impl HandshakePhase {
+    fn of_request(request: &SessionRequest) -> Self {
+        use oak_proto_rust::oak::session::v1::session_request::Request;
+        match request.request {
+            Some(Request::AttestRequest(_)) => Self::Attest,
+            Some(Request::HandshakeRequest(_)) => Self::Handshake,
+            Some(Request::EncryptedMessage(_)) => Self::Encrypted,
+            None => Self::None,
+        }
+    }
+
+    fn of_response(response: &SessionResponse) -> Self {
+        use oak_proto_rust::oak::session::v1::session_response::Response;
+        match response.response {
+            Some(Response::AttestResponse(_)) => Self::Attest,
+            Some(Response::HandshakeResponse(_)) => Self::Handshake,
+            Some(Response::EncryptedMessage(_)) => Self::Encrypted,
+            None => Self::None,
+        }
+    }
+
+    /// A stable name for CSV output.
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Attest => "attest",
+            Self::Handshake => "handshake",
+            Self::Encrypted => "encrypted",
+            Self::None => "none",
+        }
+    }
+}
+
+/// What the client was doing during a handshake segment.
+///
+/// See [`ClientNoiseMessageStream::new_client_with_config_traced`] for what
+/// each one contains and, more importantly, what it does not.
+#[cfg(feature = "std")]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum HandshakeWork {
+    /// `ClientSession::create`.
+    Create,
+    /// `get_outgoing_message` and protobuf encoding.
+    Produce,
+    /// The send, and the blocking read of the peer's reply. Wire time plus the
+    /// peer's processing, inseparably.
+    Exchange,
+    /// Protobuf decoding and `put_incoming_message`. Verification lives here.
+    Ingest,
+}
+
+#[cfg(feature = "std")]
+impl HandshakeWork {
+    /// A stable name for CSV output.
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Create => "create",
+            Self::Produce => "produce",
+            Self::Exchange => "exchange",
+            Self::Ingest => "ingest",
+        }
+    }
+}
+
+/// One timed step of a client-side session establishment.
+#[cfg(feature = "std")]
+#[derive(Clone, Copy, Debug)]
+pub struct HandshakeSegment {
+    pub phase: HandshakePhase,
+    pub work: HandshakeWork,
+    pub duration: core::time::Duration,
+}
+
+impl<MS: MessageStream> ServerNoiseMessageStream<MS> {
+    // Create a new server session for the provided message stream, and perform
+    // handshake. Unattested NoiseNN is used.
+    pub fn new_server(message_stream: MS) -> ServerNoiseMessageStream<MS> {
+        Self::new_server_with_config(message_stream, unattested_noise_nn_config())
+    }
+
+    /// Same as [`Self::new_server`], but with a caller-supplied
+    /// [`SessionConfig`]. See [`ClientNoiseMessageStream::
+    /// new_client_with_config`].
+    pub fn new_server_with_config(
+        mut message_stream: MS,
+        config: SessionConfig,
+    ) -> ServerNoiseMessageStream<MS> {
+        let mut session = ServerSession::create(config).unwrap();
+        while !session.is_open() {
+            let req_bytes = message_stream.read_message();
+            let session_req = SessionRequest::decode(req_bytes.as_slice())
+                .expect("failed to decode incoming request");
+            session.put_incoming_message(session_req).expect("failed to put incoming message");
+            if !session.is_open() {
+                let resp = session
+                    .get_outgoing_message()
+                    .expect("failed to get outgoing handshake response message")
+                    .expect("expected outgoing message");
+                message_stream.send_message(resp.encode_to_vec().as_slice());
+            }
+        }
+        NoiseMessageStream { message_stream, session }
+    }
+}
+
+/// The implementation of MessageStream for NoiseMessageStream reads and
+/// writes messages from the wrapped [`MessageStream`], and uses the wrapped
+/// [`Session`] to encrypt/decrypt the bytes.
+///
+/// The length encoding is outside of the encrypted payload, so that reading can
+/// occur as expected.
+impl<MS: MessageStream, S> MessageStream for NoiseMessageStream<MS, S>
+where
+    S: ProtocolEngine + Session,
+    S::Input: prost::Message + Default,
+    S::Output: prost::Message,
+{
+    /// Propagates the inner stream's end of stream. A Noise session over a
+    /// transport that has closed cannot produce another message, and the
+    /// session state is not worth preserving.
+    fn try_read_message(&mut self) -> Option<Vec<u8>> {
+        let incoming_bytes = self.message_stream.try_read_message()?;
+        let incoming_message = <S::Input as prost::Message>::decode(incoming_bytes.as_slice())
+            .expect("decoding incoming encrypted message");
+        self.session.put_incoming_message(incoming_message).expect("putting incoming message");
+        Some(
+            self.session
+                .read()
+                .expect("reading decrypted message")
+                .expect("empty decrypted message")
+                .plaintext,
+        )
+    }
+
+    fn send_message(&mut self, msg: &[u8]) {
+        self.session
+            .write(PlaintextMessage { plaintext: msg.to_vec() })
+            .expect("failed to write plaintext message");
+        let outgoing_message = self
+            .session
+            .get_outgoing_message()
+            .expect("failed to get outgoing encrypted message")
+            .expect("expected outgoing message");
+        let outgoing_bytes = outgoing_message.encode_to_vec();
+        self.message_stream.send_message(outgoing_bytes.as_slice());
+    }
+}
+
+#[cfg(all(test, feature = "std"))]
+mod tests {
+    use std::{
+        io::{IoSlice, Write as _},
+        vec,
+        vec::Vec,
+    };
+
+    use googletest::prelude::*;
+
+    use super::*;
+
+    /// A stream that counts the calls made to it.
+    ///
+    /// The two claims this module exists to check -- one write and one read per
+    /// message -- are claims about *call counts*, not about bytes, so the
+    /// counts are what the mock records. Reads are served from `to_read` and
+    /// never span more than one call's worth of data, which is what a socket
+    /// does.
+    #[derive(Default)]
+    struct CountingStream {
+        to_read: Vec<u8>,
+        read_pos: usize,
+        reads: usize,
+        written: Vec<u8>,
+        writes: usize,
+        /// Lengths passed to each `write_vectored`, so a forwarded vectored
+        /// write can be told apart from a loop of single-slice writes.
+        vectored_slice_counts: Vec<usize>,
+    }
+
+    impl CountingStream {
+        fn with_input(to_read: Vec<u8>) -> Self {
+            CountingStream { to_read, ..Default::default() }
+        }
+    }
+
+    impl std::io::Read for CountingStream {
+        fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
+            self.reads += 1;
+            let n = core::cmp::min(buf.len(), self.to_read.len() - self.read_pos);
+            buf[..n].copy_from_slice(&self.to_read[self.read_pos..self.read_pos + n]);
+            self.read_pos += n;
+            Ok(n)
+        }
+    }
+
+    impl std::io::Write for CountingStream {
+        fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+            self.writes += 1;
+            self.written.extend_from_slice(buf);
+            Ok(buf.len())
+        }
+
+        fn write_vectored(&mut self, bufs: &[IoSlice<'_>]) -> std::io::Result<usize> {
+            self.writes += 1;
+            self.vectored_slice_counts.push(bufs.len());
+            let mut n = 0;
+            for b in bufs {
+                self.written.extend_from_slice(b);
+                n += b.len();
+            }
+            Ok(n)
+        }
+
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+
+    /// A framed message, as `send_message` writes it.
+    fn framed(payload: &[u8]) -> Vec<u8> {
+        let mut v = (payload.len() as u32).to_le_bytes().to_vec();
+        v.extend_from_slice(payload);
+        v
+    }
+
+    #[googletest::test]
+    fn send_message_writes_the_frame_once() {
+        let mut stream = CountingStream::default();
+        stream.send_message(&[7u8; 100]);
+
+        // One write, not two: a length write followed by a body write would
+        // become two TLS records on the rustls legs.
+        expect_that!(stream.writes, eq(1));
+        expect_that!(stream.written, eq(&framed(&[7u8; 100])));
+    }
+
+    #[googletest::test]
+    fn a_small_message_is_framed_by_copying() {
+        let mut stream = CountingStream::default();
+        stream.send_message(&[7u8; VECTORED_FRAMING_THRESHOLD - 1]);
+
+        expect_that!(stream.writes, eq(1));
+        // No vectored write, so the copy path ran. Below the threshold that is
+        // the cheaper of the two; see `VECTORED_FRAMING_THRESHOLD`.
+        expect_that!(stream.vectored_slice_counts, eq(&Vec::<usize>::new()));
+        expect_that!(stream.written, eq(&framed(&[7u8; VECTORED_FRAMING_THRESHOLD - 1])));
+    }
+
+    #[googletest::test]
+    fn a_large_message_is_framed_without_copying() {
+        let mut stream = CountingStream::default();
+        stream.send_message(&[7u8; VECTORED_FRAMING_THRESHOLD]);
+
+        // Still one write, and now the prefix and the body reach it as two
+        // separate slices rather than as a freshly allocated concatenation.
+        expect_that!(stream.writes, eq(1));
+        expect_that!(stream.vectored_slice_counts, eq(&vec![2usize]));
+        expect_that!(stream.written, eq(&framed(&[7u8; VECTORED_FRAMING_THRESHOLD])));
+    }
+
+    /// A stream whose `write_vectored` behaves like the default one, writing
+    /// only the first slice it is given.
+    #[derive(Default)]
+    struct OneSliceAtATimeStream {
+        written: Vec<u8>,
+        writes: usize,
+    }
+
+    impl std::io::Write for OneSliceAtATimeStream {
+        fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+            self.writes += 1;
+            self.written.extend_from_slice(buf);
+            Ok(buf.len())
+        }
+
+        fn write_vectored(&mut self, bufs: &[IoSlice<'_>]) -> std::io::Result<usize> {
+            match bufs.iter().find(|b| !b.is_empty()) {
+                Some(b) => self.write(b),
+                None => Ok(0),
+            }
+        }
+
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+
+    impl std::io::Read for OneSliceAtATimeStream {
+        fn read(&mut self, _buf: &mut [u8]) -> std::io::Result<usize> {
+            Ok(0)
+        }
+    }
+
+    #[googletest::test]
+    fn a_partial_vectored_write_still_sends_the_whole_frame() {
+        // `write_vectored` may consume only part of what it is handed, and the
+        // default implementation consumes exactly one slice. The frame must
+        // still arrive intact -- at the cost of the extra write, which is why
+        // every stream on the measured legs implements it properly.
+        let mut stream = OneSliceAtATimeStream::default();
+        stream.send_message(&[3u8; VECTORED_FRAMING_THRESHOLD]);
+
+        expect_that!(stream.writes, eq(2));
+        expect_that!(stream.written, eq(&framed(&[3u8; VECTORED_FRAMING_THRESHOLD])));
+    }
+
+    #[googletest::test]
+    fn an_empty_message_survives_a_round_trip() {
+        // The framing loop must not spin on the empty body slice.
+        let mut writer = CountingStream::default();
+        writer.send_message(b"");
+
+        let mut reader = CountingStream::with_input(writer.written);
+        expect_that!(reader.try_read_message(), some(eq(&Vec::<u8>::new())));
+    }
+
+    #[googletest::test]
+    fn unbuffered_read_costs_two_reads() {
+        // The baseline the buffer exists to remove, pinned so that the
+        // buffered case below is measuring something.
+        let mut stream = CountingStream::with_input(framed(&[9u8; 100]));
+        let msg = stream.try_read_message();
+
+        expect_that!(msg, some(eq(&vec![9u8; 100])));
+        expect_that!(stream.reads, eq(2));
+    }
+
+    #[googletest::test]
+    fn buffered_read_costs_one_read() {
+        let inner = CountingStream::with_input(framed(&[9u8; 100]));
+        let mut stream = BufferedStream::new(inner);
+        let msg = stream.try_read_message();
+
+        expect_that!(msg, some(eq(&vec![9u8; 100])));
+        expect_that!(stream.get_ref().reads, eq(1));
+    }
+
+    #[googletest::test]
+    fn buffering_does_not_add_a_write() {
+        let mut stream = BufferedStream::new(CountingStream::default());
+        stream.send_message(&[1u8; 10]);
+
+        expect_that!(stream.get_ref().writes, eq(1));
+        expect_that!(stream.get_ref().written, eq(&framed(&[1u8; 10])));
+    }
+
+    #[googletest::test]
+    fn vectored_writes_are_forwarded_whole() {
+        // rustls writes a record as several slices in one `writev`. The
+        // default `write_vectored` would write only the first, turning that
+        // into a loop and changing the leg's syscall count.
+        let mut stream = BufferedStream::new(CountingStream::default());
+        let n = stream
+            .write_vectored(&[IoSlice::new(b"abc"), IoSlice::new(b"de")])
+            .expect("write_vectored");
+
+        expect_that!(n, eq(5));
+        expect_that!(stream.get_ref().vectored_slice_counts, eq(&vec![2usize]));
+        expect_that!(stream.get_ref().written, eq(&b"abcde".to_vec()));
+    }
+
+    #[googletest::test]
+    fn clean_end_of_stream_reads_none() {
+        let mut stream = CountingStream::default();
+        expect_that!(stream.try_read_message(), none());
+    }
+
+    #[googletest::test]
+    fn a_message_survives_a_round_trip() {
+        let mut writer = CountingStream::default();
+        writer.send_message(b"hello");
+
+        let mut reader = CountingStream::with_input(writer.written);
+        expect_that!(reader.try_read_message(), some(eq(&b"hello".to_vec())));
+    }
+}

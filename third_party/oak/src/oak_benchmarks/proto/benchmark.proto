@@ -1,0 +1,193 @@
+//
+// Copyright 2026 The Project Oak Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto3";
+
+package oak.benchmark;
+
+import "proto/micro_rpc/options.proto";
+
+// Request to run a benchmark.
+message RunBenchmarkRequest {
+  // Type of benchmark to run.
+  BenchmarkType benchmark_type = 1;
+  // Size of data to process (bytes).
+  uint32 data_size = 2;
+  // Number of iterations.
+  uint32 iterations = 3;
+  // Number of warmup iterations to run before measurement (not timed).
+  uint32 warmup_iterations = 4;
+  // Seed for deterministic pseudo-random data generation.
+  //
+  // Both the enclave and the Linux baseline must be given the same seed,
+  // otherwise they operate on different data and the comparison is not
+  // apples-to-apples. The host CLIs default this to a fixed constant rather
+  // than deriving it from the clock.
+  //
+  // Explicitly optional: zero is a valid seed, so an unset field and a seed of
+  // zero have to be distinguishable. When unset the service uses its default.
+  optional uint64 seed = 5;
+  // Working set size in bytes for memory-bound benchmarks (0 = use default).
+  //
+  // Applies to the array update, hash map and pointer chase benchmarks. For
+  // the pointer chase it is rounded down to a whole number of 64-byte slots.
+  // The allocation is performed outside the timed region.
+  //
+  // BENCHMARK_TYPE_PAGE_TOUCH also reads this field, but for it the meaning
+  // differs: it is the size of the region allocated and freed on *each*
+  // iteration, and that allocation is inside the timed region because
+  // provisioning is what that benchmark measures.
+  uint64 working_set_size = 6;
+}
+
+// Types of benchmarks supported.
+enum BenchmarkType {
+  BENCHMARK_TYPE_UNSPECIFIED = 0;
+
+  BENCHMARK_TYPE_SHA256 = 1;
+  BENCHMARK_TYPE_SHA512 = 6;
+  BENCHMARK_TYPE_SHA3_256 = 7;
+  BENCHMARK_TYPE_SHA3_512 = 8;
+
+  BENCHMARK_TYPE_P256_SIGN = 2;
+  BENCHMARK_TYPE_P256_VERIFY = 10;
+  BENCHMARK_TYPE_ED25519_SIGN = 14;
+  BENCHMARK_TYPE_ED25519_VERIFY = 15;
+  BENCHMARK_TYPE_AES_256_GCM_SEAL = 11;
+  BENCHMARK_TYPE_AES_256_GCM_OPEN = 12;
+
+  BENCHMARK_TYPE_MEMORY_INSERT = 3;
+  BENCHMARK_TYPE_MEMORY_LOOKUP = 4;
+  BENCHMARK_TYPE_ARRAY_UPDATE = 5;
+  BENCHMARK_TYPE_ALLOC_CHURN = 9;
+
+  // Removals paired with insertions on a map that stays at the size
+  // `working_set_size` asks for. BENCHMARK_TYPE_MEMORY_INSERT covers the
+  // growth path; this covers the steady state, where every insertion is
+  // preceded by a free of the same size.
+  BENCHMARK_TYPE_MEMORY_CHURN = 16;
+
+  // Cost of one user/kernel round trip with no useful work in between.
+  //
+  // The host application supplies the syscall to invoke, so the two platforms
+  // do not necessarily measure the same syscall; see the benchmark crate's
+  // `syscall` module for what each one uses and why.
+  BENCHMARK_TYPE_NULL_SYSCALL = 20;
+
+  // The null syscall benchmark's loop with no syscall in it.
+  //
+  // Measures the harness: the loop, the indirect call to the probe, the
+  // optimisation barrier and the timer. Subtracting it from
+  // BENCHMARK_TYPE_NULL_SYSCALL leaves the kernel crossing. Unlike the
+  // benchmark it controls for, this one is identical on both platforms.
+  BENCHMARK_TYPE_SYSCALL_CONTROL = 21;
+
+  // Dependent-load latency over a randomly permuted list of cache lines, the
+  // construction used by lmbench's lat_mem_rd. `working_set_size` selects the
+  // size of the list, which is what makes the result a curve across the cache
+  // hierarchy rather than a single number.
+  //
+  // At working sets of a few hundred megabytes this is also the suite's only
+  // measurement sensitive to page size: the Restricted Kernel's heap is
+  // mapped in 2 MiB units by construction, where the Linux baseline gets
+  // 4 KiB pages plus whatever transparent huge pages it happens to be given.
+  BENCHMARK_TYPE_POINTER_CHASE = 22;
+
+  // Cost of allocating a fresh region, writing one word to each 4 KiB page of
+  // it, and freeing it. `working_set_size` is the per-iteration region size.
+  //
+  // Unlike every other memory benchmark, the allocation is inside the timed
+  // region. Two things differ between the platforms at once here — whether a
+  // first write traps, and whether the allocator returns memory to the kernel
+  // between uses — and this benchmark cannot separate them. Compare a cold
+  // run against a warm one rather than reading the warm number as a page
+  // fault cost.
+  BENCHMARK_TYPE_PAGE_TOUCH = 23;
+
+  // Debug/connectivity test - returns dummy values without doing work.
+  BENCHMARK_TYPE_DEBUG = 100;
+}
+
+// Result of a benchmark run.
+message RunBenchmarkResponse {
+  // TSC ticks elapsed during the benchmark.
+  //
+  // Populated on both platforms. This is the frequency-independent measure and
+  // is the basis for the cycles-per-operation metric, which is the fairest way
+  // to compare the enclave against the Linux baseline: it needs no TSC
+  // frequency calibration and so cannot be skewed by a mis-detected frequency.
+  uint64 elapsed_tsc = 1;
+  // Elapsed time in nanoseconds.
+  //
+  // Populated only where a real clock is available (the Linux baseline). The
+  // enclave has no clock, so this is 0 there and the host converts from
+  // `elapsed_tsc` using a calibrated frequency.
+  uint64 elapsed_ns = 2;
+  // Number of iterations completed.
+  uint32 iterations_completed = 3;
+  // Total bytes processed.
+  uint64 bytes_processed = 4;
+  // Status code (0 = success, see BenchmarkError).
+  uint32 status = 5;
+  // Actual working set size used, in bytes. Lets the host report what was
+  // really measured rather than what was requested.
+  uint64 working_set_size = 6;
+  // Checksum over the benchmark output.
+  //
+  // Guards against the compiler eliding the work and against the two platforms
+  // silently computing different things: for a given benchmark, seed and
+  // parameter set this value must match across the enclave and the baseline.
+  uint64 checksum = 7;
+  // Bitfield of instruction-set extensions this binary was compiled to use.
+  //
+  // Comparing a run that used SHA-NI against one that did not measures the
+  // difference between two crypto implementations, not the cost of the
+  // Restricted Kernel, so the host fails a comparison where the two sides
+  // disagree.
+  //
+  // Layout, low bit first. Bits 0-7 are the set the binary was compiled for,
+  // bits 8-15 the set the CPU reports, bit 16 whether the binary performs
+  // runtime dispatch:
+  //
+  //   0  SHA-NI          4  AVX512IFMA
+  //   1  AES-NI          5  AVX512VL
+  //   2  PCLMULQDQ
+  //   3  AVX2
+  uint32 cpu_features = 8;
+
+  // Free-form detail about what was measured, for benchmarks where the
+  // number is not interpretable without it.
+  //
+  // Set by BENCHMARK_TYPE_NULL_SYSCALL to the name of the syscall the host
+  // installed, and by BENCHMARK_TYPE_SYSCALL_CONTROL to a constant marking it
+  // as the no-op control. Empty for every other benchmark.
+  //
+  // Unlike `checksum`, this is expected to DIFFER between two platforms
+  // running the same benchmark: the whole point of the null syscall benchmark
+  // is that each platform invokes the syscall native to it. A harness
+  // comparing two platforms should equality-check `checksum` and report
+  // `detail`, not the other way round.
+  string detail = 9;
+}
+
+// Benchmark service for Oak performance evaluation.
+service Benchmark {
+  // Run a benchmark and return results.
+  // method_id: 1001
+  rpc RunBenchmark(RunBenchmarkRequest) returns (RunBenchmarkResponse) {
+    option (.oak.micro_rpc.method_id) = 1001;
+  }
+}

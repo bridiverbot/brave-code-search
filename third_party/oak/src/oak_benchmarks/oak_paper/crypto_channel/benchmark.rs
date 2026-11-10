@@ -1,0 +1,641 @@
+//
+// Copyright 2026 The Project Oak Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#![feature(test)]
+
+extern crate test;
+
+use std::{
+    env,
+    net::{SocketAddr, TcpStream},
+    sync::Arc,
+    time::{Duration, Instant},
+};
+
+use criterion::{Criterion, criterion_group, criterion_main};
+use crypto_channel_attestation::{ServerAttestationMaterial, client_session_config};
+use linux_server::{
+    DEFAULT_NOISE_PORT, DEFAULT_PLAINTEXT_PORT, DEFAULT_TLS_PORT, SETUP_SETTLE, init_rustls,
+    load_certs_and_key, spin_for,
+};
+use message_stream_client::{BufferedStream, MessageStream, NoiseMessageStream, control};
+use rk_launcher::{OakClientChannelMessageStream, start_rk_enclave_server, vm_type_infix};
+use rustls::{ClientConfig, ServerConfig};
+use rustls_pki_types::ServerName;
+
+/// How the guest is attached to the network, from `VM_NET`.
+///
+/// `user` is QEMU's user-mode (SLIRP) stack, reached through host port
+/// forwards; `vhost` is a tap device with the in-kernel datapath. They differ
+/// by more than 10x at large payloads, so the mode goes into the benchmark
+/// name. Set the VM side to match with `run_vm.sh --net`.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum VmNet {
+    UserMode,
+    VhostNet,
+}
+
+impl VmNet {
+    fn from_env() -> Self {
+        match env::var("VM_NET").as_deref() {
+            Ok("user") | Err(_) => VmNet::UserMode,
+            Ok("vhost") => VmNet::VhostNet,
+            Ok(other) => panic!("unknown VM_NET={other}, expected user or vhost"),
+        }
+    }
+
+    fn label(self) -> &'static str {
+        match self {
+            VmNet::UserMode => "user-mode net",
+            VmNet::VhostNet => "vhost-net",
+        }
+    }
+
+    /// Where the server is reachable when `VM_HOST` says nothing.
+    ///
+    /// A tap has no port forwards, so the guest is reached on the address the
+    /// image gives itself; see `extra_ip` on the `crypto_channel_vm` target.
+    fn default_host(self) -> &'static str {
+        match self {
+            VmNet::UserMode => "127.0.0.1",
+            VmNet::VhostNet => "198.18.0.2",
+        }
+    }
+
+    fn other(self) -> Self {
+        match self {
+            VmNet::UserMode => VmNet::VhostNet,
+            VmNet::VhostNet => VmNet::UserMode,
+        }
+    }
+}
+
+/// What goes in brackets after `VM TCP`: the network mode, and the VM type when
+/// the guest is confidential.
+///
+/// `VM_TYPE` takes the values `run_vm.sh --vm-type` takes, and like `VM_NET` it
+/// only names what the VM was already booted as. A confidential guest is a
+/// separate series, so `VM TCP [vhost-net, sev-snp]` and `VM TCP [vhost-net]`
+/// can be compared. The set is the script's rather than the launcher's, which
+/// is wider: a type the script would refuse cannot label a run.
+fn vm_leg_label() -> String {
+    let net = VmNet::from_env().label();
+    match env::var("VM_TYPE").as_deref() {
+        Ok("default") | Err(_) => net.to_string(),
+        Ok(vm_type @ ("sev" | "sev-es" | "sev-snp")) => format!("{net}, {vm_type}"),
+        Ok(other) => {
+            panic!("unknown VM_TYPE={other}, expected default, sev, sev-es or sev-snp")
+        }
+    }
+}
+
+/// Get the VM host from VM_HOST environment variable, or use the default.
+///
+/// Pointing `VM_HOST` at the other mode's address is rejected, because the
+/// result would be a run that crosses one network path and is named after the
+/// other. Any other address is allowed; only this one is unambiguously wrong.
+fn get_vm_host() -> String {
+    let net = VmNet::from_env();
+    match env::var("VM_HOST") {
+        Ok(host) => {
+            assert_ne!(
+                host,
+                net.other().default_host(),
+                "VM_HOST={host} is the default for {}, but VM_NET says {}",
+                net.other().label(),
+                net.label(),
+            );
+            host
+        }
+        Err(_) => net.default_host().to_string(),
+    }
+}
+
+/// Get the VM address for a specific protocol.
+fn get_vm_addr(protocol: &str, default_port: u16) -> SocketAddr {
+    let host = get_vm_host();
+    let port_env = format!("VM_{}_PORT", protocol.to_uppercase());
+    let port: u16 = match env::var(&port_env) {
+        Ok(s) => match s.parse() {
+            Ok(p) => p,
+            Err(e) => {
+                eprintln!(
+                    "Warning: Failed to parse {}='{}': {}. Using default port {}.",
+                    port_env, s, e, default_port
+                );
+                default_port
+            }
+        },
+        Err(_) => default_port,
+    };
+    format!("{}:{}", host, port)
+        .parse()
+        .unwrap_or_else(|e| panic!("Invalid address {}:{}: {}", host, port, e))
+}
+
+fn create_message(size: usize) -> Vec<u8> {
+    let mut message = vec![0u8; size];
+    for (i, msg) in message.iter_mut().enumerate() {
+        *msg = (i % 256) as u8;
+    }
+    message
+}
+
+/// Payload sizes swept by [`benchmark_wrapper`], in bytes.
+///
+/// A single 1-byte payload cannot separate cryptography from framing. At that
+/// size the exchange is almost entirely fixed cost: four socket calls at
+/// roughly 1 us each on this host, plus the length prefix. The Noise legs put
+/// 89 bytes on the wire to carry 1 byte, because the session layer wraps the
+/// payload in a protobuf, against roughly 26 for a TLS record -- so even the
+/// bytes moved are mostly overhead. Any per-message claim read off the 1-byte
+/// row is a claim about framing.
+///
+/// The decade points -- 1, 1000, 100_000, 1_000_000, 10_000_000, 100_000_000
+/// -- come from the sweep added for `crypto_channel_benchmark_report.md` and
+/// are kept unchanged so that report can be regenerated. They characterise
+/// bulk throughput.
+///
+/// Two further points are added here because the decade spacing steps straight
+/// over the threshold that decides the small-message comparison. Both are
+/// four bytes short of a power of two, because `send_message` puts the u32
+/// length prefix in the *same* write as the body, so rustls is handed
+/// `payload + 4` bytes and fragments on that total:
+///
+/// - `16_380` -- 16384 bytes with the prefix, exactly the largest TLS 1.3
+///   plaintext that fits a single record
+///   ([RFC 8446 section 5.1](https://www.rfc-editor.org/rfc/rfc8446#section-5.1)),
+///   so it is the last size at which the TLS legs pay record overhead once.
+///   `16_384` would be the worst point rather than the boundary: at 16388
+///   bytes rustls emits two records, the second carrying four bytes.
+/// - `65_532` -- 65536 bytes with the prefix, so exactly four records. The TLS
+///   legs pay four AEAD seals and four sets of record overhead where the Noise
+///   legs pay one. This is where the comparison stops being about the cipher
+///   and starts being about the record layer, and it is here to make that
+///   visible rather than to hide it.
+///
+/// Without those two, the sweep jumps from 1000 to 100_000 and the record
+/// boundary is never observed.
+const TEST_SIZES: &[usize] =
+    &[1, 1000, 16_380, 65_532, 100_000, 1_000_000, 10_000_000, 100_000_000];
+
+/// Hands a channel back to the server and waits for it to say so.
+///
+/// See [`control::CLOSE`] for why the acknowledgement is required rather than
+/// just closing the socket.
+fn close_channel(stream: &mut dyn MessageStream) {
+    stream.send_message(control::CLOSE);
+    let ack = stream.read_message();
+    assert_eq!(ack, control::CLOSE, "server did not acknowledge close");
+}
+
+/// Measures steady-state message exchange over a single long-lived channel.
+///
+/// One channel is established for the whole measurement and reused for every
+/// iteration, so what is timed is a send plus a receive and nothing else.
+/// This is the "single channel setup" arm of the comparison the evaluation
+/// plan asks for; [`handshake_wrapper`] is the "handshake-per-RPC" arm, and
+/// the per-RPC cost of a protocol is the sum of the two.
+///
+/// It used to open a fresh channel per iteration, untimed. That was not a
+/// neutral choice. The connect was excluded from the reported figure but not
+/// from the machine, and on the VM legs the resulting connection churn
+/// through QEMU's user-mode networking dominated: two of six points came back
+/// with confidence intervals spanning more than an order of magnitude, and
+/// plaintext -- which churned hardest, because criterion runs the most
+/// iterations on the fastest leg -- came out slower than both encrypted legs.
+///
+/// The reported figure is `(send + recv) / 2`, a mean one-way latency, not a
+/// round trip. Halving is what makes the legs comparable -- a round trip
+/// through a leg with an asymmetric protocol is not the same quantity -- but
+/// it does mean the number must not be quoted as an RTT.
+///
+/// The channel is created lazily, on the first iteration rather than up
+/// front, so that filtering the benchmarks with `--bench <regex>` does not
+/// make the VM legs demand a running VM they were told not to measure.
+/// Criterion runs every group function regardless of the filter.
+fn benchmark_wrapper(
+    sizes: &[usize],
+    description: &str,
+    c: &mut Criterion,
+    mut stream_creator: impl FnMut() -> Box<dyn MessageStream>,
+) {
+    let mut group = c.benchmark_group(description);
+    let mut channel: Option<Box<dyn MessageStream>> = None;
+
+    for size in sizes.iter() {
+        // `size`, not `2 * size`, even though each iteration moves the message
+        // in both directions. Criterion computes `bytes / per_iteration_time`,
+        // and the time this group reports is already halved (see above), so the
+        // halving and the two directions cancel and the byte rate comes out
+        // right. Do not "fix" either half on its own.
+        group.throughput(criterion::Throughput::Bytes(*size as u64));
+        group.bench_with_input(criterion::BenchmarkId::from_parameter(size), size, |b, size| {
+            b.iter_custom(|iters| {
+                let stream = channel.get_or_insert_with(&mut stream_creator);
+                let mut send_total = Duration::from_millis(0);
+                let mut recv_total = Duration::from_millis(0);
+                let message = create_message(*size);
+                for _i in 0..iters {
+                    let start = Instant::now();
+                    stream.send_message(message.as_slice());
+                    send_total += start.elapsed();
+                    let start = Instant::now();
+                    let response = stream.read_message();
+                    recv_total += start.elapsed();
+                    assert_eq!(message, response);
+                }
+                (send_total + recv_total) / 2
+            });
+        });
+    }
+
+    group.finish();
+
+    if let Some(mut stream) = channel {
+        close_channel(&mut *stream);
+    }
+}
+
+/// Times channel setup: the transport connect plus whatever handshake the leg
+/// performs.
+///
+/// The evaluation plan asks for handshake latency as a metric in its own right
+/// -- "Time-to-First-Byte starting from TCP connection establishment,
+/// inclusive of the handshake and session key derivation" -- and the README
+/// has long claimed this crate measures it. It did not: every handshake
+/// happened inside `stream_creator`, outside every timer.
+///
+/// Each iteration then closes the channel and waits [`SETUP_SETTLE`], both
+/// untimed. The close is required because the server serves one channel at a
+/// time. The wait is required because a connect issued immediately after a
+/// teardown is measurably slower than one issued a round trip later; see
+/// [`SETUP_SETTLE`] for the measurements behind that.
+///
+/// The plaintext leg is the baseline here. It has no handshake, so what it
+/// reports is the cost of the transport alone, and the interesting quantity
+/// for the other legs is their distance from it.
+fn handshake_wrapper(
+    description: &str,
+    c: &mut Criterion,
+    mut stream_creator: impl FnMut() -> Box<dyn MessageStream>,
+) {
+    let mut group = c.benchmark_group(description);
+
+    group.bench_function("setup", |b| {
+        b.iter_custom(|iters| {
+            let mut total = Duration::from_millis(0);
+            for _i in 0..iters {
+                let start = Instant::now();
+                let mut stream = stream_creator();
+                total += start.elapsed();
+
+                close_channel(&mut *stream);
+                spin_for(SETUP_SETTLE);
+            }
+            total
+        });
+    });
+
+    group.finish();
+}
+
+fn plaintext_local_tcp_benchmark(c: &mut Criterion) {
+    let (addr, server_handle) = linux_server::start_tcp_server(
+        "127.0.0.1:0",
+        Arc::new(|tcp_stream: TcpStream| -> Box<dyn MessageStream> {
+            Box::new(BufferedStream::new(tcp_stream))
+        }),
+    );
+
+    let connect = || -> Box<dyn MessageStream> {
+        Box::new(BufferedStream::new(
+            linux_server::connect(addr).expect("couldn't connect to server"),
+        ))
+    };
+
+    benchmark_wrapper(TEST_SIZES, "Local TCP Plaintext Message Exchange", c, connect);
+    handshake_wrapper("Local TCP Plaintext Setup", c, connect);
+
+    let mut stream = linux_server::connect(addr).expect("couldn't connect to server");
+    stream.send_message(control::EXIT);
+    server_handle.join().unwrap();
+}
+
+fn noise_local_tcp_benchmark(c: &mut Criterion) {
+    let (addr, server_handle) = linux_server::start_tcp_server(
+        "127.0.0.1:0",
+        Arc::new(|tcp_stream: TcpStream| -> Box<dyn MessageStream> {
+            Box::new(NoiseMessageStream::new_server(BufferedStream::new(tcp_stream)))
+        }),
+    );
+
+    benchmark_wrapper(TEST_SIZES, "Local TCP Noise Message Exchange", c, || {
+        new_noise_client_stream(addr)
+    });
+    handshake_wrapper("Local TCP Noise Setup", c, || new_noise_client_stream(addr));
+
+    let mut stream = new_noise_client_stream(addr);
+    stream.send_message(control::EXIT);
+    server_handle.join().unwrap();
+}
+
+/// The same Noise leg, but with attestation switched on.
+///
+/// Read alongside [`noise_local_tcp_benchmark`]: the two differ only in the
+/// [`SessionConfig`] handed to the same handshake loop and the same transport,
+/// so their difference isolates what attestation costs. Both exchange the same
+/// number of messages, because an unattested Oak session still performs the
+/// attestation round trip with empty evidence.
+///
+/// The server's evidence is generated once, here, and shared by every session
+/// the leg opens. That mirrors a real deployment, where the DICE chain is built
+/// as the stack boots and long before any client arrives; charging it per
+/// session would measure something no deployment pays.
+///
+/// See [`crypto_channel_attestation`] for what is real in this evidence and
+/// what is substituted -- in particular that the hardware root of trust is not,
+/// and cannot be, exercised on this host.
+fn noise_attested_local_tcp_benchmark(c: &mut Criterion) {
+    let material = Arc::new(
+        ServerAttestationMaterial::generate().expect("generating server attestation material"),
+    );
+
+    let server_material = material.clone();
+    let (addr, server_handle) = linux_server::start_tcp_server(
+        "127.0.0.1:0",
+        Arc::new(move |tcp_stream: TcpStream| -> Box<dyn MessageStream> {
+            Box::new(NoiseMessageStream::new_server_with_config(
+                BufferedStream::new(tcp_stream),
+                server_material.session_config(),
+            ))
+        }),
+    );
+
+    benchmark_wrapper(TEST_SIZES, "Local TCP Noise (attested) Message Exchange", c, || {
+        new_attested_noise_client_stream(addr)
+    });
+    handshake_wrapper("Local TCP Noise (attested) Setup", c, || {
+        new_attested_noise_client_stream(addr)
+    });
+
+    let mut stream = new_attested_noise_client_stream(addr);
+    stream.send_message(control::EXIT);
+    server_handle.join().unwrap();
+}
+
+/// Connects and runs an attested Noise handshake, verifying the server's
+/// evidence and its binding signature.
+fn new_attested_noise_client_stream(addr: SocketAddr) -> Box<dyn MessageStream> {
+    let tcp_stream = linux_server::connect(addr).expect("couldn't connect to server");
+    Box::new(NoiseMessageStream::new_client_with_config(
+        BufferedStream::new(tcp_stream),
+        client_session_config(),
+    ))
+}
+
+/// Builds the client configuration for the rustls legs, with session
+/// resumption **disabled**.
+///
+/// One `ClientConfig` is shared across every iteration of a leg, and
+/// `Resumption::default()` is an in-memory store of 256 sessions, so leaving it
+/// on means the first handshake is full and every subsequent one is a PSK
+/// resumption. Confirmed by printing
+/// [`rustls::ClientConnection::handshake_kind`] from this code path: iteration
+/// 0 reports `Full` and iterations 1 through 6000 all report `Resumed`.
+/// [`new_tls_client_stream`] now asserts this on every iteration rather than
+/// leaving it to a one-off observation, because the setting is remote from the
+/// measurement and its failure mode is silent.
+///
+/// A resumed TLS 1.3 handshake sends no certificate and generates no
+/// signature, so it is a different protocol exchange from the one `Setup`
+/// claims to measure. With resumption on, `Setup` reported ~180 µs; with it
+/// off, ~652 µs. The per-iteration assert is what holds that in place; there
+/// is no second implementation in this repository to check it against.
+///
+/// Resumption is a real and important optimisation, and a client that really
+/// did reconnect to the same server for every RPC would benefit from it. It is
+/// disabled here because the point of this group is to compare handshake cost
+/// across three protocols, and Noise has no resumption mechanism to offer, so
+/// the only exchange all three can perform is a full one.
+fn tls_client_config(root_store: rustls::RootCertStore) -> Arc<ClientConfig> {
+    let mut client_config =
+        ClientConfig::builder().with_root_certificates(root_store).with_no_client_auth();
+    client_config.resumption = rustls::client::Resumption::disabled();
+    Arc::new(client_config)
+}
+
+/// Completes the TLS handshake on an already-connected socket.
+///
+/// `rustls::StreamOwned::new` does not handshake; rustls defers that to the
+/// first read or write. Left alone, the handshake therefore lands inside
+/// whatever region the caller times next, which is how the message-exchange
+/// benchmark came to charge TLS for a handshake while charging Noise for none
+/// of its own -- the two legs were not measuring the same thing.
+///
+/// `complete_io` drives the handshake to completion here, so the cost is
+/// attributed to setup on every leg alike, and [`handshake_wrapper`] can see
+/// it at all.
+///
+/// Takes a connected socket rather than an address so that each caller keeps
+/// its own connect-failure message; the VM legs need to say how to start the
+/// VM.
+///
+/// Asserts on every iteration that the handshake really was a full one. The
+/// resumption setting lives in [`tls_client_config`], several call frames away,
+/// and a default-constructed `ClientConfig` resumes; this defect went unnoticed
+/// precisely because a resumed handshake is silent and merely fast.
+/// `FullWithHelloRetryRequest` is rejected too: it is a full handshake, but it
+/// spends an extra round trip, so it is not the exchange the other two legs
+/// perform either.
+///
+/// The read buffer goes *above* rustls, not below it. rustls does its own
+/// socket reads into a record buffer, in 4 KiB chunks
+/// (`DeframerVecBuffer::read`), so a buffer underneath would coalesce two
+/// rustls reads into one `recvfrom` and memcpy every byte of ciphertext on the
+/// way past -- changing the very socket-read count this leg exists to report.
+/// Above rustls the buffer sees decrypted message bytes, which is where the raw
+/// legs' buffer sits too.
+fn new_tls_client_stream(
+    tcp_stream: TcpStream,
+    client_config: Arc<ClientConfig>,
+) -> Box<dyn MessageStream> {
+    let server_name = ServerName::try_from("localhost").unwrap().to_owned();
+    let conn = rustls::ClientConnection::new(client_config, server_name).unwrap();
+    let mut stream = rustls::StreamOwned::new(conn, tcp_stream);
+    stream.conn.complete_io(&mut stream.sock).expect("tls handshake failed");
+    assert_eq!(
+        stream.conn.handshake_kind(),
+        Some(rustls::HandshakeKind::Full),
+        "the tls leg must perform a full handshake, otherwise it is not measuring \
+         the same exchange as the noise legs"
+    );
+    Box::new(BufferedStream::new(stream))
+}
+
+fn tls_local_tcp_benchmark(c: &mut Criterion) {
+    init_rustls();
+    let (certs, key) = load_certs_and_key();
+
+    let server_config = ServerConfig::builder()
+        .with_no_client_auth()
+        .with_single_cert(certs.clone(), key)
+        .expect("bad certificate/key");
+    let server_config = Arc::new(server_config);
+
+    let (addr, server_handle) = linux_server::start_tcp_server(
+        "127.0.0.1:0",
+        Arc::new(move |tcp_stream: TcpStream| -> Box<dyn MessageStream> {
+            let conn = rustls::ServerConnection::new(server_config.clone()).unwrap();
+            let stream = rustls::StreamOwned::new(conn, tcp_stream);
+            Box::new(BufferedStream::new(stream))
+        }),
+    );
+
+    let mut root_store = rustls::RootCertStore::empty();
+    root_store.add(certs[0].clone()).unwrap();
+    let client_config = tls_client_config(root_store);
+
+    let tls_connect = || -> Box<dyn MessageStream> {
+        let tcp_stream = linux_server::connect(addr).expect("couldn't connect to server");
+        new_tls_client_stream(tcp_stream, client_config.clone())
+    };
+
+    benchmark_wrapper(TEST_SIZES, "Local TCP TLS (rustls) Message Exchange", c, tls_connect);
+    handshake_wrapper("Local TCP TLS (rustls) Setup", c, tls_connect);
+
+    let mut stream = tls_connect();
+    stream.send_message(control::EXIT);
+    server_handle.join().unwrap();
+}
+/// Message shown when a VM leg cannot reach its server.
+const VM_CONNECT_HELP: &str = "Couldn't connect to VM. Make sure the VM is running with:\n\
+     ./oak_benchmarks/linux_vm/run_vm.sh --image=<path> --port=5000 --port=5001 --port=5002 --headless";
+
+fn plaintext_vm_tcp_benchmark(c: &mut Criterion) {
+    let addr = get_vm_addr("plaintext", DEFAULT_PLAINTEXT_PORT);
+    println!("Connecting to VM at {} for plaintext benchmark", addr);
+
+    let connect = || -> Box<dyn MessageStream> {
+        Box::new(BufferedStream::new(linux_server::connect(addr).expect(VM_CONNECT_HELP)))
+    };
+
+    let leg = vm_leg_label();
+    benchmark_wrapper(
+        TEST_SIZES,
+        &format!("VM TCP [{leg}] Plaintext Message Exchange"),
+        c,
+        connect,
+    );
+    handshake_wrapper(&format!("VM TCP [{leg}] Plaintext Setup"), c, connect);
+}
+
+fn new_noise_client_stream(addr: SocketAddr) -> Box<dyn MessageStream> {
+    let tcp_stream = linux_server::connect(addr).expect("couldn't connect to server");
+    Box::new(NoiseMessageStream::new_client(BufferedStream::new(tcp_stream)))
+}
+
+fn noise_vm_tcp_benchmark(c: &mut Criterion) {
+    let addr = get_vm_addr("noise", DEFAULT_NOISE_PORT);
+    println!("Connecting to VM at {} for noise benchmark", addr);
+
+    let leg = vm_leg_label();
+    benchmark_wrapper(TEST_SIZES, &format!("VM TCP [{leg}] Noise Message Exchange"), c, || {
+        new_noise_client_stream(addr)
+    });
+    handshake_wrapper(&format!("VM TCP [{leg}] Noise Setup"), c, || new_noise_client_stream(addr));
+}
+
+fn tls_vm_tcp_benchmark(c: &mut Criterion) {
+    let addr = get_vm_addr("tls", DEFAULT_TLS_PORT);
+    println!("Connecting to VM at {} for the TLS benchmark", addr);
+
+    init_rustls();
+    let (certs, _key) = load_certs_and_key();
+
+    let mut root_store = rustls::RootCertStore::empty();
+    root_store.add(certs[0].clone()).unwrap();
+    let client_config = tls_client_config(root_store);
+
+    let tls_connect = || -> Box<dyn MessageStream> {
+        let tcp_stream = linux_server::connect(addr).expect(VM_CONNECT_HELP);
+        new_tls_client_stream(tcp_stream, client_config.clone())
+    };
+
+    let leg = vm_leg_label();
+    benchmark_wrapper(
+        TEST_SIZES,
+        &format!("VM TCP [{leg}] TLS (rustls) Message Exchange"),
+        c,
+        tls_connect,
+    );
+    handshake_wrapper(&format!("VM TCP [{leg}] TLS (rustls) Setup"), c, tls_connect);
+}
+
+fn plaintext_rk_benchmark(c: &mut Criterion) {
+    // Start the enclave app.
+    let rt = tokio::runtime::Runtime::new().expect("Failed to create Tokio runtime");
+    let (guest_instance, oak_client_channel) =
+        rt.block_on(async { start_rk_enclave_server(b"plaintext").await });
+
+    let tee = vm_type_infix();
+    benchmark_wrapper(TEST_SIZES, &format!("RK{tee} Plaintext Message Exchange"), c, || {
+        Box::new(OakClientChannelMessageStream::new(&oak_client_channel))
+    });
+    // There is deliberately no `RK Plaintext Setup` row. The TCP legs have one
+    // because their plaintext setup performs a connect, which is the transport
+    // cost that `Noise Setup` should be compared against. Here
+    // `OakClientChannelMessageStream::new` is an `Rc::clone`, so the equivalent
+    // row would time a refcount bump. Subtracting it from `RK Noise Setup`
+    // would charge Noise for enclave channel round trips it does not make.
+    futures::executor::block_on(async { guest_instance.kill().await })
+        .expect("failed to kill instance");
+}
+
+fn noise_rk_benchmark(c: &mut Criterion) {
+    // Start the enclave app.
+    let rt = tokio::runtime::Runtime::new().expect("Failed to create Tokio runtime");
+    let (guest_instance, oak_client_channel) =
+        rt.block_on(async { start_rk_enclave_server(b"noise").await });
+
+    let tee = vm_type_infix();
+    benchmark_wrapper(TEST_SIZES, &format!("RK{tee} Noise Message Exchange"), c, || {
+        Box::new(NoiseMessageStream::new_client(OakClientChannelMessageStream::new(
+            &oak_client_channel,
+        )))
+    });
+    handshake_wrapper(&format!("RK{tee} Noise Setup"), c, || {
+        Box::new(NoiseMessageStream::new_client(OakClientChannelMessageStream::new(
+            &oak_client_channel,
+        )))
+    });
+
+    rt.block_on(async { guest_instance.kill().await }).expect("failed to kill instance");
+}
+
+criterion_group!(
+    benches,
+    plaintext_rk_benchmark,
+    noise_rk_benchmark,
+    plaintext_local_tcp_benchmark,
+    noise_local_tcp_benchmark,
+    noise_attested_local_tcp_benchmark,
+    tls_local_tcp_benchmark,
+    plaintext_vm_tcp_benchmark,
+    noise_vm_tcp_benchmark,
+    tls_vm_tcp_benchmark
+);
+criterion_main!(benches);

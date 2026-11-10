@@ -1,0 +1,89 @@
+#
+# Copyright 2024 The Project Oak Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+load("@rules_rust//rust:defs.bzl", "rust_test")
+load("//bazel:defs.bzl", "any_platform")
+load(":rules.bzl", "kernel_bzimage_and_measurements")
+
+package(
+    default_visibility = ["//:internal"],
+    licenses = ["notice"],
+)
+
+rust_test(
+    name = "oak_restricted_kernel_wrapper_test",
+    size = "small",
+    srcs = ["src/elf.rs"],
+    crate_root = "src/elf.rs",
+    target_compatible_with = any_platform([
+        "//:x86_64-linux-setting",
+    ]),
+    deps = [
+        "//oak_linux_boot_params",
+        "@oak_crates_index//:elf",
+        "@oak_crates_index//:googletest",
+        "@oak_crates_index//:x86_64",
+    ],
+)
+
+kernel_bzimage_and_measurements(
+    name = "oak_restricted_kernel_wrapper_virtio_console_channel",
+    payload = "//oak_restricted_kernel_bin:oak_restricted_kernel_bin_virtio_console_channel",
+    target_compatible_with = ["@platforms//cpu:x86_64"],
+)
+
+kernel_bzimage_and_measurements(
+    name = "oak_restricted_kernel_wrapper_simple_io_channel",
+    payload = "//oak_restricted_kernel_bin:oak_restricted_kernel_bin_simple_io_channel",
+    target_compatible_with = ["@platforms//cpu:x86_64"],
+)
+
+kernel_bzimage_and_measurements(
+    name = "oak_restricted_kernel_wrapper_serial_channel",
+    payload = "//oak_restricted_kernel_bin:oak_restricted_kernel_bin_serial_channel",
+    target_compatible_with = ["@platforms//cpu:x86_64"],
+)
+
+kernel_bzimage_and_measurements(
+    name = "oak_restricted_kernel_wrapper_tdx_virtio_console_channel",
+    payload = "//oak_restricted_kernel_bin_tdx:oak_restricted_kernel_bin_tdx_virtio_console_channel",
+    target_compatible_with = ["@platforms//cpu:x86_64"],
+)
+
+kernel_bzimage_and_measurements(
+    name = "oak_restricted_kernel_wrapper_tdx_simple_io_channel",
+    payload = "//oak_restricted_kernel_bin_tdx:oak_restricted_kernel_bin_tdx_simple_io_channel",
+    target_compatible_with = ["@platforms//cpu:x86_64"],
+)
+
+kernel_bzimage_and_measurements(
+    name = "oak_restricted_kernel_wrapper_tdx_serial_channel",
+    payload = "//oak_restricted_kernel_bin_tdx:oak_restricted_kernel_bin_tdx_serial_channel",
+    target_compatible_with = ["@platforms//cpu:x86_64"],
+)
+
+kernel_bzimage_and_measurements(
+    name = "stage0_test_kernel",
+    payload = "//stage0/testing:test_kernel",
+    target_compatible_with = ["@platforms//cpu:x86_64"],
+    visibility = ["//stage0:__subpackages__"],
+)
+
+kernel_bzimage_and_measurements(
+    name = "stage0_dump_test_kernel",
+    payload = "//stage0/testing:dump_test_kernel",
+    target_compatible_with = ["@platforms//cpu:x86_64"],
+    visibility = ["//stage0:__subpackages__"],
+)

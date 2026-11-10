@@ -1,0 +1,8 @@
+bazel/test_workspace
+codelab
+oak_private_memory
+linter
+oak_containers/sysroot
+tools/lint-runner/bazel-*
+tmp
+oak_trusted_agent/sandbox/guest/agent_ts/node_modules

@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Sanity check for buildconfigs: Runs the build command and checks if the
+# subjects are present afterwards.
+#
+# Usage:
+#     scripts/test_buildconfigs buildconfigs/*.sh
+set -e
+
+export RUST_BACKTRACE=1
+export RUST_LOG=debug
+export XDG_RUNTIME_DIR=/var/run
+export JUST_TIMESTAMP=true
+export JUST_TIMESTAMP_FORMAT=JUST:%H:%M:%S%.3f
+
+failures=()
+
+check_buildconfig() {
+  buildconfig="$1"
+
+  # shellcheck source=/dev/null
+  source "${buildconfig}"
+
+  # Build the binary target. If already in a nix shell, avoid nested nix develop.
+  cmd=("${BUILD_COMMAND[@]}")
+  if [ -n "${IN_NIX_SHELL:-}" ] && [ "${cmd[0]}" = "nix" ] && [ "${cmd[1]}" = "develop" ]; then
+    for i in "${!cmd[@]}"; do
+      if [ "${cmd[${i}]}" = "--command" ]; then
+        cmd=("${cmd[@]:$((i + 1))}")
+        break
+      fi
+    done
+  fi
+  "${cmd[@]}"
+
+  for f in "${SUBJECT_PATHS[@]}"; do
+    if [ ! -f "${f}" ]; then
+      >&2 echo "ERROR: Missing ${f} in ${buildconfig}"
+      failures+=("${buildconfig}: ${f}")
+    fi
+  done
+}
+
+for b in "$@"; do
+  >&2 echo "Checking ${b}"
+  set +o errexit
+  check_buildconfig "${b}"
+  set -o errexit
+done
+
+failure_count="${#failures[@]}"
+echo ""
+echo ""
+for f in "${failures[@]}"; do
+  echo "******Missing Output - ${f}"
+done
+exit "${failure_count}"
