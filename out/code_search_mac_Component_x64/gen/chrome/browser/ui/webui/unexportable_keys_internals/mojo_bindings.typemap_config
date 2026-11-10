@@ -1,0 +1,21 @@
+[
+  {
+    "traits_deps": [
+      "//base",
+      "//components/unexportable_keys"
+    ],
+    "traits_headers": [
+      "chrome/browser/ui/webui/unexportable_keys_internals/unexportable_keys_internals_mojom_traits.h",
+      "components/unexportable_keys/unexportable_key_id.h"
+    ],
+    "traits_sources": [
+      "//chrome/browser/ui/webui/unexportable_keys_internals/unexportable_keys_internals_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::unexportable_keys::UnexportableSigningKeyId",
+        "mojom": "unexportable_keys_internals.mojom.UnexportableSigningKeyId"
+      }
+    ]
+  }
+]

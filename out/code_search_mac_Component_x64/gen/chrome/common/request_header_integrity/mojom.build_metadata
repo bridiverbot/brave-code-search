@@ -1,0 +1,11 @@
+{
+  "deps": [
+    "../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../sandbox/policy/mojom/mojom.build_metadata",
+    "../../../services/network/public/mojom/url_loader_base.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../chrome/common/request_header_integrity/chrome_companero.mojom",
+    "../../../../../../chrome/common/request_header_integrity/platform_runtime.mojom"
+  ]
+}

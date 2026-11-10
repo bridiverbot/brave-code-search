@@ -1,0 +1,156 @@
+{
+  "extends": "../../../../../../../chrome/test/data/webui/tsconfig_base_lit.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "chrome-extension://mhjfbmdgcfjbbpaeojofohoefgiehjai/*": [
+        "./../../../browser/resources/pdf/tsc/*"
+      ],
+      "//webui-test/*": [
+        "./../webui/tsc/*"
+      ],
+      "chrome://webui-test/*": [
+        "./../webui/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/basic_plugin_test.ts",
+    "preprocessed/basic_test.ts",
+    "preprocessed/beep_test.ts",
+    "preprocessed/bookmarks_test.ts",
+    "preprocessed/download_controls_test.ts",
+    "preprocessed/fullscreen_test.ts",
+    "preprocessed/gesture_detector_test.ts",
+    "preprocessed/layout_test.ts",
+    "preprocessed/material_elements_test.ts",
+    "preprocessed/metrics_test.ts",
+    "preprocessed/navigator_test.ts",
+    "preprocessed/nobeep_test.ts",
+    "preprocessed/page_change_test.ts",
+    "preprocessed/page_selector_test.ts",
+    "preprocessed/params_parser_test.ts",
+    "preprocessed/plugin_controller_test.ts",
+    "preprocessed/post_message_proxy_test.ts",
+    "preprocessed/save_controls_mixin_test.ts",
+    "preprocessed/scroll_with_form_field_focused_test.ts",
+    "preprocessed/swipe_detector_test.ts",
+    "preprocessed/test_bookmarks.ts",
+    "preprocessed/test_local_storage_proxy.ts",
+    "preprocessed/test_util.ts",
+    "preprocessed/thumbnail_lazy_loading_test.ts",
+    "preprocessed/title_test.ts",
+    "preprocessed/touch_handling_test.ts",
+    "preprocessed/two_up_view_persistence_test.ts",
+    "preprocessed/viewer_attachment_bar_test.ts",
+    "preprocessed/viewer_attachment_test.ts",
+    "preprocessed/viewer_file_picker_test.ts",
+    "preprocessed/viewer_password_dialog_test.ts",
+    "preprocessed/viewer_pdf_sidenav_test.ts",
+    "preprocessed/viewer_properties_dialog_test.ts",
+    "preprocessed/viewer_searchify_test.ts",
+    "preprocessed/viewer_thumbnail_bar_test.ts",
+    "preprocessed/viewer_thumbnail_test.ts",
+    "preprocessed/viewer_toolbar_test.ts",
+    "preprocessed/viewport_test.ts",
+    "preprocessed/whitespace_title_test.ts",
+    "preprocessed/zoom_manager_test.ts",
+    "preprocessed/caret_browsing_mode_test.ts",
+    "preprocessed/ink2_annotation_brush_mixin_test.ts",
+    "preprocessed/ink2_annotation_text_mixin_test.ts",
+    "preprocessed/ink2_bottom_toolbar_dropdown_test.ts",
+    "preprocessed/ink2_bottom_toolbar_test.ts",
+    "preprocessed/ink2_color_selector_test.ts",
+    "preprocessed/ink2_draw_before_unload_stroke_test.ts",
+    "preprocessed/ink2_draw_before_unload_undo_test.ts",
+    "preprocessed/ink2_draw_bottom_toolbar_test.ts",
+    "preprocessed/ink2_draw_brush_selector_test.ts",
+    "preprocessed/ink2_draw_side_panel_test.ts",
+    "preprocessed/ink2_draw_size_selector_test.ts",
+    "preprocessed/ink2_manager_test.ts",
+    "preprocessed/ink2_save_test.ts",
+    "preprocessed/ink2_signature_bottom_toolbar_test.ts",
+    "preprocessed/ink2_signature_dialog_test.ts",
+    "preprocessed/ink2_signature_side_panel_test.ts",
+    "preprocessed/ink2_test.ts",
+    "preprocessed/ink2_text_alignment_selector_test.ts",
+    "preprocessed/ink2_text_annotations_test.ts",
+    "preprocessed/ink2_text_bottom_toolbar_test.ts",
+    "preprocessed/ink2_text_box_basic_test.ts",
+    "preprocessed/ink2_text_box_commit_test.ts",
+    "preprocessed/ink2_text_box_keyboard_test.ts",
+    "preprocessed/ink2_text_box_test_utils.ts",
+    "preprocessed/ink2_text_box_viewport_test.ts",
+    "preprocessed/ink2_text_integration_test.ts",
+    "preprocessed/ink2_text_side_panel_test.ts",
+    "preprocessed/ink2_text_state_management_test.ts",
+    "preprocessed/ink2_text_styles_selector_test.ts",
+    "preprocessed/ink2_viewer_toolbar_test.ts",
+    "preprocessed/ink_text_annotation_utils_test.ts",
+    "preprocessed/selectable_icon_button_test.ts",
+    "preprocessed/undo_redo_stack_test.ts",
+    "preprocessed/ink2_save_to_drive_cancelled_before_unload_test.ts",
+    "preprocessed/ink2_save_to_drive_success_before_unload_test.ts",
+    "preprocessed/ink2_save_to_drive_uploading_more_edits_before_unload_test.ts",
+    "preprocessed/ink2_disabled_test.ts",
+    "preprocessed/circular_progress_ring_test.ts",
+    "preprocessed/save_to_drive_before_unload_uploading_test.ts",
+    "preprocessed/save_to_drive_bubble_test.ts",
+    "preprocessed/save_to_drive_controls_test.ts",
+    "preprocessed/save_to_drive_test.ts",
+    "preprocessed/test_pdf_viewer_private_proxy.ts",
+    "preprocessed/test_before_unload_proxy.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts",
+    "../../../../../../../tools/typescript/definitions/chrome_event.d.ts",
+    "../../../../../../../tools/typescript/definitions/chrome_test.d.ts",
+    "../../../../../../../tools/typescript/definitions/metrics_private.d.ts",
+    "../../../../../../../tools/typescript/definitions/mime_handler_private.d.ts",
+    "../../../../../../../tools/typescript/definitions/pdf_viewer_private.d.ts",
+    "../../../../../../../tools/typescript/definitions/pending.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../webui/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../webui/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../browser/resources/pdf/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    }
+  ]
+}

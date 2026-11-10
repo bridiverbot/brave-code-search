@@ -1,0 +1,16 @@
+{
+  "deps": [
+    "../composebox/mojo_bindings.build_metadata",
+    "../../../mojo/public/mojom/base/base.build_metadata",
+    "../../../ui/base/mojom/mojom.build_metadata",
+    "../../../ui/gfx/mojom/mojom.build_metadata",
+    "../../../ui/gfx/range/mojom/mojom.build_metadata",
+    "../../../url/mojom/url_mojom_gurl.build_metadata",
+    "fusebox_action_mojo_bindings.build_metadata",
+    "suggest_template_info_mojo_bindings.build_metadata"
+  ],
+  "sources": [
+    "../../../../../../components/omnibox/browser/omnibox.mojom",
+    "../../../../../../components/omnibox/browser/searchbox.mojom"
+  ]
+}
