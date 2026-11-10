@@ -1,0 +1,34 @@
+{
+  "bundled_srcjars": [
+    "gen/components/image_fetcher/jni_headers.srcjar",
+    "gen/components/image_fetcher/core/java_enums_srcjar.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/build/android/build_java.params.json",
+    "gen/components/browser_ui/util/android/java.params.json",
+    "gen/components/embedder_support/android/simple_factory_key_java.params.json",
+    "gen/content/public/android/content_main_dex_java.params.json",
+    "gen/net/android/net_java.params.json",
+    "gen/third_party/androidx/androidx_annotation_annotation_java.params.json",
+    "gen/third_party/jni_zero/jni_zero_java.params.json",
+    "gen/url/gurl_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/components/image_fetcher/java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//components/image_fetcher:java",
+  "interface_jar_path": "obj/components/image_fetcher/java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/components/image_fetcher/java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/components/image_fetcher/java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/components/image_fetcher/java.javac.jar"
+}

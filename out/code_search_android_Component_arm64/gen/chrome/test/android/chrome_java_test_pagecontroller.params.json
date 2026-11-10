@@ -1,0 +1,34 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/chrome/android/chrome_app_java_resources.params.json",
+    "gen/chrome/android/chrome_java.params.json",
+    "gen/third_party/androidx/androidx_test_core_java.params.json",
+    "gen/third_party/androidx/androidx_test_monitor_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/chrome/test/android/chrome_java_test_pagecontroller.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/test/android:chrome_java_test_pagecontroller",
+  "interface_jar_path": "obj/chrome/test/android/chrome_java_test_pagecontroller.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.chrome",
+  "processed_jar_path": "obj/chrome/test/android/chrome_java_test_pagecontroller.javac.jar",
+  "public_deps_configs": [
+    "gen/chrome/test/android/pagecontroller_utils_java.params.json"
+  ],
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/chrome/test/android/chrome_java_test_pagecontroller.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/test/android/chrome_java_test_pagecontroller.javac.jar"
+}

@@ -1,0 +1,7 @@
+{
+  "gn_target": "//components/browser_ui/theme/android:theme_template_resources",
+  "resources_zip": "obj/components/browser_ui/theme/android/theme_template_resources.compiled.resources.zip",
+  "rtxt_path": "gen/components/browser_ui/theme/android/theme_template_resources.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/components/browser_ui/theme/android/theme_template_resources.resources.zip"
+}

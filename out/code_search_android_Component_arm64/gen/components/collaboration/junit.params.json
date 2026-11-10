@@ -1,0 +1,8 @@
+{
+  "gn_target": "//components/collaboration:junit",
+  "public_deps_configs": [
+    "gen/components/collaboration/public/junit.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

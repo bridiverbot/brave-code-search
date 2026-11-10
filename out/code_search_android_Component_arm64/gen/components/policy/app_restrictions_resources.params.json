@@ -1,0 +1,11 @@
+{
+  "chromium_code": true,
+  "gn_target": "//components/policy:app_restrictions_resources",
+  "public_deps_configs": [
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/components/policy/app_restrictions_resources.res.sources",
+  "resources_zip": "obj/components/policy/app_restrictions_resources.resources.zip",
+  "rtxt_path": "gen/components/policy/app_restrictions_resources_R.txt",
+  "type": "android_resources"
+}

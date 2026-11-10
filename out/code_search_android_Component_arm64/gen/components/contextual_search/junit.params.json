@@ -1,0 +1,32 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/components/contextual_search/components_contextual_search_java.params.json",
+    "gen/components/contextual_search/test_support_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/base/base_java_test_support.params.json",
+    "gen/base/base_junit_test_support.params.json",
+    "gen/third_party/android_deps/protobuf_lite_runtime_java.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/omnibox_proto/omnibox_proto_java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//components/contextual_search:junit",
+  "interface_jar_path": "obj/components/contextual_search/junit.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/components/contextual_search/junit.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/components/contextual_search/junit.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/components/contextual_search/junit.javac.jar"
+}

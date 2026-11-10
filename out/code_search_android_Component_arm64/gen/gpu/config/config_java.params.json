@@ -1,0 +1,24 @@
+{
+  "bundled_srcjars": [
+    "gen/gpu/config/java_features_srcjar.srcjar",
+    "gen/gpu/config/java_switches_srcjar.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/gpu/config/config_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//gpu/config:config_java",
+  "interface_jar_path": "obj/gpu/config/config_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/gpu/config/config_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/gpu/config/config_java.javac.jar"
+}

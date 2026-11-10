@@ -1,0 +1,74 @@
+{
+  "extends": "../../../../../../../content/browser/resources/indexed_db/tsconfig_base.json",
+  "compilerOptions": {
+    "rootDir": "preprocessed",
+    "outDir": "tsc",
+    "skipLibCheck": true,
+    "paths": {
+      "/strings.m.js": [
+        "../../../../../../..//tools/typescript/definitions/strings.d.ts"
+      ],
+      "//resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "chrome://resources/lit/v3_0/lit.rollup.js": [
+        "./../../../../third_party/lit/v3_0/lit.d.ts"
+      ],
+      "//resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "chrome://resources/js/*": [
+        "./../../../../ui/webui/resources/tsc/js/*"
+      ],
+      "//resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "chrome://resources/mojo/*": [
+        "./../../../../ui/webui/resources/tsc/mojo/*"
+      ],
+      "/tools/typescript/definitions/*": [
+        "./../../../../../../../tools/typescript/definitions/*"
+      ],
+      "chrome://resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ],
+      "//resources/brave/*": [
+        "./../../../../brave/ui/webui/resources/tsc/*"
+      ]
+    }
+  },
+  "files": [
+    "preprocessed/database.ts",
+    "preprocessed/transaction_table.ts",
+    "preprocessed/indexeddb_internals.ts",
+    "preprocessed/indexeddb_list.html.ts",
+    "preprocessed/mojo_utils.ts",
+    "preprocessed/database.html.ts",
+    "preprocessed/transaction_table.html.ts",
+    "preprocessed/bucket_id.mojom-webui.ts",
+    "preprocessed/bucket_locator.mojom-webui.ts",
+    "preprocessed/bucket_client_info.mojom-webui.ts",
+    "preprocessed/indexed_db_internals_types.mojom-webui.ts",
+    "preprocessed/indexed_db_internals.mojom-webui.ts",
+    "preprocessed/quota_types.mojom-webui.ts",
+    "preprocessed/schemeful_site.mojom-webui.ts",
+    "preprocessed/ancestor_chain_bit.mojom-webui.ts",
+    "preprocessed/storage_key.mojom-webui.ts",
+    "preprocessed/tokens.mojom-webui.ts",
+    "../../../../../../../tools/typescript/definitions/strings.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../../../../tools/typescript/definitions/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../third_party/lit/v3_0/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/js/tsconfig_build_ts.json"
+    },
+    {
+      "path": "../../../../ui/webui/resources/mojo/tsconfig_build_ts.json"
+    }
+  ]
+}

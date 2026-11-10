@@ -1,0 +1,38 @@
+[
+  {
+    "traits_headers": [
+      "device/vr/public/mojom/test/controller_frame_data.h",
+      "device/vr/public/mojom/test/device_config.h",
+      "device/vr/public/mojom/test/layer_data.h",
+      "device/vr/public/mojom/test/view_data.h",
+      "device/vr/public/mojom/test/xr_test_hook_mojom_traits.h"
+    ],
+    "traits_public_deps": [
+      ":vr_public_test_typemaps",
+      "//device/gamepad/public/mojom",
+      "//device/vr/public/mojom:vr_service"
+    ],
+    "types": [
+      {
+        "cpp": "::device::LayerData",
+        "mojom": "device_test.mojom.LayerData"
+      },
+      {
+        "cpp": "::device::ViewData",
+        "mojom": "device_test.mojom.ViewData"
+      },
+      {
+        "cpp": "::device::DeviceConfig",
+        "mojom": "device_test.mojom.DeviceConfig"
+      },
+      {
+        "cpp": "::device::InputSourceType",
+        "mojom": "device_test.mojom.InputSourceType"
+      },
+      {
+        "cpp": "::device::ControllerFrameData",
+        "mojom": "device_test.mojom.ControllerFrameData"
+      }
+    ]
+  }
+]

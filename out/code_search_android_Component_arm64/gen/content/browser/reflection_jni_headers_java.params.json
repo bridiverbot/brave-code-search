@@ -1,0 +1,5 @@
+{
+  "gn_target": "//content/browser:reflection_jni_headers_java",
+  "supports_android": true,
+  "type": "group"
+}

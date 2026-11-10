@@ -1,0 +1,12 @@
+{
+  "chromium_code": true,
+  "gn_target": "//components/autofill/android:autofill_unbranded_browser_resources",
+  "public_deps_configs": [
+    "gen/components/payments/content/android/minimal_java_resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/components/autofill/android/autofill_unbranded_browser_resources.res.sources",
+  "resources_zip": "obj/components/autofill/android/autofill_unbranded_browser_resources.resources.zip",
+  "rtxt_path": "gen/components/autofill/android/autofill_unbranded_browser_resources_R.txt",
+  "type": "android_resources"
+}

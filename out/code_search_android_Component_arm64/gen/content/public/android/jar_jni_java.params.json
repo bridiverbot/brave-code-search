@@ -1,0 +1,5 @@
+{
+  "gn_target": "//content/public/android:jar_jni_java",
+  "supports_android": true,
+  "type": "group"
+}

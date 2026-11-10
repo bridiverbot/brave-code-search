@@ -1,0 +1,45 @@
+{
+  "android_manifest": "gen/components/components_browsertests_manifest/AndroidManifest.xml",
+  "apk_path": "components_browsertests_apk/components_browsertests-debug.apk",
+  "bundled_srcjars": [
+    "gen/components/components_browsertests__library__jni_registration.srcjar",
+    "gen/components/components_browsertests__apk__compile_resources.srcjar",
+    "gen/components/components_browsertests__apk__native_libraries.srcjar",
+    "gen/components/components_browsertests__apk__build_config_srcjar.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "create_locales_java_list": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/components/browser_ui/client_certificate/android/java.params.json",
+    "gen/components/download/internal/common/internal_java.params.json",
+    "gen/components/metrics/metrics_java.params.json",
+    "gen/content/public/test/android/android_test_message_pump_support_java.params.json",
+    "gen/components/components_browsertests_assets.params.json",
+    "gen/components/components_browsertests_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/components/components_browsertests__apk.dex.jar",
+  "enable_bytecode_checks": true,
+  "enable_lint": false,
+  "final_dex_path": "obj/components/components_browsertests__apk/components_browsertests__apk.mergeddex.jar",
+  "gn_target": "//components:components_browsertests__apk__java",
+  "interface_jar_path": "obj/components/components_browsertests__apk.turbine.jar",
+  "is_prebuilt": false,
+  "loadable_modules": [
+
+  ],
+  "merged_android_manifest": "gen/components/components_browsertests__apk/AndroidManifest.merged.xml",
+  "processed_jar_path": "obj/components/components_browsertests__apk.javac.jar",
+  "proguard_enabled": false,
+  "requires_android": true,
+  "requires_robolectric": false,
+  "rtxt_path": "gen/components/components_browsertests__apk__compile_resources_R.txt",
+  "shared_libraries_runtime_deps_file": "gen/components/components_browsertests__apk.native_libs",
+  "supports_android": true,
+  "type": "android_apk",
+  "unprocessed_jar_path": "obj/components/components_browsertests__apk.javac.jar",
+  "version_code": "1",
+  "version_name": "1.101.0"
+}

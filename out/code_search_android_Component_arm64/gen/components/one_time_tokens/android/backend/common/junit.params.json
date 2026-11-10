@@ -1,0 +1,30 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/components/one_time_tokens/android/backend/common/java.params.json",
+    "gen/third_party/android_deps/google_play_services_basement_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/base/base_java_test_support.params.json",
+    "gen/base/base_junit_test_support.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//components/one_time_tokens/android/backend/common:junit",
+  "interface_jar_path": "obj/components/one_time_tokens/android/backend/common/junit.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/components/one_time_tokens/android/backend/common/junit.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/components/one_time_tokens/android/backend/common/junit.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/components/one_time_tokens/android/backend/common/junit.javac.jar"
+}

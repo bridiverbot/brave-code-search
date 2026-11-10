@@ -1,0 +1,12 @@
+{
+  "javac_full_classpath": [
+    "obj/components/multistep_filter/core/annotation_index/proto/proto_java.javac.jar",
+    "../../third_party/androidx/cipd/libs/androidx_annotation_annotation_jvm/annotation-jvm.jar",
+    "../../third_party/android_deps/cipd/libs/org_jetbrains_kotlin_kotlin_stdlib/kotlin-stdlib.jar",
+    "../../third_party/android_deps/cipd/libs/org_jetbrains_annotations/annotations.jar",
+    "../../third_party/android_deps/cipd/libs/com_google_protobuf_protobuf_javalite/protobuf-javalite.jar"
+  ],
+  "sdk_jars": [
+    "../../third_party/android_sdk/public/platforms/android-37.2/android.jar"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "gn_target": "//components/payments/content/android:javatests",
+  "public_deps_configs": [
+    "gen/components/payments/content/android/spc/javatests.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

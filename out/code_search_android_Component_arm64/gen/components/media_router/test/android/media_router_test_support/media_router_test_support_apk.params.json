@@ -1,0 +1,38 @@
+{
+  "android_manifest": "../../components/media_router/test/android/media_router_test_support/AndroidManifest.xml",
+  "apk_path": "apks/MediaRouterTestSupportApk.apk",
+  "bundled_srcjars": [
+    "gen/components/media_router/test/android/media_router_test_support/media_router_test_support_apk__compile_resources.srcjar",
+    "gen/components/media_router/test/android/media_router_test_support/media_router_test_support_apk__native_libraries.srcjar",
+    "gen/components/media_router/test/android/media_router_test_support/media_router_test_support_apk__build_config_srcjar.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "create_locales_java_list": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/components/media_router/test/android/cast_emulator/cast_emulator_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/components/media_router/test/android/media_router_test_support/media_router_test_support_apk.dex.jar",
+  "enable_bytecode_checks": true,
+  "enable_lint": false,
+  "final_dex_path": "obj/components/media_router/test/android/media_router_test_support/media_router_test_support_apk/media_router_test_support_apk.mergeddex.jar",
+  "gn_target": "//components/media_router/test/android/media_router_test_support:media_router_test_support_apk__java",
+  "interface_jar_path": "obj/components/media_router/test/android/media_router_test_support/media_router_test_support_apk.turbine.jar",
+  "is_prebuilt": false,
+  "loadable_modules": [
+
+  ],
+  "merged_android_manifest": "gen/components/media_router/test/android/media_router_test_support/media_router_test_support_apk/AndroidManifest.merged.xml",
+  "processed_jar_path": "obj/components/media_router/test/android/media_router_test_support/media_router_test_support_apk.javac.jar",
+  "proguard_enabled": false,
+  "requires_android": true,
+  "requires_robolectric": false,
+  "rtxt_path": "gen/components/media_router/test/android/media_router_test_support/media_router_test_support_apk__compile_resources_R.txt",
+  "supports_android": true,
+  "type": "android_apk",
+  "unprocessed_jar_path": "obj/components/media_router/test/android/media_router_test_support/media_router_test_support_apk.javac.jar",
+  "version_code": "1",
+  "version_name": "1.101.0"
+}

@@ -1,0 +1,52 @@
+{
+  "assets": {
+    "disable_compression": true,
+    "outputs": [
+      "locales/ar.pak",
+      "locales/ar_MASCULINE.pak",
+      "locales/ar_FEMININE.pak",
+      "locales/ar_NEUTER.pak",
+      "locales/he.pak",
+      "locales/he_MASCULINE.pak",
+      "locales/he_FEMININE.pak",
+      "locales/he_NEUTER.pak",
+      "locales/en-US.pak",
+      "locales/en-US_MASCULINE.pak",
+      "locales/en-US_FEMININE.pak",
+      "locales/en-US_NEUTER.pak",
+      "locales/en-GB.pak",
+      "locales/en-GB_MASCULINE.pak",
+      "locales/en-GB_FEMININE.pak",
+      "locales/en-GB_NEUTER.pak",
+      "locales/es.pak",
+      "locales/es_MASCULINE.pak",
+      "locales/es_FEMININE.pak",
+      "locales/es_NEUTER.pak"
+    ],
+    "sources": [
+      "gen/chrome/android/chrome_apk_paks/locales/ar.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/ar_MASCULINE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/ar_FEMININE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/ar_NEUTER.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/he.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/he_MASCULINE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/he_FEMININE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/he_NEUTER.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/en-US.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/en-US_MASCULINE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/en-US_FEMININE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/en-US_NEUTER.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/en-GB.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/en-GB_MASCULINE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/en-GB_FEMININE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/en-GB_NEUTER.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/es.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/es_MASCULINE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/es_FEMININE.pak",
+      "gen/chrome/android/chrome_apk_paks/locales/es_NEUTER.pak"
+    ],
+    "treat_as_locale_paks": true
+  },
+  "gn_target": "//chrome/test:android_browsertests_locale_pak_assets",
+  "type": "android_assets"
+}

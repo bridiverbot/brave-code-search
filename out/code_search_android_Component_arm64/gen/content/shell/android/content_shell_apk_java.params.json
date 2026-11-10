@@ -1,0 +1,36 @@
+{
+  "bundled_srcjars": [
+    "gen/content/shell/android/content_javatests_aidl.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/content/shell/android/content_shell_apk_resources.params.json",
+    "gen/content/shell/android/content_shell_java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/base/process_launcher_java.params.json",
+    "gen/build/android/build_java.params.json",
+    "gen/components/embedder_support/android/view_java.params.json",
+    "gen/content/public/android/content_java.params.json",
+    "gen/net/android/net_java.params.json",
+    "gen/third_party/android_deps/com_google_code_findbugs_jsr305_java.params.json",
+    "gen/ui/android/ui_java.params.json",
+    "gen/url/gurl_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/content/shell/android/content_shell_apk_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//content/shell/android:content_shell_apk_java",
+  "interface_jar_path": "obj/content/shell/android/content_shell_apk_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.content_shell_apk",
+  "processed_jar_path": "obj/content/shell/android/content_shell_apk_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/content/shell/android/content_shell_apk_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/content/shell/android/content_shell_apk_java.javac.jar"
+}

@@ -1,0 +1,7 @@
+{
+  "gn_target": "//components/permissions/android:permissions_strings_grd",
+  "resources_zip": "obj/components/permissions/android/permissions_strings_grd.compiled.resources.zip",
+  "rtxt_path": "gen/components/permissions/android/permissions_strings_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/components/permissions/android/permissions_strings_grd.resources.zip"
+}

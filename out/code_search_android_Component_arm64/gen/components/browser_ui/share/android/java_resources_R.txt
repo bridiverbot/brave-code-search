@@ -1,0 +1,4 @@
+int dimen share_preview_favicon_size 0x7f010001
+int id icon 0x7f010001
+int id text 0x7f010001
+int layout share_dialog_item 0x7f010001

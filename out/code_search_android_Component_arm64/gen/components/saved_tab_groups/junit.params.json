@@ -1,0 +1,8 @@
+{
+  "gn_target": "//components/saved_tab_groups:junit",
+  "public_deps_configs": [
+    "gen/components/saved_tab_groups/public/junit.params.json"
+  ],
+  "supports_android": true,
+  "type": "group"
+}

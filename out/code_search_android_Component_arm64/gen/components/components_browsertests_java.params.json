@@ -1,0 +1,30 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/components/components_browsertests_resources.params.json",
+    "gen/base/base_java.params.json",
+    "gen/content/shell/android/content_shell_browsertests_java.params.json",
+    "gen/testing/android/native_test/native_browser_test_java.params.json",
+    "gen/ui/android/ui_full_java.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "dex_path": "obj/components/components_browsertests_java.dex.jar",
+  "enable_bytecode_checks": true,
+  "gn_target": "//components:components_browsertests_java",
+  "interface_jar_path": "obj/components/components_browsertests_java.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "package_name": "org.chromium.components_browsertests_apk",
+  "processed_jar_path": "obj/components/components_browsertests_java.javac.jar",
+  "requires_android": true,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "target_sources_file": "gen/components/components_browsertests_java.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/components/components_browsertests_java.javac.jar"
+}

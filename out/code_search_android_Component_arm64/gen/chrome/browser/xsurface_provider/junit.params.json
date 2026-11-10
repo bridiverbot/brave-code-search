@@ -1,0 +1,36 @@
+{
+  "bundled_srcjars": [
+
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/chrome/browser/xsurface_provider/dependency_provider_impl_java.params.json",
+    "gen/chrome/browser/xsurface_provider/java.params.json",
+    "gen/base/base_java.params.json",
+    "gen/base/base_java_test_support.params.json",
+    "gen/base/base_junit_test_support.params.json",
+    "gen/base/service_loader_java.params.json",
+    "gen/chrome/browser/flags/java.params.json",
+    "gen/chrome/browser/privacy/java.params.json",
+    "gen/chrome/browser/xsurface/java.params.json",
+    "gen/chrome/test/android/chrome_java_unit_test_support.params.json",
+    "gen/third_party/junit/junit.params.json",
+    "gen/third_party/mockito/mockito_java.params.json",
+    "gen/third_party/android_deps/robolectric_all_java.params.json",
+    "gen/third_party/robolectric/robolectric_test_sdk_java.params.json"
+  ],
+  "enable_bytecode_checks": true,
+  "gn_target": "//chrome/browser/xsurface_provider:junit",
+  "interface_jar_path": "obj/chrome/browser/xsurface_provider/junit.turbine.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/chrome/browser/xsurface_provider/junit.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": true,
+  "supports_android": false,
+  "target_sources_file": "gen/chrome/browser/xsurface_provider/junit.sources",
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/chrome/browser/xsurface_provider/junit.javac.jar"
+}

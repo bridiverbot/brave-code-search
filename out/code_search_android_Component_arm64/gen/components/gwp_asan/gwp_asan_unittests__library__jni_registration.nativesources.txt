@@ -1,0 +1,230 @@
+[
+  {
+    "java_files": [
+      "../../third_party/jni_zero/java/src/org/jni_zero/CommonApis.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniRawPtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniUniquePtrImpl.java",
+      "../../third_party/jni_zero/java/src/org/jni_zero/JniZero.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/ApkAssets.java",
+      "../../base/android/java/src/org/chromium/base/BaseFeatureMap.java",
+      "../../base/android/java/src/org/chromium/base/CpuFeatures.java",
+      "../../base/android/java/src/org/chromium/base/EventLog.java",
+      "../../base/android/java/src/org/chromium/base/FieldTrialList.java",
+      "../../base/android/java/src/org/chromium/base/ImportantFileWriterAndroid.java",
+      "../../base/android/java/src/org/chromium/base/InputHintChecker.java",
+      "../../base/android/java/src/org/chromium/base/JavaHandlerThread.java",
+      "../../base/android/java/src/org/chromium/base/LocaleUtils.java",
+      "../../base/android/java/src/org/chromium/base/PathService.java",
+      "../../base/android/java/src/org/chromium/base/PowerMonitor.java",
+      "../../base/android/java/src/org/chromium/base/PowerMonitorReading.java",
+      "../../base/android/java/src/org/chromium/base/RadioUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/shared_preferences/SharedPreferencesManager.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/AndroidInfo.java",
+      "../../base/android/java/src/org/chromium/base/ApkInfo.java",
+      "../../base/android/java/src/org/chromium/base/DeviceInfo.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/BundleUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/ContentUriUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/FeatureList.java",
+      "../../base/android/java/src/org/chromium/base/FeatureMap.java",
+      "../../base/android/java/src/org/chromium/base/Features.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/FileUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/memory_coordinator/MemoryConsumerRegistration.java",
+      "../../base/android/java/src/org/chromium/base/memory_coordinator/MemoryConsumerTraits.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/MemoryPressureListener.java",
+      "../../base/android/java/src/org/chromium/base/memory/MemoryInfoBridge.java",
+      "../../base/android/java/src/org/chromium/base/memory/MemoryPurgeManager.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/PathUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/process_launcher/ChildProcessService.java",
+      "../../base/android/java/src/org/chromium/base/process_launcher/ScopedServiceBindingBatch.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/ScreenStateReceiver.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/SysUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/ApplicationStatus.java",
+      "../../base/android/java/src/org/chromium/base/EarlyTraceEvent.java",
+      "../../base/android/java/src/org/chromium/base/ThreadUtils.java",
+      "../../base/android/java/src/org/chromium/base/task/PostTask.java",
+      "../../base/android/java/src/org/chromium/base/task/TaskRunnerImpl.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/VirtualDocumentPath.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/version_info/android/java/src/org/chromium/base/version_info/VersionConstantsBridge.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/Callback.java",
+      "../../base/android/java/src/org/chromium/base/Callback2.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/CommandLine.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/JavaExceptionReporter.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/JniAndroid.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/IntStringCallback.java",
+      "../../base/android/java/src/org/chromium/base/JniCallbackImpl.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/JNIUtils.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/library_loader/LibraryLoader.java",
+      "../../base/android/java/src/org/chromium/base/library_loader/LibraryPrefetcher.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/metrics/NativeUmaRecorder.java",
+      "../../base/android/java/src/org/chromium/base/metrics/StatisticsRecorderAndroid.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/TraceEvent.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/android/java/src/org/chromium/base/Token.java",
+      "../../base/android/java/src/org/chromium/base/TokenBase.java",
+      "../../base/android/java/src/org/chromium/base/UnguessableToken.java"
+    ],
+    "use_weak_called_by_natives": true
+  },
+  {
+    "java_files": [
+      "../../base/test/android/java/src/org/chromium/base/ContentUriTestUtils.java",
+      "../../base/test/android/java/src/org/chromium/base/JavaHandlerThreadHelpers.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../base/test/android/java/src/org/chromium/base/MainReturnCodeResult.java",
+      "../../base/test/android/java/src/org/chromium/base/MultiprocessTestClientLauncher.java",
+      "../../base/test/android/javatests/src/org/chromium/base/test/task/ThreadPoolTestHelpers.java",
+      "../../base/test/android/javatests/src/org/chromium/base/test/util/UrlUtils.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/gwp_asan/client/android/org/chromium/components/gwp_asan/GwpAsanFeatureMap.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../components/crash/android/java/src/org/chromium/components/crash/browser/PackagePaths.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../testing/android/native_test/java/src/org/chromium/native_test/MainRunner.java"
+    ]
+  },
+  {
+    "java_files": [
+      "../../testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java"
+    ]
+  }
+]

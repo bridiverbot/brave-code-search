@@ -1,0 +1,63 @@
+[
+  {
+    "traits_headers": [
+      "chrome/common/importer/importer_autofill_form_data_entry.h",
+      "components/favicon_base/favicon_usage_data.h",
+      "components/user_data_importer/common/imported_bookmark_entry.h",
+      "components/user_data_importer/common/importer_data_types.h",
+      "components/user_data_importer/common/importer_url_row.h"
+    ],
+    "traits_private_headers": [
+      "chrome/common/importer/profile_import_process_param_mojom_traits.h",
+      "chrome/common/importer/profile_import_process_param_traits_macros.h"
+    ],
+    "traits_public_deps": [
+      "//chrome/common",
+      "//components/autofill/core/common",
+      "//components/favicon_base",
+      "//components/user_data_importer/common",
+      "//ipc"
+    ],
+    "traits_sources": [
+      "profile_import_process_param_mojom_traits.cc"
+    ],
+    "types": [
+      {
+        "cpp": "::favicon_base::FaviconUsageDataList",
+        "mojom": "chrome.mojom.FaviconUsageDataList"
+      },
+      {
+        "cpp": "::user_data_importer::ImportedBookmarkEntry",
+        "mojom": "chrome.mojom.ImportedBookmarkEntry"
+      },
+      {
+        "cpp": "::ImporterAutofillFormDataEntry",
+        "mojom": "chrome.mojom.ImporterAutofillFormDataEntry"
+      },
+      {
+        "cpp": "::user_data_importer::ImporterIE7PasswordInfo",
+        "mojom": "chrome.mojom.ImporterIE7PasswordInfo"
+      },
+      {
+        "cpp": "::user_data_importer::ImporterURLRow",
+        "mojom": "chrome.mojom.ImporterURLRow"
+      },
+      {
+        "cpp": "::user_data_importer::SearchEngineInfo",
+        "mojom": "chrome.mojom.SearchEngineInfo"
+      },
+      {
+        "cpp": "::user_data_importer::SourceProfile",
+        "mojom": "chrome.mojom.SourceProfile"
+      },
+      {
+        "cpp": "::user_data_importer::ImportItem",
+        "mojom": "chrome.mojom.ImportItem"
+      },
+      {
+        "cpp": "::user_data_importer::ImportedPasswordForm",
+        "mojom": "chrome.mojom.ImportedPasswordForm"
+      }
+    ]
+  }
+]

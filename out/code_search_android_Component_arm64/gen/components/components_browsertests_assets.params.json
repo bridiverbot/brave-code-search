@@ -1,0 +1,14 @@
+{
+  "assets": {
+    "sources": [
+      "components_tests_resources.pak",
+      "content_shell.pak"
+    ]
+  },
+  "deps_configs": [
+    "gen/gin/v8_snapshot_assets.params.json",
+    "gen/third_party/icu/icu_assets.params.json"
+  ],
+  "gn_target": "//components:components_browsertests_assets",
+  "type": "android_assets"
+}

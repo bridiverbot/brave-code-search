@@ -1,0 +1,29 @@
+{
+  "interface_classpath": [
+    "obj/build/android/build_java.turbine.jar",
+    "obj/components/payments/content/android/spc/browser_binding_java.turbine.jar",
+    "obj/base/callback_java.turbine.jar",
+    "obj/components/browser_ui/bottomsheet/android/java.turbine.jar",
+    "obj/components/browser_ui/styles/android/java.turbine.jar",
+    "obj/components/payments/content/android/minimal_java.turbine.jar",
+    "obj/components/payments/content/android/ui/java.turbine.jar",
+    "obj/components/payments/mojom/mojom_java.turbine.jar",
+    "obj/components/url_formatter/android/url_formatter_java.turbine.jar",
+    "obj/third_party/blink/public/mojom/android_mojo_bindings_java.turbine.jar",
+    "obj/ui/android/ui_no_recycler_view_java.turbine.jar",
+    "obj/ui/android/ui_recycler_view_java.turbine.jar",
+    "obj/url/url_java.turbine.jar",
+    "obj/content/public/android/content_full_java.turbine.jar",
+    "obj/content/public/android/content_main_dex_java.turbine.jar",
+    "obj/ui/base/mojom/ui_base_types_java.turbine.jar",
+    "obj/third_party/androidx/androidx_annotation_annotation_jvm.ijar.jar",
+    "obj/third_party/androidx/androidx_core_core_java.ijar.jar",
+    "obj/third_party/androidx/local_modifications/buildcompat/buildcompat_java.turbine.jar",
+    "obj/third_party/androidx/androidx_recyclerview_recyclerview_java.ijar.jar"
+  ],
+  "processor_classes": [],
+  "processor_classpath": [],
+  "sdk_interface_jars": [
+    "obj/third_party/android_sdk/android_sdk_java.ijar.jar"
+  ]
+}

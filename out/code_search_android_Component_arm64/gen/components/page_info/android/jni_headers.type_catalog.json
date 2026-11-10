@@ -1,0 +1,5 @@
+{
+  "org/chromium/components/page_info/ConnectionInfoView$NativeConnectionInfoViewAndroid": "::ConnectionInfoViewAndroid",
+  "org/chromium/components/page_info/PageInfoConnectionSecurityController$NativeConnectionSecurityControllerAndroid": "::ConnectionSecurityControllerAndroid",
+  "org/chromium/components/page_info/PageInfoController$NativePageInfoControllerAndroid": "::PageInfoControllerAndroid"
+}

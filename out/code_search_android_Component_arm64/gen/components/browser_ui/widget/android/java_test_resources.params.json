@@ -1,0 +1,13 @@
+{
+  "chromium_code": true,
+  "gn_target": "//components/browser_ui/widget/android:java_test_resources",
+  "public_deps_configs": [
+    "gen/components/browser_ui/widget/android/java_resources.params.json",
+    "gen/ui/android/ui_java_resources.params.json",
+    "gen/third_party/android_sdk/android_sdk_java.params.json"
+  ],
+  "res_sources_path": "gen/components/browser_ui/widget/android/java_test_resources.res.sources",
+  "resources_zip": "obj/components/browser_ui/widget/android/java_test_resources.resources.zip",
+  "rtxt_path": "gen/components/browser_ui/widget/android/java_test_resources_R.txt",
+  "type": "android_resources"
+}

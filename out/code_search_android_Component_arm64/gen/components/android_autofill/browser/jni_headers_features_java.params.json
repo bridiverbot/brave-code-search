@@ -1,0 +1,23 @@
+{
+  "bundled_srcjars": [
+    "gen/components/android_autofill/browser/jni_headers_features.srcjar",
+    "gen/components/android_autofill/browser/jni_headers_features_placeholder.srcjar"
+  ],
+  "bypass_platform_checks": false,
+  "chromium_code": true,
+  "deps_configs": [
+    "gen/build/android/build_java.params.json",
+    "gen/third_party/jni_zero/gendeps_java.params.json"
+  ],
+  "dex_path": "obj/components/android_autofill/browser/jni_headers_features_java.dex.jar",
+  "gn_target": "//components/android_autofill/browser:jni_headers_features_java",
+  "interface_jar_path": "obj/components/android_autofill/browser/jni_headers_features_java.javac.jar",
+  "is_prebuilt": false,
+  "needs_full_javac_classpath": true,
+  "processed_jar_path": "obj/components/android_autofill/browser/jni_headers_features_java.javac.jar",
+  "requires_android": false,
+  "requires_robolectric": false,
+  "supports_android": true,
+  "type": "java_library",
+  "unprocessed_jar_path": "obj/components/android_autofill/browser/jni_headers_features_java.javac.jar"
+}

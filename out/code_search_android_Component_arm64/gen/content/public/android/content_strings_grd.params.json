@@ -1,0 +1,7 @@
+{
+  "gn_target": "//content/public/android:content_strings_grd",
+  "resources_zip": "obj/content/public/android/content_strings_grd.compiled.resources.zip",
+  "rtxt_path": "gen/content/public/android/content_strings_grd.R.txt",
+  "type": "android_resources",
+  "uncompiled_resources_zip": "obj/content/public/android/content_strings_grd.resources.zip"
+}

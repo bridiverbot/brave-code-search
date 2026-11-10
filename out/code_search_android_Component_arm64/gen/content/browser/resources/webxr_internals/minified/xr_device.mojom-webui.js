@@ -1,0 +1,4 @@
+// Copyright 2020 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";export const XRDeviceIdSpec={$:mojo.internal.Enum()};export var XRDeviceId;(function(XRDeviceId){XRDeviceId[XRDeviceId["MIN_VALUE"]=0]="MIN_VALUE";XRDeviceId[XRDeviceId["MAX_VALUE"]=9]="MAX_VALUE";XRDeviceId[XRDeviceId["WEB_TEST_DEVICE_ID"]=0]="WEB_TEST_DEVICE_ID";XRDeviceId[XRDeviceId["FAKE_DEVICE_ID"]=1]="FAKE_DEVICE_ID";XRDeviceId[XRDeviceId["ORIENTATION_DEVICE_ID"]=2]="ORIENTATION_DEVICE_ID";XRDeviceId[XRDeviceId["ARCORE_DEVICE_ID"]=7]="ARCORE_DEVICE_ID";XRDeviceId[XRDeviceId["OPENXR_DEVICE_ID"]=8]="OPENXR_DEVICE_ID";XRDeviceId[XRDeviceId["CARDBOARD_DEVICE_ID"]=9]="CARDBOARD_DEVICE_ID"})(XRDeviceId||(XRDeviceId={}));
