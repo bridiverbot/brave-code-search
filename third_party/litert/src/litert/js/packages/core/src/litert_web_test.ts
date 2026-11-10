@@ -1,0 +1,3875 @@
+/**
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import {abs, add, argMax, author, AuthoredModel, avgPool2d, batchMatMul, ceil, CompiledModel, concat, conv2d, cos, cumsum, depthToSpace, depthwiseConv2d, div, elu, embeddingLookup, Environment, equal, exp, expandDims, floor, floorDiv, floorMod, fullyConnected, gather, gatherNd, gelu, greater, greaterEqual, hardSwish, leakyRelu, less, lessEqual, LiteRt, loadAndCompile, loadLiteRt, type LoadLiteRtOptions, loadModelAndWeights, log, logicalAnd, logicalNot, logicalOr, logistic, logSoftmax, maximum, maxPool2d, mean, minimum, mul, neg, nonMaxSuppression, notEqual, oneHot, pack, pad, pow, reduceMax, relu, relu6, reshape, resizeBilinear, resizeNearestNeighbor, reverse, round, rsqrt, select, sin, slice, softmax, spaceToDepth, split, sqrt, squeeze, sub, sum, supportsFeature, tanh, Tensor, TensorBufferType, tile, topK, transpose, transposeConv2d, type TypedArray, unloadLiteRt, unpack} from '@litertjs/core';
+// Placeholder for internal dependency on trusted resource url
+import {type BigIntTypedArray, type NumberTypedArray} from './datatypes';
+
+declare global {
+  interface ArrayConstructor {
+    from(iterable: NumberTypedArray): number[];
+    from(iterable: BigIntTypedArray): bigint[];
+    from(iterable: TypedArray): Array<number | bigint>;
+  }
+}
+
+describe('LiteRt', () => {
+  let liteRt: LiteRt;
+
+  async function resetLiteRt(
+      loadFromDirectory = false, options: LoadLiteRtOptions = {}) {
+    unloadLiteRt();
+    if (loadFromDirectory) {
+      liteRt = await loadLiteRt('/wasm', options);
+    } else {
+      // clang-format off
+      liteRt = await loadLiteRt('/wasm/litert_wasm_internal.js', options);
+      // clang-format on
+    }
+  }
+
+  beforeAll(async () => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 600_000;
+  });
+
+  it('loads the WASM module from its js file', async () => {
+    await resetLiteRt();
+    expect(liteRt).toBeDefined();
+  });
+
+  it('loads the WASM module from a directory', async () => {
+    await resetLiteRt(/* loadFromDirectory= */ true);
+    expect(liteRt).toBeDefined();
+  });
+
+  it('reloads the WASM module', async () => {
+    await resetLiteRt();
+    expect(liteRt).toBeDefined();
+  });
+
+  describe('threaded wasm', () => {
+    it('loads the threaded WASM module', async () => {
+      try {
+        await resetLiteRt(/* loadFromDirectory= */ true, {threads: true});
+        expect(liteRt).toBeDefined();
+      } finally {
+        await resetLiteRt();
+      }
+    });
+
+    it('uses `navigator.hardwareConcurrency` threads by default', async () => {
+      await resetLiteRt(/* loadFromDirectory= */ true, {threads: true});
+      const model = await loadAndCompile('/testdata/add_10x10.tflite');
+      expect(model).toBeDefined();
+      expect(model.options.cpuOptions.numThreads)
+          .toBe(navigator.hardwareConcurrency);
+      model.delete();
+    });
+
+    it('can set the number of threads', async () => {
+      await resetLiteRt(/* loadFromDirectory= */ true, {threads: true});
+      const model = await loadAndCompile('/testdata/add_10x10.tflite', {
+        cpuOptions: {numThreads: 3},
+      });
+      expect(model).toBeDefined();
+      expect(model.options.cpuOptions.numThreads).toBe(3);
+      model.delete();
+    });
+  });
+
+  describe('jspi wasm', () => {
+    it('loads the JSPI Wasm module', async () => {
+      if (await supportsFeature('jspi')) {
+        try {
+          await resetLiteRt(/* loadFromDirectory= */ true, {jspi: true});
+          expect(liteRt).toBeDefined();
+        } finally {
+          await resetLiteRt();
+        }
+      } else {
+        pending('This browser does not support JSPI');
+      }
+    });
+
+    it('loads, compiles, and runs a model on the webnn accelerator',
+       async () => {
+         if (await supportsFeature('webnn')) {
+           await resetLiteRt(/* loadFromDirectory= */ true, {jspi: true});
+           const model = await loadAndCompile(
+               '/testdata/add_10x10.tflite', {accelerator: 'webnn'});
+
+           const identityData = new Float32Array(100).fill(1);
+           const a = new Tensor(identityData, [10, 10]);
+
+           const rangeData = new Float32Array(100);
+           for (let i = 0; i < 100; i++) {
+             rangeData[i] = i;
+           }
+           const b = new Tensor(rangeData, [10, 10]);
+
+           const outputs = await model.run({'a': a, 'b': b});
+           const outputData = await outputs['Identity'].data();
+
+           const expectedData = new Float32Array(100);
+           for (let i = 0; i < 100; i++) {
+             expectedData[i] = identityData[i] + rangeData[i];
+           }
+           expect(outputData).toEqual(expectedData);
+           expect(model.isFullyAccelerated).toBeTrue();
+
+           a.delete();
+           b.delete();
+           outputs['Identity'].delete();
+           model.delete();
+           await resetLiteRt();
+         } else {
+           pending('This browser does not support WebNN');
+         }
+       });
+
+    it('delegates fully to webnn if possible',
+       async () => {
+         if (await supportsFeature('webnn')) {
+           await resetLiteRt(/* loadFromDirectory= */ true, {jspi: true});
+           const model = await loadAndCompile('/testdata/add_10x10.tflite', {
+             accelerator: 'webnn',
+             webNNOptions: {devicePreference: 'npu'}
+           });
+           expect(model.options.accelerator).toEqual('webnn');
+           expect(model.isFullyAccelerated).toBeTrue();
+           model.delete();
+           await resetLiteRt();
+         } else {
+           pending('This browser does not support WebNN');
+         }
+       });
+
+    it('throws an error if JSPI is not supported', async () => {
+      if (await supportsFeature('jspi')) {
+        pending('JSPI is supported in this browser');
+      } else {
+        await expectAsync(resetLiteRt(/* loadFromDirectory= */ true, {
+          jspi: true
+        })).toBeRejectedWithError('JSPI is not supported');
+      }
+    });
+
+    it('compileModel returns a Promise with JSPI', async () => {
+      if (await supportsFeature('jspi')) {
+        await resetLiteRt(/* loadFromDirectory= */ true, {jspi: true});
+        const modelData = await fetch('/testdata/add_10x10.tflite')
+                              .then(response => response.arrayBuffer())
+                              .then(buffer => new Uint8Array(buffer));
+
+        const wasmModule = liteRt.liteRtWasm;
+        const ptr = wasmModule._malloc(modelData.byteLength) >>> 0;
+        wasmModule.HEAPU8.set(modelData, ptr);
+
+        const environment = liteRt.getDefaultEnvironment();
+        const wasmModel = wasmModule.loadModel(
+            environment.liteRtEnvironment, ptr, modelData.byteLength);
+
+        const compileOptions = {};
+        const result = wasmModule.compileModel(
+            environment.liteRtEnvironment, wasmModel, compileOptions);
+
+        expect(result).toBeInstanceOf(Promise);
+        const compiledModel = await result;
+        expect(compiledModel).toBeDefined();
+
+        compiledModel.delete();
+        wasmModel.delete();
+        wasmModule._free(ptr);
+      } else {
+        pending('This browser does not support JSPI');
+      }
+    });
+
+    it('compileModel returns a non-Promise without JSPI', async () => {
+      if (await supportsFeature('jspi')) {
+        pending('This test is for non-JSPI environments');
+        return;
+      }
+      await resetLiteRt();
+      const modelData = await fetch('/testdata/add_10x10.tflite')
+                            .then(response => response.arrayBuffer())
+                            .then(buffer => new Uint8Array(buffer));
+
+      const wasmModule = liteRt.liteRtWasm;
+      const ptr = wasmModule._malloc(modelData.byteLength) >>> 0;
+      wasmModule.HEAPU8.set(modelData, ptr);
+
+      const environment = liteRt.getDefaultEnvironment();
+      const wasmModel = wasmModule.loadModel(
+          environment.liteRtEnvironment, ptr, modelData.byteLength);
+
+      const compileOptions = {};
+      const result = wasmModule.compileModel(
+          environment.liteRtEnvironment, wasmModel, compileOptions);
+
+      expect(result).not.toBeInstanceOf(Promise);
+      expect(result).toBeDefined();
+
+      if (result instanceof CompiledModel) {
+        result.delete();
+      }
+      wasmModel.delete();
+      wasmModule._free(ptr);
+    });
+
+    describe('fallback model', () => {
+      let model: CompiledModel;
+
+      beforeAll(async () => {
+        if (!(await supportsFeature('jspi'))) {
+          pending('This browser does not support JSPI');
+          return;
+        }
+        await resetLiteRt(/* loadFromDirectory= */ true, {jspi: true});
+        model = await loadAndCompile(
+            '/testdata/fallback_model.tflite', {accelerator: 'webgpu'});
+      });
+
+      afterAll(async () => {
+        if (model) {
+          model.delete();
+        }
+        await resetLiteRt();
+      });
+
+      it('loads the model', () => {
+        expect(model).toBeDefined();
+      });
+
+      it('is not fully accelerated (falls back to CPU)', () => {
+        expect(model.isFullyAccelerated).toBeFalse();
+      });
+
+      it('logs a warning about partial delegation', async () => {
+        const warnSpy = spyOn(console, 'warn');
+        const tempModel = await loadAndCompile(
+            '/testdata/fallback_model.tflite', {accelerator: 'webgpu'});
+        expect(warnSpy).toHaveBeenCalledWith(
+            '%c[LiteRT]%c Model not fully compiled for webgpu. Partially delegating to WASM execution.',
+            'background: #FFA000; color: black; font-weight: bold; padding: 2px 5px; border-radius: 3px;',
+            'font-weight: bold;'
+        );
+        tempModel.delete();
+      });
+
+      it('runs successfully with fallback', async () => {
+        const inputData = new Float32Array([1, 2, 3, 4]);
+        const input = new Tensor(inputData, [1, 4]);
+        const outputs = await model.run([input]);
+        expect(outputs).toBeDefined();
+        expect(outputs.length).toBe(1);
+
+        const outputTensor = outputs[0];
+        expect(outputTensor).toBeDefined();
+
+        const outputData = await outputTensor.data();
+        const expectedOutput = new Float32Array([0, 0, 0, 0, 2, 3, 4, 5]);
+        expect(outputData).toEqual(expectedOutput);
+
+        input.delete();
+        outputTensor.delete();
+      });
+    });
+
+    describe('complex models with external weights', () => {
+      beforeEach(async () => {
+        if (!(await supportsFeature('jspi'))) {
+          pending('This browser does not support JSPI');
+          return;
+        }
+        await resetLiteRt(/* loadFromDirectory= */ true, {jspi: true});
+      });
+
+      afterEach(async () => {
+        await resetLiteRt();
+      });
+
+      // TODO(b/535068067) re-enable once external weights support is re-added.
+      it('loads and runs a complex model with external weights (per-channel quantized)',
+         async () => {
+           pending(
+               'TODO: b/535068067 - re-enable once external weights support is re-added.');
+           const adapter = await navigator.gpu.requestAdapter();
+           if (!adapter) throw new Error('No GPU adapter found.');
+           const device = await adapter.requestDevice();
+           liteRt.setWebGpuDevice(device);
+
+           const writeBufferSpy =
+               spyOn(device.queue, 'writeBuffer').and.callThrough();
+
+           const modelResponse = await fetch(
+               '/testdata/complexExtWeight/per_channel/model.tflite');
+           const modelData = new Uint8Array(await modelResponse.arrayBuffer());
+
+           const weightsResponse = await fetch(
+               '/testdata/complexExtWeight/per_channel/weights.bin');
+           const weightsStream = weightsResponse.body!;
+
+           const model = await loadModelAndWeights(modelData, weightsStream, {
+             environment: new Environment({webGpuDevice: device}),
+             accelerator: 'webgpu'
+           });
+
+           expect(writeBufferSpy).toHaveBeenCalled();
+
+           const inputDetails = model.getInputDetails();
+           const outputDetails = model.getOutputDetails();
+
+           expect(inputDetails.length).toBe(2);
+           expect(outputDetails.length).toBe(1);
+
+           const input0Data = new Float32Array(32).fill(0.5);
+           const input0 =
+               await (new Tensor(input0Data, Array.from(inputDetails[0].shape)))
+                   .moveTo('webgpu');
+
+           const input1Data = new Float32Array(32).fill(0.5);
+           const input1 =
+               await (new Tensor(input1Data, Array.from(inputDetails[1].shape)))
+                   .moveTo('webgpu');
+
+           const inputs: {[key: string]: Tensor} = {};
+           inputs[inputDetails[0].name] = input0;
+           inputs[inputDetails[1].name] = input1;
+
+           console.log('[Test2] Input Details:', JSON.stringify(inputDetails));
+           console.log(
+               '[Test2] Output Details:', JSON.stringify(outputDetails));
+           console.log('[Test2] Starting inference...');
+
+           const result = await model.run(inputs);
+           const output0 = await result[outputDetails[0].name].data();
+           console.log(
+               'complex model per-channel output0 values: ',
+               Array.from(output0));
+           expect(output0.length).toBe(64);
+
+           let allZeros = true;
+           for (let i = 0; i < output0.length; i++) {
+             if (output0[i] !== 0) {
+               allZeros = false;
+               break;
+             }
+           }
+           expect(allZeros).toBe(false);
+
+           model.delete();
+           input0.delete();
+           input1.delete();
+           for (const name of Object.keys(result)) {
+             result[name].delete();
+           }
+         });
+    });
+
+    describe('complex models with external weights', () => {
+      beforeEach(async () => {
+        if (!(await supportsFeature('jspi'))) {
+          pending('This browser does not support JSPI');
+          return;
+        }
+        await resetLiteRt(/* loadFromDirectory= */ true, {jspi: true});
+      });
+
+      afterEach(async () => {
+        await resetLiteRt();
+      });
+
+      // TODO(b/535068067) re-enable once external weights support is re-added.
+      it('loads and runs a complex model with external weights', async () => {
+        pending(
+            'TODO: b/535068067 - re-enable once external weights support is re-added.');
+        const adapter = await navigator.gpu.requestAdapter();
+        if (!adapter) throw new Error('No GPU adapter found.');
+        const device = await adapter.requestDevice();
+        liteRt.setWebGpuDevice(device);
+
+        const writeBufferSpy =
+            spyOn(device.queue, 'writeBuffer').and.callThrough();
+
+        const modelResponse =
+            await fetch('/testdata/complexExtWeight/model.tflite');
+        const modelData = new Uint8Array(await modelResponse.arrayBuffer());
+
+        const weightsResponse =
+            await fetch('/testdata/complexExtWeight/weights.bin');
+        const weightsStream = weightsResponse.body!;
+
+        const model = await loadModelAndWeights(modelData, weightsStream, {
+          environment: new Environment({webGpuDevice: device}),
+          accelerator: 'webgpu'
+        });
+
+        expect(writeBufferSpy).toHaveBeenCalled();
+
+        const inputDetails = model.getInputDetails();
+        const outputDetails = model.getOutputDetails();
+
+        expect(inputDetails.length).toBe(2);
+        expect(outputDetails.length).toBe(1);
+
+        const input0Data = new Float32Array(32).fill(0.5);
+        const input0 =
+            await (new Tensor(input0Data, Array.from(inputDetails[0].shape)))
+                .moveTo('webgpu');
+
+        const input1Data = new Float32Array(32).fill(0.5);
+        const input1 =
+            await (new Tensor(input1Data, Array.from(inputDetails[1].shape)))
+                .moveTo('webgpu');
+
+        const inputs: {[key: string]: Tensor} = {};
+        inputs[inputDetails[0].name] = input0;
+        inputs[inputDetails[1].name] = input1;
+
+        const result = await model.run(inputs);
+        const output0 = await result[outputDetails[0].name].data();
+        console.log('complex model output0 values: ', Array.from(output0));
+        expect(output0.length).toBe(64);
+
+        let allZeros = true;
+        for (let i = 0; i < output0.length; i++) {
+          if (output0[i] !== 0) {
+            allZeros = false;
+            break;
+          }
+        }
+        expect(allZeros).toBe(true);
+
+        model.delete();
+        input0.delete();
+        input1.delete();
+        for (const name of Object.keys(result)) {
+          result[name].delete();
+        }
+      });
+
+      // TODO(b/535068067) re-enable once external weights support is re-added.
+      it('loads and runs a complex model with external weights (per-channel quantized)',
+         async () => {
+           pending(
+               'TODO: b/535068067 - re-enable once external weights support is re-added.');
+           const adapter = await navigator.gpu.requestAdapter();
+           if (!adapter) throw new Error('No GPU adapter found.');
+           const device = await adapter.requestDevice();
+           liteRt.setWebGpuDevice(device);
+
+           const writeBufferSpy =
+               spyOn(device.queue, 'writeBuffer').and.callThrough();
+
+           const modelResponse = await fetch(
+               '/testdata/complexExtWeight/per_channel/model.tflite');
+           const modelData = new Uint8Array(await modelResponse.arrayBuffer());
+
+           const weightsResponse = await fetch(
+               '/testdata/complexExtWeight/per_channel/weights.bin');
+           const weightsStream = weightsResponse.body!;
+
+           const model = await loadModelAndWeights(modelData, weightsStream, {
+             environment: new Environment({webGpuDevice: device}),
+             accelerator: 'webgpu'
+           });
+
+           expect(writeBufferSpy).toHaveBeenCalled();
+
+           const inputDetails = model.getInputDetails();
+           const outputDetails = model.getOutputDetails();
+
+           expect(inputDetails.length).toBe(2);
+           expect(outputDetails.length).toBe(1);
+
+           const input0Data = new Float32Array(32).fill(0.5);
+           const input0 =
+               await (new Tensor(input0Data, Array.from(inputDetails[0].shape)))
+                   .moveTo('webgpu');
+
+           const input1Data = new Float32Array(32).fill(0.5);
+           const input1 =
+               await (new Tensor(input1Data, Array.from(inputDetails[1].shape)))
+                   .moveTo('webgpu');
+
+           const inputs: {[key: string]: Tensor} = {};
+           inputs[inputDetails[0].name] = input0;
+           inputs[inputDetails[1].name] = input1;
+
+           console.log('[Test2] Input Details:', JSON.stringify(inputDetails));
+           console.log(
+               '[Test2] Output Details:', JSON.stringify(outputDetails));
+           console.log('[Test2] Starting inference...');
+
+           const result = await model.run(inputs);
+           const output0 = await result[outputDetails[0].name].data();
+           console.log(
+               'complex model per-channel output0 values: ',
+               Array.from(output0));
+           expect(output0.length).toBe(64);
+
+           let allZeros = true;
+           for (let i = 0; i < output0.length; i++) {
+             if (output0[i] !== 0) {
+               allZeros = false;
+               break;
+             }
+           }
+           expect(allZeros).toBe(false);
+
+           model.delete();
+           input0.delete();
+           input1.delete();
+           for (const name of Object.keys(result)) {
+             result[name].delete();
+           }
+         });
+    });
+  });
+
+  it('setDefaultEnvironment() sets the default environment', async () => {
+    await resetLiteRt();
+    const environment = new Environment({webGpuDevice: null});
+    liteRt.setDefaultEnvironment(environment);
+    expect(liteRt.getDefaultEnvironment()).toBe(environment);
+  });
+
+  it('setWebGpuDevice() sets the WebGPU device', async () => {
+    await resetLiteRt();
+    const adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) {
+      throw new Error('No GPU adapter found.');
+    }
+    const device = await adapter.requestDevice();
+    liteRt.setWebGpuDevice(device);
+    expect(liteRt.getWebGpuDevice()).toBe(device);
+  });
+
+  describe('loadAndCompile', () => {
+    // Some of these tests that intentionally cause C++ exceptions leave
+    // LiteRT's wasm in a bad state. Reset it after each test to prevent
+    // cascading failures.
+    beforeEach(resetLiteRt);
+    const modelPath = '/testdata/add_10x10.tflite';  // A small test model.
+    const model2Path = '/testdata/multi_signature_model.tflite';
+
+    it('loads from a Uint8Array', async () => {
+      const modelData = await fetch(modelPath);
+      const model =
+          await loadAndCompile(new Uint8Array(await modelData.arrayBuffer()));
+      expect(model).toBeDefined();
+      model.delete();
+    });
+
+    it('loads from a string URL', async () => {
+      const model = await loadAndCompile(modelPath);
+      expect(model).toBeDefined();
+      model.delete();
+    });
+
+    it('loads from a URL object', async () => {
+      const modelUrl = new URL(`${location.origin}${modelPath}`);
+      const model = await loadAndCompile(modelUrl);
+      expect(model).toBeDefined();
+      model.delete();
+    });
+
+    it('loads from a ReadableStreamDefaultReader', async () => {
+      const modelData = await fetch(modelPath);
+      const modelReader = modelData.body!.getReader();
+      const model = await loadAndCompile(modelReader);
+      expect(model).toBeDefined();
+      model.delete();
+    });
+
+    it('throws when loading a huge model from a ReadableStreamDefaultReader',
+       async () => {
+         // TODO(msoulanille): Remove this test when we support loading large
+         // models.
+         const fakeModel = new ReadableStream<Uint8Array>({
+           start(controller) {
+             controller.enqueue(new Uint8Array(1.5e9));
+             controller.enqueue(new Uint8Array(1.5e9));
+             controller.close();
+           }
+         });
+
+         await expectAsync(loadAndCompile(fakeModel.getReader()))
+             .toBeRejectedWithError(/Model is too large/);
+       });
+
+    it('throws an error when given a bad model', async () => {
+      const badModel =
+          new TextEncoder().encode('****BADM and some extra data here.');
+
+      await expectAsync(loadAndCompile(badModel))
+          .toBeRejectedWithError(/Failed to load model from buffer/);
+    });
+
+    it('loads two models', async () => {
+      const [model1, model2] = await Promise.all([
+        loadAndCompile(modelPath),
+        loadAndCompile(model2Path),
+      ]);
+      expect(model1).toBeDefined();
+      expect(model2).toBeDefined();
+      model1.delete();
+      model2.delete();
+    });
+
+    it('loads with compileOptions with undefined accelerator', async () => {
+      const model = await loadAndCompile(modelPath, {accelerator: undefined});
+      expect(model).toBeDefined();
+      model.delete();
+    });
+
+    it('loads with compileOptions with wasm accelerator', async () => {
+      const model = await loadAndCompile(modelPath, {accelerator: 'wasm'});
+      expect(model).toBeDefined();
+      model.delete();
+    });
+
+    it('defaults to webgpu if unspecified and a WebGPU device is available',
+       async () => {
+         const adapter = await navigator.gpu.requestAdapter();
+         if (!adapter) {
+           throw new Error('No GPU adapter found.');
+         }
+         const device = await adapter.requestDevice();
+         liteRt.setWebGpuDevice(device);
+         const model = await loadAndCompile(modelPath, {
+           environment: new Environment({webGpuDevice: device}),
+         });
+         expect(model.options.accelerator).toBe('webgpu');
+         model.delete();
+       });
+
+    it('defaults to wasm if unspecified and no WebGPU device is available',
+       async () => {
+         const model = await loadAndCompile(modelPath, {
+           environment: new Environment({webGpuDevice: null}),
+         });
+         expect(model.options.accelerator).toBe('wasm');
+         model.delete();
+       });
+
+    it('throws an error if WebGPU is requested but no device is available',
+       async () => {
+         await expectAsync(loadAndCompile(modelPath, {
+           environment: new Environment({webGpuDevice: null}),
+           accelerator: 'webgpu',
+         })).toBeRejectedWithError(/no WebGPU device is set/);
+       });
+
+    it('throws an error with compileOptions with unsupported accelerator type',
+       async () => {
+         await expectAsync(loadAndCompile(modelPath, {
+           // this test is designed to throw an error, using any to
+           // contruct a mock CompileOptions object.
+           // tslint:disable-next-line:no-any
+           accelerator: 'unsupported' as any
+         })).toBeRejectedWithError(/Invalid accelerator: unsupported/);
+       });
+
+    it('loads with compileOptions with webgpu accelerator and fp16 precision',
+       async () => {
+         const adapter = await navigator.gpu.requestAdapter();
+         if (!adapter) {
+           throw new Error('No GPU adapter found.');
+         }
+         const device = await adapter.requestDevice();
+         liteRt.setWebGpuDevice(device);
+         const model = await loadAndCompile(modelPath, {
+           environment: new Environment({webGpuDevice: device}),
+           accelerator: 'webgpu',
+           gpuOptions: {precision: 'fp16'},
+         });
+         expect(model).toBeDefined();
+         expect(model.options.accelerator).toBe('webgpu');
+         expect(model.options.gpuOptions).toBeDefined();
+         expect(model.options.gpuOptions!.precision).toBe('fp16');
+         model.delete();
+       });
+
+    it('loads with compileOptions with webgpu accelerator and fp32 precision',
+       async () => {
+         const adapter = await navigator.gpu.requestAdapter();
+         if (!adapter) {
+           throw new Error('No GPU adapter found.');
+         }
+         const device = await adapter.requestDevice();
+         liteRt.setWebGpuDevice(device);
+         const model = await loadAndCompile(modelPath, {
+           environment: new Environment({webGpuDevice: device}),
+           accelerator: 'webgpu',
+           gpuOptions: {precision: 'fp32'},
+         });
+         expect(model).toBeDefined();
+         expect(model.options.accelerator).toBe('webgpu');
+         expect(model.options.gpuOptions).toBeDefined();
+         expect(model.options.gpuOptions!.precision).toBe('fp32');
+         model.delete();
+       });
+
+    it('throws with invalid webgpu precision', async () => {
+      const adapter = await navigator.gpu.requestAdapter();
+      if (!adapter) {
+        throw new Error('No GPU adapter found.');
+      }
+      const device = await adapter.requestDevice();
+      liteRt.setWebGpuDevice(device);
+      await expectAsync(loadAndCompile(modelPath, {
+        environment: new Environment({webGpuDevice: device}),
+        accelerator: 'webgpu',
+        // tslint:disable-next-line:no-any
+        gpuOptions: {precision: 'invalid' as any},
+      })).toBeRejectedWithError(/Invalid WebGPU precision: invalid/);
+    });
+
+    it('loads with compileOptions with webnn accelerator', async () => {
+      // TODO: markoristic - migrate this test to jspi section once webnn
+      // execution is supported. (i.e. run is async)
+      try {
+        const model = await loadAndCompile(modelPath, {accelerator: 'webnn'});
+        expect(model).toBeDefined();
+        model.delete();
+      } catch (e) {
+        const errorMessage = (e as Error).message;
+        expect(errorMessage).not.toContain('Invalid accelerator');
+      }
+    });
+
+    it('throws an error if WebGPU is requested but no WebGPU device is available',
+       async () => {
+         await expectAsync(loadAndCompile(modelPath, {
+           environment: new Environment({webGpuDevice: null}),
+           accelerator: 'webgpu',
+         })).toBeRejectedWithError(/no WebGPU device is set/);
+       });
+
+    describe('fallback on non-JSPI', () => {
+      beforeEach(resetLiteRt);
+
+      it('falls back to WASM if model is not fully delegated to WebGPU on non-JSPI',
+         async () => {
+           const device = liteRt.getWebGpuDevice();
+           if (!device) {
+             pending('No WebGPU device found in default environment.');
+             return;
+           }
+           // tslint:disable-next-line:no-any
+           const originalSuspending = (globalThis.WebAssembly as any).Suspending;
+           const needToMock = 'Suspending' in globalThis.WebAssembly;
+           let jspiMocked = false;
+
+           if (needToMock) {
+             try {
+               // In strict mode, delete will throw if the property is non-configurable.
+               // tslint:disable-next-line:no-any
+               jspiMocked = delete (globalThis.WebAssembly as any).Suspending;
+               if (!jspiMocked) {
+                 pending('Cannot mock JSPI (delete returned false).');
+                 return;
+               }
+             } catch (e) {
+               pending(`Cannot mock JSPI (delete threw error: ${e}).`);
+               return;
+             }
+           }
+
+           try {
+             const model = await loadAndCompile('/testdata/fallback_model.tflite', {
+               environment: new Environment({webGpuDevice: device}),
+               accelerator: 'webgpu',
+             });
+
+             expect(model).toBeDefined();
+             // Assert that it fell back to WASM
+             expect(model.options.accelerator).toBe('wasm');
+
+             // Run the model to make sure it works
+             const inputData = new Float32Array([1, 2, 3, 4]);
+             const input = new Tensor(inputData, [1, 4]);
+             const outputs = await model.run([input]);
+             expect(outputs).toBeDefined();
+             expect(outputs.length).toBe(1);
+
+             const outputTensor = outputs[0];
+             expect(outputTensor).toBeDefined();
+
+             const outputData = await outputTensor.data();
+             const expectedOutput = new Float32Array([0, 0, 0, 0, 2, 3, 4, 5]);
+             expect(outputData).toEqual(expectedOutput);
+
+             input.delete();
+             outputTensor.delete();
+             model.delete();
+           } finally {
+             // Restore JSPI support status if we mocked it
+             if (needToMock && jspiMocked && originalSuspending) {
+               // tslint:disable-next-line:no-any
+               (globalThis.WebAssembly as any).Suspending = originalSuspending;
+             }
+           }
+         });
+    });
+  });
+
+  describe('input / output details', () => {
+    let multiSignatureModel: CompiledModel;
+
+    beforeAll(async () => {
+      await resetLiteRt(true, {threads: false});
+      multiSignatureModel =
+          await loadAndCompile('/testdata/multi_signature_model.tflite');
+    });
+
+    afterAll(() => {
+      multiSignatureModel.delete();
+    });
+
+    it('gets input details about the default signature', async () => {
+      const inputDetails = multiSignatureModel.getInputDetails();
+      expect(inputDetails).toEqual([
+        {
+          name: 'b',
+          index: 0,
+          dtype: 'float32',
+          shape: new Int32Array([10, 10]),
+          supportedBufferTypes:
+              new Set([TensorBufferType.WEB_GPU_BUFFER_PACKED]),
+        },
+        {
+          name: 'a',
+          index: 1,
+          dtype: 'float32',
+          shape: new Int32Array([10, 10]),
+          supportedBufferTypes:
+              new Set([TensorBufferType.WEB_GPU_BUFFER_PACKED]),
+        },
+      ]);
+    });
+
+    it('gets output details about the default signature', async () => {
+      const outputDetails = multiSignatureModel.getOutputDetails();
+      expect(outputDetails).toEqual([
+        {
+          name: 'output',
+          index: 0,
+          dtype: 'float32',
+          shape: new Int32Array([10, 10]),
+          supportedBufferTypes:
+              new Set([TensorBufferType.WEB_GPU_BUFFER_PACKED]),
+        },
+      ]);
+    });
+
+    it('gets input details about a specific signature', async () => {
+      const inputDetails =
+          multiSignatureModel.signatures['mul'].getInputDetails();
+      expect(inputDetails).toEqual([
+        {
+          name: 'b',
+          index: 0,
+          dtype: 'float32',
+          shape: new Int32Array([10, 10]),
+          supportedBufferTypes:
+              new Set([TensorBufferType.WEB_GPU_BUFFER_PACKED]),
+        },
+        {
+          name: 'a',
+          index: 1,
+          dtype: 'float32',
+          shape: new Int32Array([10, 10]),
+          supportedBufferTypes:
+              new Set([TensorBufferType.WEB_GPU_BUFFER_PACKED]),
+        },
+      ]);
+    });
+
+    it('gets output details about a specific signature', async () => {
+      const outputDetails =
+          multiSignatureModel.signatures['mul'].getOutputDetails();
+      expect(outputDetails).toEqual([
+        {
+          name: 'output',
+          index: 0,
+          dtype: 'float32',
+          shape: new Int32Array([10, 10]),
+          supportedBufferTypes:
+              new Set([TensorBufferType.WEB_GPU_BUFFER_PACKED]),
+        },
+      ]);
+    });
+  });
+
+  describe('tensors', () => {
+    it('creates a tensor from a Float32Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('float32');
+      expect(tensor.type.layout.dimensions).toEqual([3]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a Int32Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Int32Array([1, 2, 3, 4, 5]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('int32');
+      expect(tensor.type.layout.dimensions).toEqual([5]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a Uint8Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Uint8Array([1, 2, 3, 4, 5]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('uint8');
+      expect(tensor.type.layout.dimensions).toEqual([5]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a Int8Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Int8Array([-1, 2, -3, 4, -5]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('int8');
+      expect(tensor.type.layout.dimensions).toEqual([5]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a bool tensor from a Uint8Array with bool dtype', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Uint8Array([1, 0, 1, 0, 1]);
+      const tensor = new Tensor(data, [5], 'bool');
+      expect(tensor.type.dtype).toEqual('bool');
+      expect(tensor.type.layout.dimensions).toEqual([5]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a Int16Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Int16Array([1, 2, 3, 4, 5]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('int16');
+      expect(tensor.type.layout.dimensions).toEqual([5]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a Uint16Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Uint16Array([1, 2, 3, 4, 5]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('uint16');
+      expect(tensor.type.layout.dimensions).toEqual([5]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a Float16Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float16Array([1.0, 2.0, 3.0]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('float16');
+      expect(tensor.type.layout.dimensions).toEqual([3]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a BigInt64Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new BigInt64Array([1n, 2n, 3n, 4n, 5n]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('int64');
+      expect(tensor.type.layout.dimensions).toEqual([5]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a BigUint64Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new BigUint64Array([1n, 2n, 3n, 4n, 5n]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('uint64');
+      expect(tensor.type.layout.dimensions).toEqual([5]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a Float64Array', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float64Array([1.234, 2.345, 3.456]);
+      const tensor = new Tensor(data);
+      expect(tensor.type.dtype).toEqual('float64');
+      expect(tensor.type.layout.dimensions).toEqual([3]);
+      expect(await tensor.data()).toEqual(data);
+    });
+
+    it('creates a tensor from a GPUBuffer', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+
+      const device = liteRt.getWebGpuDevice()!;
+
+      const gpuBuffer = device.createBuffer({
+        size: data.byteLength,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC |
+            GPUBufferUsage.COPY_DST,
+        mappedAtCreation: true,
+      });
+      new Float32Array(gpuBuffer.getMappedRange()).set(data);
+      gpuBuffer.unmap();
+
+      const tensor =
+          new Tensor(gpuBuffer, [3], 'float32', liteRt.getDefaultEnvironment());
+      expect(tensor.type.dtype).toEqual('float32');
+      expect(tensor.type.layout.dimensions).toEqual([3]);
+      expect(await tensor.data()).toEqual(data);
+      expect(tensor.bufferType).toEqual(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+      expect(tensor.accelerator).toEqual('webgpu');
+      tensor.delete();
+      gpuBuffer.destroy();
+    });
+
+    it('calls the onDelete callback when deleted', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const onDelete = jasmine.createSpy('onDelete');
+      const tensor = new Tensor(data, undefined, undefined, onDelete);
+      tensor.delete();
+      expect(onDelete).toHaveBeenCalled();
+    });
+
+    it('fails when passing a float16 tensor to a float32 model', async () => {
+      await resetLiteRt(true, {threads: false});
+      const model = await loadAndCompile(
+          '/testdata/add_10x10.tflite', {accelerator: 'webgpu'});
+
+      const data = new Float16Array(100).fill(1.0);
+      const device = liteRt.getWebGpuDevice()!;
+
+      const gpuBuffer = device.createBuffer({
+        size: data.byteLength,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC |
+            GPUBufferUsage.COPY_DST,
+        mappedAtCreation: true,
+      });
+      new Uint16Array(gpuBuffer.getMappedRange()).set(data);
+      gpuBuffer.unmap();
+
+      const tensor = new Tensor(
+          gpuBuffer, [10, 10], 'float16', liteRt.getDefaultEnvironment());
+
+      const bData = new Float32Array(100);
+      const bTensor = new Tensor(bData, [10, 10]);
+
+      // Expect failure because the model expects float32
+      await expectAsync(model.run({'a': tensor, 'b': bTensor}))
+          .toBeRejectedWithError(
+              /TensorBuffer ranked tensor type float16.*does not match expected ranked tensor type float32/);
+
+      bTensor.delete();
+      tensor.delete();
+      model.delete();
+      gpuBuffer.destroy();
+    });
+
+    it('environment is the default when not provided', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const tensor = new Tensor(data);
+      expect(tensor.environment).toBe(liteRt.getDefaultEnvironment());
+    });
+
+    it('environment is the provided one when provided', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const environment = new Environment({webGpuDevice: null});
+      const tensor = new Tensor(data, undefined, environment);
+      expect(tensor.environment).toBe(environment);
+    });
+
+    it('copies a CPU tensor to a float32 WebGPU tensor and back', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const cpuTensor = new Tensor(data);
+      expect(cpuTensor.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+      expect(cpuTensor.accelerator).toEqual('wasm');
+      const gpuTensor = await cpuTensor.copyTo('webgpu');
+      expect(gpuTensor.bufferType)
+          .toEqual(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+      expect(gpuTensor.accelerator).toEqual('webgpu');
+
+      // Copy back to CPU.
+      const cpuTensor2 = await gpuTensor.copyTo('wasm');
+      expect(cpuTensor2.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+      expect(cpuTensor2.accelerator).toEqual('wasm');
+      // Copy back again to verify that gpuTensor is still valid after one copy.
+      const cpuTensor3 = await gpuTensor.copyTo('wasm');
+      expect(cpuTensor3.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+      expect(cpuTensor3.accelerator).toEqual('wasm');
+
+      // Source tensor is still valid after copy.
+      expect(await cpuTensor.data()).toEqual(data);
+      // Copy actually copies the data.
+      expect(await cpuTensor2.data()).toEqual(data);
+      expect(await cpuTensor3.data()).toEqual(data);
+      cpuTensor.delete();
+      gpuTensor.delete();
+      cpuTensor2.delete();
+      cpuTensor3.delete();
+    });
+
+    it('creates symbolic tensor arithmetic graph nodes using member methods and free functions on CPU',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const dataA = new Float32Array([1.0, 2.0, 3.0]);
+         const dataB = new Float32Array([4.0, 5.0, 6.0]);
+         const tensorA = new Tensor(dataA);
+         const tensorB = new Tensor(dataB);
+
+         // Test member method syntax
+         const addedMember = tensorA.add(tensorB);
+         expect(addedMember).toBeDefined();
+         expect(addedMember.type.dtype).toEqual('float32');
+         expect(addedMember.type.layout.dimensions).toEqual([3]);
+
+         // Test free function syntax
+         const addedFree = add(tensorA, tensorB);
+         expect(addedFree).toBeDefined();
+         expect(addedFree.type.dtype).toEqual('float32');
+         expect(addedFree.type.layout.dimensions).toEqual([3]);
+
+         const mulFree = mul(tensorA, tensorB);
+         expect(mulFree).toBeDefined();
+         expect(mulFree.type.dtype).toEqual('float32');
+
+         const subFree = sub(tensorA, tensorB);
+         expect(subFree).toBeDefined();
+         expect(subFree.type.dtype).toEqual('float32');
+
+         const divFree = div(tensorA, tensorB);
+         expect(divFree).toBeDefined();
+         expect(divFree.type.dtype).toEqual('float32');
+
+         const reluFree = relu(tensorA);
+         expect(reluFree).toBeDefined();
+         expect(reluFree.type.dtype).toEqual('float32');
+
+         tensorA.delete();
+         tensorB.delete();
+         addedMember.delete();
+         addedFree.delete();
+         mulFree.delete();
+         subFree.delete();
+         divFree.delete();
+         reluFree.delete();
+       });
+
+    it('throws when performing arithmetic operations on tensors from different environments',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const data = new Float32Array([1.0, 2.0, 3.0]);
+         const tensorA = new Tensor(data);
+         const env2 = new Environment({webGpuDevice: null});
+         const tensorB = new Tensor(data, undefined, env2);
+
+         expect(() => add(tensorA, tensorB))
+             .toThrowError(
+                 'Cannot perform arithmetic operations on tensors from different environments.');
+         expect(() => tensorA.add(tensorB))
+             .toThrowError(
+                 'Cannot perform arithmetic operations on tensors from different environments.');
+
+         tensorA.delete();
+         tensorB.delete();
+       });
+
+    it('throws when performing arithmetic operations on deleted tensors',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const data = new Float32Array([1.0, 2.0, 3.0]);
+         const tensorA = new Tensor(data);
+         const tensorB = new Tensor(data);
+         tensorA.delete();
+
+         expect(() => add(tensorA, tensorB))
+             .toThrowError('Tensor is deleted and cannot be used.');
+         expect(() => tensorA.add(tensorB))
+             .toThrowError('Tensor is deleted and cannot be used.');
+         expect(() => add(tensorB, tensorA))
+             .toThrowError('Tensor is deleted and cannot be used.');
+         expect(() => relu(tensorA))
+             .toThrowError('Tensor is deleted and cannot be used.');
+
+         tensorB.delete();
+       });
+
+    it('authors and executes tensor graph with author(fn)', async () => {
+      await resetLiteRt(true, {threads: false});
+      const dataA = new Float32Array([1.0, 2.0, 3.0]);
+      const dataB = new Float32Array([4.0, 5.0, 6.0]);
+      const tensorA = new Tensor(dataA);
+      const tensorB = new Tensor(dataB);
+
+      // 1. Author tensor function
+      function myGraph(a: Tensor, b: Tensor): Tensor {
+        return a.add(b).mul(
+            a);  // (a + b) * a = [5, 7, 9] * [1, 2, 3] = [5, 14, 27]
+      }
+
+      // 2. Author with author(fn)
+      const authoredModel = author(myGraph, {accelerator: 'wasm'});
+
+      // 3. Execute (amortizes compilation on first run)
+      const result = await authoredModel.run(tensorA, tensorB);
+      expect(result).toBeDefined();
+      expect(Array.from(await result.data())).toEqual([5, 14, 27]);
+
+      // 4. Subsequent run should reuse cached compiled model
+      const result2 = await authoredModel.run(tensorA, tensorB);
+      expect(Array.from(await result2.data())).toEqual([5, 14, 27]);
+
+      tensorA.delete();
+      tensorB.delete();
+      result.delete();
+      result2.delete();
+      authoredModel.delete();
+    });
+
+    it('compiles authored model ahead of time using PlaceholderSpec without executing inference',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const authoredModel =
+             new AuthoredModel((x: Tensor) => x.mul(x), {accelerator: 'wasm'});
+
+         const spec = {shape: [3], dataType: 'float32' as const};
+         expect(authoredModel.hasCompiledSignature(spec)).toBeFalse();
+
+         // Compile ahead of time without running inference
+         await authoredModel.compile(spec);
+         expect(authoredModel.hasCompiledSignature(spec)).toBeTrue();
+
+         // First run should use the compiled signature
+         const inputTensor = new Tensor(new Float32Array([2.0, 3.0, 4.0]));
+         const result = await authoredModel.run(inputTensor);
+         expect(Array.from(await result.data())).toEqual([4, 9, 16]);
+
+         inputTensor.delete();
+         result.delete();
+         authoredModel.delete();
+       });
+
+    it('compiles multi-input authored model with dictionary specs',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const authoredModel = new AuthoredModel(
+             (inputs: Record<string, Tensor>) => inputs['a'].add(inputs['b']),
+             {accelerator: 'wasm'});
+
+         const dictSpec = {
+           a: {shape: [2], dataType: 'float32' as const},
+           b: {shape: [2], dataType: 'float32' as const},
+         };
+         expect(authoredModel.hasCompiledSignature(dictSpec)).toBeFalse();
+
+         await authoredModel.compile(dictSpec);
+         expect(authoredModel.hasCompiledSignature(dictSpec)).toBeTrue();
+
+         const tensorA = new Tensor(new Float32Array([10.0, 20.0]));
+         const tensorB = new Tensor(new Float32Array([1.0, 2.0]));
+         const result = await authoredModel.run({a: tensorA, b: tensorB});
+         expect(Array.from(await result.data())).toEqual([11, 22]);
+
+         tensorA.delete();
+         tensorB.delete();
+         result.delete();
+         authoredModel.delete();
+       });
+
+    it('compiles with concrete dummy tensor and reuses for subsequent run',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const authoredModel =
+             new AuthoredModel((x: Tensor) => x.add(x), {accelerator: 'wasm'});
+
+         const dummy = new Tensor(new Float32Array([0.0, 0.0]));
+         expect(authoredModel.hasCompiledSignature(dummy)).toBeFalse();
+
+         await authoredModel.compile(dummy);
+         expect(authoredModel.hasCompiledSignature(dummy)).toBeTrue();
+         dummy.delete();
+
+         const live = new Tensor(new Float32Array([5.0, 15.0]));
+         const result = await authoredModel.run(live);
+         expect(Array.from(await result.data())).toEqual([10, 30]);
+
+         live.delete();
+         result.delete();
+         authoredModel.delete();
+       });
+
+    it('throws error when compile is called on a deleted model', async () => {
+      await resetLiteRt(true, {threads: false});
+      const authoredModel =
+          new AuthoredModel((x: Tensor) => x, {accelerator: 'wasm'});
+      authoredModel.delete();
+
+      await expectAsync(
+          authoredModel.compile({shape: [1], dataType: 'float32'}),
+          )
+          .toBeRejectedWithError(/AuthoredModel is deleted and cannot be used/);
+    });
+
+    it('compiles multi-signature authored model with shared weights into a single CompiledModel',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const weight = new Tensor(new Float32Array([2.0, 3.0, 5.0]));
+         const authoredModel = new AuthoredModel(
+             (x: Tensor) => x.mul(weight),
+             {accelerator: 'wasm'},
+         );
+
+         // Compile two signatures upfront: shape [1, 3] and shape [2, 3]
+         const spec1 = {shape: [1, 3], dataType: 'float32' as const};
+         const spec2 = {shape: [2, 3], dataType: 'float32' as const};
+         await authoredModel.compile([[spec1], [spec2]]);
+
+         expect(authoredModel.hasCompiledSignature(spec1)).toBeTrue();
+         expect(authoredModel.hasCompiledSignature(spec2)).toBeTrue();
+         expect(authoredModel.compiledModel).toBeDefined();
+
+         // Verify exactly ONE CompiledModel with 2 signatures was created
+         const signatures = authoredModel.compiledModel!.signatures;
+         expect(Object.keys(signatures).length).toBe(2);
+
+         // Run shape 1: [1, 3]
+         const input1 =
+             new Tensor(new Float32Array([10.0, 20.0, 30.0]), [1, 3]);
+         const out1 = await authoredModel.run(input1);
+         expect(Array.from(await out1.data())).toEqual([20.0, 60.0, 150.0]);
+
+         // Run shape 2: [2, 3]
+         const input2 = new Tensor(
+             new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
+             [2, 3],
+         );
+         const out2 = await authoredModel.run(input2);
+         expect(Array.from(await out2.data())).toEqual([
+           2.0,
+           6.0,
+           15.0,
+           8.0,
+           15.0,
+           30.0,
+         ]);
+
+         // Verify calling compile() a second time succeeds and creates a new
+         // CompiledModel
+         const spec3 = {shape: [3, 3], dataType: 'float32' as const};
+         await authoredModel.compile([[spec3]]);
+         expect(authoredModel.hasCompiledSignature(spec3)).toBeTrue();
+
+         const input3 = new Tensor(
+             new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]),
+             [3, 3],
+         );
+         const out3 = await authoredModel.run(input3);
+         expect(Array.from(await out3.data())).toEqual([
+           2.0,
+           6.0,
+           15.0,
+           8.0,
+           15.0,
+           30.0,
+           14.0,
+           24.0,
+           45.0,
+         ]);
+
+         weight.delete();
+         input1.delete();
+         input2.delete();
+         input3.delete();
+         out1.delete();
+         out2.delete();
+         out3.delete();
+         authoredModel.delete();
+       });
+
+    it('compiles named multi-signature authored model', async () => {
+      await resetLiteRt(true, {threads: false});
+      const authoredModel = new AuthoredModel(
+          (x: Tensor) => x.add(x),
+          {accelerator: 'wasm'},
+      );
+
+      const specLow = {shape: [2], dataType: 'float32' as const};
+      const specHigh = {shape: [4], dataType: 'float32' as const};
+      await authoredModel.compile({
+        low: [specLow],
+        high: [specHigh],
+      });
+
+      expect(authoredModel.hasCompiledSignature(specLow)).toBeTrue();
+      expect(authoredModel.hasCompiledSignature(specHigh)).toBeTrue();
+
+      const signatures = authoredModel.compiledModel!.signatures;
+      expect('low' in signatures).toBeTrue();
+      expect('high' in signatures).toBeTrue();
+
+      const inputLow = new Tensor(new Float32Array([3.0, 7.0]), [2]);
+      const outLow = await authoredModel.run(inputLow);
+      expect(Array.from(await outLow.data())).toEqual([6.0, 14.0]);
+
+      const inputHigh = new Tensor(new Float32Array([1.0, 2.0, 3.0, 4.0]), [4]);
+      const outHigh = await authoredModel.run(inputHigh);
+      expect(Array.from(await outHigh.data())).toEqual([2.0, 4.0, 6.0, 8.0]);
+
+      inputLow.delete();
+      inputHigh.delete();
+      outLow.delete();
+      outHigh.delete();
+      authoredModel.delete();
+    });
+
+    it('lazily and silently compiles unseen shapes on run() with console log',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const authoredModel = new AuthoredModel(
+             (x: Tensor) => x.add(x),
+             {accelerator: 'wasm'},
+         );
+
+         const consoleSpy = spyOn(console, 'log').and.callThrough();
+
+         const inputA = new Tensor(new Float32Array([1.0, 2.0]), [2]);
+         const outA = await authoredModel.run(inputA);
+         expect(Array.from(await outA.data())).toEqual([2.0, 4.0]);
+         expect(consoleSpy)
+             .toHaveBeenCalledWith(
+                 jasmine.stringMatching(
+                     /JIT compiling model for input shape\/type 'float32\[2\]' under the hood/),
+             );
+
+         consoleSpy.calls.reset();
+
+         // Running same shape executes without triggering new JIT compile log
+         const inputA2 = new Tensor(new Float32Array([3.0, 4.0]), [2]);
+         const outA2 = await authoredModel.run(inputA2);
+         expect(Array.from(await outA2.data())).toEqual([6.0, 8.0]);
+         expect(consoleSpy).not.toHaveBeenCalled();
+
+         // Running unseen shape silently compiles and logs to console
+         const inputB = new Tensor(new Float32Array([1.0, 2.0, 3.0]), [3]);
+         const outB = await authoredModel.run(inputB);
+         expect(Array.from(await outB.data())).toEqual([2.0, 4.0, 6.0]);
+         expect(consoleSpy)
+             .toHaveBeenCalledWith(
+                 jasmine.stringMatching(
+                     /JIT compiling model for input shape\/type 'float32\[3\]' under the hood/),
+             );
+
+         // Calling compile after lazy run also succeeds
+         const spec4 = {shape: [4], dataType: 'float32' as const};
+         await authoredModel.compile({shape: [4]});
+         expect(authoredModel.hasCompiledSignature(spec4)).toBeTrue();
+
+         inputA.delete();
+         inputA2.delete();
+         inputB.delete();
+         outA.delete();
+         outA2.delete();
+         outB.delete();
+         authoredModel.delete();
+       });
+
+    it('compiles and executes authored tensor graphs returning multiple tensors / records',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const dataA = new Float32Array([10.0, 20.0]);
+         const dataB = new Float32Array([2.0, 5.0]);
+         const tensorA = new Tensor(dataA);
+         const tensorB = new Tensor(dataB);
+
+         function multiOutputGraph(a: Tensor, b: Tensor) {
+           return {
+             sum: a.add(b),
+             diff: a.sub(b),
+           };
+         }
+
+         const authoredModel = author(multiOutputGraph, {accelerator: 'wasm'});
+         const {sum, diff} = await authoredModel.run(tensorA, tensorB);
+
+         expect(Array.from(await sum.data())).toEqual([12, 25]);
+         expect(Array.from(await diff.data())).toEqual([8, 15]);
+
+         tensorA.delete();
+         tensorB.delete();
+         sum.delete();
+         diff.delete();
+         authoredModel.delete();
+       });
+
+    it('compiles and executes authored tensor graphs with dictionary inputs and permuted key ordering',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const dataX = new Float32Array([10.0, 20.0]);
+         const dataY = new Float32Array([2.0, 5.0]);
+         const tensorX = new Tensor(dataX);
+         const tensorY = new Tensor(dataY);
+
+         function dictGraph(inputs: Record<string, Tensor>):
+             Record<string, Tensor> {
+           return {
+             diff: inputs['x'].sub(inputs['y']),
+           };
+         }
+
+         const authoredModel = author(dictGraph, {accelerator: 'wasm'});
+
+         // Run 1: with keys ordered {x, y}
+         const out1 = await authoredModel.run({x: tensorX, y: tensorY});
+         expect(Array.from(await out1['diff'].data())).toEqual([8, 15]);
+         out1['diff'].delete();
+
+         // Run 2: with keys permuted {y, x} -> must not mix up inputs
+         const out2 = await authoredModel.run({y: tensorY, x: tensorX});
+         expect(Array.from(await out2['diff'].data())).toEqual([8, 15]);
+         out2['diff'].delete();
+
+         tensorX.delete();
+         tensorY.delete();
+         authoredModel.delete();
+       });
+
+    it('compiles and executes authored tensor graphs with single tensor input',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const data = new Float32Array([-2.0, 0.0, 3.5]);
+         const tensor = new Tensor(data);
+
+         function reluGraph(x: Tensor): Tensor {
+           return x.relu();
+         }
+
+         const authoredModel = author(reluGraph, {accelerator: 'wasm'});
+         const result = await authoredModel.run(tensor);
+
+         expect(Array.from(await result.data())).toEqual([0, 0, 3.5]);
+
+         tensor.delete();
+         result.delete();
+         authoredModel.delete();
+       });
+
+    it('compiles and executes authored tensor graphs with array input',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const dataA = new Float32Array([1.0, 2.0]);
+         const dataB = new Float32Array([3.0, 4.0]);
+         const tensorA = new Tensor(dataA);
+         const tensorB = new Tensor(dataB);
+
+         function arrayGraph(inputs: Tensor[]): Tensor[] {
+           return [inputs[0].add(inputs[1]), inputs[0].mul(inputs[1])];
+         }
+
+         const authoredModel = author(arrayGraph, {accelerator: 'wasm'});
+         const [sum, prod] = await authoredModel.run([tensorA, tensorB]);
+
+         expect(Array.from(await sum.data())).toEqual([4, 6]);
+         expect(Array.from(await prod.data())).toEqual([3, 8]);
+
+         tensorA.delete();
+         tensorB.delete();
+         sum.delete();
+         prod.delete();
+         authoredModel.delete();
+       });
+
+    it('handles delete on AuthoredModel and prevents subsequent execution',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const data = new Float32Array([1.0, 2.0]);
+         const tensor = new Tensor(data);
+
+         const authoredModel = new AuthoredModel((x: Tensor) => x.add(x), {
+           accelerator: 'wasm',
+         });
+         expect(authoredModel.deleted).toBeFalse();
+
+         const result = await authoredModel.run(tensor);
+         expect(Array.from(await result.data())).toEqual([2, 4]);
+         result.delete();
+
+         authoredModel.delete();
+         expect(authoredModel.deleted).toBeTrue();
+
+         await expectAsync(authoredModel.run(tensor))
+             .toBeRejectedWithError(
+                 'AuthoredModel is deleted and cannot be used.');
+
+         tensor.delete();
+       });
+
+    it('compiles and caches multiple signatures for different input shapes',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const authoredModel =
+             new AuthoredModel((x: Tensor) => x.add(x), {accelerator: 'wasm'});
+
+         const spec2 = {shape: [2], dataType: 'float32' as const};
+         const spec4 = {shape: [4], dataType: 'float32' as const};
+         await authoredModel.compile([[spec2], [spec4]]);
+
+         const tensorShape2 =
+             Tensor.fromTypedArray(new Float32Array([1.0, 2.0]), [2]);
+         const outShape2 = await authoredModel.run(tensorShape2);
+         expect(Array.from(await outShape2.data())).toEqual([2, 4]);
+
+         const tensorShape4 =
+             Tensor.fromTypedArray(new Float32Array([1.0, 2.0, 3.0, 4.0]), [4]);
+         const outShape4 = await authoredModel.run(tensorShape4);
+         expect(Array.from(await outShape4.data())).toEqual([2, 4, 6, 8]);
+
+         // Verify running with shape [2] again correctly uses the cached
+         // signature
+         const outShape2Cached = await authoredModel.run(tensorShape2);
+         expect(Array.from(await outShape2Cached.data())).toEqual([2, 4]);
+
+         tensorShape2.delete();
+         tensorShape4.delete();
+         outShape2.delete();
+         outShape4.delete();
+         outShape2Cached.delete();
+         authoredModel.delete();
+       });
+
+    it('handles concurrent run invocations with matching shapes without redundant compilation',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const authoredModel =
+             new AuthoredModel((x: Tensor) => x.add(x), {accelerator: 'wasm'});
+
+         const tensor1 = new Tensor(new Float32Array([2.0, 3.0]));
+         const tensor2 = new Tensor(new Float32Array([10.0, 20.0]));
+
+         const [res1, res2] = await Promise.all([
+           authoredModel.run(tensor1),
+           authoredModel.run(tensor2),
+         ]);
+
+         expect(Array.from(await res1.data())).toEqual([4, 6]);
+         expect(Array.from(await res2.data())).toEqual([20, 40]);
+
+         tensor1.delete();
+         tensor2.delete();
+         res1.delete();
+         res2.delete();
+         authoredModel.delete();
+       });
+
+    it('compiles and executes authored batchMatMul graph', async () => {
+      await resetLiteRt(true, {threads: false});
+      const dataA = new Float32Array([1, 2, 3, 4, 5, 6]);
+      const dataB = new Float32Array([7, 8, 9, 1, 2, 3]);
+      const tensorA = Tensor.fromTypedArray(dataA, [2, 3]);
+      const tensorB = Tensor.fromTypedArray(dataB, [3, 2]);
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        const model = author(
+            (a: Tensor, b: Tensor) => batchMatMul(a, b).add(a.batchMatMul(b)),
+            {accelerator});
+        const out = await model.run(tensorA, tensorB);
+
+        expect(Array.from(await out.data())).toEqual([62, 38, 170, 110]);
+
+        out.delete();
+        model.delete();
+      }
+
+      tensorA.delete();
+      tensorB.delete();
+    });
+
+    it('compiles and executes authored fullyConnected graph with and without bias',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const inputData = new Float32Array([1, 2, 3]);
+         const weightData = new Float32Array([1, 2, 3, 4, 5, 6]);
+         const biasData = new Float32Array([10, 20]);
+
+         const inputTensor = Tensor.fromTypedArray(inputData, [1, 3]);
+         const weightTensor = Tensor.fromTypedArray(weightData, [2, 3]);
+         const biasTensor = Tensor.fromTypedArray(biasData, [2]);
+
+         for (const accelerator of ['wasm', 'webgpu'] as const) {
+           // Without bias: 1*1+2*2+3*3=14, 1*4+2*5+3*6=32
+           const modelNoBias = author(
+               (x: Tensor, w: Tensor) => fullyConnected(x, w),
+               {accelerator});
+           const outNoBias = await modelNoBias.run(inputTensor, weightTensor);
+           expect(Array.from(await outNoBias.data())).toEqual([14, 32]);
+
+           // With bias: [14+10, 32+20] = [24, 52]
+           const modelWithBias = author(
+               (x: Tensor, w: Tensor, b: Tensor) => x.fullyConnected(w, b),
+               {accelerator});
+           const outWithBias =
+               await modelWithBias.run(inputTensor, weightTensor, biasTensor);
+           expect(Array.from(await outWithBias.data())).toEqual([24, 52]);
+
+           outNoBias.delete();
+           outWithBias.delete();
+           modelNoBias.delete();
+           modelWithBias.delete();
+         }
+
+         inputTensor.delete();
+         weightTensor.delete();
+         biasTensor.delete();
+       });
+
+    describe('authored activation graphs', () => {
+      let tensorLogits: Tensor;
+      let tensorZero: Tensor;
+      let tensorGeluInput: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        tensorLogits =
+            Tensor.fromTypedArray(new Float32Array([0.0, 0.0]), [1, 2]);
+        tensorZero = new Tensor(new Float32Array([0.0]));
+        tensorGeluInput =
+            Tensor.fromTypedArray(new Float32Array([0.0, 1.0]), [2]);
+      });
+
+      afterAll(() => {
+        tensorLogits.delete();
+        tensorZero.delete();
+        tensorGeluInput.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes softmax on ${accelerator}`, async () => {
+          const softmaxModel = author(
+              (x: Tensor) => softmax(x).add(x.softmax()), {accelerator});
+          const softmaxOut = await softmaxModel.run(tensorLogits);
+          const softmaxData = Array.from(await softmaxOut.data());
+          expect(softmaxData[0]).toBeCloseTo(1.0, 3);
+          expect(softmaxData[1]).toBeCloseTo(1.0, 3);
+          softmaxOut.delete();
+          softmaxModel.delete();
+        });
+
+        it(`compiles and executes logistic on ${accelerator}`, async () => {
+          const logisticModel = author(
+              (x: Tensor) => logistic(x).add(x.logistic()), {accelerator});
+          const logisticOut = await logisticModel.run(tensorZero);
+          const logisticData = Array.from(await logisticOut.data());
+          expect(logisticData[0]).toBeCloseTo(1.0, 3);
+          logisticOut.delete();
+          logisticModel.delete();
+        });
+
+        it(`compiles and executes tanh on ${accelerator}`, async () => {
+          const tanhModel = author(
+              (x: Tensor) => tanh(x).add(x.tanh()), {accelerator});
+          const tanhOut = await tanhModel.run(tensorGeluInput);
+          const tanhData = Array.from(await tanhOut.data());
+          expect(tanhData[0]).toBeCloseTo(0.0, 3);
+          expect(tanhData[1]).toBeCloseTo(2 * Math.tanh(1.0), 3);
+          tanhOut.delete();
+          tanhModel.delete();
+        });
+
+        it(`compiles and executes gelu on ${accelerator}`, async () => {
+          const geluModel = author(
+              (x: Tensor) => gelu(x).add(x.gelu()), {accelerator});
+          const geluOut = await geluModel.run(tensorGeluInput);
+          const geluData = Array.from(await geluOut.data());
+          expect(geluData[0]).toBeCloseTo(0.0, 3);
+          expect(geluData[1]).toBeCloseTo(2 * 0.8413, 2);
+          geluOut.delete();
+          geluModel.delete();
+        });
+      }
+    });
+
+    describe('authored conv2d and depthwiseConv2d graphs', () => {
+      let inputTensor: Tensor;
+      let filterTensor: Tensor;
+      let biasTensor: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        const inputData = new Float32Array([1, 2, 3, 4]);
+        const filterData = new Float32Array([1, 1, 1, 1]);
+        const biasData = new Float32Array([5]);
+        inputTensor = Tensor.fromTypedArray(inputData, [1, 2, 2, 1]);
+        filterTensor = Tensor.fromTypedArray(filterData, [1, 2, 2, 1]);
+        biasTensor = Tensor.fromTypedArray(biasData, [1]);
+      });
+
+      afterAll(() => {
+        inputTensor.delete();
+        filterTensor.delete();
+        biasTensor.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes conv2d on ${accelerator}`, async () => {
+          const convModel = author(
+              (x: Tensor, f: Tensor, b: Tensor) =>
+                  x.conv2d(f, {padding: 'VALID', bias: b}),
+              {accelerator});
+          const convOut =
+              await convModel.run(inputTensor, filterTensor, biasTensor);
+          expect(Array.from(await convOut.data())).toEqual([15]);
+
+          const convStandaloneModel = author(
+              (x: Tensor, f: Tensor, b: Tensor) =>
+                  conv2d(x, f, {padding: 'VALID', bias: b}),
+              {accelerator});
+          const convStandaloneOut = await convStandaloneModel.run(
+              inputTensor, filterTensor, biasTensor);
+          expect(Array.from(await convStandaloneOut.data())).toEqual([15]);
+
+          convOut.delete();
+          convStandaloneOut.delete();
+          convModel.delete();
+          convStandaloneModel.delete();
+        });
+
+        it(`compiles and executes depthwiseConv2d on ${accelerator}`,
+           async () => {
+             const dwConvModel = author(
+                 (x: Tensor, f: Tensor) =>
+                     x.depthwiseConv2d(f, {padding: 'VALID'}),
+                 {accelerator});
+             const dwConvOut =
+                 await dwConvModel.run(inputTensor, filterTensor);
+             expect(Array.from(await dwConvOut.data())).toEqual([10]);
+
+             const dwConvStandaloneModel = author(
+                 (x: Tensor, f: Tensor) =>
+                     depthwiseConv2d(x, f, {padding: 'VALID'}),
+                 {accelerator});
+             const dwConvStandaloneOut =
+                 await dwConvStandaloneModel.run(inputTensor, filterTensor);
+             expect(Array.from(await dwConvStandaloneOut.data())).toEqual([10]);
+
+             dwConvOut.delete();
+             dwConvStandaloneOut.delete();
+             dwConvModel.delete();
+             dwConvStandaloneModel.delete();
+           });
+      }
+    });
+
+    describe('authored shaping and slicing graphs', () => {
+      let tensorA: Tensor;
+      let tensorC1: Tensor;
+      let tensorC2: Tensor;
+      let padTensor: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        tensorA = Tensor.fromTypedArray(
+            new Float32Array([1, 2, 3, 4, 5, 6]), [2, 3]);
+        tensorC1 = Tensor.fromTypedArray(new Float32Array([1, 2]), [1, 2]);
+        tensorC2 = Tensor.fromTypedArray(new Float32Array([3, 4]), [1, 2]);
+        padTensor = Tensor.fromTypedArray(
+            new Int32Array([0, 0, 1, 1]), [2, 2]);
+      });
+
+      afterAll(() => {
+        tensorA.delete();
+        tensorC1.delete();
+        tensorC2.delete();
+        padTensor.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes reshape on ${accelerator}`, async () => {
+          const reshapeModel =
+              author((x: Tensor) => reshape(x, [3, 2]), {accelerator});
+          const reshapeOut = await reshapeModel.run(tensorA);
+          expect(reshapeOut.shape).toEqual([3, 2]);
+          expect(Array.from(await reshapeOut.data()))
+              .toEqual([1, 2, 3, 4, 5, 6]);
+          reshapeOut.delete();
+          reshapeModel.delete();
+
+          const reshapeMethodModel =
+              author((x: Tensor) => x.reshape([3, 2]), {accelerator});
+          const reshapeMethodOut = await reshapeMethodModel.run(tensorA);
+          expect(reshapeMethodOut.shape).toEqual([3, 2]);
+          expect(Array.from(await reshapeMethodOut.data()))
+              .toEqual([1, 2, 3, 4, 5, 6]);
+          reshapeMethodOut.delete();
+          reshapeMethodModel.delete();
+        });
+
+        it(`compiles and executes transpose on ${accelerator}`, async () => {
+          const transposeModel =
+              author((x: Tensor) => transpose(x, [1, 0]), {accelerator});
+          const transposeOut = await transposeModel.run(tensorA);
+          expect(transposeOut.shape).toEqual([3, 2]);
+          expect(Array.from(await transposeOut.data()))
+              .toEqual([1, 4, 2, 5, 3, 6]);
+          transposeOut.delete();
+          transposeModel.delete();
+
+          const transposeMethodModel =
+              author((x: Tensor) => x.transpose([1, 0]), {accelerator});
+          const transposeMethodOut =
+              await transposeMethodModel.run(tensorA);
+          expect(transposeMethodOut.shape).toEqual([3, 2]);
+          expect(Array.from(await transposeMethodOut.data()))
+              .toEqual([1, 4, 2, 5, 3, 6]);
+          transposeMethodOut.delete();
+          transposeMethodModel.delete();
+        });
+
+        it(`compiles and executes concat on ${accelerator}`, async () => {
+          const concatModel = author(
+              (x: Tensor, y: Tensor) => concat([x, y], 0), {accelerator});
+          const concatOut = await concatModel.run(tensorC1, tensorC2);
+          expect(concatOut.shape).toEqual([2, 2]);
+          expect(Array.from(await concatOut.data())).toEqual([1, 2, 3, 4]);
+          concatOut.delete();
+          concatModel.delete();
+
+          const concatNegAxisModel = author(
+              (x: Tensor, y: Tensor) => x.concat(y, -1), {accelerator});
+          const concatNegAxisOut =
+              await concatNegAxisModel.run(tensorC1, tensorC2);
+          expect(concatNegAxisOut.shape).toEqual([1, 4]);
+          expect(Array.from(await concatNegAxisOut.data()))
+              .toEqual([1, 2, 3, 4]);
+          concatNegAxisOut.delete();
+          concatNegAxisModel.delete();
+        });
+
+        it(`compiles and executes slice on ${accelerator}`, async () => {
+          const sliceModel = author(
+              (x: Tensor) => slice(x, [1, 1], [1, 2]), {accelerator});
+          const sliceOut = await sliceModel.run(tensorA);
+          expect(sliceOut.shape).toEqual([1, 2]);
+          expect(Array.from(await sliceOut.data())).toEqual([5, 6]);
+          sliceOut.delete();
+          sliceModel.delete();
+
+          const sliceMethodModel = author(
+              (x: Tensor) => x.slice([1, 1], [1, 2]), {accelerator});
+          const sliceMethodOut = await sliceMethodModel.run(tensorA);
+          expect(sliceMethodOut.shape).toEqual([1, 2]);
+          expect(Array.from(await sliceMethodOut.data())).toEqual([5, 6]);
+          sliceMethodOut.delete();
+          sliceMethodModel.delete();
+        });
+
+        it(`compiles and executes pad on ${accelerator}`, async () => {
+          const padModel = author(
+              (x: Tensor) => pad(x, padTensor), {accelerator});
+          const padOut = await padModel.run(tensorC1);
+          expect(padOut.shape).toEqual([1, 4]);
+          expect(Array.from(await padOut.data())).toEqual([0, 1, 2, 0]);
+          padOut.delete();
+          padModel.delete();
+
+          const padArrayModel = author(
+              (x: Tensor) => x.pad([[0, 0], [1, 1]]), {accelerator});
+          const padArrayOut = await padArrayModel.run(tensorC1);
+          expect(padArrayOut.shape).toEqual([1, 4]);
+          expect(Array.from(await padArrayOut.data())).toEqual([0, 1, 2, 0]);
+          padArrayOut.delete();
+          padArrayModel.delete();
+        });
+      }
+
+      it('throws error for invalid pad tensor dtype', () => {
+        const invalidFloatPad = Tensor.fromTypedArray(
+            new Float32Array([0, 0, 1, 1]), [2, 2]);
+        expect(() => tensorC1.pad(invalidFloatPad))
+            .toThrowError(/dtype 'int32'/);
+        invalidFloatPad.delete();
+      });
+    });
+
+    describe('authored reduction graphs', () => {
+      let tensorA: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        tensorA = Tensor.fromTypedArray(
+            new Float32Array([1, 2, 3, 4, 5, 6]), [2, 3]);
+      });
+
+      afterAll(() => {
+        tensorA.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes sum on ${accelerator}`, async () => {
+          const sumModel = author(
+              (x: Tensor) => x.sum(1), {accelerator});
+          const sumOut = await sumModel.run(tensorA);
+          expect(Array.from(await sumOut.data())).toEqual([6, 15]);
+
+          const sumStandaloneModel = author(
+              (x: Tensor) => sum(x, 1), {accelerator});
+          const sumStandaloneOut = await sumStandaloneModel.run(tensorA);
+          expect(Array.from(await sumStandaloneOut.data())).toEqual([6, 15]);
+
+          sumOut.delete();
+          sumStandaloneOut.delete();
+          sumModel.delete();
+          sumStandaloneModel.delete();
+        });
+
+        it(`compiles and executes mean on ${accelerator}`, async () => {
+          const meanModel = author(
+              (x: Tensor) => x.mean(0), {accelerator});
+          const meanOut = await meanModel.run(tensorA);
+          expect(Array.from(await meanOut.data())).toEqual([2.5, 3.5, 4.5]);
+
+          const meanStandaloneModel = author(
+              (x: Tensor) => mean(x, 0), {accelerator});
+          const meanStandaloneOut = await meanStandaloneModel.run(tensorA);
+          expect(Array.from(await meanStandaloneOut.data()))
+              .toEqual([2.5, 3.5, 4.5]);
+
+          meanOut.delete();
+          meanStandaloneOut.delete();
+          meanModel.delete();
+          meanStandaloneModel.delete();
+        });
+      }
+    });
+
+    describe('authored elementary math graphs', () => {
+      let input: Tensor;
+      let posInput: Tensor;
+      let expInput: Tensor;
+      let logInput: Tensor;
+      let trigInput: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        input = Tensor.fromTypedArray(
+            new Float32Array([-1.5, 0.0, 1.5, 4.0]), [4]);
+        posInput = Tensor.fromTypedArray(
+            new Float32Array([1.0, 4.0, 9.0, 16.0]), [4]);
+        expInput =
+            Tensor.fromTypedArray(new Float32Array([0.0, 1.0, 2.0]), [3]);
+        logInput = Tensor.fromTypedArray(
+            new Float32Array([1.0, Math.E, Math.exp(2)]), [3]);
+        trigInput = Tensor.fromTypedArray(
+            new Float32Array([0.0, Math.PI / 2, Math.PI]), [3]);
+      });
+
+      afterAll(() => {
+        expInput.delete();
+        logInput.delete();
+        input.delete();
+        posInput.delete();
+        trigInput.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes abs on ${accelerator}`, async () => {
+          const absModel = author((x: Tensor) => abs(x), {accelerator});
+          const absOut = await absModel.run(input);
+          expect(Array.from(await absOut.data())).toEqual([1.5, 0.0, 1.5, 4.0]);
+          absOut.delete();
+          absModel.delete();
+        });
+
+        it(`compiles and executes neg on ${accelerator}`, async () => {
+          const negModel = author((x: Tensor) => neg(x), {accelerator});
+          const negOut = await negModel.run(input);
+          expect(Array.from(await negOut.data()))
+              .toEqual([1.5, -0, -1.5, -4.0]);
+          negOut.delete();
+          negModel.delete();
+        });
+
+        it(`compiles and executes ceil on ${accelerator}`, async () => {
+          const ceilModel = author((x: Tensor) => ceil(x), {accelerator});
+          const ceilOut = await ceilModel.run(input);
+          expect(Array.from(await ceilOut.data())).toEqual([-1, 0, 2, 4]);
+          ceilOut.delete();
+          ceilModel.delete();
+        });
+
+        it(`compiles and executes floor on ${accelerator}`, async () => {
+          const floorModel =
+              author((x: Tensor) => floor(x), {accelerator});
+          const floorOut = await floorModel.run(input);
+          expect(Array.from(await floorOut.data())).toEqual([-2, 0, 1, 4]);
+          floorOut.delete();
+          floorModel.delete();
+        });
+
+        it(`compiles and executes round on ${accelerator}`, async () => {
+          const roundModel =
+              author((x: Tensor) => round(x), {accelerator});
+          const roundOut = await roundModel.run(input);
+          expect(Array.from(await roundOut.data())).toEqual([-2, 0, 2, 4]);
+          roundOut.delete();
+          roundModel.delete();
+        });
+
+        it(`compiles and executes sqrt on ${accelerator}`, async () => {
+          const sqrtModel = author((x: Tensor) => sqrt(x), {accelerator});
+          const sqrtOut = await sqrtModel.run(posInput);
+          expect(Array.from(await sqrtOut.data()))
+              .toEqual([1.0, 2.0, 3.0, 4.0]);
+          sqrtOut.delete();
+          sqrtModel.delete();
+        });
+
+        it(`compiles and executes rsqrt on ${accelerator}`, async () => {
+          const rsqrtModel =
+              author((x: Tensor) => rsqrt(x), {accelerator});
+          const rsqrtOut = await rsqrtModel.run(posInput);
+          const rsqrtData = Array.from(await rsqrtOut.data() as Float32Array);
+          expect(rsqrtData[0]).toBeCloseTo(1.0, 4);
+          expect(rsqrtData[1]).toBeCloseTo(0.5, 4);
+          expect(rsqrtData[2]).toBeCloseTo(1 / 3, 4);
+          expect(rsqrtData[3]).toBeCloseTo(0.25, 4);
+          rsqrtOut.delete();
+          rsqrtModel.delete();
+        });
+
+        it(`compiles and executes exp on ${accelerator}`, async () => {
+          const expModel = author((x: Tensor) => exp(x), {accelerator});
+          const expOut = await expModel.run(expInput);
+          const expData = Array.from(await expOut.data() as Float32Array);
+          expect(expData[0]).toBeCloseTo(1.0, 4);
+          expect(expData[1]).toBeCloseTo(Math.E, 4);
+          expect(expData[2]).toBeCloseTo(Math.exp(2), 4);
+          expOut.delete();
+          expModel.delete();
+        });
+
+        it(`compiles and executes log on ${accelerator}`, async () => {
+          const logModel = author((x: Tensor) => log(x), {accelerator});
+          const logOut = await logModel.run(logInput);
+          const logData = Array.from(await logOut.data() as Float32Array);
+          expect(logData[0]).toBeCloseTo(0.0, 4);
+          expect(logData[1]).toBeCloseTo(1.0, 4);
+          expect(logData[2]).toBeCloseTo(2.0, 4);
+          logOut.delete();
+          logModel.delete();
+        });
+
+        it(`compiles and executes sin on ${accelerator}`, async () => {
+          const sinModel = author((x: Tensor) => sin(x), {accelerator});
+          const sinOut = await sinModel.run(trigInput);
+          const sinData = Array.from(await sinOut.data() as Float32Array);
+          expect(sinData[0]).toBeCloseTo(0.0, 4);
+          expect(sinData[1]).toBeCloseTo(1.0, 4);
+          expect(sinData[2]).toBeCloseTo(0.0, 4);
+          sinOut.delete();
+          sinModel.delete();
+        });
+
+        it(`compiles and executes cos on ${accelerator}`, async () => {
+          const cosModel = author((x: Tensor) => cos(x), {accelerator});
+          const cosOut = await cosModel.run(trigInput);
+          const cosData = Array.from(await cosOut.data() as Float32Array);
+          expect(cosData[0]).toBeCloseTo(1.0, 4);
+          expect(cosData[1]).toBeCloseTo(0.0, 4);
+          expect(cosData[2]).toBeCloseTo(-1.0, 4);
+          cosOut.delete();
+          cosModel.delete();
+        });
+      }
+    });
+
+    describe('authored binary math graphs', () => {
+      let a: Tensor;
+      let b: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        a = Tensor.fromTypedArray(
+            new Float32Array([2.0, 3.0, 7.0, -7.0]), [4]);
+        b = Tensor.fromTypedArray(
+            new Float32Array([3.0, 2.0, 3.0, 3.0]), [4]);
+      });
+
+      afterAll(() => {
+        a.delete();
+        b.delete();
+      });
+
+      it('compiles and executes pow on wasm', async () => {
+        const powModel = author(
+            (x: Tensor, y: Tensor) => pow(x, y), {accelerator: 'wasm'});
+        const powOut = await powModel.run(a, b);
+        expect(Array.from(await powOut.data())).toEqual([8, 9, 343, -343]);
+        powOut.delete();
+        powModel.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes minimum on ${accelerator}`, async () => {
+          const minModel = author(
+              (x: Tensor, y: Tensor) => minimum(x, y), {accelerator});
+          const minOut = await minModel.run(a, b);
+          expect(Array.from(await minOut.data())).toEqual([2, 2, 3, -7]);
+          minOut.delete();
+          minModel.delete();
+        });
+
+        it(`compiles and executes maximum on ${accelerator}`, async () => {
+          const maxModel = author(
+              (x: Tensor, y: Tensor) => maximum(x, y), {accelerator});
+          const maxOut = await maxModel.run(a, b);
+          expect(Array.from(await maxOut.data())).toEqual([3, 3, 7, 3]);
+          maxOut.delete();
+          maxModel.delete();
+        });
+
+        it(`compiles and executes floorDiv on ${accelerator}`, async () => {
+          const floorDivModel = author(
+              (x: Tensor, y: Tensor) => floorDiv(x, y), {accelerator});
+          const floorDivOut = await floorDivModel.run(a, b);
+          expect(Array.from(await floorDivOut.data())).toEqual([0, 1, 2, -3]);
+          floorDivOut.delete();
+          floorDivModel.delete();
+        });
+
+        it(`compiles and executes floorMod on ${accelerator}`, async () => {
+          const floorModModel = author(
+              (x: Tensor, y: Tensor) => floorMod(x, y), {accelerator});
+          const floorModOut = await floorModModel.run(a, b);
+          expect(Array.from(await floorModOut.data())).toEqual([2, 1, 1, 2]);
+          floorModOut.delete();
+          floorModModel.delete();
+        });
+      }
+    });
+
+    describe('authored comparison and logic graphs', () => {
+      let a: Tensor;
+      let b: Tensor;
+      let trueVal: Tensor;
+      let falseVal: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        a = Tensor.fromTypedArray(
+            new Float32Array([1.0, 2.0, 5.0, 4.0]), [4]);
+        b = Tensor.fromTypedArray(
+            new Float32Array([1.0, 3.0, 2.0, 4.0]), [4]);
+        trueVal =
+            Tensor.fromTypedArray(new Float32Array([10, 20, 30, 40]), [4]);
+        falseVal =
+            Tensor.fromTypedArray(new Float32Array([-1, -2, -3, -4]), [4]);
+      });
+
+      afterAll(() => {
+        trueVal.delete();
+        falseVal.delete();
+        a.delete();
+        b.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes equal on ${accelerator}`, async () => {
+          const eqModel = author(
+              (x: Tensor, y: Tensor) => equal(x, y), {accelerator});
+          const eqOut = await eqModel.run(a, b);
+          expect(Array.from(await eqOut.data()).map(Number))
+              .toEqual([1, 0, 0, 1]);
+          eqOut.delete();
+          eqModel.delete();
+        });
+
+        it(`compiles and executes notEqual on ${accelerator}`, async () => {
+          const neqModel = author(
+              (x: Tensor, y: Tensor) => notEqual(x, y), {accelerator});
+          const neqOut = await neqModel.run(a, b);
+          expect(Array.from(await neqOut.data()).map(Number))
+              .toEqual([0, 1, 1, 0]);
+          neqOut.delete();
+          neqModel.delete();
+        });
+
+        it(`compiles and executes less on ${accelerator}`, async () => {
+          const ltModel = author(
+              (x: Tensor, y: Tensor) => less(x, y), {accelerator});
+          const ltOut = await ltModel.run(a, b);
+          expect(Array.from(await ltOut.data()).map(Number))
+              .toEqual([0, 1, 0, 0]);
+          ltOut.delete();
+          ltModel.delete();
+        });
+
+        it(`compiles and executes greater on ${accelerator}`, async () => {
+          const gtModel = author(
+              (x: Tensor, y: Tensor) => greater(x, y), {accelerator});
+          const gtOut = await gtModel.run(a, b);
+          expect(Array.from(await gtOut.data()).map(Number))
+              .toEqual([0, 0, 1, 0]);
+          gtOut.delete();
+          gtModel.delete();
+        });
+
+        it(`compiles and executes lessEqual on ${accelerator}`, async () => {
+          const leModel = author(
+              (x: Tensor, y: Tensor) => lessEqual(x, y), {accelerator});
+          const leOut = await leModel.run(a, b);
+          expect(Array.from(await leOut.data()).map(Number))
+              .toEqual([1, 1, 0, 1]);
+          leOut.delete();
+          leModel.delete();
+        });
+
+        it(`compiles and executes greaterEqual on ${accelerator}`, async () => {
+          const geModel = author(
+              (x: Tensor, y: Tensor) => greaterEqual(x, y), {accelerator});
+          const geOut = await geModel.run(a, b);
+          expect(Array.from(await geOut.data()).map(Number))
+              .toEqual([1, 0, 1, 1]);
+          geOut.delete();
+          geModel.delete();
+        });
+
+        it(`compiles and executes logicalAnd on ${accelerator}`, async () => {
+          const andModel = author(
+              (x: Tensor, y: Tensor) => logicalAnd(equal(x, y), greater(x, y)),
+              {accelerator});
+          const andOut = await andModel.run(a, b);
+          expect(Array.from(await andOut.data()).map(Number))
+              .toEqual([0, 0, 0, 0]);
+          andOut.delete();
+          andModel.delete();
+        });
+
+        it(`compiles and executes logicalOr on ${accelerator}`, async () => {
+          const orModel = author(
+              (x: Tensor, y: Tensor) => logicalOr(equal(x, y), greater(x, y)),
+              {accelerator});
+          const orOut = await orModel.run(a, b);
+          expect(Array.from(await orOut.data()).map(Number))
+              .toEqual([1, 0, 1, 1]);
+          orOut.delete();
+          orModel.delete();
+        });
+
+        it(`compiles and executes logicalNot on ${accelerator}`, async () => {
+          const notModel = author(
+              (x: Tensor, y: Tensor) => logicalNot(equal(x, y)),
+              {accelerator});
+          const notOut = await notModel.run(a, b);
+          expect(Array.from(await notOut.data()).map(Number))
+              .toEqual([0, 1, 1, 0]);
+          notOut.delete();
+          notModel.delete();
+        });
+
+        it(`compiles and executes select on ${accelerator}`, async () => {
+          const selModel = author(
+              (x: Tensor, y: Tensor, t: Tensor, f: Tensor) =>
+                  select(equal(x, y), t, f),
+              {accelerator});
+          const selOut = await selModel.run(a, b, trueVal, falseVal);
+          expect(Array.from(await selOut.data())).toEqual([10, -2, -3, 40]);
+          selOut.delete();
+          selModel.delete();
+        });
+      }
+    });
+
+    describe('authored extended activation graphs', () => {
+      let input: Tensor;
+      let lsInput: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        input = Tensor.fromTypedArray(
+            new Float32Array([-3.0, -1.0, 0.0, 2.0, 8.0]), [5]);
+        lsInput =
+            Tensor.fromTypedArray(new Float32Array([1.0, 2.0, 3.0]), [1, 3]);
+      });
+
+      afterAll(() => {
+        lsInput.delete();
+        input.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes relu6 on ${accelerator}`, async () => {
+          const relu6Model =
+              author((x: Tensor) => relu6(x), {accelerator});
+          const relu6Out = await relu6Model.run(input);
+          expect(Array.from(await relu6Out.data())).toEqual([0, 0, 0, 2, 6]);
+          relu6Out.delete();
+          relu6Model.delete();
+        });
+
+        it(`compiles and executes leakyRelu on ${accelerator}`, async () => {
+          const leakyDefaultModel = author(
+              (x: Tensor) => leakyRelu(x), {accelerator});
+          const leakyDefaultOut = await leakyDefaultModel.run(input);
+          const leakyDefaultData =
+              Array.from(await leakyDefaultOut.data() as Float32Array);
+          expect(leakyDefaultData[0]).toBeCloseTo(-0.6, 4);
+          expect(leakyDefaultData[1]).toBeCloseTo(-0.2, 4);
+          expect(leakyDefaultData[2]).toBeCloseTo(0.0, 4);
+          expect(leakyDefaultData[3]).toBeCloseTo(2.0, 4);
+          expect(leakyDefaultData[4]).toBeCloseTo(8.0, 4);
+          leakyDefaultOut.delete();
+          leakyDefaultModel.delete();
+
+          const leakyModel = author(
+              (x: Tensor) => x.leakyRelu(0.1), {accelerator});
+          const leakyOut = await leakyModel.run(input);
+          const leakyData = Array.from(await leakyOut.data() as Float32Array);
+          expect(leakyData[0]).toBeCloseTo(-0.3, 4);
+          expect(leakyData[1]).toBeCloseTo(-0.1, 4);
+          expect(leakyData[2]).toBeCloseTo(0.0, 4);
+          expect(leakyData[3]).toBeCloseTo(2.0, 4);
+          expect(leakyData[4]).toBeCloseTo(8.0, 4);
+          leakyOut.delete();
+          leakyModel.delete();
+        });
+
+        it(`compiles and executes elu on ${accelerator}`, async () => {
+          const eluModel = author((x: Tensor) => elu(x), {accelerator});
+          const eluOut = await eluModel.run(input);
+          const eluData = Array.from(await eluOut.data() as Float32Array);
+          expect(eluData[0]).toBeCloseTo(Math.exp(-3) - 1, 4);
+          expect(eluData[1]).toBeCloseTo(Math.exp(-1) - 1, 4);
+          expect(eluData[2]).toBeCloseTo(0.0, 4);
+          expect(eluData[3]).toBeCloseTo(2.0, 4);
+          expect(eluData[4]).toBeCloseTo(8.0, 4);
+          eluOut.delete();
+          eluModel.delete();
+        });
+
+        it(`compiles and executes hardSwish on ${accelerator}`, async () => {
+          const hsModel =
+              author((x: Tensor) => hardSwish(x), {accelerator});
+          const hsOut = await hsModel.run(input);
+          const hsData = Array.from(await hsOut.data() as Float32Array);
+          expect(hsData[0]).toBeCloseTo(0.0, 4);
+          expect(hsData[1]).toBeCloseTo(-1 / 3, 4);
+          expect(hsData[2]).toBeCloseTo(0.0, 4);
+          expect(hsData[3]).toBeCloseTo(5 / 3, 4);
+          expect(hsData[4]).toBeCloseTo(8.0, 4);
+          hsOut.delete();
+          hsModel.delete();
+        });
+
+        it(`compiles and executes logSoftmax on ${accelerator}`, async () => {
+          const lsModel =
+              author((x: Tensor) => logSoftmax(x), {accelerator});
+          const lsOut = await lsModel.run(lsInput);
+          const lsData = Array.from(await lsOut.data() as Float32Array);
+          const sumExp = Math.exp(1) + Math.exp(2) + Math.exp(3);
+          expect(lsData[0]).toBeCloseTo(1.0 - Math.log(sumExp), 4);
+          expect(lsData[1]).toBeCloseTo(2.0 - Math.log(sumExp), 4);
+          expect(lsData[2]).toBeCloseTo(3.0 - Math.log(sumExp), 4);
+          lsOut.delete();
+          lsModel.delete();
+        });
+      }
+    });
+
+    describe('authored dimension alignment and partitioning graphs', () => {
+      let mat: Tensor;
+      let sqInput: Tensor;
+      let tileInput: Tensor;
+      let t1: Tensor;
+      let t2: Tensor;
+      let splitInput: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        mat = Tensor.fromTypedArray(
+            new Float32Array([1, 2, 3, 4, 5, 6]), [2, 3]);
+        sqInput = Tensor.fromTypedArray(
+            new Float32Array([1, 2, 3, 4, 5, 6]), [2, 1, 3]);
+        tileInput =
+            Tensor.fromTypedArray(new Float32Array([1, 2, 3, 4]), [2, 2]);
+        t1 = Tensor.fromTypedArray(new Float32Array([1, 2]), [2]);
+        t2 = Tensor.fromTypedArray(new Float32Array([3, 4]), [2]);
+        splitInput =
+            Tensor.fromTypedArray(new Float32Array([10, 20, 30, 40]), [4]);
+      });
+
+      afterAll(() => {
+        sqInput.delete();
+        tileInput.delete();
+        splitInput.delete();
+        t1.delete();
+        t2.delete();
+        mat.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes expandDims on ${accelerator}`, async () => {
+          const expModel = author(
+              (x: Tensor) => expandDims(x, 1), {accelerator});
+          const expOut = await expModel.run(mat);
+          expect(expOut.shape).toEqual([2, 1, 3]);
+          expect(Array.from(await expOut.data())).toEqual([1, 2, 3, 4, 5, 6]);
+          expOut.delete();
+          expModel.delete();
+        });
+
+        it(`compiles and executes squeeze on ${accelerator}`, async () => {
+          const sqModel = author(
+              (x: Tensor) => squeeze(x, [1]), {accelerator});
+          const sqOut = await sqModel.run(sqInput);
+          expect(sqOut.shape).toEqual([2, 3]);
+          expect(Array.from(await sqOut.data())).toEqual([1, 2, 3, 4, 5, 6]);
+          sqOut.delete();
+          sqModel.delete();
+        });
+
+        it(`compiles and executes tile on ${accelerator}`, async () => {
+          const tileModel = author(
+              (x: Tensor) => tile(x, [1, 2]), {accelerator});
+          const tileOut = await tileModel.run(tileInput);
+          expect(tileOut.shape).toEqual([2, 4]);
+          expect(Array.from(await tileOut.data()))
+              .toEqual([1, 2, 1, 2, 3, 4, 3, 4]);
+          tileOut.delete();
+          tileModel.delete();
+        });
+
+        it(`compiles and executes pack on ${accelerator}`, async () => {
+          const packModel = author(
+              (a: Tensor, b: Tensor) => pack([a, b], 0), {accelerator});
+          const packOut = await packModel.run(t1, t2);
+          expect(packOut.shape).toEqual([2, 2]);
+          expect(Array.from(await packOut.data())).toEqual([1, 2, 3, 4]);
+          packOut.delete();
+          packModel.delete();
+
+          const packNegAxisModel = author(
+              (a: Tensor, b: Tensor) => pack([a, b], -1), {accelerator});
+          const packNegAxisOut = await packNegAxisModel.run(t1, t2);
+          expect(packNegAxisOut.shape).toEqual([2, 2]);
+          expect(Array.from(await packNegAxisOut.data()))
+              .toEqual([1, 3, 2, 4]);
+          packNegAxisOut.delete();
+          packNegAxisModel.delete();
+        });
+
+        it(`compiles and executes unpack on ${accelerator}`, async () => {
+          const unpackModel = author(
+              (x: Tensor) => unpack(x, 2, 0), {accelerator});
+          const unpackOuts = await unpackModel.run(mat);
+          expect(Array.isArray(unpackOuts)).toBeTrue();
+          expect(unpackOuts.length).toBe(2);
+          expect(unpackOuts[0].shape).toEqual([3]);
+          expect(Array.from(await unpackOuts[0].data())).toEqual([1, 2, 3]);
+          expect(unpackOuts[1].shape).toEqual([3]);
+          expect(Array.from(await unpackOuts[1].data())).toEqual([4, 5, 6]);
+          unpackOuts[0].delete();
+          unpackOuts[1].delete();
+          unpackModel.delete();
+
+          const unpackNegAxisModel = author(
+              (x: Tensor) => unpack(x, 3, -1), {accelerator});
+          const unpackNegAxisOuts = await unpackNegAxisModel.run(mat);
+          expect(unpackNegAxisOuts.length).toBe(3);
+          expect(unpackNegAxisOuts[0].shape).toEqual([2]);
+          expect(Array.from(await unpackNegAxisOuts[0].data()))
+              .toEqual([1, 4]);
+          expect(Array.from(await unpackNegAxisOuts[1].data()))
+              .toEqual([2, 5]);
+          expect(Array.from(await unpackNegAxisOuts[2].data()))
+              .toEqual([3, 6]);
+          unpackNegAxisOuts[0].delete();
+          unpackNegAxisOuts[1].delete();
+          unpackNegAxisOuts[2].delete();
+          unpackNegAxisModel.delete();
+        });
+
+        it(`compiles and executes split on ${accelerator}`, async () => {
+          const splitModel = author(
+              (x: Tensor) => split(x, 2, 0), {accelerator});
+          const splitOuts = await splitModel.run(splitInput);
+          expect(Array.isArray(splitOuts)).toBeTrue();
+          expect(splitOuts.length).toBe(2);
+          expect(splitOuts[0].shape).toEqual([2]);
+          expect(Array.from(await splitOuts[0].data())).toEqual([10, 20]);
+          expect(splitOuts[1].shape).toEqual([2]);
+          expect(Array.from(await splitOuts[1].data())).toEqual([30, 40]);
+          splitOuts[0].delete();
+          splitOuts[1].delete();
+          splitModel.delete();
+        });
+      }
+    });
+
+    describe('authored extrema and index reduction graphs', () => {
+      let mat: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        mat = Tensor.fromTypedArray(
+            new Float32Array([1.0, 5.0, 2.0, 4.0, 3.0, 6.0]), [2, 3]);
+      });
+
+      afterAll(() => {
+        mat.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes reduceMax on ${accelerator}`, async () => {
+          const rmaxModel = author(
+              (x: Tensor) => reduceMax(x, 1), {accelerator});
+          const rmaxOut = await rmaxModel.run(mat);
+          expect(rmaxOut.shape).toEqual([2]);
+          expect(Array.from(await rmaxOut.data())).toEqual([5.0, 6.0]);
+          rmaxOut.delete();
+          rmaxModel.delete();
+
+          const rmaxKdModel = author(
+              (x: Tensor) => x.reduceMax(0, true), {accelerator});
+          const rmaxKdOut = await rmaxKdModel.run(mat);
+          expect(rmaxKdOut.shape).toEqual([1, 3]);
+          expect(Array.from(await rmaxKdOut.data())).toEqual([4.0, 5.0, 6.0]);
+          rmaxKdOut.delete();
+          rmaxKdModel.delete();
+
+          const rmaxAllModel = author(
+              (x: Tensor) => reduceMax(x), {accelerator});
+          const rmaxAllOut = await rmaxAllModel.run(mat);
+          expect(Array.from(await rmaxAllOut.data())).toEqual([6]);
+          rmaxAllOut.delete();
+          rmaxAllModel.delete();
+        });
+
+        it(`compiles and executes argMax on ${accelerator}`, async () => {
+          const argmaxModel = author(
+              (x: Tensor) => argMax(x, 1), {accelerator});
+          const argmaxOut = await argmaxModel.run(mat);
+          expect(argmaxOut.shape).toEqual([2]);
+          expect(Array.from(await argmaxOut.data()).map(Number))
+              .toEqual([1, 2]);
+          argmaxOut.delete();
+          argmaxModel.delete();
+
+          const argmax0Model = author(
+              (x: Tensor) => x.argMax(0), {accelerator});
+          const argmax0Out = await argmax0Model.run(mat);
+          expect(argmax0Out.shape).toEqual([3]);
+          expect(Array.from(await argmax0Out.data()).map(Number))
+              .toEqual([1, 0, 1]);
+          argmax0Out.delete();
+          argmax0Model.delete();
+        });
+      }
+
+      it('compiles and executes argMax with outputType int64 on wasm',
+         async () => {
+           const amax64Model = author(
+               (x: Tensor) => argMax(x, 1, 'int64'), {accelerator: 'wasm'});
+           const amax64Out = await amax64Model.run(mat);
+           expect(Array.from(await amax64Out.data() as BigInt64Array))
+               .toEqual([1n, 2n]);
+           amax64Out.delete();
+           amax64Model.delete();
+         });
+    });
+
+    describe('authored spatial resizing and pooling graphs', () => {
+      let img: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        img = Tensor.fromTypedArray(
+            new Float32Array([1.0, 2.0, 3.0, 4.0]), [1, 2, 2, 1]);
+      });
+
+      afterAll(() => {
+        img.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes resizeBilinear on ${accelerator}`,
+           async () => {
+          const bilModel = author(
+              (x: Tensor) => resizeBilinear(x, [4, 4]), {accelerator});
+          const bilOut = await bilModel.run(img);
+          expect(bilOut.shape).toEqual([1, 4, 4, 1]);
+          expect(Array.from(await bilOut.data())).toEqual([
+            1, 1.5, 2, 2, 2, 2.5, 3, 3, 3, 3.5, 4, 4, 3, 3.5, 4, 4,
+          ]);
+          bilOut.delete();
+          bilModel.delete();
+        });
+
+        it(`compiles and executes resizeNearestNeighbor on ${accelerator}`,
+           async () => {
+          const nnModel = author(
+              (x: Tensor) => resizeNearestNeighbor(x, [4, 4]), {accelerator});
+          const nnOut = await nnModel.run(img);
+          expect(nnOut.shape).toEqual([1, 4, 4, 1]);
+          expect(Array.from(await nnOut.data())).toEqual([
+            1, 1, 2, 2, 1, 1, 2, 2, 3, 3, 4, 4, 3, 3, 4, 4,
+          ]);
+          nnOut.delete();
+          nnModel.delete();
+        });
+
+        it(`compiles and executes maxPool2d on ${accelerator}`, async () => {
+          const maxPoolModel = author(
+              (x: Tensor) => maxPool2d(
+                  x, {filterSize: [2, 2], strides: [2, 2], padding: 'VALID'}),
+              {accelerator});
+          const maxPoolOut = await maxPoolModel.run(img);
+          expect(maxPoolOut.shape).toEqual([1, 1, 1, 1]);
+          expect(Array.from(await maxPoolOut.data())).toEqual([4.0]);
+          maxPoolOut.delete();
+          maxPoolModel.delete();
+        });
+
+        it(`compiles and executes avgPool2d on ${accelerator}`, async () => {
+          const avgPoolModel = author(
+              (x: Tensor) => avgPool2d(
+                  x, {filterSize: [2, 2], strides: [2, 2], padding: 'VALID'}),
+              {accelerator});
+          const avgPoolOut = await avgPoolModel.run(img);
+          expect(avgPoolOut.shape).toEqual([1, 1, 1, 1]);
+          expect(Array.from(await avgPoolOut.data())).toEqual([2.5]);
+          avgPoolOut.delete();
+          avgPoolModel.delete();
+        });
+      }
+    });
+
+    describe('authored transposeConv2d graphs', () => {
+      let inputTensor: Tensor;
+      let filterTensor: Tensor;
+      let biasTensor: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        inputTensor =
+            Tensor.fromTypedArray(new Float32Array([2.0]), [1, 1, 1, 1]);
+        filterTensor = Tensor.fromTypedArray(
+            new Float32Array([1.0, 1.0, 1.0, 1.0]), [1, 2, 2, 1]);
+        biasTensor = Tensor.fromTypedArray(new Float32Array([1.0]), [1]);
+      });
+
+      afterAll(() => {
+        inputTensor.delete();
+        filterTensor.delete();
+        biasTensor.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(
+            `compiles and executes transposeConv2d with bias on ${accelerator}`,
+            async () => {
+              const tconvModel = author(
+                  (x: Tensor, f: Tensor, b: Tensor) =>
+                      x.transposeConv2d(
+                          f, [1, 2, 2, 1],
+                          {strides: 2, padding: 'SAME', bias: b}),
+                  {accelerator});
+              const tconvOut =
+                  await tconvModel.run(inputTensor, filterTensor, biasTensor);
+              expect(tconvOut.shape).toEqual([1, 2, 2, 1]);
+              expect(Array.from(await tconvOut.data()))
+                  .toEqual([3.0, 3.0, 3.0, 3.0]);
+              tconvOut.delete();
+              tconvModel.delete();
+            });
+
+        it(
+            `compiles and executes transposeConv2d without bias on ` +
+                `${accelerator}`,
+            async () => {
+              const tconvNoBiasModel = author(
+                  (x: Tensor, f: Tensor) =>
+                      transposeConv2d(
+                          x, f, [1, 2, 2, 1], {strides: 2, padding: 'SAME'}),
+                  {accelerator});
+              const tconvNoBiasOut =
+                  await tconvNoBiasModel.run(inputTensor, filterTensor);
+              expect(tconvNoBiasOut.shape).toEqual([1, 2, 2, 1]);
+              expect(Array.from(await tconvNoBiasOut.data()))
+                  .toEqual([2.0, 2.0, 2.0, 2.0]);
+              tconvNoBiasOut.delete();
+              tconvNoBiasModel.delete();
+            });
+      }
+    });
+
+    describe('authored indexing and gathering graphs', () => {
+      let params: Tensor;
+      let indices: Tensor;
+      let mat: Tensor;
+      let ndIndices: Tensor;
+      let catIndices: Tensor;
+      let weights: Tensor;
+      let lookupIds: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        params = Tensor.fromTypedArray(
+            new Float32Array([10.0, 20.0, 30.0, 40.0]), [4]);
+        indices = Tensor.fromTypedArray(new Int32Array([1, 3]), [2]);
+        mat = Tensor.fromTypedArray(
+            new Float32Array([1.0, 2.0, 3.0, 4.0]), [2, 2]);
+        ndIndices =
+            Tensor.fromTypedArray(new Int32Array([0, 1, 1, 0]), [2, 2]);
+        catIndices =
+            Tensor.fromTypedArray(new Int32Array([0, 1, 2]), [3]);
+        weights = Tensor.fromTypedArray(
+            new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), [3, 2]);
+        lookupIds = Tensor.fromTypedArray(new Int32Array([2, 0]), [2]);
+      });
+
+      afterAll(() => {
+        params.delete();
+        indices.delete();
+        mat.delete();
+        ndIndices.delete();
+        catIndices.delete();
+        weights.delete();
+        lookupIds.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes gather on ${accelerator}`, async () => {
+          const gatherModel = author(
+              (p: Tensor, idx: Tensor) => gather(p, idx, 0),
+              {accelerator});
+          const gatherOut = await gatherModel.run(params, indices);
+          expect(gatherOut.shape).toEqual([2]);
+          expect(Array.from(await gatherOut.data())).toEqual([20.0, 40.0]);
+          gatherOut.delete();
+          gatherModel.delete();
+        });
+
+        it(`compiles and executes gatherNd on ${accelerator}`, async () => {
+          const gatherNdModel = author(
+              (m: Tensor, idx: Tensor) => gatherNd(m, idx),
+              {accelerator});
+          const gatherNdOut = await gatherNdModel.run(mat, ndIndices);
+          expect(gatherNdOut.shape).toEqual([2]);
+          expect(Array.from(await gatherNdOut.data())).toEqual([2.0, 3.0]);
+          gatherNdOut.delete();
+          gatherNdModel.delete();
+        });
+
+        it(`compiles and executes oneHot on ${accelerator}`, async () => {
+          const oneHotModel = author(
+              (idx: Tensor) => oneHot(idx, 3), {accelerator});
+          const oneHotOut = await oneHotModel.run(catIndices);
+          expect(oneHotOut.shape).toEqual([3, 3]);
+          expect(Array.from(await oneHotOut.data()))
+              .toEqual([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+          oneHotOut.delete();
+          oneHotModel.delete();
+        });
+      }
+
+      it('compiles and executes embeddingLookup on wasm', async () => {
+        const embModel = author(
+            (w: Tensor, ids: Tensor) => embeddingLookup(w, ids),
+            {accelerator: 'wasm'});
+        const embOut = await embModel.run(weights, lookupIds);
+        expect(embOut.shape).toEqual([2, 2]);
+        expect(Array.from(await embOut.data()))
+            .toEqual([5.0, 6.0, 1.0, 2.0]);
+        embOut.delete();
+        embModel.delete();
+      });
+    });
+
+    describe('authored ranking and detection post-processing graphs', () => {
+      let mat: Tensor;
+      let boxes: Tensor;
+      let scores: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        mat = Tensor.fromTypedArray(
+            new Float32Array([10, 50, 20, 40, 15, 35, 65, 25]), [2, 4]);
+        boxes = Tensor.fromTypedArray(
+            new Float32Array([0, 0, 1, 1, 0, 0, 1, 1]), [2, 4]);
+        scores =
+            Tensor.fromTypedArray(new Float32Array([0.9, 0.75]), [2]);
+      });
+
+      afterAll(() => {
+        mat.delete();
+        boxes.delete();
+        scores.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes topK on ${accelerator}`, async () => {
+          const topkModel = author(
+              (x: Tensor) => topK(x, 2), {accelerator});
+          const topkOut = await topkModel.run(mat);
+          expect(topkOut.values.shape).toEqual([2, 2]);
+          expect(topkOut.indices.shape).toEqual([2, 2]);
+          expect(Array.from(await topkOut.values.data()))
+              .toEqual([50, 40, 65, 35]);
+          expect(Array.from(await topkOut.indices.data()).map(Number))
+              .toEqual([1, 3, 2, 1]);
+          topkOut.values.delete();
+          topkOut.indices.delete();
+          topkModel.delete();
+        });
+
+        it(`compiles and executes nonMaxSuppression on ${accelerator}`,
+           async () => {
+             const nmsModel = author(
+                 (b: Tensor, s: Tensor) =>
+                     nonMaxSuppression(b, s, 2, {iouThreshold: 0.5}),
+                 {accelerator});
+             const nmsOut = await nmsModel.run(boxes, scores);
+             expect(Array.from(await nmsOut.validOutputs.data()).map(Number))
+                 .toEqual([1]);
+             const indicesData =
+                 Array.from(await nmsOut.selectedIndices.data()).map(Number);
+             expect(indicesData[0]).toBe(0);
+
+             nmsOut.selectedIndices.delete();
+             nmsOut.selectedScores.delete();
+             nmsOut.validOutputs.delete();
+             nmsModel.delete();
+           });
+      }
+    });
+
+    describe('authored cumulative, spatial layout, and sequence ops', () => {
+      let vec: Tensor;
+      let img: Tensor;
+      let actIn: Tensor;
+      let alpha: Tensor;
+      let update: Tensor;
+      let s2dIn: Tensor;
+
+      beforeAll(async () => {
+        await resetLiteRt(true, {threads: false});
+        vec = Tensor.fromTypedArray(new Float32Array([1, 2, 3, 4]), [4]);
+        img = Tensor.fromTypedArray(
+            new Float32Array([1, 2, 3, 4]), [1, 2, 2, 1]);
+        actIn = Tensor.fromTypedArray(new Float32Array([-2.0, 3.0]), [2]);
+        alpha = Tensor.fromTypedArray(new Float32Array([0.5, 0.5]), [2]);
+        update = Tensor.fromTypedArray(new Float32Array([9.0, 8.0]), [2]);
+        s2dIn = Tensor.fromTypedArray(
+            new Float32Array([1, 2, 3, 4]), [1, 1, 1, 4]);
+      });
+
+      afterAll(() => {
+        img.delete();
+        actIn.delete();
+        alpha.delete();
+        update.delete();
+        s2dIn.delete();
+        vec.delete();
+      });
+
+      for (const accelerator of ['wasm', 'webgpu'] as const) {
+        it(`compiles and executes cumsum on ${accelerator}`, async () => {
+          if (accelerator === 'webgpu') {
+            pending('cumsum does not work on WebGPU yet');
+            return;
+          }
+          const csModel = author(
+              (x: Tensor) => cumsum(x, 0), {accelerator});
+          const csOut = await csModel.run(vec);
+          expect(csOut.shape).toEqual([4]);
+          expect(Array.from(await csOut.data())).toEqual([1, 3, 6, 10]);
+          csOut.delete();
+          csModel.delete();
+        });
+
+        it(`compiles and executes reverse on ${accelerator}`, async () => {
+          const revModel = author(
+              (x: Tensor) => reverse(x, 0), {accelerator});
+          const revOut = await revModel.run(vec);
+          expect(revOut.shape).toEqual([4]);
+          expect(Array.from(await revOut.data())).toEqual([4, 3, 2, 1]);
+          revOut.delete();
+          revModel.delete();
+        });
+
+        it(`compiles and executes spaceToDepth on ${accelerator}`, async () => {
+          const s2dModel = author(
+              (x: Tensor) => spaceToDepth(x, 2), {accelerator});
+          const s2dOut = await s2dModel.run(img);
+          expect(s2dOut.shape).toEqual([1, 1, 1, 4]);
+          s2dOut.delete();
+          s2dModel.delete();
+        });
+
+        it(`compiles and executes depthToSpace on ${accelerator}`, async () => {
+          const d2sModel = author(
+              (x: Tensor) => depthToSpace(x, 2), {accelerator});
+          const d2sOut = await d2sModel.run(s2dIn);
+          expect(d2sOut.shape).toEqual([1, 2, 2, 1]);
+          expect(Array.from(await d2sOut.data())).toEqual([1, 2, 3, 4]);
+          d2sOut.delete();
+          d2sModel.delete();
+        });
+
+        it(`compiles and executes pRelu on ${accelerator}`, async () => {
+          const preluModel = author(
+              (x: Tensor, a: Tensor) => x.pRelu(a), {accelerator});
+          const preluOut = await preluModel.run(actIn, alpha);
+          expect(Array.from(await preluOut.data())).toEqual([-1.0, 3.0]);
+          preluOut.delete();
+          preluModel.delete();
+        });
+
+        it(`compiles and executes dynamicUpdateSlice on ${accelerator}`,
+           async () => {
+          const dusModel = author(
+              (op: Tensor, up: Tensor) => op.dynamicUpdateSlice(up, [1]),
+              {accelerator});
+          const dusOut = await dusModel.run(vec, update);
+          expect(dusOut.shape).toEqual([4]);
+          expect(Array.from(await dusOut.data())).toEqual([1.0, 9.0, 8.0, 4.0]);
+          dusOut.delete();
+          dusModel.delete();
+        });
+      }
+    });
+
+    it('can copy to a different environment', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const cpuTensor = new Tensor(data);
+
+      // Create a new WebGPU device.
+      const newAdapter = await navigator.gpu.requestAdapter();
+      if (!newAdapter) {
+        throw new Error('No GPU adapter found.');
+      }
+      const newDevice = await newAdapter.requestDevice();
+      const newEnv = new Environment({webGpuDevice: newDevice});
+
+      const gpuTensor = await cpuTensor.copyTo('webgpu', {environment: newEnv});
+      expect(gpuTensor.environment).toBe(newEnv);
+      expect(gpuTensor.bufferType)
+          .toEqual(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+      expect(gpuTensor.accelerator).toEqual('webgpu');
+
+      const cpuTensor2 = await gpuTensor.copyTo('wasm');
+      expect(await cpuTensor2.data()).toEqual(data);
+      expect(cpuTensor2.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+      expect(cpuTensor2.accelerator).toEqual('wasm');
+
+      gpuTensor.delete();
+      cpuTensor.delete();
+      cpuTensor2.delete();
+    });
+
+    it('copying to WebGPU throws if the environment does not have a WebGPU device',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const data = new Float32Array([1.234, 2.345, 3.456]);
+         const cpuTensor = new Tensor(data);
+         const badEnv = new Environment({webGpuDevice: null});
+         await expectAsync(cpuTensor.copyTo('webgpu', {
+           environment: badEnv
+         })).toBeRejectedWithError(/No WebGPU device is available/);
+         cpuTensor.delete();
+       });
+
+    it('can specify copy destination by TensorBufferType', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const cpuTensor = new Tensor(data);
+      const gpuTensor =
+          await cpuTensor.copyTo(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+      expect(gpuTensor.bufferType)
+          .toEqual(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+      expect(gpuTensor.accelerator).toEqual('webgpu');
+      gpuTensor.delete();
+      cpuTensor.delete();
+    });
+
+    it('throws an error if copying to an unsupported destination', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const cpuTensor = new Tensor(data);
+      await expectAsync(
+          cpuTensor.copyTo('unsupported' as unknown as TensorBufferType))
+          .toBeRejectedWithError(
+              /Unknown destination 'unsupported' for copying or moving/);
+      cpuTensor.delete();
+    });
+
+    it('moves a CPU tensor to a float32 WebGPU tensor and back', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const cpuTensor = new Tensor(data);
+      expect(cpuTensor.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+      expect(cpuTensor.accelerator).toEqual('wasm');
+      const gpuTensor = await cpuTensor.moveTo('webgpu');
+      expect(gpuTensor.bufferType)
+          .toEqual(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+      expect(gpuTensor.accelerator).toEqual('webgpu');
+      const cpuTensor2 = await gpuTensor.moveTo('wasm');
+      expect(cpuTensor2.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+      expect(cpuTensor2.accelerator).toEqual('wasm');
+      // Source tensors are not valid after move.
+      expect(cpuTensor.deleted).toBeTrue();
+      expect(gpuTensor.deleted).toBeTrue();
+      // Move actually moves the data.
+      expect(await cpuTensor2.data()).toEqual(data);
+      cpuTensor2.delete();
+    });
+
+    it('data() rejects if the tensor is deleted', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const tensor = new Tensor(data);
+      tensor.delete();
+      await expectAsync(tensor.data())
+          .toBeRejectedWithError('Tensor is deleted and cannot be used.');
+    });
+
+    it('toGpuBuffer() returns the underlying GPUBuffer', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+
+      const adapter = await navigator.gpu.requestAdapter();
+      const device = await adapter!.requestDevice();
+      liteRt.setWebGpuDevice(device);
+
+      const tensor = new Tensor(data);
+      const gpuTensor = await tensor.moveTo('webgpu');
+
+      const gpuBuffer = gpuTensor.toGpuBuffer();
+      expect(gpuBuffer).toBeInstanceOf(GPUBuffer);
+      expect(gpuBuffer.size).toBeGreaterThanOrEqual(data.byteLength);
+
+      const readBuffer = device.createBuffer({
+        size: gpuBuffer.size,
+        usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ
+      });
+
+      const encoder = device.createCommandEncoder();
+      encoder.copyBufferToBuffer(gpuBuffer, 0, readBuffer, 0, gpuBuffer.size);
+      device.queue.submit([encoder.finish()]);
+
+      await readBuffer.mapAsync(GPUMapMode.READ);
+      const resultData =
+          new Float32Array(readBuffer.getMappedRange(), 0, data.length);
+      expect(resultData).toEqual(data);
+
+      readBuffer.unmap();
+      readBuffer.destroy();
+      // gpuTensor.delete();
+    });
+
+    it('toGpuBuffer() throws if the tensor is not on WebGPU', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const tensor = new Tensor(data);
+      expect(() => tensor.toGpuBuffer())
+          .toThrowError(
+              'Cannot convert a Tensor with non-WebGPU memory to a GPUBuffer.');
+      tensor.delete();
+    });
+
+    it('deletes the WebGPU buffer when the tensor is deleted', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.234, 2.345, 3.456]);
+      const tensor = new Tensor(data);
+      const gpuTensor = await tensor.moveTo('webgpu');
+      const gpuBuffer = gpuTensor.toGpuBuffer();
+      gpuBuffer.label = 'the test buffer';
+      expect(gpuBuffer).toBeInstanceOf(GPUBuffer);
+      gpuTensor.delete();
+      await expectAsync(
+          checkBufferIsUsable(tensor.environment.webGpuDevice!, gpuBuffer))
+          .toBeRejectedWithError(/the test buffer.*destroyed/);
+    });
+
+    it('liteRtWasm.WebGPU.Internals.jsObjects no longer contains the buffer pointer when the tensor is deleted',
+       async () => {
+         await resetLiteRt(true, {threads: false});
+         const data = new Float32Array([1.234, 2.345, 3.456]);
+         const tensor = new Tensor(data);
+         const gpuTensor = await tensor.moveTo('webgpu');
+         const bufferPtr = gpuTensor.liteRtTensorHandle.getWebGpuBuffer();
+
+         // This is a private property of the WebGPU module, but we need to
+         // access it to test that the buffer is removed from the map when the
+         // tensor is deleted.
+         // tslint:disable-next-line:no-any
+         const jsObjects =
+             (liteRt.liteRtWasm.WebGPU as any).Internals.jsObjects;
+         expect(jsObjects[bufferPtr]).toBe(gpuTensor.toGpuBuffer());
+         gpuTensor.delete();
+         expect(jsObjects[bufferPtr]).toBeUndefined();
+       });
+
+    it('logs a warning when accessing deprecated liteRtTensorBuffer getter', async () => {
+      await resetLiteRt(true, {threads: false});
+      const data = new Float32Array([1.0, 2.0]);
+      const tensor = new Tensor(data);
+      const warnSpy = spyOn(console, 'warn');
+      const handle = tensor.liteRtTensorBuffer;
+      expect(handle).toBe(tensor.liteRtTensorHandle);
+      expect(warnSpy).toHaveBeenCalledWith(
+          'liteRtTensorBuffer is deprecated. Use liteRtTensorHandle instead.',
+      );
+      tensor.delete();
+    });
+
+    for (const dimensionCount of [1, 2, 3, 4] as const) {
+      describe(`with ${dimensionCount} dimensions`, () => {
+        const batchDims = new Array(dimensionCount - 1).fill(1);
+        it('copies a Float32 tensor from CPU to WebGPU and back', async () => {
+          await resetLiteRt(true, {threads: false});
+          const data = new Float32Array([1.234, 2.345, 3.456]);
+          const cpuTensor = new Tensor(data, [...batchDims, 3]);
+          expect(cpuTensor.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+          expect(cpuTensor.accelerator).toEqual('wasm');
+          const gpuTensor = await cpuTensor.copyTo('webgpu');
+          expect(gpuTensor.bufferType)
+              .toEqual(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+          expect(gpuTensor.accelerator).toEqual('webgpu');
+          const cpuTensor2 = await gpuTensor.copyTo('wasm');
+          expect(cpuTensor2.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+          expect(cpuTensor2.accelerator).toEqual('wasm');
+          expect(await cpuTensor2.data()).toEqual(await cpuTensor.data());
+          expect(cpuTensor.deleted).toBeFalse();
+          expect(gpuTensor.deleted).toBeFalse();
+          cpuTensor.delete();
+          gpuTensor.delete();
+          cpuTensor2.delete();
+        });
+
+        it('copies an Int32 tensor from CPU to WebGPU and back', async () => {
+          await resetLiteRt(true, {threads: false});
+          const data = new Int32Array([1, 2, 3, 2147483647]);
+          const cpuTensor = new Tensor(data, [...batchDims, 4]);
+          expect(cpuTensor.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+          expect(cpuTensor.accelerator).toEqual('wasm');
+          const gpuTensor = await cpuTensor.copyTo('webgpu');
+          expect(gpuTensor.bufferType)
+              .toEqual(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+          expect(gpuTensor.accelerator).toEqual('webgpu');
+          const cpuTensor2 = await gpuTensor.copyTo('wasm');
+          expect(cpuTensor2.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+          expect(cpuTensor2.accelerator).toEqual('wasm');
+          expect(await cpuTensor2.data()).toEqual(await cpuTensor.data());
+          expect(cpuTensor.deleted).toBeFalse();
+          expect(gpuTensor.deleted).toBeFalse();
+          cpuTensor.delete();
+          gpuTensor.delete();
+          cpuTensor2.delete();
+        });
+
+        it('moves a Float32 tensor from CPU to WebGPU and back', async () => {
+          await resetLiteRt(true, {threads: false});
+          const data = new Float32Array([1.234, 2.345, 3.456]);
+          const cpuTensor = new Tensor(data, [...batchDims, 3]);
+          expect(cpuTensor.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+          expect(cpuTensor.accelerator).toEqual('wasm');
+          const gpuTensor = await cpuTensor.moveTo('webgpu');
+          expect(gpuTensor.bufferType)
+              .toEqual(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+          expect(gpuTensor.accelerator).toEqual('webgpu');
+          const cpuTensor2 = await gpuTensor.moveTo('wasm');
+          expect(cpuTensor2.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+          expect(cpuTensor2.accelerator).toEqual('wasm');
+          expect(await cpuTensor2.data()).toEqual(data);
+          expect(cpuTensor.deleted).toBeTrue();
+          expect(gpuTensor.deleted).toBeTrue();
+          cpuTensor2.delete();
+        });
+
+        it('moves an Int32 tensor from CPU to WebGPU and back', async () => {
+          await resetLiteRt(true, {threads: false});
+          const data = new Int32Array([1, 2, 3, 2147483647]);
+          const cpuTensor = new Tensor(data, [...batchDims, 4]);
+          expect(cpuTensor.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+          expect(cpuTensor.accelerator).toEqual('wasm');
+          const gpuTensor = await cpuTensor.moveTo('webgpu');
+          expect(gpuTensor.bufferType)
+              .toEqual(TensorBufferType.WEB_GPU_BUFFER_PACKED);
+          expect(gpuTensor.accelerator).toEqual('webgpu');
+          const cpuTensor2 = await gpuTensor.moveTo('wasm');
+          expect(cpuTensor2.bufferType).toEqual(TensorBufferType.HOST_MEMORY);
+          expect(cpuTensor2.accelerator).toEqual('wasm');
+          expect(await cpuTensor2.data()).toEqual(data);
+          expect(cpuTensor.deleted).toBeTrue();
+          expect(gpuTensor.deleted).toBeTrue();
+          cpuTensor2.delete();
+        });
+      });
+    }
+  });
+
+  describe('run', () => {
+    let identity: Tensor;
+    let range: Tensor;
+
+    beforeAll(async () => {
+      await resetLiteRt();
+      // 10x10 identity matrix
+      const identityArray = new Float32Array(100);
+      for (let i = 0; i < 10; i++) {
+        identityArray[i * 10 + i] = 1.0;
+      }
+      identity = new Tensor(identityArray, [10, 10]);
+
+      // Range from 0 to 99
+      const rangeArray = new Float32Array(100);
+      for (let i = 0; i < 100; i++) {
+        rangeArray[i] = i;
+      }
+      range = new Tensor(rangeArray, [10, 10]);
+    });
+
+    afterAll(() => {
+      identity.delete();
+      range.delete();
+    });
+
+    it('copies wasm inputs to webgpu when running a webgpu model', async () => {
+      const model = await loadAndCompile(
+          '/testdata/multi_signature_model.tflite', {accelerator: 'webgpu'});
+      const identityCpu = await identity.copyTo('wasm');
+      const rangeCpu = await range.copyTo('wasm');
+      const outputs = await model.run([identityCpu, rangeCpu]);
+      expect(outputs.length).toBe(1);
+      const sum = await addTensors(identity, range);
+      expect(await outputs[0].data()).toEqual(sum);
+      outputs[0].delete();
+      model.delete();
+      identityCpu.delete();
+      rangeCpu.delete();
+    });
+
+    it('copies webgpu inputs to wasm when running a wasm model', async () => {
+      const model = await loadAndCompile(
+          '/testdata/multi_signature_model.tflite', {accelerator: 'wasm'});
+      const identityWebGpu = await identity.copyTo('webgpu');
+      const rangeWebGpu = await range.copyTo('webgpu');
+      const outputs = await model.run([identityWebGpu, rangeWebGpu]);
+      expect(outputs.length).toBe(1);
+      const sum = await addTensors(identity, range);
+      expect(await outputs[0].data()).toEqual(sum);
+      outputs[0].delete();
+      model.delete();
+      identityWebGpu.delete();
+      rangeWebGpu.delete();
+    });
+
+    for (const accelerator of ['wasm', 'webgpu'] as const) {
+      describe(accelerator, () => {
+        let mobilenetModel: CompiledModel;
+        let multiSignatureModel: CompiledModel;
+        let mixedInputModel: CompiledModel;
+
+        beforeAll(async () => {
+          mobilenetModel = await loadAndCompile(
+              '/testdata/torchvision_mobilenet_v2.tflite', {accelerator});
+          multiSignatureModel = await loadAndCompile(
+              '/testdata/multi_signature_model.tflite', {accelerator});
+          mixedInputModel = await loadAndCompile(
+              '/testdata/mixed_input_model.tflite', {accelerator});
+        });
+
+        afterAll(() => {
+          mobilenetModel.delete();
+          multiSignatureModel.delete();
+          mixedInputModel.delete();
+        });
+
+        it(`model.options.accelerator is ${accelerator}`, () => {
+          expect(mobilenetModel.options.accelerator).toBe(accelerator);
+          expect(multiSignatureModel.options.accelerator).toBe(accelerator);
+          expect(mixedInputModel.options.accelerator).toBe(accelerator);
+        });
+
+        it('runs multiple signatures of a model', async () => {
+          // "add" signature
+          const sum = await addTensors(identity, range);
+          const addOutputs =
+              await multiSignatureModel.run('add', {'a': identity, 'b': range});
+          expect(Object.keys(addOutputs)).toEqual(['output']);
+          const output = addOutputs['output'];
+          expect(await output.data()).toEqual(sum);
+          output.delete();
+
+          // "sub" signature
+          const diff = await subTensors(identity, range);
+          const subOutputs =
+              await multiSignatureModel.run('sub', {'a': identity, 'b': range});
+          expect(Object.keys(subOutputs)).toEqual(['output']);
+          const subOutput = subOutputs['output'];
+          expect(await subOutput.data()).toEqual(diff);
+          subOutput.delete();
+
+          // "mul" signature
+          const product = await mulTensors(identity, range);
+          const mulOutputs =
+              await multiSignatureModel.run('mul', {'a': identity, 'b': range});
+          expect(Object.keys(mulOutputs)).toEqual(['output']);
+          const mulOutput = mulOutputs['output'];
+          expect(await mulOutput.data()).toEqual(product);
+          mulOutput.delete();
+        });
+
+        it('runs a model multiple times', async () => {
+          const fakeInput =
+              await (new Tensor(new Float32Array(1 * 3 * 224 * 224), [
+                1, 3, 224, 224
+              ])).moveTo(accelerator);
+
+          const outputPromises = [];
+          for (let i = 0; i < 10; ++i) {
+            // The model should not crash when run multiple times.
+            outputPromises.push(mobilenetModel.run({'args_0': fakeInput}));
+          }
+          const outputs = await Promise.all(outputPromises);
+          const outputsData = await Promise.all(
+              outputs.map(output => output['output_0'].data()));
+
+          // All the outputs should be the same.
+          for (let i = 1; i < outputsData.length; ++i) {
+            expect(outputsData[i]).toEqual(outputsData[0]);
+          }
+          fakeInput.delete();
+          for (const output of outputs) {
+            output['output_0'].delete();
+          }
+        });
+
+        it('runs a model with mixed input types', async () => {
+          const int32InputData = new Int32Array(10);
+          for (let i = 0; i < 10; i++) int32InputData[i] = i;
+          const int32Input =
+              await (new Tensor(int32InputData, [1, 10])).moveTo(accelerator);
+
+          const float32InputData = new Float32Array(10);
+          for (let i = 0; i < 10; i++) float32InputData[i] = i / 10;
+          const float32Input =
+              await (new Tensor(float32InputData, [1, 10])).moveTo(accelerator);
+
+          const outputs = await mixedInputModel.run({
+            'int_input': int32Input,
+            'float_input': float32Input,
+          });
+
+          const outputData = await outputs['Identity'].data();
+          const expectedOutputData = new Float32Array(10);
+          for (let i = 0; i < 10; i++) {
+            expectedOutputData[i] =
+                (int32InputData[i] + float32InputData[i]) * 2;
+          }
+          expect(outputData).toEqual(expectedOutputData);
+          int32Input.delete();
+          float32Input.delete();
+          outputs['Identity'].delete();
+        });
+
+        it('`run(Tensor)` returns `Tensor[]`', async () => {
+          const fakeInput =
+              await (new Tensor(new Float32Array(1 * 3 * 224 * 224), [
+                1, 3, 224, 224
+              ])).moveTo(accelerator);
+
+          const outputs = await mobilenetModel.run(fakeInput);
+          const expectedOutputs =
+              await mobilenetModel.run({'args_0': fakeInput});
+
+          expect(outputs.length).toBe(1);
+          expect(outputs[0]).toBeInstanceOf(Tensor);
+          expect(await outputs[0].data())
+              .toEqual(await expectedOutputs['output_0'].data());
+          fakeInput.delete();
+          outputs[0].delete();
+          expectedOutputs['output_0'].delete();
+        });
+
+        it('`run([Tensor, ...])` returns `Tensor[]`', async () => {
+          const outputs = await multiSignatureModel.run([identity, range]);
+          expect(outputs.length).toBe(1);
+          const sum = await addTensors(identity, range);
+          expect(outputs[0]).toBeInstanceOf(Tensor);
+          expect(await outputs[0].data()).toEqual(sum);
+          outputs[0].delete();
+        });
+
+        it('`run({\'input\': Tensor, ...})` returns `{\'output\': Tensor, ...}`',
+           async () => {
+             const outputs =
+                 await multiSignatureModel.run({'a': identity, 'b': range});
+             const sum = await addTensors(identity, range);
+             expect(await outputs['output'].data()).toEqual(sum);
+             expect(outputs['output']).toBeInstanceOf(Tensor);
+             outputs['output'].delete();
+           });
+
+        it('`run(\'signature\', Tensor)` returns `Tensor[]`', async () => {
+          const fakeInput =
+              await (new Tensor(new Float32Array(1 * 3 * 224 * 224), [
+                1, 3, 224, 224
+              ])).moveTo(accelerator);
+          const outputs =
+              await mobilenetModel.run('serving_default', fakeInput);
+          const expectedOutputs =
+              await mobilenetModel.run({'args_0': fakeInput});
+          expect(outputs.length).toBe(1);
+          expect(await outputs[0].data())
+              .toEqual(await expectedOutputs['output_0'].data());
+          fakeInput.delete();
+          outputs[0].delete();
+          expectedOutputs['output_0'].delete();
+        });
+
+        it('`run(\'signature\', [Tensor, ...])` returns `Tensor[]`',
+           async () => {
+             const outputs =
+                 await multiSignatureModel.run('add', [identity, range]);
+             expect(outputs.length).toBe(1);
+             const sum = await addTensors(identity, range);
+             expect(outputs[0]).toBeInstanceOf(Tensor);
+             expect(await outputs[0].data()).toEqual(sum);
+             outputs[0].delete();
+           });
+
+        describe('custom environments', () => {
+          let customEnv: Environment;
+          let modelWithCustomEnv: CompiledModel;
+          let identityCustom: Tensor;
+          let rangeCustom: Tensor;
+
+          beforeEach(async () => {
+            customEnv = new Environment({webGpuDevice: null});
+            modelWithCustomEnv = await loadAndCompile(
+                '/testdata/multi_signature_model.tflite',
+                {environment: customEnv});
+            identityCustom =
+                new Tensor(await identity.data(), [10, 10], customEnv);
+            rangeCustom = new Tensor(await range.data(), [10, 10], customEnv);
+          });
+
+          afterEach(() => {
+            identityCustom.delete();
+            rangeCustom.delete();
+            modelWithCustomEnv.delete();
+            customEnv.delete();
+          });
+
+          it('model.options.environment is the custom environment', () => {
+            expect(modelWithCustomEnv.options.environment).toBe(customEnv);
+          });
+
+          it('returned tensors share the same environment as the model',
+             async () => {
+               const outputs =
+                   await modelWithCustomEnv.run([identityCustom, rangeCustom]);
+               expect(outputs[0].environment).toBe(customEnv);
+               expect(outputs[0].environment)
+                   .not.toBe(liteRt.getDefaultEnvironment());
+               outputs[0].delete();
+             });
+
+          it('returned tensors share the same environment as the signature',
+             async () => {
+               const outputs = await modelWithCustomEnv.signatures['add'].run(
+                   [identityCustom, rangeCustom]);
+               expect(outputs[0].environment).toBe(customEnv);
+               expect(outputs[0].environment)
+                   .not.toBe(liteRt.getDefaultEnvironment());
+               outputs[0].delete();
+             });
+        });
+
+        it('`run([Tensor])` throws if the model expects more tensors',
+           async () => {
+             await expectAsync(multiSignatureModel.run([identity]))
+                 .toBeRejectedWithError(/called with 1.*expects 2/);
+           });
+
+        it('throws an error if no input is provided', async () => {
+          // TS compiler will prevent this, but JS may call it so test it
+          // anyway.
+          // tslint:disable-next-line:no-any
+          await expectAsync((mobilenetModel as any).run('serving_default'))
+              .toBeRejectedWithError(
+                  /No input provided for signature serving_default/);
+        });
+
+        it('throws an error if the tensor is of the wrong type', async () => {
+          const fakeInput =
+              new Tensor(new Int32Array(1 * 3 * 224 * 224), [1, 3, 224, 224]);
+          await expectAsync(mobilenetModel.run({'args_0': fakeInput}))
+              .toBeRejectedWithError(
+                  'TensorBuffer ranked tensor type int32[1, 3, 224, 224] does not match expected ranked tensor type float32[1, 3, 224, 224]');
+          fakeInput.delete();
+        });
+
+        it('throws an error if the tensor is of the wrong shape', async () => {
+          const fakeInput =
+              new Tensor(new Float32Array(1 * 3 * 224 * 225), [1, 3, 224, 225]);
+          await expectAsync(mobilenetModel.run({'args_0': fakeInput}))
+              .toBeRejectedWithError(
+                  'TensorBuffer ranked tensor type float32[1, 3, 224, 225] does not match expected ranked tensor type float32[1, 3, 224, 224]');
+          fakeInput.delete();
+        });
+
+        it('throws an error if the signature does not exist', async () => {
+          await expectAsync(multiSignatureModel.run('bad_signature', [
+            identity, range
+          ])).toBeRejectedWithError(/No signature named bad_signature/);
+        });
+
+        it('throws an error if the signature does not have all the array inputs',
+           async () => {
+             await expectAsync(multiSignatureModel.run('add', [identity]))
+                 .toBeRejectedWithError(/called with 1.*expects 2/);
+           });
+
+        it('throws an error if the signature does not have all the object inputs',
+           async () => {
+             await expectAsync(multiSignatureModel.run('add', {'a': identity}))
+                 .toBeRejectedWithError(
+                     /called with input record that is missing input b/);
+           });
+
+        it('throws an error if the model has been deleted', async () => {
+          const deletableModel = await loadAndCompile(
+              '/testdata/multi_signature_model.tflite', {accelerator});
+          deletableModel.delete();
+          await expectAsync(deletableModel.run([identity, range]))
+              .toBeRejectedWithError(
+                  Error, /CompiledModel is deleted and cannot be used./);
+        });
+
+        it('throws an error if a signature\'s model has been deleted', async () => {
+          const deletableModel = await loadAndCompile(
+              '/testdata/multi_signature_model.tflite', {accelerator});
+          const signature = deletableModel.signatures['add'];
+          deletableModel.delete();
+          await expectAsync(signature.run([identity, range]))
+              .toBeRejectedWithError(
+                  Error,
+                  /CompiledModelSignatureRunner is deleted and cannot be used./);
+        });
+
+        it('supports 1D, 2D, 3D, and 4D input tensors', async () => {
+          const model = await loadAndCompile(
+              '/testdata/add_1d_2d_3d_4d.tflite', {accelerator});
+          const x = new Tensor(new Float32Array(4).fill(1.0), [4]);
+
+          const y = new Tensor(new Float32Array(12).fill(1.0), [3, 4]);
+          const z = new Tensor(new Float32Array(24).fill(1.0), [2, 3, 4]);
+          const w = new Tensor(new Float32Array(24).fill(1.0), [1, 2, 3, 4]);
+          const inputs = {'x': x, 'y': y, 'z': z, 'w': w};
+
+          const outputs = await model.run(inputs);
+          expect(await outputs['Identity'].data())
+              .toEqual(new Float32Array(24).fill(4.0));
+
+          x.delete();
+          y.delete();
+          z.delete();
+          w.delete();
+          outputs['Identity'].delete();
+          model.delete();
+        });
+
+        it('supports 1D tensors with last dim not divisible by 4', async () => {
+          const model =
+              await loadAndCompile('/testdata/add_c1_c7.tflite', {accelerator});
+          const x = new Tensor(new Float32Array([1.0]), [1]);
+          const y = new Tensor(new Float32Array(7).fill(1.0), [7]);
+          const inputs = {'x': x, 'y': y};
+
+          const outputs = await model.run(inputs);
+          expect(await outputs['Identity'].data())
+              .toEqual(new Float32Array(7).fill(2.0));
+          x.delete();
+          y.delete();
+          outputs['Identity'].delete();
+          model.delete();
+        });
+
+        it('supports 2D tensors with last dim not divisible by 4', async () => {
+          const model =
+              await loadAndCompile('/testdata/add_10x10.tflite', {accelerator});
+
+          const identityData = new Float32Array(100);
+          for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+              identityData[i * 10 + j] = 1.0;
+            }
+          }
+          const a = new Tensor(identityData, [10, 10]);
+
+          const rangeData = new Float32Array(100);
+          for (let i = 0; i < 100; i++) {
+            rangeData[i] = i;
+          }
+          const b = new Tensor(rangeData, [10, 10]);
+
+          const outputs = await model.run({'a': a, 'b': b});
+          const outputData = await outputs['Identity'].data();
+
+          const expectedData = new Float32Array(100);
+          for (let i = 0; i < 100; i++) {
+            expectedData[i] = identityData[i] + rangeData[i];
+          }
+          expect(outputData).toEqual(expectedData);
+          a.delete();
+          b.delete();
+          outputs['Identity'].delete();
+          model.delete();
+        });
+      });
+    }
+  });
+
+  describe('delegate compatibility', () => {
+    let model: CompiledModel;
+    let a: Tensor;
+    let b: Tensor;
+    let expectedOutput: Float32Array;
+
+    beforeAll(async () => {
+      await resetLiteRt();
+      model = await loadAndCompile(
+          '/testdata/delegate_compatibility_test.tflite',
+          {accelerator: 'webgpu'});
+
+      const aData = new Float32Array(100).fill(0);
+      for (let i = 0; i < 10; ++i) aData[i * 10 + i] = 1;
+      a = new Tensor(aData, [10, 10]);
+
+      const bData = new Float32Array(100);
+      for (let i = 0; i < 100; ++i) bData[i] = i;
+      b = new Tensor(bData, [10, 10]);
+      expectedOutput = bData;
+    });
+
+    afterAll(() => {
+      model.delete();
+      a.delete();
+      b.delete();
+    });
+
+    it('loads the model', async () => {
+      expect(model).toBeDefined();
+    });
+
+    describe('matmul', () => {
+      it('works with 10x10 inputs', async () => {
+        const outputs = await model.run('matmul_10x10', {
+          'a': a,
+          'b': b,
+        });
+        expect(await outputs['output'].data()).toEqual(expectedOutput);
+        outputs['output'].delete();
+      });
+
+      it('works with 1x10x10 inputs', async () => {
+        const a1x10x10 = new Tensor(await a.data(), [1, 10, 10]);
+        const b1x10x10 = new Tensor(await b.data(), [1, 10, 10]);
+        const outputs = await model.run('matmul_1x10x10', {
+          'a': a1x10x10,
+          'b': b1x10x10,
+        });
+        expect(await outputs['output'].data()).toEqual(expectedOutput);
+        a1x10x10.delete();
+        b1x10x10.delete();
+        outputs['output'].delete();
+      });
+
+      it('works with 1x1x10x10 inputs', async () => {
+        const a1x1x10x10 = new Tensor(await a.data(), [1, 1, 10, 10]);
+        const b1x1x10x10 = new Tensor(await b.data(), [1, 1, 10, 10]);
+        const outputs = await model.run('matmul_1x1x10x10', {
+          'a': a1x1x10x10,
+          'b': b1x1x10x10,
+        });
+        expect(await outputs['output'].data()).toEqual(expectedOutput);
+        a1x1x10x10.delete();
+        b1x1x10x10.delete();
+        outputs['output'].delete();
+      });
+    });
+  });
+});
+
+async function addTensors(a: Tensor, b: Tensor): Promise<Float32Array> {
+  const aArray = (await a.data()) as Float32Array;
+  const bArray = (await b.data()) as Float32Array;
+  const result = new Float32Array(aArray.length);
+  for (let i = 0; i < aArray.length; i++) {
+    result[i] = aArray[i] + bArray[i];
+  }
+  return result;
+}
+
+async function subTensors(a: Tensor, b: Tensor): Promise<Float32Array> {
+  const aArray = (await a.data()) as Float32Array;
+  const bArray = (await b.data()) as Float32Array;
+  const result = new Float32Array(aArray.length);
+  for (let i = 0; i < aArray.length; i++) {
+    result[i] = aArray[i] - bArray[i];
+  }
+  return result;
+}
+
+async function mulTensors(a: Tensor, b: Tensor): Promise<Float32Array> {
+  const aArray = (await a.data()) as Float32Array;
+  const bArray = (await b.data()) as Float32Array;
+  const result = new Float32Array(aArray.length);
+  for (let i = 0; i < aArray.length; i++) {
+    result[i] = aArray[i] * bArray[i];
+  }
+  return result;
+}
+
+async function checkBufferIsUsable(
+    device: GPUDevice, buffer: GPUBuffer): Promise<void> {
+  device.pushErrorScope('validation');
+  const tempBuffer =
+      device.createBuffer({size: 4, usage: GPUBufferUsage.COPY_DST});
+  const encoder = device.createCommandEncoder();
+  encoder.copyBufferToBuffer(buffer, 0, tempBuffer, 0, 0);
+  device.queue.submit([encoder.finish()]);
+  tempBuffer.destroy();
+
+  const error = await device.popErrorScope();
+  if (error) {
+    // Wrap in an error message that jasmine can read.
+    throw new Error(error.message);
+  }
+}

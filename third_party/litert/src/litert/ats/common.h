@@ -1,0 +1,274 @@
+// Copyright 2025 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#ifndef THIRD_PARTY_ODML_LITERT_LITERT_ATS_COMMON_H_
+#define THIRD_PARTY_ODML_LITERT_LITERT_ATS_COMMON_H_
+
+#include <chrono>  // NOLINT
+#include <cstddef>
+#include <cstdint>
+#include <string>
+
+#include "absl/strings/str_format.h"  // from @com_google_absl
+#include "absl/strings/string_view.h"  // from @com_google_absl
+#include "litert/c/litert_op_code.h"
+#include "litert/core/model/model.h"
+
+namespace litert::testing {
+
+// Returns true if `op_code` is a curated LiteRT Core Single Op.
+constexpr bool IsCoreSingleOp(LiteRtOpCode op_code) {
+  switch (op_code) {
+    case kLiteRtOpCodeTflAdd:
+    case kLiteRtOpCodeTflBatchMatmul:
+    case kLiteRtOpCodeTflConcatenation:
+    case kLiteRtOpCodeTflConv2d:
+    case kLiteRtOpCodeTflCos:
+    case kLiteRtOpCodeTflDepthwiseConv2d:
+    case kLiteRtOpCodeTflDiv:
+    case kLiteRtOpCodeTflEqual:
+    case kLiteRtOpCodeTflFullyConnected:
+    case kLiteRtOpCodeTflGelu:
+    case kLiteRtOpCodeTflLess:
+    case kLiteRtOpCodeTflMean:
+    case kLiteRtOpCodeTflSelectV2:
+    case kLiteRtOpCodeTflSin:
+    case kLiteRtOpCodeTflSlice:
+    case kLiteRtOpCodeTflSoftmax:
+    case kLiteRtOpCodeTflSqrt:
+    case kLiteRtOpCodeTflSub:
+    case kLiteRtOpCodeTflSum:
+    case kLiteRtOpCodeTflTranspose:
+      return true;
+    default:
+      return false;
+  }
+}
+
+// Names, ids and descriptions for a given test.
+struct TestNames {
+  // Gtest suite name.
+  std::string suite;
+  // Gtest test name.
+  std::string test;
+  // Description of the test.
+  std::string desc;
+  // Identifier for the test in the report.
+  std::string report_id;
+  // Flag to skip this test in execution.
+  bool should_skip = false;
+
+  // Create using repr of ops as desc. Only use if the model has 1-ish ops.
+  static TestNames Create(size_t test_id, absl::string_view fixture,
+                          absl::string_view logic, const LiteRtModelT& graph,
+                          absl::string_view prefix_override = "") {
+    const absl::string_view prefix =
+        prefix_override.empty() ? SuitePrefixForGraph(graph) : prefix_override;
+    const std::string family = absl::StrFormat("%s_%s", prefix, fixture);
+    auto suite = MakeSuite(family, logic);
+    auto desc = absl::StrFormat("%v", graph.Subgraph(0).Ops());
+    auto test = NormalizeOpSignature(desc);
+    auto report_id = MakeReportId(test_id, family, logic);
+    return {suite, test, desc, report_id, false};
+  }
+
+  // Create with an explicit desc.
+  static TestNames Create(size_t test_id, absl::string_view fixture,
+                          absl::string_view source, absl::string_view test,
+                          absl::string_view report_id,
+                          absl::string_view desc = "") {
+    auto suite = MakeSuite(fixture, source);
+    auto full_desc = desc.empty() ? std::string(test) : std::string(desc);
+    return {suite, std::string(test), full_desc, std::string(report_id), false};
+  }
+
+ private:
+  static absl::string_view SuitePrefixForGraph(const LiteRtModelT& graph) {
+    if (graph.NumSubgraphs() >= 1 && graph.Subgraph(0).Ops().size() == 1) {
+      const LiteRtOpCode op_code = graph.Subgraph(0).Ops().front()->OpCode();
+      if (op_code == kLiteRtOpCodeShloComposite) {
+        return "CompositeOp";
+      }
+      if (IsCoreSingleOp(op_code)) {
+        return "CoreSingleOp";
+      }
+    }
+    return "SingleOp";
+  }
+
+  static std::string MakeSuite(absl::string_view family,
+                               absl::string_view logic) {
+    return absl::StrFormat("%s_%s", family, logic);
+  }
+
+  static std::string MakeReportId(size_t test_id, absl::string_view family,
+                                  absl::string_view logic) {
+    return absl::StrFormat("ats_%lu_%s_%s", test_id, family, logic);
+  }
+
+  // Strips concrete random tensor dimensions (`<4x5>`) and buffer byte sizes
+  // (`[120B]`) from an op signature so that all random-shape iterations of the
+  // same op configuration share a deterministic GTest test name for TestGrid.
+  static std::string NormalizeOpSignature(absl::string_view sig) {
+    std::string out;
+    out.reserve(sig.size());
+    int angle_depth = 0;
+    int bracket_depth = 0;
+    for (char c : sig) {
+      if (c == '<') {
+        ++angle_depth;
+      } else if (c == '>') {
+        if (angle_depth > 0) {
+          --angle_depth;
+        } else {
+          out.push_back(c);
+        }
+      } else if (c == '[') {
+        ++bracket_depth;
+      } else if (c == ']') {
+        if (bracket_depth > 0) {
+          --bracket_depth;
+        }
+      } else if (angle_depth == 0 && bracket_depth == 0) {
+        out.push_back(c);
+      }
+    }
+    return out;
+  }
+};
+
+// The type of reference to use for validation.
+enum class ReferenceType {
+  kNone,
+  // Standard CPU inference.
+  kCpu,
+  // Custom c++ reference.
+  kCustom,
+};
+
+enum class RunStatus {
+  // End never recorded.
+  kUnknown,
+  // The runs completed successfully.
+  kOk,
+  // The runs failed due to an error.
+  kError,
+  // The runs failed due to timeout.
+  kTimeout,
+  // The test was skipped.
+  kSkipped,
+};
+
+enum class CompilationStatus {
+  // End never recorded.
+  kNotRequested,
+  // The compilation failed due to an error.
+  kError,
+  // Compilation succeeded, but no ops were compiled.
+  kNoOpsCompiled,
+  // Compilation succeeded, not all ops were compiled.
+  kPartiallyCompiled,
+  // Compilation succeeded, all ops were compiled.
+  kFullyCompiled,
+};
+
+// Timing related types.
+using Clock = std::chrono::steady_clock;
+using TimePoint = Clock::time_point;
+using Microseconds = uint64_t;
+
+// Which backend to use as the "actual".
+enum class ExecutionBackend { kCpu, kGpu, kNpu };
+
+// Printing.
+
+template <typename Sink>
+void AbslStringify(Sink& sink, const ExecutionBackend& backend) {
+  switch (backend) {
+    case ExecutionBackend::kCpu:
+      sink.Append("cpu");
+      break;
+    case ExecutionBackend::kGpu:
+      sink.Append("gpu");
+      break;
+    case ExecutionBackend::kNpu:
+      sink.Append("npu");
+      break;
+  }
+}
+
+template <typename Sink>
+void AbslStringify(Sink& sink, const ReferenceType& type) {
+  switch (type) {
+    case ReferenceType::kNone:
+      sink.Append("none");
+      break;
+    case ReferenceType::kCpu:
+      sink.Append("cpu");
+      break;
+    case ReferenceType::kCustom:
+      sink.Append("custom");
+      break;
+  }
+}
+
+template <typename Sink>
+void AbslStringify(Sink& sink, const RunStatus& status) {
+  switch (status) {
+    case RunStatus::kUnknown:
+      sink.Append("unknown");
+      break;
+    case RunStatus::kOk:
+      sink.Append("ok");
+      break;
+    case RunStatus::kError:
+      sink.Append("error");
+      break;
+    case RunStatus::kTimeout:
+      sink.Append("timeout");
+      break;
+    case RunStatus::kSkipped:
+      sink.Append("skipped");
+      break;
+  }
+}
+
+template <typename Sink>
+void AbslStringify(Sink& sink, const CompilationStatus& status) {
+  switch (status) {
+    case CompilationStatus::kNotRequested:
+      sink.Append("not_requested");
+      break;
+    case CompilationStatus::kError:
+      sink.Append("error");
+      break;
+    case CompilationStatus::kNoOpsCompiled:
+      sink.Append("no_ops_compiled");
+      break;
+    case CompilationStatus::kPartiallyCompiled:
+      sink.Append("partially_compiled");
+      break;
+    case CompilationStatus::kFullyCompiled:
+      sink.Append("fully_compiled");
+      break;
+  }
+}
+
+template <typename Sink>
+void AbslStringify(Sink& sink, const Microseconds& ns) {
+  absl::Format(&sink, "%e", ns);
+}
+
+}  // namespace litert::testing
+#endif  // THIRD_PARTY_ODML_LITERT_LITERT_ATS_COMMON_H_

@@ -1,0 +1,422 @@
+// Copyright 2026 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#import <Foundation/Foundation.h>
+
+#import "third_party/odml/litert/litert/objc/apis/LRTEnvironment.h"
+#import "third_party/odml/litert/litert/objc/apis/LRTOptions.h"
+#import "third_party/odml/litert/litert/objc/apis/LRTTensorBuffer.h"
+#import "third_party/odml/litert/litert/objc/apis/LRTTensorBufferRequirements.h"
+#import "third_party/odml/litert/litert/objc/apis/LRTTensorType.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+/** A compiled LiteRT model ready for inference execution. */
+@interface LRTCompiledModel : NSObject
+
+/** Environment used to build this compiled model. */
+@property(nonatomic, readonly) LRTEnvironment *environment;
+
+/** Options used during model compilation. */
+@property(nonatomic, copy, readonly, nullable) LRTOptions *options;
+
+/** Array of signature key names defined in the compiled model. */
+@property(nonatomic, readonly, copy) NSArray<NSString *> *signatureKeys;
+
+/**
+ * Creates and compiles a LiteRT model from a file path.
+ *
+ * The model is loaded into memory, and the caller takes ownership of the
+ * returned @c LRTCompiledModel object. The provided @c options are used for model
+ * compilation (e.g. to select the accelerator).
+ *
+ * @note The provided @c environment must outlive the compiled model and any
+ * executions running on it.
+ *
+ * @param modelFilePath Absolute file path to the model file.
+ * @param environment LiteRT environment instance. Must outlive the returned compiled model.
+ * @param options Optional compilation options.
+ * @param error Out-parameter populated on failure.
+ * @return A compiled model instance, or @c nil on failure.
+ */
++ (nullable instancetype)compiledModelWithModelFilePath:(NSString *)modelFilePath
+                                            environment:(LRTEnvironment *)environment
+                                                options:(nullable LRTOptions *)options
+                                                  error:(NSError **)error;
+
+/**
+ * Creates and compiles a LiteRT model from in-memory model data.
+ *
+ * @note The returned compiled model keeps a reference to @c modelData (copying it if it is
+ * mutable), so callers are free to release or mutate their own buffer afterwards.
+ *
+ * @param modelData In-memory model byte data.
+ * @param environment LiteRT environment instance.
+ * @param options Optional compilation options.
+ * @param error Out-parameter populated on failure.
+ * @return A compiled model instance, or @c nil on failure.
+ */
++ (nullable instancetype)compiledModelWithModelData:(NSData *)modelData
+                                        environment:(LRTEnvironment *)environment
+                                            options:(nullable LRTOptions *)options
+                                              error:(NSError **)error;
+
+/**
+ * Returns the default signature key for LiteRT models.
+ *
+ * @return Default signature key string.
+ */
++ (NSString *)defaultSignatureKey;
+
+- (instancetype)init NS_UNAVAILABLE;
+
+/**
+ * Returns the input tensor names for the signature at the given index.
+ *
+ * @param signatureIndex The 0-based index of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Array of input tensor name strings, or @c nil on failure.
+ */
+- (nullable NSArray<NSString *> *)inputNamesForSignatureIndex:(NSUInteger)signatureIndex
+                                                        error:(NSError **)error;
+
+/**
+ * Returns the input tensor names for the signature matching @c signatureKey.
+ *
+ * @param signatureKey The name/key of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Array of input tensor name strings, or @c nil on failure.
+ */
+- (nullable NSArray<NSString *> *)inputNamesForSignatureKey:(NSString *)signatureKey
+                                                      error:(NSError **)error;
+
+/**
+ * Returns the output tensor names for the signature at the given index.
+ *
+ * @param signatureIndex The 0-based index of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Array of output tensor name strings, or @c nil on failure.
+ */
+- (nullable NSArray<NSString *> *)outputNamesForSignatureIndex:(NSUInteger)signatureIndex
+                                                         error:(NSError **)error;
+
+/**
+ * Returns the output tensor names for the signature matching @c signatureKey.
+ *
+ * @param signatureKey The name/key of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Array of output tensor name strings, or @c nil on failure.
+ */
+- (nullable NSArray<NSString *> *)outputNamesForSignatureKey:(NSString *)signatureKey
+                                                       error:(NSError **)error;
+
+/**
+ * Returns the tensor type for the specified input tensor of the default signature.
+ *
+ * @param inputIndex The 0-based index of the input tensor.
+ * @param error Out-parameter populated on failure.
+ * @return The input tensor's type and shape, or @c nil on failure.
+ */
+- (nullable LRTTensorType *)inputTensorTypeAtIndex:(NSUInteger)inputIndex error:(NSError **)error;
+
+/**
+ * Returns the tensor type for the specified input tensor of a given signature index.
+ *
+ * @param inputIndex The 0-based index of the input tensor.
+ * @param signatureIndex The 0-based index of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return The input tensor's type and shape, or @c nil on failure.
+ */
+- (nullable LRTTensorType *)inputTensorTypeAtIndex:(NSUInteger)inputIndex
+                                    signatureIndex:(NSUInteger)signatureIndex
+                                             error:(NSError **)error;
+
+/**
+ * Returns the tensor type for the named input tensor of a given signature key.
+ *
+ * @param inputName The name of the input tensor in the signature.
+ * @param signatureKey The name/key of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return The input tensor's type and shape, or @c nil on failure.
+ */
+- (nullable LRTTensorType *)inputTensorTypeForName:(NSString *)inputName
+                                      signatureKey:(NSString *)signatureKey
+                                             error:(NSError **)error;
+
+/**
+ * Returns the tensor type for the specified output tensor of the default signature.
+ *
+ * @param outputIndex The 0-based index of the output tensor.
+ * @param error Out-parameter populated on failure.
+ * @return The output tensor's type and shape, or @c nil on failure.
+ */
+- (nullable LRTTensorType *)outputTensorTypeAtIndex:(NSUInteger)outputIndex error:(NSError **)error;
+
+/**
+ * Returns the tensor type for the specified output tensor of a given signature index.
+ *
+ * @param outputIndex The 0-based index of the output tensor.
+ * @param signatureIndex The 0-based index of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return The output tensor's type and shape, or @c nil on failure.
+ */
+- (nullable LRTTensorType *)outputTensorTypeAtIndex:(NSUInteger)outputIndex
+                                     signatureIndex:(NSUInteger)signatureIndex
+                                              error:(NSError **)error;
+
+/**
+ * Returns the tensor type for the named output tensor of a given signature key.
+ *
+ * @param outputName The name of the output tensor in the signature.
+ * @param signatureKey The name/key of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return The output tensor's type and shape, or @c nil on failure.
+ */
+- (nullable LRTTensorType *)outputTensorTypeForName:(NSString *)outputName
+                                       signatureKey:(NSString *)signatureKey
+                                              error:(NSError **)error;
+
+/**
+ * Returns the buffer allocation requirements for the specified input tensor of the default
+ * signature.
+ *
+ * @param inputIndex The 0-based index of the input tensor.
+ * @param error Out-parameter populated on failure.
+ * @return Buffer requirements for the input tensor, or @c nil on failure.
+ */
+- (nullable LRTTensorBufferRequirements *)inputBufferRequirementsAtIndex:(NSUInteger)inputIndex
+                                                                   error:(NSError **)error;
+
+/**
+ * Returns the buffer allocation requirements for the specified input tensor of a given signature
+ * index.
+ *
+ * @param inputIndex The 0-based index of the input tensor.
+ * @param signatureIndex The 0-based index of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Buffer requirements for the input tensor, or @c nil on failure.
+ */
+- (nullable LRTTensorBufferRequirements *)inputBufferRequirementsAtIndex:(NSUInteger)inputIndex
+                                                          signatureIndex:(NSUInteger)signatureIndex
+                                                                   error:(NSError **)error;
+
+/**
+ * Returns the buffer allocation requirements for the named input tensor of a given signature key.
+ *
+ * @param inputName The name of the input tensor in the signature.
+ * @param signatureKey The name/key of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Buffer requirements for the input tensor, or @c nil on failure.
+ */
+- (nullable LRTTensorBufferRequirements *)inputBufferRequirementsForName:(NSString *)inputName
+                                                            signatureKey:(NSString *)signatureKey
+                                                                   error:(NSError **)error;
+
+/**
+ * Returns the buffer allocation requirements for the specified output tensor of the default
+ * signature.
+ *
+ * @param outputIndex The 0-based index of the output tensor.
+ * @param error Out-parameter populated on failure.
+ * @return Buffer requirements for the output tensor, or @c nil on failure.
+ */
+- (nullable LRTTensorBufferRequirements *)outputBufferRequirementsAtIndex:(NSUInteger)outputIndex
+                                                                    error:(NSError **)error;
+
+/**
+ * Returns the buffer allocation requirements for the specified output tensor of a given signature
+ * index.
+ *
+ * @param outputIndex The 0-based index of the output tensor.
+ * @param signatureIndex The 0-based index of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Buffer requirements for the output tensor, or @c nil on failure.
+ */
+- (nullable LRTTensorBufferRequirements *)outputBufferRequirementsAtIndex:(NSUInteger)outputIndex
+                                                           signatureIndex:(NSUInteger)signatureIndex
+                                                                    error:(NSError **)error;
+
+/**
+ * Returns the buffer allocation requirements for the named output tensor of a given signature key.
+ *
+ * @param outputName The name of the output tensor in the signature.
+ * @param signatureKey The name/key of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Buffer requirements for the output tensor, or @c nil on failure.
+ */
+- (nullable LRTTensorBufferRequirements *)outputBufferRequirementsForName:(NSString *)outputName
+                                                             signatureKey:(NSString *)signatureKey
+                                                                    error:(NSError **)error;
+
+/**
+ * Creates input tensor buffers according to the model's default signature requirements.
+ *
+ * It uses the model's buffer requirements and tensor types to allocate appropriate
+ * @c LRTTensorBuffer instances.
+ *
+ * @param error Out-parameter populated on failure.
+ * @return Array of newly allocated input @c LRTTensorBuffer instances, or @c nil on failure.
+ */
+- (nullable NSArray<LRTTensorBuffer *> *)createInputTensorBuffersWithError:(NSError **)error;
+
+/**
+ * Creates input tensor buffers according to the specified signature index.
+ *
+ * @param signatureIndex The index of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Array of newly allocated input @c LRTTensorBuffer instances, or @c nil on failure.
+ */
+- (nullable NSArray<LRTTensorBuffer *> *)
+    createInputTensorBuffersForSignatureIndex:(NSUInteger)signatureIndex
+                                        error:(NSError **)error;
+
+/**
+ * Creates input tensor buffers according to the specified signature key.
+ *
+ * @param signatureKey The name/key of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Array of newly allocated input @c LRTTensorBuffer instances, or @c nil on failure.
+ */
+- (nullable NSArray<LRTTensorBuffer *> *)createInputTensorBuffersForSignatureKey:
+                                             (NSString *)signatureKey
+                                                                           error:(NSError **)error;
+
+/**
+ * Creates output tensor buffers according to the model's default signature requirements.
+ *
+ * It uses the model's buffer requirements and tensor types to allocate appropriate
+ * @c LRTTensorBuffer instances.
+ *
+ * @param error Out-parameter populated on failure.
+ * @return Array of newly allocated output @c LRTTensorBuffer instances, or @c nil on failure.
+ */
+- (nullable NSArray<LRTTensorBuffer *> *)createOutputTensorBuffersWithError:(NSError **)error;
+
+/**
+ * Creates output tensor buffers according to the specified signature index.
+ *
+ * @param signatureIndex The index of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Array of newly allocated output @c LRTTensorBuffer instances, or @c nil on failure.
+ */
+- (nullable NSArray<LRTTensorBuffer *> *)
+    createOutputTensorBuffersForSignatureIndex:(NSUInteger)signatureIndex
+                                         error:(NSError **)error;
+
+/**
+ * Creates output tensor buffers according to the specified signature key.
+ *
+ * @param signatureKey The name/key of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return Array of newly allocated output @c LRTTensorBuffer instances, or @c nil on failure.
+ */
+- (nullable NSArray<LRTTensorBuffer *> *)createOutputTensorBuffersForSignatureKey:
+                                             (NSString *)signatureKey
+                                                                            error:(NSError **)error;
+
+/**
+ * Runs model inference synchronously for the default signature.
+ *
+ * @param inputs Array of input tensor buffers matching model signature.
+ * @param outputs Array of output tensor buffers matching model signature.
+ * @param error Out-parameter populated on failure.
+ * @return @c YES on success, @c NO on failure.
+ */
+- (BOOL)runWithInputs:(NSArray<LRTTensorBuffer *> *)inputs
+              outputs:(NSArray<LRTTensorBuffer *> *)outputs
+                error:(NSError **)error;
+
+/**
+ * Runs model inference synchronously for a specified signature index.
+ *
+ * @param inputs Array of input tensor buffers matching model signature.
+ * @param outputs Array of output tensor buffers matching model signature.
+ * @param signatureIndex The index of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return @c YES on success, @c NO on failure.
+ */
+- (BOOL)runWithInputs:(NSArray<LRTTensorBuffer *> *)inputs
+              outputs:(NSArray<LRTTensorBuffer *> *)outputs
+       signatureIndex:(NSUInteger)signatureIndex
+                error:(NSError **)error;
+
+/**
+ * Runs model inference synchronously for a specified signature key.
+ *
+ * @param inputs Array of input tensor buffers matching model signature.
+ * @param outputs Array of output tensor buffers matching model signature.
+ * @param signatureKey The name/key of the signature in the model.
+ * @param error Out-parameter populated on failure.
+ * @return @c YES on success, @c NO on failure.
+ */
+- (BOOL)runWithInputs:(NSArray<LRTTensorBuffer *> *)inputs
+              outputs:(NSArray<LRTTensorBuffer *> *)outputs
+         signatureKey:(NSString *)signatureKey
+                error:(NSError **)error;
+
+/**
+ * Resizes the specified input tensor of the default signature to support dynamic shapes.
+ *
+ * After calling this, you must re-create the input and output tensor buffers
+ * to match the new shapes.
+ *
+ * @param inputIndex The index of the input tensor.
+ * @param dimensions The new dimensions for the input tensor. An array of NSNumber representing the
+ * sizes of each dimension.
+ * @param error Out-parameter populated on failure.
+ * @return @c YES on success, @c NO on failure.
+ */
+- (BOOL)resizeInputTensorAtIndex:(NSUInteger)inputIndex
+                   newDimensions:(NSArray<NSNumber *> *)dimensions
+                           error:(NSError **)error;
+
+/**
+ * Resizes the specified input tensor for a given signature index to support dynamic shapes.
+ *
+ * After calling this, you must re-create the input and output tensor buffers
+ * to match the new shapes.
+ *
+ * @param inputIndex The index of the input tensor.
+ * @param signatureIndex The index of the signature containing the input tensor.
+ * @param dimensions The new dimensions for the input tensor. An array of NSNumber representing the
+ * sizes of each dimension.
+ * @param error Out-parameter populated on failure.
+ * @return @c YES on success, @c NO on failure.
+ */
+- (BOOL)resizeInputTensorAtIndex:(NSUInteger)inputIndex
+                  signatureIndex:(NSUInteger)signatureIndex
+                   newDimensions:(NSArray<NSNumber *> *)dimensions
+                           error:(NSError **)error;
+
+/**
+ * Resizes the specified input tensor for a given signature key to support dynamic shapes.
+ *
+ * After calling this, you must re-create the input and output tensor buffers
+ * to match the new shapes.
+ *
+ * @param inputIndex The index of the input tensor.
+ * @param signatureKey The name/key of the signature containing the input tensor.
+ * @param dimensions The new dimensions for the input tensor. An array of NSNumber representing the
+ * sizes of each dimension.
+ * @param error Out-parameter populated on failure.
+ * @return @c YES on success, @c NO on failure.
+ */
+- (BOOL)resizeInputTensorAtIndex:(NSUInteger)inputIndex
+                    signatureKey:(NSString *)signatureKey
+                   newDimensions:(NSArray<NSNumber *> *)dimensions
+                           error:(NSError **)error;
+
+@end
+
+NS_ASSUME_NONNULL_END

@@ -1,0 +1,36 @@
+# Copyright 2025 The Google AI Edge Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+package(
+    default_applicable_licenses = ["//third_party/odml:license"],  # copybara:comment
+    default_visibility = ["//visibility:public"],
+)
+
+exports_files(
+    ["LICENSE"],
+    visibility = ["//:__subpackages__"],
+)
+
+exports_files([
+    "PATCH.perfetto",
+    "PATCH.sentencepiece",
+    "litert_workspace.bzl",
+    "requirements_lock_3_10.txt",
+    "requirements_lock_3_11.txt",
+    "requirements_lock_3_12.txt",
+    "requirements_lock_3_13.txt",
+    "requirements_lock_3_14.txt",
+    "requirements_lock_3_14_freethreaded.txt",
+    "rbe_platform.bzl",
+])
