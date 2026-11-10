@@ -1,0 +1,306 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import {assert} from 'chai';
+import {beforeEach, it} from 'mocha';
+import sinon from 'sinon';
+
+import * as SDK from '../../core/sdk/sdk.js';
+import type * as Protocol from '../../generated/protocol.js';
+import * as ComputedStyle from '../../models/computed_style/computed_style.js';
+import {renderElementIntoDOM} from '../../testing/DOMHelpers.js';
+import {createTarget, describeWithEnvironment} from '../../testing/EnvironmentHelpers.js';
+import {MockCDPConnection} from '../../testing/MockCDPConnection.js';
+import {getMatchedStylesWithBlankRule} from '../../testing/StyleHelpers.js';
+import {createViewFunctionStub} from '../../testing/ViewFunctionHelpers.js';
+import * as UI from '../../ui/legacy/legacy.js';
+import {type LitTemplate, render} from '../../ui/lit/lit.js';
+
+import * as Elements from './elements.js';
+
+async function setUpStyles(connection: MockCDPConnection) {
+  connection.setSuccessHandler('CSS.enable', () => ({}));
+  connection.setSuccessHandler('CSS.getEnvironmentVariables',
+                               () => ({} as Protocol.CSS.GetEnvironmentVariablesResponse));
+  const computedStyleModel = new ComputedStyle.ComputedStyleModel.ComputedStyleModel();
+  const cssModel = new SDK.CSSModel.CSSModel(createTarget({connection}));
+  await cssModel.resumeModel();
+  const domModel = cssModel.domModel();
+  const node = new SDK.DOMModel.DOMNode(domModel);
+  node.id = 0 as Protocol.DOM.NodeId;
+  UI.Context.Context.instance().setFlavor(SDK.DOMModel.DOMNode, node);
+  computedStyleModel.node = node;
+  const matchedStyles = await getMatchedStylesWithBlankRule({cssModel, connection});
+  const stylesPane = new Elements.StylesSidebarPane.StylesSidebarPane(computedStyleModel);
+
+  return {matchedStyles, stylesPane};
+}
+
+async function getTreeElement(matchedStyles: SDK.CSSMatchedStyles.CSSMatchedStyles,
+                              stylesPane: Elements.StylesSidebarPane.StylesSidebarPane, name: string, value: string,
+                              variables?: Record<string, {value: string, computedValue?: string}>) {
+  const property = new SDK.CSSProperty.CSSProperty(matchedStyles.nodeStyles()[0],
+                                                   matchedStyles.nodeStyles()[0].pastLastSourcePropertyIndex(), name,
+                                                   value, true, false, true, false, '', undefined, []);
+  const treeElement = new Elements.StylePropertyTreeElement.StylePropertyTreeElement({
+    stylesContainer: stylesPane,
+    section: sinon.createStubInstance(Elements.StylePropertiesSection.StylePropertiesSection),
+    matchedStyles,
+    property,
+    isShorthand: false,
+    inherited: false,
+    overloaded: false,
+    newProperty: true,
+  });
+
+  if (variables) {
+    const varMap =
+        new Map(Object.getOwnPropertyNames(variables)
+                    .map(name => new SDK.CSSProperty.CSSProperty(
+                             matchedStyles.nodeStyles()[0], matchedStyles.nodeStyles()[0].pastLastSourcePropertyIndex(),
+                             name, variables[name].value, true, false, true, false, '', undefined, []))
+                    .map(property => [property.name, {
+                           value: variables[property.name].computedValue ?? variables[property.name].value,
+                           declaration: new SDK.CSSMatchedStyles.CSSValueSource(property),
+                         }]));
+    sinon.stub(matchedStyles, 'computeCSSVariable').callsFake((_, name) => varMap.get(name) ?? null);
+  }
+
+  return {matchedStyles, property, treeElement};
+}
+
+async function showTrace(property: SDK.CSSProperty.CSSProperty, matchedStyles: SDK.CSSMatchedStyles.CSSMatchedStyles,
+                         treeElement: Elements.StylePropertyTreeElement.StylePropertyTreeElement):
+    Promise<Elements.CSSValueTraceView.ViewInput> {
+  const viewFunction = createViewFunctionStub(Elements.CSSValueTraceView.CSSValueTraceView);
+  const view = new Elements.CSSValueTraceView.CSSValueTraceView(undefined, viewFunction);
+  await viewFunction.nextInput;
+  void view.showTrace(property, null, matchedStyles, new Map(),
+                      Elements.StylePropertyTreeElement.getPropertyRenderers(
+                          property.name, property.ownerStyle, treeElement.stylesContainer(), matchedStyles, null,
+                          treeElement.getComputedStyles() ?? new Map(), treeElement.getComputedStyleExtraFields()),
+                      false, 0, false);
+  return await viewFunction.nextInput;
+}
+
+function getLineText(lines: LitTemplate[]) {
+  const div = document.createElement('div');
+  renderElementIntoDOM(div, {allowMultipleChildren: true});
+  const text = [];
+  for (const line of lines) {
+    render(line, div);
+    text.push(div.deepInnerText());
+  }
+  div.remove();
+  return text;
+}
+
+describeWithEnvironment('CSSValueTraceView', () => {
+  let connection: MockCDPConnection;
+  beforeEach(() => {
+    connection = new MockCDPConnection();
+    connection.setSuccessHandler('CSS.resolveValues', ({values}) => {
+      const results = values.map((v: string) => {
+        if (v.endsWith('em')) {
+          return `${Number(v.substring(0, v.length - 2)) * 16}px`;
+        }
+        if (v.endsWith('vw')) {
+          return `${Number(v.substring(0, v.length - 2)) * 980 / 100}px`;
+        }
+        switch (v) {
+          case 'calc(clamp(16px, calc(1vw + 1em), 24px) + 3.2px)':
+            return '27.7px';
+          case 'clamp(16px, calc(1vw + 1em), 24px)':
+            return '24px';
+          case 'calc(1vw + 1em)':
+            return '24.53px';
+          case 'calc(1px + 1px)':
+            return '2px';
+          case 'calc(40px + 1px)':
+          case 'max(calc(40px + 1px), 20px)':
+            return '41px';
+          case 'max(5px, 20px)':
+            return '20px';
+        }
+        return v;
+      });
+      return {results};
+    });
+  });
+
+  it('shows simple values', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    for (const value of ['40', '40px', 'red']) {
+      const {property, treeElement} = await getTreeElement(matchedStyles, stylesPane, 'property', value);
+
+      const input = await showTrace(property, matchedStyles, treeElement);
+
+      const substitutions = getLineText(input.substitutions);
+      const evaluations = getLineText(input.evaluations);
+      assert.deepEqual(substitutions, []);
+      assert.deepEqual(evaluations, [value]);
+    }
+  });
+
+  it('applies substitutions', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} =
+        await getTreeElement(matchedStyles, stylesPane, 'width', 'var(--w)', {'--w': {value: '40px'}});
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['40px']);
+    assert.deepEqual(evaluations, []);
+  });
+
+  it('substitutes the variable declaration if the variable is found (with fallback)', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} =
+        await getTreeElement(matchedStyles, stylesPane, 'width', 'var(--w, 10px)', {'--w': {value: '40px'}});
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['40px']);
+    assert.deepEqual(evaluations, []);
+  });
+
+  it('substitutes the fallback if the variable is found', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} = await getTreeElement(matchedStyles, stylesPane, 'width', 'var(--w, 10px)');
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['10px']);
+    assert.deepEqual(evaluations, []);
+  });
+
+  it('substitutes a fallback containing commas if the variable is missing', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} =
+        await getTreeElement(matchedStyles, stylesPane, 'font-family', 'var(--font, Arial, sans-serif)');
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['Arial, sans-serif']);
+    assert.deepEqual(evaluations, []);
+  });
+
+  it('substitutes a fallback containing commas into another function', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} =
+        await getTreeElement(matchedStyles, stylesPane, 'font-size', 'max(var(--wrong, 5px, 20px))');
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['max(5px, 20px)']);
+    assert.deepEqual(evaluations, ['20px']);
+  });
+
+  it('substitutes a nested variable in a fallback', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} =
+        await getTreeElement(matchedStyles, stylesPane, 'width', 'var(--missing, var(--w))', {'--w': {value: '40px'}});
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.lengthOf(substitutions, 2);
+    assert.include(substitutions[0], 'var(--w)');
+    assert.include(substitutions[1], '40px');
+    assert.deepEqual(evaluations, []);
+  });
+
+  it('substitutes a function fallback containing commas if the variable is missing', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} =
+        await getTreeElement(matchedStyles, stylesPane, 'color', 'var(--c, rgb(255, 0, 0))');
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    assert.deepEqual(substitutions, ['rgb(255, 0, 0)']);
+  });
+
+  it('traces a variable nested inside a fallback function', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} = await getTreeElement(
+        matchedStyles, stylesPane, 'width', 'var(--missing, calc(var(--w) + 1px))', {'--w': {value: '40px'}});
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['calc(var(--w) + 1px)', 'calc(40px + 1px)']);
+    assert.deepEqual(evaluations, ['41px']);
+  });
+
+  it('evaluates a function in a fallback', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} =
+        await getTreeElement(matchedStyles, stylesPane, 'width', 'var(--missing, calc(1px + 1px))');
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['calc(1px + 1px)']);
+    assert.deepEqual(evaluations, ['2px']);
+  });
+
+  it('traces a nested variable and evaluates functions in a fallback containing commas', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} =
+        await getTreeElement(matchedStyles, stylesPane, 'width', 'max(var(--missing, calc(var(--w) + 1px), 20px))',
+                             {'--w': {value: '40px'}});
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['max(calc(var(--w) + 1px), 20px)', 'max(calc(40px + 1px), 20px)']);
+    assert.deepEqual(evaluations, ['max(41px, 20px)', '41px']);
+  });
+
+  it('shows chains of substitutions', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} = await getTreeElement(matchedStyles, stylesPane, 'width', 'var(--v)',
+                                                         {'--w': {value: '40px'}, '--v': {value: 'var(--w)'}});
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['var(--w)', '40px']);
+    assert.deepEqual(evaluations, []);
+  });
+
+  it('preserves spaces between back-to-back var() calls', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} = await getTreeElement(matchedStyles, stylesPane, 'margin', 'var(--a)var(--b)',
+                                                         {'--a': {value: '2px'}, '--b': {value: '3px'}});
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, ['2px 3px']);
+    assert.deepEqual(evaluations, []);
+  });
+
+  it('shows intermediate evaluation steps', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} = await getTreeElement(matchedStyles, stylesPane, 'font-size',
+                                                         'calc(clamp(16px, calc(1vw + 1em), 24px) + 3.2px)');
+    const resolveValuesSpy = sinon.spy(treeElement.stylesContainer().cssModel()!.resolveValues);
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    await Promise.all(resolveValuesSpy.returnValues);
+    assert.deepEqual(substitutions, []);
+    assert.deepEqual(evaluations, [
+      'calc(clamp(16px, calc(9.8px + 16px), 24px) + 3.2px)',
+      'calc(clamp(16px, 24.53px, 24px) + 3.2px)',
+      'calc(24px + 3.2px)',
+      '27.7px',
+    ]);
+  });
+
+  it('hides trace lines that contained no successful evaluations', async () => {
+    const {matchedStyles, stylesPane} = await setUpStyles(connection);
+    const {property, treeElement} =
+        await getTreeElement(matchedStyles, stylesPane, '--a', 'calc(100% - calc(50% + calc(1px + 1px)))');
+    const input = await showTrace(property, matchedStyles, treeElement);
+    const substitutions = getLineText(input.substitutions);
+    const evaluations = getLineText(input.evaluations);
+    assert.deepEqual(substitutions, []);
+    assert.deepEqual(evaluations, ['calc(100% - calc(50% + 2px))']);
+  });
+});

@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run current test file",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "vpython3",
+      "runtimeArgs": ["scripts/tools/dt.py", "test", "${file}"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug current test file",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "vpython3",
+      "console": "integratedTerminal",
+      "runtimeArgs": ["scripts/tools/dt.py", "test", "--debug", "${file}"],
+      "env": {
+        "VSCODE_DEBUGGER": true
+      }
+    }
+  ]
+}

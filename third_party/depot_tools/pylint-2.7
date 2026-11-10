@@ -1,0 +1,31 @@
+#!/usr/bin/env vpython3
+# Copyright 2019 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# Note: We use tags here instead of refs because refs will always hit the
+# network to see if there are any updates.
+
+# /// script
+# requires-python = '>=3.8,<3.9'
+# dependencies = [
+#   'futures==3.1.1',
+#   'isort==4.3.4',
+#   'mccabe==0.6.1',
+#   'six==1.15.0',
+#   'toml==0.10.1',
+#   'wrapt==1.12.1',
+#   'lazy-object-proxy==1.4.3',
+#   'colorama==0.4.1',
+#   'pylint-quotes==0.2.1',
+#   'astroid==2.5.3',
+#   'pylint==2.7.4'
+# ]
+# ///
+
+import sys
+
+import pylint_main
+
+if __name__ == "__main__":
+    sys.exit(pylint_main.main(sys.argv[1:]))

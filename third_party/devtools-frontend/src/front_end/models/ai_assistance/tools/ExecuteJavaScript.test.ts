@@ -1,0 +1,711 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import {assert} from 'chai';
+import {beforeEach, describe, it} from 'mocha';
+import sinon from 'sinon';
+
+import * as Root from '../../../core/root/root.js';
+import * as SDK from '../../../core/sdk/sdk.js';
+import {
+  assertIsError,
+  assertIsResult,
+  assertRequiresApproval,
+} from '../../../testing/AiAssistanceHelpers.js';
+import {updateHostConfig} from '../../../testing/EnvironmentHelpers.js';
+import {setupLocaleHooks} from '../../../testing/LocaleHelpers.js';
+import {setupRuntimeHooks} from '../../../testing/RuntimeHelpers.js';
+import {setupSettingsHooks} from '../../../testing/SettingsHelpers.js';
+import * as Formatter from '../../formatter/formatter.js';
+import * as AiAssistance from '../ai_assistance.js';
+
+describe('ExecuteJavaScriptTool', () => {
+  setupLocaleHooks();
+  setupSettingsHooks();
+  setupRuntimeHooks();
+  let element: sinon.SinonStubbedInstance<SDK.DOMModel.DOMNode>;
+  let target: sinon.SinonStubbedInstance<SDK.Target.Target>;
+  let domModel: sinon.SinonStubbedInstance<SDK.DOMModel.DOMModel>;
+  let formatStub: sinon.SinonStub;
+
+  beforeEach(() => {
+    formatStub = sinon.stub(Formatter.FormatterWorkerPool.FormatterWorkerPool.prototype, 'format')
+                     .callsFake(async (_mimeType, content) => {
+                       return {
+                         content,
+                         mapping: {original: [], formatted: []},
+                       };
+                     });
+
+    target = sinon.createStubInstance(SDK.Target.Target);
+    target.model.returns(null);
+
+    domModel = sinon.createStubInstance(SDK.DOMModel.DOMModel);
+    domModel.target.returns(target);
+
+    element = sinon.createStubInstance(SDK.DOMModel.DOMNode);
+    element.domModel.returns(domModel);
+    element.backendNodeId.returns(99 as unknown as ReturnType<SDK.DOMModel.DOMNode['backendNodeId']>);
+    element.securityOrigin.returns(SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'));
+  });
+
+  it('successfully executes JS code', async () => {
+    const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+    const mockExecJs = sinon.stub().resolves('{"success": true}');
+    const mockScope = {
+      install: sinon.stub().resolves(),
+      uninstall: sinon.stub().resolves(),
+    };
+
+    const context = {
+      getExecutionContextNode: () => element,
+      execJs: mockExecJs,
+      changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+      createExtensionScope: sinon.stub().returns(mockScope),
+      getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+        status: 'ESTABLISHED_ORIGIN',
+        origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+      }),
+    };
+
+    const response = await tool.handler({
+      explanation: 'Check element',
+      title: 'Title',
+      code: 'console.log("hello")',
+    },
+                                        context);
+
+    assertIsResult(response);
+    assert.strictEqual(response.result, '{"success": true}');
+    sinon.assert.calledOnce(mockExecJs);
+  });
+
+  it('returns error when execution context node is missing', async () => {
+    const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+    const context = {
+      getExecutionContextNode: () => null,
+      execJs: sinon.stub(),
+      changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+      createExtensionScope: sinon.stub(),
+      getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+        status: 'ESTABLISHED_ORIGIN',
+        origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+      }),
+    };
+
+    const response = await tool.handler({
+      explanation: 'Check element',
+      title: 'Title',
+      code: 'console.log("hello")',
+    },
+                                        context);
+
+    assertIsError(response);
+    assert.strictEqual(response.error, 'Error: Could not find the context node for execution.');
+  });
+
+  it('returns error when user denies execution', async () => {
+    const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+    const context = {
+      getExecutionContextNode: () => element,
+      execJs: sinon.stub(),
+      changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+      createExtensionScope: sinon.stub().returns({
+        install: sinon.stub().resolves(),
+        uninstall: sinon.stub().resolves(),
+      }),
+      getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+        status: 'ESTABLISHED_ORIGIN',
+        origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+      }),
+    };
+
+    const response = await tool.handler({
+      explanation: 'Check element',
+      title: 'Title',
+      code: 'console.log("hello")',
+    },
+                                        context, {approved: false});
+
+    assertIsError(response);
+    assert.strictEqual(response.error, 'Error: User denied code execution with side effects.');
+  });
+
+  it('returns error when JS execution is disabled by Host Config (NO_SCRIPTS)', async () => {
+    updateHostConfig({
+      devToolsFreestyler: {
+        executionMode: Root.Runtime.HostConfigFreestylerExecutionMode.NO_SCRIPTS,
+      },
+    });
+
+    const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+    const context = {
+      getExecutionContextNode: () => element,
+      execJs: sinon.stub(),
+      changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+      createExtensionScope: sinon.stub().returns({
+        install: sinon.stub().resolves(),
+        uninstall: sinon.stub().resolves(),
+      }),
+      getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+        status: 'ESTABLISHED_ORIGIN',
+        origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+      }),
+    };
+
+    const response = await tool.handler({
+      explanation: 'Check element',
+      title: 'Title',
+      code: 'console.log("hello")',
+    },
+                                        context);
+
+    assertIsError(response);
+    assert.strictEqual(response.error, 'Error: JavaScript execution is currently disabled.');
+  });
+
+  it('returns error when JS execution modifying page is disabled by Host Config (SIDE_EFFECT_FREE_SCRIPTS_ONLY)',
+     async () => {
+       updateHostConfig({
+         devToolsFreestyler: {
+           executionMode: Root.Runtime.HostConfigFreestylerExecutionMode.SIDE_EFFECT_FREE_SCRIPTS_ONLY,
+         },
+       });
+
+       const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+       const mockExecJs = sinon.stub().rejects(new AiAssistance.EvaluateAction.SideEffectError('side effect error'));
+       const mockScope = {
+         install: sinon.stub().resolves(),
+         uninstall: sinon.stub().resolves(),
+       };
+       const context = {
+         getExecutionContextNode: () => element,
+         execJs: mockExecJs,
+         changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+         createExtensionScope: sinon.stub().returns(mockScope),
+         getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+           status: 'ESTABLISHED_ORIGIN',
+           origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+         }),
+       };
+
+       const response = await tool.handler({
+         explanation: 'Check element',
+         title: 'Title',
+         code: 'console.log("hello")',
+       },
+                                           context);
+
+       assertIsError(response);
+       assert.strictEqual(response.error, 'Error: JavaScript execution that modifies the page is currently disabled.');
+     });
+
+  it('requires approval when side effect is detected', async () => {
+    const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+    const mockExecJs = sinon.stub().rejects(new AiAssistance.EvaluateAction.SideEffectError('side effect error'));
+    const mockScope = {
+      install: sinon.stub().resolves(),
+      uninstall: sinon.stub().resolves(),
+    };
+    const context = {
+      getExecutionContextNode: () => element,
+      execJs: mockExecJs,
+      changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+      createExtensionScope: sinon.stub().returns(mockScope),
+      getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+        status: 'ESTABLISHED_ORIGIN',
+        origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+      }),
+    };
+
+    const response = await tool.handler({
+      explanation: 'Check element',
+      title: 'Title',
+      code: 'console.log("hello")',
+    },
+                                        context);
+
+    assertRequiresApproval(response);
+    assert.exists(response.description);
+  });
+
+  describe('timer cleanup', () => {
+    let clock: sinon.SinonFakeTimers;
+    beforeEach(() => {
+      clock = sinon.useFakeTimers({toFake: ['setTimeout', 'clearTimeout']});
+    });
+
+    it('clears the timeout after execution completes', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      const mockExecJs = sinon.stub().resolves('{"success": true}');
+      const mockScope = {
+        install: sinon.stub().resolves(),
+        uninstall: sinon.stub().resolves(),
+      };
+
+      const context = {
+        getExecutionContextNode: () => element,
+        execJs: mockExecJs,
+        changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+        createExtensionScope: sinon.stub().returns(mockScope),
+        getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+          status: 'ESTABLISHED_ORIGIN',
+          origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+        }),
+      };
+
+      const response = await tool.handler({
+        explanation: 'Check element',
+        title: 'Title',
+        code: 'console.log("hello")',
+      },
+                                          context);
+
+      assertIsResult(response);
+      assert.strictEqual(clock.countTimers(), 0);
+    });
+
+    it('clears the timeout after execution throws an error', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      const mockExecJs = sinon.stub().rejects(new Error('some execution error'));
+      const mockScope = {
+        install: sinon.stub().resolves(),
+        uninstall: sinon.stub().resolves(),
+      };
+
+      const context = {
+        getExecutionContextNode: () => element,
+        execJs: mockExecJs,
+        changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+        createExtensionScope: sinon.stub().returns(mockScope),
+        getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+          status: 'ESTABLISHED_ORIGIN',
+          origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+        }),
+      };
+
+      const response = await tool.handler({
+        explanation: 'Check element',
+        title: 'Title',
+        code: 'console.log("hello")',
+      },
+                                          context);
+
+      assertIsResult(response);
+      assert.strictEqual(clock.countTimers(), 0);
+    });
+
+    it('handles script timeout and returns error', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      let resolveMockPromise: (value: string) => void = () => {};
+      const mockPromise = new Promise<string>(resolve => {
+        resolveMockPromise = resolve;
+      });
+      const mockExecJs = sinon.stub().returns(mockPromise);
+      const mockScope = {
+        install: sinon.stub().resolves(),
+        uninstall: sinon.stub().resolves(),
+      };
+
+      const context = {
+        getExecutionContextNode: () => element,
+        execJs: mockExecJs,
+        changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+        createExtensionScope: sinon.stub().returns(mockScope),
+        getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+          status: 'ESTABLISHED_ORIGIN',
+          origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+        }),
+      };
+
+      const responsePromise = tool.handler({
+        explanation: 'Check element',
+        title: 'Title',
+        code: 'console.log("hello")',
+      },
+                                           context);
+
+      // Fast-forward time to trigger the timeout
+      await clock.tickAsync(5000);
+
+      const response = await responsePromise;
+      assertIsResult(response);
+      assert.strictEqual(response.result, 'Error: Script execution exceeded the maximum allowed time.');
+      assert.strictEqual(clock.countTimers(), 0);
+      resolveMockPromise('done');
+    });
+  });
+
+  describe('validateAndFormatCode', () => {
+    const {validateAndFormatCode} = AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool;
+
+    it('formats valid JS code correctly', async () => {
+      formatStub.resolves({
+        content: 'const a = 1;\nconst b = 2;',
+        mapping: {original: [], formatted: []},
+      });
+      const result = await validateAndFormatCode('const a=1;const b=2;');
+      assert.strictEqual(result.formattedCode, 'const a = 1;\nconst b = 2;');
+      assert.isUndefined(result.error);
+    });
+
+    it('returns the original code when the formatter fails', async () => {
+      formatStub.rejects(new Error('Unexpected token'));
+      const result = await validateAndFormatCode('const a = ;');
+      assert.isUndefined(result.error);
+      assert.strictEqual(result.formattedCode, 'const a = ;');
+    });
+
+    const SIZE_ERROR_HEADER =
+        'Error: The code was not run because it exceeds size limits after formatting (indented with 2 spaces):';
+    const LONG_LINES_ADVICE = '- Lines longer than 120 characters. Break them into shorter lines, ' +
+        'for example by splitting long strings or selectors with concatenation, ' +
+        'or by putting arguments on separate lines:';
+
+    it('returns an error with the line count when formatted code exceeds 40 lines', async () => {
+      const longCode = Array.from({length: 45}, (_, i) => `const var${i} = ${i};`).join('\n');
+      const result = await validateAndFormatCode(longCode);
+      assert.strictEqual(
+          result.error,
+          `${SIZE_ERROR_HEADER}\n` +
+              '- The code is 45 lines (max 40). Split the logic into smaller calls and return intermediate results in `data`.',
+      );
+    });
+
+    it('returns an error with the line number, length, and preview when a line exceeds 120 characters', async () => {
+      const longLineCode = `if (true) {\n  const longVar = "${'a'.repeat(130)}";\n}`;
+      const result = await validateAndFormatCode(longLineCode);
+      assert.strictEqual(
+          result.error,
+          `${SIZE_ERROR_HEADER}\n${LONG_LINES_ADVICE}\n` +
+              `  - Line 2 is 151 characters: \`const longVar = "${'a'.repeat(42)}…\``,
+      );
+    });
+
+    it('reports at most 3 long lines and counts the rest', async () => {
+      const longLinesCode = Array.from({length: 5}, (_, i) => `const v${i} = "${'b'.repeat(120)}";`).join('\n');
+      const result = await validateAndFormatCode(longLinesCode);
+      assert.strictEqual(
+          result.error,
+          `${SIZE_ERROR_HEADER}\n${LONG_LINES_ADVICE}\n` +
+              `  - Line 1 is 134 characters: \`const v0 = "${'b'.repeat(47)}…\`\n` +
+              `  - Line 2 is 134 characters: \`const v1 = "${'b'.repeat(47)}…\`\n` +
+              `  - Line 3 is 134 characters: \`const v2 = "${'b'.repeat(47)}…\`\n` +
+              '  - 2 more lines not shown.',
+      );
+    });
+
+    it('returns an error with the character count when total character count exceeds 2500', async () => {
+      const bulkCode = Array.from({length: 30}, (_, i) => `const var${i} = "${'x'.repeat(75)}";`).join('\n');
+      const result = await validateAndFormatCode(bulkCode);
+      assert.strictEqual(
+          result.error,
+          `${SIZE_ERROR_HEADER}\n` +
+              '- The code is 2779 characters (max 2500). Remove unneeded code or split the logic into smaller calls.',
+      );
+    });
+
+    it('reports every exceeded limit in one error', async () => {
+      const code = [
+        `const longVar = "${'a'.repeat(130)}";`,
+        ...Array.from({length: 40}, (_, i) => `const var${i} = "${'x'.repeat(50)}";`),
+      ].join('\n');
+      const result = await validateAndFormatCode(code);
+      assert.strictEqual(
+          result.error,
+          `${SIZE_ERROR_HEADER}\n` +
+              '- The code is 41 lines (max 40). Split the logic into smaller calls and return intermediate results in `data`.\n' +
+              `${LONG_LINES_ADVICE}\n` +
+              `  - Line 1 is 149 characters: \`const longVar = "${'a'.repeat(42)}…\`\n` +
+              '- The code is 2859 characters (max 2500). Remove unneeded code or split the logic into smaller calls.',
+      );
+    });
+
+    it('accepts code that is exactly 40 lines', async () => {
+      const code = Array.from({length: 40}, (_, i) => `const var${i} = ${i};`).join('\n');
+      const result = await validateAndFormatCode(code);
+      assert.isUndefined(result.error);
+      assert.strictEqual(result.formattedCode, code);
+    });
+
+    it('accepts lines of exactly 120 characters and exactly 2500 characters in total', async () => {
+      const code = [
+        ...Array.from({length: 20}, () => `// ${'x'.repeat(117)}`),
+        `// ${'x'.repeat(77)}`,
+      ].join('\n');
+      const result = await validateAndFormatCode(code);
+      assert.isUndefined(result.error);
+      assert.strictEqual(result.formattedCode, code);
+    });
+  });
+
+  it('formats code and executes successfully when V2 architecture is enabled', async () => {
+    updateHostConfig({devToolsAiV2Architecture: {enabled: true}});
+    formatStub.resolves({
+      content: 'const a = 1;\nconst b = 2;',
+      mapping: {original: [], formatted: []},
+    });
+    const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+    const mockScope = {
+      install: sinon.stub().resolves(),
+      uninstall: sinon.stub().resolves(),
+    };
+    const context = {
+      getExecutionContextNode: () => element,
+      execJs: sinon.stub().resolves('undefined'),
+      changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+      createExtensionScope: sinon.stub().returns(mockScope),
+      getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+        status: 'ESTABLISHED_ORIGIN',
+        origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+      }),
+    };
+
+    const response = await tool.handler(
+        {
+          explanation: 'Check element',
+          title: 'Title',
+          code: 'const a=1;const b=2;',
+        },
+        context,
+    );
+
+    assertIsResult(response);
+  });
+
+  it('returns error result when V2 architecture is enabled and code violates limits', async () => {
+    updateHostConfig({devToolsAiV2Architecture: {enabled: true}});
+    const longCode = Array.from({length: 45}, (_, i) => `const var${i} = ${i};`).join('\n');
+    formatStub.resolves({
+      content: longCode,
+      mapping: {original: [], formatted: []},
+    });
+    const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+    const mockScope = {
+      install: sinon.stub().resolves(),
+      uninstall: sinon.stub().resolves(),
+    };
+    const context = {
+      getExecutionContextNode: () => element,
+      execJs: sinon.stub().resolves('undefined'),
+      changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+      createExtensionScope: sinon.stub().returns(mockScope),
+      getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+        status: 'ESTABLISHED_ORIGIN',
+        origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+      }),
+    };
+
+    const response = await tool.handler(
+        {
+          explanation: 'Check element',
+          title: 'Title',
+          code: longCode,
+        },
+        context,
+    );
+
+    assertIsError(response);
+    assert.match(response.error, /The code is 45 lines \(max 40\)/);
+  });
+
+  describe('blocked network requests', () => {
+    const HINT_PHRASE = 'Network access (e.g., fetch, XMLHttpRequest) is blocked for JavaScript run by this tool';
+    const SKILL_PHRASE = 'load the `network` skill with `learnSkills`';
+
+    const defaultArgs = {
+      explanation: 'Fetch reviews',
+      title: 'Fetching reviews',
+      code: 'const data = await fetch("/api/reviews");',
+    };
+
+    function createContext(observation: string) {
+      return {
+        getExecutionContextNode: () => element,
+        execJs: sinon.stub().resolves(observation),
+        changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+        createExtensionScope: sinon.stub().returns({
+          install: sinon.stub().resolves(),
+          uninstall: sinon.stub().resolves(),
+        }),
+        getOriginLock: (): AiAssistance.Tool.OriginLockState => ({
+          status: 'ESTABLISHED_ORIGIN',
+          origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'),
+        }),
+      };
+    }
+
+    describe('with the V2 architecture', () => {
+      beforeEach(() => {
+        updateHostConfig({devToolsAiV2Architecture: {enabled: true}});
+      });
+
+      it('explains that network access is blocked and points to the network tools when fetch fails', async () => {
+        const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+        const response = await tool.handler(defaultArgs, createContext('Error: Failed to fetch'));
+
+        assertIsResult(response);
+        assert.include(response.result, 'Error: Failed to fetch\n');
+        assert.include(response.result, HINT_PHRASE);
+        assert.include(response.result, SKILL_PHRASE);
+        assert.include(response.result, 'listNetworkRequests');
+      });
+
+      it('explains that network access is blocked when a synchronous XMLHttpRequest fails', async () => {
+        const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+        const xhrError =
+            'Error: Failed to execute \'send\' on \'XMLHttpRequest\': Failed to load \'https://example.com/api/reviews\'.';
+        const response = await tool.handler(defaultArgs, createContext(xhrError));
+
+        assertIsResult(response);
+        assert.include(response.result, `${xhrError}\n`);
+        assert.include(response.result, HINT_PHRASE);
+      });
+
+      it('does not add the hint when a dynamic import fails', async () => {
+        const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+        const importError = 'Error: Failed to fetch dynamically imported module: https://example.com/module.js';
+        const response = await tool.handler(defaultArgs, createContext(importError));
+
+        assertIsResult(response);
+        assert.strictEqual(response.result, importError);
+      });
+
+      it('does not add the hint when an XMLHttpRequest fails for a reason unrelated to the network', async () => {
+        const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+        const stateError =
+            'Error: Failed to execute \'send\' on \'XMLHttpRequest\': The object\'s state must be OPENED.';
+        const response = await tool.handler(defaultArgs, createContext(stateError));
+
+        assertIsResult(response);
+        assert.strictEqual(response.result, stateError);
+      });
+
+      it('does not add the hint to returned data that contains a network error message', async () => {
+        const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+        const response = await tool.handler(defaultArgs, createContext('\'Failed to fetch reviews\''));
+
+        assertIsResult(response);
+        assert.strictEqual(response.result, '\'Failed to fetch reviews\'');
+      });
+    });
+
+    it('explains that network access is blocked without pointing to the network tools in V1', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      const response = await tool.handler(defaultArgs, createContext('Error: Failed to fetch'));
+
+      assertIsResult(response);
+      assert.include(response.result, 'Error: Failed to fetch\n');
+      assert.include(response.result, HINT_PHRASE);
+      assert.notInclude(response.result, 'listNetworkRequests');
+      assert.notInclude(response.result, 'learnSkills');
+    });
+  });
+
+  describe('origin locking', () => {
+    function createContext(originLock: AiAssistance.Tool.OriginLockState) {
+      const mockExecJs = sinon.stub().resolves('{"success": true}');
+      const mockScope = {
+        install: sinon.stub().resolves(),
+        uninstall: sinon.stub().resolves(),
+      };
+      return {
+        context: {
+          getExecutionContextNode: () => element,
+          execJs: mockExecJs,
+          changeManager: new AiAssistance.ChangeManager.ChangeManager(),
+          createExtensionScope: sinon.stub().returns(mockScope),
+          getOriginLock: () => originLock,
+        },
+        mockExecJs,
+      };
+    }
+
+    const defaultArgs = {
+      explanation: 'Check element',
+      title: 'Title',
+      code: 'console.log("hello")',
+    };
+
+    it('successfully executes JS code when node matches established origin', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      element.securityOrigin.returns(SDK.SecurityOrigin.SecurityOrigin.create('https://example.com'));
+      const {context, mockExecJs} = createContext(
+          {status: 'ESTABLISHED_ORIGIN', origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com')});
+
+      const response = await tool.handler(defaultArgs, context);
+
+      assertIsResult(response);
+      assert.strictEqual(response.result, '{"success": true}');
+      sinon.assert.calledOnce(mockExecJs);
+    });
+
+    it('returns error when node origin does not match established origin', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      element.securityOrigin.returns(SDK.SecurityOrigin.SecurityOrigin.create('https://attacker.example'));
+      const {context, mockExecJs} = createContext(
+          {status: 'ESTABLISHED_ORIGIN', origin: SDK.SecurityOrigin.SecurityOrigin.create('https://victim.example')});
+
+      const response = await tool.handler(defaultArgs, context);
+
+      assertIsError(response, 'Error: Cannot execute JavaScript on cross-origin target.');
+      sinon.assert.notCalled(mockExecJs);
+    });
+
+    it('returns error when node origin is opaque', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      element.securityOrigin.returns(SDK.SecurityOrigin.SecurityOrigin.createUniqueOpaque());
+      const {context, mockExecJs} = createContext(
+          {status: 'ESTABLISHED_ORIGIN', origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com')});
+
+      const response = await tool.handler(defaultArgs, context);
+
+      assertIsError(response, 'Error: Cannot execute JavaScript on cross-origin target.');
+      sinon.assert.notCalled(mockExecJs);
+    });
+
+    it('returns error when node has no security origin', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      element.securityOrigin.returns(null);
+      const {context, mockExecJs} = createContext(
+          {status: 'ESTABLISHED_ORIGIN', origin: SDK.SecurityOrigin.SecurityOrigin.create('https://example.com')});
+
+      const response = await tool.handler(defaultArgs, context);
+
+      assertIsError(response, 'Error: Cannot execute JavaScript on cross-origin target.');
+      sinon.assert.notCalled(mockExecJs);
+    });
+
+    it('returns error when origin lock is not established', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      const {context, mockExecJs} = createContext({status: 'UNINITIALIZED'});
+
+      const response = await tool.handler(defaultArgs, context);
+
+      assertIsError(response, 'Error: Cannot execute JavaScript on cross-origin target.');
+      sinon.assert.notCalled(mockExecJs);
+    });
+
+    it('returns error when cross-origin navigation occurred', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      const {context, mockExecJs} = createContext({status: 'BLOCKED_BY_NAVIGATION'});
+
+      const response = await tool.handler(defaultArgs, context);
+
+      assertIsError(response, 'Error: Cannot execute JavaScript on cross-origin target.');
+      sinon.assert.notCalled(mockExecJs);
+    });
+
+    it('returns error when established origin is opaque', async () => {
+      const tool = new AiAssistance.ExecuteJavaScript.ExecuteJavaScriptTool();
+      const {context, mockExecJs} =
+          createContext({status: 'ESTABLISHED_ORIGIN', origin: SDK.SecurityOrigin.SecurityOrigin.createUniqueOpaque()});
+
+      const response = await tool.handler(defaultArgs, context);
+
+      assertIsError(response, 'Error: Cannot execute JavaScript on cross-origin target.');
+      sinon.assert.notCalled(mockExecJs);
+    });
+  });
+});

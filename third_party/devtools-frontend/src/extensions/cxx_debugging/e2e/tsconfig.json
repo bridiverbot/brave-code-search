@@ -1,0 +1,26 @@
+{
+  "extends": "../../../config/typescript/tsconfig.base.json",
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "composite": false,
+    "isolatedDeclarations": false,
+    "allowUnreachableCode": false,
+    "skipLibCheck": true,
+    "rootDir": "../../..",
+    "paths": {
+      "test/*": ["../../../test/*"],
+      "puppeteer": ["../../../node_modules/puppeteer/lib/types.d.ts"],
+      "*": ["../../../node_modules/@types/*/index.d.ts"]
+    },
+    "types": []
+  },
+  "files": [
+    "TestDriver.ts",
+    "StandaloneTestDriver.ts",
+    "OptionsPageTests.ts",
+    "cxx-debugging-extension-helpers.ts",
+    "standalone/MemoryInspector.test.ts",
+    "../../../front_end/legacy/legacy-defs.d.ts"
+  ]
+}

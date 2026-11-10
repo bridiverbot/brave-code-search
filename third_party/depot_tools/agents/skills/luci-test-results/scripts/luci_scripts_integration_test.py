@@ -1,0 +1,262 @@
+#!/usr/bin/env vpython3
+# Copyright 2026 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+"""Live integration tests for modular luci-test-results scripts.
+
+Dynamically discovers fresh CI builds and tests against live endpoints.
+Prints structured test results for LLM agent confirmation.
+Requires `bb auth-login`.
+"""
+
+import os
+import sys
+import unittest
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import check_test
+import fetch_log
+import find_cl_builds
+import list_failures
+import luci_client
+import test_history
+
+SAMPLE_BUILDER = "android-13-x64-rel"
+SAMPLE_CL = "8260911"
+SAMPLE_JAVA_TEST_QUERY = "ExampleFreshCtaTest"
+SAMPLE_JAVA_TEST_ID = (
+    "://chrome/android\\:chrome_public_test_apk!junit:"
+    "org.chromium.chrome.browser:ExampleFreshCtaTest#testStartOnBlankPage"
+)
+SAMPLE_CPP_TEST_QUERY = "JSONReaderTest"
+SAMPLE_CPP_TEST_ID = (
+    "://base\\:base_unittests!gtest::JSONReaderTest#ASCIIControlCodes"
+)
+
+
+class TestLuciScriptsIntegration(unittest.TestCase):
+    success_build_id = None
+    success_build_num = None
+    failure_build_id = None
+    failure_build_num = None
+
+    @classmethod
+    def setUpClass(cls):
+        print("\n" + "=" * 80)
+        print("[LUCI Integration Test] Starting live endpoint validation")
+        print("=" * 80)
+
+        if not luci_client.is_authenticated():
+            print("[AUTH] Not authenticated to LUCI (run 'bb auth-login')")
+            return
+
+        # Dynamically discover the latest SUCCESS CI build
+        res_success = luci_client.run_prpc(
+            "cr-buildbucket.appspot.com",
+            "buildbucket.v2.Builds.SearchBuilds",
+            {
+                "predicate": {
+                    "builder": {
+                        "project": "chromium",
+                        "bucket": "ci",
+                        "builder": SAMPLE_BUILDER,
+                    },
+                    "status": "SUCCESS",
+                },
+                "pageSize": 1,
+            },
+        )
+        if res_success and res_success.get("builds"):
+            cls.success_build_id = res_success["builds"][0]["id"]
+            cls.success_build_num = res_success["builds"][0]["number"]
+            print(
+                f"[DISCOVERY] Latest SUCCESS CI build: {SAMPLE_BUILDER}/"
+                f"{cls.success_build_num} (id: {cls.success_build_id})"
+            )
+        else:
+            cls.success_build_id = None
+            cls.success_build_num = None
+
+        # Dynamically discover the latest FAILURE CI build
+        res_fail = luci_client.run_prpc(
+            "cr-buildbucket.appspot.com",
+            "buildbucket.v2.Builds.SearchBuilds",
+            {
+                "predicate": {
+                    "builder": {
+                        "project": "chromium",
+                        "bucket": "ci",
+                        "builder": SAMPLE_BUILDER,
+                    },
+                    "status": "FAILURE",
+                },
+                "pageSize": 1,
+            },
+        )
+        if res_fail and res_fail.get("builds"):
+            cls.failure_build_id = res_fail["builds"][0]["id"]
+            cls.failure_build_num = res_fail["builds"][0]["number"]
+            print(
+                f"[DISCOVERY] Latest FAILURE CI build: {SAMPLE_BUILDER}/"
+                f"{cls.failure_build_num} (id: {cls.failure_build_id})"
+            )
+        else:
+            cls.failure_build_id = None
+            cls.failure_build_num = None
+
+        # Dynamically discover a recent try build with a Gerrit change
+        cls.sample_cl = SAMPLE_CL
+        res_try = luci_client.run_prpc(
+            "cr-buildbucket.appspot.com",
+            "buildbucket.v2.Builds.SearchBuilds",
+            {
+                "predicate": {
+                    "builder": {"project": "chromium", "bucket": "try"},
+                },
+                "pageSize": 10,
+                "mask": {"fields": "id,input.gerritChanges"},
+            },
+        )
+        if res_try and res_try.get("builds"):
+            for b in res_try["builds"]:
+                changes = b.get("input", {}).get("gerritChanges", [])
+                if changes:
+                    cls.sample_cl = str(changes[0].get("change"))
+                    break
+
+        print(
+            f"[DISCOVERY] Target Test Queries: '{SAMPLE_JAVA_TEST_QUERY}' (Java),"
+            f" '{SAMPLE_CPP_TEST_QUERY}' (C++ GTest)"
+        )
+        print("-" * 80)
+
+    def setUp(self):
+        if not luci_client.is_authenticated():
+            self.skipTest("Not authenticated to LUCI (run 'bb auth-login')")
+        if not self.success_build_id:
+            self.skipTest("Could not discover latest CI build for builder")
+
+    def test_resolve_build_id(self):
+        build_id = luci_client.resolve_build_id(
+            "chromium", "ci", SAMPLE_BUILDER, self.success_build_num
+        )
+        self.assertEqual(build_id, self.success_build_id)
+        print(
+            f"[PASS] resolve_build_id: {SAMPLE_BUILDER}/{self.success_build_num}"
+            f" -> {build_id}"
+        )
+
+    def test_get_build(self):
+        data = luci_client.get_build(f"b{self.success_build_id}")
+        self.assertEqual(data.get("status"), "SUCCESS")
+        self.assertEqual(data.get("id"), self.success_build_id)
+        print(
+            f"[PASS] get_build: Build {self.success_build_id} status = "
+            f"{data.get('status')}"
+        )
+
+    def test_find_cl_builds(self):
+        # Test default behavior: queries Gerrit REST API for latest patchset
+        builds_latest = find_cl_builds.find_cl_builds(self.sample_cl)
+        self.assertIsInstance(builds_latest, list)
+        self.assertTrue(
+            all("builder" in b and "id" in b for b in builds_latest)
+        )
+        print(
+            f"[PASS] find_cl_builds (latest patchset via Gerrit): Found "
+            f"{len(builds_latest)} non-success build(s) for CL {self.sample_cl}"
+        )
+
+        # Test show_all=True: returns all builds including SUCCESS/STARTED
+        builds_all = find_cl_builds.find_cl_builds(
+            self.sample_cl, show_all=True
+        )
+        self.assertGreater(len(builds_all), 0)
+        self.assertGreaterEqual(len(builds_all), len(builds_latest))
+        print(
+            f"[PASS] find_cl_builds (show_all=True): Found {len(builds_all)} "
+            f"total build(s) for latest patchset"
+        )
+
+    def test_check_test_in_build(self):
+        for query, lang in [
+            (SAMPLE_JAVA_TEST_QUERY, "Java"),
+            (SAMPLE_CPP_TEST_QUERY, "C++"),
+        ]:
+            res = check_test.check_test(f"b{self.success_build_id}", query)
+            self.assertGreater(len(res), 0)
+            self.assertTrue(any(query in r.get("id", "") for r in res))
+            print(
+                f"[PASS] check_test ({lang}): Found {len(res)} test result(s) for "
+                f"'{query}' in build {self.success_build_id}:"
+            )
+            for tr in res[:2]:
+                print(f"       - {tr.get('id')} ({tr.get('status')})")
+
+    def test_test_history(self):
+        for test_id, suite, label in [
+            (SAMPLE_JAVA_TEST_ID, "chrome_public_test_apk", "Java JUnit"),
+            (SAMPLE_CPP_TEST_ID, "base_unittests", "C++ GTest"),
+        ]:
+            verdicts = test_history.test_history(
+                "chromium",
+                test_id,
+                limit=5,
+                builder=SAMPLE_BUILDER,
+                test_suite=suite,
+            )
+            self.assertGreaterEqual(len(verdicts), 1)
+            self.assertEqual(verdicts[0].get("testId"), test_id)
+            summary = test_history.format_summary(
+                verdicts, default_builder=SAMPLE_BUILDER
+            )
+            self.assertIn(f"Builder: {SAMPLE_BUILDER}", summary)
+            print(
+                f"[PASS] test_history ({label}): Queried {len(verdicts)} verdict(s)"
+                f" for {test_id.split('!')[-1]} on {SAMPLE_BUILDER}\n{summary}"
+            )
+
+        # Verify multi-builder QueryVariants mapping & QueryTests substring search
+        variants = test_history.query_variant_builders(
+            "chromium", SAMPLE_JAVA_TEST_ID
+        )
+        self.assertGreater(len(variants), 0)
+        candidates = test_history.query_tests(
+            "chromium", SAMPLE_JAVA_TEST_QUERY
+        )
+        self.assertIn(SAMPLE_JAVA_TEST_ID, candidates)
+        print(
+            f"[PASS] test_history (variants & fuzzy search): Resolved {len(variants)} "
+            f"variant builders and {len(candidates)} candidate test IDs"
+        )
+
+    def test_list_failures_and_fetch_log(self):
+        if not self.failure_build_id:
+            self.skipTest("No recent failing build found for builder")
+
+        res = list_failures.list_failures(f"b{self.failure_build_id}")
+        if not res:
+            self.skipTest(
+                f"Build {self.failure_build_id} has no failed test variants in"
+                " ResultDB (likely a compile/infra step failure)"
+            )
+        first_task = next(iter(res))
+        self.assertIn("id", res[first_task][0])
+        self.assertIn("res", res[first_task][0])
+
+        first_res_name = res[first_task][0]["res"]
+        first_test_id = res[first_task][0]["id"]
+        output = fetch_log.fetch_log_snippet(first_res_name)
+        self.assertGreater(len(output), 0)
+
+        preview = output.strip().split("\n")[0][:100]
+        print(
+            f"[PASS] list_failures_and_fetch_log: Build {self.failure_build_id} "
+            f"has {len(res)} failing task(s).\n"
+            f"       Fetched log snippet for {first_test_id} ({len(output)} bytes).\n"
+            f"       Log preview: {preview}..."
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()
