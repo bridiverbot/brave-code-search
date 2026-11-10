@@ -1,5 +1,0 @@
-org.chromium.components.language.AndroidLanguageMetricsBridge,../../components/language/android/java/src/org/chromium/components/language/AndroidLanguageMetricsBridge.java
-org.chromium.components.language.AndroidLanguageMetricsBridgeJni,gen/components/language/android/jni_headers.srcjar/org/chromium/components/language/AndroidLanguageMetricsBridgeJni.java
-org.chromium.components.language.LanguageProfileController,../../components/language/android/java/src/org/chromium/components/language/LanguageProfileController.java
-org.chromium.components.language.LanguageProfileDelegate,../../components/language/android/java/src/org/chromium/components/language/LanguageProfileDelegate.java
-org.chromium.components.language.LanguageProfileMetricsLogger,../../components/language/android/java/src/org/chromium/components/language/LanguageProfileMetricsLogger.java

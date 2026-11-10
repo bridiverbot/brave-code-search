@@ -1,1 +1,0 @@
-int dimen ephemeral_tab_favicon_size 0x7f010001

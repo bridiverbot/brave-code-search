@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.segmentation_platform.client_util.HomeModulesRankingHelper,../../chrome/browser/segmentation_platform/android/java/src/org/chromium/chrome/browser/segmentation_platform/client_util/HomeModulesRankingHelper.java
-org.chromium.chrome.browser.segmentation_platform.client_util.HomeModulesRankingHelperJni,gen/chrome/browser/segmentation_platform/client_util_jni_headers.srcjar/org/chromium/chrome/browser/segmentation_platform/client_util/HomeModulesRankingHelperJni.java

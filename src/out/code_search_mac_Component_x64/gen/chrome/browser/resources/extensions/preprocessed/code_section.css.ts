@@ -1,8 +1,0 @@
-import {css, CSSResultGroup} from 'chrome://resources/lit/v3_0/lit.rollup.js';
-import {getCss as getCrHiddenStyleLit} from 'chrome://resources/cr_elements/cr_hidden_style_lit.css.js';
-import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[getCrHiddenStyleLit()], css`:host{--paper-grey-500:#9e9e9e;--paper-grey-800:#424242;--container-bg:white;--line-bg:var(--paper-grey-300);--main-color:var(--paper-grey-800);display:block}@media (prefers-color-scheme:dark){:host{--container-bg:rgba(0,0,0,.4);--line-bg:var(--google-grey-800);--main-color:var(--cr-primary-text-color)}}#scrollContainer{background:var(--container-bg);height:100%;overflow:auto;position:relative}@media (prefers-color-scheme:light){#scrollContainer{border:1px solid var(--paper-grey-500)}}#main{color:var(--main-color);display:flex;font-family:monospace;min-height:100%}#line-numbers{background:var(--line-bg);display:flex;flex-direction:column;padding:0 8px;text-align:end}@media (prefers-color-scheme:light){#line-numbers{border-inline-end:1px solid var(--paper-grey-500)}}#source{display:flex;flex-direction:column;margin-inline-start:4px}#line-numbers span,#source span{white-space:pre}#no-code{text-align:center}@media (prefers-color-scheme:light){#no-code{color:var(--paper-grey-800)}.more-code{color:var(--paper-grey-500)}}#highlight-description{height:0;overflow:hidden}@media (prefers-color-scheme:dark){mark{background-color:var(--google-yellow-300);color:var(--google-grey-900)}}`]);
-}

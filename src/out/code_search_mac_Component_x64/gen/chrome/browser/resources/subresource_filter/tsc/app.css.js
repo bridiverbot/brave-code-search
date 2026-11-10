@@ -1,7 +1,0 @@
-import { css } from '//resources/lit/v3_0/lit.rollup.js';
-import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
-import { getCss as getCrSharedStyleLit } from 'chrome://resources/cr_elements/cr_shared_style_lit.css.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[getCrSharedStyleLit()], css `:host{color:var(--cr-primary-text-color);display:block;min-height:100vh}header,.card{background-color:var(--cr-card-background-color);margin-bottom:24px}header{padding:16px 24px;border-bottom:1px solid var(--cr-separator-color)}.card{border-radius:var(--cr-card-border-radius);box-shadow:var(--cr-card-shadow);padding:16px 20px}h1{margin:0;font-size:20px;font-weight:500;color:var(--cr-primary-text-color)}#content{max-width:680px;margin:0 auto}h2{font-size:16px;font-weight:500;color:var(--cr-secondary-text-color);margin:0 0 16px 0;padding-bottom:12px;border-bottom:1px solid var(--cr-separator-color)}.row{display:flex;align-items:center}.row-text{flex:1;display:flex;flex-direction:column;justify-content:center}.secondary-text{color:var(--cr-secondary-text-color);font-size:13px;margin-top:4px}`]);
-}

@@ -1,1 +1,0 @@
-{"base_dir": "gen/chrome/test/data/webui/omnibox_popup/tsc", "files": ["aim_app_test.js", "app_test.js", "full_app_test.js", "omnibox_composebox_test.js", "omnibox_popup_contextual_entrypoint_button_test.js", "omnibox_popup_contextual_entrypoint_test.js", "omnibox_popup_searchbox_test.js", "test_searchbox_browser_proxy.js", "textfield_model_test.js"]}

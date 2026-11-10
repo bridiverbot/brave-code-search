@@ -1,7 +1,0 @@
-org.chromium.chrome.browser.composeplate.ComposeplateCoordinator,../../chrome/browser/composeplate/android/java/src/org/chromium/chrome/browser/composeplate/ComposeplateCoordinator.java
-org.chromium.chrome.browser.composeplate.ComposeplateMetricsUtils,../../chrome/browser/composeplate/android/java/src/org/chromium/chrome/browser/composeplate/ComposeplateMetricsUtils.java
-org.chromium.chrome.browser.composeplate.ComposeplateProperties,../../chrome/browser/composeplate/android/java/src/org/chromium/chrome/browser/composeplate/ComposeplateProperties.java
-org.chromium.chrome.browser.composeplate.ComposeplateUtils,../../chrome/browser/composeplate/android/java/src/org/chromium/chrome/browser/composeplate/ComposeplateUtils.java
-org.chromium.chrome.browser.composeplate.ComposeplateUtilsJni,gen/chrome/browser/composeplate/android/jni_headers.srcjar/org/chromium/chrome/browser/composeplate/ComposeplateUtilsJni.java
-org.chromium.chrome.browser.composeplate.ComposeplateView,../../chrome/browser/composeplate/android/java/src/org/chromium/chrome/browser/composeplate/ComposeplateView.java
-org.chromium.chrome.browser.composeplate.ComposeplateViewBinder,../../chrome/browser/composeplate/android/java/src/org/chromium/chrome/browser/composeplate/ComposeplateViewBinder.java

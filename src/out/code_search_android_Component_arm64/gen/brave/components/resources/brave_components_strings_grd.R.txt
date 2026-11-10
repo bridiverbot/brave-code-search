@@ -1,2 +1,0 @@
-int string brave_account_title 0x7f010001
-int string settings_brave_account_row_title 0x7f010001

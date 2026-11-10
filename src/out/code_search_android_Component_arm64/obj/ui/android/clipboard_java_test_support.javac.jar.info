@@ -1,2 +1,0 @@
-org.chromium.ui.base.ClipboardAndroidTestSupport,../../ui/android/javatests/src/org/chromium/ui/base/ClipboardAndroidTestSupport.java
-org.chromium.ui.base.ClipboardAndroidTestSupportJni,gen/ui/android/ui_javatest_jni_headers.srcjar/org/chromium/ui/base/ClipboardAndroidTestSupportJni.java

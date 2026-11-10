@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.prefs.LocalStatePrefs,../../chrome/browser/prefs/android/java/src/org/chromium/chrome/browser/prefs/LocalStatePrefs.java
-org.chromium.chrome.browser.prefs.LocalStatePrefsJni,gen/chrome/browser/prefs/android/jni_headers.srcjar/org/chromium/chrome/browser/prefs/LocalStatePrefsJni.java

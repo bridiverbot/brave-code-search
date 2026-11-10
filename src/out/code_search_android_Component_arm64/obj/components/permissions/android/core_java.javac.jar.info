@@ -1,3 +1,0 @@
-org.chromium.components.permissions.PermissionsAndroidFeatureList,../../components/permissions/android/java/src/org/chromium/components/permissions/PermissionsAndroidFeatureList.java
-org.chromium.components.permissions.PermissionsAndroidFeatureMap,../../components/permissions/android/java/src/org/chromium/components/permissions/PermissionsAndroidFeatureMap.java
-org.chromium.components.permissions.PermissionsAndroidFeatureMapJni,gen/components/permissions/android/core_jni.srcjar/org/chromium/components/permissions/PermissionsAndroidFeatureMapJni.java

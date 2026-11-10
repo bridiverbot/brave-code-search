@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_DOWNLOADS_ITEM_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/downloads/tsc/item_test.js" resource_path="downloads/item_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_DOWNLOADS_MANAGER_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/downloads/tsc/manager_test.js" resource_path="downloads/manager_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_DOWNLOADS_NON_EXISTENT_URL_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/downloads/tsc/non_existent_url_test.js" resource_path="downloads/non_existent_url_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_DOWNLOADS_SEARCH_SERVICE_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/downloads/tsc/search_service_test.js" resource_path="downloads/search_service_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_DOWNLOADS_TEST_SUPPORT_JS" file="${root_gen_dir}/chrome/test/data/webui/downloads/tsc/test_support.js" resource_path="downloads/test_support.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_DOWNLOADS_TOOLBAR_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/downloads/tsc/toolbar_test.js" resource_path="downloads/toolbar_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

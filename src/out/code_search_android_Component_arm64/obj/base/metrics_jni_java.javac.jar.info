@@ -1,2 +1,0 @@
-org.chromium.base.metrics.NativeUmaRecorderJni,gen/base/metrics_jni.srcjar/org/chromium/base/metrics/NativeUmaRecorderJni.java
-org.chromium.base.metrics.StatisticsRecorderAndroidJni,gen/base/metrics_jni.srcjar/org/chromium/base/metrics/StatisticsRecorderAndroidJni.java

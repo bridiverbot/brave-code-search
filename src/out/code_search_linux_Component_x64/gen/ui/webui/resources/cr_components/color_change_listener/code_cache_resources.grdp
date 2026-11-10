@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_CR_COMPONENTS_COLOR_CHANGE_LISTENER_CODE_CACHE_BROWSER_PROXY_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/color_change_listener/code_cache/browser_proxy.js.code_cache" resource_path="cr_components/color_change_listener/browser_proxy.js.code_cache" use_base_dir="false" type="BINDATA" />
-      <include name="IDR_CR_COMPONENTS_COLOR_CHANGE_LISTENER_CODE_CACHE_COLORS_CSS_UPDATER_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/color_change_listener/code_cache/colors_css_updater.js.code_cache" resource_path="cr_components/color_change_listener/colors_css_updater.js.code_cache" use_base_dir="false" type="BINDATA" />
-      <include name="IDR_CR_COMPONENTS_COLOR_CHANGE_LISTENER_CODE_CACHE_COLOR_CHANGE_LISTENER_MOJOM_WEBUI_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/color_change_listener/code_cache/color_change_listener.mojom-webui.js.code_cache" resource_path="cr_components/color_change_listener/color_change_listener.mojom-webui.js.code_cache" use_base_dir="false" type="BINDATA" />
-</grit-part>

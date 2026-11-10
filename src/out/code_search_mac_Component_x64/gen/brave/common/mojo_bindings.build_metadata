@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../brave/common/brave_renderer_configuration.mojom"
-  ]
-}

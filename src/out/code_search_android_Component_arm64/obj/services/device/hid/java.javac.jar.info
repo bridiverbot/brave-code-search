@@ -1,4 +1,0 @@
-org.chromium.device.hid.ChromeHidConnection,../../services/device/hid/android/java/src/org/chromium/device/hid/ChromeHidConnection.java
-org.chromium.device.hid.ChromeHidConnectionJni,gen/services/device/hid/jni_headers.srcjar/org/chromium/device/hid/ChromeHidConnectionJni.java
-org.chromium.device.hid.ChromeHidManager,../../services/device/hid/android/java/src/org/chromium/device/hid/ChromeHidManager.java
-org.chromium.device.hid.ChromeHidManagerJni,gen/services/device/hid/jni_headers.srcjar/org/chromium/device/hid/ChromeHidManagerJni.java

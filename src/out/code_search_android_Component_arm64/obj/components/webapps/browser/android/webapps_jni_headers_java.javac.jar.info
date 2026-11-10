@@ -1,8 +1,0 @@
-org.chromium.components.webapps.AddToHomescreenCoordinatorJni,gen/components/webapps/browser/android/webapps_jni_headers.srcjar/org/chromium/components/webapps/AddToHomescreenCoordinatorJni.java
-org.chromium.components.webapps.AddToHomescreenMediatorJni,gen/components/webapps/browser/android/webapps_jni_headers.srcjar/org/chromium/components/webapps/AddToHomescreenMediatorJni.java
-org.chromium.components.webapps.AppBannerManagerJni,gen/components/webapps/browser/android/webapps_jni_headers.srcjar/org/chromium/components/webapps/AppBannerManagerJni.java
-org.chromium.components.webapps.TwaInstallerJni,gen/components/webapps/browser/android/webapps_jni_headers.srcjar/org/chromium/components/webapps/TwaInstallerJni.java
-org.chromium.components.webapps.WebappsFeatureMapJni,gen/components/webapps/browser/android/webapps_jni_headers.srcjar/org/chromium/components/webapps/WebappsFeatureMapJni.java
-org.chromium.components.webapps.WebappsUtilsJni,gen/components/webapps/browser/android/webapps_jni_headers.srcjar/org/chromium/components/webapps/WebappsUtilsJni.java
-org.chromium.components.webapps.bottomsheet.PwaBottomSheetControllerJni,gen/components/webapps/browser/android/webapps_jni_headers.srcjar/org/chromium/components/webapps/bottomsheet/PwaBottomSheetControllerJni.java
-org.chromium.components.webapps.pwa_universal_install.PwaUniversalInstallBottomSheetCoordinatorJni,gen/components/webapps/browser/android/webapps_jni_headers.srcjar/org/chromium/components/webapps/pwa_universal_install/PwaUniversalInstallBottomSheetCoordinatorJni.java

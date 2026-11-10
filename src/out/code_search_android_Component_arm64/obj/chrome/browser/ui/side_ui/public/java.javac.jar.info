@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.ui.side_ui.SideUiContainer,../../chrome/browser/ui/side_ui/public/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiContainer.java
-org.chromium.chrome.browser.ui.side_ui.SideUiCoordinator,../../chrome/browser/ui/side_ui/public/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiCoordinator.java
-org.chromium.chrome.browser.ui.side_ui.SideUiObserver,../../chrome/browser/ui/side_ui/public/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiObserver.java
-org.chromium.chrome.browser.ui.side_ui.SideUiStateProvider,../../chrome/browser/ui/side_ui/public/android/java/src/org/chromium/chrome/browser/ui/side_ui/SideUiStateProvider.java
-org.chromium.chrome.browser.ui.side_ui.ViewMarginAdjusterForSideUi,../../chrome/browser/ui/side_ui/public/android/java/src/org/chromium/chrome/browser/ui/side_ui/ViewMarginAdjusterForSideUi.java

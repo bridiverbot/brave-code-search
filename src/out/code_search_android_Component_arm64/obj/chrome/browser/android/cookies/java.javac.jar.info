@@ -1,3 +1,0 @@
-org.chromium.chrome.browser.cookies.CanonicalCookie,../../chrome/browser/android/cookies/java/src/org/chromium/chrome/browser/cookies/CanonicalCookie.java
-org.chromium.chrome.browser.cookies.CookiesFetcher,../../chrome/browser/android/cookies/java/src/org/chromium/chrome/browser/cookies/CookiesFetcher.java
-org.chromium.chrome.browser.cookies.CookiesFetcherJni,gen/chrome/browser/android/cookies/jni_headers.srcjar/org/chromium/chrome/browser/cookies/CookiesFetcherJni.java

@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "../../../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../services/network/public/mojom/cache_storage_side_data_writer.mojom"
-  ]
-}

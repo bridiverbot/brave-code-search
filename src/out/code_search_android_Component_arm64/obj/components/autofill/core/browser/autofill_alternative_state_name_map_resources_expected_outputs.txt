@@ -1,4 +1,0 @@
-gen/components/autofill/core/browser/geo/grit/autofill_alternative_state_name_map_resources.h
-gen/components/autofill/core/browser/geo/grit/test_autofill_address_rewriter_resources_map.h
-gen/components/autofill/core/browser/geo/grit/test_autofill_address_rewriter_resources_map.cc
-gen/components/autofill/core/browser/geo/autofill_alternative_state_name_map_resources.pak

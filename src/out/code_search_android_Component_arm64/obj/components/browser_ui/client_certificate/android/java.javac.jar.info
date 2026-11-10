@@ -1,2 +1,0 @@
-org.chromium.components.browser_ui.client_certificate.SSLClientCertificateRequest,../../components/browser_ui/client_certificate/android/java/src/org/chromium/components/browser_ui/client_certificate/SSLClientCertificateRequest.java
-org.chromium.components.browser_ui.client_certificate.SSLClientCertificateRequestJni,gen/components/browser_ui/client_certificate/android/jni_headers.srcjar/org/chromium/components/browser_ui/client_certificate/SSLClientCertificateRequestJni.java

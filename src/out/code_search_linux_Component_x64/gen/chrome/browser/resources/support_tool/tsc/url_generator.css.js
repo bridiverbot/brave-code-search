@@ -1,7 +1,0 @@
-import { css } from 'chrome://resources/lit/v3_0/lit.rollup.js';
-import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
-import { getCss as getSupportToolSharedLit } from './support_tool_shared_lit.css.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[getSupportToolSharedLit()], css `:host{block-size:fit-content;display:block;margin-inline-start:40px;margin-top:72px;width:fit-content}#info-text{color:var(--cr-secondary-text-color);display:inline}.navigation-buttons{margin-inline-start:12px;margin-top:-8px}`]);
-}

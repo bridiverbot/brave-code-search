@@ -1,3 +1,0 @@
-int drawable fre_product_logo 0x7f010001
-int drawable product_logo_name 0x7f010001
-int raw signin_spin 0x7f010001

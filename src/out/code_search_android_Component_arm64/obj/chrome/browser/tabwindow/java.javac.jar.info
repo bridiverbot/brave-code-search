@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.tabwindow.TabModelSelectorFactory,../../chrome/browser/tabwindow/android/java/src/org/chromium/chrome/browser/tabwindow/TabModelSelectorFactory.java
-org.chromium.chrome.browser.tabwindow.TabWindowInfo,../../chrome/browser/tabwindow/android/java/src/org/chromium/chrome/browser/tabwindow/TabWindowInfo.java
-org.chromium.chrome.browser.tabwindow.TabWindowManager,../../chrome/browser/tabwindow/android/java/src/org/chromium/chrome/browser/tabwindow/TabWindowManager.java
-org.chromium.chrome.browser.tabwindow.TabWindowManagerUtils,../../chrome/browser/tabwindow/android/java/src/org/chromium/chrome/browser/tabwindow/TabWindowManagerUtils.java
-org.chromium.chrome.browser.tabwindow.WindowId,../../chrome/browser/tabwindow/android/java/src/org/chromium/chrome/browser/tabwindow/WindowId.java

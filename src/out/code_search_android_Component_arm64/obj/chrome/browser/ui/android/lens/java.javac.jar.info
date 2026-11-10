@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.ui.lens.LensOverlayCoordinator,../../chrome/browser/ui/android/lens/java/src/org/chromium/chrome/browser/ui/lens/LensOverlayCoordinator.java
-org.chromium.chrome.browser.ui.lens.LensOverlayCoordinatorJni,gen/chrome/browser/ui/android/lens/jni_headers.srcjar/org/chromium/chrome/browser/ui/lens/LensOverlayCoordinatorJni.java
-org.chromium.chrome.browser.ui.lens.LensOverlayImageHelper,../../chrome/browser/ui/android/lens/java/src/org/chromium/chrome/browser/ui/lens/LensOverlayImageHelper.java
-org.chromium.chrome.browser.ui.lens.LensOverlayInvocationSource,gen/components/lens/lens_overlay_invocation_source_enum_javagen.srcjar/org/chromium/chrome/browser/ui/lens/LensOverlayInvocationSource.java
-org.chromium.chrome.browser.ui.lens.LensOverlayTabHelper,../../chrome/browser/ui/android/lens/java/src/org/chromium/chrome/browser/ui/lens/LensOverlayTabHelper.java

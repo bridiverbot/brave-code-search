@@ -1,2 +1,0 @@
-gen/brave/components/psst/resources/grit/brave_psst_resources.h
-gen/brave/components/psst/resources/brave_psst_static.pak

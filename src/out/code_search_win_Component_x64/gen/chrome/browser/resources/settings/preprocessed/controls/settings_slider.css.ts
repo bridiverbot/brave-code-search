@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from 'chrome://resources/lit/v3_0/lit.rollup.js';
-
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[], css`:host{display:inline-flex}cr-policy-pref-indicator{align-self:center;margin-inline-start:var(--cr-controlled-by-spacing)}#labels[disabled]{color:var(--google-grey-400)}@media (prefers-color-scheme:dark){#labels[disabled]{color:var(--google-grey-500)}}div.outer{align-items:stretch;display:flex;flex-direction:column;margin:8px 0;min-width:200px}#labels{display:flex;flex-direction:row;justify-content:space-between;margin:-4px 16px 0 16px}#labels>div{font-size:12px}#label-begin{margin-inline-end:4px}#label-end{margin-inline-start:4px}`]);
-}

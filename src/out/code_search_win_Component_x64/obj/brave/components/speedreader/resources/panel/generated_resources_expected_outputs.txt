@@ -1,4 +1,0 @@
-gen/brave/components/speedreader/resources/panel/grit/brave_speedreader_toolbar_generated.h
-gen/brave/components/speedreader/resources/panel/grit/brave_speedreader_toolbar_generated_map.cc
-gen/brave/components/speedreader/resources/panel/grit/brave_speedreader_toolbar_generated_map.h
-gen/brave/components/speedreader/resources/panel/brave_speedreader_toolbar_generated.pak

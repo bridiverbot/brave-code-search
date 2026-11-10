@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.ui.appmenu.AppMenuTestSupport,../../chrome/browser/ui/android/appmenu/test/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenuTestSupport.java
-org.chromium.chrome.browser.ui.appmenu.TestAppMenuObserver,../../chrome/browser/ui/android/appmenu/test/java/src/org/chromium/chrome/browser/ui/appmenu/TestAppMenuObserver.java

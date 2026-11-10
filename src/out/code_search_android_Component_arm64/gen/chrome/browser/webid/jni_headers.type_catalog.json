@@ -1,3 +1,0 @@
-{
-  "org/chromium/chrome/browser/webid/VerifiedOriginResolver$NativeVerifiedOriginResolver": "::content::webid::VerifiedOriginResolver"
-}

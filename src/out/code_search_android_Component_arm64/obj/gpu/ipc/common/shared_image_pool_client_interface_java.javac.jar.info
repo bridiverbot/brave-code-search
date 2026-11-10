@@ -1,2 +1,0 @@
-org.chromium.gpu.mojom.SharedImagePoolClientInterface,gen/gpu/ipc/common/shared_image_pool_client_interface_java_sources.srcjar/org/chromium/gpu/mojom/SharedImagePoolClientInterface.java
-org.chromium.gpu.mojom.SharedImagePoolClientInterface_Internal,gen/gpu/ipc/common/shared_image_pool_client_interface_java_sources.srcjar/org/chromium/gpu/mojom/SharedImagePoolClientInterface_Internal.java

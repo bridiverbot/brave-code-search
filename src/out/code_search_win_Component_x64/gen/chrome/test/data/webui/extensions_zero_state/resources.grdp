@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_EXTENSIONS_ZERO_STATE_ZERO_STATE_PROMO_APP_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/extensions_zero_state/tsc/zero_state_promo_app_test.js" resource_path="extensions_zero_state/zero_state_promo_app_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

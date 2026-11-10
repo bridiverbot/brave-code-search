@@ -1,5 +1,0 @@
-drawable/enterprise_badge_icon.xml	../../chrome/browser/ui/android/enterprise_signals_disclaimer/java/res/drawable/enterprise_badge_icon.xml
-drawable/mobile_icon.xml	../../chrome/browser/ui/android/enterprise_signals_disclaimer/java/res/drawable/mobile_icon.xml
-layout/enterprise_signals_disclaimer_buttons_horizontal.xml	../../chrome/browser/ui/android/enterprise_signals_disclaimer/java/res/layout/enterprise_signals_disclaimer_buttons_horizontal.xml
-layout/enterprise_signals_disclaimer_buttons_vertical.xml	../../chrome/browser/ui/android/enterprise_signals_disclaimer/java/res/layout/enterprise_signals_disclaimer_buttons_vertical.xml
-layout/enterprise_signals_disclaimer_layout.xml	../../chrome/browser/ui/android/enterprise_signals_disclaimer/java/res/layout/enterprise_signals_disclaimer_layout.xml

@@ -1,9 +1,0 @@
-{
-  "gn_target": "//chrome/app:java_strings_grd",
-  "public_deps_configs": [
-    "gen/chrome/app/branded_resources_grd.params.json",
-    "gen/chrome/app/generated_resources_grd.params.json"
-  ],
-  "supports_android": true,
-  "type": "group"
-}

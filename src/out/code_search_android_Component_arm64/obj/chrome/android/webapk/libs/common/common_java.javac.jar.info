@@ -1,4 +1,0 @@
-org.chromium.webapk.lib.common.WebApkCommonUtils,../../chrome/android/webapk/libs/common/src/org/chromium/webapk/lib/common/WebApkCommonUtils.java
-org.chromium.webapk.lib.common.WebApkConstants,../../chrome/android/webapk/libs/common/src/org/chromium/webapk/lib/common/WebApkConstants.java
-org.chromium.webapk.lib.common.WebApkMetaDataUtils,../../chrome/android/webapk/libs/common/src/org/chromium/webapk/lib/common/WebApkMetaDataUtils.java
-org.chromium.webapk.lib.common.identity_service.IIdentityService,gen/chrome/android/webapk/libs/common/identity_service_aidl.srcjar/org/chromium/webapk/lib/common/identity_service/IIdentityService.java

@@ -1,8 +1,0 @@
-drawable-hdpi/message_translate_compact	../../components/translate/content/android/java/res/drawable-hdpi/message_translate_compact.png
-drawable-xhdpi/message_translate_compact	../../components/translate/content/android/java/res/drawable-xhdpi/message_translate_compact.png
-drawable-xxhdpi/message_translate_compact	../../components/translate/content/android/java/res/drawable-xxhdpi/message_translate_compact.png
-drawable-xxxhdpi/message_translate_compact	../../components/translate/content/android/java/res/drawable-xxxhdpi/message_translate_compact.png
-drawable/message_translate_compact	../../components/translate/content/android/java/res/drawable-mdpi/message_translate_compact.png
-layout/translate_menu_extended_item.xml	../../components/translate/content/android/java/res/layout/translate_menu_extended_item.xml
-layout/translate_menu_item.xml	../../components/translate/content/android/java/res/layout/translate_menu_item.xml
-layout/translate_menu_item_checked.xml	../../components/translate/content/android/java/res/layout/translate_menu_item_checked.xml

@@ -1,2 +1,0 @@
-org.chromium.url_sanitizer.mojom.UrlSanitizerService,gen/brave/components/url_sanitizer/core/common/mojom/mojom_java_sources.srcjar/org/chromium/url_sanitizer/mojom/UrlSanitizerService.java
-org.chromium.url_sanitizer.mojom.UrlSanitizerService_Internal,gen/brave/components/url_sanitizer/core/common/mojom/mojom_java_sources.srcjar/org/chromium/url_sanitizer/mojom/UrlSanitizerService_Internal.java

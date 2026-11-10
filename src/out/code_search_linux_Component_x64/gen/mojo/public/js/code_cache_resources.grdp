@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_MOJO_PUBLIC_JS_CODE_CACHE_BINDINGS_JS_CODE_CACHE" file="${root_gen_dir}/mojo/public/js/code_cache/bindings.js.code_cache" resource_path="mojo/mojo/public/js/bindings.js.code_cache" use_base_dir="false" type="BINDATA" />
-</grit-part>

@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.ui.desktop_windowing.AppHeaderCoordinator,../../chrome/browser/ui/android/desktop_windowing/java/src/org/chromium/chrome/browser/ui/desktop_windowing/AppHeaderCoordinator.java
-org.chromium.chrome.browser.ui.desktop_windowing.AppHeaderUtils,../../chrome/browser/ui/android/desktop_windowing/java/src/org/chromium/chrome/browser/ui/desktop_windowing/AppHeaderUtils.java
-org.chromium.chrome.browser.ui.desktop_windowing.BasicAppHeaderStateProvider,../../chrome/browser/ui/android/desktop_windowing/java/src/org/chromium/chrome/browser/ui/desktop_windowing/BasicAppHeaderStateProvider.java
-org.chromium.chrome.browser.ui.desktop_windowing.TopControlsLockCoordinator,../../chrome/browser/ui/android/desktop_windowing/java/src/org/chromium/chrome/browser/ui/desktop_windowing/TopControlsLockCoordinator.java

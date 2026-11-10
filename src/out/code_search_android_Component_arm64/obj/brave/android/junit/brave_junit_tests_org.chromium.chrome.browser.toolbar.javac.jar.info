@@ -1,7 +1,0 @@
-org.chromium.chrome.browser.toolbar.BraveToolbarLongPressMenuHandlerUnitTest,../../brave/android/junit/src/org/chromium/chrome/browser/toolbar/BraveToolbarLongPressMenuHandlerUnitTest.java
-org.chromium.chrome.browser.toolbar.BraveToolbarManagerUnitTest,../../brave/android/junit/src/org/chromium/chrome/browser/toolbar/BraveToolbarManagerUnitTest.java
-org.chromium.chrome.browser.toolbar.adaptive.settings.BraveAdaptiveToolbarSettingsFragmentTest,../../brave/android/junit/src/org/chromium/chrome/browser/toolbar/adaptive/settings/BraveAdaptiveToolbarSettingsFragmentTest.java
-org.chromium.chrome.browser.toolbar.bottom.BottomToolbarBookmarksMenuTest,../../brave/android/junit/src/org/chromium/chrome/browser/toolbar/bottom/BottomToolbarBookmarksMenuTest.java
-org.chromium.chrome.browser.toolbar.bottom.BottomToolbarConfigurationTest,../../brave/android/junit/src/org/chromium/chrome/browser/toolbar/bottom/BottomToolbarConfigurationTest.java
-org.chromium.chrome.browser.toolbar.bottom.BraveBottomControlsMediatorTest,../../brave/android/junit/src/org/chromium/chrome/browser/toolbar/bottom/BraveBottomControlsMediatorTest.java
-org.chromium.chrome.browser.toolbar.top.BraveTabSwitcherActionMenuCoordinatorTest,../../brave/android/junit/src/org/chromium/chrome/browser/toolbar/top/BraveTabSwitcherActionMenuCoordinatorTest.java

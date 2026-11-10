@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.browserservices.metrics.OriginVerifierMetricsRecorder,../../chrome/browser/android/browserservices/metrics/java/src/org/chromium/chrome/browser/browserservices/metrics/OriginVerifierMetricsRecorder.java
-org.chromium.chrome.browser.browserservices.metrics.TrustedWebActivityUmaRecorder,../../chrome/browser/android/browserservices/metrics/java/src/org/chromium/chrome/browser/browserservices/metrics/TrustedWebActivityUmaRecorder.java
-org.chromium.chrome.browser.browserservices.metrics.WebApkUkmRecorder,../../chrome/browser/android/browserservices/metrics/java/src/org/chromium/chrome/browser/browserservices/metrics/WebApkUkmRecorder.java
-org.chromium.chrome.browser.browserservices.metrics.WebApkUkmRecorderJni,gen/chrome/browser/android/browserservices/metrics/jni_headers.srcjar/org/chromium/chrome/browser/browserservices/metrics/WebApkUkmRecorderJni.java
-org.chromium.chrome.browser.browserservices.metrics.WebApkUmaRecorder,../../chrome/browser/android/browserservices/metrics/java/src/org/chromium/chrome/browser/browserservices/metrics/WebApkUmaRecorder.java

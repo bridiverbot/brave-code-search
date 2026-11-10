@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.content.ContentUtils,../../chrome/browser/android/content/java/src/org/chromium/chrome/browser/content/ContentUtils.java
-org.chromium.chrome.browser.content.ContentUtilsJni,gen/chrome/browser/android/content/jni_headers.srcjar/org/chromium/chrome/browser/content/ContentUtilsJni.java
-org.chromium.chrome.browser.content.WebContentsFactory,../../chrome/browser/android/content/java/src/org/chromium/chrome/browser/content/WebContentsFactory.java
-org.chromium.chrome.browser.content.WebContentsFactoryJni,gen/chrome/browser/android/content/jni_headers.srcjar/org/chromium/chrome/browser/content/WebContentsFactoryJni.java

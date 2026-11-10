@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[], css`:host{background-position:center;background-repeat:no-repeat;background-size:100%;display:flex;flex-shrink:0;height:16px;width:16px}`]);
-}

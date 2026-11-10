@@ -1,2 +1,0 @@
-org.chromium.components.collaboration.comments.CommentsServiceBridge,../../components/collaboration/internal/android/java/src/org/chromium/components/collaboration/comments/CommentsServiceBridge.java
-org.chromium.components.collaboration.comments.CommentsServiceBridgeJni,gen/components/collaboration/internal/comments_jni_headers.srcjar/org/chromium/components/collaboration/comments/CommentsServiceBridgeJni.java

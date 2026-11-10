@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-import '//resources/cr_elements/cr_shared_vars.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[], css`:host{align-items:center;border-top:1px solid var(--cr-separator-color);color:var(--cr-secondary-text-color);display:none;font-size:0.8125rem;justify-content:center;padding:0 24px}:host-context([webui-refresh-2026]){a:focus{border-radius:2px;outline:solid 2px var(--cr-focus-outline-color)}}:host([is-managed_]){display:flex}a[href]{color:var(--cr-link-color)}cr-icon{align-self:flex-start;flex-shrink:0;height:20px;padding-inline-end:var(--managed-footnote-icon-padding,8px);width:20px}`]);
-}

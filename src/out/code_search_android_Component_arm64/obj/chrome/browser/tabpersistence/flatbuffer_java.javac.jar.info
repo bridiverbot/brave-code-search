@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.tab.flatbuffer.TabGroupIdToken,gen/chrome/browser/tabpersistence/flatbuffer_java__flatc_java.srcjar/org/chromium/chrome/browser/tab/flatbuffer/TabGroupIdToken.java
-org.chromium.chrome.browser.tab.flatbuffer.TabLaunchTypeAtCreation,gen/chrome/browser/tabpersistence/flatbuffer_java__flatc_java.srcjar/org/chromium/chrome/browser/tab/flatbuffer/TabLaunchTypeAtCreation.java
-org.chromium.chrome.browser.tab.flatbuffer.TabStateFlatBufferV1,gen/chrome/browser/tabpersistence/flatbuffer_java__flatc_java.srcjar/org/chromium/chrome/browser/tab/flatbuffer/TabStateFlatBufferV1.java
-org.chromium.chrome.browser.tab.flatbuffer.UserAgentType,gen/chrome/browser/tabpersistence/flatbuffer_java__flatc_java.srcjar/org/chromium/chrome/browser/tab/flatbuffer/UserAgentType.java

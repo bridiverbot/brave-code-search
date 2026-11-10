@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "../../../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../brave/components/webcompat_reporter/common/webcompat_reporter.mojom"
-  ]
-}

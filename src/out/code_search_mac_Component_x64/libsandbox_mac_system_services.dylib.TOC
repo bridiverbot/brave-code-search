@@ -1,8 +1,0 @@
-          cmd LC_ID_DYLIB
-      cmdsize 72
-         name @rpath/libsandbox_mac_system_services.dylib (offset 24)
-   time stamp 0 Thu Jan  1 00:00:00 1970
-      current version 0.0.0
-compatibility version 0.0.0
-T __ZN7sandbox21DisableLaunchServicesEv
-T __ZN7sandbox27DisableCoreServicesCheckFixEv

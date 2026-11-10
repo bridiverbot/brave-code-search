@@ -1,3 +1,0 @@
-org.chromium.base.lifetime.DestroyChecker,../../base/android/java/src/org/chromium/base/lifetime/DestroyChecker.java
-org.chromium.base.lifetime.Destroyable,../../base/android/java/src/org/chromium/base/lifetime/Destroyable.java
-org.chromium.base.lifetime.LifetimeAssert,../../base/android/java/src/org/chromium/base/lifetime/LifetimeAssert.java

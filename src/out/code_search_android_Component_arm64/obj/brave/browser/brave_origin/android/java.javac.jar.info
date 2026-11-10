@@ -1,2 +1,0 @@
-org.chromium.brave.browser.brave_origin.BraveOriginServiceFactory,../../brave/browser/brave_origin/android/java/src/org/chromium/brave/browser/brave_origin/BraveOriginServiceFactory.java
-org.chromium.brave.browser.brave_origin.BraveOriginServiceFactoryJni,gen/brave/browser/brave_origin/android/jni_headers.srcjar/org/chromium/brave/browser/brave_origin/BraveOriginServiceFactoryJni.java

@@ -1,4 +1,0 @@
-// Copyright 2020 The Chromium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-import{mojo}from"//resources/mojo/mojo/public/js/bindings.js";export const FilePathSpec={$:{}};export const RelativeFilePathSpec={$:{}};mojo.internal.Struct(FilePathSpec.$,"FilePath",[mojo.internal.StructField("path",0,0,mojo.internal.Array(mojo.internal.Uint16,false),null,false,0,undefined,undefined)],[[0,16]]);mojo.internal.Struct(RelativeFilePathSpec.$,"RelativeFilePath",[mojo.internal.StructField("path",0,0,mojo.internal.Array(mojo.internal.Uint16,false),null,false,0,undefined,undefined)],[[0,16]]);

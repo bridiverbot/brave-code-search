@@ -1,3 +1,0 @@
-org.chromium.components.security_interstitials.CaptivePortalHelper,../../components/security_interstitials/content/android/java/src/org/chromium/components/security_interstitials/CaptivePortalHelper.java
-org.chromium.components.security_interstitials.CaptivePortalHelperJni,gen/components/security_interstitials/content/android/jni_headers.srcjar/org/chromium/components/security_interstitials/CaptivePortalHelperJni.java
-org.chromium.components.security_interstitials.DateAndTimeSettingsHelper,../../components/security_interstitials/content/android/java/src/org/chromium/components/security_interstitials/DateAndTimeSettingsHelper.java

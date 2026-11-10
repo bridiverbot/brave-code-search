@@ -1,2 +1,0 @@
-// Copyright (c) 2026 The Brave Authors. All rights reserved.
-import{search as upstreamSearch}from"./search-chromium.js";let context=null;export function setSemanticOpenTabsContext(ctx){context=ctx}export async function search(input,records,options){const result=await upstreamSearch(input,records,options);if(!input||!context||records!==context.getOpenTabsRecords()){return result}return result.concat(context.getSemanticExtras(input,result))}

@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.collaboration.messaging.MessagingBackendServiceFactory,../../chrome/browser/collaboration/android/java/src/org/chromium/chrome/browser/collaboration/messaging/MessagingBackendServiceFactory.java
-org.chromium.chrome.browser.collaboration.messaging.MessagingBackendServiceFactoryJni,gen/chrome/browser/collaboration/messaging_jni_headers.srcjar/org/chromium/chrome/browser/collaboration/messaging/MessagingBackendServiceFactoryJni.java

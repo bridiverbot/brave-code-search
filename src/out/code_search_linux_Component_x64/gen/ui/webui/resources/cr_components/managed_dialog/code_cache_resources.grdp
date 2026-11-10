@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_CR_COMPONENTS_MANAGED_DIALOG_CODE_CACHE_MANAGED_DIALOG_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/managed_dialog/code_cache/managed_dialog.js.code_cache" resource_path="cr_components/managed_dialog/managed_dialog.js.code_cache" use_base_dir="false" type="BINDATA" />
-      <include name="IDR_CR_COMPONENTS_MANAGED_DIALOG_CODE_CACHE_MANAGED_DIALOG_CSS_JS_CODE_CACHE" file="${root_gen_dir}/ui/webui/resources/cr_components/managed_dialog/code_cache/managed_dialog.css.js.code_cache" resource_path="cr_components/managed_dialog/managed_dialog.css.js.code_cache" use_base_dir="false" type="BINDATA" />
-</grit-part>

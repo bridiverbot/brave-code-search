@@ -1,2 +1,0 @@
-org.chromium.chrome.browser.tabwindow.TabWindowManagerFactory,../../chrome/browser/tabwindow/internal/android/java/src/org/chromium/chrome/browser/tabwindow/TabWindowManagerFactory.java
-org.chromium.chrome.browser.tabwindow.TabWindowManagerImpl,../../chrome/browser/tabwindow/internal/android/java/src/org/chromium/chrome/browser/tabwindow/TabWindowManagerImpl.java

@@ -1,4 +1,0 @@
-gen/brave/components/nft_display/resources/grit/nft_display_generated.h
-gen/brave/components/nft_display/resources/grit/nft_display_generated_map.cc
-gen/brave/components/nft_display/resources/grit/nft_display_generated_map.h
-gen/brave/components/nft_display/resources/nft_display_generated.pak

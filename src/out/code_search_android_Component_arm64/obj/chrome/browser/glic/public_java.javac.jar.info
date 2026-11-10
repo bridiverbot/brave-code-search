@@ -1,8 +1,0 @@
-org.chromium.chrome.browser.glic.ConversationInfo,../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/ConversationInfo.java
-org.chromium.chrome.browser.glic.GlicEnabling,../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicEnabling.java
-org.chromium.chrome.browser.glic.GlicIntentConstants,../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicIntentConstants.java
-org.chromium.chrome.browser.glic.GlicKeyedService,../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicKeyedService.java
-org.chromium.chrome.browser.glic.GlicKeyedServiceFactory,../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicKeyedServiceFactory.java
-org.chromium.chrome.browser.glic.GlicKeyedServiceHandler,../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicKeyedServiceHandler.java
-org.chromium.chrome.browser.glic.GlicPrefNames,gen/chrome/browser/glic/glic_pref_names_srcjar.srcjar/org/chromium/chrome/browser/glic/GlicPrefNames.java
-org.chromium.chrome.browser.glic.GlicUiHelper,../../chrome/browser/glic/public/android/java/src/org/chromium/chrome/browser/glic/GlicUiHelper.java

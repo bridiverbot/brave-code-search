@@ -1,4 +1,0 @@
-org.chromium.chrome.browser.tips.TipsPromoCustomizer,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoCustomizer.java
-org.chromium.chrome.browser.tips.TipsPromoHandler,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoHandler.java
-org.chromium.chrome.browser.tips.TipsPromoProperties,../../chrome/browser/tips/android/java/src/org/chromium/chrome/browser/tips/TipsPromoProperties.java
-org.chromium.chrome.browser.tips.TipsSignalKeys,gen/chrome/browser/tips/android/signal_keys_srcjar.srcjar/org/chromium/chrome/browser/tips/TipsSignalKeys.java

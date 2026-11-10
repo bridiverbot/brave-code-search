@@ -1,3 +1,0 @@
-org.chromium.components.browser_ui.webshare.BlobReceiver,../../components/browser_ui/webshare/android/java/src/org/chromium/components/browser_ui/webshare/BlobReceiver.java
-org.chromium.components.browser_ui.webshare.ShareServiceImpl,../../components/browser_ui/webshare/android/java/src/org/chromium/components/browser_ui/webshare/ShareServiceImpl.java
-org.chromium.components.browser_ui.webshare.SharedFileCollator,../../components/browser_ui/webshare/android/java/src/org/chromium/components/browser_ui/webshare/SharedFileCollator.java

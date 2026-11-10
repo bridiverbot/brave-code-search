@@ -1,2 +1,0 @@
-org.chromium.net.test.IConnectionListener,gen/net/android/embedded_test_server_aidl.srcjar/org/chromium/net/test/IConnectionListener.java
-org.chromium.net.test.IEmbeddedTestServerImpl,gen/net/android/embedded_test_server_aidl.srcjar/org/chromium/net/test/IEmbeddedTestServerImpl.java

@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "../../../../../mojo/public/mojom/base/base.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../../brave/components/traffic_control/core/mojom/traffic_control.mojom"
-  ]
-}

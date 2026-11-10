@@ -1,8 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-import '//resources/cr_elements/cr_shared_vars.css.js';
-import {getCss as getCrHiddenStyleLit} from '//resources/cr_elements/cr_hidden_style_lit.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[getCrHiddenStyleLit()], css`:host{display:block;box-sizing:border-box}#promo{display:flex;align-items:center;background:var(--cr-card-background-color);border-radius:8px;box-shadow:var(--cr-card-shadow);box-sizing:border-box;margin-block-start:16px;margin-block-end:8px;padding:32px 48px 32px 27px;gap:18px;position:relative;width:100%}#close{--cr-icon-button-margin-end:0;position:absolute;inset-block-start:12px;inset-inline-end:12px}#illustration{flex-shrink:0;width:250px;height:121px;background:url(images/history_embeddings_promo.svg) no-repeat center center}@media (prefers-color-scheme:dark){#illustration{background-image:url(images/history_embeddings_promo_dark.svg)}}#text{max-width:573px}#title{margin-block-start:0;margin-block-end:8px;color:var(--cr-primary-text-color);font-size:16px;font-weight:500;line-height:24px}#description{color:var(--cr-secondary-text-color);font-size:13px;font-style:normal;font-weight:400;line-height:20px}#description-first-block{margin-block-end:1em}a{color:var(--cr-link-color);display:inline-block}`]);
-}

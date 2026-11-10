@@ -1,2 +1,0 @@
-org.chromium.chrome.features.dev_ui.DevUi,../../chrome/android/features/dev_ui/public/java/src/org/chromium/chrome/features/dev_ui/DevUi.java
-org.chromium.chrome.features.dev_ui.DevUiModule,gen/chrome/android/features/dev_ui/public/module_interface.srcjar/org/chromium/chrome/features/dev_ui/DevUiModule.java

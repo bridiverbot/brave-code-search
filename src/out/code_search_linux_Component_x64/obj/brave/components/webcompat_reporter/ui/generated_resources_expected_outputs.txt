@@ -1,4 +1,0 @@
-gen/brave/components/webcompat_reporter/resources/grit/webcompat_reporter_generated.h
-gen/brave/components/webcompat_reporter/resources/grit/webcompat_reporter_generated_map.cc
-gen/brave/components/webcompat_reporter/resources/grit/webcompat_reporter_generated_map.h
-gen/brave/components/webcompat_reporter/resources/webcompat_reporter_generated.pak

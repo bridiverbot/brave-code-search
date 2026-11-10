@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_HISTORY_CLUSTERS_INTERNALS_HISTORY_CLUSTERS_INTERNALS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/history_clusters_internals/tsc/history_clusters_internals_test.js" resource_path="history_clusters_internals/history_clusters_internals_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

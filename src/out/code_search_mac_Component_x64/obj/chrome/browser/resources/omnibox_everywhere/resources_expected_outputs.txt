@@ -1,4 +1,0 @@
-gen/chrome/grit/omnibox_everywhere_resources.h
-gen/chrome/grit/omnibox_everywhere_resources_map.cc
-gen/chrome/grit/omnibox_everywhere_resources_map.h
-gen/chrome/omnibox_everywhere_resources.pak

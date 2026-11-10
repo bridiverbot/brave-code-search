@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_CR_COMPONENTS_HISTORY_CLUSTERS_CLUSTER_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/history_clusters/tsc/cluster_test.js" resource_path="cr_components/history_clusters/cluster_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_CR_COMPONENTS_HISTORY_CLUSTERS_HISTORY_CLUSTERS_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/history_clusters/tsc/history_clusters_test.js" resource_path="cr_components/history_clusters/history_clusters_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_CR_COMPONENTS_HISTORY_CLUSTERS_HORIZONTAL_CAROUSEL_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/history_clusters/tsc/horizontal_carousel_test.js" resource_path="cr_components/history_clusters/horizontal_carousel_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_CR_COMPONENTS_HISTORY_CLUSTERS_URL_VISIT_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/cr_components/history_clusters/tsc/url_visit_test.js" resource_path="cr_components/history_clusters/url_visit_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

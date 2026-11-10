@@ -1,8 +1,0 @@
-{
-  "deps": [
-    "../composebox/mojo_bindings.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../components/omnibox/browser/fusebox_action.mojom"
-  ]
-}

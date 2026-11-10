@@ -1,8 +1,0 @@
-{
-  "gn_target": "//third_party/androidx:androidx_compose_ui_ui_graphics_java",
-  "public_deps_configs": [
-    "gen/third_party/androidx/androidx_compose_ui_ui_graphics_android_java.params.json"
-  ],
-  "supports_android": true,
-  "type": "group"
-}

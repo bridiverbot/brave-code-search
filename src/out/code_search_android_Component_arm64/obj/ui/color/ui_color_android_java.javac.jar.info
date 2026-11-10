@@ -1,3 +1,0 @@
-org.chromium.ui.color.AndroidColorRole,gen/ui/color/ui_color_android_java_enums.srcjar/org/chromium/ui/color/AndroidColorRole.java
-org.chromium.ui.color.ColorProviderBridge,../../ui/color/android/java/src/org/chromium/ui/color/ColorProviderBridge.java
-org.chromium.ui.color.ColorProviderBridgeFactory,../../ui/color/android/java/src/org/chromium/ui/color/ColorProviderBridgeFactory.java

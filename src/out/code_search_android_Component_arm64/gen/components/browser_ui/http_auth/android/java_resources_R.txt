@@ -1,6 +1,0 @@
-int id explanation 0x7f010001
-int id password 0x7f010001
-int id password_label 0x7f010001
-int id username 0x7f010001
-int id username_label 0x7f010001
-int layout http_auth_dialog 0x7f010001

@@ -1,6 +1,0 @@
-../../services/viz/public/mojom/compositing/frame_sink_id.mojom
-../../services/viz/public/mojom/compositing/local_surface_id.mojom
-../../services/viz/public/mojom/compositing/offset_tag.mojom
-../../services/viz/public/mojom/compositing/surface_id.mojom
-../../services/viz/public/mojom/compositing/surface_info.mojom
-../../services/viz/public/mojom/compositing/surface_range.mojom

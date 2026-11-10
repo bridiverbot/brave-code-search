@@ -1,7 +1,0 @@
-int id password 0x7f010001
-int id reject_password_button 0x7f010001
-int id touch_to_fill_sheet_header_image 0x7f010001
-int id touch_to_fill_sheet_subtitle 0x7f010001
-int id touch_to_fill_sheet_title 0x7f010001
-int id use_password_button 0x7f010001
-int layout touch_to_fill_password_generation 0x7f010001

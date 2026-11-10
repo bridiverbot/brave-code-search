@@ -1,2 +1,0 @@
-org.chromium.components.messages.ManagedMessageDispatcher,../../components/messages/android/java/src/org/chromium/components/messages/ManagedMessageDispatcher.java
-org.chromium.components.messages.MessageQueueDelegate,../../components/messages/android/java/src/org/chromium/components/messages/MessageQueueDelegate.java

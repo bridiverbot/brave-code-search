@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_SIGNIN_SIGNOUT_CONFIRMATION_EXTENSIONS_SECTION_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/signin/signout_confirmation/tsc/extensions_section_test.js" resource_path="signin/signout_confirmation/extensions_section_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_SIGNIN_SIGNOUT_CONFIRMATION_SIGNOUT_CONFIRMATION_VIEW_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/signin/signout_confirmation/tsc/signout_confirmation_view_test.js" resource_path="signin/signout_confirmation/signout_confirmation_view_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_SIGNIN_SIGNOUT_CONFIRMATION_TEST_SIGNOUT_CONFIRMATION_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/signin/signout_confirmation/tsc/test_signout_confirmation_browser_proxy.js" resource_path="signin/signout_confirmation/test_signout_confirmation_browser_proxy.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

@@ -1,5 +1,0 @@
-/* Copyright (c) 2025 The Brave Authors. All rights reserved.
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at https://mozilla.org/MPL/2.0/. */
-import{PageCallbackRouter,PageHandlerFactory,PageHandlerRemote}from"./brave_education.mojom-webui.js";export class BraveEducationProxyImpl{handler;callbackRouter;constructor(){this.handler=new PageHandlerRemote;this.callbackRouter=new PageCallbackRouter;PageHandlerFactory.getRemote().createPageHandler(this.callbackRouter.$.bindNewPipeAndPassRemote(),this.handler.$.bindNewPipeAndPassReceiver())}static getInstance(){return instance||(instance=new BraveEducationProxyImpl)}static setInstance(proxy){instance=proxy}}let instance=null;

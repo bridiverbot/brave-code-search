@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.ephemeraltab.EphemeralTabCoordinator,../../chrome/browser/ui/android/ephemeraltab/java/src/org/chromium/chrome/browser/ephemeraltab/EphemeralTabCoordinator.java
-org.chromium.chrome.browser.ephemeraltab.EphemeralTabCoordinatorSupplier,../../chrome/browser/ui/android/ephemeraltab/java/src/org/chromium/chrome/browser/ephemeraltab/EphemeralTabCoordinatorSupplier.java
-org.chromium.chrome.browser.ephemeraltab.EphemeralTabMediator,../../chrome/browser/ui/android/ephemeraltab/java/src/org/chromium/chrome/browser/ephemeraltab/EphemeralTabMediator.java
-org.chromium.chrome.browser.ephemeraltab.EphemeralTabObserver,../../chrome/browser/ui/android/ephemeraltab/java/src/org/chromium/chrome/browser/ephemeraltab/EphemeralTabObserver.java
-org.chromium.chrome.browser.ephemeraltab.EphemeralTabSheetContent,../../chrome/browser/ui/android/ephemeraltab/java/src/org/chromium/chrome/browser/ephemeraltab/EphemeralTabSheetContent.java

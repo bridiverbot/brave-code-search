@@ -1,8 +1,0 @@
-org.chromium.chrome.browser.prefetch.settings.ExtendedPreloadingSettingsFragment,../../chrome/browser/prefetch/android/java/src/org/chromium/chrome/browser/prefetch/settings/ExtendedPreloadingSettingsFragment.java
-org.chromium.chrome.browser.prefetch.settings.PreloadPagesSettingsBridge,../../chrome/browser/prefetch/android/java/src/org/chromium/chrome/browser/prefetch/settings/PreloadPagesSettingsBridge.java
-org.chromium.chrome.browser.prefetch.settings.PreloadPagesSettingsBridgeJni,gen/chrome/browser/prefetch/android/jni_headers.srcjar/org/chromium/chrome/browser/prefetch/settings/PreloadPagesSettingsBridgeJni.java
-org.chromium.chrome.browser.prefetch.settings.PreloadPagesSettingsFragment,../../chrome/browser/prefetch/android/java/src/org/chromium/chrome/browser/prefetch/settings/PreloadPagesSettingsFragment.java
-org.chromium.chrome.browser.prefetch.settings.PreloadPagesSettingsFragmentBase,../../chrome/browser/prefetch/android/java/src/org/chromium/chrome/browser/prefetch/settings/PreloadPagesSettingsFragmentBase.java
-org.chromium.chrome.browser.prefetch.settings.PreloadPagesState,gen/chrome/browser/prefetch/android/preload_pages_state_generated_enum.srcjar/org/chromium/chrome/browser/prefetch/settings/PreloadPagesState.java
-org.chromium.chrome.browser.prefetch.settings.RadioButtonGroupPreloadPagesSettings,../../chrome/browser/prefetch/android/java/src/org/chromium/chrome/browser/prefetch/settings/RadioButtonGroupPreloadPagesSettings.java
-org.chromium.chrome.browser.prefetch.settings.StandardPreloadingSettingsFragment,../../chrome/browser/prefetch/android/java/src/org/chromium/chrome/browser/prefetch/settings/StandardPreloadingSettingsFragment.java

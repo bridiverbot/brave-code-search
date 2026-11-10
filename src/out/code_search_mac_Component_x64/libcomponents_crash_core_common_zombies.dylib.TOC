@@ -1,8 +1,0 @@
-          cmd LC_ID_DYLIB
-      cmdsize 80
-         name @rpath/libcomponents_crash_core_common_zombies.dylib (offset 24)
-   time stamp 0 Thu Jan  1 00:00:00 1970
-      current version 0.0.0
-compatibility version 0.0.0
-T __ZN13ObjcEvilDoers12ZombieEnableEbm
-T __ZN13ObjcEvilDoers13ZombieDisableEv

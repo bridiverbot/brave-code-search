@@ -1,9 +1,0 @@
-{
-  "deps": [
-    "../side_panel/customize_chrome/mojo_bindings.build_metadata",
-    "../../../../../url/mojom/url_mojom_gurl.build_metadata"
-  ],
-  "sources": [
-    "../../../../../../../../chrome/browser/ui/webui/customize_buttons/customize_buttons.mojom"
-  ]
-}

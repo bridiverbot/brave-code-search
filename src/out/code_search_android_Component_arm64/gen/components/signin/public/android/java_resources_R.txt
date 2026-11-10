@@ -1,3 +1,0 @@
-int drawable account_circle 0x7f010001
-int drawable account_circle_with_bg 0x7f010001
-int drawable logo_avatar_anonymous 0x7f010001

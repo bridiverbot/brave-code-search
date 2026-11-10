@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_TAB_GROUP_HOME_TAB_URL_ITEM_GRID_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/tab_group_home/tsc/tab_url_item_grid_test.js" resource_path="tab_group_home/tab_url_item_grid_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_TAB_GROUP_HOME_URL_ITEM_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/tab_group_home/tsc/url_item_test.js" resource_path="tab_group_home/url_item_test.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

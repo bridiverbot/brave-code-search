@@ -1,7 +1,0 @@
-import {css, CSSResultGroup} from '//resources/lit/v3_0/lit.rollup.js';
-import {getCss as getSharedStyle} from './shared_style.css.js';
-
-let instance: CSSResultGroup|null = null;
-export function getCss(): CSSResultGroup {
-  return instance || (instance = [...[getSharedStyle()], css`:host{align-items:center;box-sizing:border-box;display:flex;flex:1;height:100%;justify-content:center;width:100%}#container{align-items:center;display:flex;flex-direction:column;height:100%;justify-content:center;width:100%}:host([dialog]) #container{box-sizing:border-box;justify-content:space-between;padding:20px}#mainContent{max-width:320px;text-align:center}:host([dialog]) #mainContent{align-items:center;display:flex;flex:1;flex-direction:column;justify-content:center;min-height:0}#header{align-items:center;display:flex;flex-direction:row;gap:8px;justify-content:center}#mainContent cr-button{margin-top:16px}.dialog-actions-row{display:flex;gap:8px;justify-content:flex-end;width:100%}.cancel-button{--cr-button-background-color:var(--color-sys-tonal-container);--cr-button-border-color:transparent;--cr-button-text-color:var(--color-sys-on-tonal-container)}.action-button{--cr-button-background-color:var(--color-sys-primary);--cr-button-border-color:transparent;--cr-button-text-color:var(--color-sys-on-primary);--cr-button-disabled-background-color:var(--color-sys-state-disabled-container);--cr-button-disabled-border-color:transparent;--cr-button-disabled-text-color:var(--color-sys-state-disabled)}`]);
-}

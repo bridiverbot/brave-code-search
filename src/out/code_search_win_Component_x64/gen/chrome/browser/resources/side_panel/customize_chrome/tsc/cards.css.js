@@ -1,7 +1,0 @@
-import { css } from '//resources/lit/v3_0/lit.rollup.js';
-import { getCss as getSpSharedStyle } from 'chrome://customize-chrome-side-panel.top-chrome/shared/sp_shared_style.css.js';
-import { getCss as getToggleContainerShared } from './toggle_container_shared.css.js';
-let instance = null;
-export function getCss() {
-    return instance || (instance = [...[getSpSharedStyle(), getToggleContainerShared()], css `#showToggleTitle{flex-grow:1}#cards{display:flex;margin:0}.card{margin:0;padding:var(--sp-card-padding);padding-inline-start:calc(2 * var(--sp-card-inline-padding))}.card:hover{background-color:var(--cr-hover-background-color);cursor:pointer}.card:focus{background-color:var(--cr-menu-background-focus-color);outline:none}.card-checkbox::part(label-container){flex-grow:1}cr-collapse{--iron-collapse-transition-duration:300ms;width:100%}.sp-hr{margin:var(--sp-card-block-padding) var(--sp-card-inline-padding);width:auto}cr-toggle{margin-inline-start:16px}`]);
-}

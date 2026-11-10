@@ -1,8 +1,0 @@
-{
-  "gn_target": "//third_party/android_deps:com_google_ar_impress_java",
-  "public_deps_configs": [
-    "gen/third_party/android_deps/com_google_ar_impress_java__classes.params.json"
-  ],
-  "supports_android": true,
-  "type": "group"
-}

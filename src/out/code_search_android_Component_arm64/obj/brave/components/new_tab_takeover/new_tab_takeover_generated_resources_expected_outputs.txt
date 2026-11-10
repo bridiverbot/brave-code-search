@@ -1,4 +1,0 @@
-gen/brave/components/new_tab_takeover/grit/new_tab_takeover_generated.h
-gen/brave/components/new_tab_takeover/grit/new_tab_takeover_generated_map.cc
-gen/brave/components/new_tab_takeover/grit/new_tab_takeover_generated_map.h
-gen/brave/components/new_tab_takeover/new_tab_takeover_generated.pak

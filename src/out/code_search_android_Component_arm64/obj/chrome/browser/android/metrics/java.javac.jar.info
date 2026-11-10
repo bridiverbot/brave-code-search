@@ -1,5 +1,0 @@
-org.chromium.chrome.browser.metrics.AndroidSessionDurationsServiceState,../../chrome/browser/android/metrics/java/src/org/chromium/chrome/browser/metrics/AndroidSessionDurationsServiceState.java
-org.chromium.chrome.browser.metrics.AndroidSessionDurationsServiceStateJni,gen/chrome/browser/android/metrics/jni_headers.srcjar/org/chromium/chrome/browser/metrics/AndroidSessionDurationsServiceStateJni.java
-org.chromium.chrome.browser.metrics.AppUpdateInfoUtils,../../chrome/browser/android/metrics/java/src/org/chromium/chrome/browser/metrics/AppUpdateInfoUtils.java
-org.chromium.chrome.browser.metrics.ChromeStatsLogHelper,../../chrome/browser/android/metrics/java/src/org/chromium/chrome/browser/metrics/ChromeStatsLogHelper.java
-org.chromium.chrome.browser.metrics.MainIntentBehaviorMetrics,../../chrome/browser/android/metrics/java/src/org/chromium/chrome/browser/metrics/MainIntentBehaviorMetrics.java

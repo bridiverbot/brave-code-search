@@ -1,6 +1,0 @@
-org.chromium.webcompat_reporter.mojom.ComponentInfo,gen/brave/components/webcompat_reporter/common/mojom_java_sources.srcjar/org/chromium/webcompat_reporter/mojom/ComponentInfo.java
-org.chromium.webcompat_reporter.mojom.ReportInfo,gen/brave/components/webcompat_reporter/common/mojom_java_sources.srcjar/org/chromium/webcompat_reporter/mojom/ReportInfo.java
-org.chromium.webcompat_reporter.mojom.WebcompatCategory,gen/brave/components/webcompat_reporter/common/mojom_java_sources.srcjar/org/chromium/webcompat_reporter/mojom/WebcompatCategory.java
-org.chromium.webcompat_reporter.mojom.WebcompatCategoryItem,gen/brave/components/webcompat_reporter/common/mojom_java_sources.srcjar/org/chromium/webcompat_reporter/mojom/WebcompatCategoryItem.java
-org.chromium.webcompat_reporter.mojom.WebcompatReporterHandler,gen/brave/components/webcompat_reporter/common/mojom_java_sources.srcjar/org/chromium/webcompat_reporter/mojom/WebcompatReporterHandler.java
-org.chromium.webcompat_reporter.mojom.WebcompatReporterHandler_Internal,gen/brave/components/webcompat_reporter/common/mojom_java_sources.srcjar/org/chromium/webcompat_reporter/mojom/WebcompatReporterHandler_Internal.java

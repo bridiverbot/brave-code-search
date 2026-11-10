@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grit-part>
-      <include name="IDR_WEBUI_OMNIBOX_EVERYWHERE_FRE_CHIN_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_everywhere/tsc/fre_chin_test.js" resource_path="omnibox_everywhere/fre_chin_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_OMNIBOX_EVERYWHERE_FRE_MODAL_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_everywhere/tsc/fre_modal_test.js" resource_path="omnibox_everywhere/fre_modal_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_OMNIBOX_EVERYWHERE_OMNIBOX_TEST_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_everywhere/tsc/omnibox_test.js" resource_path="omnibox_everywhere/omnibox_test.js" use_base_dir="false" type="chrome_html" />
-      <include name="IDR_WEBUI_OMNIBOX_EVERYWHERE_TEST_SEARCHBOX_BROWSER_PROXY_JS" file="${root_gen_dir}/chrome/test/data/webui/omnibox_everywhere/tsc/test_searchbox_browser_proxy.js" resource_path="omnibox_everywhere/test_searchbox_browser_proxy.js" use_base_dir="false" type="chrome_html" />
-</grit-part>

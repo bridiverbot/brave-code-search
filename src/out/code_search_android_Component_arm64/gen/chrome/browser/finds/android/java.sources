@@ -1,9 +1,0 @@
-../../chrome/browser/finds/android/java/src/org/chromium/chrome/browser/finds/FindsFeatureMap.java
-../../chrome/browser/finds/android/java/src/org/chromium/chrome/browser/finds/FindsFeatures.java
-../../chrome/browser/finds/android/java/src/org/chromium/chrome/browser/finds/FindsManager.java
-../../chrome/browser/finds/android/java/src/org/chromium/chrome/browser/finds/FindsMetrics.java
-../../chrome/browser/finds/android/java/src/org/chromium/chrome/browser/finds/FindsOptInBottomSheetContent.java
-../../chrome/browser/finds/android/java/src/org/chromium/chrome/browser/finds/FindsOptInCoordinator.java
-../../chrome/browser/finds/android/java/src/org/chromium/chrome/browser/finds/FindsService.java
-../../chrome/browser/finds/android/java/src/org/chromium/chrome/browser/finds/FindsServiceFactory.java
-../../chrome/browser/finds/android/java/src/org/chromium/chrome/browser/finds/FindsUtils.java
