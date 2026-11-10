@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave කෙටිමඟ";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, හිමිකම 2026 Brave කතෲවරුන්. සියළුම හිමිකම් ඇවිරිනි.";
+NSAudioCaptureUsageDescription = "Brave හට ප්‍රවේශය ඇති විට, වෙබ් අඩවි හට ඔබගෙන් ප්‍රවේශය සඳහා ඉල්ලීමට හැකිය.";
+NSBluetoothAlwaysUsageDescription = "Brave හට ප්‍රවේශය ඇති විට, වෙබ් අඩවි හට ඔබගෙන් ප්‍රවේශය සඳහා ඉල්ලීමට හැකිය.";
+NSBluetoothPeripheralUsageDescription = "Brave හට ප්‍රවේශය ඇති විට, වෙබ් අඩවි හට ඔබගෙන් ප්‍රවේශය සඳහා ඉල්ලීමට හැකිය.";
+NSCameraUsageDescription = "Brave හට ප්‍රවේශය ඇති විට, වෙබ් අඩවි හට ඔබගෙන් ප්‍රවේශය සඳහා ඉල්ලීමට හැකිය.";
+NSHumanReadableCopyright = "හිමිකම 2026 Brave කතෲවරුන්. සියළුම හිමිකම් ඇවිරිනි.";
+NSLocalNetworkUsageDescription = "මෙය ඔබට Brave සිට ඔබේ ප්‍රාංශික ඉතිරි දෙවල්වලට, එනම් ටීවී හෝ ස්පීකරයට අන්තර්ගතය බෙදා ගැනීමට ඉඩ දෙයි।";
+NSLocationUsageDescription = "Brave හට ප්‍රවේශය ඇති විට, වෙබ් අඩවි හට ඔබගෙන් ප්‍රවේශය සඳහා ඉල්ලීමට හැකිය.";
+NSMicrophoneUsageDescription = "Brave හට ප්‍රවේශය ඇති විට, වෙබ් අඩවි හට ඔබගෙන් ප්‍රවේශය සඳහා ඉල්ලීමට හැකිය.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Brave හට ප්‍රවේශය ඇති විට, වෙබ් අඩවි හට ඔබගෙන් ප්‍රවේශය සඳහා ඉල්ලීමට හැකිය.";

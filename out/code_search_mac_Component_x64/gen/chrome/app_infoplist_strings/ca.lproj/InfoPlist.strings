@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Drecera de Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 Els autors de Brave. Tots els drets reservats.";
+NSAudioCaptureUsageDescription = "Un cop Brave tingui accés, els llocs web et podran demanar accés.";
+NSBluetoothAlwaysUsageDescription = "Un cop Brave tingui accés, els llocs web et podran demanar accés.";
+NSBluetoothPeripheralUsageDescription = "Un cop Brave tingui accés, els llocs web et podran demanar accés.";
+NSCameraUsageDescription = "Un cop Brave tingui accés, els llocs web et podran demanar accés.";
+NSHumanReadableCopyright = "Copyright © 2026 Els autors de Brave. Tots els drets reservats.";
+NSLocalNetworkUsageDescription = "Això us permetrà compartir contingut des de Brave als vostres aparells locals, com ara una TV o un altaveu.";
+NSLocationUsageDescription = "Un cop Brave tingui accés, els llocs web et podran demanar accés.";
+NSMicrophoneUsageDescription = "Un cop Brave tingui accés, els llocs web et podran demanar accés.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Un cop Brave tingui accés, els llocs web et podran demanar accés.";

@@ -1,0 +1,80 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import 'chrome://resources/cr_elements/cr_toggle/cr_toggle.js';
+import { assert } from '//resources/js/assert.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './graph_dump.css.js';
+import { getHtml } from './graph_dump.html.js';
+import { browserProxyFactory } from './webnn_internals.mojom-webui.js';
+export class WebnnInternalsGraphDumpElement extends CrLitElement {
+    static get is() {
+        return 'webnn-internals-graph-dump';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            recordGraphEnabled_: { type: Boolean },
+        };
+    }
+    listenerIds = [];
+    #recordGraphEnabled__accessor_storage = false;
+    get recordGraphEnabled_() { return this.#recordGraphEnabled__accessor_storage; }
+    set recordGraphEnabled_(value) { this.#recordGraphEnabled__accessor_storage = value; }
+    proxy_ = browserProxyFactory.getInstance();
+    connectedCallback() {
+        super.connectedCallback();
+        this.updateRecordingStatus();
+        this.listenerIds = [
+            this.proxy_.callbackRouter.onGraphRecordEnabledChanged.addListener(this.onGraphRecordEnabledChanged_.bind(this)),
+            this.proxy_.callbackRouter.exportGraphRecorded.addListener(this.exportGraphRecorded_.bind(this)),
+        ];
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.listenerIds.forEach(id => this.proxy_.callbackRouter.removeListener(id));
+        this.listenerIds = [];
+    }
+    async updateRecordingStatus() {
+        const response = await this.proxy_.handler.isGraphRecording();
+        this.recordGraphEnabled_ = response.enabled;
+    }
+    onToggleValueChange_(event) {
+        if (this.recordGraphEnabled_ === event.detail) {
+            return;
+        }
+        this.proxy_.handler.setGraphRecordEnabled(event.detail);
+    }
+    onGraphRecordEnabledChanged_(isEnabled) {
+        this.recordGraphEnabled_ = isEnabled;
+    }
+    exportGraphRecorded_(jsonData) {
+        let bytes = null;
+        if (jsonData.bytes) {
+            bytes = new Uint8Array(jsonData.bytes);
+        }
+        else if (jsonData.sharedMemory) {
+            const { result, buffer } = jsonData.sharedMemory.bufferHandle.mapBuffer(0, jsonData.sharedMemory.size);
+            assert(result === Mojo.RESULT_OK, 'Failed to map shared memory');
+            bytes = new Uint8Array(buffer, 0, jsonData.sharedMemory.size);
+        }
+        if (bytes === null) {
+            return;
+        }
+        const blob = new Blob([bytes], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `webnn_graph_${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+}
+customElements.define(WebnnInternalsGraphDumpElement.is, WebnnInternalsGraphDumpElement);

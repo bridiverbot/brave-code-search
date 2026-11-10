@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Συντόμευση Brave";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Πνευματικά δικαιώματα 2026 Οι συντάκτες του Brave. Με επιφύλαξη παντός δικαιώματος.";
+NSAudioCaptureUsageDescription = "Όταν το Brave αποκτήσει πρόσβαση, οι ιστότοποι θα μπορούν να σας ζητήσουν πρόσβαση.";
+NSBluetoothAlwaysUsageDescription = "Όταν το Brave αποκτήσει πρόσβαση, οι ιστότοποι θα μπορούν να σας ζητήσουν πρόσβαση.";
+NSBluetoothPeripheralUsageDescription = "Όταν το Brave αποκτήσει πρόσβαση, οι ιστότοποι θα μπορούν να σας ζητήσουν πρόσβαση.";
+NSCameraUsageDescription = "Όταν το Brave αποκτήσει πρόσβαση, οι ιστότοποι θα μπορούν να σας ζητήσουν πρόσβαση.";
+NSHumanReadableCopyright = "Πνευματικά δικαιώματα 2026 Οι συντάκτες του Brave. Με επιφύλαξη παντός δικαιώματος.";
+NSLocalNetworkUsageDescription = "Αυτό θα σας επιτρέψει να κοινοποιείτε περιεχόμενο από το Brave στις τοπικές σας συσκευές, όπως μια τηλεόραση ή ένας ηχείο.";
+NSLocationUsageDescription = "Όταν το Brave αποκτήσει πρόσβαση, οι ιστότοποι θα μπορούν να σας ζητήσουν πρόσβαση.";
+NSMicrophoneUsageDescription = "Όταν το Brave αποκτήσει πρόσβαση, οι ιστότοποι θα μπορούν να σας ζητήσουν πρόσβαση.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Όταν το Brave αποκτήσει πρόσβαση, οι ιστότοποι θα μπορούν να σας ζητήσουν πρόσβαση.";

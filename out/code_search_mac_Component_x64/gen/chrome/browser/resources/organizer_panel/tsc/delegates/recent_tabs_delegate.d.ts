@@ -1,0 +1,31 @@
+import '../organizer_zero_state.js';
+import type { TemplateResult } from '//resources/lit/v3_0/lit.rollup.js';
+import type { OrganizerListSectionClient, OrganizerListSectionDelegate } from '../organizer_list_section_delegate.js';
+import type { OrganizerListSectionItem } from '../organizer_list_section_item.js';
+import type { RecentlyClosedSplitView, RecentlyClosedTab, RecentlyClosedTabGroup } from '../tab_search.mojom-webui.js';
+export type RecentlyClosedItem = RecentlyClosedTab | RecentlyClosedTabGroup | RecentlyClosedSplitView;
+export declare class RecentTabsDelegate implements OrganizerListSectionDelegate<RecentlyClosedItem> {
+    private browserProxy_;
+    private client_?;
+    private listenerIds_;
+    private tabs_;
+    private tabGroups_;
+    private splitViews_;
+    private items_;
+    init(sectionClient: OrganizerListSectionClient): void;
+    getId(): string;
+    getHeader(): string;
+    getItems(): Promise<Array<OrganizerListSectionItem<RecentlyClosedItem>>>;
+    getZeroState(): TemplateResult;
+    onItemClick(item: OrganizerListSectionItem<RecentlyClosedItem>): void;
+    private updateItems_;
+    private notifyClient_;
+    private onTabsChanged_;
+    private onTabsRemoved_;
+    private extractAndSortItems_;
+    private sortItems_;
+    private toSectionItem_;
+    private tabToSectionItem_;
+    private splitViewToSectionItem_;
+    private tabGroupToSectionItem_;
+}

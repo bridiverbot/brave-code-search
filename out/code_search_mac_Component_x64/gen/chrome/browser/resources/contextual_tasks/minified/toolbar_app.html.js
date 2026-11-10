@@ -1,0 +1,17 @@
+// Copyright 2026 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import{html}from"//resources/lit/v3_0/lit.rollup.js";export function getHtml(){return html`<!--_html_template_start_-->
+    
+      <link rel="stylesheet" href="layout_constants.css">
+    
+    <top-toolbar id="toolbar"
+        .title="${this.threadTitle_}"
+        .isAiPage="${this.isAiPage_}"
+        .isAimEligible="${this.isAimEligible_}"
+        .isUserSignedIn="${this.isUserSignedIn_}"
+        .enableOpenInNewTabButton="${this.isAiPage_}"
+        .onboardingTooltipShowing="${this.onboardingTooltipShowing_}"
+        @new-thread-click="${this.onNewThreadClick_}">
+    </top-toolbar>
+  <!--_html_template_end_-->`}

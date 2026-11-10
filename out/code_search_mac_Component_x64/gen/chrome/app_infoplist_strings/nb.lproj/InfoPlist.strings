@@ -1,0 +1,11 @@
+"Chromium Shortcut" = "Brave-snarvei";
+CFBundleGetInfoString = "Brave Browser Development 158.1.101.0, Copyright © 2026 – Brave Software Inc. Med enerett.";
+NSAudioCaptureUsageDescription = "Når Brave har fått tilgang, kan nettsteder spørre deg om tilgang.";
+NSBluetoothAlwaysUsageDescription = "Når Brave har fått tilgang, kan nettsteder spørre deg om tilgang.";
+NSBluetoothPeripheralUsageDescription = "Når Brave har fått tilgang, kan nettsteder spørre deg om tilgang.";
+NSCameraUsageDescription = "Når Brave har fått tilgang, kan nettsteder spørre deg om tilgang.";
+NSHumanReadableCopyright = "Copyright © 2026 – Brave Software Inc. Med enerett.";
+NSLocalNetworkUsageDescription = "Dette lar deg dele innhold fra Brave til dine lokale enheter, for eksempel en TV eller høyttaler.";
+NSLocationUsageDescription = "Når Brave har fått tilgang, kan nettsteder spørre deg om tilgang.";
+NSMicrophoneUsageDescription = "Når Brave har fått tilgang, kan nettsteder spørre deg om tilgang.";
+NSWebBrowserPublicKeyCredentialUsageDescription = "Når Brave har fått tilgang, kan nettsteder spørre deg om tilgang.";

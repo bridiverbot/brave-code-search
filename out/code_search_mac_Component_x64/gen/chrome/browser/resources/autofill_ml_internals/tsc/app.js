@@ -1,0 +1,53 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+import './log_list.js';
+import './log_details.js';
+import { CrLitElement } from '//resources/lit/v3_0/lit.rollup.js';
+import { getCss } from './app.css.js';
+import { getHtml } from './app.html.js';
+import { browserProxyFactory } from './autofill_ml_internals.mojom-webui.js';
+export class AppElement extends CrLitElement {
+    static get is() {
+        return 'autofill-ml-internals-app';
+    }
+    static get styles() {
+        return getCss();
+    }
+    render() {
+        return getHtml.bind(this)();
+    }
+    static get properties() {
+        return {
+            logEntries_: { type: Array },
+            selectedLog_: { type: Object },
+        };
+    }
+    #logEntries__accessor_storage = [];
+    get logEntries_() { return this.#logEntries__accessor_storage; }
+    set logEntries_(value) { this.#logEntries__accessor_storage = value; }
+    #selectedLog__accessor_storage;
+    get selectedLog_() { return this.#selectedLog__accessor_storage; }
+    set selectedLog_(value) { this.#selectedLog__accessor_storage = value; }
+    browserProxy_ = browserProxyFactory.getInstance();
+    onLogAddedListenerId_ = null;
+    connectedCallback() {
+        super.connectedCallback();
+        this.onLogAddedListenerId_ =
+            this.browserProxy_.callbackRouter.onLogAdded.addListener((log) => {
+                this.logEntries_ = [log, ...this.logEntries_];
+                this.selectedLog_ = log;
+            });
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.onLogAddedListenerId_ !== null) {
+            this.browserProxy_.callbackRouter.removeListener(this.onLogAddedListenerId_);
+            this.onLogAddedListenerId_ = null;
+        }
+    }
+    onLogSelected_(e) {
+        this.selectedLog_ = e.detail;
+    }
+}
+customElements.define(AppElement.is, AppElement);

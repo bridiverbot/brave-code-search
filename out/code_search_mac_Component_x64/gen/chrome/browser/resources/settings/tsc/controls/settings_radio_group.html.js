@@ -1,0 +1,11 @@
+import { html } from '//resources/lit/v3_0/lit.rollup.js';
+export function getHtml() {
+    return html `<!--_html_template_start_--><cr-radio-group .selected="${this.selected}"
+    @selected-changed="${this.onSelectedChanged_}"
+    aria-label="${this.groupAriaLabel}"
+    .selectableElements="${this.selectableElements}"
+    ?nested-selectable="${this.nestedSelectable}">
+  <slot></slot>
+</cr-radio-group>
+<!--_html_template_end_-->`;
+}

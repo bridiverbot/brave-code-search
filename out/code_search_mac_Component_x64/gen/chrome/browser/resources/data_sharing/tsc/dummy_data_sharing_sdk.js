@@ -1,0 +1,114 @@
+// Copyright 2024 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+export const SHAREKIT_SDK_VERSION = '42';
+// Add something to the dialog to tell which flow it is.
+function appendTextForTesting(text) {
+    const newDiv = document.createElement('div');
+    newDiv.textContent = text;
+    document.body.appendChild(newDiv);
+}
+export function buildDataSharingSdk() {
+    return DataSharingSdkImpl.getInstance();
+}
+window.data_sharing_sdk = {
+    buildDataSharingSdk,
+};
+const groupMemberMapFunction = (param) => ({
+    groupId: param.groupId,
+    displayName: 'GROUP_NAME',
+    members: [
+        {
+            focusObfuscatedGaiaId: 'GAIA_ID',
+            displayName: 'MEMBER_NAME',
+            email: 'test@gmail.com',
+            role: 'member',
+            avatarUrl: 'http://example.com',
+            givenName: 'MEMBER_NAME',
+            createdAtTimeMs: 0,
+            lastUpdatedAtTimeMs: 0,
+        },
+    ],
+    formerMembers: [
+        {
+            focusObfuscatedGaiaId: 'GAIA_ID2',
+            displayName: 'MEMBER_NAME2',
+            email: 'test2@gmail.com',
+            role: 'former_member',
+            avatarUrl: 'http://example2.com',
+            givenName: 'MEMBER_NAME2',
+            createdAtTimeMs: 0,
+            lastUpdatedAtTimeMs: 0,
+        },
+    ],
+});
+export class DataSharingSdkImpl {
+    createGroup(_params) {
+        return Promise.resolve({
+            result: { groupData: { groupId: '', members: [], formerMembers: [] } },
+            status: 0 /* Code.OK */,
+        });
+    }
+    readGroup(_param, _options) {
+        return new Promise((resolve) => {
+            resolve({
+                status: 0 /* Code.OK */,
+                result: { groupData: groupMemberMapFunction(_param) },
+            });
+        });
+    }
+    readGroups(_params) {
+        return new Promise((resolve) => {
+            resolve({
+                status: 0 /* Code.OK */,
+                result: {
+                    groupData: _params.params.map(groupMemberMapFunction),
+                },
+            });
+        });
+    }
+    addMember(_params) {
+        return Promise.resolve({ status: 12 /* Code.UNIMPLEMENTED */ });
+    }
+    deleteGroup(_params) {
+        return Promise.resolve({ status: 12 /* Code.UNIMPLEMENTED */ });
+    }
+    leaveGroup(_params) {
+        return Promise.resolve({ status: 12 /* Code.UNIMPLEMENTED */ });
+    }
+    addAccessToken(_params) {
+        return Promise.resolve({ status: 12 /* Code.UNIMPLEMENTED */ });
+    }
+    runJoinFlow(_params) {
+        appendTextForTesting('A fake join dialog');
+        return new Promise(() => { });
+    }
+    runInviteFlow(_params) {
+        appendTextForTesting('A fake invite dialog');
+        return new Promise(() => { });
+    }
+    runManageFlow(_params) {
+        appendTextForTesting('A fake manage dialog');
+        return new Promise(() => { });
+    }
+    runCloseFlow(_params) {
+        appendTextForTesting('A fake close dialog');
+        return new Promise(() => { });
+    }
+    runDeleteFlow(_params) {
+        appendTextForTesting('A fake delete dialog');
+        return new Promise(() => { });
+    }
+    // Setup Helpers
+    setOauthAccessToken(_params) { }
+    updateClearcut(_params) { }
+    setClientVersionAndResetPeopleStore(_versionString, _baselineCl) { }
+    static getInstance() {
+        return dataSharingSdkInstance ||
+            (dataSharingSdkInstance = new DataSharingSdkImpl());
+    }
+    static setInstance(obj) {
+        dataSharingSdkInstance = obj;
+    }
+}
+let dataSharingSdkInstance = null;

@@ -1,0 +1,4 @@
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(`html{--card-max-width:960px;--side-bar-width:300px;--toolbar-height:56px;--password-manager-main-basis:calc(var(--cr-centered-card-max-width) / var(--cr-centered-card-width-percentage));--control-label-spacing:20px;--section-min-height:48px;--two-line-section-min-height:64px;--error-color:var(--google-red-700);--ref-palette-error10:rgba(65,14,11,1);--ref-palette-error30:rgba(140,29,24,1);--ref-palette-error90:rgba(249,222,220,1);--sys-color-error-container:var(--ref-palette-error90);--sys-color-on-error-container:var(--ref-palette-error10)}@media (prefers-color-scheme:dark){html{--error-color:var(--google-red-300);--sys-color-error-container:var(--ref-palette-error30);--sys-color-on-error-container:var(--ref-palette-error90)}}`);
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];

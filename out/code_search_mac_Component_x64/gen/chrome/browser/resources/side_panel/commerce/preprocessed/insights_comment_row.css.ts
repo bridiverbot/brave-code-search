@@ -1,0 +1,7 @@
+import {css, CSSResultGroup} from 'chrome://resources/lit/v3_0/lit.rollup.js';
+import 'chrome://resources/cr_elements/cr_shared_vars.css.js';
+
+let instance: CSSResultGroup|null = null;
+export function getCss(): CSSResultGroup {
+  return instance || (instance = [...[], css`:host{display:flex}#commentRow{display:inline;max-width:100%;color:var(--cr-secondary-text-color);font-size:11px;line-height:16px}.link{color:var(--cr-link-color);margin-left:4px;cursor:pointer}`]);
+}
