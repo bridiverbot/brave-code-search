@@ -1,0 +1,29 @@
+# Set up to use C++20.
+build --cxxopt=-std=c++20
+
+# Enable Bzlmod for all Bazel commands.
+common --enable_bzlmod
+
+# Enforce that lockfile is up-to-date.
+common --lockfile_mode=error
+
+# Limit which Tint modules are built for Shader generation.
+# Currently that just reads WGSL and outputs MSL.
+common --@dawn//src/tint:tint_build_hlsl_writer=false
+common --@dawn//src/tint:tint_build_hlsl_writer=false
+common --@dawn//src/tint:tint_build_spv_reader=false
+
+# Check that directly declared dependency maches resolved version from
+# transitive dependencies.
+common --check_direct_dependencies=error
+
+# To create this file, please run:
+#  bazel run @fuzztest//bazel:setup_configs > fuzztest.bazelrc
+try-import %workspace%/fuzztest.bazelrc
+
+# Android builds.
+build:android-common --extra_toolchains=@androidndk//:all
+build:android-x86 --config=android-common --platforms=//:android-x86
+build:android-x86_64 --config=android-common --platforms=//:android-x86_64
+build:android-armeabi-v7a --config=android-common --platforms=//:android-arm
+build:android-arm64-v8a --config=android-common --platforms=//:android-arm64
